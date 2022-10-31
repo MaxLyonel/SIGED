@@ -1,0 +1,55 @@
+{% extends app.session.get('layout') %}
+
+{% block contentoption %}
+
+<style type="text/css" media="screen">
+.textos {
+  color: #ff0000;
+  margin: 1px solid #fff;
+  text-align: center;
+  font-weight: 700;
+  font: italic bold 25px Georgia, Serif;
+  text-shadow: -4px 2px  #999;
+}
+</style>
+	<div class="header-content">
+		<h2><i class="fa fa-table"></i> Reporte seguimiento <span> Bono Juancito Pinto <b>{{ ('now'|date('Y')) }}</b></span></h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<i class="fa fa-home"></i>
+					<a href="dashboard.html">Recibidos</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li class="active">Index</li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="body-content animated fadeIn">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel rounded shadow">
+					<div class="panel panel-primary shadow">
+						<div class="panel-heading">
+							<div class="pull-left">
+								<h3 class="panel-title">Reporte seguimiento</h3>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="panel-body ">
+							<br><br>
+							<div class="row" style="text-align:center;">
+								<a href="{{path('imprimir_seguimiento_pdf')}}" class="textos" data-toggle="tooltip" target="_black" data-placement="top" title="IMPRIMIR REPORTE DE SEGUIMIENTO" ><i class="fa fa-file-pdf-o fa-2x fg-danger"></i> IMPRIMIR REPORTE DE SEGUIMIENTO</a>
+							</div>
+							<br>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+

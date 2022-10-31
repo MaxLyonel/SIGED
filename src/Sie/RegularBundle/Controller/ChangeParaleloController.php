@@ -35,10 +35,17 @@ class ChangeParaleloController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         
+         if (in_array($this->session->get('roluser'), array(9,8,10,7))){            
+         }else{
+          return $this->redirect($this->generateUrl('login'));  
+         }        
+        
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        //dump($this->session->get('pathSystem'));
+        //die;
         return $this->render($this->session->get('pathSystem') . ':ChangeParalelo:index.html.twig', array(
                     'form' => $this->craeteformsearch()->createView()
         ));
@@ -58,6 +65,7 @@ class ChangeParaleloController extends Controller {
      * @return type the list of student and inscripion data
      */
     public function resultAction(Request $request) {
+        $sesion = $request->getSession();
         //get the value to send
         $rude = strtoupper(trim($request->get('rude')));
         //find the id of student
@@ -73,11 +81,15 @@ class ChangeParaleloController extends Controller {
         if ($objStudent) {
             //look for inscription data
             $oInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getHistoryPerStudent($objStudent->getId(), $this->session->get('currentyear'));
+            
+            // dump($oInscription[0]['sie']);
+            // dump($sesion->get('ie_id'));
+            // dump($sesion->get('roluser'));
             if ($oInscription) {
+
                 //get paralelos
                 $this->oparalelos = $this->getParalelosStudent($oInscription[0]['nivelId'], $oInscription[0]['cicloId'], $oInscription[0]['gradoId'], $oInscription[0]['sie']);
                 $inscriptionForm = $this->createInscriptionForm($objStudent->getId(), $oInscription[0]['sie'], $oInscription, $rude)->createView();
-
                 //check if exists data
                 if (!$oInscription) {
                     $message = 'Estdiante no cuenta con Historial';
@@ -91,12 +103,19 @@ class ChangeParaleloController extends Controller {
                 $exist = false;
                 $oInscription = array();
             }
+            if ($oInscription[0]['sie']!=$sesion->get('ie_id') and $sesion->get('roluser') == 9){
+                $message = 'No tiene tuición, no puede realizar este cambio';
+                $this->addFlash('warningrein', $message);
+                $exist = false;
+                $oInscription = array();
+            }
+
         } else {
             $message = 'Código RUDE no existe';
             $this->addFlash('warningrein', $message);
             $exist = false;
         }
-
+        //die;
         return $this->render($this->session->get('pathSystem') . ':ChangeParalelo:result.html.twig', array(
                     'dataInscription' => $oInscription,
                     'form' => $inscriptionForm,
@@ -129,7 +148,7 @@ class ChangeParaleloController extends Controller {
                         ->add('eiId', 'hidden', array('data' => $oInscription[0]['eiId']))
                         ->add('paraleloOld', 'hidden', array('data' => $oInscription[0]['paraleloId']))
                         ->add('turnoOld', 'hidden', array('data' => $oInscription[0]['turnoId']))
-                        ->add('paralelo', 'entity', array('label' => 'Paralelo', 'empty_value' => 'seleccionar...', 'attr' => array('class' => 'form-control'),
+                        ->add('paralelo', 'entity', array('label' => 'Paralelo', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control'),
                             'class' => 'SieAppWebBundle:ParaleloTipo',
                             'query_builder' => function (EntityRepository $e) {
                         return $e->createQueryBuilder('p')
@@ -192,7 +211,7 @@ class ChangeParaleloController extends Controller {
     public function changeAction(Request $request) {
 
         $form = $request->get('form');
-        
+
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
@@ -222,27 +241,35 @@ class ChangeParaleloController extends Controller {
             //get the new paralelo info
             $objCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($newCondition);
 
-            if($objCourseOld and $objCourseOld) {
-                $query = $em->getConnection()->prepare('SELECT sp_genera_cambio_paralelo_estudiante(:igestion, :iestudiante_id, :icoicodueo, :inivelo, :igradoo, :iparaleloo, :iparalelod)');
-
+            if($objCourseOld and $objCourse) {
+                $query = $em->getConnection()->prepare('SELECT sp_regular_cambio_paralelo(:igestion, :iestudiante_id, :icoicodueo, :inivelo, :igradoo, :iparaleloo, :iturnoo, :iturnod, :iparalelod)');
                 $query->bindValue(':igestion', $this->session->get('currentyear'));
                 $query->bindValue(':iestudiante_id', $form['idStudent']);
                 $query->bindValue(':icoicodueo', $form['ueid']);
                 $query->bindValue(':inivelo', $form['nivelid']);
                 $query->bindValue(':igradoo', $form['gradoid']);
                 $query->bindValue(':iparaleloo', $form['paraleloOld']);
+                $query->bindValue(':iturnoo', $form['turnoOld']);
+                $query->bindValue(':iturnod', $form['turno']);
                 $query->bindValue(':iparalelod', $form['paralelo']);
-
                 $query->execute();
 
                 $sqlResponse = $query->fetchAll();
 
-                if($sqlResponse){
+                /*dump($sqlResponse[0]['sp_regular_cambio_paralelo']);
+                die;*/
+                if($sqlResponse[0]['sp_regular_cambio_paralelo']==1){
                     $em->getConnection()->commit();
-                    $message = "Cambio de paralelo realizado...";
-                } else{
+                    $message = "Se realizo el cambio de paralelo ...";
+                    $this->addFlash('successchangeparalelo', $message);
+                } elseif($sqlResponse[0]['sp_regular_cambio_paralelo']==2){
                     $em->getConnection()->rollback();
-                    $message = "Cambio de paralelo NO realizado...";
+                    $message = "El paralelo destino tiene observacion en areas, favor comuniquese con su técnico de distrito/departamento...";
+                    $this->addFlash('warningchangeparalelo', $message);
+                } else {
+                    $em->getConnection()->rollback();
+                    $message = "NO se realizo el Cambio de paralelo ...";
+                    $this->addFlash('warningchangeparalelo', $message);
                 }
             } else {
                 $em->getConnection()->rollback();
@@ -250,7 +277,7 @@ class ChangeParaleloController extends Controller {
             }
             
             
-            $this->addFlash('successchangeparalelo', $message);
+            
             //go the index page
             return $this->redirectToRoute('change_paralelo_sie_index');
         } catch (Exception $ex) {

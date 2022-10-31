@@ -1,0 +1,24 @@
+preinscripciones_seguimiento:
+    path:     /seguimiento
+    defaults: { _controller: SieHerramientaBundle:Preinscripciones:seguimiento}
+    options:
+        expose: true
+
+preinscripciones_mostrarDatos:
+    path:     /mostrar-datos-seguimiento
+    defaults: { _controller: "SieHerramientaBundle:Preinscripciones:mostrarDatos"}
+    options:
+         expose: true
+
+preinscripciones_ddjj:
+    path:     /ddjj/{sie}/{gestion}
+    defaults: { _controller: "SieHerramientaBundle:Preinscripciones:ddjj"}
+    options:
+         expose: true
+
+preinscripciones_listarUE:
+    path:     /listarUE/{distrito}
+    defaults: { _controller: "SieHerramientaBundle:Preinscripciones:getUE"}
+    options:
+         expose: true
+

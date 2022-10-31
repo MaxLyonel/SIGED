@@ -380,6 +380,8 @@ class StudentsInscriptionsController extends Controller {
       // first look for student on ESTUDIANTE table 
       // set array conditions
       $arrayCondition['carnetIdentidad'] = $ci;
+      $arrayCondition['segipId'] = 1;
+
       if($complemento){
         $arrayCondition['complemento'] = $complemento;
       }else{
@@ -591,6 +593,10 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$nombre,
         'fecha_nacimiento'=>$fecNac
       );
+      if($request->get('extranjero') == 1){
+        $arrParametros['extranjero'] = 'e';
+      }   
+      
       // get info segip
       $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
       // check if the data person is true
@@ -636,8 +642,9 @@ class StudentsInscriptionsController extends Controller {
               }else{//no Bolivia
                   $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
                   $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
-                  $estudiante->setLocalidadNac('');
+                  //$estudiante->setLocalidadNac('');
               }
+
               $estudiante->setSegipId(1);
               $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
               $em->persist($estudiante);
@@ -709,7 +716,7 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function studentsInscriptionAction(Request $request){
-      // dump($request);die;
+       //dump($request);die;
       //ini json var
       $response = new JsonResponse();
       // get the send values 
@@ -725,7 +732,7 @@ class StudentsInscriptionsController extends Controller {
         $arrYearStudent =$this->get('funciones')->getTheCurrentYear(date('d-m-Y', strtotime($newFecNac)), '30-6-'.date('Y'));
         $yearStudent = $arrYearStudent['age'];
 
-        if($yearStudent>15){
+        if($yearStudent>=15){
 
           // check if the student has an inscription on this course
           $objCurrentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$studentId,'institucioneducativaCurso'=>$iecId));
@@ -896,7 +903,7 @@ class StudentsInscriptionsController extends Controller {
             $objStudents = array();
 
             $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero, a.complemento 
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id
                         inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
@@ -985,7 +992,13 @@ class StudentsInscriptionsController extends Controller {
             $form = $this->createFormBuilder()
                 ->add('matricula', 'choice', array('required' => false, 'choices' => $estadomatriculaArray,  'attr' => array('class' => 'form-control')))
                 ->getForm();
-
+            // get the infor about the operative
+            $swInscription  = $this->getOperativeData($sw=false, $idcurso);
+            $swCalification = false;
+            if(!$swInscription){
+                $swCalification =  $this->getOperativeData(!$swInscription, $idcurso);
+            }
+            
 
             return $this->render('SiePermanenteBundle:CursosLargos:seeInscritos.html.twig', array(
                 'objStudents' => $objStudents,
@@ -998,6 +1011,8 @@ class StudentsInscriptionsController extends Controller {
                 'existins' => $existins,
                 'infoUe' => $infoUe,
                 'dataUe' => $dataUe,
+                'swInscription' => $swInscription,
+                'swCalification' => $swCalification,                
                 'totalInscritos'=>count($objStudents)
 
             ));
@@ -1006,6 +1021,64 @@ class StudentsInscriptionsController extends Controller {
             echo 'Excepción capturada: ', $ex->getMessage(), "\n";
         }
     }
+
+    private function getOperativeData($sw, $idcurso){
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $institucioncursocorto=$em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso'=>$idcurso));
+
+        $today = date('d-m-Y');
+        $swOpe = false;  
+
+        if( sizeof($institucioncursocorto)>0 && $institucioncursocorto->getEsabierto()){
+            $query = $em->getConnection()->prepare('
+                select a.fecha_inicio,a.fecha_fin, sat.acreditacion           
+                FROM institucioneducativa_curso a  
+                inner join superior_institucioneducativa_periodo sip on a.superior_institucioneducativa_periodo_id = sip.id
+                inner join turno_tipo tt on tt.id= a.turno_tipo_id
+                inner join superior_periodo_tipo spt on spt.id  = sip.superior_periodo_tipo_id
+                inner join superior_institucioneducativa_acreditacion sia on sia.id = sip.superior_institucioneducativa_acreditacion_id
+                inner join institucioneducativa ie on ie.id =sia.institucioneducativa_id
+                inner join superior_acreditacion_especialidad sae on sae.id = sia.acreditacion_especialidad_id
+                inner join superior_acreditacion_tipo sat on sat.id = sae.superior_acreditacion_tipo_id
+                inner join superior_especialidad_tipo sespt on sespt.id = sae.superior_especialidad_tipo_id
+                inner join superior_facultad_area_tipo sfat on sfat.id = sespt.superior_facultad_area_tipo_id
+                where  a.nivel_tipo_id= 231 and a.id=:idcurso
+            ');
+            $query->bindValue(':idcurso',$idcurso);
+            $query->execute();
+            $objRequest= $query->fetch();
+          
+                if(sizeof($objRequest)>0){
+                    // get the acreditacion to set months
+                    $monthsInscription  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?3:5;
+                    $monthsNotas  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?4:6;
+                    $f_ini = date('d-m-Y', strtotime($objRequest['fecha_inicio']));
+                    if(!$sw){
+                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$monthsInscription." month") );
+                    }else{
+                        $f_ini = date("d-m-Y", strtotime($f_ini."+".$monthsInscription." month") );
+                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$monthsNotas." month") );
+                    }
+                    //compare the limit ini and end operatvie
+                    if(strtotime($f_ini)<= strtotime($today)  && strtotime($today) <= strtotime($f_limit)){
+                        $swOpe = true;
+                    }
+
+                }else{
+                    // no data
+                }            
+
+        }else{
+            $swOpe = false;
+        }
+
+
+        
+        return(($swOpe));
+
+    }    
 
     public function showHistoryAction(Request $request){
       // ini vars
@@ -1024,7 +1097,7 @@ class StudentsInscriptionsController extends Controller {
         $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
         $query->execute();
         $dataInscription = $query->fetchAll();
-        
+        // dump($dataInscription);die;
         foreach ($dataInscription as $key => $inscription) {
             switch ($inscription['institucioneducativa_tipo_id_raep']) {
                 case '1':
@@ -1037,6 +1110,7 @@ class StudentsInscriptionsController extends Controller {
                     $dataInscriptionE[$key] = $inscription;
                     break;
                 case '5':
+                $bloquep = NULL;
                 if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
                 if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 15)$bloquep = 'Tercero';
                 if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 16)$bloquep = 'Quinto';

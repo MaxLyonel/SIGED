@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\TtecInstitucioneducativaRatificacion:
+    type: entity
+    table: ttec_institucioneducativa_ratificacion
+    indexes:
+        IDX_C126C04D5FEB51D1:
+            columns:
+                - ttec_institucioneducativa_historico_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaInicio:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_fin
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecInstitucioneducativaHistorico:
+            targetEntity: TtecInstitucioneducativaHistorico
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_institucioneducativa_historico_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

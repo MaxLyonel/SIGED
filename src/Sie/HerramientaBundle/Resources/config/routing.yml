@@ -58,6 +58,10 @@ sie_herramienta_info_estudiante:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudiante.yml"
     prefix:   /sie/infoEstudiante
 
+sie_herramienta_info_estudiante_asignar_paralelo:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteAsignarParalelo.yml"
+    prefix:   /sie/infoEstudiante
+
 sie_herramienta_info_estudianterequest:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianterequest.yml"
     prefix:   /sie/infoEstudianteRequest
@@ -251,3 +255,74 @@ sie_apoderado_bono_familia:
 sie_unidadeducativa_plataforma:
      resource: "@SieHerramientaBundle/Resources/config/routing/unidadeducativaplataforma.yml"
      prefix:   /sie/plataforma
+
+sie_registerforeignerperson:
+     resource: "@SieHerramientaBundle/Resources/config/routing/registerforeignerperson.yml"
+     prefix:   /sie/registerforeignerperson
+
+sie_unidadeducativa_selectedStudents:
+     resource: "@SieHerramientaBundle/Resources/config/routing/selectedstudents.yml"
+     prefix:   /sie/selectedstudents
+
+sie_regularizacion_rue:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionRue.yml"
+    prefix: /sie/regularizarRue
+
+
+#Ruta para el operativo de salud
+sie_herramienta_info_operativo_salud_administrativo_maestro:
+    resource: "@SieHerramientaBundle/Resources/config/routing/operativoSaludAdministrativoMaestro.yml"
+    prefix:   /acceso/operativo-salud/administrativo-maestro
+
+sie_gestiones_pasadas_areas_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/gestPasadasAreasEstudiante.yml"
+    prefix: /sie/gestPasadasAreasEstudiante
+
+#sie_unidadeducativa_regularizacionGestionesPasadas:
+#     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionGestionesPasadas.yml"
+#     prefix:   /sie/regularizacion-gestiones-pasadas
+
+
+#caso 3 regularizaion de notas gestion pasada
+sie_regularizacion_regularizacionEstudiantesPostBachillerato:
+     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionEstudiantesPostBachillerato.yml"
+     prefix:   /sie/regularizacion-estudiantes-post-bachillerato
+#     
+#     
+
+sie_institucioneducativa_acceso_internet:
+    resource: "@SieHerramientaBundle/Resources/config/routing/institucioneducativaAccesoInternet.yml"
+    prefix: /sie/institucioneducativaAccesoInternet
+
+sie_institucioneducativa_report_vul:
+    resource: "@SieHerramientaBundle/Resources/config/routing/reportstudentvulnerability.yml"
+    prefix: /sie/reportVul
+
+sie_tramite_gp_areasestudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/tramitegpareasestudiante.yml"
+    prefix:   /sie/tramite/areasestudiante
+
+
+# operativo bono JP
+sie_operativo_bonojp:
+    resource: "@SieHerramientaBundle/Resources/config/routing/operativoBonoJP.yml"
+    prefix:   /operativo-bonojp
+
+sie_academico_UpdatePlaceDataStudent:
+    resource: "@SieHerramientaBundle/Resources/config/routing/updateplaceDatastudent.yml"
+    prefix:   /sie/updateplacedatastudent
+
+sie_regularizacion_IncoherenciasExterior:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionincoherenciasexterior.yml"
+    prefix:   /sie/regularizacionGPIncoherenciasEXterior
+
+
+# preinscripciones
+sie_preinscripciones:
+    resource: "@SieHerramientaBundle/Resources/config/routing/preinscripciones.yml"
+    prefix:   /preinscripciones
+
+sie_preinscripcion_sorteo_padre:
+    resource: "@SieHerramientaBundle/Resources/config/routing/preinscripcionsorteohijo.yml"
+    prefix: /sie/sorteopreinscripcion
+

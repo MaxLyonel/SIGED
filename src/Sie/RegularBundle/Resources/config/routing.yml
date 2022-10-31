@@ -408,6 +408,9 @@ sie_app_web_inscription_reza_omi_exten:
     resource: "@SieRegularBundle/Resources/config/routing/inscriptionRezagoOmitidoExtenporaneo.yml"
     prefix:   /sie/inscriptionStudentsOmi
 
+sie_app_web_inscription_new_student:
+    resource: "@SieRegularBundle/Resources/config/routing/inscriptionNewStudent.yml"
+    prefix:   /sie/inscriptionNewStudent
 # sie_consulta_bono_familia:
 #     resource: "@SieRegularBundle/Resources/config/routing/consultaBonoFamilia.yml"
 #     prefix:   /consulta-bono-familia
@@ -424,3 +427,15 @@ sie_regular_notasMigrationttgtte:
 sie_regular_migrateNotasModular:
     resource: "@SieRegularBundle/Resources/config/routing/migrateNotasModular.yml"
     prefix:   /sie/migrationsmodular
+
+sie_regular_plataformaMoodle:
+    resource: "@SieRegularBundle/Resources/config/routing/plataformaMoodle.yml"
+    prefix:   /sie/plataformaMoodle
+
+crear_especialidades_bth_index:
+    resource: "@SieRegularBundle/Resources/config/routing/crearEspecialidadesBTH.yml"
+    prefix:   /sie/crearEspecialidadesBTH
+
+sie_app_web_unificacion_inscription_ue:
+    resource: "@SieRegularBundle/Resources/config/routing/unificacionInscriptionUe.yml"
+    prefix:   /acceso/unificacionInscriptionUe

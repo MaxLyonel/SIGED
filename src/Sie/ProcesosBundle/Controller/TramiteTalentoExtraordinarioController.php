@@ -254,6 +254,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
         $estado = 200;
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
+        // $em->getConnection()->beginTransaction();        
         
         $datos = $request->get('solicitud');
         $datos['fecha_solicitud'] = date('d/m/Y');
@@ -264,7 +265,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
         $tarea_id = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $centroinscripcion_id = $datos['centro_inscripcion'];
-        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'TE'));
+        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'NRE'));
         if ($tipotramite == null) {
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
@@ -294,6 +295,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
             $tramite_id = '';
             $msg = $result['msg'];
         }
+        // $em->getConnection()->commit();        
         return $response->setData(array('estado' => $estado, 'msg' => $msg, 'tramite' => $tramite_id));
     }
 

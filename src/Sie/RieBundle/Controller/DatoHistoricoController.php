@@ -14,7 +14,9 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaNivelAutorizado;
 use Sie\AppWebBundle\Entity\TtecInstitucioneducativaAreaFormacionAutorizado;
 use Sie\AppWebBundle\Entity\TtecInstitucioneducativaSede;
 use Sie\AppWebBundle\Entity\TtecInstitucioneducativaHistorico;
+use Sie\AppWebBundle\Entity\TtecInstitucioneducativaRatificacion;
 use Sie\AppWebBundle\Form\InstitucioneducativaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -61,10 +63,11 @@ class DatoHistoricoController extends Controller {
                                       AND ie.estadoinstitucionTipo in (:idEstado)
                                       AND se.estado = :estadoSede
                                 ORDER BY ie.id ')
-                                    ->setParameter('idTipo', array(7, 8, 9))
+                                    ->setParameter('idTipo', array(7, 8, 9,11,12,13))
                                     ->setParameter('idEstado', 10)
                                     ->setParameter('estadoSede', TRUE);        
         $entities = $query->getResult(); 
+        //dump($entities);die;
 
         return $this->render('SieRieBundle:DatoHistorico:listitt.html.twig', array('entities' => $entities));
     }
@@ -114,8 +117,11 @@ class DatoHistoricoController extends Controller {
                     ->add('nroResolucion', 'text', array('label' => 'Número de Resolución', 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => '30', 'style' => 'text-transform:uppercase')))
                     ->add('descripcion', 'textarea', array('label' => 'Descripción', 'required' => true, 'attr' => array('class' => 'form-control', 'rows' => '4', 'cols' => '50')))                    
                     ->add('datoAdicional', 'text', array('label' => 'Dato Adicional(opcional)', 'required' => false ,'attr' => array('class' => 'form-control','maxlength' => '180')))
-                    ->add('archivo', 'file', array('label' => 'Archivo PDF Adjunto (opcional)', 'required' => false, "attr" => array('accept' => 'application/pdf', 'multiple' => false)))
-                    ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
+                    ->add('archivo', 'file', array('label' => 'Archivo PDF Adjunto (opcional Max 3MB)', 'required' => false, "attr" => array('accept' => 'application/pdf', 'multiple' => false)))
+                    ->add('vigencia', CheckboxType::class, array('label'=>'Es ratificación de vigencia','required' => false))
+                    ->add('fechaInicio', 'text', array('label' => 'Fecha de Inicio', 'required' => false, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
+                    ->add('fechaFin', 'text', array('label' => 'Fecha de Finalización', 'required' => false, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
+                    ->add('guardar', 'submit', array('label' => 'Guardar datos', 'attr' => array('class' => 'btn btn-primary')));
         return $this->render('SieRieBundle:DatoHistorico:new.html.twig', array('entity' => $entity,  'form' => $form->getForm()->createView()));
     }
 
@@ -123,12 +129,25 @@ class DatoHistoricoController extends Controller {
      * Guardar datos de historiales
      */
     public function createAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
         $form = $request->get('form');
+       
         $maximo = 3.5 * (1024 * 1024);
         $size = $_FILES['form']['size']['archivo'];
         //dump($_FILES,$size,$maximo);die;
         if($size > $maximo){
             $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3.5 megas.');
+            return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
+        }
+
+        $vigencia = 0;
+        if(isset($form['vigencia'])){
+            $vigencia = 1;
+        }
+        if($vigencia==1 && ($form['fechaInicio']=='' or $form['fechaFin']=='' )){
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error, debe ingresar las fechas de vigencia de la insitución.');
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
         }
         try {
@@ -149,6 +168,19 @@ class DatoHistoricoController extends Controller {
             $historico->setFechaRegistro(new \DateTime('now'));
             $em->persist($historico);
             $em->flush();
+            $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+            if($vigencia==1 && $form['fechaInicio']!='' && $form['fechaFin']!=''){
+                $ratificacion = new TtecInstitucioneducativaRatificacion();
+                $ratificacion->setTtecInstitucioneducativaHistorico($em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($historico->getId()));
+                $ratificacion->setFechaInicio(new \DateTime($form['fechaInicio']));
+                $ratificacion->setFechaFin(new \DateTime($form['fechaFin']));
+                $ratificacion->setUsuarioId($id_usuario);
+                $ratificacion->setFechaRegistro(new \DateTime('now'));
+                $ratificacion->setFechaModificacion(new \DateTime('now'));
+                $em->persist($ratificacion);
+                $em->flush();
+            }
+
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
 
         }catch (Exception $ex){
@@ -165,7 +197,16 @@ class DatoHistoricoController extends Controller {
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $historial = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($request->get('id'));
-
+        $ratificacion = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaRatificacion')->findOneBy(array('ttecInstitucioneducativaHistorico' => $historial));
+        $vigencia = '';
+        $fechaInicio = '';
+        $fechaFin = '';
+        if($ratificacion){
+            $vigencia = 'checked';
+            $fechaInicio = $ratificacion->getFechaInicio()->format('d-m-Y');
+            $fechaFin = $ratificacion->getFechaFin()->format('d-m-Y');
+        }
+        //dump($ratificacion);die;
         $form = $this->createFormBuilder()
                     ->setAction($this->generateUrl('historico_update'))
                     ->add('idRie', 'hidden', array('data' => $entity->getId()))
@@ -175,14 +216,20 @@ class DatoHistoricoController extends Controller {
                     ->add('descripcion', 'textarea', array('label' => 'Descripción', 'data' => $historial->getDescripcion(),  'required' => true, 'attr' => array('class' => 'form-control', 'rows' => '4', 'cols' => '50')))                    
                     ->add('datoAdicional', 'text', array('label' => 'Dato Adicional(opcional)' , 'data' => $historial->getDatoAdicional(), 'required' => false, 'attr' => array('class' => 'form-control','maxlength' => '180')))
                     ->add('archivo', 'file', array('label' => 'Archivo PDF Adjunto (opcional)', 'required' => false))
+                    ->add('vigencia', CheckboxType::class, array('label'=>'Es ratificación de vigencia' , 'required' => false))
+                    ->add('fechaInicio', 'text', array('label' => 'Fecha de Inicio', 'data' => $fechaInicio, 'required' => false, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
+                    ->add('fechaFin', 'text', array('label' => 'Fecha de Finalización', 'data' => $fechaFin, 'required' => false, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
                     ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
-        return $this->render('SieRieBundle:DatoHistorico:edit.html.twig', array('entity' => $entity, 'form' => $form->getForm()->createView(), 'adjunto' => $historial->getArchivo()));
+        return $this->render('SieRieBundle:DatoHistorico:edit.html.twig', array('entity' => $entity, 'form' => $form->getForm()->createView(), 'adjunto' => $historial->getArchivo(), 'ratificacion' => $vigencia));
     }    
 
     /**
      * Guardar la modificación de datos historicos
      */
      public function updateAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
         $form = $request->get('form');
         $maximo = 3.5 * (1024 * 1024);
         $size = $_FILES['form']['size']['archivo'];
@@ -191,6 +238,16 @@ class DatoHistoricoController extends Controller {
             $this->get('session')->getFlashBag()->add('mensaje', 'Error, el archivo adjunto pesa más de lo peritido, que son 3.5 megas');
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
         }
+        $vigencia = 0;
+        if(isset($form['vigencia'])){
+            $vigencia = 1;
+        }
+        if($vigencia==1 && ($form['fechaInicio']=='' or $form['fechaFin']=='' )){
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error, debe ingresar las fechas de vigencia de la insitución.');
+            return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
+        }
+        
+
         try {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
@@ -214,6 +271,27 @@ class DatoHistoricoController extends Controller {
             $em->persist($historico);
             $em->flush();
 
+            $ratificacion = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaRatificacion')->findOneBy(array('ttecInstitucioneducativaHistorico' => $historico));
+            if(!$ratificacion && $vigencia==1){
+                $ratificacion = new TtecInstitucioneducativaRatificacion();
+                $ratificacion->setTtecInstitucioneducativaHistorico($em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($historico->getId()));
+                $ratificacion->setFechaRegistro(new \DateTime('now'));
+                $ratificacion->setUsuarioId($id_usuario);
+                $ratificacion->setFechaInicio(new \DateTime($form['fechaInicio']));
+                $ratificacion->setFechaFin(new \DateTime($form['fechaFin']));
+                $em->persist($ratificacion);
+            }
+            if($ratificacion && $vigencia==1){
+                $ratificacion->setFechaInicio(new \DateTime($form['fechaInicio']));
+                $ratificacion->setFechaFin(new \DateTime($form['fechaFin']));
+                $ratificacion->setFechaModificacion(new \DateTime('now'));
+                $em->persist($ratificacion);
+            }
+            if($ratificacion && $vigencia==0){
+                $em->remove($ratificacion);
+            }
+            $em->flush(); 
+           
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
 
         } catch (Exception $ex){

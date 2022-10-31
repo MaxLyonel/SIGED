@@ -18,6 +18,8 @@ use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
+use Sie\AppWebBundle\Entity\ValidacionProceso;
+
 
 /**
  * ChangeMatricula controller.
@@ -40,8 +42,10 @@ class ChangeMatriculaController extends Controller {
         $this->aCursosOld = $this->fillCursosOld();
         $this->arrQuestion = array(
         0 => "...",
-        1 => "Nunca asistio a clases",
-      2 => "Asistio algunos dias a clases", );
+        1 => "Nunca asistio a clases", //retiro abandono
+        2 => "Asistio algunos dias a clases", //En tolerancia
+        3 => "Asistio",
+    );
     }
 
     public function indexAction(Request $request){
@@ -55,8 +59,8 @@ class ChangeMatriculaController extends Controller {
             'infoStudent'         => json_decode($infoStudent,true),
             'infoUnidadEducativa' => unserialize($infoUe),
             'form'                => $this->matriculaForm($infoStudent, $infoUe)->createView(),
-            'student' => $objStudent
-
+            'student' => $objStudent,
+            'enTolerancia' => $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneBy(array('id'=>101))
         ));
     }
 
@@ -176,7 +180,7 @@ class ChangeMatriculaController extends Controller {
 
         $infoUe = $form['infoUe'];
         $infoStudent = json_decode($form['infoStudent'],true) ;
-
+        
         $aInfoUeducativa = unserialize($infoUe);
 
         //get db connexion
@@ -186,12 +190,26 @@ class ChangeMatriculaController extends Controller {
         $swChangeStatus = true;
         try {
         
-          if($form['questionStatus']==1){
+          switch ($form['questionStatus'])
+          {
+            case 1:
+              $updateMatricula = 6;
+            break;
+            case 2:
+              $updateMatricula = 10;//retiro abandono
+            break;
+            case 3:
+              $updateMatricula = 4;//efectivo
+            break;
+          }
+
+          /*if($form['questionStatus']==1)
+          {
             $updateMatricula = 6;
           }else{
             $updateMatricula = 6;
             // $updateMatricula = 9;
-          }
+          }*/
 
           if($swChangeStatus){
 
@@ -206,6 +224,7 @@ class ChangeMatriculaController extends Controller {
             //find to update
             $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);         
             $oldInscriptionStudent = clone $currentInscrip;
+            
             $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($updateMatricula));
             $em->persist($currentInscrip);
             $em->flush();
@@ -222,10 +241,17 @@ class ChangeMatriculaController extends Controller {
                                   'SIGED',
                                   json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
             );     
+            // retiramos la observacion regla 63 estado_matricula inconsistente
+            $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$infoStudent['codigoRude'],'validacionReglaTipo'=>63));
+            if($observacion)
+            {
+              $observacion->setEsActivo('t');
+              $em->persist($observacion);
+              $em->flush();
+            }
 
             // Try and commit the transaction
             $em->getConnection()->commit();
-
           }
 
         } catch (Exception $e) {

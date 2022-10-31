@@ -70,9 +70,9 @@ class InstitucioneducativaController extends Controller {
 
         if ($request->getMethod() == 'POST') {
             $form = $request->get('form');
-
-            $institucion = $form['sie'];
-            $gestion = $form['gestion'];
+            $institucion = hex2bin($form['sie']) ;
+            $gestion = hex2bin($form['gestion']) ;
+            
             // creamos variables de sesion de la institucion educativa y gestion
             $request->getSession()->set('idInstitucion', $institucion);
             $request->getSession()->set('idGestion', $gestion);
@@ -185,10 +185,10 @@ class InstitucioneducativaController extends Controller {
                 ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
                 ->where('mins.institucioneducativa = :idInstitucion')
                 ->andWhere('mins.gestionTipo = :gestion')
-                ->andWhere('mins.cargoTipo = :cargo')
+                ->andWhere('mins.cargoTipo in (:cargo)')
                 ->setParameter('idInstitucion', $institucion)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('cargo', '1')
+                ->setParameter('cargo', array_values(array(1,12)))
                 ->setMaxResults(1)
                 ->getQuery();
 

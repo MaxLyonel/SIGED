@@ -1,0 +1,110 @@
+Sie\AppWebBundle\Entity\PreinsEstudianteInscripcion:
+    type: entity
+    table: preins_estudiante_inscripcion
+    indexes:
+        IDX_4A0CDFD569D5EAB0:
+            columns:
+                - preins_institucioneducativa_curso_cupo_id
+        IDX_4A0CDFD5F45FE33F:
+            columns:
+                - preins_estudiante_id
+        IDX_4A0CDFD529D729C4:
+            columns:
+                - estadomatricula_inicio_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        municipioVive:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: municipio_vive
+        zonaVive:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: zona_vive
+        avenidaVive:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: avenida_vive
+        calleVive:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: calle_vive
+        numeroVive:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: numero_vive
+        celular:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        telefono:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        fechaInscripcion:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_inscripcion
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            default: now()
+            column: fecha_registro
+    manyToOne:
+        preinsInstitucioneducativaCursoCupo:
+            targetEntity: PreinsInstitucioneducativaCursoCupo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                preins_institucioneducativa_curso_cupo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        preinsEstudiante:
+            targetEntity: PreinsEstudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                preins_estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomatriculaInicioTipo:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_inicio_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -331,6 +331,11 @@ class TramiteHomologacionController extends Controller {
                 ->setAction($this->generateUrl('tramite_homologacion_diploma_humanistico_estudiante_guarda'))      
                 ->add('ci', 'text', array('label' => 'CI', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{5,10}', 'maxlength' => '10')))
                 ->add('complemento', 'text', array('required' => false, 'mapped' => false, 'label' => 'Complemento', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedicion de su CI, por favor no coloque abreviaturas de departamentos", 'maxlength' => '2')))
+
+                ->add('extrajero', 'choice', array('attr' => array('class' => 'form-control', 'required' => true),
+                    'choices' => array('0' => 'NO', '1' => 'SI')))
+
+
                 ->add('expedido', 'entity', array('label' => 'Expedido', 'attr' => array('class' => 'form-control'),
                     'mapped' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 
                     'query_builder' => function (EntityRepository $e) {
@@ -551,7 +556,7 @@ class TramiteHomologacionController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        if($yearStudent >= 2011){
+        if($yearStudent >= 2010){
             return $formOmitido = $this->createFormBuilder()
                     ->setAction($this->generateUrl('tramite_homologacion_diploma_humanistico_savenew'))
                     ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
@@ -684,6 +689,10 @@ class TramiteHomologacionController extends Controller {
 
                 $arrParametros = array('complemento'=>$newStudent['complemento'], 'primer_apellido'=>$newStudent['paterno'], 'segundo_apellido'=>$newStudent['materno'], 'nombre'=>$newStudent['nombre'], 'fecha_nacimiento'=>$newStudent['fnacimiento']);
 
+                if($newStudent['extrajero']==1){
+                    $arrParametros['extranjero']='E'; // extranjero
+                }
+
                 $answerSegip = false;
                 if ($newStudent['ci'] > 0){
                     $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($newStudent['ci'] ,$arrParametros, 'prod', 'academico');
@@ -692,7 +701,7 @@ class TramiteHomologacionController extends Controller {
                         return $response->setData(array('estado' => false, 'msg' => $msg));
                     }
                 }
-
+                
                 if ($newStudent['ci'] > 0){   
                     $entityExpedido = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $newStudent['expedido']));
                 } else {
@@ -706,6 +715,12 @@ class TramiteHomologacionController extends Controller {
                 $student->setComplemento($newStudent['complemento']);
                 $student->setPasaporte($newStudent['pasaporte']);
                 $student->setExpedido($entityExpedido);
+                $student->setSegipId(1);
+                if($newStudent['extrajero']==1){
+                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(2)); // extranjero
+                } else {
+                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(1)); // nacional
+                }
                 $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
                 $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
                 if (isset($newStudent['provincia'])){
@@ -716,19 +731,24 @@ class TramiteHomologacionController extends Controller {
 
                 $em->persist($student);
                 //$em->flush();
-                $studentId = $student->getId();                 
+                $studentId = $student->getId();   
+                             
             } else {
                 $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => $studentId));
                 if(count($student)>0){
                     $newStudent['ci'] = $student->getCarnetIdentidad();
                     $newStudent['complemento'] = $student->getComplemento();
                     $newStudent['pasaporte'] = $student->getPasaporte();
+                    $newStudent['nombre'] = $student->getNombre();
+                    $newStudent['paterno'] = $student->getPaterno();
+                    $newStudent['materno'] = $student->getMaterno();
                     $rude = $student->getCodigoRude();
-                    // $segipId = $student->getSegipId();
-                    // if ($segipId != 1){
-                    //     $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
-                    //     return $response->setData(array('estado' => false, 'msg' => $msg));
-                    // } 
+                    $segipId = $student->getSegipId();
+                    //dump($student,$newStudent);die;
+                    if ($segipId != 1){
+                        $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
+                        return $response->setData(array('estado' => false, 'msg' => $msg));
+                    } 
                 }
             }
             

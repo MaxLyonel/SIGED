@@ -107,37 +107,37 @@ var BlankonApp = function(){
         // =========================================================================
         handleSound: function () {
             if($('.page-sound').length){
-                ion.sound({
-                    sounds: [
-                        {name: "beer_can_opening"},
-                        {name: "bell_ring", volume: 0.6},
-                        {name: "branch_break", volume: 0.3},
-                        {name: "button_click"},
-                        {name: "button_click_on"},
-                        {name: "button_push"},
-                        {name: "button_tiny", volume: 0.6},
-                        {name: "camera_flashing"},
-                        {name: "camera_flashing_2", volume: 0.6},
-                        {name: "cd_tray", volume: 0.6},
-                        {name: "computer_error"},
-                        {name: "door_bell"},
-                        {name: "door_bump", volume: 0.3},
-                        {name: "glass"},
-                        {name: "keyboard_desk"},
-                        {name: "light_bulb_breaking", volume: 0.6},
-                        {name: "metal_plate"},
-                        {name: "metal_plate_2"},
-                        {name: "pop_cork"},
-                        {name: "snap"},
-                        {name: "staple_gun"},
-                        {name: "tap", volume: 0.6},
-                        {name: "water_droplet"},
-                        {name: "water_droplet_2"},
-                        {name: "water_droplet_3", volume: 0.6}
-                    ],
-                    path: BlankonApp.handleBaseURL()+'/assets/global/plugins/bower_components/ionsound/sounds/',
-                    preload: true
-                });
+                // ion.sound({
+                //     sounds: [
+                //         {name: "beer_can_opening"},
+                //         {name: "bell_ring", volume: 0.6},
+                //         {name: "branch_break", volume: 0.3},
+                //         {name: "button_click"},
+                //         {name: "button_click_on"},
+                //         {name: "button_push"},
+                //         {name: "button_tiny", volume: 0.6},
+                //         {name: "camera_flashing"},
+                //         {name: "camera_flashing_2", volume: 0.6},
+                //         {name: "cd_tray", volume: 0.6},
+                //         {name: "computer_error"},
+                //         {name: "door_bell"},
+                //         {name: "door_bump", volume: 0.3},
+                //         {name: "glass"},
+                //         {name: "keyboard_desk"},
+                //         {name: "light_bulb_breaking", volume: 0.6},
+                //         {name: "metal_plate"},
+                //         {name: "metal_plate_2"},
+                //         {name: "pop_cork"},
+                //         {name: "snap"},
+                //         {name: "staple_gun"},
+                //         {name: "tap", volume: 0.6},
+                //         {name: "water_droplet"},
+                //         {name: "water_droplet_2"},
+                //         {name: "water_droplet_3", volume: 0.6}
+                //     ],
+                //     path: BlankonApp.handleBaseURL()+'/assets/global/plugins/bower_components/ionsound/sounds/',
+                //     preload: true
+                // });
 
                 // Add effect sound water droplet type 3
                 $('.dropdown-toggle').on('click', function(){

@@ -1,0 +1,111 @@
+Sie\AppWebBundle\Entity\UnivSedeSucursal:
+    type: entity
+    table: univ_sede_sucursal
+    indexes:
+        IDX_88127A525D678D7A:
+            columns:
+                - estadoinstitucion_tipo_id
+        IDX_88127A52179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_88127A529B2067FB:
+            columns:
+                - univ_sede_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        telefono1:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        telefono2:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        referenciaTelefono2:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: referencia_telefono2
+        inicioCalendarioAcademico:
+            type: date
+            nullable: true
+            comment: ''
+            column: inicio_calendario_academico
+        fax:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        casilla:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        sitioWeb:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: sitio_web
+        email:
+            type: string
+            nullable: true
+            length: 65
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estadoinstitucionTipo:
+            targetEntity: EstadoinstitucionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadoinstitucion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univSede:
+            targetEntity: UnivSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

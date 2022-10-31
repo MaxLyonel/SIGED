@@ -1,0 +1,36 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+<table id="tablagessubsem" class="table table-striped">
+    <thead>
+        <tr>
+            <th class="text-center border-right">No.</th>
+            <th>Codigo</th>
+            <th>Centro</th>            
+            <th>Tramite Estado</th>            
+            <th>Observación</th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reg in entities %}
+            <tr>
+                <td class="text-center border-right">{{ loop.index }}</td>
+                <td><span>{{ reg.id }}</span> </td>
+                <td>{{ reg.institucioneducativa }}</td>
+                <td>{{ reg.tramite_estado }}</td>
+                <td>{{ reg.obs }}</td>
+                <td class="text-center">
+                    <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">                            
+                        <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡Abrir centro!">
+                            {#<i class="fa fa-graduation-cap"></i>#}
+                            <i class="fa fa-pencil-square"></i>
+                        </button>
+                    </form> 
+                </td>       
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+                 

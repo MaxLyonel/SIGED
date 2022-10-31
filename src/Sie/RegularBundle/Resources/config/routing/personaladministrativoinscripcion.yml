@@ -72,3 +72,9 @@ personaladministrativoinscripcion_director_create:
     path:     /createPersonaDir/
     defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:createdirector" }
     methods:  POST
+
+personaladministrativoinscripcion_close_operative:
+    path:     /closeOperative/{idDepto}/{idDistrito}/{gestion}
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:closeOperative" }
+    options:
+         expose: true    

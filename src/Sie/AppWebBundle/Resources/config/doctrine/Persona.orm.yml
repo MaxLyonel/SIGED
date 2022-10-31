@@ -2,12 +2,6 @@ Sie\AppWebBundle\Entity\Persona:
     type: entity
     table: persona
     indexes:
-        fk__persona32:
-            columns:
-                - paterno
-                - materno
-                - nombre
-                - carnet
         fk__persona31:
             columns:
                 - paterno
@@ -15,29 +9,38 @@ Sie\AppWebBundle\Entity\Persona:
                 - nombre
                 - fecha_nacimiento
                 - carnet
+        fk__persona32:
+            columns:
+                - paterno
+                - materno
+                - nombre
+                - carnet
         fk__persona30:
             columns:
                 - paterno
                 - materno
                 - nombre
-        IDX_51E5B69B1C30CFD:
-            columns:
-                - estadocivil_tipo_id
-        IDX_51E5B69B1C73F6E:
-            columns:
-                - expedido_id
-        IDX_51E5B69B2BCFBA7:
-            columns:
-                - genero_tipo_id
-        IDX_51E5B69BCD9F4106:
-            columns:
-                - idioma_materno_id
         IDX_51E5B69B70591119:
             columns:
                 - sangre_tipo_id
+        IDX_51E5B69BCD9F4106:
+            columns:
+                - idioma_materno_id
+        IDX_51E5B69B2BCFBA7:
+            columns:
+                - genero_tipo_id
         IDX_51E5B69B92548EB1:
             columns:
                 - pais_tipo_id
+        IDX_51E5B69BAE7432DF:
+            columns:
+                - cedula_tipo_id
+        IDX_51E5B69B1C73F6E:
+            columns:
+                - expedido_id
+        IDX_51E5B69B1C30CFD:
+            columns:
+                - estadocivil_tipo_id
     uniqueConstraints:
         uniq_carnet_idx:
             columns:
@@ -58,7 +61,7 @@ Sie\AppWebBundle\Entity\Persona:
             length: 15
             fixed: false
             comment: ''
-            default: '0'
+            default: ''
         rda:
             type: integer
             nullable: false
@@ -180,32 +183,21 @@ Sie\AppWebBundle\Entity\Persona:
             fixed: false
             comment: ''
             column: localidad_nac
+        apellidoEsposo:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+            column: apellido_esposo
     manyToOne:
-        estadocivilTipo:
-            targetEntity: EstadoCivilTipo
+        sangreTipo:
+            targetEntity: SangreTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estadocivil_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        expedido:
-            targetEntity: DepartamentoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                expedido_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        generoTipo:
-            targetEntity: GeneroTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                genero_tipo_id:
+                sangre_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         idiomaMaterno:
@@ -217,13 +209,13 @@ Sie\AppWebBundle\Entity\Persona:
                 idioma_materno_id:
                     referencedColumnName: id
             orphanRemoval: false
-        sangreTipo:
-            targetEntity: SangreTipo
+        generoTipo:
+            targetEntity: GeneroTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                sangre_tipo_id:
+                genero_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         paisTipo:
@@ -233,6 +225,33 @@ Sie\AppWebBundle\Entity\Persona:
             inversedBy: null
             joinColumns:
                 pais_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cedulaTipo:
+            targetEntity: CedulaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cedula_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        expedido:
+            targetEntity: DepartamentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                expedido_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadocivilTipo:
+            targetEntity: EstadoCivilTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadocivil_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

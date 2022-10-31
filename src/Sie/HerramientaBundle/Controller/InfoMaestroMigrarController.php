@@ -413,7 +413,7 @@ class InfoMaestroMigrarController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['personaId']);
-        
+                
         if($persona){
             $datos = array(
                 'complemento'=>$persona->getComplemento(),
@@ -422,12 +422,20 @@ class InfoMaestroMigrarController extends Controller {
                 'nombre'=>$persona->getNombre(),
                 'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
             );
+            $cedulaTipoId = 1;
+            if($persona->getCedulaTipo()){
+                $cedulaTipoId = $persona->getCedulaTipo()->getId();
+            }
+            if($cedulaTipoId == 2){
+                $datos["extranjero"] = 'E';
+            } 
             if($persona->getCarnet()){
                 $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnet(),$datos,'prod','academico');
 
                 if($resultadoPersona){
                     $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la persona se validaron correctamente con SEGIP.";
                     $persona->setSegipId(1);
+                    $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
                     $em->persist($persona);
                     $em->flush();
                     $this->addFlash('updateOk', $mensaje);

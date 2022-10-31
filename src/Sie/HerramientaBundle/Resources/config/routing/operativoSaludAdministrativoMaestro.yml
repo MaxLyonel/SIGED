@@ -1,0 +1,168 @@
+herramienta_info_personalAdm_maestro_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:index}
+
+
+
+
+
+#herramienta_info_personal_adm_tsie_index:
+#    path:     /tsie
+#    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:indexTecSie}
+#
+#herramienta_info_personal_adm_second:
+#    path:     /sie/second
+#    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:second}
+#
+#herramienta_info_personal_adm_third:
+#    path:     /sie/third
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:loadThird"}
+#    options:
+#         expose: true
+#         
+#herramienta_info_personal_adm_index:
+#    path:     /
+#    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:index }
+#
+#herramienta_info_personal_adm_show:
+#    path:     /{id}/show
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:show" }
+#
+#herramienta_info_personal_adm_new:
+#    path:     /new/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:new" }
+#
+#herramienta_info_personal_adm_create:
+#    path:     /create/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:create" }
+#    methods:  POST
+#
+#herramienta_info_personal_adm_edit:
+#    path:     /edit/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:edit" }
+#    methods:  [POST, PUT]
+#
+#herramienta_info_personal_adm_update:
+#    path:     /update/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:update" }
+#    methods:  [POST, PUT]
+#
+#herramienta_info_personal_adm_es_vigente_administrativo:
+#    path:     /administrativo/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:esVigenteAdministrativo" }
+#    methods:  [POST, PUT]         
+#
+#herramienta_info_personal_adm_delete:
+#    path:     /delete/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:delete" }
+#    methods:  [POST, DELETE]    
+#    
+#herramienta_info_personal_adm_search:
+#    path:     /search/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:search" }
+#    methods:  POST
+#
+#herramienta_info_personal_adm_find:
+#    path:     /find/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:find" }
+#    
+#herramienta_info_personal_adm_result:
+#    path:     /result/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:result" }
+#
+#herramienta_info_personal_adm_migrar_index:
+#    path:     /admmigrar/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:index" }
+#
+#herramienta_info_personal_adm_ratificar:
+#    path:     /ratificarAdm/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:ratificarAdm" }
+#
+#herramienta_info_personal_adm_ddjj:
+#    path:     /admDJJ/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:admDDJJ" }
+#
+#herramienta_info_personal_adm_ratificar_currentyear:
+#    path:     /ratificarAdmCurrent/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:ratificarAdmCurrent" }
+#
+#herramienta_info_personal_adm_habilitar_ddjj:
+#    path:     /admhabilitarDDJJ/
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:admHabilitarDDJJ" }
+#
+#herramienta_info_personal_adm_segip_verificar_persona:
+#    path:     /verificarPersona
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:verificarPersona" }
+#    options:
+#        expose: true
+#
+#herramienta_info_personal_adm_persona_datos:
+#    path:     /registrarPersona
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:registrarPersona" }
+#
+#herramienta_info_personal_adm_persona_segip:
+#    path:     /validarAdmSegip
+#    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:validarAdmSegip" }
+
+
+#
+
+
+herramienta_info_personal_adm_editar_estadosalud:
+    path:     /editar/estado-de-salud
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:editarEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_actualizar_estadosalud:
+    path:     /actualizar/estado-de-salud
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:actualizarEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_eliminar_estadosalud:
+    path:     /eliminar/estado-de-salud/{id}
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:eliminarEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_cerrarOperativo_estadosalud:
+    path:     /cerrar-operativo/estado-de-salud
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:cerrarOperativoEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_abrirOperativo_estadosalud:
+    path:     /abrir-operativo/estado-de-salud/{id}
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:abrirOperativoEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_seguimientoOperativo_estadosalud:
+    path:     /seguimiento-operativo
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:seguimientoOperativoEstadoSalud" }
+    options:
+        expose: true
+
+
+herramienta_info_personal_adm_seguimientoOperativo_estadosalud_detalles:
+    path:     /seguimiento-operativo/estado-de-salud-detalles
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:seguimientoOperativoEstadoSaludDetalles" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_obtener_estadosalud:
+    path:     /obtener/estado-de-salud/{request_sie}/{request_inscription}/{request_gestion}
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:seguimientoOperativoObtenerEstadoSalud" }
+    options:
+        expose: true
+
+#herramienta_info_personal_adm_seguimientoOperativo_listarUE:
+#    path:     /listar-unidades-educativas/{distrito}
+#    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:getUnidadesEducativasSeleccionadas" }
+#    options:
+#        expose: true
+
+herramienta_info_salud_personal_adm_docente_ddjj:
+    path:     /ddjj/operativo-salud/{codue}/{gestion}
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:exportarReporteDDJJOperativoSalud" }

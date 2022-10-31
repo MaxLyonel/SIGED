@@ -298,6 +298,7 @@ class InfoPersonalAdmController extends Controller {
                 ->add('persona', 'hidden', array('data' => $idPersona))
                 ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
                 ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => true, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('rda', 'text', array('label' => 'Rda', 'required' => false, 'data' => $persona->getRda(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => true, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
@@ -513,6 +514,7 @@ class InfoPersonalAdmController extends Controller {
                 ->add('idMaestroInscripcion', 'hidden', array('data' => $maestroInscripcion->getId()))
                 ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
                 ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => true, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('rda', 'text', array('label' => 'Rda', 'required' => false, 'data' => $persona->getRda(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => true, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña', 'required' => true, 'choices' => $cargosArray, 'data' => $maestroInscripcion->getCargoTipo()->getId(), 'attr' => array('class' => 'form-control')))
@@ -544,6 +546,7 @@ class InfoPersonalAdmController extends Controller {
             $persona->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
             $persona->setCelular(mb_strtoupper($form['celular'], 'utf-8'));
             $persona->setCorreo(mb_strtolower($form['correo'], 'utf-8'));
+            $persona->setRda($form['rda']);
             $em->persist($persona);
             $em->flush();
 
@@ -708,6 +711,12 @@ class InfoPersonalAdmController extends Controller {
             'fecha_nacimiento' => $form['fecha_nacimiento']
         ];
 
+        if ($request->get('nacionalidad')) {
+            //NA: nacional, EX: extranjero
+            $nacionalidad = $request->get('nacionalidad'); //EX o NA
+            $tipo_persona = ($nacionalidad == 'NA') ? 1 : 2;
+        }
+
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
         $persona = array();
 
@@ -718,7 +727,9 @@ class InfoPersonalAdmController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'tipo_persona' => $tipo_persona
+
             ];
         }
 
@@ -736,11 +747,13 @@ class InfoPersonalAdmController extends Controller {
             'persona' => serialize($persona),
             'institucion' => $form['institucion'],
             'gestion' => $form['gestion'],
+            'tipo_persona' => $tipo_persona
         ));
     }
 
     public function registrarPersonaAction(Request $request){
-        
+        //NO PERMITIR REGISTRO DE PERSONAS
+        //return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('sie_persona_datos');
         $persona = unserialize($form['persona']);
@@ -748,6 +761,69 @@ class InfoPersonalAdmController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucion']);
         $gestion = $form['gestion'];
 
+        $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
+        $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
+
+        $tipo_persona = 1;
+        if ($request->get('tipo_persona')) {
+            //NA: nacional, EX: extranjero            
+            $tipo_persona = ($request->get('tipo_persona') == "1") ? 1 : 2;
+        }
+
+        $arrayDatosPersona = array(
+            //'carnet'=>$form['carnet'],
+            'complemento'=>$complemento,
+            'paterno'=>$persona['primer_apellido'],
+            'materno'=>$persona['segundo_apellido'],
+            'nombre'=>$persona['nombre'],
+            'fecha_nacimiento' => $fecha,
+            'tipo_persona' => $tipo_persona
+        );
+
+        $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
+
+        if( $personaValida )
+        {
+            $arrayDatosPersona['carnet']=$persona['carnet'];
+            unset($arrayDatosPersona['fecha_nacimiento']);
+            $arrayDatosPersona['fechaNacimiento']=$persona['fecha_nacimiento'];
+            $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
+
+            if($personaEncontrada == null)
+            {
+                $newPersona = new Persona();
+                $newPersona->setCarnet($persona['carnet']);
+                $newPersona->setComplemento(mb_strtoupper($complemento, 'utf-8'));
+                $newPersona->setPaterno(mb_strtoupper($persona['primer_apellido'], 'utf-8'));
+                $newPersona->setMaterno(mb_strtoupper($persona['segundo_apellido'], 'utf-8'));
+                $newPersona->setNombre(mb_strtoupper($persona['nombre'], 'utf-8'));
+                $newPersona->setFechaNacimiento(new \DateTime($persona['fecha_nacimiento']));
+                $newPersona->setCelular($form['celular']);
+                $newPersona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
+                $newPersona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+                $newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
+                $newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+                $newPersona->setSegipId(1);
+                $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
+                $newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+                $newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadocivilTipo')->findOneById(0));
+                $newPersona->setRda('0');
+                $newPersona->setEsvigente('t');
+                $newPersona->setActivo('t');
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find( $tipo_persona));
+                
+                $em->persist($newPersona);
+                $em->flush();
+                $persona_validada = $newPersona;
+            }
+            // else existe la persona no se registra
+        }
+        else
+        {
+            $persona_validada = null;
+        }
+
+    /*
         //Verificar si la persona ya fue registrada
         $repository = $em->getRepository('SieAppWebBundle:Persona');
         if($persona['complemento'] == '0'){
@@ -842,6 +918,7 @@ class InfoPersonalAdmController extends Controller {
             $em->flush();
             $persona_validada = $newPersona;
         }
+    */
 
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:result_newpersona.html.twig',array(
             'persona'=>$persona_validada,

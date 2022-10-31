@@ -110,6 +110,61 @@
             {% endfor %}
         </div>
     </div>
+
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>CREAR NUEVO CURSO</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion2" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            
+                            <div style="background: #EEE; padding:3px 10px 10px 10px">                               
+                                {{form_start(formNuevo,{'attr':{'id':'formCursos','onsubmit':'return validateFormNuevoCurso()'} })}}
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoTurno)}}
+                                        {{form_widget(formNuevo.nuevoTurno)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoNivel)}}
+                                        {{form_widget(formNuevo.nuevoNivel)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoGrado)}}
+                                        {{form_widget(formNuevo.nuevoGrado)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoParalelo)}}
+                                        {{form_widget(formNuevo.nuevoParalelo)}}
+                                    </div>
+                                    <div class="col-lg-4 col-lg-offset-4" style="text-align:center;">
+                                        <br>                                       
+                                        {{form_widget(formNuevo.crear)}}
+                                    </div>
+                                </div>
+                                {{form_end(formNuevo)}}
+                            </div>
+
+                             <div id="divNuevoCurso">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
     <div class="row">
         <div class="col-lg-12">
             <div class="portlet portlet-blue">
@@ -169,12 +224,19 @@
                                 </div>
                                 {{form_end(form)}}
                             </div>
+
+                           
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    
+   
 
     <div class="row">
         <div class="col-lg-12">
@@ -272,6 +334,42 @@
                             }
                         });
                     }
+
+                    function cargarNiveles2() {
+                        
+                        var institucion = $('#form_idInstitucion').val();
+                        var gestion = $('#form_idGestion').val();
+                        var turno = $('#form_nuevoTurno').val();
+                       
+                        if (xhr2 && xhr2.readyState != 4) {
+                            xhr2.abort();
+                        }
+                        xhr2 = $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_cargar_niveles', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno}),
+                            beforeSend: function () {
+                                $("#form_nuevoNivel").empty();
+                                $("#form_nuevoGrado").empty();
+                                //$("#form_nuevoParalelo").empty();
+                                $("#form_nuevoNivel").append('<option value="">Buscando...</option>');
+                                $("#form_nuevoGrado").append('<option value="">Buscando...</option>');
+                                //$("#form_nuevoParalelo").append('<option value="">Buscando...</option>');
+                                $('#divAreas').empty();
+                            },
+                            success: function (data) {
+                                $("#form_nuevoNivel").empty();
+                                $("#form_nuevoGrado").empty();
+                                //$("#form_nuevoParalelo").empty();
+                                $("#form_nuevoNivel").append('<option value="">Seleccionar...</option>');
+                                $("#form_nuevoGrado").append('<option value="">Seleccionar...</option>');
+                                //$("#form_Paralelo").append('<option value="">Seleccionar...</option>');
+                                $.each(data.niveles, function (i, value) {
+                                    $("#form_nuevoNivel").append('<option value="' + i + '">' + value + '</option>');
+                                });
+                            }
+                        });
+                    }
+
                     function cargarGrados() {
                         var institucion = $('#form_idInstitucion').val();
                         var gestion = $('#form_idGestion').val();
@@ -301,6 +399,34 @@
                             }
                         });
                     }
+
+                    function cargarGrados2() {
+                        var institucion = $('#form_idInstitucion').val();
+                        var gestion = $('#form_idGestion').val();
+                        var turno = $('#form_nuevoTurno').val();
+                        var nivel = $('#form_nuevoNivel').val();
+                        
+
+                        if (nivel === '11') {                            //primaria
+                            
+                            $("#form_nuevoGrado").empty();
+                            $("#form_nuevoGrado").append('<option value="">Seleccionar...</option>');
+                            $("#form_nuevoGrado").append('<option value="1">Primero</option>');
+                            $("#form_nuevoGrado").append('<option value="2">Segundo</option>');
+                        }else{
+                            $("#form_nuevoGrado").empty();
+                            $("#form_nuevoGrado").append('<option value="">Seleccionar...</option>');
+                            $("#form_nuevoGrado").append('<option value="1">Primero</option>');
+                            $("#form_nuevoGrado").append('<option value="2">Segundo</option>');                            
+                            $("#form_nuevoGrado").append('<option value="3">Tercero</option>');
+                            $("#form_nuevoGrado").append('<option value="4">Cuarto</option>');
+                            $("#form_nuevoGrado").append('<option value="5">Quinto</option>');
+                            $("#form_nuevoGrado").append('<option value="6">Sexto</option>');
+                        }                        
+                        
+                        
+                    }
+
                     function cargarParalelos() {
                         var institucion = $('#form_idInstitucion').val();
                         var gestion = $('#form_idGestion').val();
@@ -327,6 +453,8 @@
                             }
                         });
                     }
+
+                    
 
                     var xhr1;
                     function validateForm() {
@@ -379,8 +507,72 @@
                         return false;
                     }
 
-                    function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado) {
-                        $('#nivelModal').empty();
+                    var xhr2;                   
+                    function validateFormNuevoCurso() {
+                      
+                        var turno = $('#form_nuevoTurno').val();
+                        var nivel = $('#form_nuevoNivel').val();
+                        var grado = $('#form_nuevoGrado').val();
+                        var paralelo = $('#form_nuevoParalelo').val();
+                        if (turno == '') {
+                            alert('Debe seleccionar un turno');
+                            return false;
+                        }
+                        if (nivel == '') {
+                            alert('Debe seleccionar un nivel');
+                            return false;
+                        }
+                        if (grado == '') {
+                            alert('Debe seleccionar un grado');
+                            return false;
+                        }
+                        if (paralelo == '') {
+                            alert('Debe seleccionar un paralelo');
+                            return false;
+                        }
+
+                        if (xhr2 && xhr2.readyState != 4) {
+                            xhr2.abort();
+                        }
+
+                        var formData = $('#formCursos').serialize();
+                         if(confirm('¿Esta seguro de que desea crear el curso?\nPresione aceptar para confirmar.')){
+                            $.ajax({
+                                type: 'post',
+                                url: Routing.generate('areas_listar_areas_nuevo_curso'),
+                                data: formData,
+                                beforeSend: function () {
+                                    $("#divNuevoCurso").empty();
+                                    $("#divNuevoCurso").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                                },
+                                success: function (data) {
+                                    if(data.exito == 1){
+                                        $("#divNuevoCurso").empty();
+                                        $("#divNuevoCurso").append('<div class="alert alert-success"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso se ha creado con exito.</div>');
+                                    }else{
+                                        $("#divNuevoCurso").empty();
+                                        $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado.</div>');    
+                                    }
+                                    
+                                    //$(".tooltips").tooltip();
+                                },
+                                error: function (data) {
+                                    $("#divNuevoCurso").empty();
+                                    $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado</div>');
+                                }
+                            });
+                        }        
+
+                        return false;        
+                        
+                    }
+
+                    /*
+                    dcastillo, se ha aumentado parametros, para la creacion de la oferta
+                    */
+                    function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado,institucioneducativa,gestionTipo,turnoTipo,nivelTipo,gradoTipo,paraleloTipo) {                        
+                        
+                        /*$('#nivelModal').empty();
                         $('#nivelModal').append((nivel));
                         $('#gradoModal').empty();
                         $('#gradoModal').append(grado);
@@ -392,21 +584,39 @@
                         $('#idInstitucionCurso').empty();
                         $('#idInstitucionCurso').val(idInstitucionCurso);
                         $('#idNivel').empty();
-                        $('#idNivel').val(idNivel);
+                        $('#idNivel').val(idNivel);     */
 
-                        $.ajax({
-                            type: 'get',
-                            url: Routing.generate('areas_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso}),
-                            beforeSend: function () {
-                                $("#areasModal").empty();
-                                $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-                            },
-                            success: function (data) {
-                                $("#areasModal").empty();
-                                $("#areasModal").append(data);
-                            }
-                        });
-                        $('#newModal').modal('show');
+                        if(confirm('¿Esta seguro de que desea crear Areas?\nPresione aceptar para confirmar.')){                  
+                            $.ajax({
+                                type: 'get',
+                                url: Routing.generate('areas_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso, 'institucioneducativa':institucioneducativa,'gestionTipo':gestionTipo, 'turnoTipo': turnoTipo,'nivelTipo':nivelTipo,'gradoTipo':gradoTipo,'paraleloTipo':paraleloTipo}),
+                                beforeSend: function () {
+                                    $("body").css("cursor", "progress");
+
+                                    /*$("#areasModal").empty();
+                                    $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");*/
+                                },
+                                success: function (data) {
+                                    /*$("#areasModal").empty();
+                                    $("#areasModal").append(data);*/
+                                    $("body").css("cursor", "default");
+                                    if(data.exito == 1){
+                                         alert('Las Areas han sido asignadas con exito !!');
+                                    }else{
+                                        if(data.exito == -1){
+                                            alert(data.mensaje);
+
+                                        }else{
+                                             alert('No se han podido registrar Areas para este curso !! \nPosiblemente ya existen, por favor revisar.');    
+                                        }
+
+                                        
+                                    }
+                                   
+                                }
+                            });
+                            //$('#newModal').modal('show');
+                        }
                     }
 
                     function marcarTodasAreas() {
@@ -436,10 +646,10 @@
                                     marcados = 'no';
                                 }
                             }
-                            if (marcados == 'no') {
+                            /*if (marcados == 'no') {
                                 alert('Debe seleccionar todas las areas.');
                                 return 0;
-                            }
+                            }*/
                         }
 
 
@@ -486,6 +696,8 @@
 
                     var xhr6;
                     var deleteArea = function(idco, asignatura){
+
+                                               
                         if(confirm('Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que tambien se eliminaran las calificaciones de los estudiantes.')){
                             $.ajax({
                                 type: 'get',

@@ -55,6 +55,7 @@ class SolicitudRITTController extends Controller {
         $TramiteController->setContainer($this->container);
         // public function tramiteTarea($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
         $lista = $TramiteController->tramiteTareaRitt(22,22,5,$id_usuario,$id_rol);
+        
         return $this->render('SieRieBundle:SolicitudRITT:index.html.twig',array('listaTramites'=>$lista['tramites']));
     }
     public  function guardaTramiteAction(Request $request){
@@ -147,6 +148,7 @@ class SolicitudRITTController extends Controller {
         $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
         $lista = $TramiteController->tramiteTareaRitt(23,24,5,$id_usuario,$id_rol);
+        //dump($lista);die;
         return $this->render('SieRieBundle:SolicitudRITT:listaTramitesCertificadosNac.html.twig',array('listaTramites'=>$lista['tramites']));
     }
     public function guardaTramiteNacImprimeAction(Request $request){
@@ -230,7 +232,7 @@ class SolicitudRITTController extends Controller {
         ");
         $query->execute();
         $ritt = $query->fetchAll();
-
+        
         $serie = 1;
 
         $query = $em->getConnection()->prepare("
@@ -239,7 +241,7 @@ class SolicitudRITTController extends Controller {
         WHERE a.documento_tipo_id = 11");
         $query->execute();
         $maxSerie = $query->fetchAll();
-        
+        //dump($maxSerie);die;
         if ($maxSerie[0]) {
             $serie = $maxSerie[0]['maximo'] + 1;
         }
@@ -306,6 +308,32 @@ class SolicitudRITTController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_cert_certificadottec_vp_v3_afv.rptdesign&institucioneducativa_id='.$idRie.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+
+        return $response;
+
+    }
+    public function guardaTramiteNacImprimeConcluidoAction(Request $request){
+        $idRie= $request->get('idRie');
+        $idTramite= $request->get('idTramite');
+        $em = $this->getDoctrine()->getManager();
+        //dump($this->container->getParameter('urlreportweb'));
+        //dump($idTramite);die;
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tramite'=>$idTramite));
+
+        $obs = $entityDocumento->getObs();
+        $entityDocumento->setObs( $obs.' reimpreso '.date('YmdHis')) ;
+        $em->persist($entityDocumento);
+        $em->flush();
+
+        $arch = 'CERTIFICADO_'.$idRie.'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_cert_certificadottec_v3_afv.rptdesign&documento_id='.$entityDocumento->getId().'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

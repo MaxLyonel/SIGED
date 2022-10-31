@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\PreinsEstudianteInscripcionHermanos:
+    type: entity
+    table: preins_estudiante_inscripcion_hermanos
+    indexes:
+        IDX_B45E5F69A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_B45E5F69E215A75A:
+            columns:
+                - preins_estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        preinsEstudianteInscripcion:
+            targetEntity: PreinsEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                preins_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

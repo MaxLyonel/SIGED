@@ -42,9 +42,7 @@
             <![endif]-->
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
             <link href="{{asset('css/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet">
-
-            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
-
+           
         {% endblock %}
 
 
@@ -278,32 +276,34 @@
                     {% else %}
                     
                     
-                    {% if app.session.get('roluser')== 10 or app.session.get('roluser')== 8 or app.session.get('roluser')== 7 %}
+                    {% if app.session.get('roluser')== 10 
+                    or app.session.get('roluser')== 8 
+                    or app.session.get('roluser')== 7 
+                    or app.session.get('roluser')== 34 %}
                         
-                        
-                            <li class="panel">
-                                <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#estudianteinfo">
-                                    <i class="fa fa-edit"></i> Estudiante info <i class="fa fa-caret-down"></i>
-                                </a>
-                                <ul class="collapse nav" id="estudianteinfo">
-                                    <li>
-                                        <a href="{{path('estudiante_main')}}">
-                                            <i class="fa fa-angle-double-right"></i> Buscar Estudiante
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('declaracion_jurada_index')}}">
-                                            <i class="fa fa-angle-double-right"></i> DD JJ
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('sie_estudiantes')}}">
-                                            <i class="fa fa-angle-double-right"></i> Modificar Datos
-                                        </a>
-                                    </li>
+                        <li class="panel">
+                            <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#estudianteinfo">
+                                <i class="fa fa-edit"></i> Estudiante info <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="collapse nav" id="estudianteinfo">
+                                <li>
+                                    <a href="{{path('estudiante_main')}}">
+                                        <i class="fa fa-angle-double-right"></i> Buscar Estudiante
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('declaracion_jurada_index')}}">
+                                        <i class="fa fa-angle-double-right"></i> DD JJ
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('sie_estudiantes')}}">
+                                        <i class="fa fa-angle-double-right"></i> Modificar Datos
+                                    </a>
+                                </li>
 
-                                </ul>
-                            </li>
+                            </ul>
+                        </li>
                         <li class="panel">
                             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#inscriptions">
                                 <i class="fa fa-edit"></i> Inscripciones <i class="fa fa-caret-down"></i>
@@ -315,37 +315,37 @@
                                     </a>
                                 </li>
                                 <li>
-                                        <a href="{{path('traslado_web')}}">
-                                            <i class="fa fa-angle-double-right"></i> Traslado
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('inscription_extranjeros_index')}}">
-                                            <i class="fa fa-angle-double-right"></i> Extranjeros
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('inscription_talento_index')}}">
-                                            <i class="fa fa-angle-double-right"></i> Talento
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('inscription_rezago_index')}}">
-                                            <i class="fa fa-angle-double-right"></i> Rezago
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('history_inscription_index')}}">
-                                            <i class="fa fa-angle-double-right"></i> Historial de Inscripción
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('sie_ienoacreditadas')}}">
-                                            <i class="fa fa-angle-double-right"></i> Bono Juancito Pinto
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                    <a href="{{path('traslado_web')}}">
+                                        <i class="fa fa-angle-double-right"></i> Traslado
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('inscription_extranjeros_index')}}">
+                                        <i class="fa fa-angle-double-right"></i> Extranjeros
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('inscription_talento_index')}}">
+                                        <i class="fa fa-angle-double-right"></i> Talento
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('inscription_rezago_index')}}">
+                                        <i class="fa fa-angle-double-right"></i> Rezago
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('history_inscription_index')}}">
+                                        <i class="fa fa-angle-double-right"></i> Historial de Inscripción
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('sie_ienoacreditadas')}}">
+                                        <i class="fa fa-angle-double-right"></i> Bono Juancito Pinto
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         
                         <li class="panel">
                             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#reportes">
@@ -359,7 +359,7 @@
                                 </li>
                             </ul>
                         </li>
-                        
+                    
                         <li class="panel">
                             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#usuarioDistrito">
                                 <i class="fa fa-edit"></i> Usuarios Distrito <i class="fa fa-caret-down"></i>
@@ -372,7 +372,7 @@
                                 </li>
                             </ul>
                         </li>
-                        {% else %}
+                    {% else %}
                         
 
 
@@ -753,6 +753,17 @@
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         <script src="{{ asset('js/initialize.js')}}"></script>
+
+            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
+
+            <script type="text/javascript">
+                $('.calendario').datepicker({
+                    format: 'dd-mm-yyyy',
+                    todayBtn: 'linked',
+                    language: 'es',
+                    autoclose: true
+                });
+            </script>
     {% endblock %}
 </body>
 

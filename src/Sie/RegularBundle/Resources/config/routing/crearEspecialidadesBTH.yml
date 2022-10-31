@@ -1,0 +1,31 @@
+crear_especialidades_bth_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:CrearEspecialidadesHistBth:index }
+
+crear_especialidades_bth_buscar:
+    path:     /buscar_historial_especialidades_bth
+    defaults: { _controller: SieRegularBundle:CrearEspecialidadesHistBth:buscar_historial_especialidades_bth }
+    
+guardar_nueva_especialidad_bth:
+    path:     /guardar_nueva_especialidad_bth
+    defaults: { _controller: SieRegularBundle:CrearEspecialidadesHistBth:guardar_nueva_especialidad_bth }
+
+funcion_eliminar_esp_bth_validar:
+    path:     /funcion_eliminar_esp_bth_validar
+    defaults: { _controller: SieRegularBundle:CrearEspecialidadesHistBth:funcion_eliminar_esp_bth_validar }
+# reactivarbth_index:
+#     path:     /
+#     defaults: { _controller: SieRegularBundle:ReactivarBTH:index }
+
+# reactivarbth_buscar_nuevo:
+#     path:     /buscaTramiteBTH
+#     defaults: { _controller: SieRegularBundle:ReactivarBTH:buscaTramiteBTH }
+
+# reactivarbth_buscar_nuevo_guardar:
+#     path:     /buscaTramiteBTH/guardar
+#     defaults: { _controller: SieRegularBundle:ReactivarBTH:buscaTramiteBTHGuardar }
+
+# reactivarbth_historial:
+#     path:     /historialBTH/
+#     defaults: { _controller: SieRegularBundle:ReactivarBTH:historialBTH }
+

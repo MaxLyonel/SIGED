@@ -1,4 +1,4 @@
-    {% extends 'layoutHerramienta.html.twig' %}
+        {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <style type="text/css">
         .swal-overlay {
@@ -327,15 +327,15 @@
                                     <div class="alert alert-warning ">
                                         <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                                         <div class="notification-info">
-                                            {# {% if estado == 1 %} #}
+                                            {% if estado == 1 %} #}
                                             <p>
                                                 Su Unidad Educativa no es plena.
                                             </p>
-                                            {# {% elseif estado == 2 %}
+                                            {% elseif estado == 2 %}
                                                 <p>
                                                     Su Unidad Educativa ya inicio su trámite ó no le corresponde realizar la solicitud.
                                                 </p>
-                                            {% endif %} #}
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -441,14 +441,17 @@
                                         }
                                         else if(data.estado==3 ){
                                             swal("Su trámite ya fue iniciado'");
-                                        }else if(data.estado == 4){
+                                        }else {
+                                             /*if(data.estado == 4){*/
                                             swal(data.msg)
                                         }
+                                        /*
                                         else {
-                                            swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
+                                            swal(data.msg);
+                                                'Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
                                                 '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
-                                                '- Su Unidad Educativa ya se encuentra registrado como BTH.');
-                                        }
+                                                '- Su Unidad Educativa ya se encuentra registrado como BTH.'& string(data.estado));
+                                        }*/
 
                                     },
                                     complete: function () {

@@ -80,6 +80,7 @@ class SolicitudBTHController extends Controller {
        /*  foreach ($objGrados as $data) {
             $grados[$data[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data[1])->getGrado();
         } */
+        
         $grados[3]=3;
         // Especialidades para Nuevo o Ratificación
         $especialidad_anterior = $especialidad_vigente = array();
@@ -170,7 +171,7 @@ class SolicitudBTHController extends Controller {
         if ($flujotipo != 0) {
             $verificarinicioTramite = $this->verificatramite($institucion_id, $gestion, $flujotipo);
         }
-
+        
         if ($tipo_tramite == 31) {
             // Especialidades para Regularización
             $query = $em->getConnection()->prepare("SELECT eth.id, eth.especialidad
@@ -185,6 +186,16 @@ class SolicitudBTHController extends Controller {
         }
         
         $datosForm = $this->datosFormulario($institucion_id, $gestion_sucursal);
+        
+        /**********teporal para regulariza ues 2022 ***/
+        // $ue = array(31920031,
+        //             70420099,
+        //             80830104);
+        // if (in_array($institucion_id, $ue)){
+        //     $verificarinicioTramite = 0; 
+        // }else{
+        //     $verificarinicioTramite = 1;
+        // }
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDirector.html.twig',
             array('institucion' => $datosForm[0],
                 'ubicacion' => $datosForm[1],
@@ -201,25 +212,25 @@ class SolicitudBTHController extends Controller {
     }
 
     public function guardaNuevoAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
         
-        $id_usuario = $this->session->get('userId');
-        $id_rol = $this->session->get('roluser');
-
-        $flujotipo = $request->get('idflujotipo');
-        $datos = $request->get('ipt');
+        $em = $this->getDoctrine()->getManager();
         $institucion_id = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
         $id_tipoTramite = $request->get('idsolicitud');
         $id_distrito = $request->get('id_distrito');
-        
+        $flujotipo = $request->get('idflujotipo');
+        // dump($request);die;
         $sw = $request->get('sw');
 
+        $id_rol = $this->session->get('roluser');
+        $id_usuario = $this->session->get('userId');
+        
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $flujotipo , 'orden' => 1));
         $tarea = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $datos = ($request->get('ipt'));
         $idTramite = '';
+        // dump($flujoproceso);die;
         if($sw == 0) {
             // Envio de solicitud nuevo
             $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $institucion_id, '', $id_tipoTramite, '', $idTramite,$datos, '', $id_distrito);
@@ -295,7 +306,16 @@ class SolicitudBTHController extends Controller {
         $informe = $datos[0]['informe'];
         $institucion_id = $datos[1]['institucionid'];
         $gestion = $request->getSession()->get('currentyear');
-        
+
+        // SE AGREGO PARA AGARRAR LA ULTIMA GESTION
+        $gestion_sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('inss')
+            ->select('max(inss.gestionTipo)')
+            ->where('inss.institucioneducativa = :institucion_id')
+            ->setParameter('institucion_id', $institucion_id)
+            ->getQuery()
+            ->getSingleResult();
+        $gestion_sucursal = ($gestion_sucursal)?$gestion_sucursal:'';
+
         $director = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->createQueryBuilder('mins')
             ->select('per.carnet, per.paterno, per.materno, per.nombre')
             ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
@@ -304,7 +324,7 @@ class SolicitudBTHController extends Controller {
             ->andWhere('mins.cargoTipo IN (:cargo)')
             ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion_id)
-            ->setParameter('gestion', $gestion)
+            ->setParameter('gestion', $gestion_sucursal)
             ->setParameter('cargo', array(1, 12))
             ->setParameter('esvigente',true)
             ->setMaxResults(1)
@@ -317,6 +337,7 @@ class SolicitudBTHController extends Controller {
                 $especialidadarray[] = array('id' => $especialidad->getId(), 'especialidad' => $especialidad->getEspecialidad());
             }
         }
+          
          if ($sw==0 and isset($datos[3]['grado'])){
             $grado = $datos[3]['grado'];
         } elseif ($sw==1 and isset($datos[5]['grado'])){
@@ -324,8 +345,9 @@ class SolicitudBTHController extends Controller {
         } else {
             $grado = '';
         }
-
-        $datosForm = $this->datosFormulario($institucion_id, $gestion);
+        
+        $datosForm = $this->datosFormulario($institucion_id, $gestion_sucursal);
+        
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDistrito.html.twig', array(
             'institucion' => $datosForm[0],
             'ubicacion' => $datosForm[1],
@@ -422,6 +444,7 @@ class SolicitudBTHController extends Controller {
         $query = $em->getConnection()->prepare("select td.* from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$id_tramite);
         $query->execute();
         $td = $query->fetch();
+        
         if (isset($td['tramite_detalle_id'])) {
             $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td['tramite_detalle_id']);
             if($tramiteDetalle->getTramiteEstado()->getId () == 4) {
@@ -444,6 +467,16 @@ class SolicitudBTHController extends Controller {
         $gestion = $request->getSession()->get('currentyear');
         //$gestion = 2019;
         // dump($datos);die;
+
+        // SE AGREGO PARA AGARRAR LA ULTIMA GESTION
+        $gestion_sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('inss')
+            ->select('max(inss.gestionTipo)')
+            ->where('inss.institucioneducativa = :institucion_id')
+            ->setParameter('institucion_id', $institucion_id)
+            ->getQuery()
+            ->getSingleResult();
+        $gestion_sucursal = ($gestion_sucursal)?$gestion_sucursal:'';
+
         if (!empty($datos[4]['grado'])){
            $documento= ($datos[5])?$datos[5]:'';
         } else {
@@ -458,7 +491,7 @@ class SolicitudBTHController extends Controller {
             ->andWhere('mins.cargoTipo IN (:cargo)')
             ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion_id)
-            ->setParameter('gestion', $gestion)
+            ->setParameter('gestion', $gestion_sucursal)
             ->setParameter('cargo', array(1, 12))
             ->setParameter('esvigente',true)
             ->setMaxResults(1)
@@ -478,7 +511,7 @@ class SolicitudBTHController extends Controller {
             $grado = '';
         }
 
-        $datosForm = $this->datosFormulario($institucion_id, $gestion);
+        $datosForm = $this->datosFormulario($institucion_id, $gestion_sucursal);
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDepartamento.html.twig',array(
             'institucion' => $datosForm[0],
             'ubicacion' => $datosForm[1],
@@ -666,7 +699,7 @@ class SolicitudBTHController extends Controller {
             ->setParameter('gestion', $gestion)
             ->getQuery()
             ->getSingleResult();
-            
+              
         $localizacion = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->createQueryBuilder('jg')
             ->select('lt4.lugar AS departamento, lt3.lugar AS provincia, lt2.lugar AS seccion, lt1.lugar AS canton, lt.lugar AS localidad,
                 dist.id AS codigo_distrito,
@@ -703,15 +736,30 @@ class SolicitudBTHController extends Controller {
             return array($infoUe, $localizacion);
     }
 
-    public function verificatramite($id_Institucion, $gestion, $flujotipo) {// dump($id_Institucion, $gestion, $flujotipo);die;
+    public function verificatramite($id_Institucion, $gestion, $flujotipo) {//dump($id_Institucion, $gestion, $flujotipo);die;
         // Verifica si la UE inicio tramite de BHT
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT COUNT(tr.id) AS  cantidad_tramite_bth FROM tramite tr  
-            WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
-            AND tr.tramite_tipo <> 31");
+        $query = $em->getConnection()->prepare("SELECT COUNT(*) AS  cantidad_tramite_bth
+                    from
+                    (  SELECT tr.id id_tramite
+                       FROM tramite tr 
+                       WHERE tr.flujo_tipo_id = $flujotipo 
+                       AND tr.institucioneducativa_id = $id_Institucion
+                       and tr.fecha_fin is null
+                       AND tr.tramite_tipo <> 31
+                       union 
+                       SELECT t.id id_tramite
+                       FROM tramite t
+                       INNER JOIN tramite_detalle td ON t.id = td.tramite_id
+                       INNER JOIN flujo_proceso fp ON td.flujo_proceso_id = fp.id
+                       INNER JOIN proceso_tipo pt ON fp.proceso_id = pt.id
+                       WHERE t.institucioneducativa_id = $id_Institucion
+                       AND t.flujo_tipo_id in (6,31)
+                       AND fp.id = 29 
+                       AND pt.id = 20) a ");
             //AND tr.gestion_id = $gestion"); en caso de verificar si INICIO EL TRAMITE EN UNA GESTION DETERMINADA
         $query->execute();
-        $tramite_ue = $query->fetch(); //dump($tramite_ue);die;
+        $tramite_ue = $query->fetch();
         $tramite_iniciado=$tramite_ue['cantidad_tramite_bth'];
         if($tramite_iniciado==0){
             // Verifica si la unidad educativa que inicio el tramite tenga estudiantes para el nivel SECUNDARIA
@@ -1005,7 +1053,7 @@ class SolicitudBTHController extends Controller {
     }
     public function nuevasolicitudAction(Request $request){
         $id_Institucion =  $request->getSession()->get('ie_id');
-        $gestion =  $request->getSession()->get('currentyear');
+        $gestion =  2021; //$request->getSession()->get('currentyear');
         $flujotipo = $request->get('id');
         $verificarinicioTramite = $this->verificatramite($id_Institucion,$gestion,$flujotipo);
 
@@ -1227,7 +1275,7 @@ class SolicitudBTHController extends Controller {
     public function guardasolicitudAction(Request $request){
         $datos          = ($request->get('ipt')); //dump($datos);die;
         $id_Institucion = $request->get('institucionid');
-        $gestion =  $request->getSession()->get('currentyear');
+        $gestion =  2021; //$request->getSession()->get('currentyear');
         $idsolicitud = $request->get('idsolicitud');
         $flujotipo = $request->get('idflujotipo');
         $em = $this->getDoctrine()->getManager();

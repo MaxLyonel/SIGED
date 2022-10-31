@@ -1,0 +1,117 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaEstudianteEstadosalud:
+    type: entity
+    table: institucioneducativa_estudiante_estadosalud
+    indexes:
+        IDX_44F244643AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_44F24464179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        enfermoF2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: enfermo_f_2020
+        enfermoF2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: enfermo_f_2021
+        fallecidoF2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: fallecido_f_2020
+        fallecidoF2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: fallecido_f_2021
+        sinSintomasF2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sin_sintomas_f_2020
+        sinSintomasF2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sin_sintomas_f_2021
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        enfermoM2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: enfermo_m_2020
+        enfermoM2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: enfermo_m_2021
+        fallecidoM2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: fallecido_m_2020
+        fallecidoM2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: fallecido_m_2021
+        sinSintomasM2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sin_sintomas_m_2020
+        sinSintomasM2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sin_sintomas_m_2021
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

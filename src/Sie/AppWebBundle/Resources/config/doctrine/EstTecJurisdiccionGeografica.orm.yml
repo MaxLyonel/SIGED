@@ -1,0 +1,68 @@
+Sie\AppWebBundle\Entity\EstTecJurisdiccionGeografica:
+    type: entity
+    table: est_tec_jurisdiccion_geografica
+    indexes:
+        IDX_FA700324EA226AB:
+            columns:
+                - lugar_tipo_id_localidad
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        cordx:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        cordy:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        zona:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        lugarTipoLocalidad:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_id_localidad:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

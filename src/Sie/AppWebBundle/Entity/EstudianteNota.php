@@ -50,14 +50,19 @@ class EstudianteNota
     private $obs;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\NotaTipo
+     * @var integer
      */
-    private $notaTipo;
+    private $personaInscripcionId;
 
     /**
      * @var \Sie\AppWebBundle\Entity\EstudianteAsignatura
      */
     private $estudianteAsignatura;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\NotaTipo
+     */
+    private $notaTipo;
 
 
     /**
@@ -232,26 +237,26 @@ class EstudianteNota
     }
 
     /**
-     * Set notaTipo
+     * Set personaInscripcionId
      *
-     * @param \Sie\AppWebBundle\Entity\NotaTipo $notaTipo
+     * @param integer $personaInscripcionId
      * @return EstudianteNota
      */
-    public function setNotaTipo(\Sie\AppWebBundle\Entity\NotaTipo $notaTipo = null)
+    public function setPersonaInscripcionId($personaInscripcionId)
     {
-        $this->notaTipo = $notaTipo;
+        $this->personaInscripcionId = $personaInscripcionId;
     
         return $this;
     }
 
     /**
-     * Get notaTipo
+     * Get personaInscripcionId
      *
-     * @return \Sie\AppWebBundle\Entity\NotaTipo 
+     * @return integer 
      */
-    public function getNotaTipo()
+    public function getPersonaInscripcionId()
     {
-        return $this->notaTipo;
+        return $this->personaInscripcionId;
     }
 
     /**
@@ -275,5 +280,28 @@ class EstudianteNota
     public function getEstudianteAsignatura()
     {
         return $this->estudianteAsignatura;
+    }
+
+    /**
+     * Set notaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\NotaTipo $notaTipo
+     * @return EstudianteNota
+     */
+    public function setNotaTipo(\Sie\AppWebBundle\Entity\NotaTipo $notaTipo = null)
+    {
+        $this->notaTipo = $notaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get notaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\NotaTipo 
+     */
+    public function getNotaTipo()
+    {
+        return $this->notaTipo;
     }
 }

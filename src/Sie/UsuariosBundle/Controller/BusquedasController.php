@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\UsuariosBundle\Form\PersonaUsuarioType;
 use Sie\UsuariosBundle\Form\PersonaCarnetType;
 use Sie\AppWebBundle\Form\BuscarPersonaType;
+use Sie\AppWebBundle\Form\BuscarPersonaTypev2;
 use Sie\AppWebBundle\Form\BuscarPersonaNacionalType;
 use Sie\AppWebBundle\Form\BuscarPersonaExtranjeroType;
 use Sie\AppWebBundle\Form\BuscarPersonaSinCarnetType;
@@ -16,11 +17,14 @@ use Sie\UsuariosBundle\Form\CodIEType;
 class BusquedasController extends Controller
 {
     private $session;
+    public $arrUserAllow;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
+        $this->arrUserAllow = array(5609814,3625644,5062963,8335918,5727128,4300231,1314301,3295554,1897494);
+
     }
     
     public function codiepersonasAction(Request $request) {
@@ -61,6 +65,13 @@ class BusquedasController extends Controller
 
     
     public function formcarnetAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
+
         $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>0)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
 
         return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           
@@ -69,21 +80,182 @@ class BusquedasController extends Controller
     }
     
     public function carnetpersonabuscarAction(Request $request) {
-        
-        $formNacional = $this->createForm(new BuscarPersonaType(array('opcion'=>0)));
+        //  dump('ok');die;
+        $formNacional = $this->createForm(new BuscarPersonaTypev2(array('opcion'=>0)));
+        // dump($formNacional);
         $formNacional->handleRequest($request);
-        
-        if ($formNacional->isValid()) {
-            $data = $formNacional->getData();                 
-            $servicioPersona = $this->get('sie_app_web.persona');            
-            if($data['complemento']==""){
+        // dump($formNacional);die;
+        if ($formNacional->isValid())
+        {
+            $persona = $formNacional->getData();
+            /*
+            $data = $formNacional->getData();
+            $servicioPersona = $this->get('sie_app_web.persona');
+            if($data['complemento']=="")
+            {
                 $resultService = $servicioPersona->buscarPersona($data['ci'], '0', $data['extranjero']);            
                 //$data['complemento'] = 0;
-            }else{
+            }
+            else
+            {
                 $resultService = $servicioPersona->buscarPersona($data['ci'], $data['complemento'], $data['extranjero']);
-            }    
+            }
+            */
+            
+            $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
+            $complemento = $persona['complemento'] == null? '':$persona['complemento'];
+            $arrayDatosPersona = array(
+                //'carnet'=>$form['carnet'],
+                'complemento'=>$complemento,
+                'fecha_nacimiento' => $fecha
+            );
+            // dump($persona['extranjero']); die;
+            
+            if($persona['extranjero']=='1')
+                $arrayDatosPersona['tipo_persona']='2';
+            // dump($arrayDatosPersona['extranjero']); die;
 
-            if($resultService->type_msg === "success"){
+            $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['ci'], $arrayDatosPersona, 'prod', 'academico');
+            // dump($personaValida); die;
+            if( $personaValida )
+            {
+                $arrayDatosPersona['carnet']=$persona['ci'];
+                unset($arrayDatosPersona['fecha_nacimiento']);
+                $arrayDatosPersona['fechaNacimiento'] = str_replace('/','-',$persona['fecha_nacimiento']);
+
+                $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
+                
+                if($personaEncontrada != null) //ALTERNATIVA A resultService->type_msg === 'success'
+                {
+                    $idperson = $personaEncontrada->getId();
+
+                    $em = $this->getDoctrine()->getManager();
+                    $db = $em->getConnection();
+                    $query = '
+                        select 
+                                a.id as usuarioid, a.username, a.esactivo as usuarioesactivo,
+                                d.id as personaid, d.carnet, d.complemento, d.paterno, d.materno, d.nombre,
+                                array_agg(cast(b.id as varchar)) as usuario_rol_id, 
+                                cast(array_agg(cast(c.id as varchar)) as text) as rol_ids,
+                                array_agg(cast(c.rol as varchar)) as roles,
+                                array_agg(cast(b.esactivo as varchar)) as roles_estado,
+                                array_agg(cast(e.id as varchar)) as jurisdiccin_lugar_id,
+                                array_agg(cast(e.lugar as varchar)) as jurisdiccion,
+                                array_agg(cast(f.id as varchar)) as cobertura_cod,
+                                array_agg(cast(f.nivel as varchar)) as cobertura,
+                                array_agg(cast(b.sub_sistema as varchar)) as subsistema
+                        from usuario a 
+                                inner join usuario_rol b on a.id = b.usuario_id
+                                inner join rol_tipo c on b.rol_tipo_id = c.id
+                                inner join lugar_tipo e on b.lugar_tipo_id = e.id
+                                inner join lugar_nivel_tipo f on e.lugar_nivel_id = f.id
+                                inner join persona d on a.persona_id = d.id
+                        where d.id = ?
+                        group by a.id, a.username, a.esactivo,d.id, d.carnet, d.complemento, d.paterno, d.materno, d.nombre
+                        order by a.esactivo';
+                    $stmt = $db->prepare($query);
+                    $params = array($idperson);
+                    $stmt->execute($params);
+                    $po=$stmt->fetchAll();
+
+                    if (count($po) === 1)//PERSONA SEGIP CON UN USUARIO CORRECTAMENTE ENCONTRADOS
+                    {
+                        //VERIFICANDO TUISION DE ROLES DEL USUARIO
+                        $query = "
+                                    select * from (
+                                        select c.id 
+                                        from rol_tipo c 
+                                        where c.id not in(
+                                        select roles as id from rol_roles_asignacion b where b.rol_id = ?
+                                        ) ) abc 
+                                        inner join (
+                                            select a.rol_tipo_id as roltipoid from usuario_rol a
+                                            inner join usuario b on a.usuario_id = b.id 
+                                            where b.persona_id = ? and a.esactivo is true
+                                        ) xyz
+                                        on abc.id = xyz.roltipoid";
+                        $stmt = $db->prepare($query);
+                        $params = array($this->session->get('roluser'),$idperson);
+                        $stmt->execute($params);
+                        $potuision = $stmt->fetchAll(); 
+
+                        //VERIFICANDO TUISION JURISDICCIÓN
+                        
+                        if (count($potuision) == 0)
+                        {
+                            $accion = 'okuser';
+                            
+                        }
+                        else
+                        {
+                            $accion = 'sintuision';
+                        }
+
+                        //VERIFICANDO USUARIO Y CARNET COMPLEMENTO PARA MENSAJE
+                        $usercarnet = $po[0]['carnet'].$po[0]['complemento'];
+                        $username = $po[0]['carnet'];
+                        
+                        //dump($usercarnet);dump($username);die;
+
+                        if ($usercarnet <> $username)
+                        {
+                            $this->session->getFlashBag()->add('warning', 'El nombre de usuario no coincide con el número de carnet y complemento');    
+                        }
+                        else
+                        {
+                            $this->session->getFlashBag()->add('success', 'El numero de carnet y su usuario no presentan problemas.');
+                        }
+                        
+                        return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
+                            'accion' => $accion,
+                            'po' => $po,
+                        ));
+                    }
+
+                    if (count($po) === 0) //PERSONA SEGIP SIN USUARIO
+                    {
+                        $accion = 'newuser';
+                        $this->session->getFlashBag()->add('warning', 'El número de carnet no cuenta con usuario.');
+                        return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
+                            'accion' => $accion,
+                            //'po' => $resultService->result,
+                            'po' => array($personaEncontrada),
+                        ));
+                    }
+
+                    if (count($po) > 1) //PERSONA CON MAS DE UN USUARIO
+                    {
+                        $accion = 'stop';
+                        $this->session->getFlashBag()->add('error', 'El numero de carnet cuenta con mas de un usuario.');
+                        return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
+                            'accion' => $accion,
+                            'po'   => $po,
+                        ));
+                    }
+                }
+                else
+                {
+                    $po = array("ci" => trim($persona['ci']), "complemento" => trim($persona['complemento']),);
+                    $accion = 'newperson';
+                    $this->session->getFlashBag()->add('message', 'El numero de carnet no tiene ningun registro en el SIGED.');
+                    return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
+                           //'personas'   => $po,
+                           //'ci'   => trim($data['ci']),
+                           //'complemento'   => trim($data['complemento']),
+                           'accion' => $accion,
+                           'po'   => $po,
+                    ));
+                }
+            }
+            else
+            {
+                $this->session->getFlashBag()->add('error', 'Proceso detenido. Los datos de la persona no son validos según validacion de SEGIP, por favor revise los campos escritos.');
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+
+        /*
+            if($resultService->type_msg === "success")
+            {
                 $idperson = $resultService->result[0]->id;
                 //dump($resultService->result);die;
                 $em = $this->getDoctrine()->getManager();
@@ -91,26 +263,26 @@ class BusquedasController extends Controller
                 $db = $em->getConnection();                
                 $query = "
                         select 
-                                a.id as usuarioid, a.username, a.esactivo as usuarioesactivo,                    
-                                d.id as personaid, d.carnet, d.complemento, d.paterno, d.materno, d.nombre,		 
+                                a.id as usuarioid, a.username, a.esactivo as usuarioesactivo,
+                                d.id as personaid, d.carnet, d.complemento, d.paterno, d.materno, d.nombre,
                                 array_agg(cast(b.id as varchar)) as usuario_rol_id,	
                                 cast(array_agg(cast(c.id as varchar)) as text) as rol_ids,
                                 array_agg(cast(c.rol as varchar)) as roles,
                                 array_agg(cast(b.esactivo as varchar)) as roles_estado,
-                                array_agg(cast(e.id as varchar)) as jurisdiccin_lugar_id,		
-                                array_agg(cast(e.lugar as varchar)) as jurisdiccion,		
-                                array_agg(cast(f.id as varchar)) as cobertura_cod,		
+                                array_agg(cast(e.id as varchar)) as jurisdiccin_lugar_id,
+                                array_agg(cast(e.lugar as varchar)) as jurisdiccion,
+                                array_agg(cast(f.id as varchar)) as cobertura_cod,
                                 array_agg(cast(f.nivel as varchar)) as cobertura,
                                 array_agg(cast(b.sub_sistema as varchar)) as subsistema
                         from usuario a 
                                 inner join usuario_rol b on a.id = b.usuario_id
                                 inner join rol_tipo c on b.rol_tipo_id = c.id
-                                inner join lugar_tipo e on b.lugar_tipo_id = e.id                                                
+                                inner join lugar_tipo e on b.lugar_tipo_id = e.id
                                 inner join lugar_nivel_tipo f on e.lugar_nivel_id = f.id
                                 inner join persona d on a.persona_id = d.id
                         where d.id = '".$idperson."'
-                                group by a.id, a.username, a.esactivo,			
-                                d.id, d.carnet, d.complemento, d.paterno, d.materno, d.nombre		
+                                group by a.id, a.username, a.esactivo,
+                                d.id, d.carnet, d.complemento, d.paterno, d.materno, d.nombre
                         order by a.esactivo";
                 $stmt = $db->prepare($query);
                 $params = array();
@@ -118,7 +290,8 @@ class BusquedasController extends Controller
                 $po = $stmt->fetchAll();
                 
                 $accion = 'undefined';
-                if (count($po) === 1){//PERSONA SEGIP CON UN USUARIO CORRECTAMENTE ENCONTRADOS
+                if (count($po) === 1)
+                {//PERSONA SEGIP CON UN USUARIO CORRECTAMENTE ENCONTRADOS
                     //VERIFICANDO TUISION DE ROLES DEL USUARIO
                     $query = "
                                 select * from (
@@ -141,10 +314,13 @@ class BusquedasController extends Controller
                     //VERIFICANDO TUISION JURISDICCIÓN                                        
                     //dump($this->session->get('roluserlugarid'));dump($po);die;
                     
-                    if (count($potuision) == 0){
+                    if (count($potuision) > 0)
+                    {
                         $accion = 'okuser';
                         
-                    }else{
+                    }
+                    else
+                    {
                         $accion = 'sintuision';
                     }
 
@@ -154,9 +330,12 @@ class BusquedasController extends Controller
 
                     //dump($usercarnet);dump($username);die;
 
-                    if ($usercarnet <> $username){
+                    if ($usercarnet <> $username)
+                    {
                         $this->session->getFlashBag()->add('warning', 'El nombre de usuario no coincide con el número de carnet y complemento');    
-                    }else{
+                    }
+                    else
+                    {
                         $this->session->getFlashBag()->add('success', 'El numero de carnet y su usuario no presentan problemas.');
                     }
                     
@@ -165,7 +344,8 @@ class BusquedasController extends Controller
                         'po' => $po,
                     ));
                 }                
-                if (count($po) === 0){//PERSONA SEGIP SIN USUARIO
+                if (count($po) === 0)
+                {//PERSONA SEGIP SIN USUARIO
                     $accion = 'newuser';
                     $this->session->getFlashBag()->add('warning', 'El número de carnet no cuenta con usuario.');
                     return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(                            
@@ -173,7 +353,8 @@ class BusquedasController extends Controller
                         'po' => $resultService->result,
                     ));                     
                 }
-                if (count($po) > 1){//PERSONA CON MAS DE UN USUARIO
+                if (count($po) > 1)
+                {//PERSONA CON MAS DE UN USUARIO
                     $accion = 'stop';
                     $this->session->getFlashBag()->add('error', 'El numero de carnet cuenta con mas de un usuario.');
                     return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
@@ -182,8 +363,10 @@ class BusquedasController extends Controller
                     ));
                 }
             }
-            if(($resultService->type_msg === "danger") || ($resultService->type_msg === "warning") || ($resultService->type_msg === "info")){
-                if($resultService->result === "null"){
+            if(($resultService->type_msg === "danger") || ($resultService->type_msg === "warning") || ($resultService->type_msg === "info"))
+            {
+                if($resultService->result === "null")
+                {
                         $po = array("ci" => trim($data['ci']), "complemento" => trim($data['complemento']),);
                         //dump($po);die;
                         $accion = 'newperson';
@@ -204,14 +387,24 @@ class BusquedasController extends Controller
                     'po'   => $po,                   
                     'accion' => $accion,
                 ));
-            }            
-        }else{
+            }
+        */
+       
+        }
+        else
+        {
             $this->session->getFlashBag()->add('error', 'Proceso detenido.');
             return $this->redirectToRoute('sie_usuarios_homepage');
         }
     }
     
     public function formusuarioAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }        
         $form = $this->createForm(new PersonaUsuarioType(), null, array('action' => $this->generateUrl('sie_usuario_resultado_nombreusuario'), 'method' => 'POST',));        
         return $this->render('SieUsuariosBundle:Busquedas:personausuario.html.twig', array(           
             'form'   => $form->createView(),
@@ -416,6 +609,12 @@ class BusquedasController extends Controller
     }
 
     public function formcodieAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
         $form = $this->createForm(new CodIEType(), null, array('action' => $this->generateUrl('sie_usuario_cod_ie_buscar'), 'method' => 'POST',));        
         return $this->render('SieUsuariosBundle:Default:codie.html.twig', array(           
             'form'   => $form->createView(),
@@ -446,7 +645,7 @@ class BusquedasController extends Controller
                     ON usuario.persona_id = persona.id  
             WHERE    
               (usuario.id = '".$usuarioid."') and              
-              (maestro_inscripcion.gestion_tipo_id = '2020') and
+              (maestro_inscripcion.gestion_tipo_id = '".$sesion->get('currentyear')."') and
               (maestro_inscripcion.es_vigente_administrativo = true) and
               ((cargo_tipo.id = '1') or (cargo_tipo.id = '12'))
             GROUP BY
@@ -484,6 +683,13 @@ class BusquedasController extends Controller
     }        
     
     public function apoderadosieAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
+
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();            

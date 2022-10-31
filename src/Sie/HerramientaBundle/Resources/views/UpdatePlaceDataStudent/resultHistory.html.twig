@@ -1,0 +1,76 @@
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Información Estudiante</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="pinfoestudiante" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><small>Rude</small></th>
+                                    <th><small>Paterno</small></th>
+                                    <th><small>Materno</small></th>
+                                    <th><small>Nombre</small></th>
+                                    <th><small>Género</small></th>
+                                    <th><small>CI</small></th>
+                                    <th><small>Fecha Nac.</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><small>{{datastudent.codigoRude}}</small></td>
+                                    <td><small>{{datastudent.paterno}}</small></td>
+                                    <td><small>{{datastudent.materno}}</small></td>
+                                    <td><small>{{datastudent.nombre}}</small></td>
+                                    <td><small>{{datastudent.generoTipo}}</small></td>
+                                    <td><small>{{datastudent.carnetIdentidad}}</small></td>
+                                    <td><small>{{ datastudent.fechaNacimiento|date('d-m-Y') }}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="portlet portlet-default">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Historial de Inscripciones</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div id="omitidos" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    {% if dataInscriptionR %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR, 'visible': visible} %}
+                    {% endif %}
+                    {% if dataInscriptionA %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA, 'visible': visible} %}
+                    {% endif %}
+                    {% if dataInscriptionE %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE, 'visible': visible} %}
+                    {% endif %}
+                    {% if dataInscriptionP %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP, 'visible': visible} %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

@@ -33,3 +33,7 @@ solicitud_ritt_tramite_obs:
 solicitud_ritt_lista_concluidos:
     path:     /rittListaTramitesConcluidos
     defaults: { _controller: SieRieBundle:SolicitudRITT:listaTramitesConcluidos }
+
+solicitud_ritt_guarda_tramite_imprime_concluido:
+    path:     /rittGuardaTramiteNacImprimeConcluido
+    defaults: { _controller: SieRieBundle:SolicitudRITT:guardaTramiteNacImprimeConcluido }

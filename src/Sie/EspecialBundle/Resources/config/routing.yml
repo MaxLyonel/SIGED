@@ -58,6 +58,35 @@ sie_especial_info_students:
     resource: "@SieEspecialBundle/Resources/config/routing/infoStudents.yml"
     prefix:   /espsie/infoStudents
 
+sie_special_register_parents:
+    resource: "@SieEspecialBundle/Resources/config/routing/registerparents.yml"
+    prefix:   /espsie/registerparents
+
 index:
     path:     /index
     defaults: { _controller: SieEspecialBundle:InfoEspecial:index }
+
+#operativo salud
+sie_herramienta_info_operativo_salud_administrativo_maestro:
+    resource: "@SieHerramientaBundle/Resources/config/routing/operativoSaludAdministrativoMaestro.yml"
+    prefix:   /acceso/operativo-salud/administrativo-maestro
+
+#operativo registro apoderado
+#sie_especial_operativo_apoderado:
+#    resource: "@SieEspecialBundle/Resources/config/routing/operativoRegistroApoderado.yml"
+#    prefix:   /acceso/operativo-apoderado
+index:
+    path:     /index
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:index }
+
+sie_especial_chagestatusstudent:
+    resource: "@SieEspecialBundle/Resources/config/routing/chagestatusstudent.yml"
+    prefix:   /sie/changestatus
+
+sie_especial_info_estudianteRudeESNuevo:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoEstudianteRudeES.yml"
+    prefix:   /sie/infoEstudianteRudeESNuevo    
+#inscripcion Especial
+sie_especial_new_InscriptionEspecial:
+    resource: "@SieEspecialBundle/Resources/config/routing/newInscriptionEspecial.yml"
+    prefix:   /sie/newInscriptionEspecial    

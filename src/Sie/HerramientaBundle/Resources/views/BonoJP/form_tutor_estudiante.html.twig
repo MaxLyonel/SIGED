@@ -1,0 +1,257 @@
+<div class="row">
+	<div class="col-xs-12 col-lg-12">
+        <form id="guardar_datos_tutor" method="post">
+        <input type="hidden" name="id" id="id" value="{{id}}">
+        <input type="hidden" name="estado" id="estado" value="{{estado}}">
+        <input type="hidden" name="estudianteInscripcion" id="estudianteInscripcion" value="{{estudianteInscripcion}}">
+
+        <div class="panel-danger">
+        	<div class="panel-heading"></div> 
+            <div class="panel-body ">
+            	{# <h4><strong>Datos de la persona</strong></h4>  #}
+                	<fieldset>
+                	<div class="row">
+                    	{# <div class="col-lg-4">
+                    		<label for="name"> TIPO DE CAMBIO:</label> 
+                    		<select name="tipo_cambio" id="tipo_cambio" class="custom-select form-control" required>
+                    			<option value="1">CAMBIO DE TUTOR</option> 
+                    			<option value="3">REGISTRO NUEVA PERSONA</option>
+                    		</select>
+                    	</div>  #}
+                		<div class="col-lg-12">
+                			<label for="name"> JUSTIFICATIVO :</label> 
+                			<textarea name="obs" required class="form-control"  style="text-transform: uppercase;"></textarea>
+                		</div> 
+                    	
+                    </div>
+                    </fieldset>
+                <br>
+           	</div>
+        </div>
+        <div class="panel-danger">
+        	<div class="panel-heading"></div>
+	        <div class="panel-body row">
+				<div class="col-lg-4">
+					<label>CARNET ID.</label>
+					<input type="text" name="ci" id="ci" pattern="[A-Za-z0-9\sñÑ]{3,18}" onkeypress="return validar_ci(event);" maxlength="20" required autocomplete="off" class="form-control" style="text-transform: uppercase;">
+				</div>
+				<div class="col-lg-4">
+					<label>COMPLEMENTO:</label>
+					<input type="text" name="complemento" id="complemento" placeholder="Complemento"  maxlength="3"  autocomplete="off" class="form-control" style="text-transform: uppercase;">
+				</div>
+				<div class="col-lg-4"> <br>
+					<button type="button" class="btn btn-success btn-block" onclick="buscar_validar_persona_ci_segip()">  <i class="fa fa-search"> </i> Buscar </button>
+				</div>
+			</div>
+		</div>
+
+        <div class="panel-danger">
+        	<div class="panel-heading"></div> 
+            <div class="panel-body ">
+            	<h4><strong>Datos de la persona</strong></h4> 
+            	<input type="hidden" name="idpersona" id="idpersona" value="0">
+            	<fieldset>
+            	<div class="row">
+            	
+            		<div class="col-lg-4">
+            			<label for="First Name">CI: </label> 
+            			<input type="text" id="ci1" name="ci1" maxlength="20" placeholder="Carnet" required class="form-control">
+            		</div>
+            		<div class="col-lg-4">
+            			<label for="First Name"> Complemento:</label> 
+            			<input type="text" id="complemento1" maxlength="10"  name="complemento1" placeholder="Complemento" class="form-control">
+            		</div>
+            		<div class="col-lg-4">
+            			<label for="First Name">Fecha Nacimiento (dd-mm-aaaa): </label> 
+            			<input type="text" id="form_idfecnac" name="form_idfecnac" required  value="__-__-____" data-mask="__-__-____" placeholder="dd-mm-aaaa" class="form-control jupper">
+            		</div>
+            		<div class="col-lg-4">
+            			<label for="First Name"> Paterno:</label> 
+            			<input type="text" id="paterno" name="paterno" placeholder="Paterno" class="form-control" style="text-transform: uppercase;">
+            		</div> 
+            		<div class="col-lg-4">
+            			<label for="second Name">Materno:</label> 
+            			<input type="text" id="materno" name="materno" placeholder="Materno" class="form-control" style="text-transform: uppercase;">
+            		</div> 
+            		<div class="col-lg-4">
+            			<label for="name"> Nombre:</label> 
+            			<input type="text" id="nombre" name="nombre" placeholder="Nombre" required class="form-control" style="text-transform: uppercase;">
+            		</div> 
+            		<div class="col-lg-4">
+                		<label for="name">Parentesco: </label> 
+                		<select name="parentesco" id="parentesco" class="custom-select form-control" required>
+                            {% for obj in bjp_Apoderado_Tipo %}
+                			<option value="{{ obj.id }}">{{ obj.apoderado }}</option>
+                            {% endfor %}
+                		</select>
+                	</div> 
+                	<div class="col-lg-4">
+                		<label for="name"> Extranjero:</label> 
+                		<select name="extranjero" id="extranjero" class="custom-select form-control" required>
+                			<option value="0">No</option> 
+                			<option value="1">Si</option>
+                		</select>
+                	</div> 
+                	<div class="col-lg-4">
+                    	<label for="name"> Genero: </label> 
+                    	<select name="genero" id="genero" class="custom-select form-control" required>
+                            <option value="2">FEMENINO</option>
+                    		<option value="1">MASCULINO</option>
+                    	</select>
+                    </div> 
+                    <div class="col-lg-12"> <p id="ver_error"></p></div>
+                    <div class="col-lg-6"> <br>
+                        <input type="hidden" id="segipId" maxlength="10"  name="segipId" placeholder="segipId" class="form-control">
+                    	<button type="submit" id="boton" class="btn btn-success btn-lg">Registrar</button>
+                    </div>
+                </div>
+                </fieldset>
+                <br>
+           	</div>
+        </div>
+        </form> 
+    </div>
+</div>
+<script type="text/javascript">
+    function validar_ci(evt){
+    var code = (evt.which) ? evt.which : evt.keyCode;
+    if(code==8) { // backspace.
+      return true;
+    } else if(code>=48 && code<=57) { // is a number.
+      return true;
+    } else{ // other keys.
+      return false;
+    }
+}
+</script>
+<script>
+Array.prototype.forEach.call(document.body.querySelectorAll("*[data-mask]"), applyDataMask);
+function applyDataMask(field) {
+    var mask = field.dataset.mask.split('');
+    function stripMask(maskedData) {
+        function isDigit(char) {
+            return /\d/.test(char);
+        }
+        return maskedData.split('').filter(isDigit);
+    }
+    function applyMask(data) {
+        return mask.map(function(char) {
+            if (char != '_') return char;
+            if (data.length == 0) return char;
+            return data.shift();
+        }).join('')
+    }
+    function reapplyMask(data) { return applyMask(stripMask(data));  }
+    function changed() {   
+        var oldStart = field.selectionStart;
+        var oldEnd = field.selectionEnd;
+        field.value = reapplyMask(field.value);
+        // field.selectionStart = oldStart;
+        field.selectionEnd = oldEnd; }
+    field.addEventListener('click', changed)
+    field.addEventListener('keyup', changed)
+}
+
+function buscar_validar_persona_ci_segip(){
+	$('#contenido_fer').css('display', 'none');
+	$("#load").html("<div style='text-align:center'><img src='/img/loading.gif'>Cargando...</div>");
+	var inscripcionid=$("#inscripcionid").val();
+	var ci=$("#ci").val();
+	var complemento=$("#complemento").val();
+	$.post('{{path('buscar_validar_persona_ci_segip')}}', {ci,complemento,inscripcionid}, function(dato) {
+        $("#load").html('')
+        var valores = eval(dato);
+		if (valores[0]===0) {
+			$('#contenido_fer').css('display', 'block');
+			$('#ci1').val(ci);
+            $("#ci1").attr('readonly', 'readonly');
+
+            $('#complemento1').val(complemento.toUpperCase());
+            $("#complemento1").attr('readonly', 'readonly');
+            // $("#complemento1").removeAttr("readonly");
+
+            $('#form_idfecnac').val('');
+            $("#form_idfecnac").removeAttr("readonly");
+
+            $('#paterno').val('');
+            $("#paterno").removeAttr("readonly");
+
+            $('#materno').val('');
+            $("#materno").removeAttr("readonly");
+
+            $('#nombre').val('');
+            $("#nombre").removeAttr("readonly");
+
+            $('#idpersona').val('0');
+		}else{        
+			if (valores[0]===1) {
+        		$('#contenido_fer').css('display', 'none');
+				$('#ci1').val(ci);
+	            $("#load").html('<div class="alert alert-danger" role="alert"> <b>ADVERTENCIA :'+valores[1]+'</b> </div>')
+	        }else{
+	        	if (valores[0]===2) {
+	        		$('#contenido_fer').css('display', 'none');
+					$('#ci1').val(ci);
+		            $("#load").html('<div class="alert alert-danger" role="alert"> <b>ADVERTENCIA :'+valores[1]+'</b> </div>')
+		        }else{
+                        var propertyVal = true;
+                        if(!valores[7]){
+                            propertyVal = false;
+                        }
+					$('#contenido_fer').css('display', 'block');
+				    $('#ci1').val(valores[0]);
+		            $("#ci1").attr('readonly', propertyVal);
+
+		            $('#complemento1').val(valores[6]);
+		            $("#complemento1").attr('readonly', propertyVal);
+
+		            $('#form_idfecnac').val(valores[4]);
+		            $("#form_idfecnac").attr('readonly', propertyVal);
+
+		            $('#paterno').val(valores[1]);
+		            $("#paterno").attr('readonly', propertyVal);
+
+		            $('#materno').val(valores[2]);
+		            $("#materno").attr('readonly', propertyVal);
+
+		            $('#nombre').val(valores[3]);
+		            $("#nombre").attr('readonly', propertyVal);
+
+		            $('#idpersona').val(valores[5]);
+                    $('#segipId').val(valores[7]);
+		        }
+				
+	        }
+		}
+	});
+}
+
+$("#guardar_datos_tutor").submit(function(event) {
+    event.preventDefault();
+
+    alertify.confirm("<p><h3> ESTA SEGURO DE MODIFICAR EL TITULAR?</h3><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+        if (e) {    
+            document.getElementById('boton').disabled=true;
+            $.ajax({
+                url:'{{path('guardar_datos_tutor')}}',
+                type:'POST',
+                data:$("form").serialize(),
+                success:function(dat){
+                    var valores = eval(dat);
+                    if (valores['error']===0) {
+                        $("#ver_error").html(valores['message']);
+                        $("#modal_listar_tutores_fer").click();
+                        alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
+                            mostrarResultadosBusqueda(this)
+                        });
+                        alertify.success("Tutor se ha restablecido."); 
+                    }else{
+                        $("#ver_error").html('<div class="alert alert-danger" role="alert">'+valores['message']+'</div>');
+                    }
+                }
+            });
+        } else { alertify.error("Has pulsado cancel"); }
+    });
+    
+});
+</script>

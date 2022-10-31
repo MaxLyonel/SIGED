@@ -190,7 +190,7 @@ class TramiteConvalidacionController extends Controller {
             inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
-            where iec.nivel_tipo_id in (13,3) and ei.estadomatricula_tipo_id in (4,5,55) and e.id = :id
+            where iec.nivel_tipo_id in (13,3) and ei.estadomatricula_tipo_id in (4,5,55,100,102) and e.id = :id
             union all
             select distinct sat.codigo as nivel_tipo_id, ies.gestion_tipo_id, sest.codigo as grado_tipo_id, ie.id as institucioneducativa_id, ie.institucioneducativa
             from superior_facultad_area_tipo as sfat
@@ -204,7 +204,7 @@ class TramiteConvalidacionController extends Controller {
             inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
             inner join (select * from estudiante where id = :id) as e on ei.estudiante_id=e.id
             inner join institucioneducativa as ie on ie.id = siea.institucioneducativa_id
-            where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2) and ei.estadomatricula_tipo_id in (4,5,55)  
+            where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2) and ei.estadomatricula_tipo_id in (4,5,55,100,102)  
             order by gestion_tipo_id, nivel_tipo_id, grado_tipo_id
         ");
         $query->bindValue(':id', $id);
@@ -448,6 +448,8 @@ class TramiteConvalidacionController extends Controller {
                 ->setAction($this->generateUrl('tramite_convalidacion_diploma_humanistico_estudiante_guarda'))      
                 ->add('ci', 'text', array('label' => 'CI', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{5,10}', 'maxlength' => '10')))
                 ->add('complemento', 'text', array('required' => false, 'mapped' => false, 'label' => 'Complemento', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedicion de su CI, por favor no coloque abreviaturas de departamentos", 'maxlength' => '2')))
+                ->add('extrajero', 'choice', array('attr' => array('class' => 'form-control', 'required' => true),
+                    'choices' => array('0' => 'NO', '1' => 'SI')))
                 ->add('expedido', 'entity', array('label' => 'Expedido', 'attr' => array('class' => 'form-control'),
                     'mapped' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 
                     'query_builder' => function (EntityRepository $e) {
@@ -656,6 +658,9 @@ class TramiteConvalidacionController extends Controller {
                 }
 
                 $arrParametros = array('complemento'=>$newStudent['complemento'], 'primer_apellido'=>$newStudent['paterno'], 'segundo_apellido'=>$newStudent['materno'], 'nombre'=>$newStudent['nombre'], 'fecha_nacimiento'=>$newStudent['fnacimiento']);
+                if($newStudent['extrajero']==1){
+                    $arrParametros['extranjero']='E'; // extranjero
+                }
 
                 $answerSegip = false;
                 if ($newStudent['ci'] > 0){
@@ -679,6 +684,12 @@ class TramiteConvalidacionController extends Controller {
                 $student->setComplemento(strtoupper($newStudent['complemento']));
                 $student->setPasaporte(strtoupper($newStudent['pasaporte']));
                 $student->setExpedido($entityExpedido);
+                $student->setSegipId(1);
+                if($newStudent['extrajero']==1){
+                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(2)); // extranjero
+                } else {
+                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(1)); // nacional
+                }
                 $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
                 $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
                 if (isset($newStudent['provincia'])){
@@ -881,7 +892,7 @@ class TramiteConvalidacionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int     
-                and ei.estadomatricula_tipo_id in (4,5,55,11)
+                and ei.estadomatricula_tipo_id in (4,5,55,11,100,102)
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);

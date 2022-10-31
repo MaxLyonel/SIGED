@@ -33,10 +33,12 @@ class RegistroInstitucionEducativaController extends Controller {
           $this->session = new Session();
       }
 
+     
+
     /**
      * Muestra formulario de Busqueda de la institución educativa
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request) { 
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -53,6 +55,7 @@ class RegistroInstitucionEducativaController extends Controller {
      * Muestra listado de institutos técnicos/tecnológicos
      */    
     public function listAction(Request $request){
+
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $id_lugar = $sesion->get('roluserlugarid');
@@ -68,12 +71,12 @@ class RegistroInstitucionEducativaController extends Controller {
             AND ie.estadoinstitucionTipo in (:idEstado)
             AND se.estado = :estadoSede
             ORDER BY ie.id ')
-            ->setParameter('idTipo', array(7, 8, 9))
+            ->setParameter('idTipo', array(7, 8, 9,11,12,13))
             ->setParameter('idEstado', 10)
             ->setParameter('estadoSede', TRUE);
         
         $entities = $query->getResult();
-        
+        //dump($entities);die;
         return $this->render('SieRieBundle:RegistroInstitucionEducativa:list.html.twig', array(
             'entities' => $entities,
             'lugarUsuario' => intval($lugar->getCodigo())
@@ -224,6 +227,7 @@ class RegistroInstitucionEducativaController extends Controller {
     		$entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
     		$entity->setFechaResolucion(new \DateTime($form['fechaResolucion']));
     		$entity->setFechaCreacion(new \DateTime('now'));
+            $entity->setFechaRegistro(new \DateTime('now'));
     		$entity->setNroResolucion(mb_strtoupper($form['nroResolucion'], 'utf-8'));
     		$entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependenciaTipo']));
             $entity->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById(0));
@@ -379,6 +383,7 @@ class RegistroInstitucionEducativaController extends Controller {
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
             $entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
             $entity->setFechaResolucion(new \DateTime($form['fechaResolucion']));
+            $entity->setFechaModificacion(new \DateTime('now'));
             $entity->setNroResolucion(mb_strtoupper($form['nroResolucion'], 'utf-8'));
             $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependenciaTipo']));
             $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoInstitucionTipo']));
@@ -442,8 +447,9 @@ class RegistroInstitucionEducativaController extends Controller {
      */
     public function deleteAction(Request $request){
         $em = $this->getDoctrine()->getManager();
+       
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
-
+        
         if(!$entity){
             throw $this->createNotFoundException('No se puede encontrar la Institución Educativa.');
         }
@@ -453,7 +459,7 @@ class RegistroInstitucionEducativaController extends Controller {
         $nivelesInstitucionArray = $this->obtieneInstitucionNivelArray($entity->getId());
         $areformInstitucionArray = $this->obtieneInstitucionAreaFormArray($entity->getId());
         $datoSede                = $this->obtieneDatosSedeArray($request->get('idRie'), 'edit');
-
+       
         if($datoSede == 0){ return $this->redirect($this->generateUrl('rie_list')); }
 
         if($eliminar = $this->validarEliminacionInstituto($entity->getId())){ //opcion 1
@@ -461,9 +467,10 @@ class RegistroInstitucionEducativaController extends Controller {
         }else{ //opcion 0
             $this->get('session')->getFlashBag()->add('msgSearch', ' El instituto tiene subsedes ó tiene carreras autorizadas, no podrá eliminarlo. Consulte con el administrador');
         }
-
+        //dump($request->get('idRie'));
+        //dump($entity);die;
         $form = $this->createFormBuilder()
-        ->setAction($this->generateUrl('rie_delete_itt'))
+        //->setAction($this->generateUrl('rie_delete_itt'))
         ->add('idRie', 'hidden', array('data' => $entity->getId()))
         ->add('idRieSede', 'hidden', array('data' => $datoSede['codSede']))
         ->add('rie', 'text', array('label' => 'Código RIE', 'data' => $entity->getId(), 'attr' => array('class' => 'form-control', 'readonly' => true)))
@@ -493,10 +500,15 @@ class RegistroInstitucionEducativaController extends Controller {
      */
     public function deleteittAction(Request $request){
     	$em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');
-        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
-        $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(11));
-        $entity->setObsRue('ELIMINADO POR ERROR DE REGISTRO');
+        
+        $estado = $em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(11);
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+        $entity->setEstadoinstitucionTipo($estado);
+        $entity->setObsRue('ELIMINADO POR ERROR DE REGISTRO  usuario:'.$id_usuario);
         $em->persist($entity);
         $em->flush();
         return $this->redirect($this->generateUrl('rie_list'));
@@ -593,7 +605,7 @@ class RegistroInstitucionEducativaController extends Controller {
                 FROM SieAppWebBundle:InstitucioneducativaTipo iet
                 WHERE iet.id in (:id)
                 ORDER BY iet.id ASC'
-            )->setParameter('id', array(7, 8, 9));
+            )->setParameter('id', array(7, 8, 9,11,12,13));
             $tipos = $query->getResult();
             $tiposArray = array();
             $tiposArray[0] = 'Seleccionar Tipo de Instituto...';
@@ -620,9 +632,10 @@ class RegistroInstitucionEducativaController extends Controller {
      * Obtiene Arrays de Area de Formación
      */ 
     public function obtieneAreaFormacionArray($id){
+        
         $em = $this->getDoctrine()->getManager();
         switch($id){
-            case '9': //instituto técnico y técnologico
+            case '999': //instituto técnico Y técnologico
                 $nuevoArray = array();
                 //areas técnicas
                 $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(7)));
@@ -634,19 +647,26 @@ class RegistroInstitucionEducativaController extends Controller {
                 foreach($datos as $dato){
                     $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
                 }
-                return $nuevoArray;
-
             break;
-
-            default: //instituto técnico ó tecnológico
-                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($id)));
+            case '11': //CENTROS de capacitación artistica
+            case '12': //instituto de formación artistica
+            case '13': //escuelas
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(12)));
                 $nuevoArray = array();
                 foreach($datos as $dato){
                     $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
                 }
-                return $nuevoArray; 
+            break;
+            default: //instituto técnico ó tecnológico
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findAll();
+                $nuevoArray = array();
+                foreach($datos as $dato){
+                    $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
+                }
+               
             break;
         }
+        return $nuevoArray; 
     }
 
     /***

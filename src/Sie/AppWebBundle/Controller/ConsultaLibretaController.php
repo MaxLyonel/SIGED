@@ -5,6 +5,7 @@ namespace Sie\AppWebBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Modals\Login;
 use \Sie\AppWebBundle\Entity\Usuario;
 use \Sie\AppWebBundle\Form\UsuarioType;
@@ -32,7 +33,7 @@ class ConsultaLibretaController extends Controller {
                 ->add('save', 'submit', array('label' => 'Aceptar'))
                 ->getForm();
 
-        return $this->render('SieAppWebBundle:ConsultaLibreta:downindex.html.twig', array("form" => $form->createView()));
+        return $this->render('SieAppWebBundle:ConsultaLibreta:index2.html.twig', array("form" => $form->createView()));
     }
 
     function canonicalize_path($path, $cwd=null) {
@@ -63,6 +64,262 @@ class ConsultaLibretaController extends Controller {
         // return canonicalized path
         return sprintf("%s",  basename($filename));
       }
+    /**
+     * [crearLibretaBimestre description]
+     * @param  idInscripcion
+     * @return array notas bimestrales
+     */
+    public function crearLibretaBimestre($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $notas = $em->createQueryBuilder()
+                    ->select('at.id, at.area, ast.id as idAsignatura, ast.asignatura,
+                              MAX(CASE WHEN nt.id=1 THEN en.notaCuantitativa ELSE 0 END) as primer_bimestre,
+                              MAX(CASE WHEN nt.id=2 THEN en.notaCuantitativa ELSE 0 END) as segundo_bimestre,
+                              MAX(CASE WHEN nt.id=3 THEN en.notaCuantitativa ELSE 0 END) as tercer_bimestre,
+                              MAX(CASE WHEN nt.id=4 THEN en.notaCuantitativa ELSE 0 END) as cuarto_bimestre,
+                              MAX(CASE WHEN nt.id=5 THEN en.notaCuantitativa ELSE 0 END) as promedio_final,
+
+                              MAX(CASE WHEN nt.id=1 THEN en.notaCualitativa ELSE :valor END) as primer_bimestre_c,
+                              MAX(CASE WHEN nt.id=2 THEN en.notaCualitativa ELSE :valor END) as segundo_bimestre_c,
+                              MAX(CASE WHEN nt.id=3 THEN en.notaCualitativa ELSE :valor END) as tercer_bimestre_c,
+                              MAX(CASE WHEN nt.id=4 THEN en.notaCualitativa ELSE :valor END) as cuarto_bimestre_c
+                              ')
+                    ->from('SieAppWebBundle:EstudianteNota','en')
+                    ->innerJoin('SieAppWebBundle:NotaTipo','nt','WITH','en.notaTipo = nt.id')
+                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ico','WITH','ea.institucioneducativaCursoOferta = ico.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','inc','WITH','ei.institucioneducativaCurso = inc.id')
+                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','ast','WITH','ico.asignaturaTipo = ast.id')
+                    ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','ast.areaTipo = at.id')
+                    ->groupBy('at.id, at.area, ast.id, ast.asignatura')
+                    ->orderBy('at.id','ASC')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion',$id)
+                    ->setParameter('valor',null)
+                    ->getQuery()
+                    ->getResult();
+        $em->getConnection()->commit();
+        //dump($notas);die;
+        $areas = array();
+        foreach ($notas as $n) {
+            $areas[$n['area']][] = $n;
+        }
+        return $areas;
+    }
+
+    /**
+     * [crearLibretaTrimestre description]
+     * @param  idInscripcion
+     * @return array notas trimestrales
+     */
+    public function crearLibretaTrimestre($id){ 
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $notas = $em->createQueryBuilder()
+                    ->select('ast.id as idAsignatura, ast.asignatura,
+
+                              MAX(CASE WHEN nt.id=6 THEN en.notaCuantitativa ELSE 0 END) as primer_trimestre,
+                              MAX(CASE WHEN nt.id=7 THEN en.notaCuantitativa ELSE 0 END) as segundo_trimestre,
+                              MAX(CASE WHEN nt.id=8 THEN en.notaCuantitativa ELSE 0 END) as tercer_trimestre,
+                              MAX(CASE WHEN nt.id=9 THEN en.notaCuantitativa ELSE 0 END) as promedio_anual,
+                              MAX(CASE WHEN nt.id=10 THEN en.notaCuantitativa ELSE 0 END) as reforzamiento,
+                              MAX(CASE WHEN nt.id=11 THEN en.notaCuantitativa ELSE 0 END) as promedio_final,
+
+                              MAX(CASE WHEN nt.id=6 THEN en.notaCualitativa ELSE en.notaCualitativa END) as primer_trimestre_c,
+                              MAX(CASE WHEN nt.id=7 THEN en.notaCualitativa ELSE en.notaCualitativa END) as segundo_trimestre_c,
+                              MAX(CASE WHEN nt.id=8 THEN en.notaCualitativa ELSE en.notaCualitativa END) as tercer_trimestre_c
+                              ')
+                    ->from('SieAppWebBundle:EstudianteNota','en')
+                    ->innerJoin('SieAppWebBundle:NotaTipo','nt','WITH','en.notaTipo = nt.id')
+                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ico','WITH','ea.institucioneducativaCursoOferta = ico.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','inc','WITH','ei.institucioneducativaCurso = inc.id')
+                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','ast','WITH','ico.asignaturaTipo = ast.id')
+                    ->groupBy('ast.id, ast.asignatura')
+                    ->orderBy('ast.id','ASC')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion',$id)
+                    ->getQuery()
+                    ->getResult();
+        $em->getConnection()->commit();
+// dump($notas);die;
+        $areas = $notas;
+        return $areas;
+    }      
+    public function lookforCalAction(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        $response = new JsonResponse();
+        // $apoderado = $request->get('apoderado', null);
+        $estudiante = $request->get('estudiante', null);
+        // $nivel = $estudiante['nivel'];
+        // $grado = $estudiante['grado'];
+        $gestion = $estudiante['gestion'];
+        $opcion = $request->get('opcion', null);
+
+        $em = $this->getDoctrine()->getManager();
+        // VALIDAMOS DATOS DEL ESTUDIANTE
+        
+        switch ($opcion) {
+            case 1:
+                $codigoRude = mb_strtoupper($estudiante['codigoRude']);
+                $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
+                break;
+            case 2:
+                $carnet = $estudiante['carnet'];
+                $complemento = $estudiante['complemento'];
+                $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('carnetIdentidad'=>$carnet, 'complemento'=>$complemento));
+                break;
+        }
+
+        if (!is_object($estudiante)) {
+            return $response->setData([
+                'status'=>'error',
+                'msg'=>'Los datos del estudiante no son válidos'
+            ]);
+        }
+
+        $objInscriptinos = $em->createQueryBuilder()
+                            ->select('ei')
+                            ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                            ->innerJoin('SieAppWebBundle:EstadomatriculaTipo','emt','WITH','ei.estadomatriculaTipo = emt.id')
+                            ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','ei.estudiante = e.id')
+                            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','WITH','ei.institucioneducativaCurso = iec.id')
+                            ->innerJoin('SieAppWebBundle:GestionTipo','gt','WITH','iec.gestionTipo = gt.id')
+                            
+                            ->where('e.codigoRude = :rude')
+                            ->andWhere('emt.id IN (:estados)')
+                            ->andWhere('gt.id = :gestion')
+                            
+                            ->orderBy('gt.id','DESC')
+                            ->setParameter('rude',$estudiante->getCodigoRude())
+                            ->setParameter('gestion',$gestion)
+                            ->setParameter('estados',array(4,5,11,26,55,57,58))
+                            
+                            ->getQuery()
+                            ->getResult(); 
+        
+        if(sizeof($objInscriptinos)>0){
+          $id = $objInscriptinos[0]->getId();
+        }else{
+            return $response->setData([
+                'status'=>'error',
+                'msg'=>'Los datos del estudiante no son válidos'
+            ]);          
+        }
+
+        try{
+            $curso = $em->createQueryBuilder()
+                    ->select('nt.id as nivel, gt.id as grado, ges.id as gestion')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','WITH','ei.institucioneducativaCurso = iec.id')
+                    ->innerJoin('SieAppWebBundle:GestionTipo','ges','WITH','iec.gestionTipo = ges.id')
+                    ->innerJoin('SieAppWebBundle:NivelTipo','nt','WITH','iec.nivelTipo = nt.id')
+                    ->innerJoin('SieAppWebBundle:GradoTipo','gt','WITH','iec.gradoTipo = gt.id')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion',$id)
+                    ->getQuery()
+                    ->getResult();
+
+            // Verificamos si no existe el curso ç
+            if(!$curso){
+                die;
+            }
+            // Obtenemos los datos del estudiante y del curso
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($id);
+            $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($inscripcion->getEstudiante()->getId());
+
+            $datosCurso = $em->createQueryBuilder()
+                ->select('ie.id as sie,ie.institucioneducativa, dt.dependencia, oct.orgcurricula, dist.distrito, dep.departamento, lt.lugar as localidad, gt.id as gestion, tt.turno as turno')
+                ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','WITH','ei.institucioneducativaCurso = iec.id')
+                ->leftJoin('SieAppWebBundle:Institucioneducativa','ie','WITH','iec.institucioneducativa = ie.id')
+                ->leftJoin('SieAppWebBundle:DependenciaTipo','dt','WITH','ie.dependenciaTipo = dt.id')
+                ->leftJoin('SieAppWebBundle:OrgcurricularTipo','oct','WITH','ie.orgcurricularTipo = oct.id')
+                ->leftJoin('SieAppWebBundle:InstitucioneducativaSucursal','ies','WITH','ies.institucioneducativa = ie.id')
+                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','ies.leJuridicciongeografica = jg.id')
+                ->leftJoin('SieAppWebBundle:DistritoTipo','dist','WITH','jg.distritoTipo = dist.id')
+                ->leftJoin('SieAppWebBundle:DepartamentoTipo','dep','WITH','dist.departamentoTipo = dep.id')
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt','WITH','jg.lugarTipoLocalidad = lt.id')
+                ->leftJoin('SieAppWebBundle:GestionTipo','gt','WITH','iec.gestionTipo = gt.id')
+                ->leftJoin('SieAppWebBundle:TurnoTipo','tt','WITH','iec.turnoTipo = tt.id')
+                ->where('ei.id = :idInscripcion')
+                ->andWhere('ies.gestionTipo = iec.gestionTipo')
+                ->setParameter('idInscripcion',$id)
+                ->getQuery()
+                ->getResult();
+
+            // Verificamos si las notas son bimestrales o trimestrales
+            if(($curso[0]['gestion']<2013) or ($curso[0]['gestion']==2013 and $curso[0]['grado']>1)){
+                $tipoNota = 'Trimestre';
+                $templateLibreta = 'libretaTrimestre.html.twig';
+                $data = $this->crearLibretaTrimestre($id);
+
+            }else{
+                if($curso[0]['gestion']>=2020){
+                    $templateLibreta = 'libretaTrimestreNew.html.twig';
+                    $tipoNota = 'Trimestre';
+                    if($curso[0]['gestion']==2020){
+                        if(in_array($curso[0]['nivel'].$curso[0]['grado'], array(111,112,121)) ){
+                            $data = $this->crearLibretaTrimestreNEW($id);                            
+                        }else {
+                            $data = $this->crearLibretaTrimestre($id);
+                        }
+                    }else{
+                        $data = $this->crearLibretaTrimestre($id);
+                    }                          
+                }else{
+                    $tipoNota = 'Bimestre';
+                    $data = $this->crearLibretaBimestre($id);
+                    $templateLibreta = 'libretaBimestre.html.twig';                    
+                } 
+            }
+            /**
+             * Listamos las valoraciones cualitativas
+             */
+            $cualitativas = $em->createQuery(
+                'SELECT enc FROM SieAppWebBundle:EstudianteNotaCualitativa enc
+                INNER JOIN enc.notaTipo nt
+                WHERE enc.estudianteInscripcion = :estInscripcion
+                ORDER BY nt.id')
+                ->setParameter('estInscripcion',$id)
+                ->getResult();
+
+            if(count($cualitativas)==0){
+                $cualitativas = array();
+            }      
+
+dump($data)           ;die;
+           /* return $this->render('SieAppWebBundle:Hijos:'.$templateLibreta,array(
+                'estudiante'=>$estudiante,
+                'inscripcion'=>$inscripcion,
+                'curso'=>$datosCurso,
+                'areas'=>$data,
+                'cualitativas'=>$cualitativas));*/
+
+        return $response->setData([
+            'status'=>'success',
+            'datos'=>array(
+                'statusApoderado'=>'success',
+                'msgApoderado'=>'this is tthe result',
+                // 'statusEstudiante'=>$statusEstudiante,
+                // 'msgEstudiante'=>$msgEstudiante,
+            )
+        ]);            
+
+
+            $em->getConnection()->commit();
+        }catch(Exception $ex){
+            $em->getConnection()->rollback();
+        }
+    }      
 
     /**
      *

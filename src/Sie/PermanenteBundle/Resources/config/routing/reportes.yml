@@ -37,3 +37,11 @@ permanente_reporte_centralizador_curso_largo:
 permanente_reporte_socioeconomico:
     path:     /socioeconomico
     defaults: { _controller: SiePermanenteBundle:Reportes:socioeconomico }
+
+estadistica_permanente_informacion_general_print_pdf:
+    path:     /informacion/general/permanente/print/pdf
+    defaults: { _controller: SiePermanenteBundle:EstadisticasPermanente:informacionGeneralPermanentePrintPdf }
+
+estadistica_permanente_informacion_general_print_xls:
+    path:     /informacion/general/permanente/print/xls
+    defaults: { _controller: SiePermanenteBundle:EstadisticasPermanente:informacionGeneralPermanentePrintXls }

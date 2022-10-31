@@ -1,0 +1,86 @@
+Sie\AppWebBundle\Entity\EstTecInstitutoSedeDocenteAdm:
+    type: entity
+    table: est_tec_instituto_sede_docente_adm
+    indexes:
+        IDX_2706D911179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_2706D911E4C68DAC:
+            columns:
+                - est_tec_cargo_tipo_id
+        IDX_2706D9112BCFBA7:
+            columns:
+                - genero_tipo_id
+        IDX_2706D911E8E891F1:
+            columns:
+                - est_tec_sede_id
+    uniqueConstraints:
+        sede_docuni_que_key:
+            columns:
+                - est_tec_sede_id
+                - gestion_tipo_id
+                - genero_tipo_id
+                - est_tec_cargo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaActualizacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_actualizacion
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecCargoTipo:
+            targetEntity: EstTecCargoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_cargo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecSede:
+            targetEntity: EstTecSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

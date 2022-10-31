@@ -37,6 +37,20 @@
                                                 {% endfor %}
                                             </select>
                                         </form>
+                                    {% else %}
+                                        <form name="form" role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" action="" method="POST" >
+                                            <input type="hidden" name="codigo" id="codigo" value="{{ 0|base64_encode }}" />
+                                            <input type="hidden" name="nivel" id="nivel" value="{{ 1|base64_encode}}" />
+                                            <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
+                                                {% for ges in gestiones %}
+                                                    {% if ges.id == gestion %}
+                                                        <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                                    {% else %}
+                                                        <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </form>
                                     {% endif %}
                                 </div>
                             </div>

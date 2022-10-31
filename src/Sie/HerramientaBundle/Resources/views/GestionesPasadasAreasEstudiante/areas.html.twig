@@ -1,0 +1,105 @@
+<h5 class="pull-left"><i class="fa fa-fw fa-user" aria-hidden="true"></i> Información General</h5>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Código SIE</th><td>{{inscripcion.institucioneducativaCurso.institucioneducativa.id}}</td>
+                    <th>Nombre</th><td>{{inscripcion.institucioneducativaCurso.institucioneducativa.institucioneducativa}}</td>
+                </tr>
+            </table>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Gestión</th><td>{{gestion}}</td>
+                    <th>Periodo</th>
+                    <td>
+                        ANUAL
+                    </td>
+                </tr>
+                <tr>
+                    <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel|upper}}</td>
+                    <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno|upper}}</td>
+                </tr>
+                <tr>
+                    <th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
+                    <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
+                </tr>
+            </table>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Codigo Rude</th><td style="color:#0086DD"><strong>{{estudiante.codigoRude}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Estudiante</th><td><strong>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Género</th><td>{{estudiante.generoTipo}}</td>
+                </tr>
+                <tr>
+                    <th>Fecha de Nacimiento</th><td>{{estudiante.fechaNacimiento|date('d-m-Y')}}</td>
+                </tr>
+                <tr>
+                    <th>Estado</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<h5 class="pull-left"><i class="fa fa-fw fa-list" aria-hidden="true" style="padding-top: 10px; padding-bottom: 10px;"></i> Áreas de la/el Estudiante</h5>
+<div class="btn-group pull-right" style="padding-top: 10px; padding-bottom: 10px;">
+    {% if gestion == app.session.get('currentyear') %}
+        <button type="button" class="btn btn-facebook dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Agregar área <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu" style="width: 480px;">
+        
+            {% if areasAsignar|length > 0 %}
+                {% for area in areasAsignar %}                
+                    <li><button onclick="agregarArea({{esGestionVigente}}, {{area.icoId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn-link">{{area.atId}} - {{area.asignatura}}</button></li>
+                {% endfor %}
+            {% else %}
+                <li style="margin:5px;" class="text-danger"><strong>No hay áreas disponibles para adicionar</strong></li>
+            {% endif %}
+
+        </ul>
+    {% endif %}    
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">        
+            <table class="table table-bordered table-hover table-striped cf">
+                <thead class="cf">
+                    <tr class="info">
+                        <th class="text-center">Código</th>
+                        <th class="text-center">Área</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for areaEstudiante in areasEstudiante %}
+                        <tr>
+                            <td {% if areaEstudiante.atId in [1038, 1039]  %} style="border:2px solid MediumSeaGreen; background-color:#6ECF86;" {% endif %}>{{areaEstudiante.atId}}</td>
+                            <td  {% if areaEstudiante.atId in [1038, 1039] %} style="border:2px solid MediumSeaGreen; background-color:#6ECF86;" {% endif %}>{{areaEstudiante.asignatura}}</td>
+                            <td class="text-center">
+                                {% if gestion == app.session.get('currentyear') %}
+                                    {% if esGestionVigente == 0 %}
+                                        <button onclick="eliminarArea({{esGestionVigente}}, {{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
+                                        <button class="btn btn-success btn-xs" onclick="abrirFormCalificaciones({{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})"><i class="fa fa-edit"></i> Calificaciones</button>
+                                        <div class="arrow-before" style="display:none; margin-left:10px;" id="calificaciones_before_{{areaEstudiante.eaId}}"></div>
+                                        <div class="arrow-after" style="display:none;margin-left:10px;" id="calificaciones_after_{{areaEstudiante.eaId}}"></div>
+                                            <div id="calificaciones_{{areaEstudiante.eaId}}" style="display:none; position:absolute; z-index:5; margin-left:-500px; border:2px solid #00B1E1; box-shadow: 7px 7px 4px #0095BD;" class="divCalificaciones">
+                                        </div>
+                                    {% else %}
+                                        {% if areaEstudiante.atId in [1038, 1039] %}
+                                            <button onclick="eliminarArea({{esGestionVigente}}, {{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
+                                        {% endif %}
+                                    {% endif %}
+                            {% endif %}                                
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends 'layoutRegular.html.twig' %}
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
@@ -13,7 +13,7 @@
 
  <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Inscripción  <span> Resultado</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Traslado inicio de gestión  <span> Inscripción</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -62,7 +62,7 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Estudiante</th>
+                    <th>Estudiante (2)</th>
                     <th>Se identifico que el estudiante esta inscrito en otra unidad educativa</th>
                 </tr>
             </thead>
@@ -124,11 +124,11 @@
                               {{form_widget(formInscription.observation)}}
                           </div>
                           #}
-                         
+
                       </div>
                       <div class="row">
                          <div class="col-md-6">
-                              <label>(*) Fecha Inscripción del la/el Estudiante (dd-mm-yyyy) </label>
+                              {# <label>(*) Fecha Inscripción del la/el Estudiante (dd-mm-yyyy) </label> #}
                               {{form_widget(formInscription.dateRequest)}}
                           </div>
                       </div>
@@ -273,6 +273,12 @@
 
     <script>
         $(function(){
+          var fecha = new Date();
+          var dia = fecha.getDate(); //obteniendo dia
+          var mes = fecha.getMonth()+1; //obteniendo mes
+          var ano = fecha.getFullYear(); //obteniendo año
+          $("#form_dateRequest").val(dia+'-'+mes+'-'+ano) ;
+
         $("#form_dateRequest").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
         });
             function institucionEducativa(id) {
@@ -430,8 +436,42 @@
           var observation = $('#form_dateRequest').val();
           var arrDate = observation.split('-');
 
-          
-          if(arrDate[2]!=2020){
+            // Return today's date and time
+            var currentTime = new Date()
+            // returns the month (from 0 to 11)
+            var month = (currentTime.getMonth() + 1).toString().padStart(2, "0");
+            // returns the day of the month (from 1 to 31)
+            var day = currentTime.getDate()
+            // returns the year (four digits)
+            var year = currentTime.getFullYear()
+
+            //userdate = (observation.replaceAll('-','/'));
+            today = year + '/' + month + '/' + day;
+            userdate = arrDate[2] + '/' + arrDate[1] + '/' + arrDate[0];
+   
+           
+           const userdateOne = new Date(userdate);
+           const dateToday = new Date(today);
+           console.log(userdateOne);
+           console.log(dateToday);
+           
+            if(userdateOne > dateToday){
+                                Swal.fire({
+                            icon: 'error',
+                            title: 'Fecha Inscripción del la/el Estudiante debe ser menor igual al de hoy!',
+                            type: 'error',
+                            showConfirmButton: true,
+                        })
+                        return;     
+            } else if(userdateOne < dateToday){
+                //nothing to do
+            } else{
+                //iguals
+            }           
+            var fecha = new Date();
+          var ano = fecha.getFullYear(); //obteniendo año
+
+          if(arrDate[2]!=ano){
              Swal.fire({
                 icon: 'error',
                 title: 'El año introducido no es el correcto!',

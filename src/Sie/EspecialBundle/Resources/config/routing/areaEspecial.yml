@@ -47,7 +47,7 @@ area_especial_listar_areas_curso:
          expose: true
 
 area_especial_listar_areas_nivel:
-    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}/{mTipo}
     defaults: { _controller: "SieEspecialBundle:Areas:lista_areas_nivel" }
     options:
          expose: true
@@ -82,8 +82,41 @@ area_especial_maestros:
     options:
          expose: true
 
+area_especial_maestros_especial:
+    path:     /maestros_materia_especial/
+    defaults: { _controller: "SieEspecialBundle:Areas:maestrosEspecial"}
+    options:
+         expose: true
+
+area_especial_asignar_materia_formulario:
+    path:     /maestros_materia_especial/
+    defaults: { _controller: "SieEspecialBundle:Areas:maestrosEspecial"}
+    options:
+         expose: true
+
 area_especial_maestros_asignar:
     path:     /maestros_asignar/
     defaults: { _controller: "SieEspecialBundle:Areas:maestrosAsignar"}
     options:
          expose: true
+
+area_especial_listar_maestros_resp:
+    path:     /maestros_responsables/
+    defaults: { _controller: "SieEspecialBundle:Areas:maestrosResponsable"}
+    options:
+         expose: true
+area_especial_asignar_materia_guardar:
+    path:     /maestros_asignar_especial/
+    defaults: { _controller: SieEspecialBundle:Areas:asignarMaestroMateriaGuardar }
+    options:
+        expose: true
+area_especial_asignar_materia_editar:
+    path:     /maestros_asignar_especial_editar/
+    defaults: { _controller: SieEspecialBundle:Areas:asignarMaestroMateriaEditar }
+    options:
+        expose: true
+area_especial_asignar_materia_eliminar:
+    path:     /maestros_asignar_especial_eliminar/
+    defaults: { _controller: SieEspecialBundle:Areas:asignarMaestroMateriaEliminar }
+    options:
+        expose: true

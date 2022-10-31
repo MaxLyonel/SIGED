@@ -1,0 +1,75 @@
+Sie\AppWebBundle\Entity\UnivUniversidad:
+    type: entity
+    table: univ_universidad
+    indexes:
+        IDX_54C77A5E8A3C865F:
+            columns:
+                - univ_categoria_tipo_id
+        IDX_54C77A5EECF8F789:
+            columns:
+                - univ_tipo_universidad_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        universidad:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        decretoSupremo:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: decreto_supremo
+        abreviacion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        logo:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        univCategoriaTipo:
+            targetEntity: UnivCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univTipoUniversidad:
+            targetEntity: UnivTipoUniversidad
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_tipo_universidad_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

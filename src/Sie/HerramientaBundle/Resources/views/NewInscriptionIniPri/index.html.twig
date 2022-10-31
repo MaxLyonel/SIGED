@@ -214,7 +214,7 @@
                 <div class="panel panel-icon panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-search"></i>
-                        <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
+                        <strong>Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
                         <div class="pull-right">
                             {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
                         </div>                                        
@@ -227,19 +227,27 @@
                          <form role="form">
                             <div class="row">
                               <div class="col-sm-2">
-                              <label for="ci">(*)Carnet de Identidad</label>
-                              <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
+                                <label for="idarrCedula">¿El Carnet de Identidad es?</label>
+                                <select name="DBExpedido" id="idarrCedula" v-model="dataNewStudent.cedulaTipoId" class="custom-select form-control"> 
+ 								                  {% for item in arrCedula %}
+                                    <option  value="{{ item.cedulaTipoId }}">{{ item.cedulaTipo }}</option>       
+								                  {% endfor %}
+                                </select> 
                               </div>
                               <div class="col-sm-2">
-                              <label for="complemento(s)">Complemento</label>
+                                <label for="ci">(*)Carnet de Identidad</label>
+                                <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
+                              </div>
+                              <div class="col-sm-2">
+                                <label for="complemento(s)">Complemento</label>
                                   <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.complementofind">
                               </div>
                               <div class="col-sm-1">
-                              <label for="expedido">Expedido</label>
+                                <label for="expedido">Expedido</label>
                                 <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
- 								{% for entity in arrExpedido %}
-                                  <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
-								{% endfor %}
+ 								                  {% for entity in arrExpedido %}
+                                    <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
+								                  {% endfor %}
                                 </select> 
                               </div>
                               <div class="col-sm-3">
@@ -249,7 +257,7 @@
                                   <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
                               </div>
 
-                              <div class="col-sm-3" v-if="allowwithoutci">
+                              <div class="col-sm-2" v-if="allowwithoutci">
 								
 	                               <label for="form_caseespecial" class="validation">SIN CI :</label>
 	                       			<input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
@@ -277,7 +285,7 @@
                             
                             <div class="form-group row buscador">
 	                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar && Validar</button>
+	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar y Validar</button>
 	                            </div>
                         	</div>
 
@@ -312,9 +320,9 @@
 								      <td  v-if="allowwithoutci"><button v-on:click="oldInscription(DBstudent.idStudent, rindex)" type="button" class="btn btn-info"><i class="fa fa-book"></i> INSCRIBIR </button></td>
 								    </tr>
 
-								    <tr v-if="allowwithoutci">
+								    <tr v-if="allowwithoutci && !swci" >
 								    	<th colspan="3" align="center">
-								    		<button v-on:click="goHomonimo()" type="button" class="btn btn-warning"><i class="fa fa-book"></i> HOMONIMO PERFECTO</button>								    		
+								    		<button v-on:click="goHomonimo()" type="button" class="btn btn-warning"><i class="fa fa-book"></i> HOMONIMO PERFECTO  </button>								    		
 								    	</th>
 								    </tr>
 								    
@@ -349,9 +357,6 @@
 
 								</br>
                             	<!-- end data new studen  -->
-
-
-
 
                             	<p class="encabezado bg-primary">INFORMACIÓN ADICIONAL DEL ESTUDIANTE </p>
 
@@ -393,18 +398,18 @@
 	                            <p class="encabezado bg-primary">INFORMACIÓN UNIDAD EDUCATIVA</p>
                                      <div class="row"  v-if="allowwithoutci" >
                                       <div class="col-md-4" >
-				      <label for="inscription">Tipo de Inscripcion</label>
-					<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
-						<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            	<option value="1">ARTÍCULO 14 R.M. 001/2021</option>
-                                            	<option value="2">REZAGO ESCOLAR</option>
+                                        <label for="inscription">Tipo de Inscripcion</label>
+                                    <select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
+                                      <option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
+                                            	<!-- option value="1">ARTÍCULO 12 d) R.M. 001/2022</option -->
+                                            	<!-- option value="2">REZAGO ESCOLAR</option -->
                                         </select>
 
                                       </div>
 					<div class="col-sm-4" v-if="allowwithoutci">
                                                      <label for="certificado">Adjuntar Documento 
 							<div v-if="dataNewStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
-                                                 	<div v-if="dataNewStudent.typeInscription ==1">INFORME DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div>
+                                                 	<div v-if="dataNewStudent.typeInscription ==1">CERTIFICACIÓN DE LA INSTITUCIÓN DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div>
                                                  	<div v-if="dataNewStudent.typeInscription ==2">CERTIFICADO DE NACIMIENTO</div>
 							</label>
                                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
@@ -426,7 +431,7 @@
 	                                  <input type="input" class="form-control" id="sieid" placeholder="SIE" v-model="dataNewStudent.sie" maxlength="8" v-on:keyup="getInfoUe(1);">
 	                              </div>
 									
-			            </div>
+			                        </div>
 	                            </br>
 
 	                            <div v-if="buscandoue" class="text-center">
@@ -436,7 +441,6 @@
 
 
 	                            <div v-if="swprocessue">
-
 	                            	<div class="row">
 		                              <div class="col-md-12">
 	                            		<p class="p-3 mb-2 bg-info text-white"> <strong>UNIDAD EDUCATIVA: ${nombreue}</strong> </p>
@@ -564,16 +568,16 @@
 					<div class="col-md-4" >                       
                                       		<label for="provincia">Tipo de Inscripcion</label>
                                         	<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="oldStudent.typeInscription" class="custom-select form-control" >
-							<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            		<option value="1">ARTÍCULO 14 R.M. 001/2021</option>
-                                            		<option value="2">REZAGO ESCOLAR</option>I                                           	
+							                                  <option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
+                                            		<!-- option value="1">ARTÍCULO 12 d) R.M. 001/2022</option -->
+                                            		<!--option value="2">REZAGO ESCOLAR</option-->
                                         	</select>
 
                                         </div>
  				        <div class="col-sm-8">
                                          <label for="certificado">Adjuntar Documento
 						<div v-if="oldStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
-						<div v-if="oldStudent.typeInscription ==1">INFORME DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div> 
+						<div v-if="oldStudent.typeInscription ==1">CERTIFICACIÓN DE LA INSTITUCIÓN DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div> 
 						<div v-if="oldStudent.typeInscription ==2">CERTIFICADO DE NACIMIENTO</div> 
 					</label>
                                          <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
@@ -704,9 +708,9 @@
 
             data: {
               state: {isSending: false},
-		allowwithoutci : '{{allowwithoutci}}',
+		          allowwithoutci : '{{allowwithoutci}}',
             	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false, 'articuleten':false, 'swrezago':false},
- 		oldStudent: {'articuleten':false, 'swrezago':false},
+ 		          oldStudent: {'articuleten':false, 'swrezago':false},
             	responseprocess:false,
             	swprocessue:false,
             	swinscription:false,
@@ -716,6 +720,7 @@
                 existStudent:false,
                 swhomonimo:false,
             	message:'',           	
+            	swci:'',           	
             	messageue:'',           	
                 DBPais: {},
                 DBDepto: {},
@@ -726,18 +731,16 @@
                 DBTurno:{},
                 DBNewStudent:{},
                 DBNewInscription:{},
-		DBstudentExist:{},
-		dataSaveStudent:{},
-		informe:'',
-		swhistory:false,
-		historyReg:{},
-		historyAlt:{},
-		historyEsp:{},
-		historyPer:{},
+                DBstudentExist:{},
+                dataSaveStudent:{},
+                informe:'',
+                swhistory:false,
+                historyReg:{},
+                historyAlt:{},
+                historyEsp:{},
+                historyPer:{},
 				
                 swoldinscription:false,
-	           
-
 
                 codigoRude:'',
                 gestion:'',
@@ -783,7 +786,8 @@
                 	this.dataNewStudent.nivelId='';
             		this.dataNewStudent.gradoId='';
             		this.dataNewStudent.paraleloId='';
-            		this.dataNewStudent.turnoId=''; 
+            		this.dataNewStudent.turnoId='';
+                this.dataNewStudent.typeInscription = 0;
 
             		this.swhomonimo = false;
                 	this.swoldinscription = false;
@@ -794,60 +798,72 @@
                 	_this.clearFields();
                 	this.state.isSending = false;
                     
-                    if (typeof this.dataNewStudent.withoutcifind === "undefined") {
-					  this.dataNewStudent.withoutcifind = false;
-					}
-					if(!this.dataNewStudent.withoutcifind){
-						if (typeof this.dataNewStudent.cifind === "undefined") {
-	        				Swal.fire(
-		                        'Carnet de Identidad',
-		                        'Debe ingresar un Carnet de Identidad válido, en caso de que la/el estudiante no tenga el carnet de identidad, el registro se lo realiza por medio del TÉCNICO DE DISTRITO',
-		                        'warning'
-		                        );
-	        				this.buscando = false;
-		                    return;
-						} 					
-					}
-					if (typeof this.dataNewStudent.fecnacfind === "undefined") {
-						Swal.fire(
-		                        'Fecha de Nacimiento',
-		                        'Debe ingresar la Fecha de Nacimiento del Estudiante Ej: 01-01-2015',
-		                        'warning'
-		                        );
-        				this.buscando = false;
-	                    return;
-					}
-					if (typeof this.dataNewStudent.nombre === "undefined" || this.dataNewStudent.nombre == "") {
-						Swal.fire(
-		                        'Nombre del Estudiante',
-		                        'Debe ingresar el Nombre(s) del Estudiante',
-		                        'warning'
-		                        );
-        				this.buscando = false;
-        				return;
-					}					
-					if (((typeof this.dataNewStudent.paterno === "undefined" || typeof this.dataNewStudent.materno === "undefined") && (this.dataNewStudent.paterno == "" || this.dataNewStudent.materno == ""))) {
-						Swal.fire(
-		                        'Apellidos del Estudiante',
-		                        'Debe ingresar Apellido(s) del Estudiante',
-		                        'warning'
-		                        );
-        				this.buscando = false;
-        				return;
-					}
-					if (typeof this.dataNewStudent.complementofind === "undefined") {
-					  this.dataNewStudent.complementofind = '';
-					}
-					if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
-					  this.dataNewStudent.expedidoIdfind = 0;
-					}					
-				
+                  if (typeof this.dataNewStudent.withoutcifind === "undefined") {
+					          this.dataNewStudent.withoutcifind = false;
+					        }
+                    if(!this.dataNewStudent.withoutcifind){
+                      if (typeof this.dataNewStudent.cifind === "undefined") {
+                            Swal.fire(
+                                      'Carnet de Identidad',
+                                      'Debe ingresar un Carnet de Identidad válido, en caso de que la/el estudiante no tenga el carnet de identidad, el registro se lo realiza por medio del TÉCNICO DE DISTRITO',
+                                      'warning'
+                                      );
+                            this.buscando = false;
+                                  return;
+                      } 					
+                    }
+                    if (typeof this.dataNewStudent.fecnacfind === "undefined") {
+                      Swal.fire(
+                                      'Fecha de Nacimiento',
+                                      'Debe ingresar la Fecha de Nacimiento del Estudiante Ej: 01-01-2015',
+                                      'warning'
+                                      );
+                          this.buscando = false;
+                                return;
+                    }
+                    if (typeof this.dataNewStudent.nombre === "undefined" || this.dataNewStudent.nombre == "") {
+                      Swal.fire(
+                                      'Nombre del Estudiante',
+                                      'Debe ingresar el Nombre(s) del Estudiante',
+                                      'warning'
+                                      );
+                          this.buscando = false;
+                          return;
+                    }					
+                    if (((typeof this.dataNewStudent.paterno === "undefined" || typeof this.dataNewStudent.materno === "undefined") && (this.dataNewStudent.paterno == "" || this.dataNewStudent.materno == ""))) {
+                      Swal.fire(
+                                      'Apellidos del Estudiante',
+                                      'Debe ingresar Apellido(s) del Estudiante',
+                                      'warning'
+                                      );
+                          this.buscando = false;
+                          return;
+                    }
+                    if ( this.dataNewStudent.withoutcifind==false && (typeof this.dataNewStudent.cedulaTipoId === "undefined" || typeof this.dataNewStudent.cedulaTipoId === "" )) {
+                    Swal.fire(
+                                    '¿El Carnet de Identidad es?',
+                                    'Debe  seleccionar si el estudiante es Nacional o extranjero',
+                                    'warning'
+                                    );
+                        this.buscando = false;
+                        return;
+                    }
+                    if (typeof this.dataNewStudent.complementofind === "undefined") {
+                      this.dataNewStudent.complementofind = '';
+                    }
+                    if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
+                      this.dataNewStudent.expedidoIdfind = 0;
+                    }					
+                    if (typeof this.dataNewStudent.cedulaTipoId === "undefined") {
+                      this.dataNewStudent.cedulaTipoId = 0;
+                    }	
 					
                     axios.get(Routing.generate('newinscriptionInipri_checksegipstudent', this.dataNewStudent ))
                     .then(response => {
                         if (response.status == 200) {
                         	this.responseprocess = response.data.swcreatestudent;
                         	this.message = response.data.message;
+                          this.swci = response.data.swci;
                         	this.DBGenero= response.data.arrGenero;
                         	this.DBPais= response.data.arrPais;
                         	this.DBstudentExist= response.data.arrStudentExist;
@@ -878,7 +894,7 @@
                     }).then((result) => {
                     	if (result.value) {                	
 
-						axios.get(Routing.generate('newinscriptionInipri_gohomonimo', this.dataNewStudent ))
+						          axios.get(Routing.generate('newinscriptionInipri_gohomonimo', this.dataNewStudent ))
 	                    .then(response => {
 	                        if (response.status == 200) {
 	                        	this.responseprocess = response.data.swcreatestudent;
@@ -1181,6 +1197,7 @@
             	
                 },        
                 doInscriptioninipri: function(swnewforeign){
+                  
 			if(swnewforeign == 0){
                            this.oldStudent.swnewforeign = swnewforeign;
                            this.dataSaveStudent = this.oldStudent;
@@ -1188,6 +1205,7 @@
                            this.dataNewStudent.swnewforeign = swnewforeign;
                            this.dataSaveStudent = this.dataNewStudent;
                          }
+                         
 		
 		 if (this.dataSaveStudent.generoId == '') {
                         Swal.fire(
@@ -1268,7 +1286,8 @@
                         );
                         return;
                     }
- 
+           
+           
                 /*validate the file attached*/
 		if(this.allowwithoutci){
                     if (typeof this.informe != 'object') {

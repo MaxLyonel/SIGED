@@ -10,7 +10,7 @@ $("#tb_carnet").attr("maxlength",'10');
 // aplicamos las mascaras para las fechas
 $("#t_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" , 'placeholder':'dd-mm-aaaa'});
 $("#tb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" , 'placeholder':'dd-mm-aaaa'});
-$("#tb_complemento").inputmask({mask: "9a"});
+//$("#tb_complemento").inputmask({mask: "9a"});
 
 // convertimos el complemento en mayusculas
 $('#tb_complemento').on('keyup',function(){
@@ -30,7 +30,7 @@ var t_validarTieneTutor = function(){
 
         $('#t_divTutor').css('display','block');
         $('#t_carnet').attr('required','required');
-        $('#t_expedido').attr('required','required');
+        //$('#t_expedido').attr('required','required');
         $('#t_nombre').attr('required','required');
         $('#t_fechaNacimiento').attr('required','required');
         $('#t_genero').attr('required','required');
@@ -138,6 +138,45 @@ $('#tb_sinCarnet').on('change', function(){
     }
 });
 
+//verificamos si es extranjero y obligamos a llenar los campos necesarios
+var mostrarTipoIdentificacionTutor=function ()
+{
+        $("#tb_es_extranjero").on( 'change', function()
+        {
+            if( $(this).is(':checked') )
+            {
+                $('#tb_nro_identidad').focus();
+                $(".tdiv-identificacion-extranjeros").show();
+                $(".tdiv-identificacion-nacionales").hide();
+
+                $('#tb_carnet').removeAttr('required');
+                $('#tb_complemento').removeAttr('required');
+
+                $('#tb_carnet').attr('disabled','disabled');
+                $('#tb_complemento').attr('disabled','disabled');
+
+                $('#tb_nro_identidad').attr('required','required');
+
+                $('#tb_carnet').val('');
+                $('#tb_complemento').val('');
+            }
+            else
+            {
+                $('#tb_carnet').focus();
+                $(".tdiv-identificacion-extranjeros").hide();
+                $(".tdiv-identificacion-nacionales").show();
+
+                $('#tb_carnet').removeAttr('disabled');
+                $('#tb_complemento').removeAttr('disabled');
+
+                $('#tb_carnet').attr('required','required');
+                $('#tb_nro_identidad').removeAttr('required');
+
+                $('#tb_nro_identidad').val('');
+            }
+        });
+}
+
 // Buscar tutor
 var t_buscarTutor = function(){
     var t_carnet = $('#tb_carnet').val();
@@ -146,6 +185,7 @@ var t_buscarTutor = function(){
     var t_materno = $('#tb_materno').val();
     var t_nombre = $('#tb_nombre').val();
     var t_fechaNacimiento = $('#tb_fechaNacimiento').val();
+    var pb_es_extranjero_t_segip = $('#pb_es_extranjero_t_segip').is(':checked');
 
     // Validamos si la fecha de nacimiento es correcta
     var t_df = t_fechaNacimiento.split('-');
@@ -161,7 +201,9 @@ var t_buscarTutor = function(){
         return;
     }
     /////////
-    /////////
+         //esta seccion de añadio para el caso de extranjeros
+         var t_es_extranjero = $('#tb_es_extranjero').is(':checked')?1:0;
+         var t_nro_identidad = $('#tb_nro_identidad').val();
 
     if($('#tb_sinCarnet').is(':checked')){
 
@@ -174,6 +216,7 @@ var t_buscarTutor = function(){
                 paterno: t_paterno,
                 materno: t_materno,
                 nombre: t_nombre,
+                extranjero_segip: pb_es_extranjero_t_segip,
                 fecha_nacimiento: t_fechaNacimiento
             };
 
@@ -194,11 +237,12 @@ var t_buscarTutor = function(){
         }
     }else{
 
-        if(t_carnet != "" && t_nombre != ""){
+        if((t_carnet != "" && t_nombre != "" && t_es_extranjero==0) || (t_nro_identidad.length>0  && t_nombre.length>0 && t_es_extranjero==1))
+        {
             
             $.ajax({
                 type: 'get',
-                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'paterno':t_paterno, 'materno': t_materno, 'nombre': t_nombre, 'fechaNacimiento': t_fechaNacimiento}),
+                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'paterno':t_paterno, 'materno': t_materno, 'nombre': t_nombre, 'fechaNacimiento': t_fechaNacimiento,'esExtranjero':t_es_extranjero,'documentoNro':t_nro_identidad,'extranjero_segip': pb_es_extranjero_t_segip}),
                 beforeSend: function(){
                     $('#t_mensaje').empty();
                     t_cambiarFondoMensaje(1);
@@ -269,6 +313,7 @@ var t_cargarDatos = function(data){
     $('#t_materno').val(data.materno);
     $('#t_nombre').val(data.nombre);
     $('#t_fechaNacimiento').val(data.fecha_nacimiento);
+    $('#t_cedulaTipoId').val(data.cedula_tipo_id);
 }
 
 // borrar los datos si el servicio no devuelve datos
@@ -283,6 +328,7 @@ function t_borrarDatos(){
     $('#t_correo').val('');
     $('#t_telefono').val('');
     $('#t_celular').val('');
+    $('#t_nro_identidad').val('');
 }
 
 var t_cambiarFondoMensaje = function(opcion){
@@ -329,6 +375,7 @@ function t_limpiarBuscador(){
 
 function saveFormTutor(){
     var data = $('#formTutor').serialize();
+    var subsistema = $('#subsistema').val();
     // data['actualizar'] = recargar;
     $.ajax({
         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
@@ -346,10 +393,18 @@ function saveFormTutor(){
                 $('#t_id').val(data.id);
                 $('#t_idDatos').val(data.idDatos);
                 $('#t_idPersona').val(data.idPersona);
+                if(subsistema=='especial'){
+                    $('#cortina').css('display','none');
+                    $('#paso7').parent('li').removeClass('disabled');
+                    $('#paso7').attr('data-toggle','tab');
+                    $('#paso7').click();
+                    $('#tabPadre').click();
+                }else{
+                    $('#paso5').parent('li').removeClass('disabled');
+                    $('#paso5').attr('data-toggle','tab');
+                    $('#paso5').click();
+                }
 
-                $('#paso5').parent('li').removeClass('disabled');
-                $('#paso5').attr('data-toggle','tab');
-                $('#paso5').click();
             }else{
                 alert(data.msg);
             }

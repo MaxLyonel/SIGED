@@ -2,15 +2,18 @@ Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcion:
     type: entity
     table: persona_administrativo_inscripcion
     indexes:
-        IDX_268132BD179FF95:
+        IDX_268132BD79DB83E8:
             columns:
-                - gestion_tipo_id
-        IDX_268132BD340DE5C5:
-            columns:
-                - persona_administrativo_inscripcion_tipo_id
+                - estadosalud_tipo_id
         IDX_268132BDF5F88DB9:
             columns:
                 - persona_id
+        IDX_268132BD340DE5C5:
+            columns:
+                - persona_administrativo_inscripcion_tipo_id
+        IDX_268132BD179FF95:
+            columns:
+                - gestion_tipo_id
         IDX_268132BDFE19D46C:
             columns:
                 - distrito_tipo_id
@@ -34,14 +37,32 @@ Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcion:
             type: boolean
             nullable: true
             comment: ''
+        finalizado:
+            type: boolean
+            nullable: true
+            comment: ''
+        esvacuna:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
     manyToOne:
-        gestionTipo:
-            targetEntity: GestionTipo
+        estadosaludTipo:
+            targetEntity: EstadosaludTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                gestion_tipo_id:
+                estadosalud_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
                     referencedColumnName: id
             orphanRemoval: false
         personaAdministrativoInscripcionTipo:
@@ -53,13 +74,13 @@ Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcion:
                 persona_administrativo_inscripcion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        persona:
-            targetEntity: Persona
+        gestionTipo:
+            targetEntity: GestionTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                persona_id:
+                gestion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         distritoTipo:

@@ -5868,6 +5868,11 @@ input.spinner[type="color"].flat {
     border: 1px solid #00addc;
     color: white;
 }
+.yearOld {
+    background-color: #8a0a19 !important; 
+    border: 1px solid #65040f !important; 
+    color: white;
+}
 .panel-primary > .panel-heading .option .btn:hover {
     background-color: #009dc8;
     color: white;
@@ -6890,12 +6895,17 @@ table.table-bordered tbody tr td:first-child:before {
 table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
     background: none;
 }
-
+.tableprocess thead tr th {
+    background-color: #8a0a19 !important; 
+    border-color: 1px solid #65040f !important; 
+    color: #fff;
+}
 .table-primary thead tr th {
     background-color: #00B1E1 !important;
     border-color: #00c5fb #00c5fb #0095bd !important;
     color: #fff;
 }
+
 .table-primary tbody tr td.sorting_1 {
     background: #24d0ff !important;
     color: white;

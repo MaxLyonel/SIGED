@@ -24,7 +24,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel shadow">
                     <div class="panel-heading">
-                        {% if estadistica is defined  %}
+                        {% if estadistica is defined and estadistica|length > 0 %}
                             <div class="pull-left">                                
                                 {% if nivel == 0 %}
                                     <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
@@ -57,28 +57,18 @@
                             <div class="clearfix"></div>
                         {% endif %}
                     </div>  
+                    
                     <div class="panel-sub-heading inner-all">
                         <small>
-                            {% if estadistica is defined  %}
-                                {% set porcentaje1 = (( estadistica[0]['area1'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje2 = (( estadistica[0]['area2'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje3 = (( estadistica[0]['area3'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje4 = (( estadistica[0]['area4'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje5 = (( estadistica[0]['area5'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje6 = (( estadistica[0]['area6'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje7 = (( estadistica[0]['area7'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje8 = (( estadistica[0]['area8'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje9 = (( estadistica[0]['area9'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
+                            {% if estadisticaArea is defined and estadisticaArea|length > 0 %}
                                 <div class="row">
-                                    <div class="col-md-4"><span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Matemática ({{estadistica[0]['area1']}} - {{porcentaje1}}%)</div>
-                                    <div class="col-md-4"><span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Física ({{estadistica[0]['area2']}} - {{porcentaje2}}%)</div>
-                                    <div class="col-md-4"><span class="label label-warning">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Química ({{estadistica[0]['area3']}} - {{porcentaje3}}%)</div>
-                                    <div class="col-md-4"><span class="label label-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Biología ({{estadistica[0]['area4']}} - {{porcentaje4}}%)</div>
-                                    <div class="col-md-4"><span class="label label-lilac">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Geografía ({{estadistica[0]['area5']}} - {{porcentaje5}}%)</div>
-                                    <div class="col-md-4"><span class="label label-teals">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Astronomía - Astrofísica ({{estadistica[0]['area6']}} - {{porcentaje6}}%)</div>
-                                    <div class="col-md-4"><span class="label label-inverse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Informática ({{estadistica[0]['area7']}} - {{porcentaje7}}%)</div>
-                                    <div class="col-md-4"><span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Robótica ({{estadistica[0]['area8']}} - {{porcentaje8}}%)</div>
-                                    <div class="col-md-4"><span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Feria científica ({{estadistica[0]['area9']}} - {{porcentaje9}}%)</div>
+                                    {% set total = estadisticaArea[0]['cantidad'] %}
+                                    {% for data in estadisticaArea %}
+                                        {% if data.id > 0 %}
+                                            {% set porcentaje = (( data.cantidad * 100 ) / total)|number_format(2,'.',',') %}
+                                            <div class="col-md-4"><span class="label label-{{random(['success', 'info', 'warning','danger','lilac','teals','inverse','primary'])}}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> {{data.nombre}} ({{data.cantidad}} - {{porcentaje}}%)</div>                                        {% else %}
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             {% else %}
                                 <div class="row">
@@ -96,7 +86,7 @@
                         </small>
                     </div>             
                     <div class="panel-body">
-                        {% if estadistica is defined  %}
+                        {% if estadistica is defined and estadistica|length > 0 %}
                             {% set count = 0 %}
                             {% set cantidadTotalGeneral = 0 %}
                             {% for data in estadistica %}
@@ -204,6 +194,14 @@
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
+                        {% else %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-primary" role="alert">
+                                        <i class="fa fa-fw fa-info-circle"></i> No se encontraron resultados.
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
                     </div><!-- /.panel-body -->
                 </div>

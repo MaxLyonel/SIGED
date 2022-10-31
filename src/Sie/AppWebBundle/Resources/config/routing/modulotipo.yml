@@ -1,0 +1,30 @@
+modulotipo:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:ModuloTipo:index" }
+
+modulotipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:ModuloTipo:show" }
+
+modulotipo_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:ModuloTipo:new" }
+
+modulotipo_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:ModuloTipo:create" }
+    methods:  POST
+
+modulotipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:ModuloTipo:edit" }
+
+modulotipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:ModuloTipo:update" }
+    methods:  [POST, PUT]
+
+modulotipo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:ModuloTipo:delete" }
+    methods:  [POST, DELETE]

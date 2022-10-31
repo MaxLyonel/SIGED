@@ -93,7 +93,8 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
-                                {% if (maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false))) %}
+                                {% if (maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5))) %}
+                                {# {% if (maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false))) %} #}
                                     <a href="{{path('herramienta_especial_info_maestro_find')}}" class="btn btn-facebook btn-md" style="display:inline-block" id="nuevoA" name="nuevoA"><i class="fa fa-user"></i> Nueva/o Maestra/o</a>
                                 {% endif %}
                                 {% if maestro_no_idioma is empty and maestro_no_genero is empty and maestro is not empty %}
@@ -151,6 +152,7 @@
                                                     <td data-title="Materno">{{ maestro.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
                                                     <td data-title="Formación">{{ maestro.formacion }}</td>
+                                                    <td data-title="Cargo">{{ maestro.cargo }}</td>
                                                     <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="Observacion" {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="text-danger"{% else %}class="text-success"{% endif %}>
@@ -158,7 +160,7 @@
                                                         {% if maestro.perId in maestro_no_genero|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>Corrija el género{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Género) Correcto{% endif %}
                                                     </td>
                                                     <td data-title="Acciones">
-                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false and gestion >= 2020) %}
+                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false and (gestion >= app.session.get('currentyear')) or gestion==2021) %}
                                                             <form action="{{path('herramienta_especial_info_maestro_edit')}}" method="post" style="display:inline-block">
                                                                 <input type="hidden" name="idPersona" value="{{maestro.perId}}">
                                                                 <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
@@ -178,7 +180,8 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false and gestion >= 2020) %}
+                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and gestion >= 2020) %}
+                                                        {# {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false and gestion >= app.session.get('currentyear')) %} #}
                                                         <form action="{{path('herramienta_especial_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">

@@ -10,7 +10,7 @@ $("#pb_carnet").attr("maxlength",'10');
 // aplicamos las mascaras para las fechas
 $("#p_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
 $("#pb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
-$("#pb_complemento").inputmask({mask: "9a"});
+//$("#pb_complemento").inputmask({mask: "9a"});
 
 // convertimos el complemento en mayusculas
 $('#pb_complemento').on('keyup',function(){
@@ -34,7 +34,8 @@ var p_validarTienePadre = function(){
     if(tiene == 1){
         $('#p_divPadre').css('display','block');
         $('#p_carnet').attr('required','required');
-        $('#p_expedido').attr('required','required');
+        //$('#p_expedido').attr('required','required');
+        $('#p_expedido').removeAttr('required');
         $('#p_nombre').attr('required','required');
         $('#p_fechaNacimiento').attr('required','required');
         $('#p_genero').attr('required','required');
@@ -142,6 +143,45 @@ $('#pb_sinCarnet').on('change', function(){
     }
 });
 
+//verificamos si es extranjero y obligamos a llenar los campos necesarios
+var mostrarTipoIdentificacion=function ()
+{
+        $("#pb_es_extranjero").on( 'change', function()
+        {
+            if( $(this).is(':checked') )
+            {
+                $('#pb_nro_identidad').focus();
+                $(".div-identificacion-extranjeros").show();
+                $(".div-identificacion-nacionales").hide();
+
+                $('#pb_carnet').removeAttr('required');
+                $('#pb_complemento').removeAttr('required');
+
+                $('#pb_carnet').attr('disabled','disabled');
+                $('#pb_complemento').attr('disabled','disabled');
+
+                $('#pb_nro_identidad').attr('required','required');
+
+                $('#pb_carnet').val('');
+                $('#pb_complemento').val('');
+            }
+            else
+            {
+                $('#pb_carnet').focus();
+                $(".div-identificacion-extranjeros").hide();
+                $(".div-identificacion-nacionales").show();
+
+                $('#pb_carnet').removeAttr('disabled');
+                $('#pb_complemento').removeAttr('disabled');
+
+                $('#pb_carnet').attr('required','required');
+                $('#pb_nro_identidad').removeAttr('required');
+
+                $('#pb_nro_identidad').val('');
+            }
+        });
+}
+
 // Buscar padre
 var p_buscarPadre = function(){
     var p_carnet = $('#pb_carnet').val();
@@ -150,7 +190,8 @@ var p_buscarPadre = function(){
     var p_materno = $('#pb_materno').val();
     var p_nombre = $('#pb_nombre').val();
     var p_fechaNacimiento = $('#pb_fechaNacimiento').val();
-
+    var pb_es_extranjero_p_segip = $('#pb_es_extranjero_p_segip').is(':checked');
+    // alert(pb_es_extranjero_p_segip)
     // Validamos si la fecha de nacimiento es correcta
     var p_df = p_fechaNacimiento.split('-');
     var p_anio = p_df[2];
@@ -165,11 +206,14 @@ var p_buscarPadre = function(){
         return;
     }
     /////////
+    //esta seccion de añadio para el caso de extranjeros
+    var p_es_extranjero = $('#pb_es_extranjero').is(':checked')?1:0; //diplomatico
+    var p_nro_identidad = $('#pb_nro_identidad').val();
 
-
-    if($('#pb_sinCarnet').is(':checked')){
-
-        if(p_nombre != "" && p_fechaNacimiento != ""){
+    if($('#pb_sinCarnet').is(':checked'))
+    {
+        if(p_nombre != "" && p_fechaNacimiento != "")
+        {
             $('#pb_carnet').val('');
             var data = {
                 id: 'nuevo',
@@ -178,6 +222,7 @@ var p_buscarPadre = function(){
                 paterno: p_paterno,
                 materno: p_materno,
                 nombre: p_nombre,
+                extranjero_segip: pb_es_extranjero_p_segip,
                 fecha_nacimiento: p_fechaNacimiento
             };
 
@@ -190,19 +235,23 @@ var p_buscarPadre = function(){
             p_cambiarFondoMensaje(2);
             $('#p_mensaje').append('Datos cargados');
 
-        }else{
+        }
+        else
+        {
             // $('#p_idPersona').val('nuevo');
             $('#p_mensaje').empty();
             p_cambiarFondoMensaje(3);
             $('#p_mensaje').append('Complete los datos de nombre y fecha de nacimiento');
         }
-    }else{
-
-        if(p_carnet != "" && p_nombre != ""){
-
+    }
+    else
+    {
+        if((p_carnet != "" && p_nombre != "" && p_es_extranjero==0) || (p_nro_identidad.length>0  && p_nombre.length>0 && p_es_extranjero==1))
+        {
             $.ajax({
                 type: 'get',
-                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',{'carnet':p_carnet, 'complemento':p_complemento, 'paterno':p_paterno, 'materno': p_materno, 'nombre': p_nombre, 'fechaNacimiento': p_fechaNacimiento}),
+                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',
+                {'carnet':p_carnet, 'complemento':p_complemento, 'paterno':p_paterno, 'materno': p_materno, 'nombre': p_nombre, 'fechaNacimiento': p_fechaNacimiento,'esExtranjero':p_es_extranjero,'documentoNro':p_nro_identidad,'extranjero_segip':pb_es_extranjero_p_segip}),
                 beforeSend: function(){
                     $('#p_mensaje').empty();
                     p_cambiarFondoMensaje(1);
@@ -214,7 +263,8 @@ var p_buscarPadre = function(){
                     $('#p_idPersona').val('nuevo');
 
                     if(data.status == 200){
-                        console.log('Encontrado');
+                        console.log('Encontrado...');
+                        
                         // Cargamos los datos devueltos por el servicio
                         p_cargarDatos(data.persona);
 
@@ -254,23 +304,30 @@ var p_buscarPadre = function(){
                     $('#p_mensaje').append('Los datos introducidos son incorrectos o no hay conexion con el servicio.');
                 }
             });
-        }else{
+        }
+        else
+        {
             $('#p_mensaje').empty();
             p_cambiarFondoMensaje(3);
-            $('#p_mensaje').append('Complete los datos de carnet y fecha de nacimiento para realizar la busqueda');
+            if($('#pb_es_extranjero').is(':checked'))
+                $('#p_mensaje').append('Complete los datos de nro de identidad y fecha de nacimiento para realizar la busqueda');
+            else
+                $('#p_mensaje').append('Complete los datos de carnet y fecha de nacimiento para realizar la busqueda');
         }
     }
 }
 
 // cargar los campos con los datos devueltos por el servicio
 var p_cargarDatos = function(data){
-    $('#p_idPersona').val(data.id);
+    
+    $('#p_idPersona').val(data.id); //id
     $('#p_carnet').val(data.carnet);
     $('#p_complemento').val(data.complemento);
     $('#p_paterno').val(data.paterno);
     $('#p_materno').val(data.materno);
     $('#p_nombre').val(data.nombre);
     $('#p_fechaNacimiento').val(data.fecha_nacimiento);
+    $('#p_cedulaTipoId').val(data.cedula_tipo_id);
 }
 
 // borrar los datos si el servicio no devuelve datos
@@ -285,6 +342,7 @@ function p_borrarDatos(){
     $('#p_correo').val('');
     $('#p_telefono').val('');
     $('#p_celular').val('');
+    $('#p_nro_identidad').val('');
 }
 
 var p_cambiarFondoMensaje = function(opcion){
@@ -331,6 +389,7 @@ function p_limpiarBuscador(){
 
 function saveFormPadre(){
     var data = $('#formPadre').serialize();
+    var subsistema = $('#subsistema').val();
     // data['actualizar'] = recargar;
     $.ajax({
         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
@@ -356,6 +415,13 @@ function saveFormPadre(){
                 //     $('#paso5').attr('data-toggle','tab');
                 //     $('#paso5').click();
                 // }
+                if(subsistema=='especial'){
+                    $('#cortina').css('display','none');
+                    $('#paso7').parent('li').removeClass('disabled');
+                    $('#paso7').attr('data-toggle','tab');
+                    $('#paso7').click();
+                    $('#tabPadre').click();
+                }
             }else{
                 alert(data.msg);
             }

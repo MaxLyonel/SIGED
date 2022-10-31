@@ -47,6 +47,7 @@ class WfTramiteController extends Controller
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
         $tipo = $request->get('tipo');
+        
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -336,7 +337,7 @@ class WfTramiteController extends Controller
         $usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>$tarea,'lugarTipoId'=>$lugarTipoUsuario,'esactivo'=>true));
         //dump($usuarios);die;
         $usuario = array();
-    	foreach($usuarios as $u){
+        foreach($usuarios as $u){
             $usuario[$u->getUsuario()->getid()] = $u->getUsuario()->getPersona()->getNombre()." ".$u->getUsuario()->getPersona()->getPaterno()." ".$u->getUsuario()->getPersona()->getMaterno();
         }
 
@@ -480,15 +481,15 @@ class WfTramiteController extends Controller
                 break;
         }
         $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
-                ->select('ft')
-                ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
-                ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.flujoTipo=ft.id')
-                ->where('wf.institucioneducativaTipo =' . $iet)
-                ->andWhere("ft.obs like '%ACTIVO%'")
-                ->andWhere("fp.orden = 1")
-                ->andWhere("fp.rolTipo = ".$rol)
-                ->getQuery()
-                ->getResult();
+            ->select('ft')
+            ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
+            ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.flujoTipo=ft.id')
+            ->where('wf.institucioneducativaTipo =' . $iet)
+            ->andWhere("ft.obs like '%ACTIVO%'")
+            ->andWhere("fp.orden = 1")
+            ->andWhere("fp.rolTipo = ".$rol)
+            ->getQuery()
+            ->getResult();
 
         $data['entities'] = $flujotipo;
         $data['titulo'] = "Nuevo trámite";
@@ -693,11 +694,11 @@ class WfTramiteController extends Controller
             join tramite_tipo tt on t.tramite_tipo=tt.id
             join flujo_tipo ft on t.flujo_tipo_id = ft.id
             join institucioneducativa ie on t.institucioneducativa_id=ie.id
-			join jurisdiccion_geografica jg on ie.le_juridicciongeografica_id=jg.id
-			join lugar_tipo lt on lt.id = jg.lugar_tipo_id_distrito
-			join rehabilitacion_bth r on r.tramite_id=t.id
-			join usuario u on r.usuario_registro_id=u.id
-			join persona p on p.id=u.persona_id
+            join jurisdiccion_geografica jg on ie.le_juridicciongeografica_id=jg.id
+            join lugar_tipo lt on lt.id = jg.lugar_tipo_id_distrito
+            join rehabilitacion_bth r on r.tramite_id=t.id
+            join usuario u on r.usuario_registro_id=u.id
+            join persona p on p.id=u.persona_id
             where ft.id=6 and t.tramite_tipo=31");
         $query->execute();
         $data['entities'] = $query->fetchAll();;
@@ -902,7 +903,8 @@ class WfTramiteController extends Controller
     
                 $datos = json_decode($wfdatos[0]->getDatos(),true);
                 //dump($datos);die;
-                $data['nombre'] = $datos['Apertura de Unidad Educativa']['institucioneducativa'];
+                $index = strpos('Apertura de Unidad Educativa', $wfdatos[0]->getDatos()) === false ? 'Apertura de Centro de Educacion Alternativa' : 'Apertura de Unidad Educativa';
+                $data['nombre'] = $datos[$index]['institucioneducativa'];
             }
 
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_recepcion,d.fecha_envio,d.usuario_remitente,d.usuario_destinatario,d.obs,d.tramite_estado,d.fecha_envio-d.fecha_recepcion as duracion
@@ -958,7 +960,7 @@ class WfTramiteController extends Controller
         LEFT JOIN
         (SELECT 
           t1.id,t1.tramite_id, t1.flujo_proceso_id,t.fecha_fin,te.tramite_estado,te.id as tramite_estado_id,t1.fecha_recepcion,t1.fecha_envio,pr.nombre||' '||pr.paterno||' '||pr.materno as usuario_remitente,pd.nombre||' '||pd.paterno||' '||pd.materno as usuario_destinatario,i.institucioneducativa,t1.valor_evaluacion,t1.obs
-	    FROM 
+        FROM 
           tramite_detalle t1 join tramite t on t1.tramite_id=t.id
           join tramite_estado te on t1.tramite_estado_id=te.id
           left join usuario ur on t1.usuario_remitente_id=ur.id

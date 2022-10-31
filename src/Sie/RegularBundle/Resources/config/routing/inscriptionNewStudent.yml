@@ -1,0 +1,64 @@
+
+inscription_new_student_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:index }
+
+inscription_new_student_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:result }
+
+inscription_new_student_norude:
+    path:    /norude
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:norude }
+
+inscription_new_student_save:
+    path:    /save
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:save }
+
+inscription_new_student_findIE:
+     path:    /findIE/{id}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionNewStudent:findIE }
+     options:
+         expose: true
+
+inscription_new_student_findgrado:
+     path:    /findgrado/{idnivel}/{sie}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionNewStudent:findgrado }
+     options:
+         expose: true
+
+inscription_new_student_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionNewStudent:findparalelo }
+     options:
+         expose: true
+
+inscription_new_student_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}/{gestionselected}
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:findturno }
+    options:
+        expose: true
+
+inscription_new_student_verificainscription:
+     path:    /verificainscription
+     defaults: { _controller: SieRegularBundle:InscriptionNewStudent:verificaInscription }
+     options:
+         expose: true
+
+inscription_new_student_saveext:
+    path: /saveext
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:saveext }
+
+inscription_new_student_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:savenew }
+
+inscription_new_student_savenewextranjero:
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieRegularBundle:InscriptionNewStudent:savenewextranjero }
+
+inscription_new_student_notasInscription:
+     path:    /notasInscription
+     defaults: { _controller: SieRegularBundle:InscriptionNewStudent:saveNotasInscription }
+     options:
+         expose: true

@@ -53,6 +53,9 @@ class InfoMaestroController extends Controller {
 
         if ($request->getMethod() == 'POST') {
             $form = $request->get('form');
+            $form['sie'] = ($form['sie']);
+            $form['gestion'] = ($form['gestion']);            
+            
 
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
             if (!$institucioneducativa) {
@@ -138,9 +141,10 @@ class InfoMaestroController extends Controller {
 //                ->getQuery();
 
         $query = $repository->createQueryBuilder('mi')
-                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion')
+                ->select('p.id perId, p.carnet, p.complemento, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion, ct.cargo')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                 ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
+                ->innerJoin('SieAppWebBundle:CargoTipo', 'ct', 'WITH', 'mi.cargoTipo = ct.id')
                 ->where('mi.institucioneducativa = :idInstitucion')
                 ->andWhere('mi.gestionTipo = :gestion')
                 ->andWhere('mi.cargoTipo IN (:cargos)')
@@ -254,7 +258,6 @@ class InfoMaestroController extends Controller {
                 }
             }
         }
-
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:index.html.twig', array(
                 'maestro' => $maestro,
                 'institucion' => $institucion,
@@ -294,8 +297,7 @@ class InfoMaestroController extends Controller {
         return $form;
     }
 
-    public function resultAction(Request $request) {
-
+    public function resultAction(Request $request) {        
         // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -332,6 +334,14 @@ class InfoMaestroController extends Controller {
     public function verificarPersonaAction(Request $request){
         
         $form = $request->get('sie_verificar_persona_segip');
+        $tipo_persona = 1;
+        //si llega desde el form, estopara que otros formualrio no tengan error
+        // mientras son modificados
+        if ($request->get('nacionalidad')) {
+            //NA: nacional, EX: extranjero
+            $nacionalidad = $request->get('nacionalidad'); //EX o NA
+            $tipo_persona = ($nacionalidad == 'NA') ? 1 : 2;
+        }
 
         $data = [
             'carnet' => $form['carnet'],
@@ -339,7 +349,8 @@ class InfoMaestroController extends Controller {
             'primer_apellido' => $form['primer_apellido'],
             'segundo_apellido' => $form['segundo_apellido'],
             'nombre' => $form['nombre'],
-            'fecha_nacimiento' => $form['fecha_nacimiento']
+            'fecha_nacimiento' => $form['fecha_nacimiento'],
+            'tipo_persona' => $tipo_persona,  //tiene que venir del form
         ];
 
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
@@ -370,20 +381,96 @@ class InfoMaestroController extends Controller {
             'persona' => serialize($persona),
             'institucion' => $form['institucion'],
             'gestion' => $form['gestion'],
+            //dcastillo 2402 pasar esto al segundo formulario...
+            'tipo_persona' => $tipo_persona
         ));
     }
 
-    public function registrarPersonaAction(Request $request){
+    public function registrarPersonaAction(Request $request)
+    {
+        //NO PERMITIR REGISTRO DE PERSONAS
+        //return $this->redirect($this->generateUrl('login'));
+
+        //aqui se adiciono un campo hidden en formulario_persona_new.html.twig
+        //por que por alguna razon, se hace dos validacione segip
+
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('sie_persona_datos');
         $persona = unserialize($form['persona']);
         $persona_validada = null;
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucion']);
         $gestion = $form['gestion'];
+        
+        $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
+        $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
 
+        $tipo_persona = 1;
+        if ($form['tipo_persona']) {
+            //NA: nacional, EX: extranjero            
+            $tipo_persona = ($form['tipo_persona'] == "1") ? 1 : 2;
+        }
+
+        $arrayDatosPersona = array(
+            //'carnet'=>$form['carnet'],
+            'complemento'=>$complemento,
+            'paterno'=>$persona['primer_apellido'],
+            'materno'=>$persona['segundo_apellido'],
+            'nombre'=>$persona['nombre'],
+            'fecha_nacimiento' => $fecha,
+            'tipo_persona' => $tipo_persona
+        );
+        //dump($arrayDatosPersona); die;
+
+        $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
+        //dump($personaValida); die;
+
+        if( $personaValida )
+        {
+            $arrayDatosPersona['carnet']=$persona['carnet'];
+            unset($arrayDatosPersona['fecha_nacimiento']);
+            $arrayDatosPersona['fechaNacimiento']=$persona['fecha_nacimiento'];
+            $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
+
+            if($personaEncontrada == null)
+            {
+                $newPersona = new Persona();
+                $newPersona->setCarnet($persona['carnet']);
+                $newPersona->setComplemento(mb_strtoupper($complemento, 'utf-8'));
+                $newPersona->setPaterno(mb_strtoupper($persona['primer_apellido'], 'utf-8'));
+                $newPersona->setMaterno(mb_strtoupper($persona['segundo_apellido'], 'utf-8'));
+                $newPersona->setNombre(mb_strtoupper($persona['nombre'], 'utf-8'));
+                $newPersona->setFechaNacimiento(new \DateTime($persona['fecha_nacimiento']));
+                $newPersona->setCelular($form['celular']);
+                $newPersona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
+                $newPersona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+                $newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
+                $newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+                $newPersona->setSegipId(1);
+                $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
+                $newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+                $newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadocivilTipo')->findOneById(0));
+                $newPersona->setRda('0');
+                $newPersona->setEsvigente('t');
+                $newPersona->setActivo('t');
+
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(isset($persona['extranjero'])?2:1));
+
+                $em->persist($newPersona);
+                $em->flush();
+                $persona_validada = $newPersona;
+            }
+            // else existe la persona no se registra
+        }
+        else
+        {
+            $persona_validada = null;
+        }
+        // else persona no valida
+    /*
         //Verificar si la persona ya fue registrada
         $repository = $em->getRepository('SieAppWebBundle:Persona');
-        if($persona['complemento'] == '0'){
+        if($persona['complemento'] == '0')
+        {
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
                 ->where('p.carnet = :carnet AND p.segipId = :valor')
@@ -391,7 +478,8 @@ class InfoMaestroController extends Controller {
                 ->setParameter('valor', 1)
                 ->getQuery();
         }
-        else{
+        else
+        {
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
                 ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId = :valor')
@@ -402,12 +490,16 @@ class InfoMaestroController extends Controller {
         }
         $personas = $query->getResult();
 
-        if($personas) {
+        if($personas)
+        {
             $persona_validada = $personas[0];
-        } else {
+        }
+        else
+        {
             //Buscar personas asociadas al nro de carnet y complemento con segip_id=0 y actualizar
             $repository = $em->getRepository('SieAppWebBundle:Persona');
-            if($persona['complemento'] == '0'){
+            if($persona['complemento'] == '0')
+            {
                 $query = $repository->createQueryBuilder('p')
                     ->select('p')
                     ->where('p.carnet = :carnet AND p.segipId = :valor')
@@ -415,7 +507,8 @@ class InfoMaestroController extends Controller {
                     ->setParameter('valor', 0)
                     ->getQuery();
             }
-            else{
+            else
+            {
                 $query = $repository->createQueryBuilder('p')
                     ->select('p')
                     ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId = :valor')
@@ -438,19 +531,22 @@ class InfoMaestroController extends Controller {
             $usuarios = $query->getResult();
 
             //Actualizar CI, complemento y username
-            foreach ($personas as $key => $value) {
+            foreach ($personas as $key => $value)
+            {
                 $value->setCarnet($value->getCarnet().'±');
                 $em->persist($value);
                 $em->flush();
             }
 
-            foreach ($usuarios as $key => $value) {
+            foreach ($usuarios as $key => $value)
+            {
                 $value->setUsername($value->getUsername().'±');
                 $em->persist($value);
                 $em->flush();
             }
 
-            if($persona['complemento'] == '0') {
+            if($persona['complemento'] == '0')
+            {
                 $persona['complemento'] = '';
             }
             $newPersona = new Persona();
@@ -477,7 +573,7 @@ class InfoMaestroController extends Controller {
             $em->flush();
             $persona_validada = $newPersona;
         }
-
+    */
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:result_newpersona.html.twig',array(
             'persona'=>$persona_validada,
             'institucion' => $institucion,
@@ -909,21 +1005,34 @@ class InfoMaestroController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($request->get('idMaestroInscripcion'));
-
+            /*dump($request->get('idMaestroInscripcion'));
+            dump($maestroInscripcion);die();*/
             if ($maestroInscripcion) { // Sie existe el maestro inscrito
                 // Verificamos si el maestro tine asignados algunas areas o asignaturas
                 $institucionCursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('maestroInscripcion' => $maestroInscripcion->getId()));
                 if ($institucionCursoOfertaMaestro) {
-
                     $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar, el maestro tiene areas asignadas.');
                     return $this->redirect($this->generateUrl('herramienta_info_maestro_index', array('op' => 'result')));
                 }
+                // dump($institucionCursoOfertaMaestro);die();
                 //eliminar idiomas del maestro
                 $idiomas = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestroInscripcion->getId()));
 
                 if ($idiomas) {
                     foreach ($idiomas as $id) {
                         $em->remove($em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findOneById($id->getId()));
+                        $em->flush();
+                    }
+                }
+
+                // Eliminados la inscripcion de salud
+                // $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
+                /*$em->remove($maestroInscripcionEstadosalud);
+                $em->flush();*/
+                $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
+                if($maestroInscripcionEstadosalud){
+                    foreach ($maestroInscripcionEstadosalud as $id1) {
+                        $em->remove($em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneById($id1->getId()));
                         $em->flush();
                     }
                 }
@@ -936,9 +1045,7 @@ class InfoMaestroController extends Controller {
 
                 return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
             }
-
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($maestroInscripcion->getPersona()->getId());
-
             $llave = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave' => $persona->getCarnet(), 'validacionReglaTipo' => 9, 'solucionTipoId' => 0));
 
             if($llave) {
@@ -1049,7 +1156,13 @@ class InfoMaestroController extends Controller {
 
     private function formSearch($gestionactual) {
 
-        $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
+        $gestiones = [];
+
+        for($i=$gestionactual;$i>=2009;$i--){
+            $gestiones[$i]=$i;
+        }
+
+        // $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_maestro_index'))

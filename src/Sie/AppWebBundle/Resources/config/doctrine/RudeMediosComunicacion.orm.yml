@@ -2,7 +2,7 @@ Sie\AppWebBundle\Entity\RudeMediosComunicacion:
     type: entity
     table: rude_medios_comunicacion
     indexes:
-        IDX_D97B6F73443E4890:
+        fk_rude_medios_comunicacion:
             columns:
                 - rude_id
         IDX_D97B6F733EC333D9:

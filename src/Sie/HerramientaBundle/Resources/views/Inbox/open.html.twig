@@ -21,6 +21,14 @@
 <div class="body-content animated fadeIn">
     {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Menú Principal', 'gestion': data.gestion,'sie': data.ieducativa.id, 'ieducativa': data.ieducativa.institucioneducativa, 'opcion': 'Acceso a Módulos'} %}
     {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
+    {% if objObsQA %}
+        {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': data.ieducativa.id,'institucion': data.ieducativa.institucioneducativa, 'gestion': data.gestion} %}
+    {% endif %}
+
+    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado </h3>
+    <input type="hidden" id="bimestre" value="{{bimestre}}">
+
+
     {% if tuicion %}
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
@@ -91,22 +99,73 @@
                         </div>
                     </div>
                 {% endif %}
-                
-                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                 {% if  data.gestion==app.session.get('currentyear') %}
+                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
                         <div class="caption text-center">
                             <h4>Cerrar Operativo</h4>
                             <div class="thumbnail-action">
-                                {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
-                                    {{form_widget(closeOperativoform.next)}}
-                                {{form_end(closeOperativoform)}}
+                                {{form_start(closeOperativoInscriptionform, { 'attr':{'id':'formCloseOperativoInscription' }} )}}
+                                    {{form_widget(closeOperativoInscriptionform.next)}}
+                                {{form_end(closeOperativoInscriptionform)}}
                             </div>
                         </div>
                     </div>
                 </div>
-                
+                {% endif %}
+                {# 
+                 {% if bimestre < '3' and data.gestion!=app.session.get('currentyear') %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="thumbnail">
+                            <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
+                            <div class="caption text-center">
+                                <h4>Cerrar Operativo</h4>
+                                <div class="thumbnail-action">
+                                    {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                        {{form_widget(closeOperativoform.next)}}
+                                    {{form_end(closeOperativoform)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                 #}
             {% endif %}
+            {% if data.gestion == app.session.get('currentyear') %}
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rude">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo Formulario Rude {{data.gestion}} </h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoRudeform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                    {{form_widget(closeOperativoRudeform.next)}}
+                                {{form_end(closeOperativoRudeform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
+                    &nbsp;
+                    <div class="caption text-center">
+                        <h4>Operativo Bono JP</h4>
+                        <div class="thumbnail-action">
+                            {% if operativoBonoJP %}
+                                <a href="{{path('operativo_bono_jp_ddjj',{sie:data.ieducativa.id,gestion:data.gestion})}}" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>
+                            {% else %}
+                            {{form_start(operativoBonoJPform, { 'attr':{'id':'formCerrarBonoJs' }} )}}
+                                {{form_widget(operativoBonoJPform.next)}}
+                            {{form_end(operativoBonoJPform)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>            
+
         </div>
         <div class="row">
             <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
@@ -123,11 +182,77 @@
         </div>
     {% endif %}
 </div>
+<script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
     <script>
         var closeOperativo = function(){
+            var bimestre=$("#bimestre").val();
+            if (typeof bimestre === "undefined") {
+                bimestre=0;
+            }
+            bimestre=Number(Number(bimestre)+(1));
+            if (bimestre>3) {
+                bimestre=3;
+            }
+            alertify.confirm("<p><h3>ESTA SEGURO/A DE CERRAR EL OPERATIVO  <h3><h1 style='color:#ff0000;'>TRIMESTRE "+bimestre+" ?</h1><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+                if (e) {
+                    alertify.success("Has pulsado ok ");
+                    formData = $('#formCloseOperativo').serialize();
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('herramienta_inbox_close_operativo'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#answerClose").empty();
+                            $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                        },
+                        success: function (data) {
+                            $("#answerClose").empty();
+                            $("#answerClose").append(data);  
+                        },
+                        statusCode: {
+                            500: function () {
+                            },
+                            404: function () {
+                            }
+                        }
+                    });
+                } else { alertify.error("Has pulsado cancel ");
+                }
+            });
+
+            /*if(confirm('¿Está segura/o de cerrar el operativo?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('herramienta_inbox_close_operativo'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }*/
+        };
+        /*var closeOperativo = function(){
             if(confirm('¿Está segura/o de cerrar el operativo?')){
                 formData = $('#formCloseOperativo').serialize();
                 $.ajax({
@@ -148,6 +273,132 @@
                         },
                         404: function () {
 
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }
+        };*/
+
+         var closeOperativoInscription = function(){
+            
+            if(confirm('¿Está segura/o de {{ data.messageope }} ?')){
+                formData = $('#formCloseOperativoInscription').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('herramienta_inbox_close_operativo_inscription'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }
+        };
+
+        var closeOperativoRude = function(){
+            if(confirm('¿Está segura/o de cerrar el operativo rude?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('herramienta_inbox_close_operativo_rude'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }
+        };
+
+        $('#formCerrarBonoJs').on('submit',function (e)
+        {
+            e.preventDefault();
+            closeOperativoBonoJS();
+        });
+        var closeOperativoBonoJS = function(){
+            if(confirm('¿Está segura/o de cerrar el operativo Bono Juancito Pinto?')){
+                formData = $('#formCerrarBonoJs').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('operativo_bono_jp_cerrar'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data)
+                    {
+                        var res= data;
+                        var status = res.status;
+                        var msj = res.msj;
+                        var urlReporte = res.urlReporte;
+                        var observacionesBonpJP = res.observacionesBonpJP;
+                        var contenedor = $('#formCerrarBonoJs');
+                        if(status==200)
+                        {
+                            if(observacionesBonpJP && observacionesBonpJP.length>0)
+                            {
+                                $("#answerClose").empty();
+                                var obs ='<ol class="list-group"><li class="list-group-item" style="background-color:#63D3E9;color:white"><h4>'+observacionesBonpJP.length+' Inconsistencias / Observaciones</h4></li>';
+                                for (var i in observacionesBonpJP)
+                                {
+                                    obs+='<li class="list-group-item list-group-item-danger">'+observacionesBonpJP[i].observacion+'</li>';
+                                }
+                                obs+='</ol>';
+                                $("#answerClose").html(obs);
+                            }
+                            else
+                            {
+                                $("#answerClose").empty();
+                                var aHref='<a href="'+urlReporte+'" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>';
+                                if(typeof(contenedor)!='undefined')
+                                {
+                                    $('#formCerrarBonoJs').html('');
+                                    $('#formCerrarBonoJs').html(aHref);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            alert('Ocurrio un error por favor vuelva a intentarlo.');
+                        }
+                    },
+                    statusCode: {
+                        500: function () {
+                            alert('Acaba de ocurrir un error de servidor.');
+                        },
+                        404: function () {
+                            alert('Ocurrio un error por favor vuelva a intentarlo.');
                         }
                     }
                 });

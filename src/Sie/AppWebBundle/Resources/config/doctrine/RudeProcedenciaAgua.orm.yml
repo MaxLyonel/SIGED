@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeProcedenciaAgua:
+    type: entity
+    table: rude_procedencia_agua
+    indexes:
+        IDX_100441DFF9DEA452:
+            columns:
+                - aguaproviene_tipo_id
+        IDX_100441DF443E4890:
+            columns:
+                - rude_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        aguaprovieneTipo:
+            targetEntity: AguaprovieneTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                aguaproviene_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

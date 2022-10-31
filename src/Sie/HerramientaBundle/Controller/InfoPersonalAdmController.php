@@ -28,7 +28,7 @@ class InfoPersonalAdmController extends Controller {
         //init the session values
         $this->session = new Session();
     }
-
+    
     /**
      * list of request
      *
@@ -53,7 +53,11 @@ class InfoPersonalAdmController extends Controller {
         if ($request->getMethod() == 'POST') {
             $form = $request->get('form');
 
+            $form['sie'] = ($form['sie']);
+            $form['gestion'] = ($form['gestion']);            
+
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
+            
             if (!$institucioneducativa) {
                 $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
                 if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
@@ -377,9 +381,10 @@ class InfoPersonalAdmController extends Controller {
     public function createAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+        
         try {
             $form = $request->get('form');
-
+        
             if($form['fechaInicio'] == ""){
                 $msg = "Debe ingresar la fecha inicial de la asignación";
                 return $response->setData(array('estado'=>false, 'msg'=>$msg));
@@ -399,6 +404,18 @@ class InfoPersonalAdmController extends Controller {
                 $this->get('session')->getFlashBag()->add('newError', $msg);
                 return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
             }
+
+            // Verifica financimiento para privada
+            $unidadeducativa = $em->getRePository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']);
+            $uedependencia = $unidadeducativa->getdependenciaTipo();
+            
+            if (($uedependencia->getid() == 3)&&(in_array($form['financiamiento'], array("1", "0", "11")))){
+                $msg = "Financimiento no valido, verifique financiamiento";
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('newError', $msg);
+                return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+            }
+                      
 
             // Registrar sucursal
             $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion']));
@@ -434,7 +451,7 @@ class InfoPersonalAdmController extends Controller {
             $em->flush();
 
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
-
+            
             // Registro Maestro inscripcion
             $maestroinscripcion = new MaestroInscripcion();
             $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
@@ -462,7 +479,7 @@ class InfoPersonalAdmController extends Controller {
             $maestroinscripcion->setAsignacionFechaFin($fechaFin);
             $em->persist($maestroinscripcion);
             $em->flush();
-
+             
             // Registro de idiomas que habla    
             for ($i = 1; $i < 10; $i++) {
                 $idioma = $request->get('idioma' . $i);
@@ -483,9 +500,11 @@ class InfoPersonalAdmController extends Controller {
                 }
             }
             $em->getConnection()->commit();
-            
+            //dump($em);
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
+            //die;
             return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+           
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
@@ -763,6 +782,11 @@ class InfoPersonalAdmController extends Controller {
                         $em->flush();
                     }
                 }
+                
+                // Eliminados la inscripcion de salud
+                $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
+                if($maestroInscripcionEstadosalud) 
+                    $em->remove($maestroInscripcionEstadosalud);
 
                 //eliminamos el registro de inscripcion del maestro
                 $em->remove($maestroInscripcion);
@@ -844,8 +868,19 @@ class InfoPersonalAdmController extends Controller {
     }
 
     public function verificarPersonaAction(Request $request){
-        
+       
+       
         $form = $request->get('sie_verificar_persona_segip');
+
+        //dcastillo: control segip        
+        $tipo_persona = 1;
+        //si llega desde el form, estopara que otros formualrio no tengan error
+        // mientras son modificados
+        if ($request->get('nacionalidad')) {
+            //NA: nacional, EX: extranjero
+            $nacionalidad = $request->get('nacionalidad'); //EX o NA
+            $tipo_persona = ($nacionalidad == 'NA') ? 1 : 2;
+        }
 
         $data = [
             'carnet' => $form['carnet'],
@@ -853,10 +888,35 @@ class InfoPersonalAdmController extends Controller {
             'primer_apellido' => $form['primer_apellido'],
             'segundo_apellido' => $form['segundo_apellido'],
             'nombre' => $form['nombre'],
-            'fecha_nacimiento' => $form['fecha_nacimiento']
-        ];
+            'fecha_nacimiento' => $form['fecha_nacimiento'],
+            'tipo_persona' => $tipo_persona,  //tiene que venir del form
 
+        ];
+        /*$data = [
+            'carnet' => 'xxxxx',            
+            'complemento' => '',
+            'primer_apellido' => 'xxxx',
+            'segundo_apellido' => 'xxxx',
+            'nombre' => 'Dan Diego',
+            'fecha_nacimiento' => '29/12/2003',
+            'tipo_persona' => 1,  //tiene que venir del form
+
+        ];*/
+
+        /*$data = [
+            'carnet' => '11609954',
+            'complemento' => '',
+            'primer_apellido' => 'CROUSE',
+            'segundo_apellido' => '',
+            'nombre' => 'ANDREW DALE',
+            'fecha_nacimiento' => '16/10/1972',
+            'tipo_persona' => 1,  //tiene que venir del form
+
+        ];*/
+        $data['extranjero']=($request->get('nacionalidad')=='EX')?'E':null;
+        
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
+        //$resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet('11609954', $data, $form['entorno'], 'academico');
         $persona = array();
 
         if($resultado) {
@@ -866,7 +926,9 @@ class InfoPersonalAdmController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'extranjero' =>  $data['extranjero'],
+
             ];
         }
 
@@ -887,7 +949,11 @@ class InfoPersonalAdmController extends Controller {
         ));
     }
 
-    public function registrarPersonaAction(Request $request){
+    public function registrarPersonaAction(Request $request)
+    {
+        //NO PERMITIR REGISTRO DE PERSONAS
+        //return $this->redirect($this->generateUrl('login'));
+        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('sie_persona_datos');
         $persona = unserialize($form['persona']);
@@ -895,9 +961,69 @@ class InfoPersonalAdmController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucion']);
         $gestion = $form['gestion'];
 
+        
+
+        $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
+        $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
+        $arrayDatosPersona = array(
+            //'carnet'=>$form['carnet'],
+            'complemento'=>$complemento,
+            'paterno'=>$persona['primer_apellido'],
+            'materno'=>$persona['segundo_apellido'],
+            'nombre'=>$persona['nombre'],
+            'fecha_nacimiento' => $fecha,
+            'extranjero'=> $persona['extranjero']
+        );
+        
+        $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
+
+        if( $personaValida )
+        {
+            $arrayDatosPersona['carnet']=$persona['carnet'];
+            unset($arrayDatosPersona['fecha_nacimiento']);
+            $arrayDatosPersona['fechaNacimiento']=$persona['fecha_nacimiento'];
+            $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
+
+            if($personaEncontrada == null)
+            {
+                $newPersona = new Persona();
+                $newPersona->setCarnet($persona['carnet']);
+                $newPersona->setComplemento(mb_strtoupper($complemento, 'utf-8'));
+                $newPersona->setPaterno(mb_strtoupper($persona['primer_apellido'], 'utf-8'));
+                $newPersona->setMaterno(mb_strtoupper($persona['segundo_apellido'], 'utf-8'));
+                $newPersona->setNombre(mb_strtoupper($persona['nombre'], 'utf-8'));
+                $newPersona->setFechaNacimiento(new \DateTime($persona['fecha_nacimiento']));
+                $newPersona->setCelular($form['celular']);
+                $newPersona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
+                $newPersona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+                $newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
+                $newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+                $newPersona->setSegipId(1);
+                $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
+                $newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+                $newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadocivilTipo')->findOneById(0));
+                $newPersona->setRda('0');
+                $newPersona->setEsvigente('t');
+                $newPersona->setActivo('t');
+
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(isset($persona['extranjero'])?2:1));
+
+                $em->persist($newPersona);
+                $em->flush();
+                $persona_validada = $newPersona;
+            }
+            // else existe la persona no se registra
+        }
+        else
+        {
+            $persona_validada = null;
+        }
+
+    /*
         //Verificar si la persona ya fue registrada
         $repository = $em->getRepository('SieAppWebBundle:Persona');
-        if($persona['complemento'] == '0'){
+        if($persona['complemento'] == '0')
+        {
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
                 ->where('p.carnet = :carnet AND p.segipId = :valor')
@@ -905,7 +1031,8 @@ class InfoPersonalAdmController extends Controller {
                 ->setParameter('valor', 1)
                 ->getQuery();
         }
-        else{
+        else
+        {
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
                 ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId = :valor')
@@ -916,12 +1043,16 @@ class InfoPersonalAdmController extends Controller {
         }
         $personas = $query->getResult();
 
-        if($personas) {
+        if($personas)
+        {
             $persona_validada = $personas[0];
-        } else {
+        }
+        else
+        {
             //Buscar personas asociadas al nro de carnet y complemento con segip_id=0 y actualizar
             $repository = $em->getRepository('SieAppWebBundle:Persona');
-            if($persona['complemento'] == '0'){
+            if($persona['complemento'] == '0')
+            {
                 $query = $repository->createQueryBuilder('p')
                     ->select('p')
                     ->where('p.carnet = :carnet AND p.segipId = :valor')
@@ -929,7 +1060,8 @@ class InfoPersonalAdmController extends Controller {
                     ->setParameter('valor', 0)
                     ->getQuery();
             }
-            else{
+            else
+            {
                 $query = $repository->createQueryBuilder('p')
                     ->select('p')
                     ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId = :valor')
@@ -952,19 +1084,22 @@ class InfoPersonalAdmController extends Controller {
             $usuarios = $query->getResult();
 
             //Actualizar CI, complemento y username
-            foreach ($personas as $key => $value) {
+            foreach ($personas as $key => $value)
+            {
                 $value->setCarnet($value->getCarnet().'±');
                 $em->persist($value);
                 $em->flush();
             }
 
-            foreach ($usuarios as $key => $value) {
+            foreach ($usuarios as $key => $value)
+            {
                 $value->setUsername($value->getUsername().'±');
                 $em->persist($value);
                 $em->flush();
             }
 
-            if($persona['complemento'] == '0') {
+            if($persona['complemento'] == '0')
+            {
                 $persona['complemento'] = '';
             }
             $newPersona = new Persona();
@@ -991,6 +1126,7 @@ class InfoPersonalAdmController extends Controller {
             $em->flush();
             $persona_validada = $newPersona;
         }
+    */
 
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:result_newpersona.html.twig',array(
             'persona'=>$persona_validada,
@@ -1019,8 +1155,12 @@ class InfoPersonalAdmController extends Controller {
      */
 
     private function formSearch($gestionactual) {
-        
-        $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
+        $gestiones = [];
+
+        for($i=$gestionactual;$i>=2009;$i--){
+            $gestiones[$i]=$i;
+        }
+        // $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_index'))

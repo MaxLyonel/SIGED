@@ -1,0 +1,85 @@
+Sie\AppWebBundle\Entity\PreinsInstitucioneducativaCursoCupo:
+    type: entity
+    table: preins_institucioneducativa_curso_cupo
+    indexes:
+        IDX_32C6A1B9C6447610:
+            columns:
+                - grado_tipo_id
+        IDX_32C6A1B96DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_32C6A1B93AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        observacion:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        cantidadCupos:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cantidad_cupos
+        fechaSorteo:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_sorteo
+    manyToOne:
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

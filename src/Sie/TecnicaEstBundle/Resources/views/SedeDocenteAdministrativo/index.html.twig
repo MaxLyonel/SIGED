@@ -1,0 +1,300 @@
+{% extends 'layoutTecnicaEst.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { top:0; bottom:0; width:100%; height: 300px; }
+    </style>
+{% endblock %}
+
+{% block contentoption %}  
+  <!-- Start page header -->
+  <div class="header-content fixed-top">
+      <h2>
+          <i class="fa fa-home"></i>
+          {% if titulo is defined  %}  {{ titulo }} {% endif %}
+          <span>{% if subtitulo is defined  %}{{ subtitulo }} {% endif %}</span>
+      </h2>
+      <div class="breadcrumb-wrapper hidden-xs">
+          <span class="label">Usted esta aquí:</span>
+          <ol class="breadcrumb">
+              <li>
+                  <i class="fa fa-home"></i>
+                  <a href="{{path('sie_tecnicaest_homepage')}}">Inicio</a>
+                  /
+                  <a href="{{path('tecest_maininfotecest_index')}}">Menú Principal</a>
+              </li>
+          </ol>
+      </div><!-- /.breadcrumb-wrapper -->
+  </div><!-- /.header-content -->
+  <!--/ End page header -->
+    <!-- Start body content -->
+  <div class="body-content animated fadeIn">
+      <div class="row">
+          <div class="col-lg-12">
+              <div class="page-content">
+                  {% for type, flashMessage in app.session.flashbag.all() %}
+                      <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          {% if flashMessage.title is defined %}
+                              <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                              {{ flashMessage.message }}
+                          {% else %}
+                              &nbsp;
+                          {% endif %}
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+      
+
+  {% if usuario is defined %}
+    {% set correo = usuario.persona.correo %}
+    {% set telefono = usuario.persona.celular %}
+    {% set username = usuario.username %}
+    {% set nombre = usuario.persona.nombre ~ " " ~ usuario.persona.paterno ~ " " ~ usuario.persona.materno %}
+  {% else %}  
+    {% set correo = "" %}
+    {% set telefono = "" %}
+    {% set username = "" %}
+    {% set nombre = "" %}
+  {% endif %}  
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-4 col-sx-12">    
+            <form name="form" id="form" role="form" action="{{ path('sie_tecest_sede_docenteadministrativo_index') }}" method="POST" onsubmit="return verificaCampos()">
+                <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
+                <input type="hidden" id="form_gestion" name="form[gestion]" value="">  
+                <input type="hidden" id="form_data" name="form[data]" value="{{data.info}}">                 
+            </form>            
+            <ul class="nav nav-pills nav-stacked nav-email rounded">
+                {% for gestion in gestiones %}
+                    {% set id = gestion.id %}
+                    {% set nombre = gestion.gestion %}
+                    <li {%if data.gestion == gestion.id %}class="active"{%endif%}>
+                        <a href="javascript:void(0);" onclick="ingresoSedeGestion('{{id}}')">
+                            {{nombre}}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-8 col-sx-12">
+            <div class="panel shadow panel-danger">
+                <div class="panel-heading text-center p-3 mb-2 text-white">
+                    <h4><span>{{ data.gestion }}</span></h4>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+
+                <div class="panel-sub-heading">                            
+                    <div class="row inner-all">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">  
+                            <div class="row"> 
+                                {% if datos is defined %}
+                                    <div class="col-lg-12 col-md-12" id="maestroNuevo">
+                                        <div class="tile orange style="height: auto;">                
+                                            <div class="row">    
+                                                <form name="form" method="post" role="form" id="formDocAdm">
+                                                    {% set c = 0 %}
+                                                    <table id="tablaDocAdm" class="table table-default" cellspacing="0">  
+                                                        <thead>                                
+                                                            {% for key1, dat1 in datos %}
+                                                                {% if loop.first %}
+                                                                    <tr>
+                                                                        <th style="text-align:center;">
+                                                                            <label></label>
+                                                                        </th> 
+                                                                        {% set c = c + 1 %} 
+                                                                        {% for key2, dat2 in dat1 %}
+                                                                            {% set c = c + 1 %} 
+                                                                            <th style="text-align:center;">
+                                                                                {{key2}}
+                                                                            </th>
+                                                                        {% endfor %} 
+                                                                    </tr>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </thead> 
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th style="text-align:center;" colspan="{{c}}">                                        
+                                                                    <a href="#" class="btn btn-success btn-block" id="form_guardar">Guardar</a>
+                                                                </th>
+                                                            </tr>
+                                                        </tfoot>              
+                                                        <tbody>
+                                                            {% set x = 0 %}
+                                                            {% for key1, dat1 in datos %}
+                                                                {% set x = x + 1 %}
+                                                                <tr>
+                                                                    {% if loop.first %}
+                                                                    {% else %}
+                                                                        <td>
+                                                                            <label>{{key1}}</label>
+                                                                        </td>
+                                                                        {% set y = 0 %}
+                                                                        {% for key2, dat2 in dat1 %}
+                                                                            {% set y = y + 1 %}
+                                                                            <td style="text-align:center;">
+                                                                                <input type="number" id="form_{{dat2.data}}" name="form[{{dat2.data}}]" min="0" max="10000" value="{{dat2.cantidad}}" class="form-control clase{{y}}" onclick="calculaTotales()" oninput="calculaTotales()">
+                                                                            </td>
+                                                                        {% endfor %}  
+                                                                    {% endif %}
+                                                                </tr>
+                                                            {% endfor %}
+                                                            {% for key1, dat1 in datos %}
+                                                                {% if loop.first %}
+                                                                    <tr>
+                                                                        <td style="text-align:left; background-color: #EEEEEE;">
+                                                                            <label>{{key1}}</label>
+                                                                        </td> 
+                                                                        {% set y = 0 %}
+                                                                        {% for key2, dat2 in dat1 %}
+                                                                            {% set y = y + 1 %}
+                                                                            <td style="text-align:left; background-color: #EEEEEE;">
+                                                                                <strong id="clase{{y}}_total">&nbsp;&nbsp;&nbsp;&nbsp;{{dat2}}</strong>
+                                                                            </td>
+                                                                        {% endfor %} 
+                                                                    </tr>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </form>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div>
+        </div>
+  </div>
+  <!--/ End body content -->
+
+{% endblock %}
+{% block javascripts%}
+{{parent()}}
+<script>
+    var ingresoSedeGestion = function (ges){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        var formGestion = $('#form_gestion');
+        var formulario = $('#form')[0];
+        formGestion.val(ges);
+        if (formGestion.val() == ""){
+          alert("Debe seleccionar una gestión válida");
+          return false;
+        }  
+        formulario.submit();      
+        return true;
+    };
+
+    var calculaTotales = function (){
+        // var masculinos = document.getElementsByName('masculino[]');
+        // var femeninos = document.getElementsByName('femenino[]');
+        var cantidadMasculino = 0;
+        var cantidadFemenino = 0;
+        // for (var i=0; i < masculinos.length; i++){
+            // cantidadMasculino = parseInt(cantidadMasculino) + parseInt(masculinos[i].value);
+        // }
+        // for (var i=0; i < femeninos.length; i++){
+            // cantidadFemenino = parseInt(cantidadFemenino) + parseInt(femeninos[i].value);
+        // }
+        // $('#total_masculino').html(cantidadMasculino);
+        // $('#total_femenino').html(cantidadFemenino);
+
+        $('.clase1').each(function(i,obj){
+            cantidadMasculino = parseInt(cantidadMasculino) + parseInt(obj.value);
+        });
+
+        $('.clase2').each(function(i,obj){
+            cantidadFemenino = parseInt(cantidadFemenino) + parseInt(obj.value);
+        });
+
+        $('#clase1_total').html(cantidadMasculino);
+        $('#clase2_total').html(cantidadFemenino);
+    };
+
+
+    $('#form_guardar').on("click", function(){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        var r = confirm("¿Desea guardar el registro?");
+        if (r == false) {
+            return false;
+        }
+                
+        var cantDocAdm = $('#cantDocAdm');
+        var boton = $(this);
+        boton.hide();
+
+        var formulario = $('#formDocAdm')[0];
+        var formData = new FormData(formulario);
+
+        for (var j = 0, element; element = formulario[j++];) {            
+            if (element.type === "number" && element.value === ""){
+                var idVal = element.id;                   
+                element.focus();
+                alert("Debe registrar la cantidad de personal");
+                boton.show();
+                return false;
+            }  
+
+            if (element.type === "number" && (element.value < 0 || element.value > 999999999)){
+                var idVal = element.id;                   
+                element.focus();
+                alert("Debe registrar una cantidad válida mayor a 0");
+                boton.show();
+                return false;
+            } 
+
+            if(element.type === "number" && (element.value % 1 != 0)){   
+                element.focus();
+                alert("Debe registrar un valor entrero válido");
+                boton.show();
+                return false;
+            }
+        }
+        
+
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_tecest_sede_docente_administrativo_save'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {       
+                $("#message").remove();
+                $("#formDocAdm").prepend('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {                                  
+                $('#message').empty();
+                if(data.estado){ 
+                    cantDocAdm.html(data.cantidad);
+                    $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
+                    boton.show();
+                } else {
+                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
+                    boton.show();
+                }                
+            },
+            error: function(error){    
+                $('#message').empty();   
+                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+                boton.show();
+            },
+        }); 
+    });
+
+</script>
+{% endblock %}

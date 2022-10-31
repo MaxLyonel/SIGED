@@ -29,8 +29,8 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2020-12-25');
-        $this->gestionOperativo = $this->session->get('currentyear');
+        $this->fechaCorte = new \DateTime('2021-11-30');
+        $this->gestionOperativo =  $this->session->get('currentyear');
     }
 
     /*
@@ -46,9 +46,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeForm();
 
@@ -86,9 +86,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeDirForm();
 
@@ -121,9 +121,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeDirForm();
         $form->handleRequest($request);
@@ -149,6 +149,23 @@ class BachillerExcelenciaController extends Controller {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
             return $this->redirect($this->generateUrl('bach_exc_dir'));
             }
+
+            /* Verificar si la UE ya ha registrado al director */
+            $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
+
+            $query = $repository->createQueryBuilder('m')
+                    ->where('m.institucioneducativa = :institucion')
+                    ->andWhere('m.gestionTipo = :gestion')
+                    ->setParameter('institucion', $formulario['institucioneducativa'])
+                    ->setParameter('gestion', $formulario['gestion'])
+                    ->getQuery();
+
+
+            $registrado = $query->getResult();
+
+            // if(count($registrado) <= 1) {
+            //     return $this->redirect($this->generateUrl('principal_web'));
+            // }
 
             /*
              * Verificar si la UE cuenta con sexto de secundaria
@@ -293,9 +310,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $response = new JsonResponse();
         try {
@@ -308,6 +325,9 @@ class BachillerExcelenciaController extends Controller {
                 'nombre'=>$form_aux['nombre'],
                 'fecha_nacimiento'=>$form_aux['fechaNacimiento']
             );
+            if($form_aux['nacionalidad']==1){
+                $persona['extranjero']='e';
+            }
             
             $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form_aux['carnet'], $persona, 'prod', 'academico');
 
@@ -464,9 +484,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeForm();
         $form->handleRequest($request);
@@ -490,7 +510,7 @@ class BachillerExcelenciaController extends Controller {
                 $gestion = $formulario['gestion'];
             } else {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
-            return $this->redirect($this->generateUrl('bach_exc'));
+            // return $this->redirect($this->generateUrl('bach_exc'));
             }
 
             /*
@@ -646,9 +666,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeRstForm();
         $form->handleRequest($request);

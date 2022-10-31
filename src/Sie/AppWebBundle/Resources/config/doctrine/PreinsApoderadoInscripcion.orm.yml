@@ -1,0 +1,74 @@
+Sie\AppWebBundle\Entity\PreinsApoderadoInscripcion:
+    type: entity
+    table: preins_apoderado_inscripcion
+    indexes:
+        IDX_F5A05028FC5A6B72:
+            columns:
+                - preins_persona_id
+        IDX_F5A05028E215A75A:
+            columns:
+                - preins_estudiante_inscripcion_id
+        IDX_F5A05028C861DD7C:
+            columns:
+                - apoderado_tipo_id
+    uniqueConstraints:
+        uq_preins_apoderado_inscripcion:
+            columns:
+                - apoderado_tipo_id
+                - preins_persona_id
+                - preins_estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        preinsPersona:
+            targetEntity: PreinsPersona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                preins_persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        preinsEstudianteInscripcion:
+            targetEntity: PreinsEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                preins_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        apoderadoTipo:
+            targetEntity: ApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

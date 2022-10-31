@@ -1,15 +1,33 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
-    <!-- Start page header -->
-      {% include 'SieHerramientaBundle:Principal:breadcrumbstrail.html.twig' with {'sie': odataUedu.id, 'gestion':gestion , 'opcion': 'Estudiante'} %}
-    <!--/ End page header -->
-    <style type="text/css">
-        .dropdown-header{
-            background: #3f729b !important;
-            color: #EEEEEE;
-        }
-    </style>
+<!-- Start page header -->
+{% include 'SieHerramientaBundle:Principal:breadcrumbstrail.html.twig' with {'sie': odataUedu.id, 'gestion':gestion , 'opcion': 'Estudiante'} %}
+<!--/ End page header -->
+<style type="text/css">
+.dropdown-header{
+    background: #3f729b !important;
+    color: #EEEEEE;
+}
+.close1 {
+font-size: 1.28571em;
+top: -0.85714em;
+position: absolute;
+right: -0.85714em;
+height: 2em;
+width: 2em;
+background-color: #313a46;
+opacity: 1;
+border: 2px solid #ffffff;
+text-shadow: none;
+color: #ffffff;
+border-radius: 50%;
+text-align: center;
+line-height: 1.83333em;}
+.panel-title1{
+    text-shadow: 3px 3px 2px #000;font-weight:bold;
+}
+</style>
 
     <div class="body-content animated fadeIn">
 
@@ -17,6 +35,9 @@
         <!--div class="container" style="margin-top:30px;"-->
         {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Unidad Educativa', 'gestion': gestion,'sie': odataUedu.id, 'ieducativa':odataUedu.institucioneducativa, 'opcion': 'Información Estudiante'} %}
         {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
+        {% if objObsQA %}
+            {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': odataUedu.id,'institucion': odataUedu.institucioneducativa, 'gestion': gestion} %}
+        {% endif %}
         {# {% include 'SieHerramientaBundle:Principal:closeRude.html.twig'%} #} 
         <div class="row">
             <div class="col-md-12 text-right">
@@ -63,15 +84,15 @@
                                             
                                             <li class="divider"></li>
                                             <div class="dropdown-header">Operativos</div>
-
                                             {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
-                                                {% if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  %}
+                                                {# if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  #}
+                                                {% if arrLevelandGrado.operativo in [2,3] and arrLevelandGrado.closeopesextosecc == false  %}
                                                     {# <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
                                                     <i class="fa fa-group" ></i>
                                                     </button> #}
                                                     <li><a href="javascript:cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">Cerrar Operativo Sexto de Secundaria</a></li>
                                                 {% else %}
-                                                    <li><a href="javascript:void();">Cerrar Operativo Sexto de Secundaria</a></li>
+                                                    <li><a href="javascript:void();">Operativo Sexto de Secundaria CERRADO </a></li>
                                                 {% endif %}
                                             {% endif %}
                                             {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
@@ -182,12 +203,21 @@
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>
                                                                         </div>
+                                                                        {# {% if "now"|date('j')|number_format in range(1,14) %} #}
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modalidad">
                                                                             <button class="btn btn-circle btn-primary btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-home"></i>
                                                                             </button>
-                                                                        </div>                                                                        
-                                                                        
+                                                                        </div>
+
+                                                                        {# Este icono es para registrar los textos educativos #}
+                                                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Textos Educativos">
+                                                                            <button class="btn btn-circle btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="registrarTextoEducativo('{{dataParalelo.infoUe}}');">
+                                                                                <i class="fa fa-book"></i>
+                                                                            </button>
+                                                                        </div> #}
+
+                                                                        {# {% endif %} #}
                                                                         {% if arrLevelandGrado.operativo in allowOperativo and arrLevelandGrado.gestion >= 2019 %}
                                                                             {% if estado == true and app.session.get('currentyear') == 2019 %}
                                                                                 {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
@@ -210,6 +240,15 @@
                                                                             {% else %}
                                                                             {% endif %}
                                                                         {% endif %}
+
+                                                                        {# icon de asignar paralelo #}
+                                                                       
+                                                                       
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Ratificación de inscripción">
+                                                                            <button class="btn btn-circle btn-success btn-stroke " onclick="asignarParalelo('{{dataParalelo.infoUe}}');">
+                                                                                <i class="fa fa-check-square-o"></i>
+                                                                            </button>
+                                                                        </div>
 
                                                                     </li>
                                                                 {% endfor %}
@@ -243,6 +282,7 @@
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
 
     </div><!-- /.modal -->
+
     <!--/ End body content -->
 {% endblock %}
 {% block javascripts%}
@@ -269,6 +309,8 @@
                 e.stopPropagation();
             });
         });
+
+        
 
         var cerrarRude = function(sie, gestion){
           $.ajax({
@@ -349,6 +391,31 @@
             });
         };
 
+        var seeStudents = function (infoUe) {
+
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_info_estudiante_see_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                    $('.tooltips').tooltip();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
         var seeStudents = function (infoUe) {
 
             $.ajax({
@@ -494,6 +561,32 @@
                 }
             });
         };
+
+        var registrarTextoEducativo = function (infoUe)
+        {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_textoEducativo_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+     
         var getDatosCurso = function (infoUe) {
             $.ajax({
                 type: 'post',
@@ -539,6 +632,8 @@
                 }
             });
         };
+
+
         var inscriptionWithRude = function (aData) {
 
             $.ajax({
@@ -625,6 +720,8 @@
             });
 
         };
+
+
 
 
   /* the new to do the inscriptions*/
@@ -845,6 +942,52 @@
       //           });
       //   }
 
+        var RegisterParents = function(idInscripcion){
+            $.ajax({
+                type: 'post',
+                data: ({idInscripcion: idInscripcion }),
+                url: "{{ path('special_registerparents_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
 
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };       
+function asignarParalelo(infoUe){
+    $("#modal").html('');
+    $('#modal').modal('show');
+    /*$.post('{{ path('herramienta_asignarPararlelo_index') }}', {infoUe:infoUe}, function(data) {
+        $("#modal1_con").html(data);
+    });*/
+    $.ajax({
+        type: 'post',
+        data: ({infoUe: infoUe}),
+        url: "{{ path('herramienta_asignarPararlelo_index') }}",
+        beforeSend: function () {
+            $("#modal").empty();
+            $("#modal").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+        },
+        success: function (data) { console.log(data);
+            $("#modal").html(data);
+        },
+        statusCode: {
+            500: function () {
+            },
+            404: function () {
+            }
+        }
+    });
+};
     </script>
 {%endblock%}

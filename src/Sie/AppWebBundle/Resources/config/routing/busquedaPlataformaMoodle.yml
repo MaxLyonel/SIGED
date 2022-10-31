@@ -1,0 +1,21 @@
+estudiante_plataforma_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:BusquedaPlataformaMoodle:index }
+
+docente_plataforma_index:
+    path:     /docente
+    defaults: { _controller: SieAppWebBundle:BusquedaPlataformaMoodle:docente }
+    options:
+         expose: true
+
+validar_info_est:
+    path:     /validar_info_est
+    defaults: { _controller: SieAppWebBundle:BusquedaPlataformaMoodle:validar_info_est }
+    options:
+         expose: true
+
+validar_info_doc:
+    path:     /validarInfoDoc
+    defaults: { _controller: SieAppWebBundle:BusquedaPlataformaMoodle:validarInfoDoc }
+    options:
+         expose: true

@@ -1,0 +1,1553 @@
+{% extends 'layoutUniversity.html.twig' %}
+{## % extends 'layoutRegular.html.twig' % ##}
+{% block contentBread %}
+<i class="fa fa-angle-right"></i>
+<a href="#">
+    Sedes
+
+</a>
+{% endblock %}
+{% block contentoption %}
+<style>
+    .formatyears {
+        width: 200px;
+        padding: 16px;
+        border-radius: 10px;
+        margin: auto;
+        background-color: #e5e7e9;
+    }
+
+    .formatyearsform {
+        padding: 16px;
+        border-radius: 10px;
+        margin: auto;
+        background-color: #e5e7e9;
+    }
+
+    .formatallstaff {
+        width: 100%;
+        padding: 16px;
+        border-radius: 10px;
+        margin: auto;
+        background-color: #e5e7e9;
+    }
+
+    form {
+        padding: 0 !important;
+        margin: 0 0 !important;
+    }
+</style>
+<!-- Start page header -->
+<link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
+<div class="header-content fixed-top">
+    <h2>
+        <i class="fa fa-home"></i>
+        {% if titulo is defined %}
+        {{ titulo }}
+        {% endif %}
+        <span>
+            {% if subtitulo is defined %}
+            {{ subtitulo }}
+            {% endif %}
+        </span>
+    </h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">
+            Usted esta aquí:
+        </span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('tecest_maininfotecest_index')}}">Menu Principal</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('tecest_carreras_index')}}">Carreras</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Estadísticas</li>
+        </ol>
+    </div>
+    <!-- /.breadcrumb-wrapper -->
+</div>
+<!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="panel">
+            <div class="panel-heading">
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading yearOld">
+                            <h3 class="panel-title"> <i class="fa fa-file"></i> CARRERA: {{ entity.carrera }} / RÉGIMEN:  {{ entity.getEstTecRegimenEstudioTipo.getDescripcion() }} / NIVEL ACADÉMICO: {{ entity.getEstTecNIvelTipo.getNivelTipo() }} </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="panel panel-primary">
+
+                            <div class="panel-body">
+
+                                <div class="row">
+
+                                    <div class="col-md-2">
+
+                                        <div class="table-responsive mb-20">
+
+                                            
+                                            <div class="formatyears">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-dark">
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Gestión</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% set var = 1 %}
+                                                        {% for entity in gestiones %}
+
+                                                        {% if gestion_id == entity.gestion_tipo_id %}
+                                                        <tr scope="row" class="success">
+                                                            <td class="text-center"><strong>{{var}}</strong></td>
+                                                            <td>
+                                                                <strong>
+                                                                    {{entity.gestion_tipo_id }}
+                                                                </strong>
+                                                            </td>
+                                                        </tr>
+                                                        {% else %}
+                                                        <tr scope="row">
+                                                            <td class="text-center">{{var}}</td>
+                                                            <td>
+                                                                <a href="{{ path('tecest_carreras_info',  {'carrera_id':carrera_id, 'gestion' :  entity.gestion_tipo_id}) }}"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    data-original-title="Ver Estadisticas">{{
+                                                                    entity.gestion_tipo_id }}</a>
+                                                            </td>
+                                                        </tr>
+
+                                                        {% endif %}
+
+                                                        {% set var = var + 1 %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-10">
+
+                                        {% if sindatoenlagestion == false %}
+
+                                            <div class="row" style="padding: 10px;">
+
+                                                <table width="30%" padding="20" border="0">
+                                                    <th>
+                                                        <td>
+                                                            {% if opestatus == true %}
+                                                                <a href="#"
+                                                                class="btn btn-teal btn-block" style="border-radius: 2px;"
+                                                                id="btn_sin_dato">Reportar sin información en la gestión</a> 
+                                                            {% endif %}   
+                                                        </td>                                                   
+                                                    </th>
+                                                </table>
+                                                <div class="messagejustifica" id="messagejustifica"></div>
+                                                                        
+                                            </div>
+                                        
+                                        {% else %}
+
+                                        <div class="callout callout-warning">
+                                            <strong>IMPORTANTE!</strong>  SE HA REGISTRADO ESTA GESTION COMO <strong>"SIN DATOS"</strong>. PARA REVERTIR ESTE ESTADO DEBE COMUNICARSE CON EL MINISTERIO DE EDUCACION
+                                        
+                                        </div>
+
+                                        {% endif %}
+                                        <br>
+
+
+                                        <div class="formatallstaff" style="width:100% ;">
+                                            <div class="messageegresadostitulados" id="messageegresadostitulados"></div> 
+
+                                            <form name="formegresadostitulados" method="post" role="form" id="formegresadostitulados">
+                                            <table id="table1" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="50%" style="text-align:center">
+                                                            <strong>TITULADOS/EGRESADOS EN LA GESTION {{ gestion_id }}</strong>
+                                                        </th>
+                                                        <th style="text-align:center"><strong>Masculino</strong></th>
+                                                        <th style="text-align:center"><strong>Femenino</strong></th>
+                                        
+                                                    </tr>
+                                        
+                                                </thead>
+                                                <tbody>
+
+                                                    {% for key, entity in data.filas_egresados %}
+                                                    <tr>
+                                                        <td> <strong> {{ entity.matricula }} </strong></td>
+                                                        
+                                                            <td class="success" id="gaf{{ key + 1 }}c1">
+                                                            <input type="number" min="0" max="9999"
+                                                                id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                value="{{ entity.m1 }}"
+                                                                onclick="this.select();"
+                                                                onclick="calculaTotales0()"
+                                                                oninput="calculaTotales0()"
+                                                                class="form-control clase00" 
+                                                                onblur="datoVacio(this)" />
+                                                        </td>
+                                                        <td class="success" id="gaf{{ key + 1 }}c2">
+                                                            <input type="number" min="0" max="9999"
+                                                                id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                value="{{ entity.f1 }}"
+                                                                onclick="this.select();"
+                                                                onclick="calculaTotales0()"
+                                                                oninput="calculaTotales0()"
+                                                                class="form-control clase01" 
+                                                                onblur="datoVacio(this)" />
+                                                                
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+
+                                                    {#
+                                                    <tr>
+                                                        <th>TOTALES</th>
+                                                        <th id="total00">{{ totales0[0].m1}}</th>                                                
+                                                        <th id="total01">{{ totales0[0].f1}}</th>                                                       
+                                                    </tr>
+                                                    #}
+
+                                                    <tr>
+                                                        <td> </td>                                                       
+                                                        <td colspan="2"> 
+                                                        {% if opestatus == true %}
+                                                            <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> 
+                                                        {% else %}   
+                                                        <div class="alert alert-danger">
+                                                            <strong>OPERATIVO CERRADO<strong> no se puede modificar la información.
+                                                        </div>
+                                                        {% endif %}   
+                                                        {#<a href="#" class="btn btn-success btn-block" id="form_save_gral" {% if opestatus == false %}  disabled="disabled" {% endif %}>Grabar Estadisticas</a> #}                                                          
+                                                        </td>                                                    
+                                                    </tr>
+
+
+                                                </tbody>
+                                            </table>
+                                            </form>
+                                        </div>
+                                        <br>
+
+                                        <div class="alert alert-success fa-2xs">
+                                            <span class="alert-icon"><i class="fa fa-user"></i></span>
+                                            <div class="notification-info">
+                                                <ul class="clearfix notification-meta">
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE
+                                                                ESTUDIANTES SEGUN TIPO DE BECA Y GENERO EN LA GESTION
+                                                                </strong></span></li>
+                                                    <li class="pull-right notification-sender" id="label_gestion_est">
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="messagebecas" id="messagebecas"></div>                                        
+
+                                        <div class="formatallstaff">
+                                            <form name="form" method="post" role="form" id="formBecas">
+                                                <table id="table1" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="50%" style="text-align:center" rowspan="2">
+                                                                <strong>TIPO DE BECA</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>2do.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>3er.
+                                                                    {{headertxt}}</strong></th>
+
+                                                            {% if data.periodos == 6 %}
+                                                            <th colspan="2" style="text-align:center"><strong>4to.
+                                                                    Periodo</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>5to.
+                                                                    Periodo</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>6to.
+                                                                    Periodo</strong></th>
+                                                            {% endif %}
+
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                            {% if data.periodos == 6 %}
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                            {% endif %}
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for key, entity in data.array_estudiantes %}
+                                                        <tr>
+                                                            <td> <strong> {{ entity.matricula }} </strong></td>
+
+                                                            <td class="success" id="af{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                    value="{{ entity.m1 }}"
+                                                                    onclick="this.select();"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"
+                                                                    class="form-control clase1" 
+                                                                    onblur="datoVacio(this)" />
+                                                            </td>
+                                                            <td class="success" id="af{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                    value="{{ entity.f1 }}"
+                                                                    onclick="this.select();"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"
+                                                                    class="form-control clase2" 
+                                                                    onblur="datoVacio(this)" />
+                                                            </td>
+                                                            <td class="success" id="af{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
+                                                                    class="form-control clase3" value="{{ entity.m2 }}"
+                                                                    onclick="this.select();"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                   
+                                                                    onblur="datoVacio(this)" />
+                                                            </td>
+                                                            <td class="success" id="af{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
+                                                                    class="form-control clase4" value="{{ entity.f2 }}"
+                                                                    onclick="this.select();"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                   
+                                                                    onblur="datoVacio(this)" />
+                                                            </td>
+                                                            <td class="success" id="af{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]"
+                                                                    class="form-control clase5" value="{{ entity.m3 }}"
+                                                                    onclick="this.select();"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                    
+                                                                    onblur="datoVacio(this)" />
+                                                            </td>
+                                                            <td class="success" id="af{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]"
+                                                                    class="form-control clase6" value="{{ entity.f3 }}"
+                                                                    onclick="this.select();"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                   
+                                                                    onblur="datoVacio(this)" />
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                    
+                                                        
+                                                        <tr>
+                                                            <th>TOTALES</th>
+                                                            <th id="total1">{{ totales1[0].m1}}</th>
+                                                            <th id="total2">{{ totales1[0].f1}}</th>
+                                                            <th id="total3">{{ totales1[0].m2}}</th>
+                                                            <th id="total4">{{ totales1[0].f2}}</th>
+                                                            <th id="total5">{{ totales1[0].m3}}</th>
+                                                            <th id="total6">{{ totales1[0].f3}}</th>
+                                                        </tr>
+                                                        
+
+
+                                                        <tr>
+                                                            <td> </td>
+                                                            {% if data.periodos == 3 %}
+                                                            <td colspan="6"> 
+                                                                    
+                                                                {% if opestatus == true %}
+                                                                    <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_becas">Grabar Estadisticas</a> 
+                                                                {% else %}   
+                                                                <div class="alert alert-danger">
+                                                                    <strong>OPERATIVO CERRADO<strong> no se puede modificar la información.
+                                                                </div>
+                                                                {% endif %} 
+
+                                                            </td>
+                                                            {% else %}
+                                                            <td colspan="12"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_becas">Grabar Estadisticas</a> </td>
+                                                            {% endif %}
+                                                        </tr>
+
+                                                    </tbody>
+
+
+
+
+                                                </table>
+                                            </form>
+                                        </div>
+
+
+                                        <hr>
+                                        <div ref="tercero" id="tercero"></div>
+                                        <div class="alert alert-warning fa-2xs">
+                                            <span class="alert-icon"><i class="fa fa-file"></i></span>
+                                            <div class="notification-info">
+                                                <ul class="clearfix notification-meta">
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE ESTUDIANTES
+                                                        POR TIPO DE MATRICULA Y GENERO EN LA
+                                                        GESTION Y
+                                                        PERIODO</strong></span></li>
+                                                    <li class="pull-right notification-sender" id="label_gestion_est">
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="messagematriculas" id="messagematriculas"></div>
+                                        <div class="formatallstaff">
+                                            <form name="formMatriculas" method="post" id="formMatriculas">
+                                                <table id="table2" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="50%" rowspan="2" style="text-align:center">
+                                                                <strong>TIPO MATRICULA</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th style="text-align:center" colspan="2"><strong>2do.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th style="text-align:center" colspan="2"><strong>3er.
+                                                                    {{headertxt}}</strong></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for key, entity in data.array_tipo_matricula %}
+                                                        <tr>
+                                                            <td> <strong>{{ entity.matricula }}</strong></td>
+
+                                                            <td class="success" id="cf{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                    class="form-control clase7"
+                                                                    value="{{ entity.m1 }}"
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                            <td class="success" id="cf{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                    class="form-control clase8"
+                                                                    value="{{ entity.f1 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="cf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
+                                                                    class="form-control clase9"
+                                                                    value="{{ entity.m2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                            <td class="success" id="cf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
+                                                                    class="form-control clase10"
+                                                                    value="{{ entity.f2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="cf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]"
+                                                                    class="form-control clase11"
+                                                                    value="{{ entity.m3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                            <td class="success" id="cf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]"
+                                                                    class="form-control clase12"
+                                                                    value="{{ entity.f3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                        {#
+                                                        <tr>
+                                                            <th>TOTALES</th>
+                                                            <th id="total7">{{ totales2[0].m1}}</th>
+                                                            <th id="total8">{{ totales2[0].f1}}</th>
+                                                            <th id="total9">{{ totales2[0].m2}}</th>
+                                                            <th id="total10">{{ totales2[0].f2}}</th>
+                                                            <th id="total11">{{ totales2[0].m3}}</th>
+                                                            <th id="total12">{{ totales2[0].f3}}</th>
+                                                        </tr>
+                                                        #}
+
+
+                                                        <tr>
+                                                            <td> </td>
+                                                            {% if data.periodos == 3 %}
+                                                            <td colspan="6"> 
+
+                                                                {% if opestatus == true %}
+                                                            
+                                                                    <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_matriculas">Grabar Estadisticas</a> 
+                                                                {% else %}   
+                                                                <div class="alert alert-danger">
+                                                                    <strong>OPERATIVO CERRADO<strong> no se puede modificar la información.
+                                                                </div>
+                                                                {% endif %}
+                                                                
+                                                            </td>
+                                                            {% else %}
+                                                            <td colspan="12"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_matriculas">Grabar Estadisticas</a> </td>
+                                                            {% endif %}
+                                                        </tr>
+
+                                                        
+                                                    </tbody>
+
+                                                   
+
+                                                </table>
+                                            </form>
+                                        </div>
+
+
+
+                                        <hr>
+
+                                        
+
+                                        <div ref="cuarto" id="cuarto"></div>
+
+                                        <div class="alert alert-danger fa-2xs">
+                                            <span class="alert-icon"><i class="fa fa-users"></i></span>
+                                            <div class="notification-info">
+                                                <ul class="clearfix notification-meta">
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE
+                                                                DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
+                                                    <li class="pull-right notification-sender" id="label_gestion_est">
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="messagecargos" id="messagecargos"></div>
+                                        <div class="formatallstaff">
+                                            <form name="formCargos" method="post" id="formCargos">
+                                                <table id="table3" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="50%" style="text-align:center" rowspan="2">
+                                                                <strong>TIPO CARGO</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>2do.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>3er.
+                                                                    {{headertxt}}</strong></th>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for key, entity in data.array_cargos %}
+                                                        <tr>
+                                                            <td> <strong>{{ entity.matricula }}</strong></td>
+
+                                                            <td class="success" id="bf{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999"                                                                    
+                                                                    id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                    class="form-control clase13" value="{{ entity.m1 }}"
+                                                                     onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+                                                            <td class="success" id="bf{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf1 }}"
+                                                                    name="form[{{entity.idf1}}]" class="form-control clase14"
+                                                                    value="{{ entity.f1 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="bf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
+                                                                    class="form-control clase15" value="{{ entity.m2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+                                                            <td class="success" id="bf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
+                                                                    class="form-control clase16" value="{{ entity.f2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="bf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]"
+                                                                    class="form-control clase17" value="{{ entity.m3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+                                                            <td class="success" id="bf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]"
+                                                                    class="form-control clase18" value="{{ entity.f3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                        {#
+                                                        <tr>
+                                                            <th>TOTALES</th>
+                                                            <th id="total13">{{ totales3[0].m1}}</th>
+                                                            <th id="total14">{{ totales3[0].f1}}</th>
+                                                            <th id="total15">{{ totales3[0].m2}}</th>
+                                                            <th id="total16">{{ totales3[0].f2}}</th>
+                                                            <th id="total17">{{ totales3[0].m3}}</th>
+                                                            <th id="total18">{{ totales3[0].f3}}</th>
+                                                        </tr>
+                                                        #}
+
+                                                        <tr>
+                                                            <td> </td>
+                                                            {% if data.periodos == 3 %}
+                                                            <td colspan="6"> 
+                                                                {% if opestatus == true %}
+                                                                    <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_cargos">Grabar Estadisticas</a> 
+                                                                {% else %}   
+                                                                <div class="alert alert-danger">
+                                                                    <strong>OPERATIVO CERRADO<strong> no se puede modificar la información.
+                                                                </div>
+                                                                {% endif %}  
+
+                                                            </td>
+                                                            {% else %}
+                                                            <td colspan="12"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_cargos">Grabar Estadisticas</a> </td>
+                                                            {% endif %}
+                                                        </tr>
+
+                                                    </tbody>
+
+
+
+                                                </table>
+                                            </form>
+                                        </div>
+                                        
+
+
+
+
+                                    </div>
+                                </div>
+
+                                <br><br>
+
+                                <div class="row">
+
+                                    <div class="col-md-3">
+
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                    </div>
+
+                    {##
+                    <div class="col-md-3">
+                        <div class="panel panel-info">
+                            <div class="panel-heading yearOld">
+                                <h3 class="panel-title"> <i class="fa fa-file"></i> Panel Info</h3>
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div style=" text-align: center;">
+                                    <i class="fa fa-institution fa-lg"></i>
+                                </div>
+
+                                <h3>{{ central.universidad }}</h3>
+                                <h4> Sede: La Paz </h4>
+                                <hr>
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    </div>
+                    ##}
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+</div>
+</div>
+
+<!-- /.row -->
+
+<div id="modal-sin-info" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-m">
+        <div class="modal-content">          
+            <div class="modal-body">               
+
+                <div class="alert alert-danger">
+                    <strong> SIN INFORMACION EN LA GESTION ? </strong>
+                </div>
+
+                <div class="callout callout-warning">
+                    <strong>Atencion!</strong> Para indicar que NO se tienen datos disponibles de esta <strong>carrera</strong> en esta <strong>gestion</strong>, debe colocar una justificacion documentada para consideracion del Ministerio de Educación</a>.
+                </div>
+
+                <br>
+
+                <form name="form" method="post" role="form" id="formJustifica" class="formatyearsform">               
+                    <div>
+                    <input type="hidden" name="carrera_id" id="carrera_id" value={{carrera_id}}>
+                    <input type="hidden" name="gestion_id" id="gestion_id" value={{gestion_id}}>
+                    <textarea name="justifica" id="justifica" class="form-control" maxlength="250" rows="5" placeholder="Introduzca la justificacion para esta accion "></textarea> 
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-theme" onclick="updateSinInfo();">Proceder</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+
+<script>
+
+
+    function calculaTotales() {
+
+        console.log('here');
+
+        var tm1 = 0;
+        var tf1 = 0;
+
+        var tm2 = 0;
+        var tf2 = 0;
+
+        var tm3 = 0;
+        var tf3 = 0;
+
+        $('.clase1').each(function (i, obj) {
+            tm1 = parseInt(tm1) + parseInt(obj.value);
+        });
+
+        $('.clase2').each(function (i, obj) {
+            tf1 = parseInt(tf1) + parseInt(obj.value);
+        });
+
+        $('.clase3').each(function (i, obj) {
+            tm2 = parseInt(tm2) + parseInt(obj.value);
+        });
+
+        $('.clase4').each(function (i, obj) {
+            tf2 = parseInt(tf2) + parseInt(obj.value);
+        });
+
+        $('.clase5').each(function (i, obj) {
+            tm3 = parseInt(tm3) + parseInt(obj.value);
+        });
+
+        $('.clase6').each(function (i, obj) {
+            tf3 = parseInt(tf3) + parseInt(obj.value);
+        });
+        console.log(tm1);
+
+        $('#total1').html(tm1);
+        $('#total2').html(tf1);
+        $('#total3').html(tm2);
+        $('#total4').html(tf2);
+        $('#total5').html(tm3);
+        $('#total6').html(tf3);
+    }
+
+    function calculaTotales2() {
+
+            console.log('here');
+
+            var tm1 = 0;
+            var tf1 = 0;
+
+            var tm2 = 0;
+            var tf2 = 0;
+
+            var tm3 = 0;
+            var tf3 = 0;
+
+            $('.clase7').each(function (i, obj) {
+                tm1 = parseInt(tm1) + parseInt(obj.value);
+            });
+
+            $('.clase8').each(function (i, obj) {
+                tf1 = parseInt(tf1) + parseInt(obj.value);
+            });
+
+            $('.clase9').each(function (i, obj) {
+                tm2 = parseInt(tm2) + parseInt(obj.value);
+            });
+
+            $('.clase10').each(function (i, obj) {
+                tf2 = parseInt(tf2) + parseInt(obj.value);
+            });
+
+            $('.clase11').each(function (i, obj) {
+                tm3 = parseInt(tm3) + parseInt(obj.value);
+            });
+
+            $('.clase12').each(function (i, obj) {
+                tf3 = parseInt(tf3) + parseInt(obj.value);
+            });
+            console.log(tm1);
+
+            $('#total7').html(tm1);
+            $('#total8').html(tf1);
+            $('#total9').html(tm2);
+            $('#total10').html(tf2);
+            $('#total11').html(tm3);
+            $('#total12').html(tf3);
+        }
+
+    function calculaTotales3() {
+
+            console.log('here');
+
+            var tm1 = 0;
+            var tf1 = 0;
+
+            var tm2 = 0;
+            var tf2 = 0;
+
+            var tm3 = 0;
+            var tf3 = 0;
+
+            $('.clase13').each(function (i, obj) {
+                tm1 = parseInt(tm1) + parseInt(obj.value);
+            });
+
+            $('.clase14').each(function (i, obj) {
+                tf1 = parseInt(tf1) + parseInt(obj.value);
+            });
+
+            $('.clase15').each(function (i, obj) {
+                tm2 = parseInt(tm2) + parseInt(obj.value);
+            });
+
+            $('.clase16').each(function (i, obj) {
+                tf2 = parseInt(tf2) + parseInt(obj.value);
+            });
+
+            $('.clase17').each(function (i, obj) {
+                tm3 = parseInt(tm3) + parseInt(obj.value);
+            });
+
+            $('.clase18').each(function (i, obj) {
+                tf3 = parseInt(tf3) + parseInt(obj.value);
+            });
+            console.log(tm1);
+
+            $('#total13').html(tm1);
+            $('#total14').html(tf1);
+            $('#total15').html(tm2);
+            $('#total16').html(tf2);
+            $('#total17').html(tm3);
+            $('#total18').html(tf3);
+        }
+
+        function calculaTotales0() {
+
+            console.log('here');
+
+            var tm1 = 0;
+            var tf1 = 0;
+           
+
+            $('.clase00').each(function (i, obj) {
+                tm1 = parseInt(tm1) + parseInt(obj.value);
+            });
+
+            $('.clase01').each(function (i, obj) {
+                tf1 = parseInt(tf1) + parseInt(obj.value);
+            });            
+
+            $('#total00').html(tm1);
+            $('#total01').html(tf1);
+           
+           
+        }
+
+    function losesFocus() {
+        console.log("Focus Lost!");
+    }
+
+    var ingresoSede = function (sede) {
+        var formSede = $('#form_sede');
+        var formulario = $('#form')[0];
+        formSede.val(sede);
+        formulario.submit();
+        return true;
+    };
+
+    function updateEstudiantes(id, fila) {
+        console.log(id, fila);
+
+        document.getElementById("registro_id").setAttribute('value', id);
+        document.getElementById("fila").setAttribute('value', fila);
+        /*
+        document.getElementById("registro_id").value = id;
+        document.getElementById("fila").value = fila;*/
+
+        $("#modal-estudiante").modal('show');
+    }
+
+    function updateCargos(id, fila) {
+        console.log(id, fila);
+
+        document.getElementById("registro_id").setAttribute('value', id);
+        document.getElementById("fila").setAttribute('value', fila);
+        /*
+        document.getElementById("registro_id").value = id;
+        document.getElementById("fila").value = fila;*/
+
+        $("#modal-cargos").modal('show');
+    }
+
+    function updateMatriculaTipo(id, fila) {
+        console.log(id, fila);
+
+        document.getElementById("registro_id").setAttribute('value', id);
+        document.getElementById("fila").setAttribute('value', fila);
+        /*
+        document.getElementById("registro_id").value = id;
+        document.getElementById("fila").value = fila;*/
+
+        $("#modal-matriculas").modal('show');
+    }
+
+
+    function updateInfo() {
+
+        if (confirm('Registrar Estadisticas ?')) {
+
+            var col = document.getElementById("genero_id");
+            var columna = col.value;
+            console.log('columna:', columna);
+
+            var per = document.getElementById("periodo_id");
+            var periodo = per.value;
+            console.log('periodo:', periodo);
+
+            valor = document.getElementById("cantidad").value;
+            console.log('valor:', valor);
+
+            row_id = document.getElementById('registro_id').value;
+            fila = document.getElementById('fila').value;
+            console.log('fila:', fila);
+
+            if (periodo === '1') {
+                if (columna === '1') { document.getElementById(fila + 'c1').innerHTML = valor; }
+                if (columna === '2') { document.getElementById(fila + 'c2').innerHTML = valor; }
+                document.getElementById(fila + 'c3').innerHTML = parseInt(document.getElementById(fila + 'c1').innerText) + parseInt(document.getElementById(fila + 'c2').innerText);
+            } else {
+                if (columna === '1') { document.getElementById(fila + 'c4').innerHTML = valor; }
+                if (columna === '2') { document.getElementById(fila + 'c5').innerHTML = valor; }
+                document.getElementById(fila + 'c6').innerHTML = parseInt(document.getElementById(fila + 'c3').innerText) + parseInt(document.getElementById(fila + 'c4').innerText);
+            }
+
+            $('#modal-estudiante').modal('hide');
+
+        }
+
+    }
+
+    function updateInfoBefore() {
+
+
+        if (confirm('Registrar Estadisticas ?')) {
+
+            /*$.ajax({
+                type: 'post',
+                url: Routing.generate('carrera_delete', {'id': id}),  
+                success: function (data) {
+                    console.log('deleted !');
+                },
+                error: function () {
+
+                }
+            });*/
+
+            fila = 4;
+
+            var col = document.getElementById("genero_id");
+            var columna = col.value;
+            console.log(columna);
+
+            var per = document.getElementById("periodo_id");
+            var periodo = per.value;
+            console.log(periodo);
+
+            valor = document.getElementById("cantidad").value;
+            console.log(valor);
+
+            if (periodo === '1') {
+                if (columna === '1') { document.getElementById('f4c1').innerHTML = valor; }
+                if (columna === '2') { document.getElementById('f4c2').innerHTML = valor; }
+                document.getElementById('f4c3').innerHTML = parseInt(document.getElementById("f4c1").innerText) + parseInt(document.getElementById("f4c2").innerText);
+            } else {
+                if (columna === '1') { document.getElementById('f4c4').innerHTML = valor; }
+                if (columna === '2') { document.getElementById('f4c5').innerHTML = valor; }
+                document.getElementById('f4c6').innerHTML = parseInt(document.getElementById("f4c3").innerText) + parseInt(document.getElementById("f4c4").innerText);
+            }
+
+            $('#modal-assign').modal('hide');
+
+
+
+
+
+        }
+
+        return false;
+    }
+
+    function loadData(gestion) {
+
+        console.log('gestion: ', gestion);
+
+
+
+        /*for(fila=1; fila<=4; fila++)
+        {            
+            //fila = 4;
+            //console.log(fila);
+            document.getElementById('f' + fila + 'c1').innerHTML = getRandomValue();
+            document.getElementById('f' + fila + 'c2').innerHTML = getRandomValue();
+            document.getElementById('f' + fila + 'c3').innerHTML = parseInt(document.getElementById ('f' + fila + 'c1' ).innerText) + parseInt(document.getElementById ( 'f' + fila + 'c2' ).innerText);
+
+            document.getElementById('f' + fila + 'c4').innerHTML = getRandomValue();
+            document.getElementById('f' + fila + 'c5').innerHTML = getRandomValue();
+            document.getElementById('f' + fila + 'c6').innerHTML = parseInt(document.getElementById ( 'f' + fila + 'c3' ).innerText) + parseInt(document.getElementById ( 'f' + fila + 'c4' ).innerText);
+        }*/
+
+        document.getElementById('label_gestion_est').innerHTML = '<strong>Gestion: ' + gestion + '</strong>';
+        //document.getElementById('label_gestion_doc').innerHTML  ='<strong>Gestion: ' + gestion + '</strong>';
+
+    }
+
+    function getRandomValue() {
+        return Math.floor(Math.random() * 101);
+    }
+
+    $('#form_save_becas').on("click", function () {
+
+         swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    /*var r = confirm("¿Desea registrar la información ?");
+                    if (r == false) {
+                        return false;
+                    }*/
+
+                    var formulario = document.getElementById("formBecas"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_becas_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$('#form_save_becas').attr("disabled", true);
+                            //$("#messagebecas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#form_save_becas').attr("disabled", false);
+                            $('#messagebecas').empty();
+                            if (data.estado) {
+                                //Swal.fire('la información ha sido registrada');
+                                $("#messagebecas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messagebecas").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messagebecas").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+
+                }
+
+            })
+
+
+    });
+
+    $('#form_save_matriculas').on("click", function () {
+        
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    //console.log('form_save_matriculas');
+                    /*var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                    if (r == false) {
+                        return false;
+                    }*/
+
+                    var formulario = document.getElementById("formMatriculas"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_matriculas_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagematriculas').empty();
+                            document.getElementById("tercero").scrollIntoView();
+                        
+                            if (data.estado) {
+                                $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messagematriculas").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messagematriculas").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+
+
+                }
+
+            })
+
+    });
+
+    $('#form_save_cargos').on("click", function () {
+        
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    //console.log('form_save_matriculas');
+                    /*var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                    if (r == false) {
+                        return false;
+                    }*/
+
+                    var formulario = document.getElementById("formCargos"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_cargos_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagecargos').empty();
+                            if (data.estado) {
+                                document.getElementById("cuarto").scrollIntoView();
+                                //window.location.href = "#cuarto";
+                                //document.getElementById("cuarto").scrollIntoView();
+                                $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messagecargos").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messagecargos").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+
+
+                }
+
+            })
+    });
+
+    $('#form_save_gral').on("click", function () {
+        
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    //console.log('form_save_matriculas');
+                    /*var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                    if (r == false) {
+                        return false;
+                    }*/
+
+                    var formulario = document.getElementById("formegresadostitulados"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_titulados_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messageegresadostitulados').empty();
+                            if (data.estado) {
+                                $("#messageegresadostitulados").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messageegresadostitulados").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messageegresadostitulados").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+                    
+
+                }
+
+            })
+    });
+
+   
+
+
+    var datoVacio = function (control) {
+        /*console.log('vacio?');
+        console.log(control.value);*/
+        if (control.value == "") { control.value = 0; }
+        if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
+        calculaTotales(control);
+    }
+
+    var datoVacio2 = function (control) {
+        /*console.log('vacio?');
+        console.log(control.value);*/
+        if (control.value == "") { control.value = 0; }
+        if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
+        calculaTotales2(control);
+    }
+
+    var datoVacio3 = function (control) {
+        /*console.log('vacio?');
+        console.log(control.value);*/
+        if (control.value == "") { control.value = 0; }
+        if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
+        calculaTotales3(control);
+    }
+
+    $('#btn_sin_dato').click(function () {
+        showModalSinInfo();
+    });
+
+    function showModalSinInfo(){
+        $("#modal-sin-info").modal('show');
+    }
+
+    function  updateSinInfo(){
+
+        if(document.getElementById("justifica").value == ""  ||  document.getElementById("justifica").value.length  < 50){
+            //no hay justificacion
+            alert("DEBE ESPECIFICAR LA JUSTIFICACION DE ESTA ACCION (MINIMO 50 CARACTERES) !");
+            document.getElementById("justifica").focus();
+
+        }else{
+
+            //procede
+
+            swal({
+                title: "¿Grabar Justificacion ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Grabar"],
+            })
+            .then(function(respuesta)  {
+                if (respuesta) {              
+    
+                    var formulario = document.getElementById("formJustifica"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+    
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_sin_info_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            $("#messagejustifica").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagejustifica').empty();
+                            $("#modal-sin-info").modal('hide');
+                            $("#messagejustifica").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            document.getElementById("btn_sin_dato").style.display="none";
+                            
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+    
+                }
+    
+            });
+
+
+        }
+
+    }
+
+
+
+
+</script>
+{% endblock %}

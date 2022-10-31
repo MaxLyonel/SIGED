@@ -1,0 +1,101 @@
+previmmediatemodi_index:
+  path: /
+  defaults: { _controller: SieProcesosBundle:PrevImmediateModi:index }
+
+previmmediatemodi_buscar_estudiante:
+  path: /buscarEstudianteone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:buscarEstudiante }
+  options:
+    expose: true
+
+previmmediatemodi_buscar_calificaciones:
+  path: /buscarCalificacionesone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:buscarCalificaciones }
+  options:
+    expose: true
+
+previmmediatemodi_formulario_save:
+  path: /formulariosaveone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:formularioSave }
+  options:
+    expose: true
+
+previmmediatemodi_formulario_imprimir:
+  path: /formularioImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:formularioImprimir }
+
+previmmediatemodi_formulario_vista_imprimir_libreta:
+  path: /formularioVistaImprimirLibretaone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:formularioVistaImprimirLibreta }
+
+previmmediatemodi_formulario_vista_imprimir_finalizar:
+  path: /formularioVistaImprimirFinalizarone/{idTramite}
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:formularioVistaImprimirFinalizar }
+
+previmmediatemodi_loadLevel:
+    path:     /loadLevel
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModi:loadLevel }
+    options:
+        expose: true    
+
+previmmediatemodi_loadGrado:
+    path:     /loadGrado
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModi:loadGrado }
+    options:
+        expose: true
+
+previmmediatemodi_loadParalelo:
+    path:     /loadParalelo
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModi:loadParalelo }
+    options:
+        expose: true
+
+previmmediatemodi_loadTurno:
+    path:     /loadTurno
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModi:loadTurno }
+    options:
+        expose: true        
+
+# DISTRITO
+
+previmmediatemodi_recepcion_verifica_ueducativa:
+  path: /recepcionaVerificaDistritoone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:recepcionVerificaDistrito }
+
+previmmediatemodi_recepcion_verifica_distrito:
+    path:     /krecepcionaVerificaDistritonew
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModi:recepcionVerificaDistritoNew }
+
+
+previmmediatemodi_deriva_distrito:
+  path: /derivaDistritoone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:derivaDistrito }
+
+# DEPARTAMENTO
+
+previmmediatemodi_recepcion_verifica_departamento:
+  path: /recepcionaVerificaDepartamentoone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:recepcionVerificaDepartamento }
+
+previmmediatemodi_deriva_veri_distrito:
+  path: /derivaVerificaDistrito
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:derivaVerificaDistrito }
+
+tramite_modificacion_calificaciones_acta_imprimir:
+  path: /actaImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:PrevImmediateModi:actaImprimir }
+
+tramite_download_inscriptionScore_yearOld:
+    path:     /ficgp/{{idTramite}
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModi:requestInsCalYearOld }  

@@ -1,0 +1,75 @@
+Sie\AppWebBundle\Entity\DistritoControlOperativoMenus:
+    type: entity
+    table: distrito_control_operativo_menus
+    indexes:
+        IDX_7F1DBE1FE19D46C:
+            columns:
+                - distrito_tipo_id
+        IDX_7F1DBE1756DFBFA:
+            columns:
+                - nota_tipo_id
+    uniqueConstraints:
+        uq_dist_contr_oper_menu:
+            columns:
+                - distrito_tipo_id
+                - gestion_tipo_id
+                - nota_tipo_id
+                - estado_menu
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        distrito:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        estadoMenu:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estado_menu
+        fecharegistro:
+            type: date
+            nullable: true
+            comment: ''
+        departamentoTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: departamento_tipo_id
+    manyToOne:
+        distritoTipo:
+            targetEntity: DistritoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                distrito_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

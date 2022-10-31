@@ -1,0 +1,21 @@
+registerforeignerperson_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegisterForeignerPerson:index }
+
+registerforeignerperson_register:
+    path:     /register
+    defaults: { _controller: SieHerramientaBundle:RegisterForeignerPerson:register }
+    options:
+         expose: true
+
+registerforeignerperson_loadData:
+    path:     /loadData
+    defaults: { _controller: SieHerramientaBundle:RegisterForeignerPerson:loadData }
+    options:
+         expose: true
+
+registerforeignerperson_lookforrude:
+    path:     /lookforrude
+    defaults: { _controller: SieHerramientaBundle:RegisterForeignerPerson:lookforrude }
+    options:
+         expose: true

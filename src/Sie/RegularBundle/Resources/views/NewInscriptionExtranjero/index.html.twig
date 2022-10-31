@@ -25,7 +25,7 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Inscripción Extranjero <span></span></h2>
+        <h2><i class="fa fa-table"></i>Inscripción Extranjero <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -209,20 +209,34 @@
             <div class="col-xs-12 col-lg-12">
 
                 <div class="panel panel-icon panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-search"></i>
-                        <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
-                        <div class="pull-right">
-                            {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
-                        </div>                                        
-                    </div>
+                    
                     {% if enableoption %}
                     <div class="panel-body">
                         <!-- form to search student -->
-                      <h4><strong> INSCRIPCIÓN POR DATOS DEL ESTUDIANTE </strong></h4></br> 
-
                          <form role="form">
-                            <div class="row">
+
+                          <ul class="nav nav-tabs" >
+                            <li role="presentation" class="active">
+                                <a href="#sinrude" data-toggle="tab">
+                                    <h5><strong> INSCRIPCIÓN POR DATOS DEL ESTUDIANTE </strong></h5>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#conrude" data-toggle="tab">
+                                    <h5><strong> INSCRIPCIÓN POR CÓDIGO RUDE </strong></h5>
+                                </a>
+                            </li>
+                          </ul>
+
+                              <!-- Tab panes -->
+                    <div class="tab-content">
+                          <div role="tabpanel" class="tab-pane fade in active" id="sinrude">
+                             <div class="panel-heading">
+                                <i class="fa fa-search"></i>
+                                <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
+                              </div>
+
+                              <div class="row">
                               <div class="col-sm-2">
                               <label for="ci">(*)Carnet de Identidad</label>
                               <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
@@ -234,25 +248,46 @@
                               <div class="col-sm-1">
                               <label for="expedido">Expedido</label>
                                 <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
- 								{% for entity in arrExpedido %}
+ 								                {% for entity in arrExpedido %}
                                   <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
-								{% endfor %}
+								                {% endfor %}
                                 </select> 
                               </div>
-                              <div class="col-sm-3">
+                              <div class="col-sm-2">
                               	<label for="fechanac">(*)Fec. Nacimiento  dd-mm-aaaa</label>
                               	    <!-- <vuejs-datepicker input-class="custom-date" :bootstrap-styling="true" :format="customFormatter" v-model="dataNewStudent.fecnacfindOrig"></vuejs-datepicker>
                               	    <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.fecnacfind" > -->
                                   <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
                               </div>
 
-                              <div class="col-sm-3">
-								{% if allowwithoutci %}
-	                               <label for="form_caseespecial" class="validation">SIN CI :</label>
-	                       			<input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
-                       			{% endif %}
-
+                              <div class="col-sm-1">
+                                {% if allowwithoutci %}
+                                    <label for="form_caseespecial" class="validation">SIN CI :</label>
+                                    <input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
+                                {% endif %}
                               </div>
+
+                              
+
+                              <div class="col-sm-3">
+
+                                  <div class="form-group">
+
+                                      <input class="form-check-input" type="radio" name="nacionalidad" id="nacional" value="NA"  v-model="tipo_persona" checked>
+                                      <label class="form-check-label" for="nacional">
+                                          Carnet de Identidad Nacional 
+                                      </label>
+                                  </div>
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="nacionalidad" id="extranjero" value="EX" v-model="tipo_persona">
+                                      <label class="form-check-label" for="extranjero">
+                                          Carnet de Identidad Extranjero (Comienza con 'E')
+                                      </label>
+                                  </div>
+                                  
+                              </div>
+
+                              
 
                             </div>
                             </br>     
@@ -274,11 +309,13 @@
                             
                             <div class="form-group row buscador">
 	                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
+	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>Buscar && Validar</button>
 	                            </div>
                         	</div>
                           </br>
-                          <h4><strong> INSCRIPCIÓN POR CÓDIGO RUDE DEL ESTUDIANTE </strong></h4></br>
+                          </div>
+                          <div role="tabpanel" class="tab-pane" id="conrude">
+                             
                           <form>
                             <div class="form-group">
                               <label for="rude">Código Rude</label>
@@ -286,6 +323,10 @@
                             </div>
                             <button v-on:click="lookforrude()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
                           </form>
+                          </div>
+                    </div>
+                    <!-- end Tab panes -->
+                         
                         	<div v-if="buscando" class="text-center">
                                 <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
                             </div>
@@ -333,7 +374,7 @@
                             <div v-if="responseprocess">
 
                             	<!-- data new studen  -->
-                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE 4444</p>
+                            	<p class="encabezado bg-primary">1. INFORMACIÓN DEL NUEVO ESTUDIANTE </p>
                             	<table class="table table-dark">
 								  <tbody>
 								    <tr>
@@ -703,11 +744,6 @@
                         	</div>                        	                    	
                                                       
                           </form>
-
-
-
-                       
-                            
                             
                     </div>
                     {% else %}
@@ -753,6 +789,7 @@
 			  },*/
 
             data: {
+              tuipo_persona: '',
             	state: {isSending: false},
             	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false},
             	oldStudent:{'withoutcifind':false, 'swnewforeign':false},
@@ -950,6 +987,17 @@
 					if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
 					  this.dataNewStudent.expedidoIdfind = 0;
 					}					
+
+          //dcastillo 2402
+          //para validacion segip
+          this.dataNewStudent.tipo_persona = 1;
+          if(this.tipo_persona == 'EX'){
+            // si es extranjero
+            this.dataNewStudent.tipo_persona = 2;
+          } 
+          console.log('objeto dataNewStudent:');
+          console.log(this.dataNewStudent);
+
 				
 					
                     axios.get(Routing.generate('newForeign_checksegipstudent', this.dataNewStudent ))

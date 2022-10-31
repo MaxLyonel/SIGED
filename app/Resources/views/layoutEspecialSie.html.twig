@@ -11,7 +11,7 @@
             <meta name="description" content="Sistema de información académico web para Educación Especial">
             <meta name="keywords" content="ministerio de educación, siged, sie, sistema de información educativa, educación especial">
             <meta name="author" content="Sistema de Información Educativa">
-            <title>SIGED | Herramienta web</title>
+            <title>SIGED | Educacion Especial</title>
             <!--/ END META SECTION -->
 
             <!-- START @FAVICONS -->
@@ -66,6 +66,8 @@
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
             <link href="{{ asset('webEspecial/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
+             <link href="{{asset('css/plugins/daterangepicker/daterangepicker-bs3.css')}}" rel="stylesheet">
+
             {% endblock %}
         </head>
     <!--/ END HEAD -->
@@ -110,7 +112,8 @@
         |=========================================================================================================================|
 
     -->
-    <body>
+    <!-- class="page-session page-sound page-header-fixed page-sidebar-fixed page-footer-fixed demo-dashboard-session" -->
+    <body class="page-session page-sound page-header-fixed page-sidebar-fixed page-footer-fixed demo-dashboard-session">
 
         <!--[if lt IE 9]>
         <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
@@ -239,7 +242,7 @@
                                 </a>
                                 <!-- Start dropdown menu -->
                                 <ul class="dropdown-menu animated flipInX">
-                                    <li class="dropdown-header">Account</li>
+                                    <li class="dropdown-header">Cuenta</li>
                                     <li><a href="{{path('sie_usuarios_homepage')}}"><i class="fa fa-user"></i>Gestión de usuarios</a></li>
                                     <li><a href="{{path('logout')}}"><i class="fa fa-sign-out"></i>Salir</a></li>
                                 </ul>
@@ -303,6 +306,46 @@
                             <span class="selected"></span>
                         </a>
                     </li>
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Control de Calidad</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ccalidad_index')}}">Inconsistencias</a></li>
+
+                            </ul>
+                        </li>
+                    {% endif %}                    
+                    {% if app.session.get('roluser') in [7,8,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Operativo Salud de Estudiantes</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ie_acceso_internet_index')}}">Registro</a></li>
+                                <li><a href="{{ path('ie_acceso_internet_seguimiento')}}">Seguimiento</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Operativo Bono Juancito Pinto</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('operativo_bono_jp_seguimiento')}}">Seguimiento</a></li>
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de titular</a></li>
+                                <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
 
                     <li class="submenu">
@@ -340,10 +383,52 @@
                         </a>
                         <ul>
                             <li><a href="{{ path('info_especial_index') }}">Info. Centro Especial</a></li>
-
+                            {# Seguimiento de operativo de salud #}
+                            {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li>
+                            {% endif %}
                         </ul>
                     </li>
 
+                    {% endif %}
+
+
+                    {% if app.session.get('roluser') in [7,8,10]  %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Seguimiento</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}   
+
+                    {# Seguimiento de operativo de salud #}
+                    {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                    <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-globe"></i></span>
+                            <span class="text">Operativo salud de Maestros</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul>
+                                <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li>
+                        </ul>
+                    </li>
+                     <li class="submenu">    
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Inscripciones</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('newinscriptionEspecial_index')}}">Estudiantes de Especial </a></li>
+                            </ul>
+                    </li>
+                            
                     {% endif %}
 
                     <li class="submenu">
@@ -356,6 +441,7 @@
                             <li><a href="{{ path('estudiante_index') }}"> Buscar Estudiante</a></li>
                             <li><a href="{{ path('history_new_inscription_index') }}"> Historial de Inscripción</a></li>
                             <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
+                            <li><a href="{{ path('especial_chagestatusstudent_index')}}">Cambio de Estado</a></li>
                         </ul>
                     </li>
                     {# <li class="submenu">
@@ -391,7 +477,19 @@
                             <span class="text">Trámites</span>
                         </a>
                     </li>
-
+                    {% if app.session.get('roluser') in [7,8,10, 9] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Bono Juancito Pinto</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>                                
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de titular</a></li>
+                                <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
+                            </ul>
+                        </li>                        
+                    {% endif %}
 
                     <!-- Start navigation - dashboard -->
 
@@ -1218,6 +1316,8 @@
             <script src="{{ asset('webEspecial/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js') }}"></script>
 
             <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+            <script src="{{asset('js/plugins/daterangepicker/daterangepicker.js')}}"></script>
+            <script src="{{asset('js/plugins/daterangepicker/moment.js')}}"></script>            
             <script src="{{ asset('js/initialize.js')}}"></script>
             <!--/ END GOOGLE ANALYTICS -->
         {%endblock%}

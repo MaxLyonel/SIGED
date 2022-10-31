@@ -1,0 +1,193 @@
+{% extends app.session.get('layout') %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i>Seguimiento a reporte de salud de Estudiantes <span>Acceso a internet, acceso a tv, estado de salud...</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('ie_acceso_internet_seguimiento')}}">Inicio</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Seguimiento</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('restablecerOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-teal">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Seguimiento</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12" id="tablaSeguimiento">
+                                {% if seguimientoiai is not empty %}
+                                    <div class="table-responsive col-md-12">
+                                        <table class="table table-bordered table-striped" id="listaSeguimiento">
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width:15px">#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Cód. Distrito</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Institución Educativa</th>
+                                                    <th>Estado</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Cód. Distrito</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Institución Educativa</th>
+                                                    <th>Estado</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                {% for registro in seguimientoiai %}
+                                                    <tr>
+                                                        <td class="text-center">{{loop.index}}</td>
+                                                        <td>{{registro.desc_departamento}}</td>
+                                                        <td>{{registro.cod_distrito}}</td>
+                                                        <td>{{registro.distrito}}</td>
+                                                        <td>{{registro.cod_ue_id}}</td>
+                                                        <td>{{registro.desc_ue}}</td>
+                                                        <td>
+                                                            <span class="label label-{% if registro.esactivo %}success{% else %}danger{% endif %}">
+                                                                {% if registro.esactivo %}
+                                                                    Reportó
+                                                                {% else %}
+                                                                    No reportó
+                                                                {% endif %}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            {% if registro.esactivo %}
+                                                                <a href="#" onclick="verDatos('{{registro.iaiid}}')" class="btn btn-xs btn-info"><i class="fa fa-fw fa-eye"></i> Ver</a>
+                                                                <a href="{{path('ie_acceso_internet_restablecer',{'iaiid': registro.iaiid})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer los registros?');"><i class="fa fa-fw fa-edit"></i> Restablecer</a>
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    No se encontraron registros.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-flex fade" id="modalDatos" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Datos reportados por la Institución Educativa</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idDatos"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+        var cargatablas = function (){
+            // Setup - add a text input to each footer cell
+            $('#listaSeguimiento tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#" || title === "Acciones"){
+                    $(this).html('');
+                } else {
+                    $(this).html('<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />');
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaSeguimiento').DataTable( {
+                    "order": [[ 0, "asc" ]]
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+        $(document).ready(function(){
+            cargatablas();
+        });
+
+        var verDatos = function(iaiid) {
+            $('#modalDatos').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('ie_acceso_internet_ver_datos', {'iaiid': iaiid}),
+                beforeSend: function () {
+                    $("#idDatos").empty();
+                    $("#idDatos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#idDatos").empty();
+                    $("#idDatos").html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#idDatos').empty();
+                        $('#idDatos').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#idDatos').empty();
+                        $('#idDatos').html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        };
+    </script>
+{% endblock %}

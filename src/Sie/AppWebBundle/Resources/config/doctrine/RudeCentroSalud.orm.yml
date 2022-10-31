@@ -2,7 +2,7 @@ Sie\AppWebBundle\Entity\RudeCentroSalud:
     type: entity
     table: rude_centro_salud
     indexes:
-        IDX_2451C012443E4890:
+        fk_rude_centro_salud:
             columns:
                 - rude_id
         IDX_2451C0124B6E9708:

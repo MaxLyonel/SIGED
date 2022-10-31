@@ -73,16 +73,13 @@
                             </div>  
                             <div class="pull-right">
                                 {% if ingresaAdmin == 1 %}
-                                    <button id="tour-13" onclick="document.forms['formEstadisticaRegularPdfTemp'].submit();" title="Descargar en formato PDF" class="btn btn-primary">
+                                    <button id="tour-13" onclick="document.forms['formEstadisticaPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
                                         <i class="fa fa-file-pdf-o"></i>
                                     </button>
-                                {% endif %} 
-                                <button id="tour-13" onclick="document.forms['formEstadisticaPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </button>
-                                <button id="tour-14" onclick="document.forms['formEstadisticaXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-                                    <i class="fa fa-file-excel-o"></i>
-                                </button>                            
+                                    <button id="tour-14" onclick="document.forms['formEstadisticaXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                        <i class="fa fa-file-excel-o"></i>
+                                    </button>      
+                                {% endif %}                       
                             </div>     
                             <div class="clearfix"></div>
                         </div>
@@ -108,6 +105,9 @@
                             {% for data in infoSubEntidad %}
                                 {% set cantidad = data.cantidad %}  
                                 {% set total = data['total_general'] %} 
+                                {% if total == 0 %}
+                                    {% set total = 1 %} 
+                                {% endif %}  
                                 {% set porcentaje = (cantidad*100)/(total)%} 
                                 {% set id = data.codigo %}
                                 {% set nombre = data.nombre %} 

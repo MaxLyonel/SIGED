@@ -24,8 +24,15 @@ class Login {
      * verificamos si tiene roles activos
      */
 	public function verificarRolesActivos($id, $key) {                
-        $gestion = '2021';
-        $semestre = '2';
+        /**
+         * TODO
+         * modificar gestion y semestre alternativa
+         */
+        // $gestion = '2022';
+        // $semestre = '2';
+        $gestion = date('Y');
+        $semestre = (date('m')>=7)?3:'2';        
+
 
         $db = $this->em->getConnection();
         //******************
@@ -48,6 +55,7 @@ class Login {
                 b.institucioneducativa_tipo_id = 2
                 ";
         $stmt = $db->prepare($query);
+        
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();                
@@ -87,7 +95,7 @@ class Login {
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();                
-
+        //dump($stmt);die;
         //*****EN CASO DE QUE EXISTA VIGENTES EN LA GESTION
         if (count($po) > 0){ 
             $gestionReg = $gestion;                
@@ -297,14 +305,16 @@ class Login {
                             left join usuario_rol e on e.usuario_id = d.id
                             left join rol_tipo f on e.rol_tipo_id = f.id
                             inner join lugar_tipo g on e.lugar_tipo_id = g.id
-                            inner join lugar_nivel_tipo h on f.lugar_nivel_tipo_id = h.id                  
+                            inner join lugar_nivel_tipo h on f.lugar_nivel_tipo_id = h.id    
+                            left join institucioneducativa_nivel_autorizado i on b.id = i.institucioneducativa_id
+                            left join nivel_tipo j on j.id = i.nivel_tipo_id              
                             where 
                             a.persona_id = '".$id."' and
                             c.id = 2 and
                             a.gestion_tipo_id = '".$gestion."' and
                             (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 ) and
                             a.es_vigente_administrativo is true and
-                            b.institucioneducativa_tipo_id = 5 and                 
+                            (j.id in (211,212,213,214,215,216,217,218,219,220,221,222,223,224,230,231) or b.institucioneducativa_tipo_id = 5) and                 
                             f.id = 9 and
                             e.esactivo is true
                 ) z";
@@ -322,7 +332,8 @@ class Login {
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
-        $po = $stmt->fetchAll();               
+        $po = $stmt->fetchAll();     
+      //  dump($po);    die;
         return $po;
 	}
 }

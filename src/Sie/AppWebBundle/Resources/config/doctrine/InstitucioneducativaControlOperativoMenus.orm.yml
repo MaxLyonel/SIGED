@@ -41,6 +41,12 @@ Sie\AppWebBundle\Entity\InstitucioneducativaControlOperativoMenus:
             type: date
             nullable: true
             comment: ''
+        periodoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: periodo_tipo_id
     manyToOne:
         notaTipo:
             targetEntity: NotaTipo

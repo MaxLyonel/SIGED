@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+    <!-- START @HEAD -->
+    <head>
+        <!-- START @META SECTION -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="Acceso al sistema Alternativa - Educación Alternativa - Ministerio de Educación">
+        <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
+        <meta name="author" content="Djava UI">
+        <title>Login - SIE</title>
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/admin/css/pages/sign-type-2.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}">
+
+        <style type="text/css">
+            
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                border: 0;
+                padding: 0;
+                background-color:  #FFF;
+            }
+
+            body{
+                /* background: url("{{asset('images/fondo1.png')}}") no-repeat center center fixed; */
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+
+            #sign-wrapper{
+                height: 100%;
+            }
+
+            .sign-header{
+                color: #ECEFF1;
+                margin-top: 2px;
+                font-size: 1.3em;
+            }
+
+            .sign-header, .sign-text span{
+                background-color: #1b3f61;
+                color: #ECEFF1;
+            }
+            .sign-text span{
+                font-size:2em;
+                border-bottom: 1px solid #D6E9ED;
+                text-shadow: 2px 2px #90A4AE;
+            }
+
+            .sign-header{
+                border-color: #B2CCC6;
+            }
+
+            .form-signin{
+                background-color: #D6E9ED;
+                opacity: 1 !important;
+                /* border: 1px solid #CCE9E4; */
+            }
+
+            .sign-body, .sign-footer{
+                /* background: #D6E9ED; */
+                background: #ECEFF1;
+                font-size: 1.2em;
+            }
+
+            .btn-aceptar{
+                background-color: #1b3f61;
+                /* background-color: #D6E9ED; */
+                color: #FFFFFF;
+                font-size: 1.1em;
+            }
+
+            .icono{
+                color: #404647 !important;
+            }
+
+            .input-group{
+                border: 1px solid #98A4A9;
+            }
+
+            .img-logo{
+                width: 120%
+            }
+            .img{
+                text-align: center;
+            }
+            input[type="text"]{
+                color: #404647 !important;
+            }
+
+            input[type=checkbox]
+            {
+              /* Doble-tamaño Checkboxes */
+              -ms-transform: scale(1.5); /* IE */
+              -moz-transform: scale(1.5); /* FF */
+              -webkit-transform: scale(1.5); /* Safari y Chrome */
+              -o-transform: scale(1.5); /* Opera */
+              padding: 5px;
+              margin-right: 20px;
+            }
+
+            .enlaces{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 5px;
+                background: #78909C;
+            }
+            .enlaces > a{
+                color: #F7F7F7;
+                text-decoration: none;
+                font-size: 1.2em;
+            }
+
+            .enlaces > a:hover{
+                color: #FFFFFF;
+            }
+            .consulta{
+                padding-top: 20px;
+            }
+        </style>
+        
+    </head>
+    
+    <body class="page-sound page-backstretch" >
+        
+        <div class="enlaces">
+            
+        </div>
+
+        <!-- START @SIGN WRAPPER -->
+        <div id="sign-wrapper">
+
+            </br>
+            </br>
+            </br>
+            
+            <div class="img">
+               
+            </div>
+
+            <div class="">
+                    <center>
+                        <small>{{app.session.get('sysname')|upper}}</small>
+                    </center>
+                    <img class="img-logo" src="{{asset('images/down2022.jpeg')}}" alt="">
+                
+            </div><!-- /.sign-header -->
+        </div>
+
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+ 
+
+
+    </body>
+
+</html>

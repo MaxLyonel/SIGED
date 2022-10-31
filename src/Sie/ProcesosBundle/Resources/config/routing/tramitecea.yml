@@ -1,0 +1,143 @@
+tramite_cea_inicio_modificacion: #fRnk
+    path:     /solicitudcea
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:inicioSolicitudModificacion" }
+
+tramite_cea_inicio_modificacion_guardar:
+    path:     /solicitud/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:inicioSolicitudModificacionGuardar" }
+
+tramite_cea_inicio_modificacion_reporte:
+    path:     /solicitud/reporte
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:inicioSolicitudModificacionReporte" }
+
+tramite_cea_recepcion_distrito:
+    path:     /recepcion/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionDistrito" }
+
+tramite_cea_recepcion_distrito_guardar:
+    path:     /recepcion/distrito/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionDistritoGuardar" }
+
+tramite_cea_recepcion_distrito_apertura:
+    path:     /recepcion/distrito/apertura
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionDistritoApertura" }
+
+tramite_cea_recepcion_departamento:
+    path:     /recepcion/departamento
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionDepartamento" }
+
+tramite_cea_recepcion_departamento_guardar:
+    path:     /recepcion/departamento/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionDepartamentoGuardar" }
+
+tramite_cea_recepcion_minedu:
+    path:     /recepcio/nminedu
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionMinedu" }
+
+tramite_cea_recepcion_minedu_guardar:
+    path:     /recepcion/minedu/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionMineduGuardar" }
+
+tramite_cea_envia_certificado_minedu:
+    path:     /envia/certificado/minedu
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:enviaCertificadoMinedu" }
+
+tramite_cea_envia_certificado_minedu_guardar:
+    path:     /envia/certificado/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:enviaCertificadoMineduGuardar" }
+
+tramite_cea_envia_certificado_departamento:
+    path:     /envia/certificado/departamento
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:enviaCertificadoDepartamento" }
+
+tramite_cea_entrega_certificado_distrito_guardar:
+    path:     /envia/certificado/departamento/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:enviaCertificadoDepartamentoGuardar" }
+
+tramite_cea_entrega_certificado_distrito:
+    path:     /entrega/certificado/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:entregaCertificadoDistrito" }
+
+tramite_cea_entrega_certificado_distrito_guardar:
+    path:     /entrega/certificado/distrito/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:entregaCertificadoDistritoGuardar" }
+
+tramite_cea_buscar_edificio:
+    path:     /buscaredificio
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscaredificio" }
+
+tramite_cea_le_buscar_provincias:
+     path:    /provincias/{idDepartamento}/{censo}
+     defaults: { _controller: "SieProcesosBundle:TramiteCea:provincias" }
+     options:
+         expose: true
+
+tramite_cea_le_buscar_municipios:
+     path:    /municipios/{idProvincia}/{censo}
+     defaults: { _controller: "SieProcesosBundle:TramiteCea:municipios" }
+     options:
+         expose: true
+
+tramite_cea_le_buscar_comunidad:
+     path:    /comunidades/{idMunicipio}/{censo}
+     defaults: { _controller: "SieProcesosBundle:TramiteCea:comunidad" }
+     options:
+         expose: true
+
+tramite_cea_le_buscar_cantones:
+     path:    /cantones/{idMunicipio}/{censo}
+     defaults: { _controller: "SieProcesosBundle:TramiteCea:cantones" }
+     options:
+         expose: true
+
+tramite_cea_le_buscar_localidades:
+     path:    /localidades/{idCanton}/{censo}
+     defaults: { _controller: "SieProcesosBundle:TramiteCea:localidades" }
+     options:
+         expose: true
+
+tramite_cea_le_buscar_distritos:
+     path:    /distritos/{idDepartamento}  
+     defaults: { _controller: "SieProcesosBundle:TramiteCea:distritos" }
+     options:
+         expose: true
+
+tramite_cea_buscar_rue:
+    path:     /buscarrue
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscarRue" }
+
+tramite_cea_buscar_solicitud:
+    path:     /buscar/solicitud
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscarSolicitud" }
+
+tramite_cea_buscar_ruecomparte:
+    path:     /buscarrue/comparte
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscarRueComparte" }
+
+tramite_cea_validarnombredistrito:
+    path:     /validar/nombre/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:validarNombreDistrito" }
+
+tramite_cea_busca_tarea:
+    path:     /buscatarea
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscarTarea" }
+
+tramite_cea_busca_requisitos:
+    path:     /buscarequisitos
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscarRequisitos" }
+
+tramite_cea_apertura:
+    path:     /apertura
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:apertura" }
+
+tramite_cea_apertura_subcentro:
+  path:     /aperturasubcentro
+  defaults: { _controller: "SieProcesosBundle:TramiteCea:aperturaSubcentro" }
+
+tramite_cea_recepcion_distrito_apertura_guardar:
+    path:     /recepcion/distrito/apertura/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:recepcionDistritoAperturaGuardar" }
+
+tramite_cea_actualizacion:
+    path:     /actualizacion
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:actualizacion" }

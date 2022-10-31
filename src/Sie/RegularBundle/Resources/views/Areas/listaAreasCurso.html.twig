@@ -22,14 +22,20 @@
             </div>
         </div>
     {% endif %}
-    {% if areas.tipoUE != 2 and areas.vista != 0 %}
-        {# if (app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10) #}
+   
+     {#{% if areas.tipoUE != 2 and areas.vista != 0 %} #}
+        {% if (app.session.get('roluser') == 7 or app.session.get('roluser') == 10 or app.session.get('roluser') == 8) %}
+        
+        {#{% if existenOfertas == 0 and paraleloTipo == 1 %}#}
+        {% if existenOfertas == 0 and nivelautorizado != 0 %}
         <span style="float:right; margin-bottom:10px">
-            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
+            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas', {{institucioneducativa}},{{gestionTipo}},{{turnoTipo}},{{nivelTipo}},{{gradoTipo}},{{paraleloTipo}})" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
         </span>
-        {# endif #}
-    {% endif %}
+        {% endif %}
+        {% endif %}
+     {#{% endif %}#}
 </h4>
+
 
 {% if areas is not empty %}
     {% if mensaje %}
@@ -49,7 +55,7 @@
 <div style="display:none">
 <h4><i class="fa fa-list-alt"></i> Áreas Técnicas
     <span style="float:right; margin-bottom:10px">
-        <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
+        <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas',{{institucioneducativa}},{{gestionTipo}},{{turnoTipo}},{{nivelTipo}},{{gradoTipo}},{{paraleloTipo}})" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
     </span>
 </h4>
 {% if areas is empty %}
@@ -61,7 +67,7 @@
 </strong>
 <script>
     $(document).ready( function(){
-        $(".tooltips").tooltip();
+        $(".tooltips").tooltip();        
     });
 
     var verMateriaTecnica = function(id){

@@ -1,0 +1,103 @@
+Sie\AppWebBundle\Entity\EstTecInstitutoCarrera:
+    type: entity
+    table: est_tec_instituto_carrera
+    indexes:
+        IDX_2B7728628470456:
+            columns:
+                - est_tec_nivel_tipo_id
+        IDX_2B772866F017409:
+            columns:
+                - est_tec_area_formacion_tipo_id
+        IDX_2B77286770F2CDF:
+            columns:
+                - est_tec_regimen_estudio_tipo_id
+        IDX_2B77286E8E891F1:
+            columns:
+                - est_tec_sede_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tiempoEstudio:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tiempo_estudio
+        cargaHoraria:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: carga_horaria
+        carrera:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        resolucion:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        estado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estTecNivelTipo:
+            targetEntity: EstTecNivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecAreaFormacionTipo:
+            targetEntity: EstTecAreaFormacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_area_formacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecRegimenEstudioTipo:
+            targetEntity: EstTecRegimenEstudioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_regimen_estudio_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecSede:
+            targetEntity: EstTecSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

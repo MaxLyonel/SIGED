@@ -1,0 +1,441 @@
+{% extends 'layoutPermanente.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+<div class="header-content">
+    <h2><i class="fa fa-th-large"></i>Certificaciones<span>Subsistema de Educación Permanente</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <ol class="breadcrumb">
+            <li class="active">
+                <div class="btn-green date-picker">
+                
+                </div>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+.
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div id= "mengestioncurso" class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div> 
+    <div class="row">
+        <div id= "mengestioncurso" class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newAdvertencia') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-hand-o-right'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel shadow">
+                    <div id="tour-15" style="display: block;" class="panel-body">
+                        {% if formBusqueda is defined  %}
+                            {{form_start(formBusqueda, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <form class="form-horizontal">
+                                    <div class="form-body">
+                                        <div class="form-group no-margin">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    Sie
+                                                </div>
+                                                <div class="col-md-2">
+                                                    Gestión
+                                                </div>
+                                                <div class="col-md-4">
+                                                  Mención
+                                                </div>
+                                                <div class="col-md-2">
+                                                   Nivel
+                                                </div>
+                                                <div class="col-md-2">
+                                                 
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    {{ form_widget(formBusqueda.sie) }}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    {{ form_widget(formBusqueda.gestion) }}
+                                                </div>
+                                                <div class="col-md-4">
+                                                    {{ form_widget(formBusqueda.especialidad) }}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    {{ form_widget(formBusqueda.nivel) }}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    {{ form_widget(formBusqueda.search,{ 'attr':{'class':'btn btn-warning mb-15 btn-block' } } ) }}
+                                                </div>
+                                            </div>
+                                            
+                                        </div><!-- /.form-group -->
+                                    </div><!-- /.form-body -->
+                                </form>
+                            {{form_end(formBusqueda)}}
+                        {% endif %}
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% block contentsearch %}
+{% endblock %}
+<aside>
+    <!-- Start table in modal element -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div id="participanteHistorial" class="table-responsive">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!--/ End table in modal element -->
+</aside>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    // funcion que valida la cantidad de caracteres del campo sie
+        function valSie(){
+            if($('#form_sie').length){
+                if($('#form_sie').val().length==8){
+                    $('#form_gestion').removeAttr('disabled');
+                } else {
+                    $('#form_gestion').attr("disabled", "disabled");
+                    $('#form_especialidad').attr("disabled", "disabled");
+                    $('#form_nivel').attr("disabled", "disabled");
+                }
+            }
+        }
+     // funcion que lista el campo nivel
+        function listar_nivel(esp) {
+            var peticion;
+            var espForm = esp;
+            var gesForm = document.getElementById('form_gestion').value;
+            var sieForm = document.getElementById('form_sie').value;
+            if (peticion && peticion.readyState != 4) {
+                peticion.abort();
+            }
+            peticion = $.ajax({
+                type: 'POST',
+                url: '{{ path('tramite_certificado_permanente_busca_listar_nivel')}}',
+                data: {'sie': sieForm, 'gestion': gesForm, 'especialidad': espForm},
+                beforeSend: function () {
+                    $("#form_nivel").attr('disabled', 'true');
+                    $('#form_nivel').empty();
+                    $("#form_nivel").append('<option value="">Cargando Datos..</option>');
+                },
+                success: function (data) {
+                    if (data.niveles == '') {
+                        $("#form_nivel").attr('disabled', 'true');
+                    } else {
+                        $('#form_nivel').empty();
+                        $("#form_nivel").append('<option value="">Seleccionar Nivel</option>');
+                        for (var i in data.niveles) {
+                            $("#form_nivel").append('<option value="' + data.niveles[i].nivel_id + '">' + data.niveles[i].nivel + '</option>');
+                        }
+                        $("#form_nivel").removeAttr('disabled');
+                    }
+                },
+                error: function(xhr) {
+                    $('#form_nivel').empty();
+                    $("#form_nivel").append('<option value="">Seleccionar Nivel</option>');
+                    $("#form_nivel").removeAttr('disabled');
+                },
+            });
+        }   
+    // funcion que selecciona la primera opcion del campo gestion al momento de ingresar o modificar un nuevo sie
+        function valSieFocusOut(){
+            $("#form_gestion").prop("selectedIndex", 0);
+        }
+    // funcion que lista el campo mencion
+
+        function listar_especialidad(ges) {
+            var peticion;
+            var gesForm = ges;
+            var sieForm = document.getElementById('form_sie').value;
+            if (peticion && peticion.readyState != 4) {
+                peticion.abort();
+            }
+            peticion = $.ajax({
+                type: 'POST',
+                url: '{{ path('tramite_certificado_tecnico_busca_listar_mencion')}}',
+                data: {'sie': sieForm, 'gestion': gesForm},
+                beforeSend: function () {
+                    $("#form_especialidad").attr('disabled', 'true');
+                    $('#form_especialidad').empty();
+                    $("#form_especialidad").append('<option value="">Cargando Datos..</option>');
+                    $("#form_nivel").attr('disabled', 'true');
+                    $('#form_nivel').empty();
+                    $("#form_nivel").append('<option value="">Cargando Datos..</option>');
+                },
+                success: function (data) {
+                    if (data.especialidades == '') {
+                        $('#form_especialidad').empty();
+                        $("#form_especialidad").append('<option value="">Seleccionar Especialidad</option>');
+                        $("#form_especialidad").removeAttr('disabled');
+                        $('#form_nivel').empty();
+                        $("#form_nivel").append('<option value="">Seleccionar Nivel</option>');
+                        $("#form_nivel").removeAttr('disabled');
+                    } else {
+                        $('#form_especialidad').empty();
+                        $("#form_especialidad").append('<option value="">Seleccionar Especialidad</option>');
+                        $('#form_nivel').empty();
+                        $("#form_nivel").append('<option value="">Seleccionar Nivel</option>');
+                        for (var i in data.especialidades) { 
+                            $("#form_especialidad").append('<option value="' + data.especialidades[i].id + '">' + data.especialidades[i].especialidad + '</option>');
+                        }
+                        $("#form_especialidad").removeAttr('disabled');
+                    }
+                },
+                error: function(xhr) {
+                    $('#form_especialidad').empty();
+                    $("#form_especialidad").append('<option value="">Seleccionar Especialidad</option>');
+                    $("#form_especialidad").removeAttr('disabled');
+                    $('#form_nivel').empty();
+                    $("#form_nivel").append('<option value="">Seleccionar Nivel</option>');
+                    $("#form_nivel").removeAttr('disabled');
+                },
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                    $("#form_especialidad").attr('disabled', 'true');
+                    $('#form_especialidad').empty();
+                    $("#form_especialidad").append('<option value="">Error..</option>');
+                    $("#form_nivel").attr('disabled', 'true');
+                    $('#form_nivel').empty();
+                    $("#form_nivel").append('<option value="">Error..</option>');
+            });
+        }
+        function habilitarSubmit(){
+            $('#form_search').removeAttr('disabled');
+        }
+        
+        function marcarTodos(chkAll){
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var participantes = document.getElementsByName('participantes[]');
+            if(chkAll.checked){
+                for (var i=0; i < participantes.length; i++){
+                    participantes[i].checked = true;
+                }
+                if(participantes.length > 0){
+                    if(botonAceptar){
+                        botonAceptar.disabled = false;
+                    }
+                    if(botonModalDevolver){
+                        botonModalDevolver.disabled = false;
+                    }
+                }
+            }else{
+                for (var i=0; i < participantes.length; i++){
+                    participantes[i].checked = false;
+                }
+                if(botonAceptar){
+                    botonAceptar.disabled = true;
+                }
+                if(botonModalDevolver){
+                    botonModalDevolver.disabled = true;
+                }
+            }
+        }       
+        function validarMarcar(chk){
+            var participantesAll = document.getElementById('participantesAll');
+            var participantes = document.getElementsByName('participantes[]');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var estado = false;
+            var estadoAll = true;
+
+            for (var i=0; i < participantes.length; i++){
+                if(participantes[i].checked === true){
+                    estado = true;
+                } else {
+                    estadoAll = false;
+                }
+            }
+
+            if(estadoAll){
+                participantesAll.checked = true;
+            } else {
+                participantesAll.checked = false;
+            }
+
+            if(estado){
+                if(botonAceptar){
+                    botonAceptar.disabled = false;
+                }
+                if(botonModalDevolver){
+                    botonModalDevolver.disabled = false;
+                }
+            } else {
+                if(botonAceptar){
+                    botonAceptar.disabled = true;
+                }
+                if(botonModalDevolver){
+                    botonModalDevolver.disabled = true;
+                }
+            }
+        }
+        function verificaCampos(){
+            var participantes = document.getElementsByName('participantes[]');
+            var cantidadParticipantes = 0;
+            for (var i=0; i < participantes.length; i++){
+                if(participantes[i].checked == true){
+                    cantidadParticipantes = cantidadParticipantes +1;
+                }
+            }
+            var botonAceptar = document.getElementById('botonAceptar');
+            /*var botonImprimir = document.getElementById('botonImprimir');
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var botonDevolver = document.getElementsByName('botonDevolver')[0];
+            var botonCancelarDevolver = document.getElementsByName('botonCancelarDevolver')[0];*/            
+            var r = confirm("¿ Desea registrar los "+cantidadParticipantes+" participantes seleccionados ?");
+
+            if (r == false) {
+                if (botonAceptar){
+                    botonAceptar.style.display = "";
+                }
+                /*if (botonImprimir){
+                    botonImprimir.style.display = "";
+                }
+                if (botonDevolver){
+                    botonDevolver.style.display = "";
+                }
+                if (botonCancelarDevolver){
+                    botonCancelarDevolver.style.display = "";
+                }*/
+                return false;
+            } else {
+                for (var i=0; i < participantes.length; i++){
+                    if(participantes[i].checked == true){
+                        participantes[i].style.visibility = 'hidden';
+                    }
+                }
+                if (botonAceptar){
+                    botonAceptar.style.display = "none";
+                }
+                /*if (botonImprimir){
+                    //botonImprimir.disabled = true;
+                    botonImprimir.innerHTML = "Registrando, espere por favor...";
+                    botonImprimir.classList.remove("btn-lilac");
+                    botonImprimir.classList.add("btn-success");
+                }
+                if (botonModalDevolver){
+                    botonModalDevolver.style.display = "none";
+                }
+                if (botonDevolver){
+                    botonDevolver.style.display = "none";
+                }
+                if (botonCancelarDevolver){
+                    botonCancelarDevolver.style.display = "none";
+                }*/
+                return true;
+            }
+        }
+
+        $(window).load(function(){
+            // ..
+            document.getElementById("form_sie").focus();
+            // ..
+
+            if($('#form_gestion option').length !== 0) {
+                $('#form_gestion').removeAttr('disabled');
+            }
+
+            if($('#form_especialidad option').length !== 0) {
+                $('#form_especialidad').removeAttr('disabled');
+            }
+
+            if($('#form_nivel option').length !== 0) {
+                $('#form_nivel').removeAttr('disabled');
+                $('#form_search').removeAttr('disabled');
+            }
+
+            // Setup - add a text input to each footer cell
+            $('#tablaParticipantesHabilitados tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#tablaParticipantesHabilitados').DataTable( {
+                    //"order": [[ 3, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": 7 }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+
+            $("#botonModalDevolver").on( "click", function() {
+                $('#botonAceptar').hide();
+                $('#botonImprimir').hide();
+                $('#botonModalDevolver').hide();
+            });
+
+            $("#botonCancelarDevolver").on( "click", function() {
+                $('#botonAceptar').show();
+                $('#botonImprimir').show();
+                $('#botonModalDevolver').show();
+            });
+        });
+    
+    </script>
+    {% if listaParticipante is defined  %}
+    {% endif %}
+   
+{% endblock %}

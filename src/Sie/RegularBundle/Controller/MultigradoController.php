@@ -534,8 +534,12 @@ class MultigradoController extends Controller {
         // $em->flush();
         if($flagError){
           $em->getConnection()->rollback();
-        }else{
-          $em->getConnection()->commit();
+        }else{          
+           $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($arrDataMultigrado['idDetalle']);
+           $vproceso->setEsActivo('t');
+           $em->persist($vproceso);
+           $em->flush();
+           $em->getConnection()->commit();
         }
 
         // $message = 'Datos guardados correctamente... ';

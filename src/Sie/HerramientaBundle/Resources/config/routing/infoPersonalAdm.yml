@@ -99,3 +99,29 @@ herramienta_info_personal_adm_persona_datos:
 herramienta_info_personal_adm_persona_segip:
     path:     /validarAdmSegip
     defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:validarAdmSegip" }
+
+
+#
+herramienta_info_personal_adm_editar_estadosalud:
+    path:     /editar/estado-de-salud
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:editarEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_actualizar_estadosalud:
+    path:     /actualizar/estado-de-salud
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:actualizarEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_cerrarOperativo_estadosalud:
+    path:     /cerrar-operativo/estado-de-salud
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:cerrarOperativoEstadoSalud" }
+    options:
+        expose: true
+
+herramienta_info_personal_adm_seguimientoOperativo_estadosalud:
+    path:     /seguimiento-operativo/estado-de-salud
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:seguimientoOperativoEstadoSalud" }
+    options:
+        expose: true

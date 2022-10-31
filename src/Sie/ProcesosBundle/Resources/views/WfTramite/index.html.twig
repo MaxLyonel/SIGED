@@ -2,6 +2,12 @@
 {% extends app.session.get('layout') %}
 
 {% block contentoption %}
+<style>
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.activeprocess>a:hover {
+    color: #fff;
+    background-color: #8a0a19;
+}
+</style>
 
     <!-- Start page header -->
     <div class="header-content">
@@ -27,13 +33,13 @@
                         <div class="col-sm-2">
                             <div class="panel">
                                 <ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
-                                    <li {% if tipo == 1 %}class="active"{% endif %}>
+                                    <li {% if tipo == 1 %}class="activeprocess"{% endif %}>
                                         <a href="javascript:void(0);" onclick="nuevotramite()"><i class="fa fa-inbox"></i> Nuevo Trámite</a>
                                     </li>
-                                    <li {% if tipo == 2 %} class="active"{% endif %}>    
+                                    <li {% if tipo == 2 %} class="activeprocess"{% endif %}>    
                                         <a href="javascript:void(0);" onclick="recibidos()"><i class="fa fa-envelope-o"></i> Recibidos</a>
                                     </li>
-                                    <li {% if tipo == 3 %} class="active"{% endif %}>
+                                    <li {% if tipo == 3 %} class="activeprocess"{% endif %}>
                                         <a href="javascript:void(0);" onclick="enviados()"><i class="fa fa-certificate"></i> Enviados</a>
                                     </li>
                                     <li>
@@ -55,7 +61,7 @@
                         </div>
                         <div class="col-sm-10">
                             <div class="panel rounded shadow panel-primary">
-                                <div class="panel-heading">
+                                <div class="panel-heading yearOld">
                                     <div class="pull-left">
                                         <h3 class="panel-title" id="titulo">{{titulo}}</h3>
                                     </div>

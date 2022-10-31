@@ -30,7 +30,9 @@
             <!-- START @GLOBAL MANDATORY STYLES -->
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
             <!--/ END GLOBAL MANDATORY STYLES -->
+            {# /// alert #}
 
+            {# /// alert fin #}
             <!-- START @PAGE LEVEL STYLES -->
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
@@ -65,6 +67,7 @@
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
             <link href="{{ asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
+
             <style>
                 .loading{
                     background-image: url("{{asset('img/loading.gif')}}}");
@@ -285,6 +288,40 @@
                             <span class="selected"></span>
                         </a>
                     </li> -->
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Control de Calidad</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ccalidad_index')}}">Inconsistencias</a></li>
+
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Operativo Salud</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ie_acceso_internet_index')}}">Registro</a></li>
+                                <li><a href="{{ path('opemonitorhealthseg_index')}}">Seguimiento</a></li>
+                                
+                                {% if app.session.get('roluser') in [9] %}
+                                    <li><a href="{{ path('appweb_biosecurityform_index')}}">Formulario Bioseguridad</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('monitorbioform_index')}}">Formulario Bio Seguridad</a></li>
+                                {% endif %}
+                                {# <li><a href="{{ path('InstitucionModalidadAte_index')}}">Registro Modalidad por UE</a></li> #}
+
+                            </ul>
+                        </li>
+                    {% endif %}
                     {% if app.session.get('roluser') != 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -296,13 +333,54 @@
                                 <li><a href="{{ path('herramienta_inbox_index')}}">Recibidos</a></li>
                                 {% if app.session.get('roluser') in [7,8,9,10]  %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_index')}}">Consolidación Info</a></li>
+                                    <li><a href="{{ path('registerforeignerperson_index')}}">Registro Diplomático/Extranjero</a></li>
                                 {% endif %}
-                                {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 %}
+                                {# {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8   %} #}
+                                {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_gestion_index')}}">Seguimiento Consolidación</a></li>
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
                                 {% endif %}
 
+                                {% if app.session.get('roluser') in [7,8,10]  %}
+                                    <li>
+                                        <a href="{{ path('herramienta_infoconsolidation_gestion_inconsistencias_index')}}">Seguimiento Inconsistencias</a>
+                                    </li>
+                                {% endif %}
 
+                                {% if true and app.session.get('roluser') in [0,8]  %}<!--Tecnnico nacional-->
+                                    <li><a href="{{ path('herramienta_inforeporte_inicio_actividades')}}">Nacional Reporte de inicio de actividades</a></li>
+                                {% endif %}
+                                {% if true and app.session.get('roluser') in [7]  %}<!--Tecnnico departamental-->
+                                    <li><a href="{{ path('herramienta_inforeporte_inicio_actividades_distrito')}}">Departamental Reporte de inicio de actividades</a></li>
+                                {% endif %}
+                                {% if true and app.session.get('roluser') in [10,11]  %}<!--Tecnnico distrital-->
+                                    <li><a href="{{ path('herramienta_inforeporte_inicio_actividades_distrito_colegio')}}">Distrital Reporte de inicio de actividades</a></li>
+                                {% endif %}
+
+                                {# Reporte de unidades de frontera #}
+                                {% if true and app.session.get('roluser') in [7,10,10]  %}<!--Tecnnico departamental y distrital-->
+                                    <li><a href="{{ path('herramienta_inforeporte_estudiantes_en_situacion_de_vulnerabilidad')}}">Reporte de estudiantes en situación de Vulnerabilidad</a></li>
+                                {% endif %}
+
+
+                                {# Seguimiento de operativo de salud #}
+                                {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                    <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li>
+                                {% endif %}
+
+                                {# Seguimiento de operativo registro de textos educativos #}
+                                {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                    <li><a target="_blank" href="{{ path('herramienta_textoEducativo_seguimiento')}}">Seguimiento al operativo de registro de textos educativos</a></li>
+                                {% endif %}
+
+                                {# Seguimiento de operativo bonojp #}
+                                {% if app.session.get('roluser') in [7,8,10,34]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                    <li><a target="_blank" href="{{ path('operativo_bono_jp_seguimiento')}}">Seguimiento al operativo Bono JP</a></li>
+                                {% endif %}
+
+                                {% if app.session.get('roluser') in [34] %}
+                                    <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file Bono JP</a></li>
+                                {% endif %}
                             </ul>
                         </li>
 
@@ -343,7 +421,8 @@
                     {% endif %} #}
 
                     {% if app.session.get('roluser') == 9 %}
-                    {# <li class="submenu">
+                    
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -355,7 +434,8 @@
                             <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
                             <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
                         </ul>
-                    </li> #}
+                    </li>
+                    
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -363,7 +443,7 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            <li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>
+                            {#<li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>#}
                             <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
                             {#<li><a href="{{ path('download_file_sie_index')}}">Generar Archivo IGM</a></li>
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>#}
@@ -423,7 +503,7 @@
                     {#
                     #}
                     
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -431,13 +511,14 @@
                         </a>
                         <ul>
                         {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
-                        {% if app.session.get('roluser') == 8 %}
+                        {% if app.session.get('roluser') in [7,8,10] %}
                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                         {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                             <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
                         </ul>
-                    </li> #}
+                        {% endif %}
+                    </li>
                     
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -556,11 +637,15 @@
                             <ul>
                                 <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
                             </ul>
+                            
                             <ul>
                                 <li><a href="{{ path('declaracion_jurada_index')}}">Declaración Jurada</a></li>
                             </ul>                            
+                            <ul>
+                                <li><a href="{{ path('history_new_inscription_index')}}">Historial</a></li>
+                            </ul>                            
                         </li>
-                        <li class="submenu">
+                        <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Inscripciones</span>
@@ -569,19 +654,26 @@
                             <ul>
                                 <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('newForeign_index')}}">Extranjeros</a></li>
-                                <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Traslado</a></li>
+                                <li><a href="{{ path('inscription_new_student_index')}}">Nuevo Estudiante en la UE</a></li>
+                                <li><a href="{{ path('inscription_ini_pri_rue_index')}}"> Gestión</a></li>
                                 {% if app.session.get('roluser') in [7,8,10] %}
-                                <li><a href="{{ path('remove_inscription_sie_index')}}">Eliminar Inscripción</a></li>
+                                <!-- li><a href="{{ path('remove_inscription_sie_index')}}">Eliminar Inscripción</a></li-->
+                                <li><a href="{{ path('inscriptionSpecialNew_find')}}">Centros de Educación Especial</a></li>
+                                <!-- li><a href="{{ path('inscription_reza_omi_exten_index')}}">Omitidos/Extemporáneos</a></li -->
                                 {% endif %}
-                                {#
-                                <li><a href="{{ path('inscription_reza_omi_exten_index')}}">Omitidos/Extemporáneos</a></li>
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
+                                <li><a href="{{ path('updateSudentLevel_index')}}">Modificar Nivel y Grado</a></li>
+                                <li><a href="{{ path('rudeunificationinscription_index')}}">Unificar Rudes de Inscripción</a></li>
+                                <li><a href="{{ path('unificacion_inscription_index')}}">Corrección doble inscripción en la UE</a></li>
+                               
+                                {#
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                                 
                                 #}
                             </ul>
                         </li>
                     {% endif %}
+                    {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -599,7 +691,38 @@
                             {% endif %}
                         </li>
                     {% endif %}
-
+                    #}
+                    {# commented by krlos 8.7.21#}
+                    {# commented by krlos 8.7.21
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
+                            #}
+                    
+                    
+                    {% if  (app.session.get('roluser') in [7,10,9,8])  %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Situación de Vulnerabilidad</span>
+                                <span class="arrow"></span>
+                            </a>
+                            {% if  app.session.get('roluser') in [8,9]   %}
+                            <ul>
+                                <li><a href="{{ path('selected_students_index')}}">Registro</a></li>
+                            </ul>
+                            {% endif %}
+                            {% if  app.session.get('roluser') in [7,8,10]   %}
+                                <ul>
+                                    <li><a href="{{ path('report_vul_seguimiento')}}">Reporte de Registro</a></li>
+                                </ul>
+                            {% endif %}
+                            
+                        </li>
+                    {% endif %}                    
+                    
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -612,6 +735,109 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {% if app.session.get('roluser') in [9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">RUE</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('regularizacion_rue_index')}}">Fecha de Fundación</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {# Preinscripciones #}
+                    {% if app.session.get('roluser') in [9,10,8,7] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Preinscripción {{'now'|date('Y') + 1}}</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('preinscripciones_seguimiento')}}">Listado Preinscripción</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('preinscripcion_sorteo_index')}}">Fecha de sorteo</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{path('uealtademanda')}}">Modificar cupo</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    {# Cambio de tutor BJP 2021  #}
+                    
+                    {% if app.session.get('roluser') in [9,10,8,7] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Bono JP - {{ 'now'|date('Y') }}</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de Titular</a></li> 
+                                {% if app.session.get('roluser') in [9,10,8] %}
+                                  <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
+                                {% endif %}
+                                {% if app.session.get('roluser') in [8,37] %}
+                                <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}"> Generar file</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                   
+
+
+                    {% if false %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Regularización de gestiones pasadas</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 1 </a></li>
+                                <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 2 </a></li>
+                                
+                                <li>
+                                    <li class="submenu">
+                                        <a href="javascript:void(0);">
+                                            <span class="text">Caso 3 (Inscripción de gestiones pasadas y registro de notas)</span>
+                                            <span class="arrow"></span>
+                                        </a>
+                                        <ul>
+                                            <li><a href="{{ path('regularizacion_estudiantesPostBachillerato_getRegistrarHistorial')}}"> <span class="icon"><i class="fa fa-edit"></i></span> Registrar historial</a></li>
+                                            <li><a href="{{ path('regularizacion_estudiantesPostBachillerato_getSolicitudeRecibidasDepartamental')}}"> <span class="icon"><i class="fa fa-eye"></i></span> DEPARTAMENTAL Solicitudes recibidas </a></li>
+                                            <li><a href="{{ path('regularizacion_estudiantesPostBachillerato_getSolicitudeRecibidasDistrital')}}"> <span class="icon"><i class="fa fa-eye"></i></span> DISTRIAL Solicitudes recibidas </a></li>
+                                            <li><a href="{{ path('regularizacion_estudiantesPostBachillerato_getSolicitudeRecibidasUE')}}"> <span class="icon"><i class="fa fa-eye"></i></span> UE Solicitudes recibidas </a></li>
+                                        </ul>
+                                    </li>
+                                </li>
+
+                                <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 4 </a></li>
+                                <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 5 </a></li>
+                                <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 6 </a></li>
+                            </ul>
+                        </li>
+                    {% endif %}   
+                    {# line 725--> app/Resources/views/layoutHerramienta.html.twig #}
+                    {# Cambio de tutor BJP 2021 #}
+                    {# {% if app.session.get('roluser') in [9,10,8,7] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Bono JP - {{ 'now'|date('Y') }}</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li>
+                            </ul>
+                        </li>
+                    {% endif %} #}
+
+
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">

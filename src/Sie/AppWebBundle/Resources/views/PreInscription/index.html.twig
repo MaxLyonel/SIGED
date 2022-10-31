@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PreInscripción - Unidades Alta Demanda</title>
+	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+	<style>
+		body{
+			background: #EEEEEE;
+			margin: 0;
+			padding: 0;
+		}
+		[v-cloak]{
+			display: none;
+		}
+		.jupper{
+			text-transform: uppercase;
+		}
+		.titulo{
+			margin-bottom: 15px;
+		}
+		.caja{
+			background: #FFFFFF;
+			padding: 10px;
+			width: 820px;
+			margin-top: 50px;
+			/*margin-left: auto;*/
+			/*margin-right: auto;*/
+		}
+		.caja h2{
+			text-align: center;
+		}
+		.tab-pane{
+			padding-top: 10px;
+		}
+		.secundario{
+			color:#CCCCCC;
+			font-style: italic;
+			font-size: 0.8em;
+		}
+		.respuesta p{
+			margin-bottom: 10px;
+		}
+		.respuesta h3{
+			text-align: center;
+			margin-bottom: 15px;
+		}
+		.respuesta .botones{
+			text-align: center;
+		}
+		.cortina{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: #CCCCCC;
+			opacity: 0.6;
+			z-index: 100;
+			text-align: center;
+			font-size: 1.5em;
+			padding-top: 200px;
+		}
+		.form-control .popover {
+  			width:600px;
+  			height:250px;
+		}
+
+		.popover {
+		  	/*max-width: 700px;*/
+		  	width: 600px;
+		  	background: #EFF7FF;
+		  	color: #11BCFB;
+		}
+		.subtitulo{
+			font-size: 1.2em;
+		}
+		article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div v-if="cortina" class="cortina">
+			{# <i class="fa fa-refresh fa-spin"></i> Procesando... #}
+		</div>
+		<div class="container">
+
+			<div class="row">
+				  
+				<div class="col-md-6 col-xs-12 col-md-offset-2 caja">
+					<div class="col-xs-12 text-center">
+						<img src="{{asset('img/logo-minedu.png')}}" alt="Logo Ministerio Educación" width="55%">
+						<h3 class="titulo" style ="margin-top: 0%" >PRE-INSCRIPCIÓN 2023</h3>
+					</div>
+
+					<div  class="contenido">
+						<p class="subtitulo">FORMULARIO DE PRE INSCRIPCIÓN PARA EL SORTEO DE PLAZAS EN UNIDADES EDUCATIVAS DE ALTA DEMANDA PARA EDUCACIÓN INICIAL Y PRIMER AÑO DE ESCOLARIDAD DE EDUCACIÓN PRIMARIA Y SECUNDARIA PARA LA GESTIÓN 2023</p>
+						<p></p>
+						<div class="row">
+							<div class="col-md-12">
+								<div role="tabpanel">
+									<!-- Nav tabs -->
+									<ul class="nav nav-tabs" role="tablist">
+										<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+											<a role="tab" data-toggle="tab">Datos Personales Padre/Madre/Tutor</a>
+											{#<a role="tab" data-toggle="tab"> REIMPRESIÓN DE FORMULARIO</a>#}
+										</li>
+									</ul>
+									<!-- Tab panes -->
+									<div class="tab-content">
+										<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+										
+											<div class="row">
+												<div class="form-group col-md-4">
+													<label>Carnet</label>
+													<input type="text" v-model="dataParent.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico"  :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+													<input type="text" v-model="dataParent.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Fecha Nacimiento (dd-mm-aaaa)</label>
+													<input type="text" v-model="dataParent.fechaNacimiento" class="form-control jupper " maxlength="10" v-on:keypress="" :disabled="swdata ? '':disabled" placeholder="dd-mm-aaaa">
+												</div>		
+											</div>
+											<div class="row">
+												<div class="form-group col-md-4">
+													<label>Paterno</label>
+													<input type="text" v-model="dataParent.paterno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Materno  </label>
+													<input type="text" v-model="dataParent.materno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Nombre(s) </label>
+													<input type="text" v-model="dataParent.nombre" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+												</div>		
+											</div>
+
+											<div class="row">
+
+												<div class="form-group col-md-4">
+													<label>Parentesco</label>
+			                                        <select name="arrParen" id="idarrParen" class="custom-select form-control" v-model="dataParent.parentesco" v-on:change="" :disabled="swdata ? '':disabled">  
+			                                          	<option v-for="item in dbParentesco" :value="item.id">${ item.parentesco }</option>
+			                                        </select>														
+													
+												</div>
+												<div class="form-group col-md-4">
+													<label>Genero </label>
+													<select name="arrGen" id="idarrGen" class="custom-select form-control" v-model="dataParent.genero" v-on:change="" :disabled="swdata ? '':disabled"> 
+														<option v-for="item in dbGenero" :value="item.id">${ item.genero }</option>
+													</select>														
+												</div>
+												<div class="form-group col-md-4">
+													<div class="form-check">
+													<input class="form-check-input" v-model="dataParent.forign" type="checkbox" value="" id="flexCheckIndeterminate" :disabled="swdata ? '':disabled">
+													<label class="form-check-label" for="flexCheckIndeterminate">
+														Extranjero?
+													</label>
+													</div>	
+												</div>														
+											</div>
+											
+{# 
+											<div class="row">
+												<div class="form-group col-md-12">
+													<div class="form-check">
+													<input class="form-check-input" v-model="dataParent.forign" type="checkbox" value="" id="flexCheckIndeterminate" :disabled="swdata ? '':disabled">
+													<label class="form-check-label" for="flexCheckIndeterminate">
+														Extranjero?
+													</label>
+													</div>	
+												</div>
+											</div>	 #}																				
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<br>
+						<br>
+						<br>
+						<br>
+
+						
+
+						<div class="col-md-12 text-center" v-show="!swdata">
+						
+							
+							<div class="card" style="box-shadow: 1px 1px 5px grey">
+								<div class="form-group col-md-12">
+									<div class="form-check">
+										<canvas id="canvas" style="box-shadow: 1px 1px 5px grey;padding: 1em;" width="350" height="60"></canvas>
+									</div>
+								</div>
+								<div class="form-group col-md-12">
+									<div class="form-check">
+										<input name="code" class="form-check-input" placeholder="Ingrese el captcha" />
+									</div>
+								</div>
+							</div>
+
+							<button type="button" class="btn btn-primary" @click="consultar">Verificar </button>
+							<br>
+							<a href="javascript:;" onclick="formReimprision()" class="btn btn-link"><span class="fa fa-file-pdf-o"></span> REIMPRESIÓN DE FORMULARIO </a>
+						</div>
+					</div>
+
+					<div v-if="swdata" class="respuesta">
+
+						<div class="alert" :class="[{'alert-success':datos.status == 'success'}, {'alert-warning':datos.status == 'warning'}]">
+							Segip: Datos Validados correctamente...<br>														
+						</div>
+
+						<form>
+							<div class="panel panel-default">
+								<div class="panel-heading">Dirección de residencia del padre, madre o tutor</div>
+								<div class="panel-body">
+									<div class="form-row">
+										<div class="form-group col-md-12">
+										<label for="job">Dirección de su residencia (Zona/avenida/calle/N°/teléfono):</label>
+										{# <input rows="3" class="form-control" id="" > #}
+										 <textarea class="form-control jupper" id="addrr" rows="3" v-model="addrressParent.dirresidencia" :disabled="swParentAddress ==true"></textarea>
+										</div>
+									
+									</div>							
+								</div>
+							</div>
+
+							<div class="panel panel-default">
+								<div class="panel-heading"> Dirección actual del trabajo del padre, madre o tutor </div>
+								<div class="panel-body">
+																
+										<div class="form-row">
+											<div class="form-group col-md-6">
+											<label for="job">Nombre del lugar de trabajo:</label>
+											<input type="text" class="form-control jupper" id="job" v-model="addrressParent.lugarTrabajo" :disabled="swParentAddress ==true" v-on:keypress="alfabetico">
+											</div>
+											<div class="form-group col-md-6">
+											<label for="Municipio">Municipio:</label>
+											<input type="text" class="form-control jupper" id="Municipio" v-model="addrressParent.municipio" :disabled="swParentAddress ==true" v-on:keypress="alfabetico">
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-6">
+											<label for="job">Zona/Villa:</label>
+											<input type="text" class="form-control jupper" id="zona" v-model="addrressParent.zona" :disabled="swParentAddress ==true" v-on:keypress="alfabetico">
+											</div>
+											<div class="form-group col-md-6">
+											<label for="Municipio">Avenida/Calle/N°:</label>
+											<input type="text" class="form-control jupper" id="avenida" v-model="addrressParent.avenida" :disabled="swParentAddress ==true" v-on:keypress="alfanumerico">
+											</div>
+										</div>	
+										<div class="form-row">
+											<div class="form-group col-md-6">
+												<label for="job">Teléfono/Celular:</label>
+												<input type="text" class="form-control" id="fono" v-model="addrressParent.fono":disabled="swParentAddress ==true" v-on:keypress="numerico">
+											</div>
+										</div>
+										
+										<div class="form-row">
+											<div class="form-group col-md-12">
+												<button type="button" class="btn btn-primary" @click="saveAddrress" v-show="!swParentAddress" >Registrar </button>
+
+
+											</div>
+
+										</div>
+															
+								</div>
+							</div>						
+
+							<div class="panel panel-default" v-show="swParentAddress">
+								<div class="panel-heading">Seleccionar Departamento y Unidad Educativa</div>
+								<div class="panel-body">
+									<div class="form-row">
+										<div class="form-group col-md-3">
+	                                        <label for="depto">Departamento</label>
+	                                        <select name="arrPais" id="idarrPais_dept" class="custom-select form-control" v-model="ueInfo.departamento" v-on:change="getUES" :disabled="swuned == true">  
+	                                          <option v-for="item in departamentos" :value="item.id">${ item.depto }</option>
+	                                        </select>	
+										</div>
+	                                    <div class="col-sm-7">
+	                                        <label for="provincia">Unidad Educativa</label>
+	                                        <select name="arrPais" id="ues" class="custom-select form-control" v-model="ueInfo.sie" :disabled="swuned == true">  
+	                                          <option v-for="itemd in dataUEs"  :value="itemd.id">${itemd.id} - ${ itemd.institucioneducativa }</option>
+	                                        </select>
+	                                    </div>										
+	                                    <div class="col-sm-2">
+	                                        <button type="button" class="btn btn-md btn-warning" @click="chooseUE" v-if="!(this.dataUnEd.length > 0)" >Seleccionar </button>
+	                                    </div>											                                    
+									
+									</div>
+								</div>
+							</div>
+
+							<div class="panel panel-default"  v-if="(this.dataUnEd.length > 0)">
+								<div class="panel-heading">Informacion Unidad Educativa</div>
+								<div class="panel-body">
+
+									<div class="table-responsive">
+                                            <table class="table table-hover table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Código RUE</th>
+                                                        <th>Institución Educativa</th>                                            
+                                                        <th>Dependencia</th>                                            
+                                                        <th>Tipo</th>
+                                                        <th>Estado</th>
+                                                        <th>Departamento</th>
+                                                        <th>Distrito</th>
+                                                        <th>Opciones</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(infoUnEd, index) in dataUnEd">
+                                                        <td>${infoUnEd.sie}</td>
+                                                        <td>${infoUnEd.institucioneducativa}</td>
+                                                        <td>${infoUnEd.dependencia}</td>
+                                                        <td>${infoUnEd.descripcion}</td>
+                                                        <td>${infoUnEd.estadoinstitucion}</td>
+                                                        <td>${infoUnEd.departamento}</td>
+                                                        <td>${infoUnEd.distrito}</td>
+
+                                                        <td class="text-center"> 
+                                                        	<small>
+                                                            <table class="table ">
+	                                                            <tr>
+	                                                                <td>
+	                                                                <a href="#" @click="registryStudent" >
+	                                                                    <i class="fa fa-user" > Registrar Estudiante</i>
+	                                                                </a>
+	                                                                </td>
+	                                                            	<td>
+	                                                                <a href="#" class="btn-xs" @click="removeInfoUnEd(index)"><i class="fa fa-trash"> Eliminar</i></a>
+	                                                                </td>
+	                                                            </tr>                                                                              
+                                                            </table>                         
+                                                            </small>
+                                                        </td> 
+                                                    </tr>  
+                                                </tbody>
+                                            </table>
+                                        </div>								
+									
+								</div>
+							</div>
+
+
+							<div class="panel panel-default" v-if="swstudent">
+								<div class="panel-heading">Registre Estudiante para la Pre-Inscripcion</div>
+								<div class="panel-body">
+
+									<div class="row">
+										<div class="form-group col-md-4">
+											<label>Carnet</label>
+											<input type="text" v-model="student.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico"  >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+											<input type="text" v-model="student.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Fecha Nacimiento (dd-mm-aaaa)</label>
+											<input type="text" v-model="student.fechaNacimiento" class="form-control jupper " placeholder="dd-mm-aaaa" maxlength="10" v-on:keypress="" >
+										</div>		
+									</div>
+									<div class="row">
+										<div class="form-group col-md-4">
+											<label>Paterno</label>
+											<input type="text" v-model="student.paterno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Materno </i> </label>
+											<input type="text" v-model="student.materno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Nombre(s) </label>
+											<input type="text" v-model="student.nombre" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" >
+										</div>		
+									</div>
+
+									<div class="row">
+										<div class="form-group col-md-6">
+											<label>Lugar de nacimiento</label>
+											<input type="text" v-model="student.lugarNacimiento" class="form-control jupper" v-on:keypress="alfabetico" >
+										</div>
+									</div>
+
+									<div class="row">
+
+										<div class="form-group col-md-6">
+											<label>Genero </label>
+											<select name="arrGens" id="idarrGens" class="custom-select form-control" v-model="student.genero" v-on:change=""> 
+												<option v-for="item in dbGenero" :value="item.id">${ item.genero }</option>
+											</select>														
+										</div>									
+
+
+										<div class="form-group col-md-6">
+											<div class="form-check">
+											<input class="form-check-input" v-model="student.forign" type="checkbox" value="" id="flexCheckIndeterminate" >
+											<label class="form-check-label" for="flexCheckIndeterminate">
+												Extranjero?
+											</label>
+											</div>	
+										</div>
+									</div>	
+
+
+										<div class="form-row">
+											<div class="form-group col-md-6">
+											<label for="Municipio">Municipio:</label>
+											<input type="text" class="form-control jupper" id="Municipio" v-model="student.municipio" v-on:keypress="alfabetico">
+											</div>
+											<div class="form-group col-md-6">
+											<label for="job">Zona/Villa:</label>
+											<input type="text" class="form-control jupper" id="zona" v-model="student.zona" v-on:keypress="alfabetico">
+											</div>											
+										</div>
+										<div class="form-row">
+
+											<div class="form-group col-md-6">
+											<label for="Municipio">Avenida/Calle/N°:</label>
+											<input type="text" class="form-control jupper" id="avenida" v-model="student.avenida" v-on:keypress="alfanumerico">
+											</div>
+										</div>	
+										<div class="form-row">
+											<div class="form-group col-md-6">
+												<label for="job">Teléfono/Celular:</label>
+												<input type="text" class="form-control jupper" id="fono" v-model="student.fono" v-on:keypress="numerico">
+											</div>
+										</div>	
+
+
+									{# 	<div v-for="category in categories">    
+										    <input type="checkbox" v-model.number="item.category" :id="'category_' + category.id" :value="category.id" @change="save"/>
+										    <label>{{ item.category }} : {{ category.id }}</label>
+										</div>	 #}									
+
+
+
+										<div class="form-row">
+											<div class="form-group col-md-6">
+		                                        <label for="level">Nivel de educación:</label>
+		                                        <select name="arrLevel" id="idarrPais_Level" class="custom-select form-control" v-model="ueInfo.nivel" v-on:change="getGrados">  
+		                                          <option v-for="item in dataLevel" :value="item.id">${ item.level }</option>
+		                                        </select>	
+											</div>
+		                                    <div class="col-md-6">
+		                                        <label for="provincia">Año de escolaridad:</label>
+		                                        <select name="arrGrado" id="grado" class="custom-select form-control" v-model="ueInfo.grado" >  
+		                                          <option v-for="item in dataGrados" :value="item.id" >${item.grado}</option>
+		                                        </select>
+		                                    </div>											                                    
+										
+										</div>										
+
+										<div class="form-row">
+											<div class="form-group col-md-12">
+												<label for="provincia">Justificativo:</label>
+											    <ul>
+											        <li v-for="(option, index) in dataJustify" :key="index">
+											          <input type="checkbox" :id="index" :value="option.id" v-model="checkedNames" @change="openJustify(option.id)">
+											          <label :for="index">${ option.justificativo }</label>
+											        </li>
+											      </ul>
+										      	{# <span>Checked names: ${ checkedNames } sampel: ${showOptionBrothers}</span> #}
+										     </div>
+										</div>								
+
+
+										<div class="form-row" v-if="showOptionBrothers">
+											<div class="form-group col-md-12">
+												<div class="table-responsive">
+			                                            <table class="table table-hover table-bordered">
+			                                                <thead>
+			                                                    <tr>
+			                                                        <th>Buscar hermana/o por Código RUDE</th>
+			                                                        <th></th>
+			                                                        
+			                                                    </tr>
+			                                                </thead>
+			                                                <tbody>
+			                                                	<tr>
+			                                                		<td>
+			                                                			<input type="text"  class="form-control jupper" maxlength="20" v-on:keypress="alfanumerico" placeholder="Código RUDE" v-model="student.codigoRude">
+			                                                		</td>
+			                                                		<td>
+			                                                			<button type="button" class="btn btn-md btn-warning mb-2" @click="findBrother"><i  class="fa fa-search"></i> Buscar</button>
+			                                                		</td>
+			                                                	</tr>
+			                                                	{# ${dataBrotherSelected} #}
+		                                                        <tr v-for="(brother, index) in dataBrother">
+		                                                            <td class="text-left border-right" colspan="2">${ index + 1} - ${brother.paterno} ${brother.materno} ${brother.nombre}
+		                                                            </td>
+		                                                            {# <td><a class="btn btn btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"  @click='removeRequest(index)'> <i class="fa fa-trash text-danger"></i> </a></td>
+		                                                            <td>
+		                                                            <a v-on:click="seleccionarInscripcion(index)" class="btn btn btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Registrar Notas"> <i class=" fa fa-pencil text-success"  ></i> </a></td>
+		                                                             #}
+		                                                            
+		                                                        </tr>			                                                	
+
+			                                                </tbody>
+			                                            </table>	
+			                                    </div>											 
+		                                    </div>											 
+										</div>									  										
+									
+
+									</br>
+									</br>
+									
+									<div class="col-md-12text-center" >
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="saveAllData">REGISTRAR PRE INSCRIPCIÓN  </button>
+									</div>
+
+
+																		
+								</div>
+							</div>														
+
+						</form>						
+						
+
+
+					</div>
+					<br>
+					<br>
+					
+					<div v-if="datos.status =='warning'" class="alert" :class="[{'alert-success':datos.status == 'warning'}, {'alert-warning':datos.status == 'warning'}]">
+						<p v-if="datos.status =='warning'" >Segip: Datos NO validados correctamente...</p>
+					</div>
+
+					<div  v-if="urlreporte">
+		                <div class="panel panel-">
+		                    <div class="panel-heading">
+		                        <h3 class="panel-title"> <i class="fa fa-file-pdf-o"></i> Solicitud enviada</h3>
+		                    </div>
+		                    <div class="panel-body">
+		                        <div class="alert alert-success">
+		                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		                            Trámite Nro. <b class="text-success">${numTramite}</b> enviado exitosamente.
+		                        </div>
+		                        <div class="text-center">
+		                            <a v-bind:href="urlreporte"><b> <i class="fa fa-file-pdf-o fa-2x"></i> Descargar formulario</b></a>
+		                        </div>
+		                    </div>
+		                </div>			
+					</div>	
+									
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
+	<div id="form_preinscripcion_fer" class="modal fade" role="dialog">
+	  	<div class="modal-dialog">
+	    	<!-- Modal contenido-->
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        		<h4 class="modal-title">BUSCAR REPORTE DE FORM. REIMPRESION</h4>
+	      		</div>
+	      		<div class="modal-body">
+	        		<form method="post" id="verificacion_datos" accept-charset="utf-8">
+		        		<div class="row">
+		        			<div class="col-lg-4 col-md-4 col-xs-12">
+		        				<label>CARNET ID.</label>
+		        				<input type="text" name="ci" id="ci" maxlength="15" class="form-control" required>
+		        			</div>
+		        			<div class="col-lg-4 col-md-4 col-xs-12">
+		        				<label>COMPLEMENTO.</label>
+		        				<input type="text" name="compl" id="compl" maxlength="10" class="form-control">
+		        			</div>
+		        			<div class="col-lg-4 col-md-4 col-xs-12"> <br>
+		        				<button type="submit" class="btn btn-primary btn-lg">BUSCAR</button>
+		        			</div>
+		        		</div>
+	        		</form>
+        			<hr>
+        			<div id="ver_datos">
+        				
+        			</div>
+	      		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-warning" data-dismiss="modal">CERRAR</button>
+	      		</div>
+	    	</div>
+	    </div>
+	</div>
+
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script src="{{asset('js/inputmask.js')}}"></script>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js')}}"></script>
+	<script src="{{asset('js/jquery-captcha.min.js')}}"></script>
+		<script>
+		function formReimprision(){
+			$("#form_preinscripcion_fer").modal({backdrop:'static',keyboard:false});
+		}
+		$("#verificacion_datos").submit(function(event) {
+	        event.preventDefault();
+	        $("#ver_datos").html('')
+	        $.ajax({
+	            url:'{{path('verificacion_datos')}}',
+	            type:'POST',
+	            data:$("form").serialize(),
+	            beforeSend:function (){
+	            	$("#ver_datos").html('Cargando datos ...')
+	            },
+	            success:function(dat){
+	                $("#ver_datos").html(dat)
+	            }
+	        });
+	    });
+	</script>
+	<script>
+		var captcha = null;
+		$(function () {
+			captcha = new Captcha($('#canvas'),{length: 5, autoRefresh: true, caseSensitive: true, width: 350, height: 60});
+			$(".fecha").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
+			//const ans = captcha.valid($('input[name="code"]').val());
+			//$('#valid').on('click', function() {
+			//	const ans = captcha.valid($('input[name="code"]').val());
+			//	console.log(ans);
+			//})
+		})
+
+		var app = new Vue({
+		    delimiters: ['${', '}'],
+		    el: '#app',
+		    data: {
+		    	state: {isSending: false},
+		    	errores: [],
+		    	opcion: 1,
+		    	niveles: [],
+		    	grados: [],
+		    	gradosDisponibles: [],
+		    	apoderado: {
+		    		carnet: '',
+		    		complemento: ''
+		    	},
+				dataParent:{
+					carnet: '',
+		    		complemento: '',
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+		    		fechaNacimiento: '',
+		    		parentesco: '',
+		    		genero: '',
+				},
+				
+		    	student: {
+		    		/*codigoRude: '4073040820205783 809700692017061 718500012020019',*/
+					codigoRude: '',
+					// codigoRudeId: '',
+		    		carnet: '',
+		    		complemento: '',
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+		    		fechaNacimiento: '',
+		    		municipio: '',
+		    		zona: '',
+		    		avenida: '',
+		    		fono: '',
+		    		lugarNacimiento: ''
+		   //  		nivel: '',
+					// estId: '',
+		   //  		grado: ''
+		    	},
+		    	validado: false,
+		    	cortina: false,
+				showFormReclamo:false,
+		    	datos: [],
+
+				status:'',
+                code:'',
+                message:'',                
+                swdata:'',
+                swnodata:'',
+                urlreporte:'',
+                numTramite:'',
+                swuned:false,
+				disabled:false, 
+				swstudent:false, 
+				disabledaddress:false, 
+				showOptionBrothers:false, 
+				allDataRequest:{},           
+                addrressParent:{
+                	dirresidencia:''
+                },
+                swParentAddress:false,
+                departamentos:[ {"id":1,"depto":"Chuquisaca"},
+                				{"id":2,"depto":"La Paz"},
+                				{"id":3,"depto":"Cochabamba"},
+                				{"id":4,"depto":"Oruro"},
+                				{"id":5,"depto":"Potosi"},
+                				{"id":6,"depto":"Tarija"},
+                				{"id":7,"depto":"Santa Cruz"},
+                				{"id":8,"depto":"Beni"},
+                				{"id":9,"depto":"Pando"}],
+                
+                dbParentesco:[  
+                				{"id":1,"parentesco":"Padre"},
+                				{"id":2,"parentesco":"Madre"},
+                				{"id":8,"parentesco":"Tutor"},
+                			],
+                dbGenero:[  
+                				{"id":1,"genero":"Masculino"},
+                				{"id":2,"genero":"Femenino"},
+                			],
+
+                ueInfo:{nivel:'',grado:''},
+                dataUEs:{},
+                dataUnEd:{},
+                dataLevel:{},
+                dataGrados:{},
+                dataJustify:{},
+                dataBrother:{'codigoRude':''},
+                dataBrotherSelected:[],
+                checkedNames: []
+
+		    	
+		    },
+		    mounted(){
+
+		    },
+		    methods: {
+		    	actualizarGrados(){
+		    		if (this.estudiante.nivel == 11) {
+		    			this.estudiante.grado = '1';
+		    			this.gradosDisponibles = [];
+		    			console.log(this.grados);
+		    			let me = this;
+		    			$.each(this.grados, function(index, val) {
+		    				console.log(val);
+		    				if (val.id == 1 || val.id == 2) {
+		    				 	me.gradosDisponibles.push(me.grados[index]);
+		    				}
+		    			});
+		    		}else{
+		    			this.gradosDisponibles = this.grados;
+		    		}
+		    	},
+
+		    	consultar(){
+		    		this.errores = [];
+		    		this.state.isSending = false;
+		    		
+		    		if (this.opcion == 1) {
+		    			if (this.dataParent.carnet == '') {
+		    				this.errores.push('Carnet del solicitante');
+		    			}
+		    			if (this.dataParent.fechaNacimiento == '') {
+		    				this.errores.push('Fecha Nacimiento del solicitante');
+		    			}	
+		    			if (this.dataParent.nombre == '') {
+		    				this.errores.push('Nombre del solicitante');
+		    			}	
+		    			if (this.dataParent.parentesco == '') {
+		    				this.errores.push('Parentesco del solicitante');
+		    			}	
+		    			if (this.dataParent.genero == '') {
+		    				this.errores.push('Genero del solicitante');
+		    			}											
+		    		}
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+
+		    		// Verificamos el Captcha
+		    		const ans = captcha.valid($('input[name="code"]').val());
+		    		if(ans == false)
+		    		{
+		    			Swal.fire({
+		    				title:'Captcha invalido, intente nuevamente',
+		    				type:'warning'
+		    			});
+		    			captcha.refresh();
+		    			return false;
+		    		}
+
+		    		this.datos = [];
+		    		this.validado = false;
+		    		this.cortina = true;
+					this.swdata=false;
+					this.disabled=false;
+					this.swnodata=false;
+	    			Swal.fire({
+	    		  		title:'Procesando',
+	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
+	    		  		type:'info',
+	    		  		showConfirmButton: false,
+	    			});
+		    		axios.post(Routing.generate('preinscription_buscar', { dataParent: this.dataParent, opcion: this.opcion}))
+		    			.then(response => {
+		    				if (response.data.status === 'error') {
+			    				Swal.fire(
+	    					  		'Aviso',
+	    					  		response.data.msg,
+	    					  		'info'
+	    						)
+		    				}
+
+		    				if (response.data.status == 'success') {
+		    					Swal.close();
+								
+		    					this.datos = response.data.datos;
+
+								this.status=this.datos.status;
+								this.code=this.datos.code;
+								this.message=this.datos.message;                
+								this.swdata=this.datos.swdata;
+								this.swnodata=this.datos.swdata;
+								this.disabled=this.datos.swdata;
+								this.dataParent=this.datos.dataParent;
+								this.dataJustify=this.datos.dataJustify;
+
+								// this.allDataRequest.push(this.datos.dataParent);
+								this.allDataRequest['dataParent'] =  this.datos.dataParent;
+		    					this.validado = true;
+		    				}
+		    				this.cortina = false;
+		    			})
+		    			.catch(e => {
+		    				Swal.fire(
+    					  		'Aviso',
+    					  		'No se pudo realizar la verficación',
+    					  		'error'
+    						)
+		    				this.cortina = false;
+		    			});
+		    	},
+				saveAddrress(){
+
+	    			this.errores = [];
+
+	    			if (this.addrressParent.dirresidencia == '') {
+	    				this.errores.push('Dirección de su residencia del solicitante');
+	    			}
+											
+		    		
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}					
+
+					
+
+					this.swParentAddress=false;
+					this.disabledaddress=false;
+                	Swal.fire({
+                        title: 'Registrar informacion de Dirección del padre, madre o tutor',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+						if (result.value) {
+							this.swParentAddress=true;
+							this.disabledaddress=true;
+							// this.allDataRequest.push(this.addrressParent);
+							this.allDataRequest['addrressParent'] = this.addrressParent;
+						}
+	                })					
+
+				},
+                getUES(){
+                    var me = this;
+
+                    if( me.ueInfo.departamento > 0){
+                         axios.post(Routing.generate('preinscription_getUES', me.ueInfo ))
+                            .then(response => {
+                                if (response.status == 200) {
+			    					this.datos = response.data.datos;
+
+									this.status=this.datos.status;
+									this.code=this.datos.code;
+									this.message=this.datos.message;                
+									this.swues=this.datos.swues;
+									// this.disabled=this.datos.swdata;
+									this.dataUEs=this.datos.dataUEs;
+									//this.allDataRequest.push(this.datos.dataParent);
+
+
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    //this.respuesta = response.data;
+                                }
+
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+                    }else{
+                    }
+
+                },				
+                chooseUE(){
+
+                    var me = this;
+                    me.swuned = false;
+
+                	Swal.fire({
+                        title: 'Seleccionar Unidad Educativa para la Pre-Inscription',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	if (result.value) {
+
+		                    if( me.ueInfo.departamento > 0 && me.ueInfo.sie > 0){
+		                         axios.post(Routing.generate('preinscription_chooseUE', me.ueInfo ))
+		                            .then(response => {
+		                                if (response.status == 200) {
+					    					this.datos = response.data.datos;
+
+											this.status=this.datos.status;
+											this.code=this.datos.code;
+											this.message=this.datos.message;                
+											this.swuned=this.datos.swues;
+											// this.disabled=this.datos.swdata;
+											this.dataUnEd=this.datos.dataUnEd;
+											//this.allDataRequest.push(this.datos.dataParent);
+											this.allDataRequest['ueInfo'] = me.ueInfo;
+
+		                                    $('[data-toggle="tooltip"]').tooltip();
+		                                }
+		                                if( response.status == 202){
+		                                    //this.respuesta = response.data;
+		                                }
+
+		                                this.buscando = false;
+		                            })
+		                            .catch(e => {
+		                                console.log(e);
+		                                this.buscando = false;
+		                            });
+		                    }else{
+		                    }   
+                    	}
+                    	
+	                })					
+
+
+
+
+             	
+
+
+
+                },
+				removeInfoUnEd(ikey){
+
+					this.swstudent = false;
+
+                	Swal.fire({
+                        title: 'Eliminar Unidad Educativa seleccionada',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	if (result.value) {
+							if (result.value) {
+								if(ikey == 0){
+	                        		this.dataUnEd.shift();												
+	                        		this.swuned = false;
+								}
+								
+							}
+                    	}
+	                })					
+
+                    
+
+
+				},
+				registryStudent(){
+					this.swstudent = false;
+					me = this;
+                	Swal.fire({
+                        title: 'Registrar Estudiante para la Pre-Inscription',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+						if (result.value) {
+                        	this.swstudent = true;
+
+	                         axios.post(Routing.generate('preinscription_getLevelUE', me.ueInfo ))
+	                            .then(response => {
+	                                if (response.status == 200) {
+				    					this.datos = response.data.datos;
+
+										this.status=this.datos.status;
+										this.code=this.datos.code;
+										this.message=this.datos.message;                
+										// this.swlevel=this.datos.swlevel;
+										// this.disabled=this.datos.swdata;
+										this.dataLevel=this.datos.dataLevel;
+										//this.allDataRequest.push(this.datos.dataParent);
+										// this.allDataRequest['ueInfo'] = me.ueInfo;
+
+	                                    $('[data-toggle="tooltip"]').tooltip();
+	                                }
+	                                if( response.status == 202){
+	                                    //this.respuesta = response.data;
+	                                }
+
+	                                this.buscando = false;
+	                            })
+	                            .catch(e => {
+	                                console.log(e);
+	                                this.buscando = false;
+	                            });                        		
+							
+						}
+	                })						
+
+					
+
+				},
+				getGrados(){
+					getGrados = '';
+	                 axios.post(Routing.generate('preinscription_getGradosUE', me.ueInfo ))
+	                    .then(response => {
+	                        if (response.status == 200) {
+		    					this.datos = response.data.datos;
+
+								this.status=this.datos.status;
+								this.code=this.datos.code;
+								this.message=this.datos.message;     
+								this.dataGrados=this.datos.dataGrados;
+								
+
+	                            $('[data-toggle="tooltip"]').tooltip();
+	                        }
+	                        if( response.status == 202){
+	                            //this.respuesta = response.data;
+	                        }
+
+	                        this.buscando = false;
+	                    })
+	                    .catch(e => {
+	                        console.log(e);
+	                        this.buscando = false;
+	                    });   					
+
+				},
+				openJustify(){
+					me = this;
+					me.showOptionBrothers = false;
+					// console.log(this.checkedNames);
+                    $.each(this.checkedNames, function(index, val) {
+                    	// console.log(val);
+                        if (val == 1) {
+                        	// console.log(val);
+                        	// this.showOptionBrothers = val;
+                            me.showOptionBrothers=true;
+                        }else{
+                        	//this.dataBrother.shift();
+                        }
+                    });					
+                        
+
+				},
+
+				findBrother(){
+					me = this;
+					me.student.sie=me.ueInfo.sie;
+	                 axios.post(Routing.generate('preinscription_findBrother', me.student ))
+	                    .then(response => {
+	                        if (response.status == 200) {
+		    					this.datos = response.data.datos;
+
+								
+								this.code=this.datos.code;
+								this.status=this.datos.status;
+								this.message=this.datos.message;     
+								this.swbrother=this.datos.swbrother;     
+								this.dataBrother=this.datos.dataBrother;
+								this.dataBrother.codigoRude=me.student.codigoRude;
+								// this.allDataRequest['dataBrother']=this.dataBrother;
+								// this.dataBrotherSelected.push(this.dataBrother);
+								
+
+	                            $('[data-toggle="tooltip"]').tooltip();
+	                        }
+	                        if( response.status == 202){
+	                            //this.respuesta = response.data;
+	                        }
+
+	                        this.buscando = false;
+	                    })
+	                    .catch(e => {
+	                        console.log(e);
+	                        this.buscando = false;
+	                    });   
+				},
+				saveAllData(){
+					
+					me = this;
+		    		this.errores = [];
+		    		
+		    		
+	    			if (this.student.fechaNacimiento == '') {
+	    				this.errores.push('Fecha Nacimiento del postulante');
+	    			}	
+	    			if (this.student.nombre == '') {
+	    				this.errores.push('Nombre del postulante');
+	    			}		
+	    			if (this.ueInfo.nivel == '') {
+	    				this.errores.push('Nivel de educación del postulante');
+	    			}		
+	    			if (this.ueInfo.grado == '') {
+	    				this.errores.push('Año de escolaridad del postulante');
+	    			}	
+	    			if (this.student.genero == '') {
+	    				this.errores.push('Genero del postulante');
+	    			}
+	    			if(me.checkedNames.length > 0) {
+	    			}else{
+	    				this.errores.push('Justificativo');
+	    			}
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+
+
+                	Swal.fire({
+                        title: 'Registrar solicitud de Pre-Inscription',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+						if (result.value) {
+                        	this.swstudent = true;
+
+
+                        	me.allDataRequest['brother']=me.dataBrother;
+                        	me.allDataRequest['student']=me.student;
+                        	me.allDataRequest['justify']=me.checkedNames;
+
+	                         axios.post(Routing.generate('preinscription_saveAllData', me.allDataRequest ))
+	                            .then(response => {
+	                                if (response.status == 200) {
+				    					this.datos = response.data.datos;
+
+										this.status=this.datos.status;
+										this.code=this.datos.code;
+										this.message=this.datos.message;                
+										this.dataLevel=this.datos.dataLevel;
+										
+										this.numTramite=this.datos.numTramite;
+										this.urlreporte=this.datos.urlreporte;
+
+										this.dataParent={};
+										this.addrressParent={};
+										this.dataBrother={};
+										this.dataParent={};
+										this.student={};
+										this.dataUnEd={};
+										this.swdata =false;
+										this.disabled =false;
+										
+										this.swstudent=false;
+
+	                                    $('[data-toggle="tooltip"]').tooltip();
+	                                }
+	                                if( response.status == 202){
+	                                    //this.respuesta = response.data;
+	                                }
+
+	                                this.buscando = false;
+	                            })
+	                            .catch(e => {
+	                                console.log(e);
+	                                this.buscando = false;
+	                            });                        		
+							
+						}
+	                })	
+					// this.swstudent = false;
+
+				},
+				validEmail(email){
+					var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					return re.test(email);
+				},			
+				registryClaim(){
+					this.errores = [];
+				
+					if (typeof this.dataClaim.persona.nombre  === "undefined") {
+						this.errores.push('Nombre(s)');
+					}
+
+					if (typeof this.dataClaim.persona.ci  === "undefined") {
+						this.errores.push('CI');
+					}
+					/*
+					if (typeof this.dataClaim.persona.paterno  === "undefined") {
+						this.errores.push('Paterno');
+					}
+					if (typeof this.dataClaim.persona.materno  === "undefined") {
+						this.errores.push('Materno');
+					}					
+					if (typeof this.dataClaim.persona.complemento  === "undefined") {
+						this.errores.push('complemento');
+					}
+					if (typeof this.dataClaim.persona.correo  === "undefined") {
+						this.errores.push('correo');
+					}
+					if(!this.validEmail(this.dataClaim.persona.correo)){
+		    			this.errores.push('Correo Electrónico incorrecto');
+					}					
+					*/
+					if (typeof this.dataClaim.persona.celular  === "undefined") {
+						this.errores.push('celular');
+					}
+					if (typeof this.dataClaim.persona.correo  === "undefined") {
+						this.dataClaim.persona.correo='';
+					}		
+					
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+
+                	Swal.fire({
+                        title: 'Enviar solicitud de Reclamo',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+						if (result.value) {  
+							this.state.isSending = true;
+							this.dataClaim.student = this.estudiante;
+							
+							axios.post(Routing.generate('claim_bjp_registryClaim', this.dataClaim ))
+								.then(response => {
+									if (response.data.status === 'error') {
+										Swal.fire(
+											'Aviso',
+											response.data.msg,
+											'info'
+										)
+									}
+
+									if (response.data.status == 'success') {
+										
+										Swal.fire(
+											'Aviso',
+											'Datos registrados correctamente, el reclamo será atendida por la Institución Educativa',
+											'success'
+										)
+										this.cortina = false;
+										this.cerrar();
+									}
+									
+								})
+								.catch(e => {
+									Swal.fire(
+										'Aviso',
+										'No se pudo realizar la verficación',
+										'error'
+									)
+									this.cortina = false;
+								});	
+
+						}
+	                })
+
+										
+
+				},			
+		    	cerrar(){
+		    		this.validado = false;
+		    		this.opcion = 1;
+		    		this.apoderado.carnet = '';
+		    		this.apoderado.complemento = '';
+		    		this.estudiante.codigoRude = '';
+		    		this.estudiante.carnet = '';
+		    		this.estudiante.complemento = '';
+		    		this.estudiante.nombre = '';
+		    		this.estudiante.paterno = '';
+		    		this.estudiante.materno = '';
+		    		this.estudiante.fechaNacimiento = '';
+		    		this.estudiante.nivel = '';
+		    		this.estudiante.grado = '';
+		    	},
+		    	validarFormatoFecha(campo) {
+	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+	    	        if ((campo.match(RegExPattern)) && (campo!='')) {
+	    	            return true;
+	    	        } else {
+	    	            return false;
+	    	        }
+		    	},
+		    	numerico: function(event){
+		    	    var k = event.charCode || event.keyCode;
+		    	    if ((k < 48 || k > 57) //NUmeros
+		    	        && (k != 13) //ENTER
+		    	        && (k != 8) //retroceso
+		    	        && (k != 9) //tab
+		    	    ){
+		    	        event.preventDefault();
+		    	        return false;
+		    	    }
+		    	},
+		    	alfabetico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    	alfanumerico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k < 48 || k > 57) //NUmeros
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    }
+		});
+	</script>
+</body>
+</html>

@@ -469,10 +469,20 @@ class RegularizationCUTController extends Controller{
      */
     private function createSearForm(){
         // array($this->session->get('currentyear')=>$this->session->get('currentyear'))
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT id,gestion from gestion_tipo ORDER BY gestion DESC");
+        $query->execute();
+        $lista_gestion = $query->fetchAll();
+        /*$aGestion = array();
+        for ($i=2019; $i <=date('Y') ; $i++) { 
+            $aGestion[$i] = $i;
+        }*/
+        $i = date('Y');
+        $aGestion[$i] = $i;
         return $this->createFormBuilder()
                 // ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'Rude', 'required' => true, 'invalid_message' => 'campo obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{10,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array(2020=>2020,2019=>2019), 'attr' => array('class' => 'form-control')))
+                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($aGestion), 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'gethistory();')))
                 ->getForm();
     }
@@ -490,33 +500,30 @@ class RegularizationCUTController extends Controller{
         
         //get send data
         $form = $request->get('form');
-        
         if($form['codigoRude']){
             return $this->redirectToRoute('regularizacion_cut_listHistory', array('form'=> base64_encode(json_encode($form)) ));
         }else {
             return $this->redirectToRoute('regularizacion_cut_index');
         }
+       
         //create db conexion
         
     }
 
     public function listHistoryAction(Request $request, $form){
-
         $em = $this->getDoctrine()->getManager();
         $swError = true;
         // $form['codigoRude'] = trim(base64_decode($codigoRude,true));
         $jsonForm = base64_decode($form ,true);
         $form = json_decode($jsonForm,true);
-        // die;
         // check if the student exists
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>trim($form['codigoRude'])));        
         if($objStudent){
             // check if the student is in 6t
             // $dataStudentSixth      = $this->get('funciones')->getInscriptionBthByRude($objStudent->getCodigoRude());
+            //$form['gestion'] = 2021;
             $objStudentInscription = $this->get('funciones')->getInscriptionBthByGestion($form);
-
             if($objStudentInscription){
-
                 if($em->getRepository('SieAppWebBundle:BthEstudianteNivelacion')->findOneBy(array('estudianteInscripcion'=>$objStudentInscription[0]['estInsId']))){
                     $message = 'Registro ya realizado para la/el estudiante';
                     $this->addFlash('warningReg', $message);
@@ -543,8 +550,7 @@ class RegularizationCUTController extends Controller{
                     ->setParameter('typeUE',array(1,7))
                     ->getQuery()
                     ->getResult();
-
-                    if(sizeof($sieAutorizado)){
+                    if(sizeof(true)){
                     // if(in_array($sie, $this->arrSie2018)){
 
                         // check if the user has permissions
@@ -603,15 +609,12 @@ class RegularizationCUTController extends Controller{
             $swError = false;
 
         }
-
-        // dump($objStudent);die;
-        // dump($form);die;
-
         if ($swError) {
             //get current inscription
             $historyStudentInscription = $this->get('funciones')->getCurrentInscriptionStudentByRude($form);
-            // dump($historyStudentInscription);
-            // die;
+            /*dump($historyStudentInscription);
+            die;*/
+            
             return $this->render('SieHerramientaBundle:RegularizationCUT:history.html.twig', array(
                 'currentInscription' => $objStudentInscription[0]['estInsId'],
                 'currentGestion' => $objStudentInscription[0]['gestion'],

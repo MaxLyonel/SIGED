@@ -95,7 +95,13 @@
                         <div class="panel panel-primary shadow">
                             <div class="panel-heading">
                                 <div class="pull-left">
-                                    <h3 class="panel-title"> <i class="fa fa-user"></i> Datos Tutor</h3>
+                                    <h3 class="panel-title"> <i class="fa fa-user"></i> Datos Tutor
+                                        {#
+                                        <a href="{{path('olimRoboticaReporte_inscripcion_export',{'tutor':tutor.carnet,'gestion':'now'|date('Y')})}}" target="_blank" title="Descarga Inscripción">
+                                            <i class="fa fa-file-pdf-o fa-2x text-danger" aria-hidden="true"></i>
+                                        </a>
+                                        #}
+                                    </h3>
                                 </div>
                                 <div class="pull-right">
                                     <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
@@ -172,9 +178,13 @@
                             <div class="row">
                                 <div class="form-group formulario text-center">
                                     {{form_start(formCategoria)}}
+                                        <input type="hidden" name="tutorCi" id="tutorCi" value="{{tutor.carnet}}">
+                                        <input type="hidden" name="sie" id="sie" value="{{sie}}">
                                         {{form_label(formCategoria.reglasTipo)}}
                                         {{form_widget(formCategoria.reglasTipo, {'attr':{'class':'seleccionCategoria'} })}}
-                                        {# <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar">Confirmar participación</span> </button> #}
+                                        
+                                        <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar">Confirmar participación</span> </button>
+                                        
                                     {{form_end(formCategoria)}}
                                 </div>
                             </div>
@@ -265,11 +275,13 @@
         $('#btnGuardar').on('click', function(){
             var grupoProyectoId = $('#form_grupoProyectoId').val();
             var categoriaId = document.getElementById("form_reglasTipo").value;
+            var tutorCi = $('#tutorCi').val();
+            var sie = $('#sie').val();
 
             var imagen = '{{ asset("img/loading96.gif") }}';
 
             $.ajax({
-                url: Routing.generate('olimrobotica_actualizarCategoria', {grupoProyectoId: grupoProyectoId, categoriaId: categoriaId}),
+                url: Routing.generate('olimrobotica_actualizarCategoria', {grupoProyectoId: grupoProyectoId, categoriaId: categoriaId,tutorCi:tutorCi,sie:sie}),
                 type: 'GET',
                 beforeSend: function(){
                     swal({
@@ -282,7 +294,10 @@
                     if(data.status == 200){
                         swal("¡Registro actualizado!", data.mensaje, "success").then(okay => {
                             if(okay){
-                                location.reload();
+                                if(typeof(data.url)!='undefined')
+                                    location.href=data.url;
+                                else
+                                    location.reload();
                             }
                         });
                     }else{

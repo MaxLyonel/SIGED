@@ -56,9 +56,13 @@
                                     <label for="complemento">Complemento</label>
                                     <input class="form-control" type="text" value="{{complemento}}" disabled>                                    
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-3">
                                     {{ form_row(form.departamentoTipo, { 'id': 'sigla' }) }}
                                     <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="complemento">C.I. Extranjero</label>
+                                    <div class="rdio rdio-theme">{{form_widget(form.extranjero)}}</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -114,6 +118,7 @@
             var nombre = $('#nombre').val();
             var paterno = $('#paterno').val();
             var materno = $('#materno').val();
+            
             nombre = nombre.toUpperCase();
             paterno = paterno.toUpperCase();
             materno = materno.toUpperCase();

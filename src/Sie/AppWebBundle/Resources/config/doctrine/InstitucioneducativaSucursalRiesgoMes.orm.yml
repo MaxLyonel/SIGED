@@ -60,6 +60,11 @@ Sie\AppWebBundle\Entity\InstitucioneducativaSucursalRiesgoMes:
             length: 255
             fixed: false
             comment: ''
+        semana:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         riesgoUnidadeducativaTipo:
             targetEntity: RiesgoUnidadeducativaTipo

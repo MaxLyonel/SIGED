@@ -1,0 +1,131 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    <style type="text/css">
+        .requisitos{
+            background: #EEEEEE;
+            padding: 5px;
+            padding-left: 50px;
+            box-shadow: 4px 4px #DDDDDD;
+            margin-bottom: 15px;
+        }
+        .requisitos > .checkbox > label{
+            color: #2A3271;
+            font-size: 1.2rem !important;
+        }
+    </style>
+
+    <div class="header-content">
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite <span>Nivelación por rezago escolar</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('wf_tramite_index') }}">Tramites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-file"></i>
+                    Nivelación por rezago escolar
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Solicitud</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">    
+            <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">  
+                <div class="panel panel-primary" >
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> <i class="fa fa-search"></i> Búsqueda </h3>
+                    </div>
+                    <div class="panel-body">     
+                        <div class="form-group row buscador">
+                            <form role="form" method="post" enctype"multipart/form-data" id="form" name="form">
+                                <input type="hidden" value="{{data}}" id="form_data" name="form[data]">
+                                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                                    Código Rude
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <input type="text" id="form_rude" name="form[rude]" required="required" class="form-control" maxlength="18"  placeholder="Ingrese el Código RUDE a buscar">
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                    <button onclick="buscarEstudiante()" type="button" class="btn btn-primary btn-block"><i class="fa fa-search"></i> Buscar </button>
+                                </div>                            
+                            </form>
+                        </div>           
+                    </div>
+                </div>           
+            </div>
+        </div>
+        <div class="row" id="datosEstudiante"> 
+            {% if tramite > 0 %}
+                {% include 'SieProcesosBundle:TramiteInscripcionNivelacionRezago:formulario.html.twig' with {'historial': historial, 'data': data, 'info': info, 'alert': alert, 'tramite': tramite} %}
+            {% endif %}
+        </div>     
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}   
+    <script>            
+        var buscarEstudiante = function(){
+            formulario = $('#form')[0];
+            var formData = new FormData(formulario);
+            peticion = $.ajax({
+                type: 'post',
+                url: "{{ path('tramite_inscripcion_nivelacion_rezago_buscar_estudiante') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $("#datosEstudiante").empty();
+                    $("#datosEstudiante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#datosEstudiante').empty();
+                    $("#datosEstudiante").append(data);
+                },
+                error: function(xhr) {
+                    $("#datosEstudiante").empty();
+                    $("#datosEstudiante").append('<div style="text-align:center">Error, no fue posible enviar el formulario</div>');
+                },
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                $("#datosEstudiante").empty();
+                $("#datosEstudiante").append('<div style="text-align:center">Error, no fue posible procesar el formulario</div>');
+            });
+            return true;
+        }
+
+        $(".jnumbersletters").keypress(function (key) {
+            var key = key || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 97 || k > 122)//letras minusculas
+                && (k < 65 || k > 90) //letras mayusculas
+                && (k < 48 || k > 57) //NUmeros
+                // && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+                && (k != 241) //ñ
+                 && (k != 209) //Ñ
+                 && (k != 32) //espacio
+                 && (k != 225) //á
+                 && (k != 233) //é
+                 && (k != 237) //í
+                 && (k != 243) //ó
+                 && (k != 250) //ú
+                 && (k != 193) //Á
+                 && (k != 201) //É
+                 && (k != 205) //Í
+                 && (k != 211) //Ó
+                 && (k != 218) //Ú
+                 && (k != 44) //coma ,
+                 && (k != 46) //punto .
+                )
+                return false;
+        });
+
+    </script>
+{% endblock %}

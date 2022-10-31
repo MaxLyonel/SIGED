@@ -1,0 +1,70 @@
+tramite_modificacion_calificacion_gestion_pasada_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:index }
+
+
+tramite_modificacion_calificacion_gestion_pasada_buscar_estudiante:
+    path:     /buscar/Estudiante
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:buscarEstudiante }
+    options:
+        expose: true
+
+tramite_modificacion_calificacion_gestion_pasada_buscar_calificaciones:
+    path:     /buscar/Calificaciones
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:buscarCalificaciones }
+    options:
+        expose: true
+
+tramite_modificacion_calificacion_gestion_pasada_formulario_save:
+    path:     /formulario/save
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:formularioSave }
+    options:
+        expose: true
+
+tramite_modificacion_calificacion_gestion_pasada_comprobante:
+    path:     /comprobante
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:requestInsCalYearOld }  
+
+# UNIDAD EDUCATIVA
+
+tramite_modificacion_calificacion_gestion_pasada_ue_verifica:
+    path:     /ue/verifica
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:ueVerifica }
+
+tramite_modificacion_calificacion_gestion_pasada_ue_verifica_save:
+    path:     /ue/verifica/save
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:ueVerificaSave }
+
+
+
+# DISTRITO EDUCATIVO
+
+tramite_modificacion_calificacion_gestion_pasada_distrito_verifica:
+    path:     /distrito/verifica
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:distritoVerifica }
+
+tramite_modificacion_calificacion_gestion_pasada_distrito_verifica_save:
+    path:     /distrito/verifica/save
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:distritoVerificaSave }
+
+tramite_modificacion_calificacion_gestion_pasada_solicita:
+    path:     /distrito/solicita
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:distritoSolicita }
+
+tramite_modificacion_calificacion_gestion_pasada_solicita_save:
+    path:     /distrito/solicita/save
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:distritoSolicitaSave }
+
+
+# DEPARTAMENTO
+tramite_modificacion_calificacion_gestion_pasada_autoriza:
+    path:     /departamento/autoriza
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:recepcionVerificaDepartamento }
+    
+tramite_modificacion_calificacion_gestion_pasada_autoriza_save:
+    path:     /departamento/autoriza/save
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:derivaDepartamento }
+
+
+
+

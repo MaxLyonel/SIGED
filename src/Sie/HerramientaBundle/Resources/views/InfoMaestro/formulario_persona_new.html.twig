@@ -29,6 +29,10 @@
 						<label>{{form_label(form_datos.correo)}} (*):</label>
 						{{form_widget(form_datos.correo)}}
 					</div>
+
+					{# dcastillo 2402 aqui hay que añadir otra vez el option ...para que segunda validacion ?? quien fue el inteligente ?#}
+					<input type="hidden" id="sie_persona_tipo_persona" name="sie_persona_datos[tipo_persona]" value="{{tipo_persona}}">
+					
 					<input type="hidden" id="sie_persona_datos_persona" name="sie_persona_datos[persona]" value="{{persona}}">
 					<input type="hidden" id="sie_persona_datos_institucion" name="sie_persona_datos[institucion]" value="{{institucion}}">
 					<input type="hidden" id="sie_persona_datos_gestion" name="sie_persona_datos[gestion]" value="{{gestion}}">

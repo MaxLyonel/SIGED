@@ -22,6 +22,7 @@
         </div>
     </div>
 
+    <!-- Start body content -->
     <div class="body-content animated fadeIn">
         {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Menú Principal', 'gestion': data.gestion,'sie': data.id, 'ieducativa': data.institucioneducativa, 'opcion': 'Acceso a Módulos'} %}
         {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
@@ -92,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12" >
                 <div class="thumbnail">
                     <img src="{{asset('img/estudiantes300Alter.jpg')}}" alt="Estudiantes">
                     <div class="caption text-center">
@@ -105,12 +106,14 @@
                     </div>
                 </div>
             </div>
-            {% if onlyview == false %}
+            
+            {# se oculta hasta aviso  #}
+            {% if onlyview == false %} 
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
                         <div class="caption text-center">
-                            <h4>Cerrar Operativo</h4>
+                            <h4>Cerrar Operativo Inscripción</h4>
                             <div class="thumbnail-action">
                                 {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
                                     {{form_widget(closeOperativoform.next)}}
@@ -119,7 +122,70 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rudees">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo Rudees</h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoRudeesform, { 'attr':{'id':'formCloseOperativoRudees' }} )}}
+                                    {{form_widget(closeOperativoRudeesform.next)}}
+                                {{form_end(closeOperativoRudeesform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo 1er Trimestre">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo 1er Trimestre</h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoNotasform, { 'attr':{'id':'formCloseOperativoNotas' }} )}}
+                                    {{form_widget(closeOperativoNotasform.next)}}
+                                {{form_end(closeOperativoNotasform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
+            {# Operativo Bono JP
+             
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/operativo-salud300.jpg')}}" alt="Operativo Salud">
+                    <div class="caption text-center">
+                        <h4>Operativo salud</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(operativoSaludform)}}
+                                {{form_widget(operativoSaludform.next)}}
+                            {{form_end(operativoSaludform)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            #}
+             {# Operativo Bono JP #}
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
+                    <div class="caption text-center">
+                        <h4>Operativo Bono JP</h4>
+                        <div class="thumbnail-action">
+                            {% if operativoBonoJP %}
+                                <a href="{{path('operativo_bono_jp_ddjj',{sie:data.id,gestion:data.gestion})}}" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>
+                            {% else %}
+                                {{form_start(operativoBonoJPform, { 'attr':{'id':'formCerrarBonoJs' }} )}}
+                                    {{form_widget(operativoBonoJPform.next)}}
+                                {{form_end(operativoBonoJPform)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <input type="hidden" name="op" id="op" value="{{operativo}}">
         </div>
         <div class="row">
             <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
@@ -131,6 +197,7 @@
     {{parent()}}
     <script>
         var closeOperativo = function(){
+            
             if(confirm('¿Está segura/o de cerrar el operativo?')){
                 formData = $('#formCloseOperativo').serialize();
                 $.ajax({
@@ -159,5 +226,135 @@
                 return false;
             }
         };
+        var closeOperativoRudees = function(){
+            
+            if(confirm('¿Está segura/o de cerrar el operativo?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('info_especial_close_operativo_rudees'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                        //location.reload(true);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                return false;
+            }
+        };
+        var closeOperativoNotas = function(){
+            
+            if(confirm('¿Está segura/o de cerrar el operativo?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('info_especial_close_operativo_notas'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                        //location.reload(true);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                return false;
+            }
+        };
+
+
+
+        $('#formCerrarBonoJs').on('submit',function (e)
+        {
+            e.preventDefault();
+            closeOperativoBonoJS();
+        });
+        var closeOperativoBonoJS = function(){
+            if(confirm('¿Está segura/o de cerrar el operativo Bono Juancito Pinto?')){
+                formData = $('#formCerrarBonoJs').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('operativo_bono_jp_cerrar'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data)
+                    {
+                        var res= data;
+                        var status = res.status;
+                        var msj = res.msj;
+                        var urlReporte = res.urlReporte;
+                        var observacionesBonpJP = res.observacionesBonpJP;
+                        var contenedor = $('#formCerrarBonoJs');
+                        if(status==200)
+                        {
+                            if(observacionesBonpJP && observacionesBonpJP.length>0)
+                            {
+                                $("#answerClose").empty();
+                                var obs ='<ol class="list-group"><li class="list-group-item" style="background-color:#63D3E9;color:white"><h4>'+observacionesBonpJP.length+' Inconsistencias / Observaciones</h4></li>';
+                                for (var i in observacionesBonpJP)
+                                {
+                                    obs+='<li class="list-group-item list-group-item-danger">'+observacionesBonpJP[i].observacion+'</li>';
+                                }
+                                obs+='</ol>';
+                                $("#answerClose").html(obs);
+                            }
+                            else
+                            {
+                                $("#answerClose").empty();
+                                var aHref='<a href="'+urlReporte+'" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>';
+                                if(typeof(contenedor)!='undefined')
+                                {
+                                    $('#formCerrarBonoJs').html('');
+                                    $('#formCerrarBonoJs').html(aHref);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            alert('Ocurrio un error por favor vuelva a intentarlo.');
+                        }
+                    },
+                    statusCode: {
+                        500: function () {
+                            alert('Acaba de ocurrir un error de servidor.');
+                        },
+                        404: function () {
+                            alert('Ocurrio un error por favor vuelva a intentarlo.');
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }
+        };
+
         </script>
 {%endblock%}

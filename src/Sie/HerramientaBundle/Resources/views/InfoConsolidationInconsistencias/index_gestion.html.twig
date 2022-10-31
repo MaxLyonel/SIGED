@@ -1,0 +1,220 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <style>
+    .modal-header-danger {
+        color:#fff;
+        padding:9px 15px;
+        border-bottom:1px solid #eee;
+        background-color: #d9534f;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+        -moz-border-radius-topright: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    .table-wrapper {
+        max-height: 600px;
+        overflow: auto;
+        display:inline-block;
+        }
+    </style>
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Información General <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">
+                    Información Unidad Educativa
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <!-- Start default panel -->
+                <div class="panel panel-warning rounded shadow">
+                    <!-- Start panel heading -->
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{title}}</h3>
+                        <h4 class="panel-title">Unidades Educativas que NO cerraron operativo en la gestion actual</h4>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <!--/ End panel heading -->
+                    <!-- Start panel content -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group" style="display:none;">                            
+                                <label class="col-md-2 col-md-offset-3 control-label text-right" for="gestiones"><strong>Seleccionar gestión:</strong></label>
+                                <div class="col-md-2">
+                                    <select onchange="registroConsol(this.value)" id="gestiones" class="form-control">
+                                        {% for gestion in gestiones %}
+                                            <option value="{{gestion}}">{{gestion}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </!--div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12" id="tableConsol">
+                                {% include 'SieEspecialBundle:Institucioneducativa:consol_especial_inconsistencias.html.twig' with {'gestionactual': gestionactual, 'consolEspecial': consol, 'label': label, 'label_distrito': label_distrito} %}
+                            </div>
+                        </div>
+
+                        <div id="infoInconsistencias">
+            
+                        </div>
+
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+                <!--/ End panel content -->
+        </div><!-- /.panel -->
+        <!--/ End default panel -->
+    </div>
+
+   
+    
+                   
+                
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    var registroConsol = function (gestionid) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+            beforeSend: function () {
+                $("#tableConsol").empty();
+                $("#tableConsol").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" style="width: 80px;" /></div>');
+            },
+            success: function (data) {
+                $("#listaConsol").remove();
+                $("#tableConsol").empty();
+                $("#tableConsol").append(data);
+                cargatablas();
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var cargatablas = function (identif){
+        // Setup - add a text input to each footer cell
+        $('#listaConsol tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "#"){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#listaConsol').DataTable( {
+                "order": [[ 0, "asc" ]]
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    };
+
+    $(document).ready(function(){
+        
+        cargatablas();
+        
+    });
+
+     function mostrarModalInconsistencias(codigo_ue, nombre_ue) {        
+        
+        //alert(nombre_ue);
+        //$("#infoModal").hide();
+        $.ajax({
+            type: 'get',
+            //url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+            //url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+            url: Routing.generate('herramienta_infoconsolidation_inconsistencias_modal', {'ueid': codigo_ue}),
+            beforeSend: function () {
+                $('body').css('cursor', 'wait');
+
+                //$("#infoModal2").hide();
+                /*$("#infoModal2").empty();
+                $("#infoModal2").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');*/                
+            },
+            success: function (data) {
+                /*console.log(data.data.length);
+                console.log(data);*/
+                //$("#tbodyexample2").remove();
+                $("#tbodyexample2").empty();
+                //$("#infoModal").append(data);
+                
+                var tbody = $('#tbodyexample2');
+                
+                for (var i = 0; i < data.data.length ; i++) {
+                    // create an <tr> element, append it to the <tbody> and cache it as a variable:
+                    var tr = $('<tr/>').appendTo(tbody);                   
+                    tr.append('<td> ' + (i+1) + ' </td><td>' + data.data[i]['observacion']) + '</td>';                   
+                }
+
+                //$("#infoModal").show();
+                $('body').css('cursor', 'auto');
+                document.getElementById("nombre_ue").innerHTML = "";
+                document.getElementById("nombre_ue").innerHTML = "Inconsistencias: " + nombre_ue;
+
+                var elm = document.getElementById('#lista_inconsistencias');
+                elm.scrollIntoView(true);
+                
+               // $('#example').DataTable().ajax.reload();
+
+                
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+
+        $('#newModalIncon').modal('show');
+
+     }
+    </script>
+{% endblock %}

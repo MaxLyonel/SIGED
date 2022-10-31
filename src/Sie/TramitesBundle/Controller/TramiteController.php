@@ -2213,14 +2213,20 @@ class TramiteController extends Controller {
                 institucioneducativa_curso.turno_tipo_id,
                 especialidad_tecnico_humanistico_tipo.especialidad
              ) as v
-           where
-           case
-            when (gestion_tipo_id::double precision = 2020::double precision)
-            then false -- (t1 is null or t1 = 0)
+            where
+            case
+            when (v.institucioneducativa_id in (select institucioneducativa_id from institucioneducativa_humanistico_tecnico where institucioneducativa_humanistico_tecnico_tipo_id = 3 and gestion_tipo_id = date_part('year',current_date)::double precision)) then false
+            when (gestion_tipo_id::double precision = date_part('year',current_date)::double precision) then
+            case
+            when (gestion_tipo_id::double precision >= 2020::double precision) then
+            (t1 is null or t1 = 0)
+            else
+            (b1 is null or b1 = 0)
+            end
             when (((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1)) and gestion_tipo_id < 2020)
             then (b1 is null or b1 = 0 or b2 is null or b2 = 0 or b3 is null or b3 = 0 or b4 is null or b4 = 0 or b5 is null or b5 = 0)
             else (t1 is null or t1 = 0 or t2 is null or t2 = 0 or t3 is null or t3 = 0 or t4 is null or t4 = 0)
-          end
+            end
           group by
           v.codigo_rude,
           v.carnet_identidad,
@@ -4372,24 +4378,38 @@ class TramiteController extends Controller {
                 $em->getConnection()->beginTransaction();
                 try {
                     $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
-                    if(count($estudianteInscripcion)>0){                        
+                    if(count($estudianteInscripcion)>0){      
+                        //dump($estudianteInscripcion->getEstudiante());die;                  
                         $nombre = $estudianteInscripcion->getEstudiante()->getNombre();
                         $paterno = $estudianteInscripcion->getEstudiante()->getPaterno();
                         $materno = $estudianteInscripcion->getEstudiante()->getMaterno();
                         $carnetIdentidad = $estudianteInscripcion->getEstudiante()->getCarnetIdentidad();
                         $complemento = $estudianteInscripcion->getEstudiante()->getComplemento();
                         $fechaNacimiento = $estudianteInscripcion->getEstudiante()->getFechaNacimiento();
-
+                        if($estudianteInscripcion->getEstudiante()->getCedulaTipo()){
+                            $cedulaTipoId = $estudianteInscripcion->getEstudiante()->getCedulaTipo()->getId();
+                        } else {
+                            $cedulaTipoId = 1;
+                        }
+                        
                         $arrParametros = array('complemento'=>$complemento, 'primer_apellido'=>$paterno, 'segundo_apellido'=>$materno, 'nombre'=>$nombre, 'fecha_nacimiento'=>$fechaNacimiento->format('d-m-Y'));
+                        if($cedulaTipoId==2) {
+                            $arrParametros['extranjero'] = 'E';
+                        } 
 
                         $answerSegip = false;
                         if ($carnetIdentidad > 0){
                             $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad ,$arrParametros, 'prod', 'academico');
+                            if(!$answerSegip){
+                                $arrParametros['extranjero']='e'; // extranjero
+                                $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad ,$arrParametros, 'prod', 'academico');
+                            }
                         }
                         
                         if($answerSegip){
                             $entityEstudiante = $estudianteInscripcion->getEstudiante();
                             $entityEstudiante->setSegipId(1);
+                            $entityEstudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
                             $em->persist($entityEstudiante);
                             $em->flush();
                             $em->getConnection()->commit();

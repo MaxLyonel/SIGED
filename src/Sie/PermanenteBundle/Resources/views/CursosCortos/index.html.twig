@@ -127,6 +127,11 @@
                                                                                                             <i class="fa fa-graduation-cap"></i>
                                                                                                         </button>
                                                                                                     </div>
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modalidad">
+                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad( '{{ dataIdcurso.infoUe }}');">
+                                                                                                            <i class="fa fa-home"></i>
+                                                                                                        </button>
+                                                                                                    </div>
                                                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
 
                                                                                                         <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.iecId}} ');">
@@ -505,7 +510,28 @@
         }
         document.getElementById("defaultOpen").click();
 
+        var getDatosModalidad = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_modalidadCurso_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
 
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
 
         var nuevoMaestro = function (infoUe) {
 

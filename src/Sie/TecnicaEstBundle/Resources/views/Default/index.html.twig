@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="{{asset('favicon.ico')}}" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Institutos</title>
+
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}">
+        <style>
+            .container{
+                margin-top: 10px;
+            }
+            body{
+                background: #FFF;
+            }
+            .img-logo{
+                width: 39%;
+            }
+            .titulo{
+                background-color: #1b3f61;
+                color: #ECEFF1;
+                text-align: center;
+            }
+            .sign-text{
+                margin-bottom: 7px;
+            }
+            .sign-text span{
+                font-size:2em;
+                border-bottom: 1px solid #D6E9ED;
+                text-shadow: 2px 2px #90A4AE;
+            }
+            .subsistema{
+                font-size: 1.3em;
+            }
+            .img-user{
+                width: 60px;
+            }
+            .datos-usuario{
+                /* background: #78909C; */
+                text-align: center;
+            }
+            .encabezado{
+                /* background: #78909C; */
+                padding: 7px;
+                color: #1b3f61;
+                font-weight: bold;
+            }
+            .panel-body{
+                background: #ECEFF1 !important;
+            }
+            .btn-aceptar{
+                background-color: #1b3f61;
+                /* background-color: #D6E9ED; */
+                color: #FFFFFF;
+                font-size: 1.1em;
+            }
+            
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="login-banner text-center">
+                        <div class="img">
+                            <img class="img-logo" src="{{asset('images/logo-min-edu.png')}}" alt="">
+                        </div>
+                    </div>                    
+                    <div class="panel panel-invoice rounded">
+                        <div class="panel-sub-heading" style="border-bottom: 0px;">
+                            <div class="row inner-all">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <h3 class="mt-0 text-primary"><strong>{{central.estTecInstituto.instituto}}</strong></h3>
+                                    <h4 class="mt-0 text-info">{{central.estTecInstituto.abreviacion}}</h3>
+                                </div>
+                            </div>
+                            <div class="row inner-all">
+                                {% if msg is defined %}
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+                                        <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> {{msg}}</div>
+                                    </div>
+                                {% endif %}  
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+                                    <div class="panel">                                  
+                                        <form action="{{path('sie_tecnica_est_menu')}}" method="post" name="form" id="form">
+                                            <input type="hidden" id="form_sede" name="form[sede]" value="">
+                                        </form>
+                                        <ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
+                                            {% set c = 0 %}
+                                            {% for sede in sedes %}
+                                                {% set c = c + 1 %}
+                                                {% set id = sede.id %}
+                                                {% set nombre = sede.nombre %}
+                                                {% set direccion = sede.direccion %}
+                                                <li style="border-bottom: 1px solid #DEDEDE;">
+                                                    <a href="javascript:void(0);" onclick="ingresoSede('{{id}}')">
+                                                    <i class="fa fa-institution"></i> {{nombre}}
+                                                    <p class="email-summary">{{direccion}}</p>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>    
+                                </div>
+                            </div>
+                        </div><!-- /.panel-sub-heading -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+        <script type="text/javascript">
+            var ingresoSede = function (sede){
+                var formSede = $('#form_sede');
+                var formulario = $('#form')[0];
+                formSede.val(sede);
+                formulario.submit();        
+                return true;
+            };
+        </script>
+    </body>
+
+</html>
+
+
+
+

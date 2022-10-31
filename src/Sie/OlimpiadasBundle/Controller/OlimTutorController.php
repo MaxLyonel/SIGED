@@ -222,7 +222,7 @@ class OlimTutorController extends Controller{
 	    $form = $request->get('form');
 	    $data = json_decode($form['data'],true);
 	    //dump($data);die;
-        array_pop(($form));
+        //array_pop(($form));
         // dump($form['data']);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:newTutor.html.twig', array(
 		'form' => $this->formLookForTutor($form['data'])->createView(),

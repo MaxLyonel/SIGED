@@ -192,4 +192,88 @@ class PersonaAdministrativoInscripcion
     {
         return $this->distritoTipo;
     }
+    /**
+     * @var boolean
+     */
+    private $finalizado;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadosaludTipo
+     */
+    private $estadosaludTipo;
+
+
+    /**
+     * Set finalizado
+     *
+     * @param boolean $finalizado
+     * @return PersonaAdministrativoInscripcion
+     */
+    public function setFinalizado($finalizado)
+    {
+        $this->finalizado = $finalizado;
+    
+        return $this;
+    }
+
+    /**
+     * Get finalizado
+     *
+     * @return boolean 
+     */
+    public function getFinalizado()
+    {
+        return $this->finalizado;
+    }
+
+    /**
+     * Set estadosaludTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadosaludTipo $estadosaludTipo
+     * @return PersonaAdministrativoInscripcion
+     */
+    public function setEstadosaludTipo(\Sie\AppWebBundle\Entity\EstadosaludTipo $estadosaludTipo = null)
+    {
+        $this->estadosaludTipo = $estadosaludTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadosaludTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadosaludTipo 
+     */
+    public function getEstadosaludTipo()
+    {
+        return $this->estadosaludTipo;
+    }
+    /**
+     * @var boolean
+     */
+    private $esvacuna;
+
+
+    /**
+     * Set esvacuna
+     *
+     * @param boolean $esvacuna
+     * @return PersonaAdministrativoInscripcion
+     */
+    public function setEsvacuna($esvacuna)
+    {
+        $this->esvacuna = $esvacuna;
+    
+        return $this;
+    }
+
+    /**
+     * Get esvacuna
+     *
+     * @return boolean 
+     */
+    public function getEsvacuna()
+    {
+        return $this->esvacuna;
+    }
 }

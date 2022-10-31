@@ -30,14 +30,19 @@ class InstitucioneducativaCursoModalidadAtencion
     private $observacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\ModalidadAtencionTipo
+     * @var integer
      */
-    private $modalidadAtencionTipo;
+    private $mes;
 
     /**
      * @var \Sie\AppWebBundle\Entity\InstitucioneducativaCurso
      */
     private $institucioneducativaCurso;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\ModalidadAtencionTipo
+     */
+    private $modalidadAtencionTipo;
 
 
     /**
@@ -120,26 +125,26 @@ class InstitucioneducativaCursoModalidadAtencion
     }
 
     /**
-     * Set modalidadAtencionTipo
+     * Set mes
      *
-     * @param \Sie\AppWebBundle\Entity\ModalidadAtencionTipo $modalidadAtencionTipo
+     * @param integer $mes
      * @return InstitucioneducativaCursoModalidadAtencion
      */
-    public function setModalidadAtencionTipo(\Sie\AppWebBundle\Entity\ModalidadAtencionTipo $modalidadAtencionTipo = null)
+    public function setMes($mes)
     {
-        $this->modalidadAtencionTipo = $modalidadAtencionTipo;
+        $this->mes = $mes;
     
         return $this;
     }
 
     /**
-     * Get modalidadAtencionTipo
+     * Get mes
      *
-     * @return \Sie\AppWebBundle\Entity\ModalidadAtencionTipo 
+     * @return integer 
      */
-    public function getModalidadAtencionTipo()
+    public function getMes()
     {
-        return $this->modalidadAtencionTipo;
+        return $this->mes;
     }
 
     /**
@@ -163,5 +168,84 @@ class InstitucioneducativaCursoModalidadAtencion
     public function getInstitucioneducativaCurso()
     {
         return $this->institucioneducativaCurso;
+    }
+
+    /**
+     * Set modalidadAtencionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\ModalidadAtencionTipo $modalidadAtencionTipo
+     * @return InstitucioneducativaCursoModalidadAtencion
+     */
+    public function setModalidadAtencionTipo(\Sie\AppWebBundle\Entity\ModalidadAtencionTipo $modalidadAtencionTipo = null)
+    {
+        $this->modalidadAtencionTipo = $modalidadAtencionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get modalidadAtencionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\ModalidadAtencionTipo 
+     */
+    public function getModalidadAtencionTipo()
+    {
+        return $this->modalidadAtencionTipo;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo
+     */
+    private $semanaModalidadAtencionTipo;
+
+
+    /**
+     * Set semanaModalidadAtencionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo $semanaModalidadAtencionTipo
+     * @return InstitucioneducativaCursoModalidadAtencion
+     */
+    public function setSemanaModalidadAtencionTipo(\Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo $semanaModalidadAtencionTipo = null)
+    {
+        $this->semanaModalidadAtencionTipo = $semanaModalidadAtencionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get semanaModalidadAtencionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo 
+     */
+    public function getSemanaModalidadAtencionTipo()
+    {
+        return $this->semanaModalidadAtencionTipo;
+    }
+    /**
+     * @var integer
+     */
+    private $semana;
+
+
+    /**
+     * Set semana
+     *
+     * @param integer $semana
+     * @return InstitucioneducativaCursoModalidadAtencion
+     */
+    public function setSemana($semana)
+    {
+        $this->semana = $semana;
+    
+        return $this;
+    }
+
+    /**
+     * Get semana
+     *
+     * @return integer 
+     */
+    public function getSemana()
+    {
+        return $this->semana;
     }
 }

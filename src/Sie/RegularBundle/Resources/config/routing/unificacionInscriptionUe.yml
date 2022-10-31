@@ -1,0 +1,7 @@
+unificacion_inscription_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:UnificacionInscriptionUe:index }
+
+unificacion_inscription_remove:
+    path:     /removeIns/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{sie}/{gestion}/{eiid}
+    defaults: { _controller: SieRegularBundle:UnificacionInscriptionUe:removeInscription }

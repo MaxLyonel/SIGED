@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EstTecEgresadoTituladosTipo:
+    type: entity
+    table: est_tec_egresado_titulados_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadoFinal:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: estado_final
+    lifecycleCallbacks: {  }

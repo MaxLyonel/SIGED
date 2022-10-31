@@ -690,7 +690,7 @@ class TramiteAceleracionController extends Controller
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
         }
-        $observaciones = 'Llenado del Acta Supletoria';
+        $observaciones = 'Llenado del Acta Supletorio';
         $tipotramite_id = $tipotramite->getId();
         $evaluacion = '';
         $distrito_id = 0;
@@ -820,11 +820,14 @@ class TramiteAceleracionController extends Controller
             ->orderBy("td.flujoProceso")
             ->getQuery()
             ->getResult();
+
         $datos1 = json_decode($resultDatos[0]->getdatos());
-        $datos2 = json_decode($resultDatos[1]->getdatos());//dump($datos2->curso_asignatura_notas, count(json_decode($datos2->curso_asignatura_notas)));die;
+        $datos2 = json_decode($resultDatos[1]->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos1->estudiante_id);
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
+        //added
+        $arrFechasolicitud = explode("/", $datos1->fecha_solicitud);
 
         // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
         $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
@@ -884,7 +887,7 @@ class TramiteAceleracionController extends Controller
             ->setParameter('id', $codigo_sie)
             ->setParameter('nivel', $nivel_id)
             ->setParameter('grado', $grado_id)
-            ->setParameter('gestion', $this->session->get('currentyear'))
+            ->setParameter('gestion', $arrFechasolicitud[2])
             ->distinct()
             ->orderBy('iec.paraleloTipo', 'ASC')
             ->getQuery();
@@ -898,13 +901,13 @@ class TramiteAceleracionController extends Controller
             ->setParameter('id', $codigo_sie)
             ->setParameter('nivel', $nivel_id)
             ->setParameter('grado', $grado_id)
-            ->setParameter('gestion', $this->session->get('currentyear'))
+            ->setParameter('gestion', $arrFechasolicitud[2])
             ->distinct()
             ->orderBy('iec.turnoTipo', 'ASC')
             ->getQuery();
         $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_id);
         $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_id);
-        $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $codigo_sie, 'nivelTipo' => $nivel_id, 'gradoTipo' => $grado_id, 'paraleloTipo' => $paralelo_id, 'turnoTipo' => $turno_id, 'gestionTipo' => $this->session->get('currentyear')));
+        $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $codigo_sie, 'nivelTipo' => $nivel_id, 'gradoTipo' => $grado_id, 'gestionTipo' => $arrFechasolicitud[2]));
         if (empty($iecurso)) {
             if ($paralelo_id > 1) {
                 $paralelo_id = 1;
@@ -1442,12 +1445,12 @@ class TramiteAceleracionController extends Controller
         );
         // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetAuthor('Adal');
-        $pdf->SetTitle('Acta Supletoria');
+        $pdf->SetTitle('Acta Supletorio');
         $pdf->SetSubject('Report PDF');
         $pdf->SetPrintHeader(false);
         $pdf->SetPrintFooter(true, -10);
         // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
-        $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIA');
+        $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIO');
         $pdf->setFontSubsetting(true);
         $pdf->SetMargins(10, 10, 10, true);
         $pdf->SetAutoPageBreak(true, 8);
@@ -1484,7 +1487,21 @@ class TramiteAceleracionController extends Controller
         //{{absolute_url(asset(\'webEspecial/img/logo/html/logo-white.png\'))}}
         //<span style="font-size: 8px">(Aceleración Educativa)</span>
         //
-        //dump(json_decode($datos2->curso_asignatura_notas));die;
+        $image_path = $this->getRequest()->getUriForPath('/images/escudo.jpg');
+        $image_path = str_replace("/app_dev.php", "", $image_path);
+        $cabecera = '<table border="0">';
+        $cabecera .='<tr>';
+            $cabecera .='<td width="15%" align="center" style="font-size: 6px"><img src="'.$image_path.'" width="64" height="47"><br><span>Estado Plurinacional de Bolivia</span><br><span>Ministerio de Educación</span></td>';
+            $cabecera .='<td width="70%" align="center"><h2>ACTA SUPLETORIA DE PROMOCIÓN PARA<br>TALENTO EXTRAORDINARIO</h2></td>';
+            $cabecera .='<td width="15%" align="right"><img src="http://172.20.0.114/index.php?data='.$tramite_id.'" width="66" height="66"></td>';
+        $cabecera .='</tr>';
+        $cabecera .='<tr>';
+            $cabecera .='<td width="50%"><b>Fecha de Trámite: </b>'.$resultDatos[1]->getFechaRegistro()->format('d/m/Y').'</td>';
+            $cabecera .='<td width="50%" align="right"><b>Nro. Trámite: </b>'.$tramite_id.'&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+        $cabecera .='</tr>';
+        $cabecera .='</table>';
+        $pdf->writeHTML($cabecera, true, false, true, false, '');
+
         $inscripcion_actual_n = $inscripcion_actual_g = '';
         if ($datos2 and $datos2->curso_asignatura_notas) {
             $curso_actual = json_decode($datos2->curso_asignatura_notas)[0]->curso;
@@ -1513,9 +1530,13 @@ class TramiteAceleracionController extends Controller
             ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
             ->where('inst.id = :idInstitucion')
             ->andWhere('mi.gestionTipo = :gestion')
-            ->andWhere('mi.cargoTipo = 1')
+            ->andWhere('mi.cargoTipo in (:cargos)')
+            ->andWhere('mi.esVigenteAdministrativo = :estado')
             ->setParameter('idInstitucion', $institucioneducativa_id)
             ->setParameter('gestion', $gestion_id)
+            ->setParameter('cargos', array(1,12))
+            ->setParameter('estado', 't')
+            ->orderBy("mi.cargoTipo")
             ->getQuery()
             ->getSingleResult();
         $queryEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->createQueryBuilder('est')
@@ -1560,12 +1581,12 @@ class TramiteAceleracionController extends Controller
             'nivel' => '',
             'asignatura_id' => array(),
             'asignatura' => array(),
-            'nota1' => array('','','','','','','','','','','','','','',''),
-            'nota2' => array('','','','','','','','','','','','','','',''),
-            'nota3' => array('','','','','','','','','','','','','','',''),
-            'nota4' => array('','','','','','','','','','','','','','',''),
-            'nota5' => array('','','','','','','','','','','','','','',''),
-            'nota6' => array('','','','','','','','','','','','','','','')
+            'nota1' => array('','','','','','','','','','','','','',''),
+            'nota2' => array('','','','','','','','','','','','','',''),
+            'nota3' => array('','','','','','','','','','','','','',''),
+            'nota4' => array('','','','','','','','','','','','','',''),
+            'nota5' => array('','','','','','','','','','','','','',''),
+            'nota6' => array('','','','','','','','','','','','','','')
         );
         
         $posicion_asig = 0;

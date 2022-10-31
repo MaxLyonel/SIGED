@@ -1,0 +1,133 @@
+operativo_bono_jp_cerrar:
+    path:     /cerrar
+    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:cerrar}
+    options:
+        expose: true
+
+operativo_bono_jp_abrir:
+    path:     /abrir/{id}
+    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:abrir}
+    options:
+        expose: true
+
+operativo_bono_jp_seguimiento:
+    path:     /seguimiento
+    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:seguimiento}
+    options:
+        expose: true
+
+
+operativo_bono_jp_mostrarDatos:
+    path:     /mostrar-datos-seguimiento
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:mostrarDatos"}
+    options:
+         expose: true
+
+
+operativo_bono_jp_ddjj:
+    path:     /ddjj/{sie}/{gestion}
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:ddjj"}
+    options:
+         expose: true
+
+operativo_bono_jp_formularioCambioTutor:
+    path:     /cambio-tutor
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:formularioCambiarTutor"}
+    options:
+         expose: true
+
+operativo_bono_jp_buscarInscripciones:
+    path:     /buscar-inscripciones
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscarInscripciones"}
+    options:
+         expose: true
+
+operativo_bono_jp_buscarTutores:
+    path:     /buscar-tutores/{inscripcion}
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscarTutores"}
+    options:
+         expose: true
+
+# operativo_bono_jp_cambiarEstadoTutores:
+#     path:     /eliminar-tutores/{id}/{estado}
+#     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores"}
+#     options:
+#          expose: true
+
+# buscar_tutor_ci_persona:
+#     path:     /buscar_tutor_ci_persona
+#     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_tutor_ci_persona"}
+#     options:
+#          expose: true
+# ////fernando
+buscar_validar_persona_ci_segip:
+    path:     /buscar_validar_persona_ci_segip
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_validar_persona_ci_segip"}
+    options:
+         expose: true
+
+guardar_datos_tutor:
+    path:     /guardar_datos_tutor
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:guardar_datos_tutor"}
+    options:
+         expose: true
+
+operativo_bono_jp_cambiarEstadoTutore:
+    path:     /operativo_bono_jp_cambiarEstadoTutore
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_cambiarEstadoTutore"}
+    options:
+         expose: true
+operativo_bono_jp_cambiarEstadoTutore1:
+    path:     /operativo_bono_jp_cambiarEstadoTutore1
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_cambiarEstadoTutore1"}
+    options:
+         expose: true
+
+cambiarEstadoTutores_restablecer:
+    path:     /cambiarEstadoTutores_restablecer
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores_restablecer"}
+    options:
+         expose: true
+
+bajaTutoresBjp:
+    path:     /bajaTutoresBjp
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:bajaTutoresBjp"}
+    options:
+         expose: true
+reporte_seguimiento_Bjp_pdf:
+    path:     /reporte_seguimiento_Bjp_pdf
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:reporte_seguimiento_Bjp_pdf"}
+    options:
+         expose: true
+         
+imprimir_seguimiento_pdf:
+    path:     /imprimir_seguimiento_pdf
+    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:imprimir_seguimiento_pdf }
+    options:
+         expose: true  
+
+# generar file menu
+operativo_bono_jp_GenerarFileCambioTutor:
+    path:     /operativo_bono_jp_GenerarFileCambioTutor
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_GenerarFileCambioTutor"}
+    options:
+         expose: true
+boton_generar_file_bonoJP:
+    path:     /boton_generar_file_bonoJP/{identificador}
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:boton_generar_file_bonoJP"}
+    options:
+         expose: true
+
+boton_generar_file_bonoJP_a_demanda:
+    path:     /boton_generar_file_bonoJP_a_demanda/
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:boton_generar_file_bonoJP_a_demanda"}
+    options:
+         expose: true
+
+generar_reporte_pdf_cambio_tutor:
+    path:     /generar_reporte_pdf_cambio_tutor/{idTramite}
+    defaults: { _controller: SieAppWebBundle:PreInscription:generar_reporte_pdf_cambio_tutor }
+    options:
+         expose: true  
+
+# generar file menu fin

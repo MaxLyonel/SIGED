@@ -17,42 +17,7 @@ class TramiteDetalle
     /**
      * @var string
      */
-    private $tramteDetalle;
-
-    /**
-     * @var string
-     */
     private $obs;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Usuario
-     */
-    private $usuario;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TramiteDetalle
-     */
-    private $tramiteDetalle;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Tramite
-     */
-    private $tramite;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TramiteEstado
-     */
-    private $tramiteEstado;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\FlujoProceso
-     */
-    private $flujoProceso;
-    
-    /**
-     * @var integer
-     */
-    private $usuarioDestinatarioId;
 
     /**
      * @var \DateTime
@@ -75,15 +40,41 @@ class TramiteDetalle
     private $fechaModificacion;
 
     /**
+     * @var string
+     */
+    private $valorEvaluacion;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\Usuario
      */
     private $usuarioRemitente;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\Usuario
+     */
+    private $usuarioDestinatario;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Tramite
+     */
+    private $tramite;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TramiteEstado
+     */
+    private $tramiteEstado;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\TramiteDetalle
      */
-    private $tramiteDetalle2;
-    
+    private $tramiteDetalle;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\FlujoProceso
+     */
+    private $flujoProceso;
+
+
     /**
      * Get id
      *
@@ -92,29 +83,6 @@ class TramiteDetalle
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set tramteDetalle
-     *
-     * @param string $tramteDetalle
-     * @return TramiteDetalle
-     */
-    public function setTramteDetalle($tramteDetalle)
-    {
-        $this->tramteDetalle = $tramteDetalle;
-    
-        return $this;
-    }
-
-    /**
-     * Get tramteDetalle
-     *
-     * @return string 
-     */
-    public function getTramteDetalle()
-    {
-        return $this->tramteDetalle;
     }
 
     /**
@@ -138,122 +106,6 @@ class TramiteDetalle
     public function getObs()
     {
         return $this->obs;
-    }
-
-    /**
-     * Set usuario
-     *
-     * @param \Sie\AppWebBundle\Entity\Usuario $usuario
-     * @return TramiteDetalle
-     */
-    public function setUsuario(\Sie\AppWebBundle\Entity\Usuario $usuario = null)
-    {
-        $this->usuario = $usuario;
-    
-        return $this;
-    }
-
-    /**
-     * Get usuario
-     *
-     * @return \Sie\AppWebBundle\Entity\Usuario 
-     */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * Set tramiteDetalle
-     *
-     * @param \Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle
-     * @return TramiteDetalle
-     */
-    public function setTramiteDetalle(\Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle = null)
-    {
-        $this->tramiteDetalle = $tramiteDetalle;
-    
-        return $this;
-    }
-
-    /**
-     * Get tramiteDetalle
-     *
-     * @return \Sie\AppWebBundle\Entity\TramiteDetalle 
-     */
-    public function getTramiteDetalle()
-    {
-        return $this->tramiteDetalle;
-    }
-
-    /**
-     * Set tramite
-     *
-     * @param \Sie\AppWebBundle\Entity\Tramite $tramite
-     * @return TramiteDetalle
-     */
-    public function setTramite(\Sie\AppWebBundle\Entity\Tramite $tramite = null)
-    {
-        $this->tramite = $tramite;
-    
-        return $this;
-    }
-
-    /**
-     * Get tramite
-     *
-     * @return \Sie\AppWebBundle\Entity\Tramite 
-     */
-    public function getTramite()
-    {
-        return $this->tramite;
-    }
-
-    /**
-     * Set tramiteEstado
-     *
-     * @param \Sie\AppWebBundle\Entity\TramiteEstado $tramiteEstado
-     * @return TramiteDetalle
-     */
-    public function setTramiteEstado(\Sie\AppWebBundle\Entity\TramiteEstado $tramiteEstado = null)
-    {
-        $this->tramiteEstado = $tramiteEstado;
-    
-        return $this;
-    }
-
-    /**
-     * Get tramiteEstado
-     *
-     * @return \Sie\AppWebBundle\Entity\TramiteEstado 
-     */
-    public function getTramiteEstado()
-    {
-        return $this->tramiteEstado;
-    }
-    
-
-    /**
-     * Set usuarioDestinatarioId
-     *
-     * @param integer $usuarioDestinatarioId
-     * @return TramiteDetalle
-     */
-    public function setUsuarioDestinatarioId($usuarioDestinatarioId)
-    {
-        $this->usuarioDestinatarioId = $usuarioDestinatarioId;
-    
-        return $this;
-    }
-
-    /**
-     * Get usuarioDestinatarioId
-     *
-     * @return integer 
-     */
-    public function getUsuarioDestinatarioId()
-    {
-        return $this->usuarioDestinatarioId;
     }
 
     /**
@@ -349,6 +201,29 @@ class TramiteDetalle
     }
 
     /**
+     * Set valorEvaluacion
+     *
+     * @param string $valorEvaluacion
+     * @return TramiteDetalle
+     */
+    public function setValorEvaluacion($valorEvaluacion)
+    {
+        $this->valorEvaluacion = $valorEvaluacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get valorEvaluacion
+     *
+     * @return string 
+     */
+    public function getValorEvaluacion()
+    {
+        return $this->valorEvaluacion;
+    }
+
+    /**
      * Set usuarioRemitente
      *
      * @param \Sie\AppWebBundle\Entity\Usuario $usuarioRemitente
@@ -372,28 +247,96 @@ class TramiteDetalle
     }
 
     /**
-     * Set tramiteDetalle2
+     * Set usuarioDestinatario
      *
-     * @param \Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle2
+     * @param \Sie\AppWebBundle\Entity\Usuario $usuarioDestinatario
      * @return TramiteDetalle
      */
-    public function setTramiteDetalle2(\Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle2 = null)
+    public function setUsuarioDestinatario(\Sie\AppWebBundle\Entity\Usuario $usuarioDestinatario = null)
     {
-        $this->tramiteDetalle2 = $tramiteDetalle2;
+        $this->usuarioDestinatario = $usuarioDestinatario;
     
         return $this;
     }
 
     /**
-     * Get tramiteDetalle2
+     * Get usuarioDestinatario
+     *
+     * @return \Sie\AppWebBundle\Entity\Usuario 
+     */
+    public function getUsuarioDestinatario()
+    {
+        return $this->usuarioDestinatario;
+    }
+
+    /**
+     * Set tramite
+     *
+     * @param \Sie\AppWebBundle\Entity\Tramite $tramite
+     * @return TramiteDetalle
+     */
+    public function setTramite(\Sie\AppWebBundle\Entity\Tramite $tramite = null)
+    {
+        $this->tramite = $tramite;
+    
+        return $this;
+    }
+
+    /**
+     * Get tramite
+     *
+     * @return \Sie\AppWebBundle\Entity\Tramite 
+     */
+    public function getTramite()
+    {
+        return $this->tramite;
+    }
+
+    /**
+     * Set tramiteEstado
+     *
+     * @param \Sie\AppWebBundle\Entity\TramiteEstado $tramiteEstado
+     * @return TramiteDetalle
+     */
+    public function setTramiteEstado(\Sie\AppWebBundle\Entity\TramiteEstado $tramiteEstado = null)
+    {
+        $this->tramiteEstado = $tramiteEstado;
+    
+        return $this;
+    }
+
+    /**
+     * Get tramiteEstado
+     *
+     * @return \Sie\AppWebBundle\Entity\TramiteEstado 
+     */
+    public function getTramiteEstado()
+    {
+        return $this->tramiteEstado;
+    }
+
+    /**
+     * Set tramiteDetalle
+     *
+     * @param \Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle
+     * @return TramiteDetalle
+     */
+    public function setTramiteDetalle(\Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle = null)
+    {
+        $this->tramiteDetalle = $tramiteDetalle;
+    
+        return $this;
+    }
+
+    /**
+     * Get tramiteDetalle
      *
      * @return \Sie\AppWebBundle\Entity\TramiteDetalle 
      */
-    public function getTramiteDetalle2()
+    public function getTramiteDetalle()
     {
-        return $this->tramiteDetalle2;
+        return $this->tramiteDetalle;
     }
-    
 
     /**
      * Set flujoProceso
@@ -416,61 +359,5 @@ class TramiteDetalle
     public function getFlujoProceso()
     {
         return $this->flujoProceso;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\Usuario
-     */
-    private $usuarioDestinatario;
-
-
-    /**
-     * Set usuarioDestinatario
-     *
-     * @param \Sie\AppWebBundle\Entity\Usuario $usuarioDestinatario
-     * @return TramiteDetalle
-     */
-    public function setUsuarioDestinatario(\Sie\AppWebBundle\Entity\Usuario $usuarioDestinatario = null)
-    {
-        $this->usuarioDestinatario = $usuarioDestinatario;
-    
-        return $this;
-    }
-
-    /**
-     * Get usuarioDestinatario
-     *
-     * @return \Sie\AppWebBundle\Entity\Usuario 
-     */
-    public function getUsuarioDestinatario()
-    {
-        return $this->usuarioDestinatario;
-    }
-    /**
-     * @var string
-     */
-    private $valorEvaluacion;
-
-
-    /**
-     * Set valorEvaluacion
-     *
-     * @param string $valorEvaluacion
-     * @return TramiteDetalle
-     */
-    public function setValorEvaluacion($valorEvaluacion)
-    {
-        $this->valorEvaluacion = $valorEvaluacion;
-    
-        return $this;
-    }
-
-    /**
-     * Get valorEvaluacion
-     *
-     * @return string 
-     */
-    public function getValorEvaluacion()
-    {
-        return $this->valorEvaluacion;
     }
 }

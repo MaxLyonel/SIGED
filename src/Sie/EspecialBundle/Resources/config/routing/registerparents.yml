@@ -1,0 +1,42 @@
+special_registerparents_index:
+    path:     /
+    defaults: { _controller: "SieEspecialBundle:RegisterParents:index"}
+    options:
+         expose: true
+
+special_registerparents_lookforperson:
+    path:     /lookforperson
+    defaults: { _controller: "SieEspecialBundle:RegisterParents:lookforPerson"}
+    options:
+         expose: true
+
+
+special_registerparents_saveParents:
+    path:     /saveParents
+    defaults: { _controller: "SieEspecialBundle:RegisterParents:saveParents"}
+    options:
+         expose: true
+
+special_registerparents_loadData:
+    path:     /loadData
+    defaults: { _controller: "SieEspecialBundle:RegisterParents:loadData"}
+    options:
+         expose: true
+
+special_registerparents_remove:
+    path:     /remove
+    defaults: { _controller: "SieEspecialBundle:RegisterParents:remove"}
+    options:
+         expose: true
+
+special_registerparents_assignParentBJP:
+    path:     /assignParentBJP
+    defaults: { _controller: "SieEspecialBundle:RegisterParents:assignParentBJP"}
+    options:
+         expose: true           
+
+special_registerparents_removeParentBJP:
+    path:     /removeParentBJP
+    defaults: { _controller: "SieEspecialBundle:RegisterParents:removeParentBJP"}
+    options:
+         expose: true         

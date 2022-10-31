@@ -9,9 +9,13 @@
                     <th>Distrito</th>
                     <th>SIE</th>
                     <th>Institución Educativa</th>
+					 <th>RUDE</th>
                     <th>Trim. 1</th>
                     <th>Trim. 2</th>
                     <th>Trim. 3</th>
+                    {% if app.session.get('roluser') != 10  %}
+					   <th>Habilitar Operativo</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tfoot>
@@ -20,10 +24,14 @@
                     <th>Departamento</th>
                     <th>Distrito</th>
                     <th>SIE</th>
-                    <th>Centro</th>
+                    <th>Institución Educativa</th>
+                    <th>RUDE</th>
                     <th>Trim. 1</th>
                     <th>Trim. 2</th>
                     <th>Trim. 3</th>
+                    {% if app.session.get('roluser') != 10  %}
+					   <th>habilitar Operativo</th>
+                    {% endif %}
                 </tr>
             </tfoot>
             <tbody>
@@ -34,9 +42,19 @@
                 		<td>{{registro.distrito}}</td>
                 		<td>{{registro.codigo_sie}}</td>
                 		<td>{{registro.institucioneducativa}}</td>
+                		<td><span class="label label-{% if registro.rude == 'NO' %}danger{% else %}success{% endif %}">{{registro.rude}}</span></td>
                 		<td><span class="label label-{% if registro.bim1 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim1}}</span></td>
                 		<td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
                 		<td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td>
+                        	<td>
+                                {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
+                                
+                            	   {#<a href="{{path('herramienta_infoconsolidation_enabledOpe',{'sie': registro.codigo_sie,'gestion':registro.gestion})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el registro?');"><i class="fa fa-fw fa-edit"></i> Restablecer</a>#}
+								   {#
+                            	   <a href="{{path('herramienta_infoconsolidation_enabledOpe',{'sie': registro.codigo_sie,'gestion':registro.gestion})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el operativo? ');"><i class="fa fa-fw fa-edit"></i> Restablecer</a>
+								   #}
+                                {% endif %}
+                        	</td>
                 	</tr>
                 {% endfor %}
             </tbody>

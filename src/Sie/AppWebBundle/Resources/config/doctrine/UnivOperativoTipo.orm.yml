@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\UnivOperativoTipo:
+    type: entity
+    table: univ_operativo_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        operativo:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

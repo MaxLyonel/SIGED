@@ -17,6 +17,7 @@ class Segip {
         $this->client = new Client([
             // Base URI is used with relative requests
             'base_uri' => 'http://100.0.100.116',
+            //'base_uri' => 'http://localhost:1336'
         ]);
 
         /*TOKEN DE CONEXIÓN*/
@@ -26,10 +27,9 @@ class Segip {
         /*TOKEN DE CONEXIÓN*/
     }
     
-    public function estadoServicio($env, $sistema) {
-
+    public function estadoServicio($env, $sistema)
+    {
         $token = $this->getToken($env,$sistema);
-
         $response = $this->client->request(
             'GET', 
             $this->getUrlBase($env).'status', 
@@ -37,13 +37,11 @@ class Segip {
             ['debug' => true]])->getBody()->getContents();
 
         $responseDecode = json_decode($response, true);
-
         $response = false;
-
-        if($responseDecode){
+        if($responseDecode)
+        {
             $response = true;
         }
-
 		return $response;
 	}
 
@@ -69,8 +67,21 @@ class Segip {
 		return $responseDecode;
 	}
 
-    public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac, $env, $sistema) {
 
+    //funcion modificada el 26/05/2021
+    public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac, $env, $sistema)
+    {
+    	//funcion modificada el 26/05/2021
+    	$opcional= array(
+    		'ci' => $carnet,
+    		'complemento' => $complemento,
+    		'primer_apellido' => $paterno,
+    		'segundo_apellido' => $materno,
+    		'nombre' => $nombre,
+    		'fecha_nacimiento' => $fechaNac,
+    	);
+    	return $this->verificarPersonaPorCarnet($carnet, $opcional, $env, $sistema);
+    	/*
         $token = $this->getToken($env,$sistema);
         $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
@@ -99,12 +110,29 @@ class Segip {
         if($persona == 'null') {
             $resultado = false;
         }
-
         return $resultado;
+        */
     }
 
-    public function buscarPersonaPorCarnet($carnet, $opcional, $env, $sistema) {
+    //funcion modificada el 28/06/2021
+    public function buscarPersonaPorCarnet($carnet, $opcional, $env, $sistema)
+    {
+    	//funcion modificada el 28/06/2021
+    	$resultadoValidacion = $this->verificarPersonaPorCarnet($carnet, $opcional, $env, $sistema);
+    	$persona = array();
 
+    	if($resultadoValidacion)
+    	{
+    		$opcional['ci']=$carnet;
+    		$camposMinimosRequeridos = array_keys($opcional);
+    		list($lista_campo,$tipo_persona,$rawDatosEnvidosSegip) = $this->getJsonDatosVerificacion($opcional,$camposMinimosRequeridos);
+			
+    		$persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']=$lista_campo;
+    		return $persona;
+    	}
+    	else
+    		return null;
+    	/*
         $c = 0;
         $query = '';
 
@@ -141,59 +169,268 @@ class Segip {
         $responseDecode = json_decode($response, true);
 
         return $responseDecode;
+        */
     }
 
-    public function verificarPersonaPorCarnet($carnet, $opcional, $env, $sistema) {
+	//funcion modificada el 28/06/2021
+	public function verificarPersonaPorCarnet($carnet, $opcional, $env, $sistema)
+	{
+		
+		//funcion modificada el 28/06/2021
+		$resultado = false;
+		$token = $this->getToken($env,$sistema);
+		try
+		{
+			$datosVerificacion = $opcional;
+			$datosVerificacion = new \ArrayObject($opcional);
+			$datosVerificacion['ci']=$carnet;
+			//dump($datosVerificacion); die;
+			list($lista_campo,$tipo_persona,$rawDatosEnvidosSegip) = $this->getJsonDatosVerificacion($datosVerificacion);
+			/*dump($lista_campo);
+			dump($tipo_persona);
+			dump($rawDatosEnvidosSegip);
+			die;*/
 
-        $c = 0;
-        $query = '';
+			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
+			//$lista_campo='{"ComplementoVisible":"1","NumeroDocumento":"13814118","Complemento":"1F","Nombres":"JHONSON JOEL","PrimerApellido":"QUEZO","SegundoApellido":"MANUELO","FechaNacimiento":"04/08/2007","LugarNacimientoPais":"BOLIVIA","LugarNacimientoDepartamento":"LA PAZ","LugarNacimientoProvincia":"MURILLO","LugarNacimientoLocalidad":"EL ALTO"}';
+			//$respuestaJson = array();
+			//$respuestaJson["ComplementoVisible"]="1";
+			//$respuestaJson["NumeroDocumento"]="7000001";
+			//$respuestaJson["Complemento"]="1P";
+			//$respuestaJson["Nombres"]="ANGEL";
+			//$respuestaJson["PrimerApellido"]="VILLANUEVA";
+			//$respuestaJson["SegundoApellido"]="PEDRAZA";
+			//$respuestaJson["FechaNacimiento"]="01/01/1998";
+			//$lista_campo = json_encode($respuestaJson,JSON_UNESCAPED_SLASHES);
+			//$tipo_persona = 1;//1: nacional, 2:extranjero
+			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
+			$url = $this->getUrlBase($env)."personas/contrastacion/?lista_campo=$lista_campo&tipo_persona=$tipo_persona";
+			//dump($url); die;
+			$response = $this->client->request(
+			    'GET', 
+			    $url, 
+			    ['headers' => ['Accept' => 'application/json', 'Authorization' => $token],
+			    ['debug' => true]])->getBody()->getContents();
+			//Obtenemos la respuesta del segip
+			$resultado = $this->obtenerValidacionDeSegip($response,$rawDatosEnvidosSegip);
+			//dump($resultado); die; //dcastillo para verificar el resultado de nacionla y extranjero
+		}
+		catch(Exception $e)
+		{
+			return false;
+		}
+		return $resultado;
+	}
 
-        $parametros = array();
-        foreach ($opcional as $key => $value) {
-            if($value && $key != 'entorno' && $key != '_token' && $key != 'carnet'){
-                $parametros[$key] = $value;
-            }
-            
-        }
+	/*Nueva funcion 26/08/2021*/
+	private function getJsonDatosVerificacion($datosVerificacion,$camposMinimosRequeridos=array('ci','complemento','fecha_nacimiento'))
+	{
+		$respuestaJson = array();
+		$tipo_persona = 1; //nacional he aqui el error
+		$datosMinimos = 0;
 
-        foreach ($parametros as $key => $value) {
-            if ($key == 'fecha_nacimiento') {
-                $value = date('d/m/Y', strtotime($value));
-            }
-            if ($c == 0) {
-                $query = '?'.$key.'='.$value;
-            } else{
-                $query = $query.'&'.$key.'='.$value;
-            }
-            $c++;
-        }
+		/**
+		 * dcastillo: lo que venga del form 1 NACIONAL 2 EXTRANJERO
+		 * que ya viene en datosVerificacion, si no existe hasta que se adecuen todos los formularios
+		 * pregunta si existe y se queda con 1
+		 */
+		if (isset($datosVerificacion['tipo_persona'])) {
+			$tipo_persona = $datosVerificacion['tipo_persona'];
+		}
+		
 
-        $token = $this->getToken($env,$sistema);
+		foreach ($datosVerificacion as $key => $valor)
+		{
+			switch ($key)
+			{
+				case 'ci':
+					$newKey="NumeroDocumento";
+					//$datosMinimos ++;
+				break;
+				case 'complemento':
+					$newKey="Complemento";
+					$respuestaJson['ComplementoVisible']=($valor=='')?0:1;
+					//$datosMinimos ++;
+				break;
+				case 'primer_apellido':
+					$newKey="PrimerApellido";
+				break;
+				case 'segundo_apellido':
+					$newKey="SegundoApellido";
+				break;
+				case 'nombre':
+					$newKey="Nombres";
+				break;
+				case 'fecha_nacimiento':
+					$newKey="FechaNacimiento";
+					$valor = str_replace('-','/',$valor);
+					//$datosMinimos++;
+				break;
+				default:
+					$newKey=null;
+					$valor = null;
+				break;
+			}
+			if($newKey)
+				$respuestaJson[$newKey]=trim($valor);
+			if (in_array($key, $camposMinimosRequeridos))
+			{
+				$datosMinimos++;
+			}
+		}
+		//verificacion de si extranjero, aqui nunca entra, no importa ya viene del form
+		if(array_key_exists('extranjero', $datosVerificacion)==true)
+			$tipo_persona=2; //extranjero
 
-        $url = $this->getUrlBase($env).'personas/'.$carnet.$query;
+		//verificacion de si NO tiene complemento
+		if(array_key_exists('complemento', $datosVerificacion)==false)
+			$respuestaJson['ComplementoVisible']=0;
 
-        $response = $this->client->request(
-            'GET', 
-            $url, 
-            ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], 
-            ['debug' => true]])->getBody()->getContents();
+		//esto verifica que por lo menos se recibio el ci, el complemento , la fecha de nacimiento o al menos otros 3 campos
+		if($datosMinimos <3 || count($datosVerificacion)<3)
+			$respuestaJson = array();
 
-        $responseDecode = json_decode($response, true);
+		return array(json_encode($respuestaJson,JSON_UNESCAPED_SLASHES),$tipo_persona,$respuestaJson);
+	}
 
-        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido'] === "true") {
-            $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
-            $resultado = true;
-        } else {
-            $persona = 'null';
-            $resultado = false;
-        }
+	/*Nueva funcion 26/08/2021*/
+	private function obtenerValidacionDeSegip($respuestaSegip,$datosEnviadosSegip)	
+	{
+		$esCorrecto = true;
+		/*
+		'{
+			"ConsultaDatoPersonaContrastacionResult":
+			{
+				"EsValido":"true",
+				"Mensaje":"La consulta se realizó satisfactoriamente",
+				"TipoMensaje":"Correcto",
+				"CodigoRespuesta":"2",
+				"CodigoUnico":"hUlLUuzX-5457274",
+				"DescripcionRespuesta":"Se encontró un registro",
+				"ContrastacionEnFormatoJson":"{\"LugarNacimientoPais\":2,\"LugarNacimientoDepartamento\":2,\"LugarNacimientoProvincia\":2,\"LugarNacimientoLocalidad\":2,\"ComplementoVisible\":1,\"NumeroDocumento\":1,\"Complemento\":1,\"Nombres\":1,\"PrimerApellido\":1,\"SegundoApellido\":1,\"FechaNacimiento\":1}"
+			}
+		}';
+		*/
+		try
+		{
+			$respustaSegipJsonDecode = json_decode($respuestaSegip);
+			
+			if(property_exists($respustaSegipJsonDecode,'ConsultaDatoPersonaContrastacionResult'))
+			{
+				$respuestaTmp = $respustaSegipJsonDecode->ConsultaDatoPersonaContrastacionResult;
+				if(property_exists($respuestaTmp,'EsValido') && property_exists($respuestaTmp,'CodigoRespuesta') && property_exists($respuestaTmp,'ContrastacionEnFormatoJson'))
+				{
+					if($respuestaTmp->EsValido == true)
+					{
+						if($respuestaTmp->CodigoRespuesta==2)
+						{
+							$datosRecibidosSegip = $respuestaTmp->ContrastacionEnFormatoJson;
+							$verificarDatosPersona= $this->verificacionDatosEnviadosYRecibidos($datosRecibidosSegip,$datosEnviadosSegip);
+							if($verificarDatosPersona)
+								$esCorrecto = true;
+							else
+								$esCorrecto = false;
+						}
+						else
+						{
+							$esCorrecto = false;
+						}
+					}
+					else
+					{
+						$esCorrecto = false;
+					}
+				}
+				else
+				{
+					$esCorrecto = false;
+				}
+			}
+			else
+			{
+				$esCorrecto = false;
+			}
+		}
+		catch(Exception $e)
+		{
+			return false;
+		}
 
-        if($persona == 'null') {
-            $resultado = false;
-        }
+		return $esCorrecto;
+	}
 
-        return $resultado;
-    }
+	private function retirarCamposVacios($datosEnviadosSegip)
+	{
+		$return = array();
+		if(count($datosEnviadosSegip)>0)
+		{
+			foreach ($datosEnviadosSegip as $key => $value)
+			{
+				if($key != 'ComplementoVisible' && $key != 'Complemento')
+				{
+					if($value == '')
+					{
+						unset($datosEnviadosSegip[$key]);
+					}
+				}
+			}
+			$return = $datosEnviadosSegip;
+		}
+		return $return;
+	}
+
+	/*Nueva funcion 26/08/2021*/
+	private function verificacionDatosEnviadosYRecibidos($datosRecibidosSegip,$datosEnviadosSegip)
+	{
+		$datosValidos =true;
+		$datosEnviadosSegip_copy = $datosEnviadosSegip;
+
+		// retiramos los campos con valor vacio que se envian al segip, sin tomar en cuenta el Complemento y ComplementoVisible
+		// Esto funciona pero solo se retornara los campos DISTINTOS DE VACIOS ... por favor considerarlo 
+		//$datosEnviadosSegip = $this->retirarCamposVacios($datosEnviadosSegip);
+
+		if(count($datosEnviadosSegip)>=3)//verificamos que al menos se envien 3 datos
+		{
+			try
+			{
+				$datosRecibidosSegip_decode=json_decode($datosRecibidosSegip);
+				foreach ($datosEnviadosSegip as $key => $value)
+				{
+					if($key != 'ComplementoVisible' && $key != 'Complemento')
+					{
+						if($datosRecibidosSegip_decode->{$key} != 1 )
+						{
+							$datosValidos = false;
+							break;
+						}
+					}
+				}
+
+				//verificamos el complemento
+				if(array_key_exists('Complemento', $datosEnviadosSegip)==true)
+				{
+					$tmpComplementoEnviado = $datosEnviadosSegip['Complemento'];
+					$tmpComplementoRecibido = $datosRecibidosSegip_decode->Complemento;
+					if(strlen($tmpComplementoEnviado)!=0)
+					{
+						if($tmpComplementoRecibido!=1)
+						{
+							$datosValidos = false;
+						}
+					}
+				}
+			}
+			catch (Exception $e)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			$datosValidos= false;
+		}
+		return $datosValidos;
+	}
 
     private function getToken($env, $sistema){
         if ($env == 'dev') {

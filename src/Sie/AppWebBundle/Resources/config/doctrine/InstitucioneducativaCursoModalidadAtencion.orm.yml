@@ -34,6 +34,16 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion:
             length: 255
             fixed: false
             comment: ''
+        mes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        semana:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         modalidadAtencionTipo:
             targetEntity: ModalidadAtencionTipo

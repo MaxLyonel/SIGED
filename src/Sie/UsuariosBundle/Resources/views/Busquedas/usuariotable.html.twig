@@ -88,7 +88,9 @@
                                         </div>
                                         <div class="panel-body no-padding">
                                             <span class="pull-left text-capitalize">{{rolesarray_jur[i]}}</span>
-                                            <span class="pull-right text-strong">{{rolesarray_sub_sis[i]}}</span>                                                        
+                                            {% if i <= rolesarray_sub_sis|length -1 %}
+                                                <span class="pull-right text-strong">{{rolesarray_sub_sis[i]}}</span>                                                        
+                                            {% endif %}
                                         </div>
                                         </div>
                                     {% endfor %}                                                

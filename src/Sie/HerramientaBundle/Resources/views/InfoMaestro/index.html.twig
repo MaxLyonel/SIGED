@@ -161,7 +161,7 @@
                                                 <th>Paterno</th>
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
-                                                <th>Formación</th>
+                                                <th>Cargo</th>
                                                 <th>Fecha Registro</th>
                                                 <th>Fecha Modificación</th>
                                                 <th>Observación</th>
@@ -175,11 +175,11 @@
                                             {% for maestro in maestro %}
                                                 <tr {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="danger text-danger"{% endif %}>
                                                     <td data-title="N°">{{ loop.index }}</td>
-                                                    <td data-title="Carnet">{{ maestro.carnet }}</td>
+                                                    <td data-title="Carnet">{{ maestro.carnet }}{% if maestro.complemento != null or maestro.complemento != '' %}-{{maestro.complemento}}{% endif %}</td>
                                                     <td data-title="Paterno">{{ maestro.paterno }}</td>
                                                     <td data-title="Materno">{{ maestro.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
-                                                    <td data-title="Formación">{{ maestro.formacion }}</td>
+                                                    <td data-title="Formación">{{ maestro.cargo }}</td>
                                                     <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="Observacion" {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="text-danger"{% else %}class="text-success"{% endif %}>

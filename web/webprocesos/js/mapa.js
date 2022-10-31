@@ -129,4 +129,28 @@ function initMapLeaflet(image) {
     });
 }
 
+function initMap3(lt, lg, div, image) {
+    $('#'+div).empty();
+    var openstreet = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
+        satelital = L.tileLayer('https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=pk.eyJ1Ijoic2lnZWUiLCJhIjoiY2p5ZnZsODM3MGFrMjNtbmpmdHpnOW9xbiJ9.p4csjOmfBTl1Yun4PCeXNg');
+    map = L.map(div, {
+        center: [lt, lg],
+        zoom: 6,
+        minZoom: 3,
+        layers: [openstreet]
+    });
+    var baseMaps = {
+        "Mapa": openstreet,
+        "Satélite": satelital
+    };
+    L.control.layers(baseMaps).addTo(map);
+    coordenadas = L.latLng(lt, lg);
+    marker = L.marker(coordenadas, {
+        title: 'Edificio educativo',
+        draggable: false,
+        icon: image
+    });
+    map.addLayer(marker);
+    map.setView(coordenadas);
+}
 //initMap();

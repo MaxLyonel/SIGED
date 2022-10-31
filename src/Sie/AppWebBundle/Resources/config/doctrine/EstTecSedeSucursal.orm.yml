@@ -1,0 +1,123 @@
+Sie\AppWebBundle\Entity\EstTecSedeSucursal:
+    type: entity
+    table: est_tec_sede_sucursal
+    indexes:
+        IDX_BB3EC29F40C2965:
+            columns:
+                - est_tec_juridicciongeografica_id
+        IDX_BB3EC295D678D7A:
+            columns:
+                - estadoinstitucion_tipo_id
+        IDX_BB3EC29179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_BB3EC29E8E891F1:
+            columns:
+                - est_tec_sede_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        telefono1:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        telefono2:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        referenciaTelefono2:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: referencia_telefono2
+        inicioCalendarioAcademico:
+            type: date
+            nullable: true
+            comment: ''
+            column: inicio_calendario_academico
+        fax:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        casilla:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        sitioWeb:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: sitio_web
+        email:
+            type: string
+            nullable: true
+            length: 65
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estTecJuridicciongeografica:
+            targetEntity: EstTecJurisdiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_juridicciongeografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadoinstitucionTipo:
+            targetEntity: EstadoinstitucionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadoinstitucion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecSede:
+            targetEntity: EstTecSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

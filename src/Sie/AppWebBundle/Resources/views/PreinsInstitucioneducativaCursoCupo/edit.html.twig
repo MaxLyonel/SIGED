@@ -1,0 +1,35 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Cambio Estado Inscripción <span>Participante</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li class="active">Index</li>
+            </ol>
+        </div>
+    </div>  
+<div class="body-content animated fadeIn">
+    <div class="row">
+
+        <div class="col-md-12">
+
+
+		    <h1>PreinsInstitucioneducativaCursoCupo edit</h1>
+
+		    {{ form(edit_form) }}
+
+		        <ul class="record_actions">
+		    <li>
+		        <a href="{{ path('uealtademanda') }}">
+		            Back to the list
+		        </a>
+		    </li>
+		    {# <li>{{ form(delete_form) }}</li> #}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}

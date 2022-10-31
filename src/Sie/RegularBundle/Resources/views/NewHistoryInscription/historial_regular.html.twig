@@ -21,6 +21,7 @@
       </thead>
 
       <tbody role="alert" aria-live="polite" aria-relevant="all">
+      
         {% for data in dataInscription %}
           <tr class = "success">
             <td>{{data.gestion_tipo_id_raep}}</td>
@@ -36,9 +37,35 @@
                 <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.gestion_tipo_id_raep}}', '1')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
               {% endif %}
               <span class="clearfix"></span>
-              {# {% if data.gestion_tipo_id_raep == 2020 and app.session.get('roluser') == 8 %}
+              {#
+              {% if data.gestion_tipo_id_raep in [2019,2020,2021] and (app.session.get('roluser') in [7,8,10,9]) %}
+                <a href="{{path('evaluar_estado',{'inscripcionId': data.estudiante_inscripcion_id_raep})}}" onclick="return confirm('Se evaluará el estado de matrícula final ¿Desea continuar?');"><span class="fa fa-list"></span> Evaluar estado de matrícula</a>
+              {% endif %}
+              {% if data.gestion_tipo_id_raep < 2020 and (app.session.get('roluser') in [7,8,10]) %}
+                <a href="{{path('evaluar_estado',{'inscripcionId': data.estudiante_inscripcion_id_raep})}}" onclick="return confirm('Se evaluará el estado de matrícula final ¿Desea continuar?');"><span class="fa fa-list"></span> Evaluar estado de matrícula</a>
+              {% endif %}
+              {% if data.gestion_tipo_id_raep == 2020 and app.session.get('roluser') == 8 %}
                 <a href="#" onclick="pagoBf('{{data.estudiante_inscripcion_id_raep}}')" ><span class="fa fa-list"></span> Bono familia</a>
-              {% endif %} #}
+              {% endif %}
+              #}
+              {# if ( (app.session.get('roluser') == '8') or (app.session.get('roluser') == '7') or (app.session.get('roluser') == '10')) #}
+              {% if app.session.get('roluser') == '8' %}
+                <br>
+                  <a href="{{path( 'remove_inscription_sie_remove', {
+                        'idstudent':data.estudiante_id_raep,
+                        'nivel':data.nivel_tipo_id_r,
+                        'grado':data.grado_tipo_id_r,
+                        'paralelo':data.paralelo_tipo_id_raep,
+                        'turno':data.turno_tipo_id_raep,
+                        'sie':data.institucioneducativa_id_raep,
+                        'gestion':data.gestion_tipo_id_raep,
+                        'eiid':data.estudiante_inscripcion_id_raep } )}}" onclick="javascript:if (confirm('¿Está seguro de Eliminar la inscripción ?')) {
+                              return true;
+                          } else {
+                              return false;
+                          }
+                  " class="text-danger"><span class="glyphicon glyphicon-remove"></span> Eliminar inscripción</a>
+              {% endif %}
             </td>
           </tr>
         {% endfor %}

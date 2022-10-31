@@ -9,3 +9,14 @@ modificar_ci_localidad_result:
 modificar_ci_localidad_save:
     path: /savemod
     defaults: { _controller: SieRegularBundle:ModCiLocalidad:save }
+
+modificar_genero_save:
+    path: /savemodGenero
+    defaults: { _controller: SieRegularBundle:ModCiLocalidad:saveGenero }
+    
+temporal_provincia:
+    path:    /buscarprovincias/{departamento}/
+    # path:    /provin/provincias/{departamento}/
+    defaults: { _controller: SieRegularBundle:ModCiLocalidad:provinciasTemporal }
+    options:
+         expose: true

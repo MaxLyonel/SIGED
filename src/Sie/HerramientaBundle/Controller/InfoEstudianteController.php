@@ -22,8 +22,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
+use Sie\AppWebBundle\Entity\Institucioneducativa;
+use Sie\AppWebBundle\Entity\GestionTipo;
 
+// use Monolog\Handler\NewRelicHandlerTest;
 
+ 
 use Doctrine\DBAL\Types\Type;
 Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
 
@@ -60,12 +65,47 @@ class InfoEstudianteController extends Controller {
 //        }
 //        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array());
         //get the value to send
-        $form = $request->get('form');
-
+        $formResponse = $request->get('form');
+// dump($formResponse);die;
         $em = $this->getDoctrine()->getManager();
         //find the levels from UE
         //levels gestion -1
         //$objLevelsOld = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getNivelBySieAndGestion($form['sie'], $form['gestion']);
+        
+        // get the QA observactions
+        $form['reglas'] = '2,3,6,8,10,12,13,15,16,20,24,25,26';
+        $form['sie'] = hex2bin($formResponse['sie']);
+        $form['gestion'] = hex2bin($formResponse['gestion']);                    
+        
+        if ($form['gestion'] == $this->session->get('currentyear')) {
+            $objObsQA = $this->getObservationQA($form);        
+        } else {
+            $objObsQA = null;
+        }       
+        // check QA on UE
+        if($objObsQA){
+            $swRegisterCalifications = false;
+        }else{
+            $swRegisterCalifications = true;
+        }
+    
+        // get the QA BJP observactions
+        $form['reglas'] = '12,13,26,24,25,8,15,20,11,37,63,60,61,62';
+        $form['gestion'] = $form['gestion'];
+        $form['sie'] = $form['sie'];
+        if ($form['gestion'] == $this->session->get('currentyear')) {
+            $objObsQAbjp = $this->getObservationQA($form);     
+        } else {
+            $objObsQAbjp = null;
+        }       
+        // check QA on UE
+        if($objObsQAbjp){
+            $swRegisterPersonBjp = false;
+        }else{
+            $swRegisterPersonBjp = true;
+        }
+        $objObsQA = null;
+        $objObsQA = $objObsQAbjp;
 
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
         $exist = true;
@@ -78,7 +118,7 @@ class InfoEstudianteController extends Controller {
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
                     'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId']),
-                    'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'])
+                    'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'], 'swRegisterCalifications' => $swRegisterCalifications, 'swRegisterPersonBjp' => $swRegisterPersonBjp)
                 ));
 
                 //send the values to the next steps
@@ -112,6 +152,12 @@ class InfoEstudianteController extends Controller {
         $gestion = $form['gestion'];
 
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        if($operativo >3){
+            $this->session->set('donwloadLibreta', true);
+        }else{
+            $this->session->set('donwloadLibreta', false);
+        }
+
         $mostrarSextoCerrado = false;
         if($tieneSextoSec and $gestion >= 2018 and $operativo == 4){
             $validacionSexto = $this->get('funciones')->verificarGradoCerrado($sie, $gestion);
@@ -177,11 +223,13 @@ class InfoEstudianteController extends Controller {
         //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
         $gradoId = implode(",",$grado);
+        // dump($this->session->get('pathSystem'));die;
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
                     'sie' => $form['sie'],
                     'gestion' => $form['gestion'],
                     'objUe' => $objUe,
+                    'objObsQA' => $objObsQA,
                     //'form' => $this->removeForm()->createView(),
                     'exist' => $exist,
           //          'levelAutorizados' => $objInfoAutorizadaUe,
@@ -192,6 +240,24 @@ class InfoEstudianteController extends Controller {
                     'gradoId'=>$gradoId
         ));
     }
+    private function getObservationQA($data){
+      // added to 2021 about qa
+      $years = $data['gestion'].' ,'.$data['gestion'];
+
+      $em = $this->getDoctrine()->getManager();
+      $query = $em->getConnection()->prepare("
+                                                select vp.*
+                                                from validacion_proceso vp
+                                                where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id in (".$years.")
+                                                and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+                                                and vp.es_activo = 'f'
+                                            ");
+          //
+      $query->execute();
+      $objobsQA = $query->fetchAll();
+
+      return $objobsQA;
+    }    
 
     public function getStudentsAction(Request $request) {
         //get db connexion
@@ -199,7 +265,7 @@ class InfoEstudianteController extends Controller {
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-//        dump($aInfoUeducativa);
+  //      dump($aInfoUeducativa);
 //        die;
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
@@ -622,12 +688,18 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
+
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+        
 
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
+        //$swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
+        $swRegisterCalifications = true;
+        // $swRegisterPersonBjp = $aInfoUeducativa['requestUser']['swRegisterPersonBjp'];
+        $swRegisterPersonBjp = true;
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
         $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
@@ -649,6 +721,14 @@ class InfoEstudianteController extends Controller {
         }else{
           $this->session->set('allowInscription',false);
         }
+
+        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        if($operativo >3){
+            $this->session->set('donwloadLibreta', true);
+        }else{
+            $this->session->set('donwloadLibreta', false);
+        }
+        
         //get turnos
         //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($iecId, '5');
         //get th position of next level
@@ -740,6 +820,7 @@ class InfoEstudianteController extends Controller {
         if($gestion == 2020){
             $estadosPermitidosImprimir = array(5,55);
         }
+        // dump($operativo);exit();
 
         if($tipoUE){
             /*
@@ -748,9 +829,10 @@ class InfoEstudianteController extends Controller {
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
                 // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2 ) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 3 ) {
                     $imprimirLibreta = true;
                 }
+                // dump($imprimirLibreta);exit();
                 // Unidades educativas tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $operativo >= 4){
                     $imprimirLibreta = true;
@@ -830,9 +912,18 @@ class InfoEstudianteController extends Controller {
         }
     }
 
-    $this->session->set('optionRemove', false);
-    if($operativo){
-        $this->session->set('optionRemove',true);
+    $this->session->set('optionFormRude', false);
+    $this->session->set('optionReporteRude', false);
+
+    if($operativo)
+    {
+        $this->session->set('optionFormRude',true);
+    }
+    // if the rude operative was closed, so hidden the form rude option
+    $registroConsolRude = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion, 'rude' => 1));
+    if($registroConsolRude){
+        $this->session->set('optionFormRude', false);
+        $this->session->set('optionReporteRude', true);
     }
 
   $this->session->set('removeInscriptionAllowed', false);
@@ -845,10 +936,68 @@ class InfoEstudianteController extends Controller {
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
         $dependencia = $institucioneducativa->getDependenciaTipo()->getId(); // 3 privada
 
+
+    // add validation to show califications option
+    $showOptInscription = true;    
+    //dpto no habilitados (st,lp,bn);
+    // echo ">".date('d');exit();
+    /*if ((date('d')=='30') or (date('d')=='01')) {
+        $valor= array('7','2','8');
+    }
+    //dpto no habilitados (cbb,ch,tj,or,pt);
+    if((date('d')=='02') or (date('d')=='03')){
+        $valor= array('3','1','6','4','5');
+        
+    }
+    if(date('d')>'02'){       
+            $showOptInscription = false;
+    }  
+    if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
+            $showOptInscription = false;
+    }*/  
+   
+    $this->session->set('showOptInscription',$showOptInscription);
+    //verificacion de estado de la UE en la gestion actual
+    $estado = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->createQueryBuilder('op')
+                ->select('op')               
+                ->where('op.institucioneducativa='.$sie)
+                ->andWhere("op.gestionTipoId=".$gestion)
+                ->getQuery()
+                ->getResult();
+    if($estado){
+        $this->session->set('estado',$estado[0]->getEstadoMenu()); 
+    }else{
+        $this->session->set('estado',''); 
+    }   
+
+
+        /* Operativo de sexto 2021 */
+        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
+        $query->execute();
+        $objDataOperativo = $query->fetchAll();
+        $haslevel = false;
+        $hasgrado = false;
+        if(sizeof($objDataOperativo)>0)
+        {
+            $haslevel = 13;
+            $hasgrado = 6;
+        }
+        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+        $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
+        
+        // to enable 1er Trim 
+        $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+        if(sizeof($objUe1erTrin)>0){
+            $this->session->set('unablePrimerTrim',true);
+        }
+
+    // end add validation to show califications option
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
                     'sie' => $sie,
+                    'swRegisterCalifications' => $swRegisterCalifications,
+                    'swRegisterPersonBjp' => $swRegisterPersonBjp,
                     'turno' => $turno,
                     'nivel' => $nivel,
                     'grado' => $grado,
@@ -870,7 +1019,9 @@ class InfoEstudianteController extends Controller {
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion),
                     'wenakeyBono'=>$wenayekBono,
-                    'dependencia'=>$dependencia
+                    'dependencia'=>$dependencia,
+                    'cerrarOperativoSexto' => $closeopesextosecc,
+                    'nivelGradoSexto' => $arrLevelandGrado
         ));
     }
 
@@ -1426,15 +1577,15 @@ class InfoEstudianteController extends Controller {
            ));
           }
 
-          dump($objinstitucioneducativaOperativoLog);
+          //dump($objinstitucioneducativaOperativoLog);
         }else{
           // return new Response('Proceso anteriormente realizado... ');
           $response = new Response('Proceso anteriormente realizado... '.$sie, Response::HTTP_OK);
 
           return $response;
-          die;
+          //die;
         }
-        die('...');
+        //die('...');
 
     }
 
@@ -1899,7 +2050,7 @@ class InfoEstudianteController extends Controller {
         // get the send values
         $sie     = $request->get('sie');
         $gestion = $request->get('gestion');
-        $bimestre = 4;
+        $bimestre = 3;
         $level = 13;
         $grado = 6;
 
@@ -1912,7 +2063,9 @@ class InfoEstudianteController extends Controller {
             $responseOpe = $query->fetchAll();//function db
             $arrResponse = array();
             // chek if the validation has error
-            if(sizeof($responseOpe)>0){
+            //if(sizeof($responseOpe)>0)
+            if(false) // ya no validamos las observaciones
+            {
                 // error; send the errors to show on the view
                 $swObservations = true;
                 $arrResponse = $responseOpe;                
@@ -1959,19 +2112,30 @@ class InfoEstudianteController extends Controller {
         $persona = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
         $estado = false;
         $mensaje = "";
+        $cedulaTipo = "";
+
+        if ($persona->getCedulaTipo() === null){
+            $cedulaTipo = 1;
+        }else{
+            $cedulaTipo = $persona->getCedulaTipo()->getId();
+        }
+        
         if($persona){
             $datos = array(
                 'complemento'=>$persona->getComplemento(),
                 'primer_apellido'=>$persona->getPaterno(),
                 'segundo_apellido'=>$persona->getMaterno(),
                 'nombre'=>$persona->getNombre(),
-                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y'),
+                'tipo_persona' => $cedulaTipo
             );
+            
             if($persona->getCarnetIdentidad()){
                 $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnetIdentidad(),$datos,'prod','academico');
-
+                
                 if($resultadoPersona){
                     $persona->setSegipId(1);
+                    $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
                     $em->persist($persona);
                     $em->flush();
                     $mensaje = "Válido SEGIP";
@@ -1987,5 +2151,34 @@ class InfoEstudianteController extends Controller {
         }
 
         return new JsonResponse(array('estado' => $estado, 'mensaje' => $mensaje));
+    }
+    public function visualizarContenidoAction(Request $request) {
+
+        // $response = new JsonResponse();
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        $infoStudent = $request->get('infoStudent');
+
+        $aInfoStudent = json_decode($infoStudent,true);
+
+        $gestion = $aInfoUeducativa['requestUser']['gestion'];
+        $idest = $aInfoStudent['id'];
+     
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT
+            ei.observacion,
+            iec.gestion_tipo_id,
+            ie.institucioneducativa,
+            ie.id
+            FROM  estudiante_inscripcion AS ei
+            INNER JOIN institucioneducativa_curso AS iec ON iec.id = ei.institucioneducativa_curso_id
+            INNER JOIN institucioneducativa AS ie ON ie.id = iec.institucioneducativa_id
+            INNER JOIN gestion_tipo gt ON gt.id=iec.gestion_tipo_id
+            WHERE ei.estudiante_id = '$idest' AND gt.gestion = '$gestion' AND (ei.cod_ue_procedencia_id IS NOT null)
+            ORDER BY ei.id DESC LIMIT 1 ");
+        $query->execute();
+        $valor= $query->fetch();
+        return $this->render($this->session->get('pathSystem').':InfoEstudiante:descripcionTrasladoUEst.html.twig',array('valor'=>$valor));
+
     }
 }

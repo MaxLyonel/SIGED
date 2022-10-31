@@ -536,10 +536,12 @@ class AcaMultigradoController extends Controller {
           return new JsonResponse(array('mensaje'=>$message, 'typeMessage'=>$typeMessage));
 
         }
-        // $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($arrDataMultigrado['idDetalle']);
-        // $vproceso->setEsActivo('t');
-        // $em->persist($vproceso);
-        // $em->flush();
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave' => $arrDataMultigrado['sie'],'gestionTipo'=> $arrDataMultigrado['gestion'], 'esActivo'=>'false' ));
+        if($vproceso){
+          $vproceso->setEsActivo('t');
+          $em->persist($vproceso);
+          $em->flush();
+        }
         if($flagError){
           $em->getConnection()->rollback();
         }else{
@@ -559,7 +561,7 @@ class AcaMultigradoController extends Controller {
         //get Multigrado per SIE and GESTION
         $objMultigradoArr = $this->getMultigradoPerUeAndGestion($arrData);
         // dump($message);die;
-        return $this->render('SieRegularBundle:Multigrado:showNewMultigrado.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':AcaMultigrado:showNewMultigrado.html.twig', array(
           'objMultigradoArr' => $objMultigradoArr,
           'jsonDataMultigrado' => json_encode($arrData),
           'arrData'=>$arrData,

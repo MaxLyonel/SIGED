@@ -597,4 +597,6 @@ class RegistroConsolidacion
     {
         return $this->boletin;
     }
+
+   
 }

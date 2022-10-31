@@ -65,7 +65,7 @@ class CursoCapacitacionController extends Controller {
                                       AND ie.estadoinstitucionTipo in (:idEstado)
                                       AND se.estado = :estadoSede
                                 ORDER BY ie.id ')
-                                    ->setParameter('idTipo', array(7, 8, 9))
+                                    ->setParameter('idTipo', array(7, 8, 9, 11,12,13))
                                     ->setParameter('idEstado', 10)
                                     ->setParameter('estadoSede', TRUE);        
         $entities = $query->getResult(); 

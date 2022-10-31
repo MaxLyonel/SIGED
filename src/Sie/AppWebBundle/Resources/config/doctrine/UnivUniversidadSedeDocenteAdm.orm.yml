@@ -1,0 +1,86 @@
+Sie\AppWebBundle\Entity\UnivUniversidadSedeDocenteAdm:
+    type: entity
+    table: univ_universidad_sede_docente_adm
+    indexes:
+        IDX_C416871E179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_C416871E67671BD7:
+            columns:
+                - univ_cargo_tipo_id
+        IDX_C416871E2BCFBA7:
+            columns:
+                - genero_tipo_id
+        IDX_C416871E9B2067FB:
+            columns:
+                - univ_sede_id
+    uniqueConstraints:
+        sede_docunique_key:
+            columns:
+                - univ_sede_id
+                - gestion_tipo_id
+                - genero_tipo_id
+                - univ_cargo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaActualizacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_actualizacion
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univCargoTipo:
+            targetEntity: UnivCargoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_cargo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univSede:
+            targetEntity: UnivSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

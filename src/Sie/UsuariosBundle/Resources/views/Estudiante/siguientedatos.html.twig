@@ -85,6 +85,17 @@
                                                 {% endif %}
                                         </div>
                                     </div>
+                                    <div class="row"> 
+                                        <div class="col-lg-6">
+                                            <label class="required">Gestion :</label>
+                                            <select name="busquedaDatosTotForm[Gestion]" id="busquedaDatosTotForm_Gestion" class="form-control">
+                                                {% set gestionActual = "now"|date('Y') %}
+                                                {% for gestion in range(2009,gestionActual) %}
+                                                    <option value="{{gestion}}">{{gestion}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-lg-12">
@@ -279,6 +290,7 @@
                         $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
                         $("#busquedaDatosTotForm_Sie").prop("disabled", true );
                         $("#busquedaDatosTotForm_Expedido").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Gestion").prop("disabled", true );
                         
                         $("#butguardar").empty();
                         if(data.error){
@@ -297,6 +309,7 @@
                         $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
                         $("#busquedaDatosTotForm_Sie").prop("disabled", true );
                         $("#busquedaDatosTotForm_Expedido").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Gestion").prop("disabled", true );
                         
                         $("#butguardar").empty();
                         $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');

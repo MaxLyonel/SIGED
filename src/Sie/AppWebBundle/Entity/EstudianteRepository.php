@@ -127,6 +127,37 @@ class EstudianteRepository extends EntityRepository {
         return $qb->getQuery()->getResult();
     }
 
+    public function getStudentsEfectivosEspecial($id, $gestion) {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('e.id as eId, ei.id as eiId, oi.observacion as ObsTipoDesc', 'eo.obs as Obs', 'oi.id as idObsTipo', 'eo.id as idObservacion', 'n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->from('SieAppWebBundle:Estudiante', 'e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:institucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->leftJoin('SieAppWebBundle:EstudianteInscripcionObservacion', 'eo', 'WITH', 'ei.id = eo.estudianteInscripcion')
+                ->leftJoin('SieAppWebBundle:ObservacionInscripcionTipo', 'oi', 'WITH', 'eo.observacionInscripcionTipo = oi.id')
+                ->where('e.id = :id')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('it.id = :ittipo')
+                //->andwhere('ei.estadomatriculaTipo = :mat')
+                ->setParameter('id', $id)
+                ->setParameter('gestion', $gestion)
+                ->setParameter('ittipo', 4)
+                //->setParameter('mat', '4')
+                ->orderBy('ei.fechaInscripcion', 'DESC');
+
+
+        return $qb->getQuery()->getResult();
+    }    
+
     public function getStudentsEfectivosChange($id, $gestion) {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -277,6 +308,23 @@ class EstudianteRepository extends EntityRepository {
         return $qb->getQuery()->getResult();
     }
 
+    public function getUeIdbyEstudianteId_SinMatricula($id, $gestion) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('IDENTITY(iec.institucioneducativa) as ueId')
+                ->from('SieAppWebBundle:Estudiante', 'e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('ei.estudiante = :id')
+                ->andwhere('iec.gestionTipo = :gestion')
+                //->andwhere('ei.estadomatriculaTipo = :matricula')
+                ->setParameter('id', $id)
+                ->setParameter('gestion', $gestion)
+                //->setParameter('matricula', 4)
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
     public function getHistoryInscriptionEfectivo($id) {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
@@ -370,6 +418,33 @@ class EstudianteRepository extends EntityRepository {
                 ->setParameter('sie', $sie)
                 ->orderBy('ei.fechaInscripcion', 'DESC')
         ;
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getHistoryInscriptionPerStudentUe($id, $gestion, $sie) {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('e.id as eId', 'ei.id as eiId', 'n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->from('SieAppWebBundle:Estudiante', 'e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.id = :id')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andWhere('i.id = :sie')
+                ->setParameter('id', $id)
+                ->setParameter('gestion', $gestion)
+                ->setParameter('sie', $sie)
+                //->setParameter('mat', '4')
+                ->orderBy('ei.fechaInscripcion', 'DESC');
+
+
         return $qb->getQuery()->getResult();
     }
 
@@ -689,8 +764,13 @@ class EstudianteRepository extends EntityRepository {
      * * HISTORIAL DEL ALUMNO INCLUYENDO OBSERVACIONES
      * * HISTORIAL DEL ALUMNO INCLUYENDO OBSERVACIONES
      */
-    public function getInscriptionHistoryEstudenWhitObservation($rude, $roluser) {
+    public function getInscriptionHistoryEstudenWhitObservation($rude, $roluser,$gestion=null) {
 /**/
+        if($gestion==null)
+        {
+            $gestion= date('Y');
+        }
+
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
                 ->select('eo.esactivo as obsActivo, ei.id as inscripcionid, oi.observacion as ObsTipoDesc', 'eo.obs as Obs', 'oi.id as idObsTipo', 'eo.id as idObservacion', 'e.id idStudent, n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa','emini.estadomatricula as estadoMatriculaInicio')
@@ -712,12 +792,12 @@ class EstudianteRepository extends EntityRepository {
                 ->andwhere('ei.estadomatriculaTipo IN (:matricula)')
                 //->andwhere('it.id = :ittipo')
                 ->setParameter('rude', $rude)
-                ->setParameter('gestion', 2021)
+                ->setParameter('gestion', $gestion)
                 ;
             if($roluser == 8){
-                $arrMat = array(4,9);
+                $arrMat = array(4,9,5);
             }else{
-                $arrMat = array(9);
+                $arrMat = array(6,9);
             }
             $qb = $qb ->setParameter('matricula', $arrMat);
             $qb = $qb ->orderBy('iec.gestionTipo', 'DESC')

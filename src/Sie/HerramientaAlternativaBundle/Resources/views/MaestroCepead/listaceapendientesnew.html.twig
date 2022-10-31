@@ -1,0 +1,325 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-th-large"></i> Lista de Centros de Alternativa con Pendientes de Reporte de Información. <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-users"></i>
+                    Gestión
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Operativos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    Lista de ceas pendientes
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    <div class="col-md-12">
+    <div class="panel panel-success rounded shadow">
+        <div class="panel-heading">
+            <h3>Centros de Alternativa con Pendientes de Reporte de Información</h3>
+
+        </div><!-- /.panel-heading -->
+        <div class="panel-body panel-success">
+            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <div class="col-md-5">
+                            {{ form_label(form.gestion)}}
+                        </div>
+                        <div class="col-md-3">
+                            {{form_widget(form.gestion) }}
+                        </div>
+                    </div>
+                    {% if rol == 8 %}
+                        <div class="form-group col-md-3">
+                            <div class="col-md-5">
+                                {{ form_label(form.departamento)}}
+                            </div>
+                            <div class="col-md-5">
+                                {{form_widget(form.departamento) }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="form-group col-md-3">  
+                        <div class="col-md-6">                                      
+                            {{ form_widget(form.buscar ) }}
+                        </div>
+                    </div>
+                    {#<div class="form-group col-lg-2 col-md-2">
+                        {{ form_label(form.distrito)}}
+                        {{form_widget(form.distrito) }}
+                    </div>#}
+                </div>
+                {{form_end(form)}}
+                {{form_start(form_exp)}}
+                <div class="panel-heading" id="exportar1" style= "display:none">
+                    <div class="pull-right">
+                        {{ form_widget(form_exp.pdf1 ) }}
+                        {{ form_widget(form_exp.xlsx1) }}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {{form_end(form_exp)}}
+            </div>
+        </div>
+        <div >
+                <div class="row">
+                    <div class="col-md-12">
+                    <div id="tabla"></div>
+                    
+                        <!-- Start default tabs -->
+                        {# <div class="panel panel-tab rounded shadow">
+                             <!-- Start tabs heading -->
+                             <div class="panel-heading no-padding">
+                                 <ul class="nav nav-tabs">
+                                     <li class="active">
+                                         <a href="#">
+                                             <i class="fa fa-list"></i>
+                                             <span>Gestión </span>
+                                         </a>
+                                     </li>
+                                    #}{# {% for gestion in gestiones %}
+                                         <li>
+                                             <a href="component-tabsaccordion.html#tab-{{gestion}}" data-toggle="tab" onclick="registroConsol({{gestion}})">
+                                                 <i class="fa fa-list"></i>
+                                                 <span>Gestión {{gestion}}</span>
+                                             </a>
+                                         </li>
+                                     {% endfor %}#}{#
+                                 </ul>
+                             </div><!-- /.panel-heading -->
+                             <!--/ End tabs heading -->
+
+                             <!-- Start tabs content -->
+                             <div class="panel-body">
+                                 <div class="tab-content">
+                                     <div class="tab-pane fade in active" id="">
+                                         <h4>Reporte de cierre de operativos por gestión y Centro de Educación Especial</h4>
+                                         <div id="#}{#table-{{gestionactual}}#}{#" class="row">
+                                             {% include 'SieEspecialBundle:Institucioneducativa:consol_especial.html.twig' with {'consolEspecial': consolEspecial} %}
+                                         </div>
+                                     </div>
+                                     #}{#{% for gestion in gestiones %}
+                                         <div class="tab-pane fade" id="tab-{{gestion}}">
+                                             <h4>Reporte de cierre de operativos por gestión y Centro de Educación Especial - Gestión {{gestion}}</h4>
+                                             <div id="table-{{gestion}}" class="row"></div>
+                                         </div>
+                                     {% endfor %}#}{#
+                                 </div>
+                             </div><!-- /.panel-body -->
+                             <!--/ End tabs content -->
+                         </div><!-- /.panel -->
+                         <!--/ End default tabs -->#}
+
+                        {#<div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped" id="listaCeas">
+                                <thead>
+                                <tr>
+                                    <th class="text-center" style="min-width:5px">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Gestión</th>
+                                    <th>Semestre</th>
+                                    <th>Observación</th>
+                                    <th>Cod. Cea</th>
+                                    <th>Centro Alternativa</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th class="text-center" style="min-width:5px">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Gestión</th>
+                                    <th>Semestre</th>
+                                    <th>Observación</th>
+                                    <th>Cod. Cea</th>
+                                    <th>Centro Alternativa</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                {% for reg in entities %}
+                                    <tr>
+                                        <td class="text-center">{{ loop.index }}</td>
+                                        <td>{{ reg.lugar }}</td>
+                                        <td>{{ reg.distrito_cod }}</td>
+                                        <td>{{ reg.gestion_tipo_id }}</td>
+                                        <td>{{ reg.semestre }}</td>
+                                        <td>
+                                            <span class="label label-success">{{  reg.obs }} </span>
+
+                                        </td>
+
+
+                                        <td>{{ reg.ieue }}</td>
+                                        <td>{{ reg.institucioneducativa }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>#}
+
+                    </div>
+                </div><!-- /.row -->
+            </div>
+    </div><!-- /.panel-body -->
+    </div>
+    <div class="panel-sub-heading">
+    </div><!-- /.panel-sub-heading -->
+</div>
+
+
+
+
+        
+        {#<table aria-readonly="true" class="table" data-container="true" data-preserve="shallow" role="grid">
+            <thead>
+                <tr>
+                    <th class="text-center border-right">No.</th>
+                    <th>Departamento</th>
+                    <th>Código de distrito</th>            
+                    <th>Gestión</th>
+                    <th>Semestre</th>
+                    <th>Observación</th>
+                    <th>Cod. Cea</th>            
+                    <th>Centro Alternativa</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reg in entities %}
+                    <tr>
+                        <td class="text-center border-right">{{ loop.index }}</td>
+                        <td>{{ reg.lugar }}</td>
+                        <td>{{ reg.distrito_cod }}</td>
+                        <td>{{ reg.gestion_tipo_id }}</td>
+                        <td><h5>{{ reg.semestre }}</h5></td>
+                        <td><h4>{{ reg.obs }}</h4></td>                        
+                        <td><h3>{{ reg.ieue }}</h3></td>
+                        <td><h3>{{ reg.institucioneducativa }}</h3></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>#}
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function buscarceaspendientes()
+        {
+            //alert('{{rol}}');
+            if('{{rol}}'== 8)
+            {
+                var formData = {gestion: $('#form_gestion').val(),departamento: $('#form_departamento').val(),rol: '{{ rol }}', id_usuario: '{{ id_usuario }}'};    
+            }else{
+                var formData = {gestion: $('#form_gestion').val(),rol: '{{ rol }}',id_usuario: '{{ id_usuario }}'};
+            }
+            $.ajax({
+                type: 'get',
+                url: "{{path('sie_alt_ges_sub_sem_ceas_pendinte_lista')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#tabla').empty();
+                    $("#tabla").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#tabla').empty();
+                    $('#tabla').append(data);
+                    $('#form_rol').val('{{rol}}');
+                    $('#form_id_usuario').val('{{id_usuario}}');
+                    $('#form_gestion1').val($('#form_gestion').val());
+                    $('#form_departamento1').val($('#form_departamento').val());
+                    $('#exportar1').css('display', 'block');
+                    $( document ).ready(function() {
+                        cargatablas();
+                    });
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
+        $('#form_pdf1').click(function(){
+            //alert('entra');
+            
+            $('#form_tipo').val('pdf');
+        });
+        
+        $('#form_xlsx1').click(function(){
+            $('#form_tipo').val('xlsx');
+        });
+        /*function exportar(tipo)
+        {
+            //alert(tipo);
+            if('{{rol}}'== 8)
+            {
+                var formData = {tipo: tipo, gestion: $('#form_gestion').val(),departamento: $('#form_departamento').val(),rol: '{{ rol }}', id_usuario: '{{ id_usuario }}'};    
+            }else{
+                var formData = {tipo: tipo, gestion: $('#form_gestion').val(),rol: '{{ rol }}',id_usuario: '{{ id_usuario }}'};
+            }
+            $.ajax({
+                type: 'get',
+                url: "{{path('sie_alt_lista_ceaspendientes')}}",
+                data: formData,
+                success: function (data) {
+                    //document.location.href = data;;
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }*/
+
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#listaCeas tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "No."){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaCeas').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+
+    </script>
+{% endblock %}

@@ -2,17 +2,21 @@
 {% block contentoption %}
     <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="fa fa-table"></i> Creación de Cursos <span>Nuevo Curso</span></h2>
+    <h2><i class="fa fa-table"></i> Creación de Oferta <span>Nueva Oferta Educativa</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
             <li>
-                <i class="fa fa-home"></i>
-                <a href="{{path('creacioncursos_especial',{'op':'result'})}}">Menu Principal</a>
+                <i class="fa fa-windows"></i>
+                <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion': gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
                 <i class="fa fa-angle-right">
                 </i>
             </li>
-            <li><a href="{{path('creacioncursos_especial',{'op':'result'})}}">Creación de Cursos</a><i class="fa fa-angle-right"></i></li>
+            <li>
+                <a href="{{path('creacioncursos_especial', {'op':'result'})}}">Creación de Oferta Educativa</a>
+                <i class="fa fa-angle-right">
+                </i>
+            </li>
             <li class="active">Nuevo</li>
         </ol>
     </div><!-- /.breadcrumb-wrapper -->
@@ -20,25 +24,54 @@
 <!--/ End page header -->
 <div class="body-content animated fadeIn">
 
-    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Cursos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Oferta Educativa', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel panel-primary">
+            <div class="panel panel-teal">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        <h4>Nuevo curso</h4>
+                        Nueva oferta educativa
                     </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-collapse collapse in" id="panelnuevocurso">
                     <div class="panel-body">
                         <div class="panel-body">
-                            {{form_start(form)}}
+                            {{form_start(form, { 'attr':{'onsubmit':'return validacion()'}  })}}
+                                <div class="row">
+                                    <div class="col-lg-offset-3 col-lg-6 col-md-12">
+                                        <div class="form-group">
+                                            {{form_label(form.area)}}
+                                            {{form_widget(form.area, { 'attr':{'onchange':'reseteaTodo()', 'disabled':'disabled'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12" id="divMultiple" style="display:none">
+                                        {% for a in form.multiple %}
+                                            <div class="col-md-4 rdio rdio-primary circle">
+                                                {{ form_widget(a,{ 'attr':{'class':'multiple'}  }) }}
+                                                {{ form_label(a) }}
+                                            </div>
+                                        {% endfor %}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-md-12" id="divFisicoMotor" style="display:none">
+                                        {% for a in form.fisicoMotor %}
+                                            <div class="col-md-4 rdio rdio-primary circle">
+                                                {{ form_widget(a,{ 'attr':{'class':'fisicoMotor'}  }) }}
+                                                {{ form_label(a) }}
+                                            </div>
+                                        {% endfor %}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.area)}}
-                                        {{form_widget(form.area,{ 'attr':{'onchange':'listarNiveles()'}  }) }}
+                                        {{form_label(form.modalidad)}}
+                                        {{form_widget(form.modalidad,{ 'attr':{'onchange':'listarNiveles()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="form-group col-lg-6 col-md-12">
@@ -46,45 +79,60 @@
                                         {{form_widget(form.turno) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                     <div class="form-group col-lg-6 col-md-12">
+                                </div>
+                                <div class="row"> 
+                                    <div class="form-group col-lg-6 col-md-12">
                                         {{form_label(form.nivel)}}
                                         {{form_widget(form.nivel,{ 'attr':{'onchange':'listarGrados()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                     <div class="form-group col-lg-6 col-md-12">
+                                    <div class="form-group col-lg-6 col-md-12" id="divservicio">
                                         {{form_label(form.servicio)}}
                                         {{form_widget(form.servicio,{ 'attr':{'onchange':'listarProgramas()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                </div>
-                                <div class="row"> 
-                                    <div class="form-group col-lg-6 col-md-12">
+                                    <div class="form-group col-lg-6 col-md-12" id= "divgrado">
                                         {{form_label(form.grado)}}
                                         {{form_widget(form.grado,{ 'attr':{'onchange':'listarServicios()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="form-group col-lg-6 col-md-12">
+                                    <div class="form-group col-lg-6 col-md-12" id= "divprograma">
                                         {{form_label(form.programa)}}
-                                        {{form_widget(form.programa) }}
+                                        {{form_widget(form.programa ,{ 'attr':{'onchange':'listarMomentos()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
+
+                                    <div class="form-group col-lg-6 col-md-12" id= "divmomento"  style="display:none">
+                                        {{form_label(form.momento)}}
+                                        {{form_widget(form.momento ) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    
                                     <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.paralelo)}}
+                                        <label for="form_paralelo" class="required" id="idparalelo">Paralelo</label>
+                                        {# {{form_label(form.paralelo)}} #}
                                         {{form_widget(form.paralelo) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
  
-                                   <div class="form-group col-lg-6 col-md-12">
+                                   <div class="form-group col-lg-6 col-md-12" id="divtecnica">
                                         {{form_label(form.tecnica)}}
                                         {{form_widget(form.tecnica) }}
                                         <div class="help-block with-errors"></div>
                                     </div>                                   
-                                   <div class="form-group col-lg-6 col-md-12">
+                                   <div class="form-group col-lg-6 col-md-12" id="divniveltec">
                                         {{form_label(form.nivelTecnico)}}
                                         {{form_widget(form.nivelTecnico) }}
                                         <div class="help-block with-errors"></div>
                                     </div>                                   
-
+                                    <div class="form-group col-lg-6 col-md-12" id="divEc" style="display:none">
+                                        <div class="ckbox ckbox-primary text-primary">
+                                            {{form_widget(form.educacionCasa) }}
+                                            <label for="form_educacionCasa"><strong>Educación Sociocomunitaria en Casa</strong></label>
+                                            {# {{form_label(form.educacionCasa)}} #}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>  
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12" style="text-align:center">
@@ -105,45 +153,103 @@
     {{parent()}}
     <script src="{{asset('js/jquery-ui.min.js')}}"></script>
     <script>
-
+        $( document ).ready(function() {
+            $('#form_area').attr('disabled', false)
+        });
         function listarNiveles() {
             var area = $('#form_area').val();
-
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('listar_niveles_especial', {'area':area}),
-                beforeSend: function () {
-                    $("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_programa").empty();
-                    $("#form_servicio").empty();
-                    $("#form_nivel").append('<option value="">Buscando...</option>');
-                    $("#form_grado").append('<option value="">Buscando...</option>');
-                    $("#form_programa").append('<option value="">Buscando...</option>');
-                    $("#form_servicio").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_programa").empty();
-                    $("#form_servicio").empty();
-                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
-                    $("#form_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_programa").append('<option value="">Seleccionar...</option>');
-                    $("#form_servicio").append('<option value="">Seleccionar...</option>');
-                    $.each(data.niveles, function (i, value) {
-                        $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
-                    });
+            if (area == "") {
+                alert("Seleccione Subárea");
+                $('#form_modalidad').val('');
+            } else {
+                var modalidad = $('#form_modalidad').val();
+                if(area== 4 || area== 6 || area== 7){
+                    $("#divgrado").hide();
+                    $("#divtecnica").hide();
+                    $("#divniveltec").hide();
+                }else{
+                    $("#divgrado").show();
+                    $("#divtecnica").show();
+                    $("#divniveltec").show();
                 }
-            });
+                $("#divservicio").show();
+                $("#divprograma").show();
+                if(area== 3 || area == 4 || area== 5){
+                    $("#divEc").show();
+                }else{
+                    $("#divEc").hide();
+                }
+                if(area == 2){
+                    $('#idparalelo').text("Grupo");
+                }else{
+                    $('#idparalelo').text("Paralelo");
+                }
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('listar_niveles_especial', {'area':area,'modalidad':modalidad}),
+                    beforeSend: function () {
+                        $("#form_nivel").empty();
+                        $("#form_grado").empty();
+                        $("#form_programa").empty();
+                        $("#form_servicio").empty();
+                        $("#form_nivelTecnico").empty();
+                        $("#form_nivel").append('<option value="">Buscando...</option>');
+                        $("#form_grado").append('<option value="">Buscando...</option>');
+                        $("#form_programa").append('<option value="">Buscando...</option>');
+                        $("#form_servicio").append('<option value="">Buscando...</option>');
+                        
+                    },
+                    success: function (data) {
+                        $("#form_nivel").empty();
+                        $("#form_grado").empty();
+                        $("#form_programa").empty();
+                        $("#form_servicio").empty();
+                        $("#form_nivel").append('<option value="">Seleccionar...</option>');
+                        $("#form_grado").append('<option value="">Seleccionar...</option>');
+                        $("#form_programa").append('<option value="">Seleccionar...</option>');
+                        $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                        
+                        $.each(data.niveles, function (i, value) {
+                            $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        dropdown("#form_nivel");
+                    }
+                });
+            }
         }
 
         function listarGrados() {
+            var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
-
+            
+             if(nivel== 410){
+                $("#divservicio").show();
+                $("#divprograma").hide();
+            }
+            if(nivel== 411){
+                $("#divprograma").show();
+                $("#divservicio").hide();
+            }
+            if(nivel == 410 || nivel == 411){
+                $('#idparalelo').text("Grupo");
+                $("#divgrado").hide();
+            }else{
+                $("#divservicio").hide();
+                $("#divprograma").hide();
+                $('#idparalelo').text("Paralelo");
+                $("#divgrado").show();
+            }
+            if(nivel != 405){
+                $("#divtecnica").hide();
+                $("#divniveltec").hide();
+            }else{
+                $("#divtecnica").show();
+                $("#divniveltec").show();
+            }
+           
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listar_grados_especial', {'nivel':nivel}),
+                url: Routing.generate('listar_grados_especial', {'nivel':nivel, 'area':area}),
                 beforeSend: function () {
                     $("#form_grado").empty();
                     $("#form_programa").empty();
@@ -156,12 +262,20 @@
                     $("#form_grado").empty();
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
-                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $("#form_nivelTecnico").empty();
+                    if(nivel != 410 && nivel != 411){
+                        $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    }
                     $("#form_programa").append('<option value="">Seleccionar...</option>');
                     $("#form_servicio").append('<option value="">Seleccionar...</option>');
                     $.each(data.grados, function (i, value) {
                         $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    //dropdown("#form_grado");
+                    listarServicios();
+                    listarProgramas();                    
+                    listarNivelesTecnicos();
+                   
                 }
             });
         }
@@ -170,10 +284,10 @@
             var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
             var grado = $('#form_grado').val();
-
+            var modalidad = $('#form_modalidad').val();
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listar_servicios_especial', {'area':area,'nivel':nivel,'grado':grado}),
+                url: Routing.generate('listar_servicios_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
                 beforeSend: function () {
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
@@ -183,36 +297,166 @@
                 success: function (data) {
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
-                    $("#form_programa").append('<option value="">Seleccionar...</option>');
-                    $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                    if(nivel == 410){
+                        $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                    }
+                    $("#form_programa").append('<option value="">Seleccionar...</option>');    
                     $.each(data.servicios, function (i, value) {
                         $("#form_servicio").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    listarProgramas();
+                    dropdown("#form_servicio");
                 }
             });
+        }
+
+          function listarMomentos() {
+            var area = $('#form_area').val();
+            var nivel = $('#form_nivel').val();
+            var grado = $('#form_grado').val();
+            var modalidad = $('#form_modalidad').val();
+            var programa = $('#form_programa').val();
+            if(programa == 26 && area==2){ // Solo para visual y programa multiple: hab momentos
+                $("#divmomento").show();
+            }else{
+                $("#divmomento").hide();
+            }
         }
 
         function listarProgramas() {
-			var area  = $('#form_area').val();
-        	var nivel = $('#form_nivel').val();
-            var grado = $('#form_grado').val();
+            if ($('#form_educacionCasa').is(":checked") && $('#form_servicio').val() == 20) {
+                alert('No se puede seleccionar Apoyo Técnico Pedagógico por que está marcado Programa de Atención en Casa.');
+                $('#form_servicio').val('');
+            } else {
+                var area  = $('#form_area').val();
+                var nivel = $('#form_nivel').val();
+                var grado = $('#form_grado').val();
+                var modalidad = $('#form_modalidad').val();
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
+                    beforeSend: function () {
+                        $("#form_programa").empty();
+                        $("#form_programa").append('<option value="">Buscando...</option>');
+                    },
+                    success: function (data) {
+                        $("#form_programa").empty();
+                        if(nivel == 411){
+                            $("#form_programa").append('<option value="">Seleccionar...</option>');
+                        }
+                        $.each(data.programas, function (i, value) {
+                            $("#form_programa").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        
+                        dropdown("#form_programa");
+                    }
+                });
+            }
+        }
 
+         function listarNivelesTecnicos() {
+            var area = $('#form_area').val();
+            var nivel = $('#form_nivel').val();
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado}),
-                beforeSend: function () {
-                    $("#form_programa").empty();
-                    $("#form_programa").append('<option value="">Buscando...</option>');
-                },
+                url: Routing.generate('listar_nivelestecnicos_especial', {'area':area,'nivel':nivel}),
+                
                 success: function (data) {
-                    $("#form_programa").empty();
-                    $("#form_programa").append('<option value="">Seleccionar...</option>');
-                    $.each(data.programas, function (i, value) {
-                        $("#form_programa").append('<option value="' + i + '">' + value + '</option>');
+                    $("#form_nivelTecnico").append('<option value="">Seleccionar...</option>');    
+                    $.each(data.nivelestecnicos, function (i, value) {
+                        $("#form_nivelTecnico").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    
+                    dropdown("#form_nivelTecnico");
                 }
             });
         }
-        
+
+        function validacion(){
+            var area  = $('#form_area').val();
+            if((area == 3 || area == 4 || area == 5) && $("#form_educacionCasa").is(':checked')){
+                msg = "¿Está seguro/a de crear una nueva  educativa?\n Tome nota que la  educativa será creado para:\n -EDUCACIÓN SOCIOCOMUNITARIA EN CASA";
+            }else{
+                msg = '¿Está seguro/a de crear una nueva oferta educativa?';
+            }
+            
+            if(confirm(msg)){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function dropdown(form_select) {
+            // choose target dropdown
+            var foption = $(form_select + ' option:first');
+            var soptions = $(form_select + ' option:not(:first)').sort(function (a, b) {
+                return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+            });
+            $(form_select).html(soptions).prepend(foption);
+        };
+
+        $('#form_educacionCasa').change(function() {
+            if ($('#form_servicio').val() != 20) {
+                if($(this).is(":checked")) {
+                   var returnVal = confirm("¿Esta seguro(a) de definir la oferta educativa para EDUCACIÓN SOCIOCOMUNITARIA EN CASA?");
+                    $(this).attr("checked", returnVal);
+                }
+                $('#form_educacionCasa').val($(this).is(':checked'));
+            } else {
+                alert('No se puede marcar EDUCACIÓN SOCIOCOMUNITARIA EN CASA por que está seleccionado Apoyo Técnico Pedagógico.');
+                $(this).attr("checked", false);
+                $('#form_educacionCasa').val(false);
+            }
+        });
+        function reseteaTodo() {
+            var area  = $('#form_area').val();
+            $("#form_nivel").html('<option value="">Seleccionar...</option>');
+            $("#form_grado").html('<option value="">Seleccionar...</option>');
+            $("#form_programa").html('<option value="">Seleccionar...</option>');
+            $("#form_servicio").html('<option value="">Seleccionar...</option>');
+            $("#form_modalidad").val('');
+            $(".multiple").prop('checked', false);
+            $(".fisicoMotor").prop('checked', false);
+            if(area == 2 || area == 4 || area == 6 || area == 7){
+                $('#idparalelo').text("Grupo");
+            }else{
+                $('#idparalelo').text("Paralelo");
+            }
+            $("#divservicio").show();
+            $("#divprograma").show();
+            if(area== 3 || area == 4 || area== 5){
+                $("#divEc").show();
+            }else{
+                $("#divEc").hide();
+            }
+            if(area == 4){
+                $("#divFisicoMotor").show();
+                $(".fisicoMotor").attr('required', false);
+                //$(".fisicoMotor").removeAttr('required');
+                $("#form_educacionCasa").prop('checked', false);
+                $("#form_educacionCasa").prop('disabled', false);
+            }else{
+                $("#divFisicoMotor").hide();
+                $(".fisicoMotor").removeAttr('required');
+                $("#form_educacionCasa").prop('checked', false);
+                $("#form_educacionCasa").prop('disabled', false);
+            }
+            if(area == 5){
+                $("#divMultiple").show();
+                $(".multiple").attr('required', true);
+            }else{
+                $("#divMultiple").hide();
+                $(".multiple").removeAttr('required');
+            }
+            if(area== 4 || area== 6 || area== 7){
+                $("#divgrado").hide();
+                $("#divtecnica").hide();
+                $("#divniveltec").hide();
+            }else{
+                $("#divgrado").show();
+                $("#divtecnica").show();
+                $("#divniveltec").show();
+            }
+        }
     </script>
 {% endblock %}

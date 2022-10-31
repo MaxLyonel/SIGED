@@ -1,0 +1,234 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+
+{% block contentoption %}
+
+	<!-- Start page header -->
+	<div class="header-content">
+		<h2><i class="fa fa-table"></i> Seguimiento <span>Operativo Textos Educativos</span></h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<i class="fa fa-home"></i>
+					<a href="dashboard.html">Recibidos</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+
+				<li class="active">Index</li>
+			</ol>
+		</div><!-- /.breadcrumb-wrapper -->
+	</div><!-- /.header-content -->
+	<!--/ End page header -->
+	<div class="body-content animated fadeIn">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel rounded shadow">
+					<div class="panel panel-primary shadow">
+						<div class="panel-heading">
+							<div class="pull-left">
+								<h3 class="panel-title">Seguimiento</h3>
+							</div>
+							<div class="pull-right">
+								<button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+							</div>
+							<div class="clearfix"></div>
+						</div><!-- /.panel-heading -->
+						<div class="panel-body ">
+							<div class="col-md-12 p-3">
+								<div class="col-sm-12">
+									<i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong> se desplegará el listado de las Unidades Educativas y además la información de si registro los textos educativos.
+									<p><mark>Solo se considera un registro completo del curso si registro 2 Trimestres</mark></p>
+								</div>
+								<form method="POST" id="form-mostrar-resultados-reporte-salud" onsubmit="mostrarResultadosReporte(this); return false;">
+								  <div class="form-row">
+
+									<div class="form-group col-md-3 col-sm-6 ">
+										<select class="form-control" name="gestion" id="gestion">
+											<option value="{{currentyear}}">{{currentyear}}</option>
+										</select>
+									</div>
+
+									<div class="form-group col-md-3 col-sm-6 ">
+										<select class="form-control" name="departamento" id="departamento" onchange="getDistritos(this.value); return false;" required="" autocomplete="off">
+											<option value="" selected>Seleccione un departamento</option>
+											{% for d in departamentos %}
+												<option value="{{d.codigo}}">{{d.depto}}</option>
+											{% endfor %}
+										</select>
+									</div>
+
+									<div class="form-group col-md-3 col-sm-6 ">
+									  <select class="form-control select-distrito" name="distrito" id="distrito" autocomplete="off" >
+									  	{% if departamentos|length > 1 %}
+											<option>Primero seleccione un departamento</option>
+									  	{% else %}
+											<option value="" selected>Seleccione un distrito</option>
+											{% for di in distritos %}
+												<option value="{{di.id}}">{{di.id}} | {{di.distrito}}</option>
+											{% endfor %}
+									  	{% endif %}
+									  </select>
+									</div>
+
+									{#
+									<div class="form-group col-md-3 col-sm-6 ">
+									  <select class="form-control select-ue" name="ue" id="ue" autocomplete="off">
+									  	{% if distritos|length > 1 %}
+											<option>Primero seleccione un departamento</option>
+									  	{% else %}
+											<option value="" selected>Seleccione una unidad educativa</option>
+											{# for u in ues %}
+												<option value="{{u.id}}">{{u.ue}}</option>
+											{% endfor }
+									  	{% endif %}
+									  </select>
+									</div>
+									#}
+
+									<div class="form-group col-md-3 col-sm-6 ">
+										<button type="submit" class="btn btn-primary btn-search-request-salud"><i class="fa fa-search"></i> Buscar</button>
+									</div>
+								  </div>
+								</form>
+							</div>
+						</div><!-- /.panel-body --> 
+						<div class="div-mostrar-resultados-reporte-modalidad-atencion" style="padding:1rem;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row div-data">
+			<div class="panel">
+				<div class="panel-heading">
+					<div class="pull-left">
+						<h3 class="panel-title">Información</h3>
+					</div>
+					<div class="clearfix"></div>
+				</div><!-- /.panel-heading -->
+				<div class="panel-body no-padding">
+					<div class="table-responsive div-mostrar-resultados" style="margin-top: -1px;">
+
+					</div>
+				</div><!-- /.panel-body -->
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    var mostrarResultadosReporte=function (form)
+    {
+        var formData = $(form).serialize();
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('herramienta_textoEducativo_seguimiento_mostrarDatos'),
+                data: formData,
+                beforeSend: function () {
+                    $(".div-mostrar-resultados").empty();
+                    $(".div-mostrar-resultados").html("<div style='text-align:center'><img src='/img/loading.gif'></div>");
+                },
+                success: function (data)
+                {
+                    $(".div-mostrar-resultados").empty();
+                    $(".div-mostrar-resultados").html(data);
+                    //$('#dataTable-modalidad').DataTable( {});
+                },
+                error: function (data) {
+                    $(".div-mostrar-resultados").empty();
+                    $(".div-mostrar-resultados").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    }
+
+    var abrirOperativoEstadoSalud=function(id)
+    {
+     var abrir=confirm('¿Está seguro de abrir el operativo?');
+     if(abrir==true)
+     {
+        $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_personal_adm_abrirOperativo_estadosalud',{id:id}),
+                beforeSend: function ()
+                {
+                },
+                success: function (data)
+                {
+                	var status= data.status;
+                	if(status==200)
+                	{
+                		var resp='<span class="label label-warning">Operativo abierto</span>';
+                		$('.tr-estado-reporte-'+id).find('.td-estado-operativo').html(resp);
+                		$('.tr-estado-reporte-'+id).find('.td-estado-operativo-detalle').html('Abierto');
+                		//$('.tr-estado-reporte-'+id).remove();
+                		//$('.btn-search-request-salud').trigger('click');
+                	}
+                	else
+                	{
+                		alert('Ocurrio un error. por favor vuelva a intentarlo');
+                	}
+                },
+                error: function (data)
+                {
+                	alert('Ocurrio un error. por favor vuelva a intentarlo');
+                }
+            });
+     }
+    }
+
+    </script>
+
+    <script>
+    {% if departamentos|length>1 %}
+	    var getDistritos= function(d)
+	    {
+	        if(d.length>0)
+	        {
+	            $.ajax({
+	                    type: 'post',
+	                    url: Routing.generate('siged_get_distritos_modalidad_atencion'),
+	                    data: {departamento:d},
+	                    beforeSend: function () {
+	                        $(".select-distrito").empty();
+	                        $(".select-distrito").append('<option>Obteniendo distritos ...</option>');
+	                    },
+	                    success: function (data)
+	                    {
+	                        try
+	                        {
+	                            var len= data.length;
+	                            var option='<option value="-1" selected>Todos los distritos</option>';
+	                            for(i in data)
+	                            {
+	                                option+='<option value="'+data[i].id+'">'+data[i].id+' | '+data[i].distrito+'</option>';
+	                            }
+	                            if(len==0)
+	                            {
+	                                option='<option>El departamento no tiene distritos</option>';
+	                            }
+	                            $(".select-distrito").empty();
+	                            $(".select-distrito").html(option);
+	                        }
+	                        catch(e)
+	                        {
+	                            $(".select-distrito").html('<option>El departamento no tiene distritos</option>');
+	                        }
+	                    },
+	                    error: function (data) {
+	                        $(".select-distrito").empty();
+	                        $(".select-distrito").append('<option>Ocurrio un error, por favor intente nuevamente.</option>');
+	                    }
+	                });
+	        }
+	    }
+    {% else %}
+    	var getDistritos= function(d)
+    	{}
+    {% endif %}
+    </script>
+
+
+{% endblock %}

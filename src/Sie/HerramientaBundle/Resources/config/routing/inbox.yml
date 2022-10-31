@@ -39,3 +39,14 @@ herramienta_inbox_downloadRude:
          expose: true
 
 
+herramienta_inbox_close_operativo_rude:
+    path:     /closeoperativo-rude
+    defaults: { _controller: "SieHerramientaBundle:Inbox:closeOperativoRude"}
+    options:
+         expose: true
+
+herramienta_inbox_close_operativo_inscription:
+    path:     /closeoperativo-inscription
+    defaults: { _controller: "SieHerramientaBundle:Inbox:closeOperativoInscription"}
+    options:
+         expose: true

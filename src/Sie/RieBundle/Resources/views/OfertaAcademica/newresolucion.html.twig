@@ -110,11 +110,12 @@
     <script>
         
         function cargarTiempoEstudio(){
+                        
             nivel = $("#form_nivelTipo").val();
             regimen = $("#form_regimenEstudio").val();
             //TS = 500; TM=501; C=502
             //Anual = 1; Semestral=2; modular = 3
-
+            
             //TecSup ; Anual
             if(nivel == 500 && regimen == 1)
             {
@@ -153,7 +154,20 @@
                 $("#form_tiempoEstudio").append('<option value="6">6</option>');
                 $("#form_tiempoEstudio").selectpicker('refresh');
             }
+
+             if(nivel == 500 && regimen == 4)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
             
+
             //TecMed ; Anual
             if(nivel == 501 && regimen == 1)
             {
@@ -182,6 +196,19 @@
                 $("#form_tiempoEstudio").empty();
                 $("#form_tiempoEstudio").selectpicker('refresh');
                 $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }    
+
+             //TecMed ; Modular
+            if(nivel == 501 && regimen == 4)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
                 $("#form_tiempoEstudio").append('<option value="2">2</option>');
                 $("#form_tiempoEstudio").append('<option value="3">3</option>');
                 $("#form_tiempoEstudio").append('<option value="4">4</option>');

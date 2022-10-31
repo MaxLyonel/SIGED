@@ -293,6 +293,7 @@ class StudentsInscriptionsController extends Controller {
       $infoUe = $form['data'];
       
       $aInfoUeducativa = unserialize($form['data']);
+       
 //dump($aInfoUeducativa);die;
     //set the validate year
 
@@ -316,9 +317,13 @@ class StudentsInscriptionsController extends Controller {
         $em->persist($studentInscription);
         $em->flush();
         //add the areas to the student
-        $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+
+        $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
         $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
-        $query->execute();        
+				$query->bindValue(':sie', $aInfoUeducativa['requestUser']['sie']);
+        $query->execute();
+
+
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();

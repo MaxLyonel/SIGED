@@ -46,7 +46,7 @@ class NoteConsultationUesController extends Controller {
         //set new gestion to the select year
         $arrGestion = array();
         $currentYear = date('Y');
-        for ($i = 0; $i <= 10; $i++) {
+        for ($i = 0; $i <= 12; $i++) {
             $arrGestion[$currentYear] = $currentYear;
             $currentYear--;
         }
@@ -98,8 +98,8 @@ class NoteConsultationUesController extends Controller {
                       $exist = false;
                     }
                   } else {
-                    if($operativo <= 3){
-                      $message = 'Unidad Educativa no cerro el operativo 4to bimestre';
+                    if($operativo <= 2){
+                      $message = 'Unidad Educativa no cerro el operativo 3er Trim';
                       $this->addFlash('warningconsultaue', $message);
                       $exist = false;
                     }
@@ -172,12 +172,24 @@ class NoteConsultationUesController extends Controller {
                           $query->execute();
                           $inconsistencia = $query->fetchAll();
                         } else {
-                          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
-                          $query->bindValue(':gestion', $gestion);
-                          $query->bindValue(':sie', $sie);
-                          $query->bindValue(':periodo', 4);
-                          $query->execute();
-                          $inconsistencia = $query->fetchAll();
+                          if($gestion == 2021){
+                            $valor_op=array('0'=>6,'1'=>6,'2'=>7,'3'=>8);
+
+                            $queryCheckCal = 'select * from sp_validacion_regular_web2021_fg(:gestion,:sie,:ope)';
+                            $query = $em->getConnection()->prepare($queryCheckCal);
+                            $query->bindValue(':gestion', $gestion);
+                            $query->bindValue(':sie', $sie);
+                            $query->bindValue(':ope', $valor_op[$operativo]);
+                            $inconsistencia = $query->fetchAll();                            
+                          }else{                            
+                            $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+                            $query->bindValue(':gestion', $gestion);
+                            $query->bindValue(':sie', $sie);
+                            $query->bindValue(':periodo', 4);
+                            $query->execute();
+                            $inconsistencia = $query->fetchAll();
+                          }
+
                         }
 
                         if ($inconsistencia) {

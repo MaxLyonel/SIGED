@@ -1,0 +1,71 @@
+Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico:
+    type: entity
+    table: estudiante_persona_diplomatico
+    indexes:
+        IDX_868582AF5F88DB9:
+            columns:
+                - persona_id
+        IDX_868582A7C9FBE9A:
+            columns:
+                - documento_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        documentoNumero:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: documento_numero
+        documentoPath:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: documento_path
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        lugar:
+            type: string
+            nullable: true
+            length: 80
+            fixed: false
+            comment: ''
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        documentoTipo:
+            targetEntity: DocumentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -16,15 +16,15 @@ use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
 
 class Funciones {
 
-	protected $em;
-	protected $router;
+    protected $em;
+    protected $router;
     protected $session;
 
-	public function __construct(EntityManager $entityManager, Router $router) {
-		$this->em = $entityManager;
-		$this->router = $router;
+    public function __construct(EntityManager $entityManager, Router $router) {
+        $this->em = $entityManager;
+        $this->router = $router;
         $this->session = new Session();
-	}
+    }
 
     /**
      * SERVICIO DE VALIDACION DE RUTA POR ROL DE USUARIO
@@ -63,10 +63,10 @@ class Funciones {
         return $permitido;
     }
 
-	/*
+    /*
      * verificamos si tiene tuicion
      */
-	public function verificaTuicion($sie, $idUsuario, $rolUsuario) {
+    public function verificaTuicion($sie, $idUsuario, $rolUsuario) {
 
         $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
         $query->bindValue(':user_id', $idUsuario);
@@ -77,11 +77,11 @@ class Funciones {
 
         $response = ['tuicion' => $aTuicion[0]['get_ue_tuicion']];
 
-		return $response;
+        return $response;
 
-	}
+    }
 
-	public function obtenerOperativo($sie,$gestion){
+    public function obtenerOperativo($sie,$gestion){
         $objRegistroConsolidado = $this->em->createQueryBuilder()
                 ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
                 ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
@@ -194,7 +194,7 @@ class Funciones {
 
 
 
-	public function obtenerOperativoDown($sie,$gestion){
+    public function obtenerOperativoDown($sie,$gestion){
         $objRegistroConsolidado = $this->em->createQueryBuilder()
                 ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
                 ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
@@ -341,7 +341,9 @@ class Funciones {
             case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
             case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
             case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
-            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4
+            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
+            case when rc.rude = 1 then 'SI' else 'NO' end AS rude,
+            rc.gestion
             FROM registro_consolidacion rc
             INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
             INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
@@ -352,12 +354,111 @@ class Funciones {
             LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
             INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
             WHERE ".$where." AND rc.gestion = ".$gestionid." AND
-            rc.institucioneducativa_tipo_id = ".$instipoid."
+            rc.institucioneducativa_tipo_id = ".$instipoid." AND inst.estadoinstitucion_tipo_id = 10
             ORDER BY
             codigo_departamento,
             codigo_distrito,
             codigo_sie;
         ");
+        
+        $query->execute();
+        $registro_consolidacion = $query->fetchAll();
+        return $registro_consolidacion;
+    }
+
+    /**
+     * dcastillo
+     * los que NO han cerrado operativo en la gestion actual
+     */
+    public function reporteNoConsol($gestionid, $roluser, $roluserlugarid, $instipoid){
+        
+        $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+        
+        switch ($roluser) {
+            case '7':
+                $where = "lt4.codigo = '".$lugar->getCodigo()."'";
+                break;
+
+            case '8':
+                $where = '1 = 1';
+                break;
+
+            case '10':
+                $where = "dt.id = '".$lugar->getCodigo()."'";
+                break;
+
+            default:
+                $where = '1 = 0';
+                break;
+        }
+
+        /*$query = $this->em->getConnection()->prepare("
+            SELECT
+            lt4.codigo AS codigo_departamento,
+            lt4.lugar AS departamento,
+            dt.id codigo_distrito,
+            dt.distrito,
+            inst.id codigo_sie,
+            inst.institucioneducativa,
+            case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
+            case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
+            case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
+            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
+            rc.gestion
+            FROM registro_consolidacion rc
+            INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+            INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+            LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+            INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
+            WHERE ".$where." AND rc.gestion = ".$gestionid." AND
+            rc.institucioneducativa_tipo_id = ".$instipoid." AND inst.estadoinstitucion_tipo_id = 10
+            ORDER BY
+            codigo_departamento,
+            codigo_distrito,
+            codigo_sie;
+        ");*/
+
+        $query = $this->em->getConnection()->prepare("
+        SELECT
+            * 
+        FROM
+            (
+            SELECT
+                inst.ID,
+                lt4.codigo AS codigo_departamento,
+                lt4.lugar AS departamento,
+                dt.ID codigo_distrito,
+                dt.distrito,
+                inst.ID codigo_sie,
+                inst.institucioneducativa,
+                'NO' AS bim1,
+                'NO' AS bim2,
+                'NO' AS bim3,
+                'NO' AS bim4 --rc.gestion
+                
+            FROM
+                institucioneducativa inst
+                INNER JOIN jurisdiccion_geografica jg ON jg.ID = inst.le_juridicciongeografica_id
+                LEFT JOIN lugar_tipo lt ON lt.ID = jg.lugar_tipo_id_localidad
+                LEFT JOIN lugar_tipo lt1 ON lt1.ID = lt.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt2 ON lt2.ID = lt1.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt3 ON lt3.ID = lt2.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt4 ON lt4.ID = lt3.lugar_tipo_id
+                INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.ID 
+            WHERE ".$where."  AND inst.estadoinstitucion_tipo_id =  10 and inst.institucioneducativa_acreditacion_tipo_id = 1 and inst.institucioneducativa_tipo_id = 1 
+            ORDER BY
+                codigo_departamento,
+                codigo_distrito,
+                codigo_sie 
+            ) AS datos 
+        WHERE
+            datos.codigo_sie NOT IN ( SELECT unidad_educativa FROM registro_consolidacion WHERE gestion = ".$gestionid." AND institucioneducativa_tipo_id = ".$instipoid." )
+        ");
+
         $query->execute();
         $registro_consolidacion = $query->fetchAll();
         return $registro_consolidacion;
@@ -1651,7 +1752,7 @@ class Funciones {
                     inner join tramite as t on t.id = d.tramite_id
                     inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                     inner join estudiante as e on e.id = ei.estudiante_id
-                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1
+                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1 /*and d.documento_tipo_id = 1*/
                     ");
 
         $query->execute();
@@ -1659,6 +1760,57 @@ class Funciones {
 
         return $documentos;
     }
+    /**
+     * Servicio para cupos en cursos de educacion especial
+     * Accesos: Vistas y controladores
+     * Autor: Patricia
+     */
+    public function getCantidadEstudiantes($infoUe,$estudiantes){
+        
+        $infoUe = unserialize($infoUe);
+        $cantidad = 0;
+        $area = $infoUe['ueducativaInfoId']['areaEspecialId'];
+        $programa = $infoUe['ueducativaInfoId']['programaId'];
+        $iecLugar = $infoUe['ueducativaInfo']['iecLugar'];
+        switch($infoUe['ueducativaInfoId']['areaEspecialId']){
+            case 2:
+                foreach($estudiantes as $est ){
+                    if($est['estadomatriculaId'] != 6 and $est['estadomatriculaId'] != 78){
+                        $cantidad = $cantidad + 1;
+                    }
+                }
+                if(($programa == 14 and $cantidad >= 4) or ($programa == 8 and $cantidad >= 6) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 7) or ($programa == 11  and $cantidad >= 3) or ($programa == 12  and $cantidad >= 8)){
+                    $data['cupo'] = "NO";
+                    $data['msg'] = "El curso para este programa no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
+                }else{
+                    $data['cupo'] = "SI";
+                    $data['msg'] = "El curso cuenta con cupos";
+                }
+                break;
+            case 3:
+            case 4:
+            case 5:
+                foreach($estudiantes as $est ){
+                    if($est['estadomatriculaId'] != 6 and $est['estadomatriculaId'] != 10 and $est['estadomatriculaId'] != 78){
+                        $cantidad = $cantidad + 1;
+                    }
+                }
+                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) and $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
+                    $data['cupo'] = "NO";
+                    $data['msg'] = "El curso o grupo no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
+                }else{
+                    $data['cupo'] = "SI";
+                    $data['msg'] = "El curso cuenta con cupos";
+                }
+                break;
+            default:
+                $data['cupo'] = "SI";
+                $data['msg'] = "El curso cuenta con cupos";
+        }
+        return $data;
+    }    
+
+
     /**
      * Servicio para eliminar especialidades bth
      * @param  [integer] $codsie     [Id de inscripcion del estudiante]
@@ -1727,6 +1879,51 @@ class Funciones {
                 
     }    
 
+    /**
+     * Service to check the users tuicion in inscription process
+     * @param  [array] $codrude    [codigoRude, gestion]
+     */
+    public function getInscriptionToValidateTuicionUe($rue, $gestion){
+        //$this->session->get('roluser')
+        //look for the current inscription on 4.5.11 matricula id
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('iec')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('ei.estadomatriculaTipo IN (:mat)')
+                ->andWhere('iec.gestionTipo = :gestion');
+        $query = $query->setParameter('id', $rue)
+                ->setParameter('mat', array(4))
+                ->setParameter('gestion', $gestion)
+                ->orderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        
+        $objCurrentInscripcion = $query->getResult();
+        $swtucion = false;
+        if($objCurrentInscripcion){
+            while (($objectUe = current($objCurrentInscripcion)) !== FALSE && !$swtucion) {
+                // check the tución info
+                $currentSie = $objectUe->getInstitucioneducativa()->getId();
+              
+                $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie', $currentSie);
+                $query->bindValue(':rolId', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetch(); 
+                if($aTuicion['get_ue_tuicion']){
+                    $swtucion = $aTuicion['get_ue_tuicion'];
+                }
+                next($objCurrentInscripcion);
+            }
+            return ($swtucion);
+        }else{
+            return false;
+        }
+                
+    } 
     /**
      * [existeInscripcionSimilarAprobado description]
      * @param  integer    $idInscripcion [inscripcion del estudiante para verificar si existe otra inscripcion similar con los diferentes estados]
@@ -2008,5 +2205,213 @@ class Funciones {
         $entities = $query->getResult();
 
         return $entities;                
+    } 
+
+    public function getuserInscriptions($userId){
+        $query = $this->em->getConnection()->prepare("
+            select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
+            from usuario a 
+                inner join usuario_rol b on a.id=b.usuario_id 
+                inner join lugar_tipo c on b.lugar_tipo_id=c.id
+            where substring(c.codigo,1,1) in ('7') and codigo not in ('04') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo='t'and a.id = ".$userId);
+
+        $query->execute();
+        $userInscriptions = $query->fetchAll();
+
+        return $userInscriptions;
     }    
+
+    public function getuserAccessToCalifications($userId,$valor){
+        $valor =implode(',', $valor);
+         // dump($valor); exit();
+        /*$queryAccess = "
+          select *
+          from (
+          select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+          from maestro_inscripcion a
+            inner join institucioneducativa b on a.institucioneducativa_id=b.id
+              inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+                inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                  inner join usuario e on a.persona_id=e.persona_id
+                    inner join usuario_rol f on e.id=f.usuario_id
+          where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1) in ('7','8','9','1','3','6','0') and e.esactivo='t') a
+            where user_id=".$userId.";
+        ";*/      
+        $queryAccess = "
+          select *
+          from (
+          select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+          from maestro_inscripcion a
+            inner join institucioneducativa b on a.institucioneducativa_id=b.id
+              inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+                inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                  inner join usuario e on a.persona_id=e.persona_id
+                    inner join usuario_rol f on e.id=f.usuario_id
+          where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1)::integer in (".$valor.") and e.esactivo='t') a
+            where user_id='".$userId."';
+           
+        ";   
+
+        $query = $this->em->getConnection()->prepare($queryAccess);
+
+        $query->execute();
+        $userInscriptions = $query->fetchAll();
+
+        return $userInscriptions;
+    }  
+
+    public function getUEspreInscription($idDepto){
+        
+        $queryUes = "
+         select distinct(g.id),  g.institucioneducativa
+            from institucioneducativa g
+                inner join jurisdiccion_geografica h on g.le_juridicciongeografica_id=h.id
+                     inner join distrito_tipo i on h.distrito_tipo_id = i.id
+                        inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
+                            inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
+                            where dt.id = '".$idDepto."';           
+        ";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();
+
+        return $uesPreins;
+    }         
+    public function chooseUE($idDepto, $sie, $gestion){
+        
+        $queryUes = "
+         select *
+            from institucioneducativa g
+                inner join jurisdiccion_geografica h on g.le_juridicciongeografica_id=h.id
+                     inner join distrito_tipo i on h.distrito_tipo_id = i.id
+                        inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
+                            inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
+                                inner join dependencia_tipo dpt on (g.dependencia_tipo_id = dpt.id)
+                                    inner join institucioneducativa_tipo int on (g.institucioneducativa_tipo_id = int.id)
+                                        inner join estadoinstitucion_tipo eitt on (g.estadoinstitucion_tipo_id = eitt.id)
+                            where dt.id = '".$idDepto."' and  g.id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." '           
+        limit 1";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();
+
+        return $uesPreins;
+    }      
+    
+    public function getAllJustify(){
+        $allJustify = $this->em->getRepository('SieAppWebBundle:PreinsJustificativoTipo')->findAll();
+
+        return $allJustify;
+    }
+
+    public function getLevelUE($sie, $gestion){
+
+        // $objLevels = $this->em->createQueryBuilder()
+        //     ->select('IDENTITY(iec.nivelTipo)')
+        //     ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
+        //     ->where('iec.institucioneducativa = :sie')
+        //     ->andwhere('iec.gestionTipo = :gestion')
+        //     ->setParameter('sie', $sie)
+        //     ->setParameter('gestion', $gestion )
+        //     ->orderBy('iec.nivelTipo', 'ASC')
+        //     ->distinct()
+        //     ->getQuery()
+        //     ->getResult();  
+        $queryUes = "
+         select distinct(pin.nivel_tipo_id)
+            from preins_institucioneducativa_curso_cupo pin
+                where  pin.institucioneducativa_id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." ' 
+                order by pin.nivel_tipo_id
+                ";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();        
+        
+        return($uesPreins);
+
+
+
+    }
+
+    public function getcurrentInscriptinoValidation($idInscripcion){
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $estudiante = $inscripcion->getEstudiante()->getId();
+        $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        
+        $response = false;
+        $dataRemove = array();
+
+        $currentInscription = $this->em->createQueryBuilder()
+                        ->select('ei,iec')
+                        ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                        ->where('ei.estudiante = :estudiante')
+                        ->andWhere('ei.estadomatriculaTipo IN (:estados)')
+                        ->andWhere('iec.nivelTipo = :nivel')
+                        ->andWhere('iec.gradoTipo = :grado')
+                        ->setParameter('estudiante', $estudiante)                        
+                        ->setParameter('estados', array(4,5,24,26,37,45,46,55,56,57,58)) // Estados que deveria validar
+                        ->setParameter('nivel', $nivel)
+                        ->setParameter('grado', $grado)
+                        ->setMaxResults(1)
+                        ->getQuery()
+                        ->getResult();
+        $response = false;
+
+        if (count($currentInscription) > 0) {
+        // get data course
+            $dataRemove['inscripcion']['id']    = $currentInscription[0]->getId();
+            $dataRemove['inscripcion']['studentid']    = $currentInscription[0]->getEstudiante()->getId();
+            $dataRemove['inscripcion']['nivel'] = $nivel;
+            $dataRemove['inscripcion']['grado'] = $grado;
+            $dataRemove['inscripcion']['gestion'] = $currentInscription[1]->getGestionTipo()->getId();;
+            $asignaturas = $this->em->createQueryBuilder()
+                    ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    ->groupBy('asit.id, asit.asignatura, ea.id')
+                    ->orderBy('asit.id','ASC')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion',$currentInscription[0]->getId())
+                    ->getQuery()
+                    ->getResult();   
+                 // dumP($asignaturas);
+            $dataRemove['inscripcion']['asignaturas'] = $asignaturas;
+
+            foreach ($asignaturas as $a) {
+                // $notasArray[$cont] = array('idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
+                $asignaturasNotas = $this->em->createQueryBuilder()
+                                    ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
+                                    ->from('SieAppWebBundle:EstudianteNota','en')
+                                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
+                                    ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
+                                    ->orderBy('nt.id','ASC')
+                                    ->where('ea.id = :estAsigId')
+                                    ->setParameter('estAsigId',$a['estAsigId'])
+                                    ->getQuery()
+                                    ->getResult();                    
+                $dataRemove['inscripcion']['asignaturasNotas'][] = $asignaturasNotas;
+
+            }          
+
+            $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$currentInscription[0]->getId()),array('notaTipo'=>'ASC'));
+            $dataRemove['inscripcion']['cualitativas'] = $cualitativas;
+
+            $response = true;
+        }
+
+        return $dataRemove;
+    }     
+
 }

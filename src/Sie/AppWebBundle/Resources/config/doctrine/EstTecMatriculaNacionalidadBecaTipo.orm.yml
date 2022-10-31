@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EstTecMatriculaNacionalidadBecaTipo:
+    type: entity
+    table: est_tec_matricula_nacionalidad_beca_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nacionalidadBeca:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: nacionalidad_beca
+    lifecycleCallbacks: {  }

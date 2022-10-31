@@ -690,6 +690,43 @@ class ReportesController extends Controller {
 
 
 
+
+    public function reportAlterMatriculaGestionPdfAction(Request $request){
+
+        if ($request->isMethod('POST')) {
+            $gestion = $request->get('ges');
+            $periodo = 2;
+        }        
+        
+        $argum= 'REPORTE_ALTERNATIVA_MATRICULA_GESTION';
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+
+        if (isset($_POST['btnGestionMatriculaPdf'])) {
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'_NACIONAL_'. $periodo . '_' . $gestion . '.pdf'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_matricula_gestion_v1_rcm.rptdesign&Gestion=' . $gestion .  '&&__format=pdf&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+        }
+
+        if (isset($_POST['btnGestionMatriculaXls'])) {
+            $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'_NACIONAL_'. $periodo . '_' . $gestion . '.xlsx'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_matricula_gestion_v1_rcm.rptdesign&Gestion=' . $gestion .  '&&__format=xlsx&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+        }
+        
+        return $response;        
+    }
+
+
     public function reportAlterPrimariaPdfAction(Request $request, $dataInfo){
 
         $arrDataInfo = unserialize($dataInfo);
@@ -723,6 +760,8 @@ class ReportesController extends Controller {
 
 
     }
+
+
     //'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     public function reportAlterPrimariaExcelAction(Request $request, $dataInfo){
 
@@ -753,6 +792,145 @@ class ReportesController extends Controller {
 
     }
 
+    public function reportAlterSecundariaPdfAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        // dump($arrDataInfo);
+        // dump($reporte);die;
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA SECUNDARIA';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_esa_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+    public function reportAlterSecundariaExcelAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        $roluser = $arrDataInfo['roluser'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $argum= 'REPORTE ALTERNATIVA SECUNDARIA ';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_esa_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function reportAlterTecnicaPdfAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        // dump($arrDataInfo);
+        // dump($reporte);die;
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA TECNICA';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_eta_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+    public function reportAlterTecnicaExcelAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        $roluser = $arrDataInfo['roluser'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $argum= 'REPORTE ALTERNATIVA TECNICA ';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        if (($roluser== 8) || ($roluser==20))
+        {
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_humanistica_eta_maestro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function reportAlterMatriculaModalidadAtencionPdfAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        // dump($arrDataInfo);
+        // dump($reporte);die;
+        $roluser = $arrDataInfo['roluser'];
+        $userId=$arrDataInfo['userId'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $lugar= $arrDataInfo['lugarid'];
+        $argum= 'REPORTE ALTERNATIVA TECNICA';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_matricula_modalidad_atencion_v1_rcm.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+    public function reportAlterMatriculaModalidadAtencionExcelAction(Request $request, $dataInfo){
+
+        $arrDataInfo = unserialize($dataInfo);
+        $roluser = $arrDataInfo['roluser'];
+        $gestion = $arrDataInfo['gestion'];
+        $periodo=$arrDataInfo['periodo'];
+        $argum= 'REPORTE ALTERNATIVA TECNICA ';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_matricula_modalidad_atencion_v1_rcm.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    
     public function reportEstAction(Request $request, $dataInfo){
 
         $arrDataInfo = unserialize($dataInfo);

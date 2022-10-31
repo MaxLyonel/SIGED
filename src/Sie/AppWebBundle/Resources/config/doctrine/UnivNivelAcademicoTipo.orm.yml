@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\UnivNivelAcademicoTipo:
+    type: entity
+    table: univ_nivel_academico_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

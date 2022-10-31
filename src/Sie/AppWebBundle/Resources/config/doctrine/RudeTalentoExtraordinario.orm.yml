@@ -1,0 +1,76 @@
+Sie\AppWebBundle\Entity\RudeTalentoExtraordinario:
+    type: entity
+    table: rude_talento_extraordinario
+    indexes:
+        IDX_8EDBDAE54BE7885C:
+            columns:
+                - talento_extraordinario_tipo_id
+        IDX_8EDBDAE5443E4890:
+            columns:
+                - rude_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        coeficienteintelectual:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+        promediocalificaciones:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        especificoEn:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: especifico_en
+        talentoOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: talento_otro
+    manyToOne:
+        talentoExtraordinarioTipo:
+            targetEntity: TalentoExtraordinarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                talento_extraordinario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

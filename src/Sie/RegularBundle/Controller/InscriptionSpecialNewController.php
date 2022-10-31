@@ -24,8 +24,12 @@ class InscriptionSpecialNewController extends Controller
      */ 
     public function indexAction()
     {
+       if (in_array($this->session->get('roluser'), array(8,10,7))){
+       }else{
+        return $this->redirect($this->generateUrl('login'));  
+       }      
         
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:index.html.twig', array(
                 // ...
                   'form' => $this->createSearchForm()->createView(),
             ));
@@ -50,6 +54,11 @@ class InscriptionSpecialNewController extends Controller
         return $form;
      }
     public function findAction(Request $request ){
+       if (in_array($this->session->get('roluser'), array(7,8,9,10))){
+
+       }else{
+        return $this->redirect($this->generateUrl('login'));  
+       }        
       //get values to send by post
       $form = $request->get('form');
       // return $this->redirectToRoute('principal_web');
@@ -74,7 +83,7 @@ class InscriptionSpecialNewController extends Controller
           //     ));
         $message = 'Estudiante no se encuentra registrado en el Sistema De Educacion Especial.';
         $this->addFlash('notiext', $message);
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:index.html.twig', array(
                   'form' => $this->createSearchForm()->createView(),
             ));
       }
@@ -85,7 +94,7 @@ class InscriptionSpecialNewController extends Controller
       $form['idStudent'] = $datastudent->getId();
       $formExtranjeros = $this->createFormNewExtranjeros($datastudent->getId(), $sw, $form);
       // dump($form);die;
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:find.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:find.html.twig', array(
           'datastudent' => $datastudent,
           'formExtranjeros' => $formExtranjeros->createView(),
           'infoStudent' => $form
@@ -239,7 +248,7 @@ class InscriptionSpecialNewController extends Controller
                 //check if the user can do the inscription
                 //validate allow access
                   $arrAllowAccessOption = array(7,8);
-                  if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
+                  /*if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
                     $defaultController = new DefaultCont();
                     $defaultController->setContainer($this->container);
 
@@ -250,7 +259,7 @@ class InscriptionSpecialNewController extends Controller
                       $this->addFlash('notiext', $message);
                       return $this->redirect($this->generateUrl('inscriptionSpecialNew_index'));
                     }
-                  }
+                  }*/
 
 
                   //insert a new record with the new selected variables and put matriculaFinID like 5
@@ -285,11 +294,11 @@ class InscriptionSpecialNewController extends Controller
 
                   $message = 'Datos Registrados Correctamente';
                   $this->addFlash('goodext', $message);
-                  //return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                  return $this->redirect($this->generateUrl('inscriptionSpecialNew_find'));
 
-                  return $this->forward('SieRegularBundle:RegularizarNotas:show',array(
+                  /*return $this->forward('SieRegularBundle:RegularizarNotas:show',array(
                     'idInscripcion'=>$studentInscription->getId()
-                    ));
+                    ));*/
 
               } catch (Exception $ex) {
                   $em->getConnection()->rollback();
@@ -337,7 +346,7 @@ class InscriptionSpecialNewController extends Controller
 
     public function resultAction()
     {
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:result.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:result.html.twig', array(
                 // ...
             ));    }
 
@@ -349,6 +358,7 @@ class InscriptionSpecialNewController extends Controller
      * @return type
      */
     public function findIEAction($id, $gestion) {
+      
       $em = $this->getDoctrine()->getManager();
       //get the tuicion
       //select * from get_ue_tuicion(137746,82480002)
@@ -380,6 +390,7 @@ class InscriptionSpecialNewController extends Controller
               ->distinct()
               ->getQuery();
       $aNiveles = $query->getResult();
+      
       foreach ($aNiveles as $nivel) {
           $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
       }
@@ -400,8 +411,9 @@ class InscriptionSpecialNewController extends Controller
    * return list of grados
    */
   public function findgradoAction($idnivel, $sie, $gestion) {
+      
       $em = $this->getDoctrine()->getManager();
-
+    
        //get grado
       $agrados = array();
       $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');

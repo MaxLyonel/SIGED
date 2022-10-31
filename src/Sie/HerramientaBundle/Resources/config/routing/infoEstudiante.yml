@@ -157,3 +157,9 @@ herramienta_info_estudiante_validar_segip:
     defaults: { _controller: "SieHerramientaBundle:InfoEstudiante:validarEstudianteSegip" }
     options:
         expose: true
+
+visualizar_contenido:
+    path:     /visualizarContenido
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudiante:visualizarContenido" }
+    options:
+        expose: true

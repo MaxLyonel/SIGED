@@ -2,18 +2,18 @@ Sie\AppWebBundle\Entity\RudeEducacionDiversa:
     type: entity
     table: rude_educacion_diversa
     indexes:
-        IDX_ED925C80443E4890:
+        fk_rude_educacion_diversa:
             columns:
                 - rude_id
-        IDX_ED925C804F369AC9:
-            columns:
-                - educacion_diversa_tipo_id
         IDX_ED925C80E2A8AB09:
             columns:
                 - recinto_penitenciario_tipo_id
         IDX_ED925C80834754B:
             columns:
                 - unidad_militar_tipo_id
+        IDX_ED925C804F369AC9:
+            columns:
+                - educacion_diversa_tipo_id
     id:
         id:
             type: integer
@@ -44,15 +44,6 @@ Sie\AppWebBundle\Entity\RudeEducacionDiversa:
                 rude_id:
                     referencedColumnName: id
             orphanRemoval: false
-        educacionDiversaTipo:
-            targetEntity: EducacionDiversaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                educacion_diversa_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         recintoPenitenciarioTipo:
             targetEntity: RecintoPenitenciarioTipo
             cascade: {  }
@@ -69,6 +60,15 @@ Sie\AppWebBundle\Entity\RudeEducacionDiversa:
             inversedBy: null
             joinColumns:
                 unidad_militar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        educacionDiversaTipo:
+            targetEntity: EducacionDiversaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                educacion_diversa_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
