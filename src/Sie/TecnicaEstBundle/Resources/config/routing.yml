@@ -2,6 +2,10 @@ sie_tecnicaest_homepage:
     path:     /tecest/homepage
     defaults: { _controller: SieTecnicaEstBundle:Default:index }
 
+sie_tecnicaest_dashboard:
+    path:     /tecest/inicio
+    defaults: { _controller: SieTecnicaEstBundle:Estadistica:index }
+
 sie_tecnica_est_menu:
     path:     /tecest/menu
     defaults: { _controller: SieTecnicaEstBundle:Default:menu }

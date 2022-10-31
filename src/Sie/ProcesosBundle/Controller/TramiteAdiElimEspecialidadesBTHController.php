@@ -229,8 +229,10 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
                                                     WHERE tr.flujo_tipo_id = $idflujotipo AND tr.institucioneducativa_id = $idinstitucion
-                                                    AND tr.gestion_id = $gestion and tr.tramite_tipo= $idsolicitud" );
+                                                    AND tr.gestion_id = $gestion and tr.tramite_tipo= $idsolicitud
+                                                    AND tr.fecha_fin is null ");
         $query->execute();
+        //dump($query);die;
         $tramite = $query->fetchAll();
         $tramite_iniciado=$tramite[0]['cantidad_tramite_bth'];
         if((int)$tramite_iniciado==0){
