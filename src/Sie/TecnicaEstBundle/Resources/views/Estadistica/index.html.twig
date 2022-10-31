@@ -369,8 +369,11 @@
                                 <div class="tab-pane" id="profile" role="tabpanel">
                                     <div class="card-block">
 
+                                    <div class="row">
+                                    <div class="col-lg-6 col-xlg-6 col-md-6">
+
                                         <div class="card-body">
-                                            <h4 class="card-title">Total Becas Sociales y Otras Becas en la Gestion por Genero</h4>
+                                            <h4 class="card-title">Total Becas la Gestion por Genero - PUBLICO</h4>
                                             <h6 class="card-subtitle"></h6>
                                             <div class="table-responsive">
                                                 <table class="table">
@@ -385,11 +388,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody class="border border-info">
-                                                        {% for row in tbl_becas %}
+                                                        {% for row in tbl_becas_publicas %}
 
                                                         <tr>
                                                             <td><strong>{{ row.gestion_tipo_id }}</strong></td>
-                                                            <td>{{ row.nacionalidad_beca }}</td>
+                                                            <td><strong>{{ row.nacionalidad_beca }}</strong></td>
                                                             <td>{{ row.total_becas_masculino |number_format }}</td>
                                                             <td>{{ row.total_becas_femenino |number_format }}</td>
                                                             <td bgcolor="#FCF3CF"> {{ (row.total_becas_masculino + row.total_becas_femenino) |number_format}}</td>
@@ -400,6 +403,46 @@
                                                 </table>
                                             </div>
                                         </div>
+
+                                    </div>
+
+                                    <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                        <div class="card-body">
+                                            <h4 class="card-title">Total Becas en la Gestion por Genero - PRIVADAS</h4>
+                                            <h6 class="card-subtitle"></h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead class="bg-warning text-white">
+                                                        <tr>
+                                                            <th>Gestion</th>
+                                                            <th>Tipo Beca</th>
+                                                            <th>Total Masculino</th>
+                                                            <th>Total Femenino</th>
+                                                            <th>Total General</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="border border-info">
+                                                        {% for row in tbl_becas_privadas %}
+
+                                                        <tr>
+                                                            <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                            <td><strong>{{ row.nacionalidad_beca }}</strong></td>
+                                                            <td>{{ row.total_becas_masculino |number_format }}</td>
+                                                            <td>{{ row.total_becas_femenino |number_format }}</td>
+                                                            <td bgcolor="#FCF3CF"> {{ (row.total_becas_masculino + row.total_becas_femenino) |number_format}}</td>
+                                                        </tr>
+
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
                                         
                                     </div>
                                 </div>
