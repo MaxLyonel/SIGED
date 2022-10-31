@@ -127,7 +127,7 @@ class EstadisticaController extends Controller
             )
               
             select 1 as tipo_id, 'categoria' as tipo_nombre, nombre as detalle, cantidad from tabla
-            order by 1,2,3
+            order by 4 desc
         "); 
         $query->execute();
         $objEntidad = $query->fetchAll(); 

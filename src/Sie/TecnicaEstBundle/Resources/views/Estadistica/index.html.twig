@@ -225,7 +225,7 @@
                     <div class="col-lg-4 col-md-4">
                         <div class="card">
                             <div class="card-block">
-                                <h3 class="card-title">Estudiantes </h3>
+                                <h3 class="card-title">Inscripciones </h3>
                                 <h6 class="card-subtitle">por tipo de inscripción</h6>
                                 <figure class="highcharts-figure">
                                     <div id="chart1" style="height:480px; width:100%;"></div>
@@ -244,7 +244,7 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h4 class="card-title">Estudiantes <span class="card-subtitle">por sexo</span></h4>
+                                        <h4 class="card-title">Inscripciones <span class="card-subtitle">por sexo</span></h4>
                                         <figure class="highcharts-figure mb-0">
                                             <div id="chart2" style="height:250px; width:100%;"></div>
                                         </figure>
@@ -254,7 +254,7 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h4 class="card-title">Estudiantes <span class="card-subtitle">por tipo de matrícula</span></h4>                                     
+                                        <h4 class="card-title">Inscripciones <span class="card-subtitle">por tipo de matrícula</span></h4>                                     
                                         <figure class="highcharts-figure mb-0">
                                         <div class="row">
                                             <div class="col-12">
@@ -270,7 +270,7 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h4 class="card-title">Institutos <span class="card-subtitle">por tipo de institución</span></h4>
+                                        <h4 class="card-title">Personas <span class="card-subtitle">por función</span></h4>
                                         <figure class="highcharts-figure">
                                             <div id="chart4" style="height:250px; width:100%;"></div>
                                         </figure>
@@ -280,7 +280,7 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h4 class="card-title">Personas <span class="card-subtitle">por función</span></h4>                                    
+                                        <h4 class="card-title">Institutos <span class="card-subtitle">por tipo de institución</span></h4>                                    
                                         <figure class="highcharts-figure">
                                             <div id="chart5" style="height:250px; width:100%;"></div>
                                         </figure>
@@ -321,7 +321,6 @@
                                                 <table class="table">
                                                     <thead class="bg-info text-white">
                                                         <tr>
-                                                            <th>Gestion</th>
                                                             <th>Estado</th>
                                                             <th>Total Masculino</th>
                                                             <th>Total Femenino</th>
@@ -333,7 +332,6 @@
                                                         {% for row in tbl_titulados_egresados %}
 
                                                         <tr>
-                                                            <td><strong>{{ row.gestion_tipo_id }}</strong></td>
                                                             <td>{{ row.estado_final }}</td>
                                                             <td>{{ row.total_masculino |number_format }}</td>
                                                             <td>{{ row.total_femenino |number_format }}</td>
@@ -358,7 +356,6 @@
                                                 <table class="table">
                                                     <thead class="bg-success text-white">
                                                         <tr>
-                                                            <th>Gestion</th>
                                                             <th>Tipo Beca</th>
                                                             <th>Total Masculino</th>
                                                             <th>Total Femenino</th>
@@ -370,7 +367,6 @@
                                                         {% for row in tbl_becas %}
 
                                                         <tr>
-                                                            <td><strong>{{ row.gestion_tipo_id }}</strong></td>
                                                             <td>{{ row.nacionalidad_beca }}</td>
                                                             <td>{{ row.total_becas_masculino |number_format }}</td>
                                                             <td>{{ row.total_becas_femenino |number_format }}</td>
@@ -676,7 +672,7 @@
             },
             tooltip: {
                 headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
-                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} estudiantes</b> del total<br/>'
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} inscritos</b> del total<br/>'
             },
             accessibility: {
                 point: {
@@ -703,7 +699,7 @@
             },
             series: [{
                 type: 'pie',
-                name: 'Estudiantes según Sexo',
+                name: 'Inscritos según Sexo',
                 innerSize: '80%',
                 data: data.series
             }]
@@ -726,7 +722,7 @@
             },
             tooltip: {
                 headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
-                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} estudiantes</b> del total<br/>'
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} inscritos</b> del total<br/>'
             },
             accessibility: {
                 point: {
@@ -754,7 +750,7 @@
             },
             series: [{
                 type: 'pie',
-                name: 'Estudiantes según Sexo',
+                name: 'Inscritos según Sexo',
                 innerSize: '80%',
                 data: data.series
             }]
@@ -788,7 +784,7 @@
             },
             tooltip: {
                 headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
-                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} estudiantes </b> del total<br/>'
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} inscritos </b> del total<br/>'
             },
             plotOptions: {
                 column: {
@@ -798,7 +794,7 @@
                 }
             },
             series: [{
-                name: "Estudiantes",
+                name: "Inscritos",
                 colorByPoint: true,
                 data: data.series
             }]
@@ -821,7 +817,8 @@
                 y: 60
             },
             tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} personas </b> del total<br/>'
             },
             accessibility: {
                 point: {
@@ -841,7 +838,7 @@
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: 'Personas',
                 innerSize: '50%',
                 data: data.series
             }]
@@ -872,8 +869,12 @@
             legend: {
                 enabled: false
             },
+            tooltip: {
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} institutos </b> del total<br/>'
+            },
             series: [{
-                name: 'Unique users',
+                name: 'Institutos',
                 data: data.series
             }],
 
