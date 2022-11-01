@@ -203,10 +203,15 @@ class OfertaAcademicaController extends Controller {
      * Muestra formulario para modificar la oferta académica
      */
     public function editAction(Request $request){
+        
+        
         $em = $this->getDoctrine()->getManager();
         $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')->findOneById($request->get('idresolucion'));
+
+
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
                                                 ->findOneById($datResolucion->getTtecInstitucioneducativaCarreraAutorizada()->getId());
+
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($datAutorizado->getInstitucioneducativa()->getId());
         
         if(!$datAutorizado){
@@ -446,11 +451,30 @@ class OfertaAcademicaController extends Controller {
      * Editar Resolucion ministerial
      */ 
     public function editresolucionAction(Request $request){
+        
         $em = $this->getDoctrine()->getManager();
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
                                                 ->findOneById($request->get('idAutorizado'));
         $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')
                                                 ->findOneById($request->get('idResolucion'));
+
+        $query = $em->getConnection()->prepare(' select a.*
+        from  ttec_resolucion_carrera r, 
+        ttec_institucioneducativa_carrera_autorizada ca, 
+        ttec_area_formacion_carrera_tipo afct, 
+        ttec_institucioneducativa_area_formacion_autorizado aa,
+        ttec_area_formacion_tipo a 
+        where r.id = :idResolucion 
+        and  r.ttec_institucioneducativa_carrera_autorizada_id  = ca.id
+        and afct.ttec_carrera_tipo_id =ca.ttec_carrera_tipo_id 
+        and afct.ttec_area_formacion_tipo_id  = aa.ttec_area_formacion_tipo_id 
+        and aa.institucioneducativa_id = ca.institucioneducativa_id 
+        and aa.ttec_area_formacion_tipo_id = a.id');
+        $query->bindValue(':idResolucion', $request->get('idResolucion'));
+        $query->execute();
+        $data = $query->fetch();
+        //dump($data['area_formacion']);die;
+
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
 
         $regimenEstudioArray = $this->obtieneRegimenEstudio();
@@ -462,7 +486,7 @@ class OfertaAcademicaController extends Controller {
         ->add('idRie', 'hidden', array('data' => $institucion->getId()))
         ->add('idAutorizado', 'hidden', array('data' => $datAutorizado->getId()))
         ->add('idResolucion', 'hidden', array('data' => $datResolucion->getId()))
-        ->add('ttecAreaFormacion', 'text', array('label' => 'Area de Formación', 'data' => $datAutorizado->getTtecCarreraTipo()->getTtecAreaFormacionTipo()->getAreaFormacion(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))        
+        ->add('ttecAreaFormacion', 'text', array('label' => 'Area de Formación', 'data' => $data['area_formacion'], 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))        
         ->add('ttecCarreraTipo', 'text', array('label' => 'Carrera', 'data' => $datAutorizado->getTtecCarreraTipo()->getNombre(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
         ->add('nivelTipo', 'choice', array('label' => 'Nivel de Formación', 'data' => $datResolucion->getNivelTipo()->getId(), 'required' => true,'choices'=>$nivelesArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))                 
         ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'data' => $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
@@ -662,7 +686,6 @@ $entities = $query->getResult();
                     FROM ttec_institucioneducativa_carrera_autorizada AS autorizado
                     INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
                     INNER JOIN institucioneducativa AS instituto ON autorizado.institucioneducativa_id = instituto.id 
-                    INNER JOIN ttec_area_formacion_tipo AS area ON carrera.ttec_area_formacion_tipo_id = area.id
                     INNER JOIN ttec_area_formacion_carrera_tipo AS afct ON afct.ttec_carrera_tipo_id = carrera .id
                     WHERE instituto.id = '".$idRie."'  and afct.ttec_area_formacion_tipo_id <> 200 "; //200 es cursos de capacitacion
         $stmt = $db->prepare($query);
