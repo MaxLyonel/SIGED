@@ -1,0 +1,913 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.png">
+    <title>Material Pro Admin Template - The Most Complete & Trusted Bootstrap 4 Admin Template</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="{{asset('webEstadistica/assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <!-- chartist CSS -->
+    <link href="{{asset('webEstadistica/assets/plugins/chartist-js/dist/chartist.min.css')}}" rel="stylesheet">
+    <link href="{{asset('webEstadistica/assets/plugins/chartist-js/dist/chartist-init.css')}}" rel="stylesheet">
+    <link href="{{asset('webEstadistica/assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css')}}" rel="stylesheet">
+    <!--This page css - Morris CSS -->
+    <link href="{{asset('webEstadistica/assets/plugins/c3-master/c3.min.css')}}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{asset('webEstadistica/css/style.css')}}" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="{{asset('webEstadistica/css/colors/blue.css')}}" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body class="card-no-border">
+
+
+                {% block stylesheets %}
+                <style>
+                
+                    .highcharts-figure {
+                        min-width: 100%;
+                        max-width: 800px;
+                        margin: 1em auto;
+                    }
+                </style>
+                {% endblock %}
+        
+                {% block contentoption %}
+                   
+
+                    
+                {% endblock %}
+
+            
+
+
+
+
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-toggleable-sm navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{{path('sie_tecnicaest_dashboard')}}">
+                        <!-- Logo icon -->
+                        <b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            
+                            <!-- Light Logo icon -->
+                            <!-- <img src="{{asset('webEstadistica/assets/images/logo-light-icon.png')}}" alt="homepage" class="light-logo" /> -->
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text -->
+                        <span class="btn btn-block btn-lg waves-effect waves-light text-white">                         
+                            <!-- Light Logo text -->    
+                            <!-- <img src="{{asset('webEstadistica/assets/images/logo-light-text.png')}}" class="light-logo" alt="homepage" /> --> 
+                            INSTITUTOS
+                        </span>
+                    </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse"> 
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav mr-auto mt-md-0">
+                        <!-- This is  -->
+                        <!-- <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li> -->
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <!-- 
+                        <li class="nav-item hidden-sm-down search-box"> <a class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
+                            <form class="app-search">
+                                <input type="text" class="form-control" placeholder="Search & enter"> <a class="srh-btn"><i class="ti-close"></i></a> 
+                            </form>
+                        </li>
+                        -->
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- User profile and search -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset('webEstadistica/assets/images/users/1.jpg')}}" alt="user" class="profile-pic m-r-10" />{{app.session.get('name')}}</a>
+                        </li>
+                        <li class="nav-item dropdown">                            
+                            <a href="{{path('logout')}}" class="link nav-link dropdown-toggle text-muted waves-effect waves-dark" data-toggle="tooltip" title="Logout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="mdi mdi-power"></i> </a> </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2022})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2022</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2021})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2021</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2020})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2020</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2019})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2019</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2018})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2018</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2017})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2017</span></a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+            <!-- Bottom points-->
+            <div class="sidebar-footer">
+                <!-- item--><a href="" class="link" data-toggle="tooltip" title="Settings"><i class="ti-settings"></i></a>
+                <!-- item--><a href="" class="link" data-toggle="tooltip" title="Email"><i class="mdi mdi-gmail"></i></a>
+                <!-- item--><a href="" class="link" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a> </div>
+            <!-- End Bottom points-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+
+                <!-- 
+                <div class="row page-titles">
+                    <div class="col-md-5 col-8 align-self-center">
+                        <h3 class="text-themecolor">Dashboard</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-7 col-4 align-self-center">
+                    </div>
+                </div>
+                 -->
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                
+                <div class="card-body">
+                    <h4 class="card-title"></h4>
+                    <h6 class="card-subtitle"></h6>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="bg-success text-white">
+                                <tr>
+                                    <th>ESTADISTICAS GESTION: {{gestionActual}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                
+
+                <div class="row pt-3">
+                    <div class="col-lg-4 col-md-4">
+                        <div class="card">
+                            <div class="card-block">
+                                <h3 class="card-title">Inscripciones </h3>
+                                <h6 class="card-subtitle">por tipo de inscripción</h6>
+                                <figure class="highcharts-figure">
+                                    <div id="chart1" style="height:480px; width:100%;"></div>
+                                </figure>
+                            </div>
+                            <div>
+                                <hr class="m-t-0 m-b-0">
+                            </div>
+                            <div class="card-block text-center ">
+                                <a href="javascript:void(0)" class="m-t-10 btn waves-effect waves-light btn-info btn-md"> {{data.inscripcion[0].cantidad|number_format(0, ',', '.')}} <small>inscritos</small></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-8">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-block">
+                                        <h4 class="card-title">Inscripciones <span class="card-subtitle">por sexo</span></h4>
+                                        <figure class="highcharts-figure mb-0">
+                                            <div id="chart2" style="height:250px; width:100%;"></div>
+                                        </figure>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-block">
+                                        <h4 class="card-title">Inscripciones <span class="card-subtitle">por tipo de matrícula</span></h4>                                     
+                                        <figure class="highcharts-figure mb-0">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div id="chart3" style="height:250px; width:100%;"></div>
+                                            </div>
+                                        </div>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-block">
+                                        <h4 class="card-title">Personas <span class="card-subtitle">por función</span></h4>
+                                        <figure class="highcharts-figure">
+                                            <div id="chart4" style="height:250px; width:100%;"></div>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-block">
+                                        <h4 class="card-title">Institutos <span class="card-subtitle">por tipo de institución</span></h4>                                    
+                                        <figure class="highcharts-figure">
+                                            <div id="chart5" style="height:250px; width:100%;"></div>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+              
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-4 col-xlg-3 col-md-5">
+                        <!-- Column -->
+                        
+                        <!-- Column -->
+                        
+                    </div>
+                    <div class="col-lg-12 col-xlg-12 col-md-12">
+                        <div class="card">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs profile-tab" role="tablist">
+                                <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Egresados y Titulados</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Becas Sociales</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Tipo de Matricula</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#list" role="tab">Personal Docente</a> </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="home" role="tabpanel">
+                                    <div class="card-block">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Total Egresados y Titulados en la Gestion por Genero</h4>
+                                            <h6 class="card-subtitle"></h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead class="bg-info text-white">
+                                                        <tr>
+                                                            <th>Estado</th>
+                                                            <th>Total Masculino</th>
+                                                            <th>Total Femenino</th>
+                                                            <th>Total General</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="border border-info">
+                                                        {% for row in tbl_titulados_egresados %}
+
+                                                        <tr>
+                                                            <td>{{ row.estado_final }}</td>
+                                                            <td>{{ row.total_masculino |number_format }}</td>
+                                                            <td>{{ row.total_femenino |number_format }}</td>
+                                                            <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                        </tr>
+
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--second tab-->
+                                <div class="tab-pane" id="profile" role="tabpanel">
+                                    <div class="card-block">
+
+                                        <div class="card-body">
+                                            <h4 class="card-title">Total Becas Sociales y Otras Becas en la Gestion por Genero</h4>
+                                            <h6 class="card-subtitle"></h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead class="bg-success text-white">
+                                                        <tr>
+                                                            <th>Tipo Beca</th>
+                                                            <th>Total Masculino</th>
+                                                            <th>Total Femenino</th>
+                                                            <th>Total General</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="border border-info">
+                                                        {% for row in tbl_becas %}
+
+                                                        <tr>
+                                                            <td>{{ row.nacionalidad_beca }}</td>
+                                                            <td>{{ row.total_becas_masculino |number_format }}</td>
+                                                            <td>{{ row.total_becas_femenino |number_format }}</td>
+                                                            <td bgcolor="#FCF3CF"> {{ (row.total_becas_masculino + row.total_becas_femenino) |number_format}}</td>
+                                                        </tr>
+
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="settings" role="tabpanel">
+                                    <div class="card-block">
+
+                                        <div class="row">
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Alumnos Segun Tipo de Matricula en la Gestion por Genero - PUBLICO</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-danger text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Matricula</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_matriculas_publicas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.estadomatricula }}</strong></td>
+                                                                    <td>{{ row.totalmasculino |number_format }}</td>
+                                                                    <td>{{ row.totalfemenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.totalmasculino + row.totalfemenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Alumnos Segun Tipo de Matricula en la Gestion por Genero - PRIVADAS</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-warning text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Matricula</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_matriculas_privadas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.estadomatricula }}</strong></td>
+                                                                    <td>{{ row.totalmasculino |number_format }}</td>
+                                                                    <td>{{ row.totalfemenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.totalmasculino + row.totalfemenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="list" role="tabpanel">
+                                    <div class="card-block">
+                                   
+                                    <div class="table-responsive">
+
+                                        <div class="row">
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Personal Academico en la Gestion por Genero - PUBLICO</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-info text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Cargo</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_personal_publicas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.cargo }}</strong></td>
+                                                                    <td>{{ row.total_masculino |number_format }}</td>
+                                                                    <td>{{ row.total_femenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Personal Academico en la Gestion por Genero - PRIVADAS</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-success text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Cargo</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_personal_privadas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.cargo }}</strong></td>
+                                                                    <td>{{ row.total_masculino |number_format }}</td>
+                                                                    <td>{{ row.total_femenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer"> © 2017 Material Pro Admin by wrappixel.com </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="{{ asset('webEstadistica/assets/plugins/jquery/jquery.min.js') }}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{{ asset('webEstadistica/assets/plugins/bootstrap/js/tether.min.js') }}"></script>
+    <script src="{{ asset('webEstadistica/assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{{ asset('webEstadistica/js/jquery.slimscroll.js') }}"></script>
+    <!--Wave Effects -->
+    <script src="{{ asset('webEstadistica/js/waves.js') }}"></script>
+    <!--Menu sidebar -->
+    <script src="{{ asset('webEstadistica/js/sidebarmenu.js') }}"></script>
+    <!--stickey kit -->
+    <script src="{{ asset('webEstadistica/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js') }}"></script>
+    <!--Custom JavaScript -->
+    <script src="{{ asset('webEstadistica/js/custom.min.js') }}"></script>
+    <!-- ============================================================== -->
+    <!-- This page plugins -->
+    <!-- ============================================================== -->
+    <!-- chartist chart -->
+    <script src="{{ asset('webEstadistica/assets/plugins/chartist-js/dist/chartist.min.js') }}"></script>
+    <script src="{{ asset('webEstadistica/assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js') }}"></script>
+    <!--c3 JavaScript -->
+    <script src="{{ asset('webEstadistica/assets/plugins/d3/d3.min.js') }}"></script>
+    <script src="{{ asset('webEstadistica/assets/plugins/c3-master/c3.min.js') }}"></script>
+    <!-- Chart JS -->
+    <script src="{{ asset('webEstadistica/js/dashboard1.js') }}"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel.js"></script>
+
+
+    {% block javascripts %}
+
+        
+        
+
+    {% endblock %}
+
+    <script>
+
+    Highcharts.setOptions({
+        lang: {
+            decimalPoint: ',',
+            thousandsSep: '.'
+        }
+    });
+
+    const colores1 = ['#7460ee','#1e88e5','#21c1d6','#ffb22b','#fc4b6c','#6c757d'];
+    const colores2 = ['#7460ee','#ffb22b','#21c1d6','#ffb22b','#fc4b6c','#6c757d','#cfecfe','#7460ee'];
+    const colores3 = ['#fc4b6c','#21c1d6','#f1effd','#cfecfe','#7460ee','#ffb22b','#21c1d6','#6c757d'];
+    const colores4 = ['#1e88e5','#21c1d6','#ffb22b','#fc4b6c','#6c757d','#7460ee'];
+    const colores5 = ['#21c1d6','#ffb22b','#fc4b6c','#6c757d','#7460ee','#1e88e5'];
+    const datos = [['Chrome', 73.86, 10000],['Edge', 11.97, 10000],['Firefox', 5.52, 10000],['Safari', 2.98, 10000],['Internet Explorer', 1.90, 10000],{name: 'Other',y: 3.77, label: 10000, dataLabels: {enabled: true}},{name: 'Other 1',y: 3.77, label: 10000, dataLabels: {enabled: true}}];
+    const cars = ["Saab", "Volvo", "BMW"];
+
+    {% autoescape %}
+        {% if data is defined %}
+            var data = {{ data|json_encode|raw }}  
+        {% else %}   
+            var data = [];
+        {% endif %} 
+    {% endautoescape %}
+
+    console.log(data);
+
+    var getData = function(data){
+        let arrayData = [];
+        for (var i in data) {
+            if(i > 0){
+                let elementData = {name: '', y: 0.0, label: '', data:[], dataLabels: {enabled: true}};
+                elementData.name = data[i].nombre;
+                elementData.y = data[i].cantidad;
+                elementData.label = data[i].cantidad;
+                elementData.data = [data[i].cantidad];
+                arrayData.push(elementData);
+            }
+        }
+        return arrayData;
+    }
+
+
+    var chart1Load = function(data) {
+        $('#chart1').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: data.colores,
+            title: {
+                text: '',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: 60
+            },
+            tooltip: {
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} inscritos</b> del total<br/>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        distance: 1,
+                        format: '<b>{point.name:,.0f}</b> ({point.percentage:.1f}%)',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 360,
+                    size: '100%',
+                    innerSize: 80,
+                    showInLegend: false,
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Inscritos según Sexo',
+                innerSize: '80%',
+                data: data.series
+            }]
+        });
+    }
+
+    var chart2Load = function(data) {
+        $('#chart2').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: data.colores,
+            title: {
+                text: '',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: 60
+            },
+            tooltip: {
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} inscritos</b> del total<br/>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        distance: 1,
+                        format: '<b>{point.name:,.0f}</b> ({point.percentage:.1f}%)',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 360,
+                    size: '70%',
+                    innerSize: 80,
+                    showInLegend: false,
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Inscritos según Sexo',
+                innerSize: '80%',
+                data: data.series
+            }]
+        });
+    }
+
+    var chart3Load = function(data) {
+        data.series.filter(dat => delete dat.data);
+        $('#chart3').highcharts({
+            chart: {
+                type: 'column'
+            },
+            colors: data.colores,
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    useHTML: true,
+                    text: ''
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} inscritos </b> del total<br/>'
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: "Inscritos",
+                colorByPoint: true,
+                data: data.series
+            }]
+        });
+    }
+
+    var chart4Load = function(data) {
+        data.series.filter(dat => delete dat.data);
+        $('#chart4').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: data.colores,
+            title: {
+                text: '',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: 60
+            },
+            tooltip: {
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} personas </b> del total<br/>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '75%'],
+                    size: '110%'
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Personas',
+                innerSize: '50%',
+                data: data.series
+            }]
+        });
+    }
+
+    var chart5Load = function(data) {
+        $('#chart5').highcharts({
+            chart: {
+                type: 'pyramid'
+            },
+            title: {
+                text: '',
+                x: -50
+            },
+            colors: data.colores,
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b> ({point.y:,.0f})',
+                        softConnector: true
+                    },
+                    center: ['40%', '50%'],
+                    width: '80%',
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} institutos </b> del total<br/>'
+            },
+            series: [{
+                name: 'Institutos',
+                data: data.series
+            }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        plotOptions: {
+                            series: {
+                                dataLabels: {
+                                    inside: false
+                                },
+                                center: ['40%', '50%'],
+                                width: '50%'
+                            }
+                        }
+                    }
+                }]
+            }
+        });
+    }
+    
+
+    chart1Load({colores: colores2, series: getData(data.inscripcion)});
+    chart2Load({colores: colores3, series: getData(data.genero)});
+    chart3Load({colores: colores1, series: getData(data.matricula)});
+    chart4Load({colores: colores4, series: getData(data.cargo)});
+    chart5Load({colores: colores5, series: getData(data.categoria)});
+
+    </script>
+
+</body>
+
+</html>
