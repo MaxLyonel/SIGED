@@ -50,7 +50,10 @@ class EstadisticaController extends Controller
 
 
         $tbl_titulados_egresados = $this->tbl_titulados_egresados($gestionActual);
-        $tbl_becas = $this->tbl_becas($gestionActual);
+        
+        $tbl_becas_publicas = $this->tbl_becas_publicas($gestionActual);
+        $tbl_becas_privadas = $this->tbl_becas_privadas($gestionActual);
+
         $tbl_matriculas_publicas = $this->tbl_matriculas_publicas($gestionActual);
         $tbl_matriculas_privadas = $this->tbl_matriculas_privadas($gestionActual);
 
@@ -61,7 +64,8 @@ class EstadisticaController extends Controller
             'titulo' => "Estadística",
             "data" => $dataArray,
             "tbl_titulados_egresados" => $tbl_titulados_egresados,
-            "tbl_becas" => $tbl_becas,
+            "tbl_becas_publicas" => $tbl_becas_publicas,
+            "tbl_becas_privadas" => $tbl_becas_privadas,
             "tbl_matriculas_publicas" => $tbl_matriculas_publicas,
             "tbl_matriculas_privadas" => $tbl_matriculas_privadas,
             "tbl_personal_publicas" => $tbl_personal_publicas,
@@ -127,7 +131,7 @@ class EstadisticaController extends Controller
             )
               
             select 1 as tipo_id, 'categoria' as tipo_nombre, nombre as detalle, cantidad from tabla
-            order by 4 desc
+            order by 1,2,3
         "); 
         $query->execute();
         $objEntidad = $query->fetchAll(); 
@@ -198,43 +202,120 @@ class EstadisticaController extends Controller
         }
     }
 
-    private function tbl_becas($gestion){
+    private function tbl_becas_publicas($gestion){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("            
-            select gestion_tipo_id,nacionalidad_beca, sum(cantidadm) as total_becas_masculino, sum(cantidadf) as total_becas_femenino 
-            from
-            (
+        select gestion_tipo_id,nacionalidad_beca, sum(cantidadm) as total_becas_masculino, sum(cantidadf) as total_becas_femenino 
+        from
+        (
+        SELECT
+            est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.cantidad as cantidadm,
+            0 as cantidadf
+        FROM
+            est_tec_matricula_nacionalidad_beca_tipo
+            INNER JOIN
+            est_tec_instituto_carrera_estudiante_nacionalidad
+            ON 
+                est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
+            INNER JOIN
+            est_tec_instituto_carrera
+            ON 
+                est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+                
+            where genero_tipo_id = 1 and gestion_tipo_id = :gestionId
+            and est_tec_instituto_carrera.est_tec_sede_id in 
+            ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 1)
+            
+            union all
+            
             SELECT
-                est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
-                est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
-                est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
-                est_tec_instituto_carrera_estudiante_nacionalidad.cantidad as cantidadm,
-                0 as cantidadf
-            FROM
-                est_tec_matricula_nacionalidad_beca_tipo
-                INNER JOIN
-                est_tec_instituto_carrera_estudiante_nacionalidad
-                ON 
-                    est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
-                where genero_tipo_id = 1 and gestion_tipo_id = :gestionId
+            est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
+            0 as cantidadm,
+            est_tec_instituto_carrera_estudiante_nacionalidad.cantidad  as cantidadf
+        FROM
+            est_tec_matricula_nacionalidad_beca_tipo
+            INNER JOIN
+            est_tec_instituto_carrera_estudiante_nacionalidad
+            ON 
+                est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
+            INNER JOIN
+            est_tec_instituto_carrera
+            ON 
+                est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            where genero_tipo_id = 2 and gestion_tipo_id = :gestionId
+            and est_tec_instituto_carrera.est_tec_sede_id in 
+            ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 1)
+            
+            ) as data
+            group by gestion_tipo_id, nacionalidad_beca
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_becas_privadas($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+        select gestion_tipo_id,nacionalidad_beca, sum(cantidadm) as total_becas_masculino, sum(cantidadf) as total_becas_femenino 
+        from
+        (
+        SELECT
+            est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.cantidad as cantidadm,
+            0 as cantidadf
+        FROM
+            est_tec_matricula_nacionalidad_beca_tipo
+            INNER JOIN
+            est_tec_instituto_carrera_estudiante_nacionalidad
+            ON 
+                est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
+            INNER JOIN
+            est_tec_instituto_carrera
+            ON 
+                est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
                 
-                union all
-                
-                SELECT
-                est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
-                est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
-                est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
-                0 as cantidadm,
-                est_tec_instituto_carrera_estudiante_nacionalidad.cantidad  as cantidadf
-            FROM
-                est_tec_matricula_nacionalidad_beca_tipo
-                INNER JOIN
-                est_tec_instituto_carrera_estudiante_nacionalidad
-                ON 
-                    est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
-                where genero_tipo_id = 2 and gestion_tipo_id = :gestionId
-                ) as data
-                group by gestion_tipo_id, nacionalidad_beca
+            where genero_tipo_id = 1 and gestion_tipo_id = :gestionId
+            and est_tec_instituto_carrera.est_tec_sede_id in 
+            ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 2)
+            
+            union all
+            
+            SELECT
+            est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
+            0 as cantidadm,
+            est_tec_instituto_carrera_estudiante_nacionalidad.cantidad  as cantidadf
+        FROM
+            est_tec_matricula_nacionalidad_beca_tipo
+            INNER JOIN
+            est_tec_instituto_carrera_estudiante_nacionalidad
+            ON 
+                est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
+            INNER JOIN
+            est_tec_instituto_carrera
+            ON 
+                est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            where genero_tipo_id = 2 and gestion_tipo_id = :gestionId
+            and est_tec_instituto_carrera.est_tec_sede_id in 
+            ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 2)
+            
+            ) as data
+            group by gestion_tipo_id, nacionalidad_beca
         "); 
         $query->bindValue(':gestionId', $gestion);
         $query->execute();

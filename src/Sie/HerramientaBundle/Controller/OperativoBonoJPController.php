@@ -644,7 +644,7 @@ class OperativoBonoJPController extends Controller
 		        } 	*/ 
         	}
         }else{
-        	$data = array(0=>0,1=>$mensaje);
+        	$data = array(0=>0,1=>$mensaje,7=>0);
         }
         
    		return new JsonResponse($data);
@@ -703,7 +703,7 @@ class OperativoBonoJPController extends Controller
         // dump($persona); die;
 
         $data = array('error'=>0, 'message'=>'Datos registados');
-        if(1){
+        if($segipId==0){
         	$datos = array(
                 'complemento'=>$complemento1,
                 'primer_apellido'=>$paterno,
