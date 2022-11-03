@@ -124,6 +124,7 @@ class OfertaAcademicaController extends Controller {
             ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY','class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
             ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
             ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
+            ->add('descripcion', 'text', array('label' => 'Descripción adicional','required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
             
             return $this->render('SieRieBundle:OfertaAcademica:new.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=>$institucion));
@@ -188,6 +189,7 @@ class OfertaAcademicaController extends Controller {
                 $resolucion->setCargaHoraria($form['cargaHoraria']);
                 $resolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
                 $resolucion->setOperacion($form['operacion']);
+                $resolucion->setDescripcion($form['descripcion']);
                 $em->persist($resolucion);
                 $em->flush();            
             }
@@ -237,6 +239,7 @@ class OfertaAcademicaController extends Controller {
             ->add('resolucion', 'text', array('label' => 'Resolución', 'data'=>$datResolucion->getNumero(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
             ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data' => $datResolucion->getFecha()->format('d-m-Y') ,'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
             ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'data' => $datResolucion->getOperacion(), 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))                        
+            ->add('descripcion', 'text', array('label' => 'Descripción adicional', 'data' => $datResolucion->getDescripcion(), 'required' => true, 'required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
             return $this->render('SieRieBundle:OfertaAcademica:edit.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'datAutorizado' => $datAutorizado, 'datResolucion'=>$datResolucion));
         }        
@@ -262,6 +265,7 @@ class OfertaAcademicaController extends Controller {
             $datResolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
             $datResolucion->setFechaModificacion(new \DateTime('now'));
             $datResolucion->setOperacion($form['operacion']);
+            $datResolucion->setDescripcion($form['descripcion']);
             $em->persist($datResolucion);
             $em->flush();   
                         
@@ -345,6 +349,7 @@ class OfertaAcademicaController extends Controller {
         ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
         ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
         ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
+        ->add('descripcion', 'text', array('label' => 'Descripción adicional','required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
         ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
         ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
@@ -495,6 +500,8 @@ class OfertaAcademicaController extends Controller {
         ->add('resolucion', 'text', array('label' => 'Resolución', 'data' => $datResolucion->getNumero(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data' => $datResolucion->getFecha()->format('d-m-Y'),'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
         ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'data' => $datResolucion->getOperacion(), 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
+        ->add('descripcion', 'text', array('label' => 'Descripción adicional','data' => $datResolucion->getDescripcion(),'required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
+        
         ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
         return $this->render('SieRieBundle:OfertaAcademica:editresolucion.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'idAutorizado' => $datAutorizado->getId()));
     }
@@ -518,6 +525,7 @@ class OfertaAcademicaController extends Controller {
             $datResolucion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($form['nivelTipo']));
             $datResolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
             $datResolucion->setOperacion($form['operacion']);
+            $datResolucion->setDescripcion($form['descripcion']);
             $em->persist($datResolucion);
             $em->flush(); 
 
