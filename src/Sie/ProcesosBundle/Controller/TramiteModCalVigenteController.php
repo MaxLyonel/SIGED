@@ -95,15 +95,7 @@ class TramiteModCalVigenteController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
-
-        // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DOCUMENTOS EMITIDOS
-        $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
-        if (count($documentos) > 0) {
-            $response->setStatusCode(202);
-            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
-            return $response;
-        }
-        
+       
         // SI EL ESTUDIANTE NO EXISTE, DEVOLVEMOS 204 SIN CONTENIDO
         if(!$estudiante){
             $response->setStatusCode(202);
@@ -160,6 +152,14 @@ class TramiteModCalVigenteController extends Controller {
                 'departamento'=>$value['departamento'],
                 'distrito'=>$value['distrito']
             );
+        }
+
+        // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DIPLOMA EMITIDO
+        $documentos = $this->validartieneDiploma($codigoRude);
+        if (count($documentos) > 0) {
+            $response->setStatusCode(202);
+            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
+            return $response;
         }
 
         // OBTENEMOS EL DATO DEL DIRECTOR
@@ -459,7 +459,7 @@ class TramiteModCalVigenteController extends Controller {
             $response->setStatusCode(200);
             $response->setData(array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('tramite_add_mod_download_requet', array('idTramite'=>$idTramite))
+                'urlreporte'=> $this->generateUrl('tramite_mod_cal_vigente_formulario_descarga', array('idTramite'=>$idTramite))
             ));
 
             $em->getConnection()->commit();
@@ -1420,6 +1420,23 @@ class TramiteModCalVigenteController extends Controller {
         } catch (Exception $e) {
             
         }
+    }
+
+    public function validartieneDiploma($codigoRude){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+                    select *
+                    from documento as d
+                    inner join tramite as t on t.id = d.tramite_id
+                    inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
+                    inner join estudiante as e on e.id = ei.estudiante_id
+                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1 and d.documento_tipo_id = 1
+                    ");
+
+        $query->execute();
+        $documentos = $query->fetchAll();
+
+        return $documentos;
     }
 
     public function requestInsCalYearVigAction(Request $request, $idTramite){
