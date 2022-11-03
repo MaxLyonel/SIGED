@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\MaestroCuentabancaria:
     type: entity
     table: maestro_cuentabancaria
     indexes:
+        IDX_7CADB0F8DB38439E:
+            columns:
+                - usuario_id
         IDX_7CADB0F8F5F88DB9:
             columns:
                 - persona_id
@@ -127,6 +130,15 @@ Sie\AppWebBundle\Entity\MaestroCuentabancaria:
             comment: ''
             column: enlazador_apellido
     manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         persona:
             targetEntity: Persona
             cascade: {  }
