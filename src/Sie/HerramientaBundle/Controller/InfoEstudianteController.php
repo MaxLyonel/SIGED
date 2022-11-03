@@ -2063,9 +2063,9 @@ class InfoEstudianteController extends Controller {
             $responseOpe = $query->fetchAll();//function db
             $arrResponse = array();
             // chek if the validation has error
-            //if(sizeof($responseOpe)>0)
-            if(false) // ya no validamos las observaciones
-            {
+            if(sizeof($responseOpe)>0){
+            //if(false){ // ya no validamos las observaciones, preguntar
+            
                 // error; send the errors to show on the view
                 $swObservations = true;
                 $arrResponse = $responseOpe;                
