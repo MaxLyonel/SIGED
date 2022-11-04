@@ -58,5 +58,5 @@ tramite_mod_cal_vigente_acta_imprimir:
     defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:actaImprimir }
 
 tramite_mod_cal_vigente_formulario_descarga:
-    path:     /famcgv/{idTramite}
+    path:     famcgv/
     defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:requestInsCalYearVig }  

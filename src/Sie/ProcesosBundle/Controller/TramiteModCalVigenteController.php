@@ -84,6 +84,7 @@ class TramiteModCalVigenteController extends Controller {
         $flujoTipo = $request->get('flujoTipo');
         $sie = $this->session->get('ie_id');
         $rol = $this->session->get('roluser');
+        $gestionActual = $this->session->get('currentyear');
 
         // VALIDAMOS QUE EL USUARIO QUE ESTA REALIZANDO LA SOLICITUD SEA CON ROL DE DIRECTOR
         // PARA EVITAR ERRORES CUANDO SE SOBREESCRIBEN LAS SESIONES
@@ -119,9 +120,11 @@ class TramiteModCalVigenteController extends Controller {
                             ->innerJoin('SieAppWebBundle:DistritoTipo','dt','with','jg.distritoTipo = dt.id')
                             ->innerJoin('SieAppWebBundle:DepartamentoTipo','dep','with','dt.departamentoTipo = dep.id')
                             ->where('e.codigoRude = :rude')
-                            // ->andWhere('ie.id = :sie')
+                            ->andWhere('ie.id = :sie')
+                            ->andWhere('iec.gestionTipo = :gestionactual')
                             ->setParameter('rude', $codigoRude)
-                            // ->setParameter('sie', $sie)
+                            ->setParameter('sie', $sie)
+                            ->setParameter('gestionactual', $gestionActual)
                             ->addOrderBy('get.id','DESC')
                             ->addOrderBy('nt.id','DESC')
                             ->addOrderBy('gt.id','DESC')
@@ -1439,9 +1442,10 @@ class TramiteModCalVigenteController extends Controller {
         return $documentos;
     }
 
-    public function requestInsCalYearVigAction(Request $request, $idTramite){
+    public function requestInsCalYearVigAction(Request $request){
 
         $response = new Response();
+        $idTramite = $request->get('idtramite');
         $gestion = $this->session->get('currentyear');
         $codigoQR = 'FICGP'.$idTramite.'|'.$gestion;
 
