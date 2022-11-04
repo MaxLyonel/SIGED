@@ -1595,27 +1595,27 @@
 
                             this.formularioEnviado = true;
                             
-                            // console.log(this.idTramite);
-                            // console.log(this.idInscripcion);
-
-                            // console.log(data);
-
                             axios.post(Routing.generate('tramite_mod_cal_vigente_formulario_save'), data)
-                            //axios.get(Routing.generate('tramite_mod_cal_vigente_formulario_save'), data)
                             .then(response => {
-                                // window.location.href = "{{path('wf_tramite_index', { tipo: 3 })}}";
+                                if (response.data.msg == ''){
                                 this.respuestaIdTramite = response.data.idTramite;
                                 this.urlreporte = response.data.urlreporte;
-
                                 document.location.href = "#tramiteEnviado";
+                                } else {
+                                    Swal.fire(
+                                  'No se pudo enviar la solicitud!',
+                                  response.data.msg,
+                                   'error'
+                                ); 
+                                }
                                 
                             })
                             .catch(e => {
                                 this.formularioEnviado = false;
                                 Swal.fire(
                                   'No se pudo enviar la solicitud!',
-                                  '',
-                                  'error'
+                                   '',
+                                   'error'
                                 );
                             });
                         }
@@ -1625,13 +1625,6 @@
             mounted(){
             }
         });
-
-        // $(document).ready(function(){
-        //     $('[data-toggle="tooltip"]').tooltip();
-        //     $('[data-toggle="popover"]').popover();
-        //     // $("td").focus();
-        //     console.log('adsfadsfsadf');
-        // });
 
         $(".jnumbersletters").keypress(function (key) {
             var key = key || window.event;

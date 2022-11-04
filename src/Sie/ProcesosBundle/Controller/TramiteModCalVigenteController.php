@@ -268,8 +268,7 @@ class TramiteModCalVigenteController extends Controller {
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             $sie = $this->session->get('ie_id');
             $gestion = $this->session->get('currentyear');
-            // dump('ok');
-            // dump($inscripcion);die;
+            
             // OBTENEMOS EL ID DEL TRAMITE SI SE TRATA DE UNA MODIFICACION
             $idTramite = $request->get('idTramite');
             // VERIFICAMOS SI EXISTE EL ARCHIVO
@@ -283,7 +282,7 @@ class TramiteModCalVigenteController extends Controller {
                 $extension = explode('.', $name);
                 $extension = $extension[count($extension)-1];
                 $new_name = date('YmdHis').'.'.$extension;
-
+                
                 // GUARDAMOS EL ARCHIVO
                 $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionNotas/' . $sie;
                 if (!file_exists($directorio)) {
@@ -291,12 +290,12 @@ class TramiteModCalVigenteController extends Controller {
                 }
 
                 $archivador = $directorio.'/'.$new_name;
-
+                
                 if(!move_uploaded_file($tmp_name, $archivador)){
                     $response->setStatusCode(500);
                     return $response;
                 }
-
+                
                 // CREAMOS LOS DATOS DE LA IMAGEN
                 $informe = array(
                     'name' => $name,
@@ -308,7 +307,7 @@ class TramiteModCalVigenteController extends Controller {
             }else{
                 $informe = null;
             }
-
+            
             // OBTENEMOS LA INFORMACION DEL FORMULARIO
             $codigoRude = $request->get('codigoRude');
             $estudiante = $request->get('estudiante');
@@ -335,7 +334,7 @@ class TramiteModCalVigenteController extends Controller {
             $checkInforme = $request->get('checkInforme');
             $checkCuaderno = $request->get('checkCuaderno');
             $checkFormulario = $request->get('checkFormulario');
-
+            
             $dataInscription = array(
                 "gestion"=>$gestionInscripcion ,
                 "nivelId"=>$inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
@@ -354,7 +353,7 @@ class TramiteModCalVigenteController extends Controller {
                 "posSelected"=>0,
                 "codigoRude"=>$codigoRude
             );
-
+            
             // ARMAMOS EL ARRAY DE LA DATA
             $data = array(
                 'idInscripcion'=> $idInscripcion,
@@ -394,12 +393,12 @@ class TramiteModCalVigenteController extends Controller {
 
             // OBTENEMOS EL TIPO DE TRAMITE
             $tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs'=>'MGV'));
-
+            
             if ($idTramite == null) {
                 
                 // OBTENEMOS OPERATIVO ACTUAL Y LO AGREGAMOS AL ARRAY DE DATOS           
                 $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
-
+                
                 // REGISTRAMOS UN NUEVO TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
                     $this->session->get('userId'),
@@ -416,15 +415,27 @@ class TramiteModCalVigenteController extends Controller {
                     '',//$lugarTipoLocalidad,
                     $lugarTipo['lugarTipoIdDistrito']
                 );
-
+                
                 if ($registroTramite['dato'] == false) {
-                    $response->setStatusCode(500);
-                    return $response;
+                    if ($registroTramite['msg'] == "") {
+                        $response->setStatusCode(500);
+                        return $response;
+                    } else {
+                        $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$registroTramite['msg'],
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                        return $response;
+                    }
+
                 }
 
                 $idTramite = $registroTramite['idtramite'];
 
             }else{
+            
                 // RECUPERAMOS EL OPERATIVO DONDE SE INICIO EL TRAMITE Y LO AGREGAMOS AL ARRAY DE DATOS
                 $datosFormulario = $this->datosFormulario($idTramite);
                 $data['operativoActual'] = $datosFormulario['operativoActual'];
@@ -462,6 +473,7 @@ class TramiteModCalVigenteController extends Controller {
 
             $response->setStatusCode(200);
             $response->setData(array(
+                'msg'=>"",
                 'idTramite'=>$idTramite,
                 'urlreporte'=> $this->generateUrl('tramite_mod_cal_vigente_formulario_descarga') //, array('idTramite'=>$idTramite))
             ));
@@ -471,6 +483,7 @@ class TramiteModCalVigenteController extends Controller {
             return $response;
 
         } catch (Exception $e) {
+            
             $em->getConnection()->rollback();
             $response->setStatusCode(500);
             return $response;
