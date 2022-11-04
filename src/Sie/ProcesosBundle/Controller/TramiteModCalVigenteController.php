@@ -268,7 +268,8 @@ class TramiteModCalVigenteController extends Controller {
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             $sie = $this->session->get('ie_id');
             $gestion = $this->session->get('currentyear');
-
+            dump('ok');
+            dump($inscripcion);die;
             // OBTENEMOS EL ID DEL TRAMITE SI SE TRATA DE UNA MODIFICACION
             $idTramite = $request->get('idTramite');
             // VERIFICAMOS SI EXISTE EL ARCHIVO
@@ -462,7 +463,7 @@ class TramiteModCalVigenteController extends Controller {
             $response->setStatusCode(200);
             $response->setData(array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('tramite_mod_cal_vigente_formulario_descarga', array('idTramite'=>$idTramite))
+                'urlreporte'=> $this->generateUrl('tramite_mod_cal_vigente_formulario_descarga') //, array('idTramite'=>$idTramite))
             ));
 
             $em->getConnection()->commit();
