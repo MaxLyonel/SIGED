@@ -252,6 +252,12 @@ class DefaultController extends Controller {
                 // $this->session->set('color', 'success');
                 // $this->session->set('sistemaid', 2);
                 // break;
+                // $sysname = 'Sistema Académico Educación Permanente';
+                // $sysporlet = 'green';
+                // $sysbutton = false;
+                // $layout = 'layoutPermanente.html.twig';
+                // $this->session->set('pathSystem', "SiePermanenteBundle");
+                // break;
             case 'tramite.sie.gob.bo':
             case 'diplomas.sie.gob.bo':
             case 'diplomas2015.sie.gob.bo':           
@@ -1263,6 +1269,7 @@ class DefaultController extends Controller {
         $objUsuarioRol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array(
           'usuario' => $data['usuarioId'],
           'rolTipo' => $data['rolId'],
+          'esactivo' => true,
         ));
   
         if($objUsuarioRol && $objUsuarioRol->getId()){
