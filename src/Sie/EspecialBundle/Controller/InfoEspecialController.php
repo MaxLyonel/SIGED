@@ -156,14 +156,15 @@ class InfoEspecialController extends Controller{
                 'infotStudentform' => $this->InfoStudentForm('info_students_index', 'Estudiantes',$data)->createView(),
                 'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Cursos',$data)->createView(),
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
-                'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo',$data, $periodo)->createView(),
-                'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
-                'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
-               // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
                 'data'=>$dataInfo,
+                'closeOperativoform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo',$data, $periodo)->createView(),
+                //'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
+              //  'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
+               // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
+
                 'operativo'=>$periodo,
-                'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
-                'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
+               // 'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
+               // 'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
 
     ));
 
@@ -219,6 +220,7 @@ class InfoEspecialController extends Controller{
                         ->getForm()
       
         ;
+        //dump($form);die;
         return $form;
     }
 
@@ -342,13 +344,13 @@ class InfoEspecialController extends Controller{
     return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo, 'estado' => $estado));
   }
 /** INSCRIPCION */
-  public function closeOperativoAction (Request $request){
+  public function closeOperativoAction (Request $request){ 
       //crete conexion DB
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
       //get the values
       $form = $request->get('form');
-      //dump($form);die;
+      
 
       //get the current operativo
       $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
@@ -433,13 +435,12 @@ class InfoEspecialController extends Controller{
       return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo, 'estado' => $estado));
     }
 
-    public function closeOperativoRudeesAction (Request $request){
+    public function closeOperativoRudeesAction (Request $request){ 
       //crete conexion DB
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
       //get the values
       $form = $request->get('form');
-      //dump($form);die;
 
       //update the close operativo to registro consolido table
      
@@ -482,7 +483,7 @@ class InfoEspecialController extends Controller{
       return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => 100, 'estado' => $estado));
     }
 
-    public function closeOperativoNotasAction (Request $request){
+    public function closeOperativoNotasAction (Request $request){ 
       //crete conexion DB
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
@@ -499,8 +500,9 @@ class InfoEspecialController extends Controller{
           'unidadEducativa' => $form['sie'], 
           'gestion' => $form['gestion']
         ));
-     
+     //dump($registroConsol);die;
       $periodo = $this->operativo($form['sie'], $form['gestion']);
+      dump($periodo);die;
       $estado = '';
       if(!$registroConsol){
         $estado = 'SIN_INSC';
@@ -508,12 +510,18 @@ class InfoEspecialController extends Controller{
         if($registroConsol->getRude()!=1){
           $estado = 'SIN_RUDE';
         }
-        if($registroConsol->getBim1()==1){
+        if($registroConsol->getBim1()==2){
           $estado = 'CON_BIM1';
+        }
+        if($registroConsol->getBim2()==2){
+          $estado = 'CON_BIM2';
+        }
+        if($registroConsol->getBim3()==2){
+          $estado = 'CON_BIM3';
         }
       }
       $inconsistencia = null;
-      
+     // dump($estado);die;
       if($estado==''){
       
         //sp_validacion_regular_RUDE
@@ -525,7 +533,11 @@ class InfoEspecialController extends Controller{
         $inconsistencia = $query->fetchAll();
         //dump($inconsistencia);die;
         if($registroConsol && !$inconsistencia){
-            $registroConsol->setBim1('2');
+              $registroConsol->setBim1('2');
+            if($periodo==2)
+              $registroConsol->setBim2('2');
+            if($periodo==3)
+              $registroConsol->setBim3('2');
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
