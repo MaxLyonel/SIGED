@@ -29,9 +29,9 @@ tramite_mod_cal_vigente_formulario_vista_imprimir_libreta:
     path:     /formularioVistaImprimirLibreta
     defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimirLibreta }
 
-tramite_mod_cal_vigente_formulario_vista_imprimir_finalizar:
-    path:     /kformularioVistaImprimirFinalizar/{idTramite}
-    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimirFinalizar }
+tramite_mod_cal_vigente_formulario_vista_imprimir:
+    path:     /famcgv/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimir }
 
 # DISTRITO
 
