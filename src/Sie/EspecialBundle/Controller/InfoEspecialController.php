@@ -502,7 +502,7 @@ class InfoEspecialController extends Controller{
         ));
      //dump($registroConsol);die;
       $periodo = $this->operativo($form['sie'], $form['gestion']);
-      dump($periodo);die;
+     // dump($periodo);die;
       $estado = '';
       if(!$registroConsol){
         $estado = 'SIN_INSC';
