@@ -109,12 +109,12 @@
             
             
             {% if onlyview == false %} 
-            {# se oculta hasta aviso  
+                
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
                         <div class="caption text-center">
-                            <h4>Cerrar Operativo Inscripción</h4>
+                            <h4>Cerrar Operativo </h4>
                             <div class="thumbnail-action">
                                 {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
                                     {{form_widget(closeOperativoform.next)}}
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                 </div>
-
+                {#
                 
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
@@ -138,10 +138,11 @@
                         </div>
                     </div>
                 </div>
-                #}
+           
+                
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
-                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo 1er Trimestre">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo ">
                         <div class="caption text-center">
                             <h4>Cerrar Operativo Calificaciones</h4>
                             <div class="thumbnail-action">
@@ -151,7 +152,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  #}
             {% endif %}
             {# Operativo Bono JP
              
