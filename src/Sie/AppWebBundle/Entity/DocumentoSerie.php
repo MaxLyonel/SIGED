@@ -204,4 +204,32 @@ class DocumentoSerie
     {
         return $this->documentoTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\FormacionEducacionTipo
+     */
+    private $formacionEducacionTipo;
+
+
+    /**
+     * Set formacionEducacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\FormacionEducacionTipo $formacionEducacionTipo
+     * @return DocumentoSerie
+     */
+    public function setFormacionEducacionTipo(\Sie\AppWebBundle\Entity\FormacionEducacionTipo $formacionEducacionTipo = null)
+    {
+        $this->formacionEducacionTipo = $formacionEducacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get formacionEducacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\FormacionEducacionTipo 
+     */
+    public function getFormacionEducacionTipo()
+    {
+        return $this->formacionEducacionTipo;
+    }
 }

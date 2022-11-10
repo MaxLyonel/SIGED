@@ -5,12 +5,15 @@ Sie\AppWebBundle\Entity\DocumentoSerie:
         documento_serie_idx_departamento_tipo:
             columns:
                 - departamento_tipo_id
-        IDX_36036B9C7C9FBE9A:
+        IDX_36036B9CAB7915D9:
             columns:
-                - documento_tipo_id
+                - formacion_educacion_tipo_id
         IDX_36036B9C8ADDF3C3:
             columns:
                 - gestion_id
+        IDX_36036B9C7C9FBE9A:
+            columns:
+                - documento_tipo_id
     id:
         id:
             type: string
@@ -19,8 +22,8 @@ Sie\AppWebBundle\Entity\DocumentoSerie:
             fixed: false
             comment: ''
             id: true
-            # generator:
-            #     strategy: SEQUENCE
+            generator:
+                strategy: SEQUENCE
     fields:
         esanulado:
             type: boolean
@@ -40,6 +43,24 @@ Sie\AppWebBundle\Entity\DocumentoSerie:
             fixed: false
             comment: ''
     manyToOne:
+        formacionEducacionTipo:
+            targetEntity: FormacionEducacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                formacion_educacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestion:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         documentoTipo:
             targetEntity: DocumentoTipo
             cascade: {  }
@@ -56,15 +77,6 @@ Sie\AppWebBundle\Entity\DocumentoSerie:
             inversedBy: null
             joinColumns:
                 departamento_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        gestion:
-            targetEntity: GestionTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                gestion_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

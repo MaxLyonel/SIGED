@@ -332,4 +332,32 @@ class CertificadoPermanente
     {
         return $this->estudianteInscripcion;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\DocumentoSerie
+     */
+    private $documentoSerie;
+
+
+    /**
+     * Set documentoSerie
+     *
+     * @param \Sie\AppWebBundle\Entity\DocumentoSerie $documentoSerie
+     * @return CertificadoPermanente
+     */
+    public function setDocumentoSerie(\Sie\AppWebBundle\Entity\DocumentoSerie $documentoSerie = null)
+    {
+        $this->documentoSerie = $documentoSerie;
+    
+        return $this;
+    }
+
+    /**
+     * Get documentoSerie
+     *
+     * @return \Sie\AppWebBundle\Entity\DocumentoSerie 
+     */
+    public function getDocumentoSerie()
+    {
+        return $this->documentoSerie;
+    }
 }

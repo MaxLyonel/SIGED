@@ -1,0 +1,35 @@
+Sie\AppWebBundle\Entity\FormacionEducacionTipo:
+    type: entity
+    table: formacion_educacion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        formacionEducacion:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: formacion_educacion
+        activo:
+            type: string
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            default: 'true'
+        comentario:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            default: ''
+    lifecycleCallbacks: {  }
