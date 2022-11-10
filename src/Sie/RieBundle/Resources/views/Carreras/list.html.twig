@@ -27,8 +27,8 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="body">
-                    {% if app.session.get('roluser') == 8 %}
+                <div class="body"> 
+                    {% if app.session.get('roluser') == 8 %} {#tecnico nacional#}
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
                             <a href="{{path('carrera_rie_new')}}" class="btn btn-md bg-orange waves-effect">
@@ -52,16 +52,21 @@
                                 <tbody>
                                     {% for carrera in carreras %}
                                         <tr>
+                                        
                                             {% if app.session.get('roluser') == 8 %}
                                                 <td>
+                                                
                                                     <a href="{{path('carrera_rie_edit', {'idCarrera': carrera.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                         <i class="material-icons">mode_edit</i>
                                                     </a>
+                                                
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede eliminar">
+                                                    <a href="{{path('carrera_rie_delete', {'idCarrera': carrera.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" {% if carrera.cantidad > 0 %} disabled="disabled"  {% endif %} data-toggle="tooltip" data-placement="top" title="Borrar">
                                                         <i class="material-icons">delete_forever</i>
-                                                    </button>
+                                                    </a> 
+                                                    
+                                                   
                                                 </td>  
                                             {% else %}      
                                                 <td>

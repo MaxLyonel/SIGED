@@ -48,7 +48,7 @@ class EstudianteInformacionController extends Controller {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('estudianteinformacion_result'))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'RUDE', 'required' => true, 'invalid_message' => 'Campo Obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{14,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestión', 'choices' => array('2019' => '2019','2018' => '2018', '2017' => '2017', '2016' => '2016', '2015' => '2015', '2014' => '2014', '2013' => '2013'), 'attr' => array('class' => 'form-control')))
+                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestión', 'choices' => array('2022' => '2022','2021' => '2021','2020' => '2020','2019' => '2019','2018' => '2018', '2017' => '2017', '2016' => '2016', '2015' => '2015', '2014' => '2014', '2013' => '2013'), 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'submit', array('label' => 'Buscar estudiante'))
                 ->getForm();
         return $form;
@@ -125,7 +125,7 @@ class EstudianteInformacionController extends Controller {
             if ($inscription) {
                 $idEstudiante = $student->getId();
 
-                $repository = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion');
+/*                $repository = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion');
 
                 $query = $repository->createQueryBuilder('ai')
                         ->select('p.id perId, ai.id aiId, aid.id aidId, p.carnet, p.paterno, p.materno, p.nombre, at.apoderado apoTipo, aid.empleo')
@@ -136,7 +136,23 @@ class EstudianteInformacionController extends Controller {
                         ->setParameter('inscripcion', $inscription['insId'])
                         ->getQuery();
 
-                $apoderados = $query->getResult();
+                $apoderados = $query->getResult();*/
+
+                $repository = $em->getRepository('SieAppWebBundle:Estudiante');
+
+                $query = $repository->createQueryBuilder('e')
+                        ->select('p.id perId, ai.id aiId, aid.id aidId, p.carnet, p.paterno, p.materno, p.nombre, at.apoderado apoTipo, aid.empleo')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                        ->innerJoin('SieAppWebBundle:ApoderadoInscripcion', 'ai', 'WITH', 'ei.id = ai.estudianteInscripcion')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
+                        ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'ai.persona = p.id')
+                        ->innerJoin('SieAppWebBundle:ApoderadoInscripcionDatos', 'aid', 'WITH', 'ai.id = aid.apoderadoInscripcion')
+                        ->innerJoin('SieAppWebBundle:ApoderadoTipo', 'at', 'WITH', 'ai.apoderadoTipo = at.id')
+                        ->where('e.codigoRude = :rude')
+                        ->setParameter('rude', $rude)
+                        ->getQuery();
+
+                $apoderados = $query->getResult();                
 
                 //Información de la institución educativa
                 $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');

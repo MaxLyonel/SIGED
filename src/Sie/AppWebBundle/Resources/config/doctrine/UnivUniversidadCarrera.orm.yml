@@ -1,0 +1,156 @@
+Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
+    type: entity
+    table: univ_universidad_carrera
+    indexes:
+        IDX_729C05DBBA738CEC:
+            columns:
+                - univ_grado_academico_tipo_id
+        IDX_729C05DB7AC73B91:
+            columns:
+                - univ_area_conocimiento_tipo_id
+        IDX_729C05DBFDF04187:
+            columns:
+                - univ_modalidad_ensenanza_tipo_id
+        IDX_729C05DBD4C10D5D:
+            columns:
+                - univ_regimen_estudios_tipo_id
+        IDX_729C05DBEC47CD44:
+            columns:
+                - univ_nivel_academico_tipo_id
+        IDX_729C05DB9B2067FB:
+            columns:
+                - univ_sede_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        univFacultad:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: univ_facultad
+        carrera:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        resolucion:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fecha:
+            type: date
+            nullable: true
+            comment: ''
+        rmApertura:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: rm_apertura
+        fechaApertura:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_apertura
+        duracion:
+            type: float
+            nullable: true
+            unsigned: false
+            comment: ''
+        duracionAnios:
+            type: float
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: duracion_anios
+        estado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        esSiesu:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: es_siesu
+    manyToOne:
+        univGradoAcademicoTipo:
+            targetEntity: UnivGradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_grado_academico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univAreaConocimientoTipo:
+            targetEntity: UnivAreaConocimientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_area_conocimiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univModalidadEnsenanzaTipo:
+            targetEntity: UnivModalidadEnsenanzaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_modalidad_ensenanza_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univRegimenEstudiosTipo:
+            targetEntity: UnivRegimenEstudiosTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_regimen_estudios_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univNivelAcademicoTipo:
+            targetEntity: UnivNivelAcademicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_nivel_academico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univSede:
+            targetEntity: UnivSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

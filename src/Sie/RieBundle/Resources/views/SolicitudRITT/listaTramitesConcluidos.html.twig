@@ -29,6 +29,7 @@
                                     <th>Nro. Trámite</th>
                                     <th>Fecha Concluido</th>
                                     <th>Estado</th>
+                                    <th>Certificado</th>
                                 </tr>
                                 </thead>
                                 <tfoot>
@@ -40,6 +41,8 @@
                                     <th>Nro. Trámite</th>
                                     <th>Fecha de Concluido</th>
                                     <th>Estado</th>
+                                    <th>Certificado</th>
+
                                 </tr>
                                 </tfoot>
                                 <tbody>
@@ -52,6 +55,14 @@
                                         <td>{{ tramite.id }}</td>
                                         <td class="text-center">{{ tramite.fecha_fin }}</td>
                                         <td>{{ tramite.estado }}</td>
+                                        <td>
+                                        <a href="{{path('solicitud_ritt_vista_previa_certificado', {'idRie':tramite.codrie,'idTramite':tramite.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Vista previa Certificado">
+                                            <i class="material-icons">open_in_new</i>
+                                        </a>
+                                       {# <a href="{{path('solicitud_ritt_guarda_tramite_imprime_concluido', {'idRie':tramite.codrie,'idTramite':tramite.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Imprimir Certificado">
+                                            <i class="material-icons">print</i>
+                                        </a> #}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

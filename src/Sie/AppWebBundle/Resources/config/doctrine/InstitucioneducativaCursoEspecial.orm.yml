@@ -96,4 +96,13 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial:
                 especial_modalidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
+        especialMomentoTipo:
+            targetEntity: EspecialMomentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especial_momento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

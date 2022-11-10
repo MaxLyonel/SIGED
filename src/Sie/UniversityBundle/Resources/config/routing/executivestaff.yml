@@ -1,0 +1,54 @@
+
+staff_index:
+    path:     /
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:index }
+
+
+staff_getAllStaff:
+    path:     /getAllStaff
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:getAllStaff }
+    options:
+        expose: true
+
+staff_lookforperson:
+    path:     /lookforperson
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:lookforperson }
+    options:
+        expose: true  
+
+staff_getAllOperative:
+    path:     /getAllOperative
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:getAllOperative }
+    options:
+        expose: true  
+
+staff_validateDataSegip:
+    path:     /validateDataSegip
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:validateDataSegip }
+    options:
+        expose: true   
+
+staff_savestaff:
+    path:     /savestaff
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:savestaff }
+    options:
+        expose: true    
+
+staff_saveEditPersonal:
+    path:     /saveEditPersonal
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:saveEditPersonal }
+    options:
+        expose: true        
+
+staff_deletePersonal:
+    path:     /deletePersonal
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:deletePersonal }
+    options:
+        expose: true         
+
+staff_editPersonal:
+    path:     /editPersonal
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:editPersonal }
+    options:
+        expose: true        
+        

@@ -20,6 +20,7 @@ use Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo;
 use Sie\AppWebBundle\Entity\TtecCarreraTipo;
 use Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo;
 use Sie\AppWebBundle\Entity\TtecEstadoCarreraTipo;
+use Sie\AppWebBundle\Entity\TtecAreaFormacionCarreraTipo;
 
 use Sie\AppWebBundle\Form\InstitucioneducativaType;
 
@@ -65,7 +66,7 @@ class CursoCapacitacionController extends Controller {
                                       AND ie.estadoinstitucionTipo in (:idEstado)
                                       AND se.estado = :estadoSede
                                 ORDER BY ie.id ')
-                                    ->setParameter('idTipo', array(7, 8, 9))
+                                    ->setParameter('idTipo', array(7, 8, 9, 11,12,13))
                                     ->setParameter('idEstado', 10)
                                     ->setParameter('estadoSede', TRUE);        
         $entities = $query->getResult(); 
@@ -136,67 +137,103 @@ class CursoCapacitacionController extends Controller {
             //Buscamos si el curso existe
             $query = $em->createQuery('SELECT ca
                                          FROM SieAppWebBundle:TtecCarreraTipo ca
-                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera
-                                        AND ca.ttecAreaFormacionTipo = :areaCurso')
-                                    ->setParameter('nombreCarrera', trim(strtoupper($form['ttecCarreraTipo'])))
-                                    ->setParameter('areaCurso', 200);        
+                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera')
+                                    ->setParameter('nombreCarrera', trim(strtoupper($form['ttecCarreraTipo'])));
+                                        
             $dato = $query->getResult();   
-            
-            if($dato){ //El curso ya se encuentra en el catálogo
-                $curso = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($dato[0]->getId()); 
-                //Verificamos si la carrera ya fue autorizada
-                $query = $em->createQuery('SELECT se
-                                             FROM SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada se
-                                             JOIN se.institucioneducativa ie 
-                                             JOIN se.ttecCarreraTipo ca 
-                                            WHERE ie.id = :idInstituto
-                                              AND ca.id = :idCarrera
-                                              AND se.esVigente = :esVigente')
-                            ->setParameter('idInstituto', $institucion->getId())
-                            ->setParameter('idCarrera', $curso->getId())
-                            ->setParameter('esVigente', TRUE);        
-                $valor = $query->getResult();
 
-                if($valor){ //la carrera fue autorizada
-                    $this->get('session')->getFlashBag()->add('mensaje', 'El curso de capacitación ya se encuentra registrado');
-                    return $this->redirect($this->generateUrl('cap_list', array('idRie' => $institucion->getId())));  
-                }
-            }
-            else{ //el curso debe ser registrado
+            if(!$dato){ // se intserta la carrera
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_carrera_tipo');")->execute();
-                $curso = new TtecCarreraTipo(); 
-                $curso->setNombre(strtoupper($form['ttecCarreraTipo']));
-                $curso->setFechaRegistro(new \DateTime('now'));
-                $curso->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById(200));
-                $curso->setTtecEstadoCarreraTipo($em->getRepository('SieAppWebBundle:TtecEstadoCarreraTipo')->findOneById(1));
-                $em->persist($curso);
-                $em->flush(); 
+                $entity = new TtecCarreraTipo();
+                $entity->setNombre(strtoupper($form['ttecCarreraTipo']));
+                $entity->setFechaRegistro(new \DateTime('now'));
+                $entity->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById(200));
+                $entity->setTtecEstadoCarreraTipo($em->getRepository('SieAppWebBundle:TtecEstadoCarreraTipo')->findOneById(1));
+                $em->persist($entity);
+                $em->flush();     
+                $carrera_id = $entity->getId();
+            }else{
+                $carrera_id = $dato[0]->getId();
             }
 
-            //Guardando carreras autorizadas
-            $entity = new TtecInstitucioneducativaCarreraAutorizada();
-            $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']));
-            $entity->setTtecCarreraTipo($curso);
-            $entity->setEsEnviado(FALSE);
-            $entity->setEsVigente(TRUE);
-            $entity->setFechaRegistro(new \DateTime('now'));
-            $em->persist($entity);
-            $em->flush();     
+            $query = $em->createQuery('SELECT afca
+            FROM SieAppWebBundle:TtecAreaFormacionCarreraTipo afca
+           WHERE afca.ttecCarreraTipo = :idCarrera
+           AND afca.ttecAreaFormacionTipo = :idArea')
+                    ->setParameter('idCarrera', $carrera_id)
+                    ->setParameter('idArea', 200);        
+            $area_carrera = $query->getResult(); 
+            
+            if(!$area_carrera){
+                $entity = new TtecAreaFormacionCarreraTipo();
+                $entity->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById(200));
+                $entity->setTtecCarreraTipo($em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($carrera_id));
+                $entity->setUsuarioRegistro($this->session->get('userId'));
+                $entity->setFechaRegistro(new \DateTime('now'));
+                $em->persist($entity);
+                $em->flush();     
+                $this->get('session')->getFlashBag()->add('mensajeOk', 'Registro creado correctamente.');
+            }else{
+                $this->get('session')->getFlashBag()->add('mensajeError', 'Duplicidad al registrar la carrera.');   
+                
+            }
+            $query = $em->createQuery('SELECT se
+            FROM SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada se
+            JOIN se.institucioneducativa ie 
+            JOIN se.ttecCarreraTipo ca 
+           WHERE ie.id = :idInstituto
+             AND ca.id = :idCarrera
+             AND se.esVigente = :esVigente')
+            ->setParameter('idInstituto', $institucion->getId())
+            ->setParameter('idCarrera', $carrera_id)
+            ->setParameter('esVigente', TRUE);        
+            $valor = $query->getResult();
+            
+            if($valor){ //la carrera fue autorizada
+                $carrera_autorizada_id = $valor[0]->getId();
+            $this->get('session')->getFlashBag()->add('mensaje', 'El curso de capacitación ya se encuentra registrado');
+            return $this->redirect($this->generateUrl('cap_list', array('idRie' => $institucion->getId())));  
+            }else{
+                $entity = new TtecInstitucioneducativaCarreraAutorizada();
+                $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion->getId()));
+                $entity->setTtecCarreraTipo($em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($carrera_id));
+                $entity->setEsEnviado(FALSE);
+                $entity->setEsVigente(TRUE);
+                $entity->setFechaRegistro(new \DateTime('now'));
+                $em->persist($entity);
+                $em->flush();     
+                $carrera_autorizada_id = $entity->getId();
+            }
 
-            //Guardando la resolucion de la carrera
-            $resolucion = new TtecResolucionCarrera();
-            $resolucion->setNumero($form['resolucion']);
-            $resolucion->setFecha(new \DateTime($form['fechaResolucion']));
-            $resolucion->setTtecResolucionTipo($em->getRepository('SieAppWebBundle:TtecResolucionTipo')->findOneById(1)); //Por defecto guardando tipo de Resolucion = R.M.
-            $resolucion->setTtecInstitucioneducativaCarreraAutorizada($entity);
-            $resolucion->setFechaRegistro(new \DateTime('now'));
-            $resolucion->setTiempoEstudio($form['tiempoEstudio']);
-            $resolucion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById(502));//cursos de capacitacion
-            $resolucion->setCargaHoraria($form['cargaHoraria']);
-            $resolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
-            $resolucion->setOperacion($form['operacion']);
-            $em->persist($resolucion);
-            $em->flush();            
+            $query = $em->createQuery('SELECT rc
+            FROM SieAppWebBundle:TtecResolucionCarrera rc
+            INNER JOIN rc.ttecInstitucioneducativaCarreraAutorizada ie
+           WHERE ie.institucioneducativa = :idInstitucion
+             AND ie.ttecCarreraTipo = :ieCarrera 
+             AND ie.esVigente = :ieEsVigente
+             AND rc.nivelTipo = :rcNivel')
+           ->setParameter('idInstitucion', $institucion->getId())
+           ->setParameter('ieCarrera', $carrera_id)
+           ->setParameter('ieEsVigente', TRUE)
+           ->setParameter('rcNivel', 502);
+                $datoCarrera = $query->getResult();
+            if(!$datoCarrera){
+                $resolucion = new TtecResolucionCarrera();
+                $resolucion->setNumero($form['resolucion']);
+                $resolucion->setFecha(new \DateTime($form['fechaResolucion']));
+                $resolucion->setTtecResolucionTipo($em->getRepository('SieAppWebBundle:TtecResolucionTipo')->findOneById(1)); //Por defecto guardando tipo de Resolucion = R.M.
+                $resolucion->setTtecInstitucioneducativaCarreraAutorizada($em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')->findOneById($carrera_autorizada_id));
+                $resolucion->setFechaRegistro(new \DateTime('now'));
+                $resolucion->setTiempoEstudio($form['tiempoEstudio']);
+                $resolucion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById(502));//cursos de capacitacion
+                $resolucion->setCargaHoraria($form['cargaHoraria']);
+                $resolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
+                $resolucion->setOperacion($form['operacion']);
+                $em->persist($resolucion);
+                $em->flush();   
+                
+            }
+                //Guardando la resolucion de la carrera
 
         }catch (Exception $ex){
             $em->getConnection()->rollback();
@@ -609,7 +646,7 @@ class CursoCapacitacionController extends Controller {
     }
 
     /***
-     * Obtiene un array con datos del listado de carreras autorizadas
+     * Obtiene un array con datos del listado de cursps de capacitacion autorizadas
      */
     public function listadoCursosCapacitacion($idRie){
         $em = $this->getDoctrine()->getManager();
@@ -618,8 +655,8 @@ class CursoCapacitacionController extends Controller {
                     FROM ttec_institucioneducativa_carrera_autorizada AS autorizado
                     INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
                     INNER JOIN institucioneducativa AS instituto ON autorizado.institucioneducativa_id = instituto.id 
-                    INNER JOIN ttec_area_formacion_tipo AS area ON carrera.ttec_area_formacion_tipo_id = area.id
-                    WHERE instituto.id = '".$idRie."' AND area.id = 200  ";
+                    INNER JOIN ttec_area_formacion_carrera_tipo AS afct ON afct.ttec_carrera_tipo_id = carrera .id
+                    WHERE instituto.id = '".$idRie."' AND afct.ttec_area_formacion_tipo_id = 200  ";
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params); 

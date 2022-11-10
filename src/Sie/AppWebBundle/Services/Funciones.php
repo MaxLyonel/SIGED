@@ -342,6 +342,7 @@ class Funciones {
             case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
             case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
             case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
+            case when rc.rude = 1 then 'SI' else 'NO' end AS rude,
             rc.gestion
             FROM registro_consolidacion rc
             INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
@@ -359,6 +360,105 @@ class Funciones {
             codigo_distrito,
             codigo_sie;
         ");
+        
+        $query->execute();
+        $registro_consolidacion = $query->fetchAll();
+        return $registro_consolidacion;
+    }
+
+    /**
+     * dcastillo
+     * los que NO han cerrado operativo en la gestion actual
+     */
+    public function reporteNoConsol($gestionid, $roluser, $roluserlugarid, $instipoid){
+        
+        $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+        
+        switch ($roluser) {
+            case '7':
+                $where = "lt4.codigo = '".$lugar->getCodigo()."'";
+                break;
+
+            case '8':
+                $where = '1 = 1';
+                break;
+
+            case '10':
+                $where = "dt.id = '".$lugar->getCodigo()."'";
+                break;
+
+            default:
+                $where = '1 = 0';
+                break;
+        }
+
+        /*$query = $this->em->getConnection()->prepare("
+            SELECT
+            lt4.codigo AS codigo_departamento,
+            lt4.lugar AS departamento,
+            dt.id codigo_distrito,
+            dt.distrito,
+            inst.id codigo_sie,
+            inst.institucioneducativa,
+            case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
+            case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
+            case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
+            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
+            rc.gestion
+            FROM registro_consolidacion rc
+            INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+            INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+            LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+            INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
+            WHERE ".$where." AND rc.gestion = ".$gestionid." AND
+            rc.institucioneducativa_tipo_id = ".$instipoid." AND inst.estadoinstitucion_tipo_id = 10
+            ORDER BY
+            codigo_departamento,
+            codigo_distrito,
+            codigo_sie;
+        ");*/
+
+        $query = $this->em->getConnection()->prepare("
+        SELECT
+            * 
+        FROM
+            (
+            SELECT
+                inst.ID,
+                lt4.codigo AS codigo_departamento,
+                lt4.lugar AS departamento,
+                dt.ID codigo_distrito,
+                dt.distrito,
+                inst.ID codigo_sie,
+                inst.institucioneducativa,
+                'NO' AS bim1,
+                'NO' AS bim2,
+                'NO' AS bim3,
+                'NO' AS bim4 --rc.gestion
+                
+            FROM
+                institucioneducativa inst
+                INNER JOIN jurisdiccion_geografica jg ON jg.ID = inst.le_juridicciongeografica_id
+                LEFT JOIN lugar_tipo lt ON lt.ID = jg.lugar_tipo_id_localidad
+                LEFT JOIN lugar_tipo lt1 ON lt1.ID = lt.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt2 ON lt2.ID = lt1.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt3 ON lt3.ID = lt2.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt4 ON lt4.ID = lt3.lugar_tipo_id
+                INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.ID 
+            WHERE ".$where."  AND inst.estadoinstitucion_tipo_id =  10 and inst.institucioneducativa_acreditacion_tipo_id = 1 and inst.institucioneducativa_tipo_id = 1 
+            ORDER BY
+                codigo_departamento,
+                codigo_distrito,
+                codigo_sie 
+            ) AS datos 
+        WHERE
+            datos.codigo_sie NOT IN ( SELECT unidad_educativa FROM registro_consolidacion WHERE gestion = ".$gestionid." AND institucioneducativa_tipo_id = ".$instipoid." )
+        ");
+
         $query->execute();
         $registro_consolidacion = $query->fetchAll();
         return $registro_consolidacion;
@@ -1652,7 +1752,7 @@ class Funciones {
                     inner join tramite as t on t.id = d.tramite_id
                     inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                     inner join estudiante as e on e.id = ei.estudiante_id
-                    where e.codigo_rude = '". $codigoRude ."' and d.documento_tipo_id = 1
+                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1 /*and d.documento_tipo_id = 1*/
                     ");
 
         $query->execute();
@@ -2238,5 +2338,80 @@ class Funciones {
 
 
     }
+
+    public function getcurrentInscriptinoValidation($idInscripcion){
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+        $estudiante = $inscripcion->getEstudiante()->getId();
+        $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        
+        $response = false;
+        $dataRemove = array();
+
+        $currentInscription = $this->em->createQueryBuilder()
+                        ->select('ei,iec')
+                        ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                        ->where('ei.estudiante = :estudiante')
+                        ->andWhere('ei.estadomatriculaTipo IN (:estados)')
+                        ->andWhere('iec.nivelTipo = :nivel')
+                        ->andWhere('iec.gradoTipo = :grado')
+                        ->setParameter('estudiante', $estudiante)                        
+                        ->setParameter('estados', array(4,5,24,26,37,45,46,55,56,57,58)) // Estados que deveria validar
+                        ->setParameter('nivel', $nivel)
+                        ->setParameter('grado', $grado)
+                        ->setMaxResults(1)
+                        ->getQuery()
+                        ->getResult();
+        $response = false;
+
+        if (count($currentInscription) > 0) {
+        // get data course
+            $dataRemove['inscripcion']['id']    = $currentInscription[0]->getId();
+            $dataRemove['inscripcion']['studentid']    = $currentInscription[0]->getEstudiante()->getId();
+            $dataRemove['inscripcion']['nivel'] = $nivel;
+            $dataRemove['inscripcion']['grado'] = $grado;
+            $dataRemove['inscripcion']['gestion'] = $currentInscription[1]->getGestionTipo()->getId();;
+            $asignaturas = $this->em->createQueryBuilder()
+                    ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                    ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                    ->groupBy('asit.id, asit.asignatura, ea.id')
+                    ->orderBy('asit.id','ASC')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion',$currentInscription[0]->getId())
+                    ->getQuery()
+                    ->getResult();   
+                 // dumP($asignaturas);
+            $dataRemove['inscripcion']['asignaturas'] = $asignaturas;
+
+            foreach ($asignaturas as $a) {
+                // $notasArray[$cont] = array('idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
+                $asignaturasNotas = $this->em->createQueryBuilder()
+                                    ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
+                                    ->from('SieAppWebBundle:EstudianteNota','en')
+                                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
+                                    ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
+                                    ->orderBy('nt.id','ASC')
+                                    ->where('ea.id = :estAsigId')
+                                    ->setParameter('estAsigId',$a['estAsigId'])
+                                    ->getQuery()
+                                    ->getResult();                    
+                $dataRemove['inscripcion']['asignaturasNotas'][] = $asignaturasNotas;
+
+            }          
+
+            $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$currentInscription[0]->getId()),array('notaTipo'=>'ASC'));
+            $dataRemove['inscripcion']['cualitativas'] = $cualitativas;
+
+            $response = true;
+        }
+
+        return $dataRemove;
+    }     
 
 }

@@ -13,6 +13,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 use Sie\AppWebBundle\Entity\EspecialModalidadTipo;
+use Sie\AppWebBundle\Entity\EspecialMomentoTipo;
 
 
 /**
@@ -131,6 +132,8 @@ class CreacionCursosEspecialController extends Controller {
                                 ->setParameter('gestion', $gestion);
 
             $cursos = $query->getResult();
+
+           //dump($cursos);die;
             /*
              * obtenemos los datos de la unidad educativa
              */
@@ -193,6 +196,20 @@ class CreacionCursosEspecialController extends Controller {
             foreach ($turnos_result as $t){
                 $turnos[$t->getId()] = $t->getTurno();
             }
+
+            /*
+             * Listamos los momento aplicado a visual
+             */
+            $query = $em->createQuery(
+                'SELECT t FROM SieAppWebBundle:EspecialMomentoTipo t
+                WHERE t.id IN (:id)'
+                )->setParameter('id',array(1,2,3,4));
+                $momentos_result = $query->getResult();
+                $momentos = array();
+                foreach ($momentos_result as $t){
+                $momentos[$t->getId()] = $t->getMomento();
+                }
+            
 
             /*
              * Listamos las areas validas
@@ -295,6 +312,7 @@ class CreacionCursosEspecialController extends Controller {
                         $nivelesTecnicoArray[$t->getId()] = $t->getNivelTecnico();
                     }
             $nivelTecnico = 99;
+            $momento = 99;
 
             $form = $this->createFormBuilder()
                     ->setAction($this->generateUrl('creacioncursos_especial_create'))
@@ -308,6 +326,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('programa','choice',array('label'=>'Programa','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('servicio','choice',array('label'=>'Servicio','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('tecnica','choice',array('label'=>'Técnica','choices'=>$tecnicas,'data'=> $tecnica,'attr'=>array('class'=>'form-control')))
+                    ->add('momento','choice',array('label'=>'Momento','choices'=>$momentos,'data'=> $momento,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnicoId','hidden',array('data'=> $nivelTecnico))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
@@ -336,13 +355,15 @@ class CreacionCursosEspecialController extends Controller {
 
     public function createAction(Request $request){
         try{
-            
            
             $form = $request->get('form');
-            
             $nivelTecnico = 99;
             if(isset($form['nivelTecnico'])){
                 $nivelTecnico = $form['nivelTecnico']?$form['nivelTecnico']:99;
+            }
+            $momento = 99;
+            if(isset($form['momento']) && $form['programa']==26){
+                $momento = $form['momento']?$form['momento']:99;
             }
             //dump($nivelTecnico);die;
             $em = $this->getDoctrine()->getManager();
@@ -369,6 +390,7 @@ class CreacionCursosEspecialController extends Controller {
                     AND iec.especialServicioTipo =:servicio
                     AND iec.especialNivelTecnicoTipo =:niveltecnico
                     AND iec.especialTecnicaEspecialidadTipo =:tecnica
+                    AND iec.especialMomentoTipo =:momento
                     ORDER BY ie.turnoTipo, ie.nivelTipo, ie.gradoTipo, ie.paraleloTipo')
                                 ->setParameter('idInstitucion', $form['idInstitucion'])
                                 ->setParameter('gestion', $form['idGestion'])
@@ -380,8 +402,10 @@ class CreacionCursosEspecialController extends Controller {
                                 ->setParameter('programa', $form['programa'])
                                 ->setParameter('servicio', $form['servicio'])
                                 ->setParameter('niveltecnico', $nivelTecnico)
-                                ->setParameter('tecnica', $form['tecnica']);
-                                $curso = $query->getResult();
+                                ->setParameter('tecnica', $form['tecnica'])
+                                ->setParameter('momento', $form['momento']);
+                                $curso = $query->getResult(); 
+
 
 //             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array(  'institucioneducativaCurso.institucioneducativa'=>$form['idInstitucion'],
 //                     'institucioneducativaCurso.gestionTipo'=>$form['idGestion'],
@@ -395,6 +419,7 @@ class CreacionCursosEspecialController extends Controller {
 //                  'especialNivelTecnicoTipo'=>$form['nivelTecnico'],
 //                  'especialTecnicaEspecialidadTipo'=>$form['tecnica']));
             //dump($form);die;
+           // dump($curso);die;
             if($curso){
                 $this->get('session')->getFlashBag()->add('newCursoError', 'No se pudo crear el curso, ya existe un curso con las mismas características.');
                 return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
@@ -445,6 +470,7 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($form['tecnica']));
                 $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($nivelTecnico));
                 $nuevo_curso->setEspecialModalidadTipo($em->getRepository('SieAppWebBundle:EspecialModalidadTipo')->find($form['modalidad']));
+                $nuevo_curso->setEspecialMomentoTipo($em->getRepository('SieAppWebBundle:EspecialMomentoTipo')->find($momento));
                 $em->persist($nuevo_curso);
                 $em->flush();
 
@@ -758,7 +784,8 @@ class CreacionCursosEspecialController extends Controller {
                         $servicios = array(1,2,3,4,5,25,26,27,28);
                     }
                 } else {
-                    $servicios = array(20);//8,9
+                    //$servicios = array(20);//8,9
+                    $servicios = array(8,9,30,31);//8,9
                 }
             }//array(8,9,10,11,12,14,15)
         }
@@ -803,7 +830,8 @@ class CreacionCursosEspecialController extends Controller {
     }
 
     public function listarProgramasAction($area,$nivel,$grado,$modalidad) {
-        
+       // dump($area);
+       // dump($nivel);die;
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
         if ( $area == "1" and $nivel == "411" and  $grado == "99" ) {
@@ -836,7 +864,7 @@ class CreacionCursosEspecialController extends Controller {
         elseif (($area == "3" or $area == "5") and $nivel == "411" and  $grado == "99" ) {
             $programas = array(99);
             if ($this->session->get('idGestion') > 2020) {
-                $programas = array(28);
+                $programas = array(28,30);
             }
         }elseif ($area == "6" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
@@ -855,7 +883,8 @@ class CreacionCursosEspecialController extends Controller {
                 $programas = array(99);
             } else {
                 if($modalidad == 1){
-                    $programas = array(23, 24);
+                    //$programas = array(23, 24);
+                    $programas = array(31,32,33,34);
                 }else{
                     $programas = array(99);
                 }

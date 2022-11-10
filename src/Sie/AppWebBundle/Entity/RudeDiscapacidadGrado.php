@@ -25,31 +25,34 @@ class RudeDiscapacidadGrado
     private $fechaModificacion;
 
     /**
+     * @var integer
+     */
+    private $porcentaje;
+
+    /**
+     * @var string
+     */
+    private $gradoOtro;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\DiscapacidadTipo
      */
-    private $discapacidadTipo;
+    private $discapacidadOtroGrado;
 
     /**
      * @var \Sie\AppWebBundle\Entity\Rude
      */
     private $rude;
+
     /**
      * @var \Sie\AppWebBundle\Entity\GradoDiscapacidadTipo
      */
     private $gradoDiscapacidadTipo;
-     /**
-     * @var string
-     */
-    private $porcentaje;
+
     /**
      * @var \Sie\AppWebBundle\Entity\DiscapacidadTipo
      */
-    private $discapacidadOtroGrado;
-    
-
-
-    
-   
+    private $discapacidadTipo;
 
 
     /**
@@ -109,26 +112,72 @@ class RudeDiscapacidadGrado
     }
 
     /**
-     * Set discapacidadTipo
+     * Set porcentaje
      *
-     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo
+     * @param integer $porcentaje
      * @return RudeDiscapacidadGrado
      */
-    public function setDiscapacidadTipo(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo = null)
+    public function setPorcentaje($porcentaje)
     {
-        $this->discapacidadTipo = $discapacidadTipo;
+        $this->porcentaje = $porcentaje;
     
         return $this;
     }
 
     /**
-     * Get discapacidadTipo
+     * Get porcentaje
+     *
+     * @return integer 
+     */
+    public function getPorcentaje()
+    {
+        return $this->porcentaje;
+    }
+
+    /**
+     * Set gradoOtro
+     *
+     * @param string $gradoOtro
+     * @return RudeDiscapacidadGrado
+     */
+    public function setGradoOtro($gradoOtro)
+    {
+        $this->gradoOtro = $gradoOtro;
+    
+        return $this;
+    }
+
+    /**
+     * Get gradoOtro
+     *
+     * @return string 
+     */
+    public function getGradoOtro()
+    {
+        return $this->gradoOtro;
+    }
+
+    /**
+     * Set discapacidadOtroGrado
+     *
+     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado
+     * @return RudeDiscapacidadGrado
+     */
+    public function setDiscapacidadOtroGrado(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado = null)
+    {
+        $this->discapacidadOtroGrado = $discapacidadOtroGrado;
+    
+        return $this;
+    }
+
+    /**
+     * Get discapacidadOtroGrado
      *
      * @return \Sie\AppWebBundle\Entity\DiscapacidadTipo 
      */
-    public function getDiscapacidadTipo()
+    public function getDiscapacidadOtroGrado()
     {
-        return $this->discapacidadTipo;
+        return $this->discapacidadOtroGrado;
     }
 
     /**
@@ -153,6 +202,7 @@ class RudeDiscapacidadGrado
     {
         return $this->rude;
     }
+
     /**
      * Set gradoDiscapacidadTipo
      *
@@ -175,79 +225,27 @@ class RudeDiscapacidadGrado
     {
         return $this->gradoDiscapacidadTipo;
     }
+
     /**
-     * Set porcentaje
+     * Set discapacidadTipo
      *
-     * @param string $porcentaje
+     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo
      * @return RudeDiscapacidadGrado
      */
-    public function setPorcentaje($porcentaje)
+    public function setDiscapacidadTipo(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo = null)
     {
-        $this->porcentaje = $porcentaje;
+        $this->discapacidadTipo = $discapacidadTipo;
     
         return $this;
     }
 
     /**
-     * Get porcentaje
-     *
-     * @return string 
-     */
-    public function getPorcentaje()
-    {
-        return $this->porcentaje;
-    }
-    /**
-     * Set discapacidadOtroGrado
-     *
-     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado
-     * @return RudeDiscapacidadGrado
-     */
-    public function setDiscapacidadOtroGrado(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado = null)
-    {
-        $this->discapacidadOtroGrado = $discapacidadOtroGrado;
-    
-        return $this;
-    }
-
-    /**
-     * Get discapacidadOtroGrado
+     * Get discapacidadTipo
      *
      * @return \Sie\AppWebBundle\Entity\DiscapacidadTipo 
      */
-    public function getDiscapacidadOtroGrado()
+    public function getDiscapacidadTipo()
     {
-        return $this->discapacidadOtroGrado;
-    }
-    
-
-    
-    /**
-     * @var string
-     */
-    private $gradoOtro;
-
-
-    /**
-     * Set gradoOtro
-     *
-     * @param string $gradoOtro
-     * @return RudeDiscapacidadGrado
-     */
-    public function setGradoOtro($gradoOtro)
-    {
-        $this->gradoOtro = $gradoOtro;
-    
-        return $this;
-    }
-
-    /**
-     * Get gradoOtro
-     *
-     * @return string 
-     */
-    public function getGradoOtro()
-    {
-        return $this->gradoOtro;
+        return $this->discapacidadTipo;
     }
 }

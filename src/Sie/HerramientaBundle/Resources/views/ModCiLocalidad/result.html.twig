@@ -66,11 +66,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     {{form_label(form.departamento)}}
-                                    {{form_widget(form.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
+                                    {{form_widget(form.departamento)}}
                                 </div>
                                 <div class="col-md-3">
                                     {{form_label(form.provincia)}}
-                                    {{form_widget(form.provincia,{'attr':{'id':'form_provincia'} })}}
+                                    {{form_widget(form.provincia)}}
                                 </div>
                                 <div class="col-md-3 form-group">
                                     {{form_label(form.localidad)}}
@@ -91,13 +91,17 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="col-md-3 form-group">
+                                    {{form_label(form.cedulatipo)}}
+                                    {{form_widget(form.cedulatipo)}}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-md-3 form-group">
                                     {{form_label(form.fechaNacimiento)}}
                                     {{form_widget(form.fechaNacimiento)}}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                         {# {{form_widget(form.save, {'attr':{'class':'btn btn-success', 'onclick':"return confirm('Está a punto de validar con SEGIP y actualizar la información. ¿Desea continuar?');"} }) }} #}
-                          {{form_widget(form.save, {'attr':{'class':'btn btn-success', 'onclick':"return confirm('Está a punto de actualizar la información. ¿Desea continuar?');"} }) }}
+                            {{form_widget(form.save, {'attr':{'class':'btn btn-success', 'onclick':"return confirm('Está a punto de validar con SEGIP y actualizar la información. ¿Desea continuar?');"} }) }}
                             {{form_end(form)}}
                         </div>
                     </div>
@@ -114,26 +118,4 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">
-    
-    function prov(d) {
-        
-            console.log (d)
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('temporal_provincia', {'departamento': parseInt(d)}),
-                beforeSend: function () {
-                    $("#form_provincia").empty();
-                    $("#div-load-prov").parent().append('<div class="loading"></div>');
-                },
-                success: function (data) {
-                    $("#form_provincia").empty();
-                    $.each(data.provincia, function (i, value) {
-                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    $(".loading").remove();
-                }
-            });
-        }
-     </script>
 {% endblock %}

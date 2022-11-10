@@ -81,13 +81,17 @@ class EstudianteUpdateController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $calidad = false;
+        $calidadValidacionId = 0;
         $this->session->set('yearQA',isset($form['gestion'])?$form['gestion']:$this->session->get('currentyear'));
 
         //que no esté en sexto y que esté en calidad
         if (isset($form['gestion'])) {
             $calidad = true;
+            if (isset($form['calidad'])) {
+                $calidadValidacionId = $form['calidad'];
+            }
         }
-      
+              
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => trim($form['codigoRude']) ));
         //verificamos si existe el estudiante
         if ($student) {
@@ -165,11 +169,25 @@ class EstudianteUpdateController extends Controller {
                     }*/
                 }
                 $infoInscription = $this->getCurrentInscriptionsStudent($student->getCodigoRude());
+                //dump($m1,$m2,$m3);
+                if ($calidadValidacionId>0) {
+                    $m1 = 1;
+                    $m2 = 1;
+                    $m3 = 0;
+                }
 
                 $form_mode1 = (isset($form['mode1'])) ? $this->createFormMode1($student, $m3)->createView() : '';
                 $form_mode2 = (isset($form['mode2'])) ? $this->createFormMode2($student, $m3)->createView() : '';
                 $form_mode3 = (isset($form['mode3'])) ? $this->createFormMode3($student)->createView() : '';
+
+                if ($calidadValidacionId>0) {
+                    $form_mode1 = null;
+                    $form_mode2 = null;
+                    $form_mode3 = null;
+                    $form_mode4 = (isset($form['mode3'])) ? $this->createFormModeFecNac($student)->createView() : '';
+                }
                 //print_r($infoInscription);
+                //dump($form_mode1,$form_mode2,$form_mode3);die;
             /*} else {
                 $this->session->getFlashBag()->add('noticemodi', 'Estudiante no cuenta con inscripción para gestión ' . $this->session->get('currentyear'));
                 return $this->redirectToRoute('sie_estudiantes');
@@ -178,16 +196,35 @@ class EstudianteUpdateController extends Controller {
             $this->session->getFlashBag()->add('noticemodi', 'Estudiante no existe');
             return $this->redirectToRoute('sie_estudiantes');
         }
-        return $this->render($this->session->get('pathSystem') . ':Estudiante:result.html.twig', array(
-                    'student' => $student,
-                    'infoinscription' => $infoInscription,
-                    'form_mode1' => $form_mode1,
-                    'form_mode2' => $form_mode2,
-                    'form_mode3' => $form_mode3,
-                    'm1' => $m1,
-                    'm2' => $m2,
-                    'm3' => $m3
-        ));
+
+        //que no esté en sexto y que esté en calidad
+        if ($calidadValidacionId>0) {
+            return $this->render($this->session->get('pathSystem') . ':Estudiante:result.html.twig', array(
+                        'student' => $student,
+                        'infoinscription' => $infoInscription,
+                        'form_mode1' => $form_mode1,
+                        'form_mode2' => $form_mode2,
+                        'form_mode3' => $form_mode3,
+                        'form_mode4' => $form_mode4,
+                        'm1' => $m1,
+                        'm2' => $m2,
+                        'm3' => $m3,
+                        'calidad' => $calidad,
+                        'calidadValidacionId' => $calidadValidacionId
+            ));
+        } else {
+            return $this->render($this->session->get('pathSystem') . ':Estudiante:result.html.twig', array(
+                        'student' => $student,
+                        'infoinscription' => $infoInscription,
+                        'form_mode1' => $form_mode1,
+                        'form_mode2' => $form_mode2,
+                        'form_mode3' => $form_mode3,
+                        'form_mode4' => null,
+                        'm1' => $m1,
+                        'm2' => $m2,
+                        'm3' => $m3
+            ));
+        }
     }
 
     /**
@@ -252,6 +289,33 @@ class EstudianteUpdateController extends Controller {
      * @param type $student
      * @return form mode 1
      */
+    private function createFormModeFecNac($student) {
+
+        $em = $this->getDoctrine()->getManager();
+        $ext = '';
+        $cistudent = '';
+        
+        $form = $this->createFormBuilder($student)
+        // ->setAction($this->generateUrl('sie_estudiantes_updatestudentA', array('id' => $student->getId())))
+        ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
+        ->add('ci', 'hidden', array('label' => 'carnetIdentidad','required' => false, 'mapped' => false, 'data'=>$student->getCarnetIdentidad()))
+        ->add('complemento', 'hidden', array('label' => 'complemento','required' => false, 'mapped' => false))
+        ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
+        ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
+        
+        // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+        ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormA()')))
+        ->getForm();
+
+        return $form;
+    }
+
+
+    /**
+     * create the students mode 1 form
+     * @param type $student
+     * @return form mode 1
+     */
     private function createFormMode1($student, $m3) {
 
         $em = $this->getDoctrine()->getManager();
@@ -277,15 +341,14 @@ class EstudianteUpdateController extends Controller {
 
         //echo $student->getLugarNacTipo()->getId();        die;
         if (!$m3) {
-
             $form = $this->createFormBuilder($student)
                     // ->setAction($this->generateUrl('sie_estudiantes_updatestudentA', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
                     ->add('ci', 'hidden', array('label' => 'carnetIdentidad','required' => false, 'mapped' => false, 'data'=>$student->getCarnetIdentidad()))
                     ->add('complemento', 'hidden', array('label' => 'complemento','required' => false, 'mapped' => false))
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('readonly' => 'readonly', 'class' => 'form-control')))
                     
@@ -312,8 +375,8 @@ class EstudianteUpdateController extends Controller {
                     // ->setAction($this->generateUrl('sie_estudiantes_updatestudentD', array('id' => $student->getId())))
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
@@ -414,8 +477,8 @@ class EstudianteUpdateController extends Controller {
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
 
 
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'.- A-ZÑ-\'.-]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
@@ -445,8 +508,8 @@ class EstudianteUpdateController extends Controller {
 
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
 
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñüö A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'.-]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
@@ -686,6 +749,16 @@ class EstudianteUpdateController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        
+        //que esté en calidad
+        $calidad = false;
+        $validacionProcesoId = 0;
+        $validacionTipoId = 0;
+        $validacionProcesoEntity = array();
+        if (isset($form['calidad'])) {
+            $calidad = true;
+            $validacionProcesoId = $form['calidad'];            
+        }
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
@@ -693,16 +766,34 @@ class EstudianteUpdateController extends Controller {
         }
         $oldDataStudent = clone $entity;
         $oldDataStudent = (array)$oldDataStudent;
+
+        $cedulaTipoId = $entity->getCedulaTipo()->getId();
+        if($cedulaTipoId == 2){
+            $form["extranjero"] = 'E';
+        } else {
+            $form["extranjero"] = '';
+        }
         
         // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
 
         if($resultSegip || $resultSegip == 2){
               
-            $entity->setPaterno(mb_strtoupper($form['paterno'], 'utf8'));
-            $entity->setMaterno(mb_strtoupper($form['materno'], 'utf8'));
-            $entity->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
-            $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+            if ($calidad) {
+                $validacionProcesoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
+                if(count($validacionProcesoEntity)>0){
+                    $validacionTipoId = $validacionProcesoEntity->getValidacionReglaTipo()->getId();
+                }
+            }  
+
+            if ($calidad and $validacionTipoId == 20) { 
+                $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+            } else {
+                $entity->setPaterno(mb_strtoupper($form['paterno'], 'utf8'));
+                $entity->setMaterno(mb_strtoupper($form['materno'], 'utf8'));
+                $entity->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
+                $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+            }
             $em->flush();
             $updateDataStudent = (array)$entity;
             $this->get('funciones')->setLogTransaccion(
@@ -724,6 +815,13 @@ class EstudianteUpdateController extends Controller {
             
             $typeMessage = 'success';
             $mainMessage = 'Guardado';
+
+            if ($calidad and count($validacionProcesoEntity)>0) {
+                if(count($validacionProcesoEntity)>0){
+                    $validacionProcesoEntity->setEsActivo(true);
+                    $em->flush();
+                }
+            } 
             
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
@@ -749,6 +847,7 @@ class EstudianteUpdateController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+      
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
@@ -757,12 +856,18 @@ class EstudianteUpdateController extends Controller {
         $oldDataStudent = clone $entity;
         $oldDataStudent = (array)$oldDataStudent;
 
+        $cedulaTipoId = $entity->getCedulaTipo()->getId();
+        if($cedulaTipoId == 2){
+            $form["extranjero"] = 'E';
+        } else {
+            $form["extranjero"] = '';
+        }    
+
          // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
 
         if($resultSegip || $resultSegip == 2){
             
-
             $entity->setPaterno(mb_strtoupper($form['paterno']));
             $entity->setMaterno(mb_strtoupper($form['materno']));
             $entity->setNombre(mb_strtoupper($form['nombre']));
@@ -807,6 +912,30 @@ class EstudianteUpdateController extends Controller {
 
         ));
     }
+
+
+    /*
+    save the log transaccion
+    */
+    private function updateQAstatus($student){
+      // dump($objOldValues);
+      // dump($arrNewValues);die;
+      $em = $this->getDoctrine()->getManager();
+      // get the student with observatino info
+      $objStudentObs =  $em->getRepository('SieAppWebBundle:ValidacionProceso')->getNacFechaAndGeneroInfo($student->getCodigoRude(), $this->session->get('yearQA'));
+      //opdate observation
+      foreach ($objStudentObs as $key => $value) {
+          //get observation values  to update
+          $objValidationProcessUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($value->getId());
+          $objValidationProcessUpdate->setEsActivo('t');
+          $em->persist($objValidationProcessUpdate);
+          $em->flush();
+
+      }
+
+      return true;
+    }
+
 
     /**
      * update an existing Estudiante entity.
@@ -862,7 +991,12 @@ class EstudianteUpdateController extends Controller {
 //
         //save about the certificadoNac
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
-        $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+
+        //$ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        $ci = $form['ci'];
+        $cedulaTipoId = ($form['extranjero'] == 'E') ? 2 : 1;
+        $entity->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
+
         $entity->setCarnetIdentidad($ci);
         $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
@@ -892,7 +1026,8 @@ class EstudianteUpdateController extends Controller {
             }
             $typeMessage = 'success';
             $mainMessage = 'Guardado';
-            
+            // update QA status
+            $this->updateQAstatus($entity);
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
@@ -920,9 +1055,10 @@ class EstudianteUpdateController extends Controller {
      * Save administrativo and manera voluntaria CAMBIOS
      */
     public function updateStudentDAction(Request $request) {
-
+        //dump("***********************");die;
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        
         /*
           print_r($form);
           die; */
@@ -950,7 +1086,12 @@ class EstudianteUpdateController extends Controller {
         ($form['pais'] == 1) ? $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia'])) : $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11));
         ($form['pais'] == 1) ? $entity->setLocalidadNac(strtoupper($form['localidad'])) : $entity->setLocalidadNac(strtoupper(''));
         //save about the certificadoNac
-        $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        
+        //$ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        $ci = $form['ci'];
+        $cedulaTipoId = ($form['extranjero'] == 'E') ? 2 : 1;
+        $entity->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
+
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
         $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
@@ -973,7 +1114,20 @@ class EstudianteUpdateController extends Controller {
                                 $oldDataStudent,
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-        );      
+        );   
+
+          // get the student with observatino info
+          $objStudentObs =  $em->getRepository('SieAppWebBundle:ValidacionProceso')->getNacFechaAndGeneroInfo($entity->getCodigoRude(), $this->session->get('yearQA')-1);
+          //opdate observation
+          foreach ($objStudentObs as $key => $value) {
+              //get observation values  to update
+              $objValidationProcessUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($value->getId());
+              $objValidationProcessUpdate->setEsActivo('t');
+              $em->persist($objValidationProcessUpdate);
+              $em->flush();
+
+          }
+
         // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
         // return $this->redirect($this->generateUrl('sie_estudiantes'));
             if($resultSegip == 1){
@@ -983,7 +1137,7 @@ class EstudianteUpdateController extends Controller {
             }
             $typeMessage = 'success';
             $mainMessage = 'Guardado';
-            
+                
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
@@ -1024,6 +1178,7 @@ class EstudianteUpdateController extends Controller {
         $resultSegip = $this->saveResultSegipService($form);
 
         if($resultSegip || $resultSegip == 2){
+
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi [libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
         $entity->setPaterno(mb_strtoupper($form['paterno']));
         $entity->setMaterno(mb_strtoupper($form['materno']));
@@ -1037,7 +1192,12 @@ class EstudianteUpdateController extends Controller {
         ($form['pais'] == 1) ? $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia'])) : $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11));
         ($form['pais'] == 1) ? $entity->setLocalidadNac(strtoupper($form['localidad'])) : $entity->setLocalidadNac(strtoupper(''));
         //save about the certificadoNac
-        $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+
+        //$ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        $ci = $form['ci'];
+        $cedulaTipoId = ($form['extranjero'] == 'E') ? 2 : 1;
+        $entity->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
+
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
         $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
@@ -1085,7 +1245,6 @@ class EstudianteUpdateController extends Controller {
             'updateMessage' => $updateMessage,
             'typeMessage'   => $typeMessage,
             'mainMessage'   => $mainMessage
-
         ));
     }
     /*

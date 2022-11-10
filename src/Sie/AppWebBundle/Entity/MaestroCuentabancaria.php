@@ -836,4 +836,32 @@ class MaestroCuentabancaria
     {
         return $this->enlazadorApellido;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\Usuario
+     */
+    private $usuario;
+
+
+    /**
+     * Set usuario
+     *
+     * @param \Sie\AppWebBundle\Entity\Usuario $usuario
+     * @return MaestroCuentabancaria
+     */
+    public function setUsuario(\Sie\AppWebBundle\Entity\Usuario $usuario = null)
+    {
+        $this->usuario = $usuario;
+    
+        return $this;
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return \Sie\AppWebBundle\Entity\Usuario 
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
 }

@@ -292,12 +292,33 @@
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>
-                                <span class="text">Operativo Salud de Estudiantes</span>
+                                <span class="text">Control de Calidad</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ccalidad_index')}}">Inconsistencias</a></li>
+
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Operativo Salud</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul>
                                 <li><a href="{{ path('ie_acceso_internet_index')}}">Registro</a></li>
-                                <li><a href="{{ path('ie_acceso_internet_seguimiento')}}">Seguimiento</a></li>
+                                <li><a href="{{ path('opemonitorhealthseg_index')}}">Seguimiento</a></li>
+                                
+                                {% if app.session.get('roluser') in [9] %}
+                                    <li><a href="{{ path('appweb_biosecurityform_index')}}">Formulario Bioseguridad</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('monitorbioform_index')}}">Formulario Bio Seguridad</a></li>
+                                {% endif %}
+                                {# <li><a href="{{ path('InstitucionModalidadAte_index')}}">Registro Modalidad por UE</a></li> #}
+
                             </ul>
                         </li>
                     {% endif %}
@@ -318,8 +339,14 @@
                                 {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_gestion_index')}}">Seguimiento Consolidación</a></li>
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
-                                    <li><a href="{{ path('controlOperativoMenu')}}">Habilitar Operativo 1er. Trimestre</a></li>
                                 {% endif %}
+
+                                {% if app.session.get('roluser') in [7,8,10]  %}
+                                    <li>
+                                        <a href="{{ path('herramienta_infoconsolidation_gestion_inconsistencias_index')}}">Seguimiento Inconsistencias</a>
+                                    </li>
+                                {% endif %}
+
                                 {% if true and app.session.get('roluser') in [0,8]  %}<!--Tecnnico nacional-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades')}}">Nacional Reporte de inicio de actividades</a></li>
                                 {% endif %}
@@ -352,7 +379,7 @@
                                 {% endif %}
 
                                 {% if app.session.get('roluser') in [34] %}
-                                    <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file Bono JP 2021</a></li>
+                                    <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file Bono JP</a></li>
                                 {% endif %}
                             </ul>
                         </li>
@@ -416,7 +443,7 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            <li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>
+                            {#<li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>#}
                             <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
                             {#<li><a href="{{ path('download_file_sie_index')}}">Generar Archivo IGM</a></li>
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>#}
@@ -628,7 +655,7 @@
                                 <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('newForeign_index')}}">Extranjeros</a></li>
                                 <li><a href="{{ path('inscription_new_student_index')}}">Nuevo Estudiante en la UE</a></li>
-                                <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Traslado Inicio de Gestión</a></li>
+                                <li><a href="{{ path('inscription_ini_pri_rue_index')}}"> Gestión</a></li>
                                 {% if app.session.get('roluser') in [7,8,10] %}
                                 <!-- li><a href="{{ path('remove_inscription_sie_index')}}">Eliminar Inscripción</a></li-->
                                 <li><a href="{{ path('inscriptionSpecialNew_find')}}">Centros de Educación Especial</a></li>
@@ -637,6 +664,7 @@
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
                                 <li><a href="{{ path('updateSudentLevel_index')}}">Modificar Nivel y Grado</a></li>
                                 <li><a href="{{ path('rudeunificationinscription_index')}}">Unificar Rudes de Inscripción</a></li>
+                                <li><a href="{{ path('unificacion_inscription_index')}}">Corrección doble inscripción en la UE</a></li>
                                
                                 {#
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
@@ -749,7 +777,7 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                {# <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li> #}
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de Titular</a></li> 
                                 {% if app.session.get('roluser') in [9,10,8] %}
                                   <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
                                 {% endif %}

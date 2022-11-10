@@ -91,7 +91,13 @@
                                 <div class="form-line">
                                     {{form_widget(form.operacion) }}
                                 </div>
-                            </div>                                                                                    
+                            </div>          
+                             <label class="form-label">{{form_label(form.descripcion)}}</label>
+                             <div class="form-group">
+                                <div class="form-line">
+								    {{form_widget(form.descripcion) }}                               
+                                </div>                                                                                   
+                            </div>                                                                           
                         </fieldset>
                             {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
                             <a href="{{path('oac_list', {'idRie': institucion.getId()})}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
@@ -170,6 +176,18 @@
                 $("#form_tiempoEstudio").empty();
                 $("#form_tiempoEstudio").selectpicker('refresh');
                 $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+             //TecSup ; Modular
+            if(regimen == 4)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
                 $("#form_tiempoEstudio").append('<option value="2">2</option>');
                 $("#form_tiempoEstudio").append('<option value="3">3</option>');
                 $("#form_tiempoEstudio").append('<option value="4">4</option>');

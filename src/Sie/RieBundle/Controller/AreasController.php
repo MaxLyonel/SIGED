@@ -54,15 +54,15 @@ class AreasController extends Controller {
                                      FROM SieAppWebBundle:TtecAreaFormacionTipo a 
                                     WHERE a.institucioneducativaTipo in (:idTipo)
                                  ORDER BY a.areaFormacion ASC')
-                    ->setParameter('idTipo', array(7));                                
+                    ->setParameter('idTipo', array(7,8,11,12,13));                                
         $areas = $query->getResult(); 
-
-        $query = $em->createQuery('SELECT a
+        $areas1 = '';
+      /*  $query = $em->createQuery('SELECT a
                                     FROM SieAppWebBundle:TtecAreaFormacionTipo a 
                                 WHERE a.institucioneducativaTipo in (:idTipo)
                                 ORDER BY a.areaFormacion ASC')
                             ->setParameter('idTipo', array(8));                                
-        $areas1 = $query->getResult(); 
+        $areas1 = $query->getResult(); */
 
 
         return $this->render('SieRieBundle:Areas:list.html.twig', array('areas' => $areas, 'areas1' => $areas1));
@@ -77,7 +77,7 @@ class AreasController extends Controller {
         $query = $em->createQuery('SELECT it
                                     FROM SieAppWebBundle:InstitucioneducativaTipo it
                                     WHERE it.id IN (:idTipo)')                                    
-                        ->setParameter('idTipo', array(7, 8));
+                        ->setParameter('idTipo', array(7, 8, 12));
         $datos = $query->getResult();
         foreach($datos as $dato)
         {
@@ -138,7 +138,7 @@ class AreasController extends Controller {
         $query = $em->createQuery('SELECT it
                                     FROM SieAppWebBundle:InstitucioneducativaTipo it
                                     WHERE it.id IN (:idTipo)')                                    
-                        ->setParameter('idTipo', array(7, 8));
+                        ->setParameter('idTipo', array(7, 8,11,12,13));
         $datos = $query->getResult();
         foreach($datos as $dato)
         {

@@ -17,11 +17,14 @@ use Sie\UsuariosBundle\Form\CodIEType;
 class BusquedasController extends Controller
 {
     private $session;
+    public $arrUserAllow;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
+        $this->arrUserAllow = array(5609814,3625644,5062963,8335918,5727128,4300231,1314301,3295554,1897494);
+
     }
     
     public function codiepersonasAction(Request $request) {
@@ -62,6 +65,13 @@ class BusquedasController extends Controller
 
     
     public function formcarnetAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
+
         $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>0)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
 
         return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           
@@ -70,14 +80,14 @@ class BusquedasController extends Controller
     }
     
     public function carnetpersonabuscarAction(Request $request) {
-        
+        //  dump('ok');die;
         $formNacional = $this->createForm(new BuscarPersonaTypev2(array('opcion'=>0)));
+        // dump($formNacional);
         $formNacional->handleRequest($request);
-        
+        // dump($formNacional);die;
         if ($formNacional->isValid())
         {
             $persona = $formNacional->getData();
-            
             /*
             $data = $formNacional->getData();
             $servicioPersona = $this->get('sie_app_web.persona');
@@ -99,12 +109,14 @@ class BusquedasController extends Controller
                 'complemento'=>$complemento,
                 'fecha_nacimiento' => $fecha
             );
-
+            // dump($persona['extranjero']); die;
+            
             if($persona['extranjero']=='1')
-                $arrayDatosPersona['extranjero']='E';
+                $arrayDatosPersona['tipo_persona']='2';
+            // dump($arrayDatosPersona['extranjero']); die;
 
             $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['ci'], $arrayDatosPersona, 'prod', 'academico');
-            
+            // dump($personaValida); die;
             if( $personaValida )
             {
                 $arrayDatosPersona['carnet']=$persona['ci'];
@@ -387,6 +399,12 @@ class BusquedasController extends Controller
     }
     
     public function formusuarioAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }        
         $form = $this->createForm(new PersonaUsuarioType(), null, array('action' => $this->generateUrl('sie_usuario_resultado_nombreusuario'), 'method' => 'POST',));        
         return $this->render('SieUsuariosBundle:Busquedas:personausuario.html.twig', array(           
             'form'   => $form->createView(),
@@ -591,6 +609,12 @@ class BusquedasController extends Controller
     }
 
     public function formcodieAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
         $form = $this->createForm(new CodIEType(), null, array('action' => $this->generateUrl('sie_usuario_cod_ie_buscar'), 'method' => 'POST',));        
         return $this->render('SieUsuariosBundle:Default:codie.html.twig', array(           
             'form'   => $form->createView(),
@@ -659,6 +683,13 @@ class BusquedasController extends Controller
     }        
     
     public function apoderadosieAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
+
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();            

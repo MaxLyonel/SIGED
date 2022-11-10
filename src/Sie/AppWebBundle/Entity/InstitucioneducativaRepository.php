@@ -647,7 +647,9 @@ class InstitucioneducativaRepository extends EntityRepository {
                           nt.nivel, gt.grado, pt.paralelo, IDENTITY(iec.cicloTipo) as cicloTipoId, eat.id as areaEspecialId,
                           IDENTITY(iece.especialProgramaTipo) as especialProgramaTipo, ept.programa as programa,
                           IDENTITY(iece.especialServicioTipo) as especialServicioTipo, est.servicio as servicio,
-                          iec.id as iecId, eat.areaEspecial,iece.id as ieceId, iec.lugar as iecLugar
+                          iec.id as iecId, eat.areaEspecial,iece.id as ieceId, iec.lugar as iecLugar, 
+                          emt.momento, emt.id as momentoId, 
+                          emot.id as modalidadId, emot.modalidad as modalidad
                           ')
                 ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iec.id = iece.institucioneducativaCurso')
@@ -655,17 +657,19 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->leftJoin('SieAppWebBundle:EspecialProgramaTipo', 'ept', 'WITH', 'iece.especialProgramaTipo = ept.id')
                 ->leftJoin('SieAppWebBundle:EspecialServicioTipo', 'est', 'WITH', 'iece.especialServicioTipo = est.id')
                 ->leftJoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'iec.turnoTipo = tt.id')
+                ->leftJoin('SieAppWebBundle:EspecialModalidadTipo', 'emot', 'WITH', 'iece.especialModalidadTipo = emot.id')
                 ->leftJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'iec.nivelTipo = nt.id')
                 ->leftJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'iec.gradoTipo = gt.id')
                 ->leftJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'iec.paraleloTipo = pt.id')
+                ->leftJoin('SieAppWebBundle:EspecialMomentoTipo', 'emt', 'WITH', 'iece.especialMomentoTipo = emt.id')
                 ->where('iec.institucioneducativa = :sie')
                 ->andwhere('iec.gestionTipo =  :gestion')
                 ->setParameter('sie', $sie)
                 ->setParameter('gestion', $gestion)
                 //->distinct()
-                ->groupBy('tt.id, nt.id, ept.programa, est.servicio, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
+                ->groupBy('tt.id, nt.id, ept.programa, est.servicio, emt.momento, emt.id, emot.modalidad, emot.id, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
                 //->orderBy('tt.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
-                ->orderBy('tt.id, eat.id, nt.id,ept.programa, est.servicio, gt.id, pt.id, iec.cicloTipo, iec.id,iece.id')
+                ->orderBy('tt.id, eat.id, nt.id,ept.programa, est.servicio, emt.momento, emt.id, gt.id, pt.id, iec.cicloTipo, iec.id,iece.id')
 
 
         ;

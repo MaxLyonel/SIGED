@@ -35,6 +35,8 @@ class AreasController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
+
+       
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -95,6 +97,7 @@ class AreasController extends Controller {
                     return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
             } else {
+               
                 $nivelUsuario = $request->getSession()->get('roluser');
                 if ($nivelUsuario != 1) { // si no es estudiante
                     // formulario de busqueda de institucion educativa
@@ -107,7 +110,7 @@ class AreasController extends Controller {
                             return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                         }
                     } else {
-
+                       //dcastillo
                         return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                     }
                 } else { // si es institucion educativa
@@ -116,6 +119,7 @@ class AreasController extends Controller {
                         $institucion = $sesinst;
                         $gestion = date('Y') - 1;
                     } else {
+                      
                         $funcion = new \Sie\AppWebBundle\Controller\FuncionesController();
                         $institucion = $funcion->ObtenerUnidadEducativaAction($request->getSession()->get('userId'), $request->getSession()->get('currentyear')); //5484231);
                         $gestion = date('Y') - 1;
@@ -158,10 +162,10 @@ class AreasController extends Controller {
                     ->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
                     ->add('buscar', 'submit', array('label' => 'Buscar Curso', 'attr' => array('class' => 'btn btn-info btn-block')))
                     ->getForm();
-            
+
             //dcastillo formNuevo
             // turnos menos 10,11
-            $RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+            /*$RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();
@@ -170,9 +174,82 @@ class AreasController extends Controller {
             $turnosArray = array();
             for ($i = 0; $i < count($turnos); $i++) {
                 $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
-            }
-            // niveles solo 11,12,13
-            $RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
+            }*/
+
+            // Lista de turnos validos para la unidad educativa
+            $query = $em->createQuery(
+                'SELECT DISTINCT tt.id,tt.turno
+                    FROM SieAppWebBundle:InstitucioneducativaCurso iec
+                    JOIN iec.institucioneducativa ie
+                    JOIN iec.turnoTipo tt
+                    WHERE ie.id = :id
+                    AND iec.gestionTipo = :gestion
+                    ORDER BY tt.id'
+            )
+            ->setParameter('id', $institucion)
+                ->setParameter('gestion', $gestion);
+            $turnos = $query->getResult();
+            $turnosArray = array();
+            for ($i = 0; $i < count($turnos); $i++) {
+                $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+            }    
+            
+            /**
+             * dcastillo 2202: 
+             * si no hay turnos, ver gestion anterior, si no hay habilitar todos
+             */
+
+             if(sizeof($turnosArray) == 0){
+
+                // vemos si hay la gestion anterior
+                $query = $em->createQuery(
+                    'SELECT DISTINCT tt.id,tt.turno
+                        FROM SieAppWebBundle:InstitucioneducativaCurso iec
+                        JOIN iec.institucioneducativa ie
+                        JOIN iec.turnoTipo tt
+                        WHERE ie.id = :id
+                        AND iec.gestionTipo = :gestion
+                        ORDER BY tt.id'
+                )
+                ->setParameter('id', $institucion)
+                    ->setParameter('gestion', $gestion - 1);
+                $turnos = $query->getResult();
+                $turnosArray = array();
+                for ($i = 0; $i < count($turnos); $i++) {
+                    $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+                }    
+
+                if(sizeof($turnosArray) == 0){
+                    // no hay en la gestion anterior, entonces se muestran todos
+
+                    $RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+                    $statement = $em->getConnection()->prepare($RAW_QUERY);
+                    $statement->execute();
+                    $result = $statement->fetchAll();                  
+                    $turnos = $result;
+                    $turnosArray = array();
+                    for ($i = 0; $i < count($turnos); $i++) {
+                        $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+                    }
+
+                }
+
+             }
+
+             //dcastillo: 2102 - habilitar todos los paralelos si es privada, solo A si es fiscal
+            //$RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$institucion;                   
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $dependencia = $result;
+            //dump($dependencia[0]['dependencia_tipo_id']); die;
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+
+
+
+            // niveles solo 11,12,13 reqerimiento incial erroneo
+            /*$RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();                            
@@ -180,7 +257,124 @@ class AreasController extends Controller {
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
                 $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
+            }*/
+
+            //sacamos solo los PERMITIDOS segun RUE para esa UE
+            $sw_nivel_primario = false;
+            $sw_nivel_inicial = false;
+            //para las modulares
+            $sw_nivel_secundario = false;
+
+            $RAW_QUERY = "SELECT
+                nivel_tipo.id, 
+                nivel_tipo.nivel, 
+                nivel_tipo.vigente, 
+                institucioneducativa_nivel_autorizado.institucioneducativa_id
+            FROM
+                institucioneducativa_nivel_autorizado
+                INNER JOIN
+                nivel_tipo
+                ON 
+                    institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+            where institucioneducativa_id = '" . $institucion."' and vigente = true";
+
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $niveles = $result;
+            $nivelesArray = array();
+            for ($i = 0; $i < count($niveles); $i++) {
+                $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
+
+                //para el caso modulares
+                if($niveles[$i]['id'] == 13){
+                    //esta UE tiene habilitada Primaria Comunitaria Vocacional
+                    $sw_nivel_secundario = true;
+                }
+                
+                //para el caso multigrado
+                if($niveles[$i]['id'] == 12){
+                    //esta UE tiene habilitada Primaria Comunitaria Vocacional
+                    $sw_nivel_primario = true;
+                }
+                if($niveles[$i]['id'] == 11){
+                    //esta UE tiene habilitada Inicial en Familia Comunitaria
+                    $sw_nivel_inicial = true;
+                }
+
             }
+
+
+            /**
+             * dcastillo 03052022
+             * si la ue no tiene habilitado secundaria, preguntamos si es modular, si es se aumenta al array
+             */
+
+            $es_modular = false;
+            $paralelosArray = array();           
+          
+            //no tiene  habilitado secundaria, vemos si es modular
+            $sql = "select count(*) as es_modular
+            from institucioneducativa_humanistico_tecnico iht 
+            where iht.institucioneducativa_humanistico_tecnico_tipo_id = 3
+            and gestion_tipo_id = 2021
+            and institucioneducativa_id = '" . $institucion . "'";
+            
+            $statement = $em->getConnection()->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            
+            $es_modular_result = $result;
+            $es_modular_result[0]['es_modular'];
+            if($es_modular_result[0]['es_modular'] != 0){
+                $es_modular = true;
+            }
+
+            if($sw_nivel_secundario == false and $es_modular == true){
+                    $nivelesArray[13] = 'Secundaria Comunitaria Productiva';
+                    $paralelosArray[1] = 'A';
+            }
+
+            
+
+
+
+            /**
+             * dcastillo 2302: si tiene nivel primario, se adiciona nivel inicial y solo paralelo A
+             * solo si es publico caso mULTIGRADOS
+             */
+
+             $sw_habilita_multigrado= false;
+             //vemos si la ue tiene al menos un multigrado en primaria gestion 2022 en la tabla 
+             //institucioneducativa_curso, campo multigrado en nivel_tipo_id = primaria
+             $RAW_QUERY = '
+             SELECT count(*) as existe_multigrado FROM institucioneducativa_curso 
+             where institucioneducativa_id = ' .$institucion . ' and gestion_tipo_id = ' . $gestion . ' and nivel_tipo_id = 12' ;                   
+
+             $statement = $em->getConnection()->prepare($RAW_QUERY);
+             $statement->execute();
+             $result = $statement->fetchAll();
+             $es_multigrado_result = $result;
+             $es_multigrado = false;
+             if($es_multigrado_result[0]['existe_multigrado'] != 0){
+                $es_multigrado = true;
+             }
+
+             /*dump($sw_nivel_primario);
+             dump($sw_nivel_inicial);
+             dump($dependencia_tipo_id);
+             dump($es_multigrado);
+             die;*/
+
+             if($sw_nivel_primario == true and $sw_nivel_inicial == false and $dependencia_tipo_id != 3 and $es_multigrado == true)
+             {
+                 //tiene nivel primario pero no tiene nivel incial, entonces aumentamos nivel incial
+                 $nivelesArray[11] = 'Inicial en Familia Comunitaria';
+                 //array_push($nivelesArray,[11,'Inicial en Familia Comunitaria']);
+                 $sw_habilita_multigrado= true;
+             }
+            
+
             // grados menos 7,8,14,15,16,17,41,42,43,99
             $RAW_QUERY = 'SELECT * FROM grado_tipo where id in (1,2,3,4,5,6);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
@@ -191,25 +385,151 @@ class AreasController extends Controller {
             for ($i = 0; $i < count($grados); $i++) {
                 $gradosArray[$grados[$i]['id']] = $grados[$i]['grado'];
             }
-            // paralelos de la A - Z
-            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';            
-            $statement = $em->getConnection()->prepare($RAW_QUERY);
-            $statement->execute();
-            $result = $statement->fetchAll();                            
-            $paralelos = $result;
-            $paralelosArray = array();
-            for ($i = 0; $i < count($paralelos); $i++) {
-                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+           
+            //TODOS
+
+            //dump(sizeof($paralelosArray)); die;
+            if(sizeof($paralelosArray) == 0)
+            {
+                      
+            if( $sw_habilita_multigrado == false){
+                // como estaba incialmente antes de multigrado
+               
+                if($dependencia_tipo_id != 3 ){
+
+                    if($this->session->get('roluser') == 9 )
+                    {
+                        //es director?
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
+
+                    }else{
+                        // es distrital o departamental o nacional
+                        if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 11 or $this->session->get('roluser') == 8 ){
+
+                            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                            $statement = $em->getConnection()->prepare($RAW_QUERY);
+                            $statement->execute();
+                            $result = $statement->fetchAll();
+                            $paralelos = $result;
+                            $paralelosArray = array();
+                            for ($i = 0; $i < count($paralelos); $i++) {
+                                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                            }
+
+                        }
+                    }
+
+                    
+                    
+
+                }else{
+
+                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                    $statement = $em->getConnection()->prepare($RAW_QUERY);
+                    $statement->execute();
+                    $result = $statement->fetchAll();
+                    $paralelos = $result;
+                    $paralelosArray = array();
+                    for ($i = 0; $i < count($paralelos); $i++) {
+                        $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                    }
+
+                }
+            }else{
+                
+
+                if($this->session->get('roluser') == 9 ) // es director
+                {
+                    if($dependencia_tipo_id != 3 ){
+                        // es fiscal y similares y ademas
+                        //es un caso multigrado, solos e habilita el paralelo A
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
+                    }
+                }
+                
+                if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 10)
+                {
+                    
+                    if($es_modular == true){
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
+                    }else{
+
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
+                    }
+
+                }
+
             }
 
+            }
+            
+            /*if( $dependencia_tipo_id == 3) { 
+                // es privada
+                //TODOS LOS DEMAS DE LA B A LA Z
+                //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelos = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelos); $i++) {
+                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                }
 
+            }else{
+                // es fiscal y similares
+                 //TODOS LOS DEMAS DE LA B A LA Z
+                //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelos = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelos); $i++) {
+                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                }
+            }*/
 
 
             $formNuevo = $this->createFormBuilder()
             ->add('idInstitucion', 'hidden', array('data' => $institucion))
             ->add('idGestion', 'hidden', array('data' => $gestion))
-            ->add('nuevoTurno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control')))            
-            ->add('nuevoNivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $nivelesArray, 'attr' => array('class' => 'form-control')))            
+            ->add('nuevoTurno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control', )))            
+            ->add('nuevoNivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $nivelesArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados2()')))            
             //->add('nivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados()')))
             //->add('grado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))
             ->add('nuevoGrado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $gradosArray, 'attr' => array('class' => 'form-control')))            
@@ -230,6 +550,8 @@ class AreasController extends Controller {
 
             $em->getConnection()->commit();
 
+           
+
 
             //dcastillo aqui llama a esa pantalla donde se van a crear los cursos
             return $this->render('SieRegularBundle:Areas:index.html.twig', array(
@@ -248,9 +570,14 @@ class AreasController extends Controller {
 
     private function formSearch($gestionactual) {
         $gestiones = array();
-        for($i=$gestionactual;$i>=2008;$i--){
+        //dcastillo 3103 solo gestion actual
+        /*for($i=$gestionactual;$i>=2008;$i--){
             $gestiones[$i] = $i;
-        }
+        }*/
+
+        $gestiones[$gestionactual] = $gestionactual;
+
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('areas'))
                 ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => 8)))
@@ -436,14 +763,82 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
         
         $form = $request->get('form');
+
+        // vemos is el nivel es autorizado en el RUDE
+        $sql = "select count(*) from
+                (
+                SELECT
+                    nivel_tipo.id, 
+                    nivel_tipo.nivel, 
+                    nivel_tipo.vigente, 
+                    institucioneducativa_nivel_autorizado.institucioneducativa_id
+                FROM
+                    institucioneducativa_nivel_autorizado
+                    INNER JOIN
+                    nivel_tipo
+                    ON 
+                        institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+                where institucioneducativa_id = '".$form['idInstitucion']."' and vigente = true
+                )as tmp where id = " . $form['nivel'];
+                        
+        $em = $this->getDoctrine()->getManager();      
+        $statement = $em->getConnection()->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        //dump($result[0]['count']); die;
+        $nivelautorizado = $result[0]['count'];
+
+        /**
+         * dcastillo 3/3/22
+         * si no es nivel autorizado, puede ser multigrado
+         */
+        if($nivelautorizado == 0){                  //No es nivel autorizado            
+
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$form['idInstitucion'];                   
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $dependencia = $result;            
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+
+            if($dependencia_tipo_id != 3){          //es fiscal o derivados
+                if($form['nivel'] == 11) {          // es nivel Inicial ? puede ser ser multigrado
+                    if($form['paralelo'] == 1){     // es paralelo A ?
+                        $nivelautorizado = 1;       
+                    }
+
+                }
+            }
+        }
         
+        //dcastillo 2406
+        //caso rzoraide areas para un modular que no tiene habilitado secundaria
+        
+        if($nivelautorizado == 0){     
+            //si es modular
+            $sql = "select count(*) as es_modular
+            from institucioneducativa_humanistico_tecnico iht 
+            where iht.institucioneducativa_humanistico_tecnico_tipo_id = 3
+            and gestion_tipo_id = 2021
+            and institucioneducativa_id = '" . $form['idInstitucion'] . "'";
+            
+            $statement = $em->getConnection()->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll();            
+            if( $nivelautorizado = $result[0]['es_modular'] == 1) {
+                $nivelautorizado == 1;
+            }
+        }
+
+                
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
             'institucioneducativa' => $form['idInstitucion'],
             'gestionTipo' => $form['idGestion'],
             'turnoTipo' => $form['turno'],
             'nivelTipo' => $form['nivel'],
             'gradoTipo' => $form['grado'],
-            'paraleloTipo' => $form['paralelo']
+            'paraleloTipo' => $form['paralelo'],  
+                     
         ));
 
         if ($curso) {
@@ -457,6 +852,9 @@ class AreasController extends Controller {
         $areasCurso = $this->get('areas')->getAreas($idCurso);
         $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
 
+        
+        $existenOfertas = sizeof($areasCurso['cursoOferta']);
+        
         //dacastillo: se adicionan parametros enviados
         return $this->render('SieRegularBundle:Areas:listaAreasCurso.html.twig', array(
             'areas' => $areasCurso,
@@ -468,7 +866,10 @@ class AreasController extends Controller {
             'turnoTipo' => $form['turno'],
             'nivelTipo' => $form['nivel'],
             'gradoTipo' => $form['grado'],
-            'paraleloTipo' => $form['paralelo']
+            'paraleloTipo' => $form['paralelo'],
+            'existenOfertas' => $existenOfertas,
+            'nivelautorizado' => $nivelautorizado
+            
         ));
     }
 
@@ -480,7 +881,9 @@ class AreasController extends Controller {
      * ventana modal
      */
 
-    public function lista_areas_nivelAction($idNivel, $idCurso, $institucioneducativa,$gestionTipo,$turnoTipo,$nivelTipo,$gradoTipo,$paraleloTipo) {        
+    public function lista_areas_nivelAction($idNivel, $idCurso, $institucioneducativa,$gestionTipo,$turnoTipo,$nivelTipo,$gradoTipo,$paraleloTipo) {  
+
+           //llega desde la otra pantalla
                     
             /* inicio modificacion dcastillo 
             necesito 
@@ -492,17 +895,70 @@ class AreasController extends Controller {
             iparalelo character varying
             select sp_crea_curso_oferta('2022', '80730274', '2', '12', '1','3')
             */
+           
+           //nueva regla
+            /*if director = true and nivel_autorizado and  paralelo = A entonces                
+                ejecuta
+            else
+                msg "Acuda a su tecnico distrital o departamental para la ahabilitacion correspondiente"*/
+
+            // validamos que el nivel sea autorizado
+            $sql = "select count(*) from
+                (
+                SELECT
+                    nivel_tipo.id, 
+                    nivel_tipo.nivel, 
+                    nivel_tipo.vigente, 
+                    institucioneducativa_nivel_autorizado.institucioneducativa_id
+                FROM
+                    institucioneducativa_nivel_autorizado
+                    INNER JOIN
+                    nivel_tipo
+                    ON 
+                        institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+                where institucioneducativa_id = '".$institucioneducativa."' and vigente = true
+                )as tmp where id = " . $nivelTipo;
 
             $em = $this->getDoctrine()->getManager();      
-            $query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
-            $query->execute();
-            $valor= $query->fetchAll();
-            $res= $valor[0]['sp_crea_curso_oferta'];
-            /* fin modificacion */
+            $statement = $em->getConnection()->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            //dump($result[0]['count']); die;
+            $nivelautorizado = $result[0]['count'];
 
-            $res= $valor[0]['sp_crea_curso_oferta'];
-            $response = new JsonResponse();
-            return $response->setData(array('exito'=>$res,'mensaje'=>''));
+
+            //director
+           //if($this->session->get('roluser') == 9 ){
+
+                //if($paralelo_id == 1 and $nivelautorizado == 1) {
+
+                    $em = $this->getDoctrine()->getManager();      
+                    $query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
+                    $query->execute();
+                    $valor= $query->fetchAll();
+                    $res= $valor[0]['sp_crea_curso_oferta'];
+                    /* fin modificacion */
+
+                    $res= $valor[0]['sp_crea_curso_oferta'];
+                    $response = new JsonResponse();
+                    return $response->setData(array('exito'=>$res,'mensaje'=>''));
+
+
+
+                /*}else{
+                    $msg = 'Acuda a su Tecnico SIE Distrital o Departamental para la habilitacion Correspondiente';
+                    $response = new JsonResponse();
+                    return $response->setData(array('exito'=>0,'mensaje'=>$msj));    
+                }*/
+
+           /*}else {
+                $msg = 'Su usuario no puede realizar esta operacion !!';
+                $response = new JsonResponse();
+                return $response->setData(array('exito'=>-1,'mensaje'=>$msg));
+           }*/
+
+
+           
     }
 
     /**
@@ -713,7 +1169,7 @@ class AreasController extends Controller {
                         'areas' => $areasCurso,
                         'curso' => $curso,
                         'mensaje' => '',
-                        'operativo'=>$operativo
+                        'operativo'=>$operativo 
             ));
 
             $em->getConnection()->commit();
@@ -846,8 +1302,12 @@ class AreasController extends Controller {
         $institucion_id = $form['idInstitucion'];
         $gestion_id = $form['idGestion'];
 
-         /*dump($institucion_id);
-        dump($gestion_id);
+        /*dump('institucion_id'. $institucion_id);
+        dump('gestion_id: '. $gestion_id);
+        dump('nivel_id: '.$nivel_id);
+        dump('paralelo_id: '. $paralelo_id);
+        dump('turno_id: ' . $turno_id);
+        dump('grado_id: ' . $grado_id);
         
         die;*/
 
@@ -861,11 +1321,14 @@ class AreasController extends Controller {
         igrado character varying, 
         iparalelo character varying)
         */
+       
 
         $em = $this->getDoctrine()->getManager();      
         $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
+        //dump($query); die;
         $query->execute();
         $valor= $query->fetchAll();
+
         //dump($valor[0]['sp_crea_nuevo_curso']); die;
         
         /*$RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
@@ -876,8 +1339,10 @@ class AreasController extends Controller {
 
 
         $res= $valor[0]['sp_crea_nuevo_curso'];
+       
         $response = new JsonResponse();
         return $response->setData(array('exito'=>$res,'mensaje'=>''));
+       
     }   
 
 }

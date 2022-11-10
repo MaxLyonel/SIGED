@@ -1,0 +1,944 @@
+{% extends 'layoutUniversity.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentBread %}
+    <i class="fa fa-angle-right"></i>
+    <a href="#">
+        Sedes
+    </a>   
+{% endblock %}
+{% block contentoption %}
+    
+    <!-- Start page header -->
+    <div class="header-content fixed-top">
+        <h2>
+            <i class="fa fa-home"></i>
+            {% if titulo is defined %}
+                {{ titulo }}
+            {% endif %}
+            <span>
+                {% if subtitulo is defined %}
+                    {{ subtitulo }}
+                {% endif %}
+            </span>
+        </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('maininfouni_index')}}">Registro de Información</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Administración de Carreras</li>
+        </ol>
+        </div>
+    <!-- /.breadcrumb-wrapper -->
+    </div>
+    <!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">        
+        <div class="row">
+            <div class="panel">
+                {## <div class="panel-heading">
+                    <h3 class="mt-0 text-primary">
+                        <strong>
+                            {{ central.universidad }}
+                        </strong>
+                    </h3>
+                    <h4 class="mt-0 text-info">
+                        {{ central.abreviacion }}
+                    </h3>
+                </div>##}
+                <div class="panel panel-primary">
+                    <div class="panel-heading yearOld">
+                        <h3 class="panel-title"> <i class="fa fa-file"></i> ADMINISTRACION DE CARRERAS</h3>
+                    </div>
+
+                    <div class="panel-body">
+                    
+                        {% for flashMessage in app.session.flashbag.get('carreraok') %}
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            {{ flashMessage }}
+                        </div>
+                        {% endfor %}
+                    
+                    
+                    </div>
+                
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-9">
+
+                        <div class="panel panel-tab panel-tab-double rounded shadow">
+                        <!-- Start tabs heading -->
+                            <div class="panel-heading no-padding">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="component-tabsaccordion.html#tab2-1" data-toggle="tab">                                            
+                                            <div>
+                                                <span class="text-strong">PREGRADO</span>                                           
+                                            </div>
+                                        </a>
+                                    </li>
+                                   
+                                    <li>
+                                        <a href="component-tabsaccordion.html#tab2-2" data-toggle="tab">                                            
+                                            <div>
+                                                <span class="text-strong">POSTGRADO</span>                                            
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="panel-body">
+
+                               
+                            
+                                <div class="tab-content">
+
+                                    <div class="tab-pane fade in active" id="tab2-1">
+
+                                        {#
+                                        <button class="btn btn-m btn-primary yearOld" onclick="showModalNew(1)">
+                                            Adicionar Carrera                       
+                                        </button>
+                                        #}
+                                        <hr>
+                                    
+                                       
+
+                                        <div class="formatyears">
+                                        <table id="tbl-pregrado" class="table table-bordered table-hover cf dataTable table-primary">
+                                            <thead class="cf">
+                                                <tr>
+                                                    
+                                                    <th width="30%">
+                                                        Nombre Carrera                                      
+                                                    </th>
+                                                    <th width="30%">
+                                                        Grado Academico                                      
+                                                    </th>
+                                                    
+                                                    <th width="10%">
+                                                        Acciones                                     
+                                                    </th>
+                                                    <th width="20%" align="center">
+                                                        Datos                                            
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            {% for key, entity in carreras %}
+                                                <tr>
+                                                    
+                                                    <td>
+                                                        <strong>{{ entity.carrera |trim }}</strong>
+                                                    </td>
+
+                                                    <td>
+                                                        {{ entity.getUnivGradoAcademicoTipo().getGradoAcademico() |trim }}
+                                                    </td>
+                                                
+                                                    <td>
+                                                        {#
+                                                        {% if entity.esSiesu == 0 %}
+                                                        <button  style="border-radius: 10px;" class="btn btn-danger" onclick="deleteCarrera('{{ entity.id }}');">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                        {% endif %}
+                                                        
+
+                                                        {% if entity.esSiesu == 0 %}
+
+                                                        <button  style="border-radius: 10px;" class="btn btn-info"
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',0,'{{ entity.getUnivAreaConocimientoTipo.getId() | default(0) }}');">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+
+                                                        {% else %}
+
+                                                        <button  style="border-radius: 10px;" class="btn btn-warning"
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+
+                                                        {% endif %}
+                                                        #}
+
+                                                        <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver datos"
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion |trim}}',' {{ entity.duracionAnios |trim}}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+
+
+                                                    </td>
+
+                                                    <td>                                                       
+
+                                                        <a href="{{ path('carreras_info',  {'carrera_id':entity.id, 'gestion' : last_gestion }) }}" style="border-radius: 0px;" class="btn btn-success btn-push" data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="Ver Estadisticas"><i class="fa fa-signal"></i>  Estadisticas  </i></a>
+
+                                                        
+                                                        
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        </div>
+                                      
+                                        
+                                    </div>
+
+                                    <div class="tab-pane fade " id="tab2-2">
+
+                                        {#
+                                        <button  class="btn btn-m btn-primary yearOld" onclick="showModalNew(2)">
+                                            Adicionar Carrera                       
+                                        </button>
+                                        #}
+                                        <hr>
+
+                                            <div class="table-responsive">
+                                                <table id="tbl-postgrado" class="table table-bordered table-hover cf dataTable table-teal">
+                                                    <thead class="cf">
+                                                        <tr>
+                                                            
+                                                            <th width="30%">
+                                                                Nombre Carrera                                      
+                                                            </th>
+
+                                                            <th width="30%">
+                                                                Grado Academico
+                                                            </th>
+                                                        
+                                                            <th width="10%">
+                                                                Acciones                                     
+                                                            </th>
+                                                            <th width="20%" align="center">
+                                                                Datos                                            
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    {% for key, entity in carreras_post %}
+                                                        <tr>
+                                                            
+                                                            <td>
+                                                                <strong>{{ entity.carrera |trim }}</strong>
+                                                            </td>
+
+                                                            <td>
+                                                                {{ entity.getUnivGradoAcademicoTipo().getGradoAcademico() |trim }}
+                                                            </td>
+                                                        
+                                                            <td>
+                                                                {#
+                                                                {% if entity.esSiesu == 0 %}                                                                   
+                                                                    <button style="border-radius: 10px;" class="btn btn-danger"  onclick="deleteCarrera('{{ entity.id }}');">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                {% endif %}
+
+                                                                {% if entity.esSiesu == 0 %}
+
+                                                                <button  style="border-radius: 10px;" class="btn btn-info"
+                                                                    onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',0,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0)}}');">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </button>
+
+                                                                {% else %}
+
+                                                                    <button style="border-radius: 10px;" class="btn btn-warning" 
+                                                                        onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </button>
+
+                                                                {% endif %}
+                                                                #}
+
+                                                                <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver datos"
+                                                                    onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </button>
+
+
+                                                            </td>
+                                                            <td>
+                                                                <a href="{{ path('carreras_info', {'carrera_id':entity.id, 'gestion' : last_gestion }) }}" class="btn btn-success btn-push" data-toggle="tooltip" data-placement="top"
+                                                                    data-original-title="Ver Estadisticas"><i class="fa fa-signal"></i>  Ver Estadisticas</a>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                       
+                                    </div>
+
+
+                                </div>
+
+                               
+
+                            </div>
+
+
+                        </div>
+
+
+
+                            
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel panel-info">
+
+                                <br>
+                              
+                                {## <div class="panel-heading yearOld">
+                                    <h3 class="panel-title">
+                                        Panel Info
+                                                                            
+                                    </h3>
+                                </div>##}
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                {## 
+                                <div style=" text-align: center;">
+                                    <i class="fa fa-institution fa-lg"></i>
+                                </div>
+                                <h3>{{ central.universidad }}</h3>
+                                <h4> Sede: La Paz </h4>
+                                ##}
+
+                                    <div class="row  inner-all">                        
+                                <div class="panel text-center rounded shadow">
+                                    <div class="panel-body bg-success rounded">
+                                           
+                                        <h5 class="media-heading">Carreras</h5>                                        
+                                        <div style="height:60px">
+                                            <h3 class="text-strong mb-0" id="cantDocAdm">{{ total_carreras }}</h3>
+                                            <p class="text-muted">TOTAL GENERAL</p> 
+                                        </div>
+                                            
+                                        
+                                    </div><!-- /.panel-body -->
+                                    <hr>
+                                    <div class="panel-body bg-info rounded">
+                                    
+                                        <h5 class="media-heading">Carreras</h5>
+                                        <div style="height:60px">
+                                            <h3 class="text-strong mb-0" id="cantDocAdm"> {{ total_carreras_pre }}</h3>
+                                            <p class="text-muted">TOTAL PREGRADO</p>
+                                        </div>
+                                    
+                                    
+                                    </div><!-- /.panel-body -->
+                                    <hr>
+                                    <div class="panel-body bg-warning rounded">
+                                    
+                                        <h5 class="media-heading">Carreras</h5>
+                                        <div style="height:60px">
+                                            <h3 class="text-strong mb-0" id="cantDocAdm"> {{ total_carreras_post }}</h3>
+                                            <p class="text-muted">TOTAL POSTGRADO</p>
+                                        </div>
+                                    
+                                    
+                                    </div><!-- /.panel-body -->
+                                </div>
+                            </div>
+
+                                
+
+                                                                                                        
+                                                                    
+                                </div>
+                            <!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+   
+   
+    <div id="modal-new" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                    </button>
+                    <h4 id="titulo" class="modal-title">
+                    
+                    </h4>
+                </div>
+                <form action="{{ path('carreras_new') }}" method="post">
+                    <div class="modal-body">
+                    <div class="form-body no-padding">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="carrera">
+                                Carrera
+                                </label>
+                                <input type="text" class="form-control" id="carrera" name= "carrera" placeholder="" maxlength="60">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="modalidad">
+                                    Area de Conocimiento
+                                </label>
+                                <select name="area_conocimiento_id" id="area_conocimiento_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in area_conocimiento %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {#<div class="row">
+                            <div class="col-sm-12">
+                                <label for="resolucion">
+                                Resolución
+                                </label>
+                                <input type="text" class="form-control" id="resolucion" name="resolucion" placeholder="" maxlength="15">
+                            </div>
+                        </div>#}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="fecha_apertura">
+                                Fecha Apertura
+                                </label>
+                                <input type="text" class="form-control fecha" id="fecha_apertura" name="fecha_apertura" placeholder="" maxlength="60">
+                            </div>
+                            <input type="hidden"  id="nivel_academico_id" name="nivel_academico_id" value="">
+                            <div class="col-sm-6">
+                                <label for="resolucion">
+                                Resolución
+                                </label>
+                                <input type="text" class="form-control" id="resolucion" name="resolucion" placeholder="" maxlength="15">
+                            </div>
+                            
+                            {# 
+                            <div class="col-sm-6">
+                                <label for="nivel">
+                                Nivel Académico
+                                </label>
+                                <select name="nivel_academico_id" id="nivel_academico_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in niveles %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            #}
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="modalidad">
+                                Modalidad Enseñanza
+                                </label>
+                                <select name="modalidad_id" id="modalidad_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in modalidad %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                           
+                            <div class="col-sm-6">
+                                <label for="grado">
+                                Grado Académico
+                                </label>
+                                <select name="grado_id" id="grado_id" class="custom-select js-example-basic-multiple form-control">
+                                
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="modalidad">
+                                Régimen de Estudios
+                                </label>
+                                <select name="regimen_id" id="regimen_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in regimen_estudios %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            
+                            {##
+                            <div class="col-sm-6">
+                                <label for="grado">
+                                Periodo Académico
+                                </label>
+                                <select name="periodo_id" id="periodo_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in periodo_academico %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            ##}
+                            <div class="col-sm-6">
+                                <label for="modalidad">
+                                Duracion (Semestres)
+                                </label>
+                                <input type="text" class="form-control" id="duracion" name="duracion" placeholder="" maxlength="15">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="grado">
+                                Duracion Años
+                                </label>
+                                <input type="numeric" class="form-control" id="duracion_anios" name="duracion_anios" placeholder="" maxlength="15">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-theme">
+                    Grabar
+                    </button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+  
+    </div>
+    
+
+    <div id="modal-edit" class="modal modal-info fade bs-example-modal-lg2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                    </button>
+                    <h4 id="titulo-edit" class="modal-title">
+                    
+                    </h4>
+                </div>
+                <form action="{{ path('carreras_edit') }}" onsubmit="return validateForm()" method="post">
+                    <input type="hidden"  id="carrera_id" name="carrera_id">
+                    <div class="modal-body">
+                    <div class="form-body no-padding">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="carrera">
+                                Carrera dsadad
+                                </label>
+                                <input type="text" class="form-control" id="edit_carrera" name= "edit_carrera" placeholder="" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="modalidad">
+                                    Area de Conocimiento
+                                </label>
+                                <select name="edit_area_conocimiento_id" id="edit_area_conocimiento_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in area_conocimiento %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="resolucion">
+                                Resolución
+                                </label>
+                                <input type="text" class="form-control" id="edit_resolucion" name="edit_resolucion" placeholder="" maxlength="15">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="fecha_apertura">
+                                Fecha Apertura
+                                </label>
+                                <input type="text" class="form-control" id="edit_fecha_apertura" name="edit_fecha_apertura" placeholder="" maxlength="15">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="nivel">
+                                Nivel Académico
+                                </label>
+                                <select name="edit_nivel_academico_id" id="edit_nivel_academico_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in niveles %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="modalidad">
+                                Modalidad Enseñanza
+                                </label>
+                                <select name="edit_modalidad_id" id="edit_modalidad_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in modalidad %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="grado">
+                                Grado Académico
+                                </label>
+                                <select name="edit_grado_id" id="edit_grado_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in grado_academico_pre %}                               
+                                <option value="{{ c.id }}">
+                                    {{ c.getGradoAcademico() }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="modalidad">
+                                Régimen de Estudios
+                                </label>
+                                <select name="edit_regimen_id" id="edit_regimen_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in regimen_estudios %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            {##<div class="col-sm-6">
+                                <label for="grado">
+                                Periodo Académico
+                                </label>
+                                <select name="periodo_id" id="periodo_id" class="custom-select js-example-basic-multiple form-control">
+                                {% for c in periodo_academico %}
+                                <option value="{{ c.id }}">
+                                    {{ c.descripcion }}
+                                </option>
+                                {% endfor %}
+                                </select>
+                            </div>##}
+                            <div class="col-sm-6">
+                                <label for="modalidad">
+                                Duracion Semestres
+                                </label>
+                                <input type="text" class="form-control decimales" id="edit_duracion" name="edit_duracion" placeholder="9 o 9.5 segun corresponda" maxlength="3" data-type="currency" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="grado">
+                                Duracion Años
+                                </label>
+                                <input type="text" class="form-control decimales" id="edit_duracion_anios" name="edit_duracion_anios" placeholder="4 o 4.5 segun corresponda" maxlength="3" required>
+                            </div>
+                        </div>
+                        {##<div class="row">
+                            <div class="col-sm-6">
+                                <label for="modalidad">
+                                Estado
+                                </label>
+                                <input type="text" class="form-control" id="resolucion" placeholder="" maxlength="15">
+                            </div>
+                        </div>
+                        ##}
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Cancelar
+                    </button>
+                    <button id="btn_save_edit" type="submit" class="btn btn-theme">
+                    Actualizar Datos
+                    </button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+
+    </div>
+
+   
+</div>
+
+        
+
+        
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+   
+
+    var ingresoSede = function (sede){
+        var formSede = $('#form_sede');
+        var formulario = $('#form')[0];
+        formSede.val(sede);
+        formulario.submit();        
+        return true;
+    };
+
+    $(function(){
+        $(".fecha").inputmask({ "alias": "dd-mm-yyyy" });
+        $('#tbl-pregrado').DataTable();
+        $('#tbl-postgrado').DataTable();
+    });
+
+    function showModalNew(nivel_id) {
+        console.log(nivel_id);
+
+        if(nivel_id == 1){
+            $("#titulo").html('Nueva Carrera PREGRADO');
+        }else{
+            $("#titulo").html('Nueva Carrera POSTGRADO');
+        }
+
+        document.getElementById("nivel_academico_id").setAttribute('value', nivel_id);
+        
+        $("#modal-new").modal('show');
+    }
+
+    function updateCarrera(id, carrera, resolucion, fecha_apertura, duracion, duracion_anios, nivel_academico_id, modalidad_id, grado_id, regimen_id, sw, area_conocimiento_id){
+
+        /*
+        sw = 0 es editar
+        sw = 1 es ver
+        */
+        console.log(fecha_apertura);
+        console.log(duracion);
+        console.log(duracion_anios);
+
+        if(sw == 0){
+            $("#titulo-edit").html('Editar Carrera');
+        }else{
+            $("#titulo-edit").html('Ver Datos Carrera');
+        }
+
+         console.log(area_conocimiento_id);
+
+        if (area_conocimiento_id == 0) {
+
+            //remove options with value = 0
+            var select = document.getElementById('edit_area_conocimiento_id')
+            //select.removeChild(select.options[0])
+            //select.removeChild(getOptionByValue(select, '0'))
+            //select.removeChild(select.querySelector('option[value="0"]'))
+
+            for (var i = 0; i < select.length; i++) {
+                if (select.options[i].value == '0')
+                    select.remove(i);
+            }
+
+            var select = document.getElementById("edit_area_conocimiento_id");
+            var option = document.createElement('option');        
+            option.innerHTML = "-- Seleccione una opcion --";
+            option.value = "0";         
+            console.log(option);
+            select.appendChild(option);
+            $('#edit_area_conocimiento_id').val(0);
+        } else {
+            $('#edit_area_conocimiento_id').val(area_conocimiento_id);
+        }
+
+
+        document.getElementById("carrera_id").value = id;
+        document.getElementById("edit_carrera").value = carrera;
+        document.getElementById("edit_resolucion").value = resolucion;
+        document.getElementById("edit_fecha_apertura").value = fecha_apertura;
+
+        document.getElementById("edit_duracion").value = duracion.replace(/\s+/g, "");
+        document.getElementById("edit_duracion_anios").value = duracion_anios.replace(/\s+/g, "");
+        
+        $('#edit_nivel_academico_id').val(nivel_academico_id);
+        $('#edit_modalidad_id').val(modalidad_id);
+        $('#edit_grado_id').val(grado_id);
+        $('#edit_regimen_id').val(regimen_id);  
+        
+        $('#edit_area_conocimiento_id').val(area_conocimiento_id);
+
+        console.log(sw);
+        if(sw == 1){
+
+            document.getElementById("edit_carrera").readOnly = true;
+            document.getElementById("edit_resolucion").readOnly = true;
+            document.getElementById("edit_fecha_apertura").readOnly = true;
+            document.getElementById("edit_duracion").readOnly = false;
+            document.getElementById("edit_duracion_anios").readOnly = false;
+           
+
+            $('#edit_modalidad_id').prop('disabled', true);
+            $('#edit_grado_id').prop('disabled', true);
+            $('#edit_regimen_id').prop('disabled', true);
+            $('#edit_nivel_academico_id').prop('disabled', true);
+
+            /*var button = document.getElementById("btn_save_edit");
+            button.style.display = "none";*/
+
+        }else{
+
+            document.getElementById("edit_carrera").readOnly = false;
+            document.getElementById("edit_resolucion").readOnly = false;
+            document.getElementById("edit_fecha_apertura").readOnly = false;
+            document.getElementById("edit_duracion").readOnly = false;
+            document.getElementById("edit_duracion_anios").readOnly = false;
+            $('#edit_modalidad_id').prop('disabled', false);
+            $('#edit_grado_id').prop('disabled', false);
+            $('#edit_regimen_id').prop('disabled', false);
+            $('#edit_nivel_academico_id').prop('disabled', false);
+
+        }
+
+        $("#modal-edit").modal('show');
+    
+    }
+
+    function getOptionByValue(select, value) {
+        var options = select.options;
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].value === value) {
+                return options[i]
+            }
+        }
+        return null
+    }
+
+    function deleteCarrera(id) {
+        var msj = '\n\n ¿Esta seguro de continuar?';
+      
+        if (confirm('Está por eliminar una carrera:' + msj)) {
+            console.log('begin delete');
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('carreras_delete', {'id': id}),  
+                success: function (data) {
+                    console.log(data);
+                    console.log('deleted !');
+                    if(data.status == 201){
+                        // tiene datos
+                        swal({ title: "Atencion !", text: data.msg});
+                    }
+                },
+                error: function () {
+
+                }
+            });
+
+        }
+
+        return false;
+    }
+
+    function validateForm() {
+        console.log('validation');
+       
+        var e = document.getElementById("edit_area_conocimiento_id");
+        var value = e.options[e.selectedIndex].value;
+
+        var value = e.value;
+
+        console.log(value);
+        if (value == "0") {
+            alert("Debe seleccionar un Area de Conocimiento");
+            return false;
+        }
+
+        let aux = document.getElementById("edit_duracion").value;     
+        aux = aux.trim();
+        console.log('aux:', aux.length);
+        if(aux.length == 0){
+            alert("la duracion en semestres no puede ser nula o vacia");
+            return false;
+        }
+        
+        let aux2 = document.getElementById("edit_duracion_anios").value;
+        aux2 = aux2.trim();
+        console.log('aux2:',aux2.length);
+        if (aux2.length == 0) {  
+            alert("la duracion en años no puede ser nula o vacia");
+            return false;
+        }
+
+        if( esnumero(aux) == 0){
+            //no es numero
+            alert("la duracion en semestres no es un numero valido !");
+            return false;
+        }else{
+            //es numero, es valido ?
+            if(aux>0 && aux<=12 ){
+                // es valor correcto
+            }else{
+                alert("la duracion en semestres no pertenece a un rango valido !");
+                return false;
+            }
+        }
+
+        if( esnumero(aux2) == 0){
+            //no es numero
+            alert("la duracion en años no es un numero valido !");
+            return false;
+        }else{
+            //es numero, es valido ?
+            if(aux2>0 && aux2<=6){
+                // es valor correcto
+            }else{
+                alert("la duracion en años no pertenece a un rango valido !");
+                return false;
+            }
+        }
+
+        if(!confirm('Actualizar los datos de la carrera ?')){return false;}
+
+    }
+
+    $('.decimales').on('input', function () {
+        this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+    });
+
+    function esnumero(valor){
+        var num = valor; //"987238";
+
+        if(num.match(/^-?\d+$/)){
+        //valid integer (positive or negative)
+        return 1;
+        }else if(num.match(/^\d+\.\d+$/)){
+        //valid float
+        return 1;
+        }else{
+        //not valid number
+        return 0;
+        }
+    }
+
+
+
+</script>
+{% endblock %}
+                            

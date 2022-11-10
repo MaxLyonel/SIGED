@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\EstudianteDestacadoAuditoria:
+    type: entity
+    table: estudiante_destacado_auditoria
+    indexes:
+        IDX_9206F945DB38439E:
+            columns:
+                - usuario_id
+        IDX_9206F945712C042D:
+            columns:
+                - estudiante_destacado_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteDestacado:
+            targetEntity: EstudianteDestacado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_destacado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

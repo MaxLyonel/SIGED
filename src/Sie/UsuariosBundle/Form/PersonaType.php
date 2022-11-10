@@ -32,6 +32,12 @@ class PersonaType extends AbstractType
             //->add('estadocivilTipo', 'entity', array('label' => 'Género', 'class' => 'SieAppWebBundle:EstadoCivilTipo', 'attr' => array('class' => 'form-control','style'=>'text-transform:uppercase')))
             //->add('celular', 'text', array('label' => 'Nro de Celular', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell','data-toggle'=>'tooltip','data-placement'=>'bottom','data-original-title'=>'El número de celular debe tener 8 digitos')))
             ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'attr' => array('class' => 'form-control jemail','pattern' => '^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$','maxlength'=>'40')))
+            ->add('extranjero','choice', array(
+                'choices'=>array('1'=>'No','2'=>'Si'),
+                'data' => '1',
+                'multiple'=>false,
+                'expanded'=>true,
+            ))
             //->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters','pattern'=>'[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]{4,50}','maxlength'=>'50','style'=>'text-transform:uppercase')))
             //->add('rda', 'text', array('label' => 'Rda', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{1,10}','maxlength'=>'6','data-toggle'=>'tooltip','data-placement'=>'bottom','data-original-title'=>'En caso de no contar con RDA colocar: 0')))
             ->add('save', 'submit', array("attr" => array("type" => "button", "class" => "btn btn-success btn-large glyphicon glyphicon-ok-sign"), 'label' => ' Guardar'))             

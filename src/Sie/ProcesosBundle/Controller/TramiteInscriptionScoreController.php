@@ -43,6 +43,7 @@ class TramiteInscriptionScoreController extends Controller{
     }    
 
     public function indexAction (Request $request) {
+        
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
         $ie_id = $this->session->get('ie_id');

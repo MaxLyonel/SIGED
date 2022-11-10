@@ -1,3 +1,11 @@
+sie_tecnica_est:
+    resource: "@SieTecnicaEstBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_university:
+    resource: "@SieUniversityBundle/Resources/config/routing.yml"
+    prefix:   /
+
 sie_procesos:
     resource: "@SieProcesosBundle/Resources/config/routing.yml"
     prefix:   /

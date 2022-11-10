@@ -272,7 +272,6 @@ class InfoMaestroController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-        //dump($form);die;       
 
         $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
         
@@ -311,7 +310,12 @@ class InfoMaestroController extends Controller {
             'nombre' => $form['nombre'],
             'fecha_nacimiento' => $form['fecha_nacimiento']
         ];
-
+        if ($request->get('nacionalidad')) {
+            //NA: nacional, EX: extranjero
+            $nacionalidad = $request->get('nacionalidad'); //EX o NA
+            $tipo_persona = ($nacionalidad == 'NA') ? 1 : 2;
+        }
+        
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
         $persona = array();
 
@@ -322,7 +326,8 @@ class InfoMaestroController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'tipo_persona' => $tipo_persona,
             ];
         }
 
@@ -340,6 +345,7 @@ class InfoMaestroController extends Controller {
             'persona' => serialize($persona),
             'institucion' => $form['institucion'],
             'gestion' => $form['gestion'],
+            'tipo_persona' => $tipo_persona
         ));
     }
 
@@ -356,13 +362,22 @@ class InfoMaestroController extends Controller {
 
         $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
         $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
+        
+
+        $tipo_persona = 1;
+        if ($request->get('tipo_persona')) {
+            //NA: nacional, EX: extranjero            
+            $tipo_persona = ($request->get('tipo_persona') == "1") ? 1 : 2;
+        }
+
         $arrayDatosPersona = array(
             //'carnet'=>$form['carnet'],
             'complemento'=>$complemento,
             'paterno'=>$persona['primer_apellido'],
             'materno'=>$persona['segundo_apellido'],
             'nombre'=>$persona['nombre'],
-            'fecha_nacimiento' => $fecha
+            'fecha_nacimiento' => $fecha,
+            'tipo_persona' => $tipo_persona
         );
 
         $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
@@ -389,12 +404,14 @@ class InfoMaestroController extends Controller {
                 $newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
                 $newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
                 $newPersona->setSegipId(1);
+                
                 $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
                 $newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
                 $newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadocivilTipo')->findOneById(0));
                 $newPersona->setRda('0');
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find( $tipo_persona));
 
                 $em->persist($newPersona);
                 $em->flush();
@@ -632,6 +649,7 @@ class InfoMaestroController extends Controller {
                 ->add('formacionDescripcion', 'text', array('label' => 'Denominativo del título del último grado de formación alcanzado', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '45', 'pattern' => '[A-Za-z0-9\Ññ ]{0,45}')))
                 ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista'))
                 ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+                ->add('rda', 'text', array('label' => 'RDA', 'required' => false, 'data' => $persona->getRda() ,'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'form-control')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille'))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-facebook')))
@@ -696,6 +714,7 @@ class InfoMaestroController extends Controller {
                 ->add('formacionDescripcion', 'text', array('label' => 'Denominativo del título del último grado de formación alcanzado', 'required' => false, 'data' => $maestroInscripcion->getFormaciondescripcion(), 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '45', 'pattern' => '[A-Za-z0-9\Ññ ]{0,45}')))
                 ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista', 'attr' => array('checked' => $maestroInscripcion->getNormalista())))
                 ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'data' => $maestroInscripcion->getItem() ? $maestroInscripcion->getItem() : 0, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+                ->add('rda', 'text', array('label' => 'RDA', 'required' => false, 'data' => $persona->getRda() ? $persona->getRda() : 0, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => ($maestroInscripcion->getEstudiaiomaMaterno()), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'form-control')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('checked' => $maestroInscripcion->getLeeescribebraile())))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-facebook')))
@@ -874,6 +893,7 @@ class InfoMaestroController extends Controller {
             $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
             $persona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
             $persona->setCelular($form['celular']);
+            $persona->setRda($form['rda']);
             $persona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
             $em->persist($persona);
             $em->flush();

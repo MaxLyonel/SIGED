@@ -200,7 +200,7 @@ class Olimfunctions {
 
     $sql = "
             
-            select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento 
+            select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento, e.segip_id 
             from institucioneducativa ie 
             left join institucioneducativa_curso iec on ie.id = iec.institucioneducativa_id
             left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
@@ -226,7 +226,7 @@ class Olimfunctions {
 
       $sql = "
               
-              select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento 
+              select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento, e.segip_id 
               from institucioneducativa ie 
               left join institucioneducativa_curso iec on ie.id = iec.institucioneducativa_id
               left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
@@ -496,7 +496,7 @@ class Olimfunctions {
           left join grado_tipo gt on (iec.grado_tipo_id = gt.id)
           left join paralelo_tipo pt on (iec.paralelo_tipo_id = pt.id)
           left join turno_tipo tt on (iec.turno_tipo_id = tt.id)
-          where i.institucioneducativa_tipo_id = 1 and e.codigo_rude = '".$data['codigoRude']."' and iec.gestion_tipo_id = ".$data['gestiontipoid']."
+          where  ei.estadomatricula_tipo_id = 4 and i.institucioneducativa_tipo_id = 1 and e.codigo_rude = '".$data['codigoRude']."' and iec.gestion_tipo_id = ".$data['gestiontipoid']."
         
       "
     );

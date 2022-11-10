@@ -1,0 +1,74 @@
+{% extends 'layoutTecnicaEst.html.twig' %}
+{% block contentBread %}
+<i class="fa fa-angle-right"></i>
+<a href="#">Gestiones</a>
+{% endblock %}
+{% block contentoption %}  
+    {% if gestiones is defined  %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <form name="form" id="form" role="form" action="{{ path('sie_tecest_operativo') }}" method="POST" onsubmit="return verificaCampos()">
+                    <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
+                    <input type="hidden" id="form_gestion" name="form[gestion]" value="">
+                    <input type="hidden" id="form_sede" name="form[sede]" value="{{sede.id|base64_encode }}">                    
+                </form>
+                    <div class="panel">                        
+                        <div class="panel-head">
+                            <table id="tabla" class="table table-striped table-bordered table-default" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px; text-align:center;">#</th>
+                                        <th style="text-align:center;">Gestión</th>
+                                        <th style="width:50px; text-align:center;">
+                                            &nbsp;
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set c = 0 %}
+                                    {% for gestion in gestiones %}
+                                        {% set c = c + 1 %}
+                                        {% set id = gestion.id %}
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                {{c}}
+                                            </td>
+                                            <td>{{ gestion.id }}</td>
+                                            <td><a href="javascript:void(0);" onclick="ingresoGestion({{id}})" class="btn btn-primary">Seleccionar</a></td>    
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div><!-- /.panel-body -->
+
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+
+    </div>
+
+
+
+
+
+{% endblock %}
+{% block javascripts%}
+{{parent()}}
+<script>
+
+    var ingresoGestion = function (gestion){
+        var formGestion = $('#form_gestion');
+        var formulario = $('#form')[0];
+        formGestion.val(gestion);
+        formulario.submit(); 
+        if (formGestion.val() == ""){
+          alert("Debe seleccionar una gestión válida");
+          return false;
+        }       
+        return true;
+    };
+
+</script>
+{% endblock %}

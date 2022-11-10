@@ -1,0 +1,69 @@
+tramite_inclusion_calificacion_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:index }
+
+tramite_inclusion_calificacion_buscar_estudiante:
+    path:     /kbuscarEstudiante
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:buscarEstudiante }
+    options:
+        expose: true
+
+tramite_inclusion_calificacion_buscar_calificaciones:
+    path:     /kbuscarCalificaciones
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:buscarCalificaciones }
+    options:
+        expose: true
+
+tramite_inclusion_calificacion_formulario_save:
+    path:     /kformulariosaveinclusion
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:formularioSave }
+    options:
+        expose: true
+# DEPARTAMENTO
+# recepcion departamento
+tramite_inclusion_calificacion_verifica_departamento: 
+    path:     /kinclusionverificaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:recepcionVerificaDepartamento }
+# evalua solicitud SI/NO
+tramite_inclusion_calificacion_guardar_verificacion_departamento:
+    path:     /kderivaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:guardarVerificacionDepartamento }
+
+tramite_inclusion_calificacion_download_solicitud:
+    path:     /fsolinclu/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:downloadSolicitudInclusion }  
+
+tramite_inclusion_calificacion_download_comprobante:
+    path:     /fsolinclucomprobante
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:comprobanteSolicitudInclusion } 
+
+
+tramite_add_mod_cal_formulario_imprimir:
+    path:     /kformularioImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioImprimir }
+
+
+tramite_add_mod_cal_formulario_vista_imprimir_libreta:
+    path:     /kformularioVistaImprimirLibreta
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioVistaImprimirLibreta }
+
+tramite_add_mod_cal_formulario_vista_imprimir_finalizar:
+    path:     /kformularioVistaImprimirFinalizar/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioVistaImprimirFinalizar }
+
+# DISTRITO
+
+tramite_add_mod_cal_recepcion_verifica_distrito:
+    path:     /krecepcionaVerificaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:recepcionVerificaDistrito }
+
+tramite_add_mod_cal_deriva_distrito:
+    path:     /kderivaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:derivaDistrito }
+
+
+
+tramite_add_mod_cal_acta_imprimir:
+    path:     /kactaImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:actaImprimir }
+

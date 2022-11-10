@@ -239,6 +239,14 @@
                               </div>
 
                              <div class="row">
+                                <div class="col-sm-2">
+                                    <label for="idarrCedula">¿El Carnet de Identidad es?</label>
+                                    <select name="DBExpedido" id="idarrCedula" v-model="dataNewStudent.cedulaTipoId" class="custom-select form-control"> 
+                                      {% for item in arrCedula %}
+                                        <option  value="{{ item.cedulaTipoId }}">{{ item.cedulaTipo }}</option>       
+                                      {% endfor %}
+                                    </select> 
+                                  </div>
                                   <div class="col-sm-2">
                                     <label for="ci">(*)Carnet de Identidad</label>
                                       <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
@@ -264,7 +272,7 @@
                                       <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
                                   </div>
 
-                                  <div class="col-sm-3">
+                                  <div class="col-sm-2">
                                   {% if allowwithoutci %}
                                       <label for="form_caseespecial" class="validation">SIN CI :</label>
                                         <input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
@@ -957,12 +965,24 @@
         				this.buscando = false;
         				return;
 					}
+           if ( this.dataNewStudent.withoutcifind==false && (typeof this.dataNewStudent.cedulaTipoId === "undefined" || typeof this.dataNewStudent.cedulaTipoId === "" )) {
+                    Swal.fire(
+                                    'El Carnet de Identidad es?',
+                                    'Debe  seleccionar si el estudiante es Nacional o extranjero',
+                                    'warning'
+                                    );
+                        this.buscando = false;
+                        return;
+            }
 					if (typeof this.dataNewStudent.complementofind === "undefined") {
 					  this.dataNewStudent.complementofind = '';
 					}
 					if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
 					  this.dataNewStudent.expedidoIdfind = 0;
-					}					
+					}
+          if (typeof this.dataNewStudent.cedulaTipoId === "undefined") {
+            this.dataNewStudent.cedulaTipoId = 0;
+          }						
 				
 					
                     axios.get(Routing.generate('newForeign_checksegipstudent', this.dataNewStudent ))

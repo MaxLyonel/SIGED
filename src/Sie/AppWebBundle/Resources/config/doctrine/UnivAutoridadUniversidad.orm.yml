@@ -1,0 +1,165 @@
+Sie\AppWebBundle\Entity\UnivAutoridadUniversidad:
+    type: entity
+    table: univ_autoridad_universidad
+    indexes:
+        IDX_4128B78F17AD0B2F:
+            columns:
+                - gestion_nombramiento_id
+        IDX_4128B78FF5F88DB9:
+            columns:
+                - persona_id
+        IDX_4128B78FB52C38F9:
+            columns:
+                - univ_formacion_tipo_id
+        IDX_4128B78F913DBDB6:
+            columns:
+                - univ_cargo_jerarquico_tipo_id
+        IDX_4128B78F179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_4128B78F9B2067FB:
+            columns:
+                - univ_sede_id
+    uniqueConstraints:
+        uniq_univ_autoridad_univ:
+            columns:
+                - gestion_tipo_id
+                - univ_sede_id
+                - univ_cargo_jerarquico_tipo_id
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ref:
+            type: string
+            nullable: true
+            length: 80
+            fixed: false
+            comment: ''
+        telefono:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fax:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        casilla:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        email:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        formaciondescripcion:
+            type: string
+            nullable: true
+            length: 1500
+            fixed: false
+            comment: ''
+        documentosAcad:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: documentos_acad
+        ratificacionAnioIni:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: ratificacion_anio_ini
+        ratificacionAnioFin:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: ratificacion_anio_fin
+        fechaRegistroFirma:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro_firma
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaActualizacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_actualizacion
+    manyToOne:
+        gestionNombramiento:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_nombramiento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univFormacionTipo:
+            targetEntity: UnivFormacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_formacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univCargoJerarquicoTipo:
+            targetEntity: UnivCargoJerarquicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_cargo_jerarquico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univSede:
+            targetEntity: UnivSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

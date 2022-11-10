@@ -313,6 +313,7 @@ var t_cargarDatos = function(data){
     $('#t_materno').val(data.materno);
     $('#t_nombre').val(data.nombre);
     $('#t_fechaNacimiento').val(data.fecha_nacimiento);
+    $('#t_cedulaTipoId').val(data.cedula_tipo_id);
 }
 
 // borrar los datos si el servicio no devuelve datos
@@ -374,6 +375,7 @@ function t_limpiarBuscador(){
 
 function saveFormTutor(){
     var data = $('#formTutor').serialize();
+    var subsistema = $('#subsistema').val();
     // data['actualizar'] = recargar;
     $.ajax({
         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
@@ -391,10 +393,18 @@ function saveFormTutor(){
                 $('#t_id').val(data.id);
                 $('#t_idDatos').val(data.idDatos);
                 $('#t_idPersona').val(data.idPersona);
+                if(subsistema=='especial'){
+                    $('#cortina').css('display','none');
+                    $('#paso7').parent('li').removeClass('disabled');
+                    $('#paso7').attr('data-toggle','tab');
+                    $('#paso7').click();
+                    $('#tabPadre').click();
+                }else{
+                    $('#paso5').parent('li').removeClass('disabled');
+                    $('#paso5').attr('data-toggle','tab');
+                    $('#paso5').click();
+                }
 
-                $('#paso5').parent('li').removeClass('disabled');
-                $('#paso5').attr('data-toggle','tab');
-                $('#paso5').click();
             }else{
                 alert(data.msg);
             }

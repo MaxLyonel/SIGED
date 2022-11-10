@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\BioDesinfeccionProveeTipo:
+    type: entity
+    table: bio_desinfeccion_provee_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        desinfeccionProvee:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: desinfeccion_provee
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

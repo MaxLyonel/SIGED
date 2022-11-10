@@ -10,3 +10,13 @@ info_especial_close_operativo:
     defaults: { _controller: SieEspecialBundle:InfoEspecial:closeOperativo }
     options:
          expose: true
+info_especial_close_operativo_rudees:
+    path:     /closeEspRudees
+    defaults: { _controller: SieEspecialBundle:InfoEspecial:closeOperativoRudees }
+    options:
+         expose: true
+info_especial_close_operativo_notas:
+    path:     /closeEspNotas
+    defaults: { _controller: SieEspecialBundle:InfoEspecial:closeOperativoNotas }
+    options:
+         expose: true

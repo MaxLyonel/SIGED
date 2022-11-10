@@ -172,7 +172,7 @@ class TramiteAddModCalificationController extends Controller {
                 // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
         }
-
+        //dump($inscripcionesArray);die;
         // OBTENEMOS EL DATO DEL DIRECTOR
         $user = $this->container->get('security.context')->getToken()->getUser();
         $directorNombre = $user->getPersona()->getNombre().' '.$user->getPersona()->getPaterno().' '.$user->getPersona()->getMaterno();
@@ -229,11 +229,14 @@ class TramiteAddModCalificationController extends Controller {
         $datos = [];
         $promedioGeneral = ''; // PARA PRIMARIA 2019
         if(count($tramitePendiente)<=0) {
-            $datos = $this->get('notas')->regular($idInscripcion, $operativo - 1);
-            // dump($datos);die;
+            $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
+            
+            // dump($operativo);
+            // dump($datos['cualitativas']);
+            // die;
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
                 foreach ($datos['cualitativas'] as $key => $value) {
-                    if ($value['idNotaTipo'] == 5) {
+                    if ($value['idNotaTipo'] == 9) {
                         $promedioGeneral = $value['notaCuantitativa'];
                     }
                 }
@@ -352,6 +355,27 @@ class TramiteAddModCalificationController extends Controller {
             $checkCuaderno = $request->get('checkCuaderno');
             $checkFormulario = $request->get('checkFormulario');
 
+
+
+            $dataInscription = array(
+                "gestion"=>$gestionInscripcion ,
+                "nivelId"=>$inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
+                "nivel"=>$nivelInscripcion,
+                "gradoId"=>$inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId(),
+                "grado"=>$gradoInscripcion,
+                "paraleloId"=>$inscripcion->getInstitucioneducativaCurso()->getParaleloTipo()->getId(),
+                "paralelo"=>$paraleloInscripcion,
+                "turnoId"=>$inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getId(),
+                "turno"=>$turnoInscripcion,
+                "keyId"=>"",
+                "notasRequest"=>"",
+                "idTramite"=>"",
+                "flujoTipo"=>$flujoTipo,
+                "sie"=>$sieInscripcion,
+                "posSelected"=>0,
+                "codigoRude"=>$codigoRude
+            );
+
             // ARMAMOS EL ARRAY DE LA DATA
             $data = array(
                 'idInscripcion'=> $idInscripcion,
@@ -374,6 +398,7 @@ class TramiteAddModCalificationController extends Controller {
                 'flujoTipo'=>$flujoTipo,
                 'notas'=> $notas,
                 'notasCualitativas'=>$notasCualitativas,
+                'dataInscription'=>array($dataInscription),
                 'justificacion'=>$justificacion,
                 'checkInforme'=>$checkInforme,
                 'checkCuaderno'=>$checkCuaderno,
@@ -394,7 +419,7 @@ class TramiteAddModCalificationController extends Controller {
             if ($idTramite == null) {
                 
                 // OBTENEMOS OPERATIVO ACTUAL Y LO AGREGAMOS AL ARRAY DE DATOS           
-                $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
+               // $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
 
                 // REGISTRAMOS UN NUEVO TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
@@ -412,7 +437,7 @@ class TramiteAddModCalificationController extends Controller {
                     '',//$lugarTipoLocalidad,
                     $lugarTipo['lugarTipoIdDistrito']
                 );
-
+               // dump( $registroTramite);die;
                 if ($registroTramite['dato'] == false) {
                     $response->setStatusCode(500);
                     return $response;
@@ -420,7 +445,7 @@ class TramiteAddModCalificationController extends Controller {
 
                 $idTramite = $registroTramite['idtramite'];
 
-                // $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
+                 $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
 
             }else{
                 // RECUPERAMOS EL OPERATIVO DONDE SE INICIO EL TRAMITE Y LO AGREGAMOS AL ARRAY DE DATOS
@@ -1421,6 +1446,8 @@ class TramiteAddModCalificationController extends Controller {
         $insGestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
         $insNivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $insGrado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        dump($insNivel);
+        dump($datosNotas);
         // REGISTRAMOS LAS NOTAS CUANTITATIVAS
         if(count($datosNotas['notas']) > 0){
             foreach ($datosNotas['notas'] as $n) {
@@ -1451,6 +1478,9 @@ class TramiteAddModCalificationController extends Controller {
                     case 2020:
                                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
                                 break;                                
+                    case 2021:
+                                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
+                                break;                                                                
                     default:
                                 $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
                                 break;
@@ -1471,6 +1501,10 @@ class TramiteAddModCalificationController extends Controller {
             }
         }
 
+        // update the average
+        if($insNivel==12){
+            $this->get('notas')->updateAveragePrim($idInscripcion);
+        }
         // ACTUALIZAMOS EL ESTADO DE MATRICULA
         // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
         $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);                    
@@ -1503,7 +1537,7 @@ class TramiteAddModCalificationController extends Controller {
             $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
             
             // OOBTENEMOS EL TIPO DE NOTA BIMESTRE O TRIMESTRE
-            $tipo = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipo = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado, 'no');
             $array = [];
             $arrayPromedios = [];
             $cont = 0;

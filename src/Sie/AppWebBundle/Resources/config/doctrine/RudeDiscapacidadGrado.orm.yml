@@ -56,6 +56,15 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
                 discapacidad_otro_grado_id:
                     referencedColumnName: id
             orphanRemoval: false
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         gradoDiscapacidadTipo:
             targetEntity: GradoDiscapacidadTipo
             cascade: {  }
@@ -72,15 +81,6 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
             inversedBy: null
             joinColumns:
                 discapacidad_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        rude:
-            targetEntity: Rude
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                rude_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

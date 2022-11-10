@@ -28,7 +28,15 @@
                             <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
                             <td data-title="Paterno">{{datastudent.paterno|e}}</td>
                             <td data-title="Materno">{{datastudent.materno|e}}</td>
-                            <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                            <td data-title="CI">
+                                {% set extranjero = "" %}
+                                {% if datastudent.cedulaTipo %}
+                                    {% if datastudent.cedulaTipo.id == 2 %}
+                                        {% set extranjero = "E-" %}
+                                    {% endif %}
+                                {% endif %}
+                                {{extranjero~datastudent.carnetIdentidad}} 
+                            </td>
                             <td data-title="Complemento" class="text-center">{{datastudent.complemento}}</td>
                             <td data-title="Genero" class="text-center">{{datastudent.generoTipo}} </td>
                             <td data-title="F. Nacimiento" class="text-center">{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>

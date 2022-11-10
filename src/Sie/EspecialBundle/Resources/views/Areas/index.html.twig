@@ -1,41 +1,6 @@
 {% extends 'layoutEspecialSie.html.twig' %}
-{% block stylesheets %}
-    {{parent()}}
-    <link href="{{asset('css/chosen.css')}}" rel="stylesheet">
-    <link href="{{asset('bootstrap-wizard/css/bwizard.min.css')}}" rel="stylesheet">
-    <style>
-    .arrow-before {
-        width:0px;
-        height:0px;
-        border-left: 6px solid transparent;  /* izquierda flecha */
-        border-right: 6px solid transparent; /* derecha flecha */
-        border-bottom: 6px solid #906094; /* base flecha y color*/
-        font-size:0px;
-        line-height:0px;
-        top: 6px;
-        left: 3px;
-        position: relative;
-    }
-    .arrow-after {
-        width:0px;
-        height:0px;
-        border-left: 6px solid transparent;  /* izquierda flecha */
-        border-right: 6px solid transparent; /* derecha flecha */
-        border-bottom: 6px solid #906094; /* base flecha y color*/
-        font-size:0px;
-        line-height:0px;
-        top: 1px;
-        left: 3px;
-        position: relative;
-    }
-    #popover-head{
-        width: 300px;
-        background-color: #6E89FF;
-    }
-</style>
-{% endblock %}
-{% block contentoption %}
 
+{% block contentoption %}
 <div class="modal modal-flex fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -44,13 +9,14 @@
                 <input type="hidden" name="divResultado" id="divResultado">
                 <input type="hidden" name="idInstitucionCurso" id="idInstitucionCurso">
                 <input type="hidden" name="idNivel" id="idNivel">
+                
                 <input type="hidden" name="educacionTipo" id="educacionTipo" value="{{app.session.get('sysname')}}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h4 class="modal-title" id="flexModalLabel">Adición de Áreas</h4>
                     <span id="nivelModal"></span>
-                    - <span id="gradoModal"></span>
-                    - <span id="paraleloModal"></span>
+                    <span id="gradoModal"></span>
+                    <span id="paraleloModal"></span>
                 </div>
                 <div class="modal-body">
                     <div id="areasModal">
@@ -64,6 +30,28 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal modal-flex fade" id="newModalCargaHoraria" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="formAreasModal2" id="formAreasModal2" action="">
+                
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">Asignacion Maestro Carga Horaria</h4>
+                
+                </div>
+                <div class="modal-body">
+                    <div id="areasModal2">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 <!-- Start page header -->
 <div class="header-content">
     <h2><i class="fa fa-table"></i> Asignación Área/Maestro <span>Lista</span></h2>
@@ -233,11 +221,9 @@
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
-    <script src="{{asset('js/chosen.jquery.js')}}"></script>
-    <script src="{{asset('bootstrap-wizard/js/bwizard.js')}}"></script>
-    <script src="{{asset('bootstrap-wizard/jquery-ui.min.js')}}"></script>
     <script>
-                    
+        
+       
         function cargarNiveles() {
             var institucion = $('#form_idInstitucion').val();
             var gestion = $('#form_idGestion').val();
@@ -374,7 +360,7 @@
             return false;
         }
 
-        function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, lugar, divResultado) {
+        function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, lugar,  divResultado) {
             var modalidad_texto = '';
             var modalidad_tipo = 0;
 
@@ -390,6 +376,7 @@
             $('#idInstitucionCurso').val(idInstitucionCurso);
             $('#idNivel').empty();
             $('#idNivel').val(idNivel);
+            
             $('#idNivel').empty();
             $('#modal-subtitle').html(nivel+' - '+grado+' - '+paralelo+modalidad_texto);
             $.ajax({
@@ -433,18 +420,33 @@
 
         function enviarAreas() {
             var educacionTipo = $('#educacionTipo').val();
+              var todasLasAsignaturas = $('#todasLasAsignaturas').val();
+          
             var nivel = $('#idNivel').val();
             if (educacionTipo != 'REGULAR') {
                 var marcados = 'si';
+                var contadorSi = 0;
                 var areas = document.getElementsByName('areas[]');
                 for (var i = 0; i < areas.length; i++) {
+
                     if (!areas[i].checked) {
                         marcados = 'no';
+                    }else{
+                        contadorSi = parseFloat(contadorSi) +parseFloat(1);
+                    }
+                    
+                }
+                if(todasLasAsignaturas=='SI'){
+                    if (marcados == 'no') {
+                        alert('Debe seleccionar todas las areas');
+                        return 0;
                     }
                 }
-                if (marcados == 'no') {
-                    alert('Debe seleccionar todas las areas.');
-                    return 0;
+                if(todasLasAsignaturas=='NO'){
+                    if (contadorSi <1) {
+                        alert('Debe seleccionar al menos una Area');
+                        return 0;
+                    }
                 }
             }
 
@@ -545,7 +547,26 @@
                 $('#after'+idco).fadeOut();
             }
         };
-
+        function asignarHoras(idco) {
+            var modalidad_texto = '';
+            var modalidad_tipo = 0;
+           
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('area_especial_asignar_materia_formulario', {'idco': idco}),
+                beforeSend: function () {
+                    $("#areasModal2").empty();
+                    $("#areasModal2").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#areasModal2").empty();
+                    $("#areasModal2").append(data);
+                   
+                   
+                }
+            });
+            $('#newModalCargaHoraria').modal('show');
+        }
         var cerrarMaestros = function(idco){
             $('#'+idco).fadeOut();
             $('#before'+idco).fadeOut();
@@ -590,5 +611,7 @@
             $(form_select).html(soptions).prepend(foption);
         };        
               
+      
+
     </script>
 {% endblock %}

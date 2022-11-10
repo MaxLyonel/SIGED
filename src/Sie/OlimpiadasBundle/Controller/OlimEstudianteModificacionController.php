@@ -729,7 +729,13 @@ class OlimEstudianteModificacionController extends Controller{
         
         $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
 
-        $discapacidades = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+        // $discapacidades = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+       $entity = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo');
+       $query = $entity->createQueryBuilder('odt')
+               ->distinct()
+               ->orderBy('odt.id', 'ASC')
+               ->getQuery();
+       $discapacidades = $query->getResult();         
 
         $entity = $em->getRepository('SieAppWebBundle:OlimTutor');
         $query = $entity->createQueryBuilder('ot')
@@ -815,7 +821,13 @@ class OlimEstudianteModificacionController extends Controller{
         
         $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
 
-        $discapacidades = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+        // $discapacidades = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+       $entity = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo');
+       $query = $entity->createQueryBuilder('odt')
+               ->distinct()
+               ->orderBy('odt.id', 'ASC')
+               ->getQuery();
+       $discapacidades = $query->getResult();     
 
         $entity = $em->getRepository('SieAppWebBundle:OlimTutor');
         $query = $entity->createQueryBuilder('ot')
@@ -1211,7 +1223,13 @@ class OlimEstudianteModificacionController extends Controller{
         
         // die;
         //get the discapacidad
-         $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+         // $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+       $entity = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo');
+       $query = $entity->createQueryBuilder('odt')
+               ->distinct()
+               ->orderBy('odt.id', 'ASC')
+               ->getQuery();
+       $discapacidades = $query->getResult();         
         
         // get the data to do the inscription 
         $jsonDataInscription = json_encode( array(

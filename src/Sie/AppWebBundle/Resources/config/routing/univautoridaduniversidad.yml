@@ -1,0 +1,30 @@
+gralstaff:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:UnivAutoridadUniversidad:index" }
+
+gralstaff_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:UnivAutoridadUniversidad:show" }
+
+gralstaff_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:UnivAutoridadUniversidad:new" }
+
+gralstaff_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:UnivAutoridadUniversidad:create" }
+    methods:  POST
+
+gralstaff_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:UnivAutoridadUniversidad:edit" }
+
+gralstaff_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:UnivAutoridadUniversidad:update" }
+    methods:  [POST, PUT]
+
+gralstaff_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:UnivAutoridadUniversidad:delete" }
+    methods:  [POST, DELETE]

@@ -1,0 +1,134 @@
+{% if consol is not empty %}
+    <div class="table-responsive col-md-8">
+        <table class="table table-bordered table-striped " id="listaConsol">
+		{% if gestionactual >= 2020 %}
+            <thead>
+                <tr>
+                	<th style="min-width:15px">#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Institución Educativa</th>
+                   
+                    {% if app.session.get('roluser') != 10  %}
+					   <th>Inconsistencias</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                	<th>#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Institución Educativa</th>
+                    
+                    {% if app.session.get('roluser') != 10  %}
+					   <th>Inconsistencias</th>
+                    {% endif %}
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for registro in consol %}
+                	<tr>
+                		<td class="text-center">{{loop.index}}</td>
+                		<td>{{registro.departamento}}</td>
+                		<td>{{registro.distrito}}</td>
+                		<td>{{registro.codigo_sie}}</td>
+                		<td>{{registro.institucioneducativa}}</td>
+                		
+                        	<td>
+                                {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
+                            	   <a class="btn btn-xs btn-danger" onclick="mostrarModalInconsistencias({{registro.codigo_sie}},'{{registro.institucioneducativa}}')"><i class="fa fa-fw fa-exclamation"></i> Ver Inconsistencias</a>
+                                {% endif %}								
+                        	</td>
+                	</tr>
+                {% endfor %}
+            </tbody>
+		{% else %}
+			<thead>
+                <tr>
+                	<th style="min-width:15px">#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Institución Educativa</th>
+                    <th>Bim. 1</th>
+                    <th>Bim. 2</th>
+                    <th>Bim. 3</th>
+                    <th>Bim. 4</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                	<th>#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Centro</th>
+                    <th>Bim. 1</th>
+                    <th>Bim. 2</th>
+                    <th>Bim. 3</th>
+                    <th>Bim. 4</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for registro in consol %}
+                	<tr>
+                		<td class="text-center">{{loop.index}}</td>
+                		<td>{{registro.departamento}}</td>
+                		<td>{{registro.distrito}}</td>
+                		<td>{{registro.codigo_sie}}</td>
+                		<td>{{registro.institucioneducativa}}</td>
+                		<td><span class="label label-{% if registro.bim1 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim1}}</span></td>
+                		<td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
+                		<td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td>
+                		<td><span class="label label-{% if registro.bim4 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim4}}</span></td>
+                	</tr>
+                {% endfor %}
+            </tbody>
+		{% endif %}
+        </table>
+    </div>
+{% else %}
+    No se encontraron registros.
+{% endif %}
+{% if ues is not empty %}
+	<div class="col-md-4">
+		{% if app.session.get('roluser') != 10 %}
+		    <div class="panel panel-warning rounded shadow">
+				<div class="panel-heading">					
+					<h5 class="panel-title" id="nombre_ue">Detalle de Inconsistencias</h5>										
+				</div>		       
+		        <div class="panel-body">
+		            <div class="table-responsive col-md-12">
+				        <table class="table table-bordered table-striped table-wrapper" id="lista_inconsistencias">
+				            <!--thead>
+				                <tr>				                	
+				                	
+				                    <th>Listado de Inconsistencias</th>				                    
+				                </tr>
+				            </thead-->				           
+				            <tbody id='tbodyexample2'>				            	
+				            </tbody>
+				        </table>
+				    </div>
+				    
+		        </div><!-- /.panel-body -->
+		    </div><!-- /.panel -->
+		{% else %}
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	            <div class="mini-stat-type-4 bg-primary shadow">
+	                <h3>{{label_distrito}}</h3>
+	                {% set cant = 0 %}
+	                {% for registro in ues %}
+	                	{% set cant = cant + registro.total %}
+	                {% endfor %}
+	                <h1 class="count">{{cant}}</h1>
+	            </div>
+	        </div>
+		{% endif %}
+	</div>
+{% else %}
+    No se encontraron registros.
+{% endif %}

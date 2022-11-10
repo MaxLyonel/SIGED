@@ -17,7 +17,11 @@
                         {{form_label(formDatoPersonal.complemento)}}
                         {{form_widget(formDatoPersonal.complemento)}}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
+                        {{form_label(formDatoPersonal.extrajero)}}
+                        {{form_widget(formDatoPersonal.extrajero)}}
+                    </div>
+                    <div class="col-md-1">
                         {{form_label(formDatoPersonal.expedido)}}
                         {{form_widget(formDatoPersonal.expedido)}}
                     </div>
@@ -334,7 +338,7 @@
         }).bind('change', function (e) {
             var nombre = $(this).attr('id');
             var numero = nombre.substr(nombre.length-1,nombre.length);
-            if(nombre == 'form_gestion1'){
+            if(nombre == 'form_gestion1' && 1 > 1){
                 if ($('#form_gestion1').val() > $('#form_gestion2').val()){
                     alert("la gestión del 3er. año de escolaridad no puede ser igual o mayor al 4to. año de escolaridad");
                     $(this).val(prevValue);
@@ -342,7 +346,7 @@
                 }
             }
 
-            if(nombre == 'form_gestion2'){
+            if(nombre == 'form_gestion2' && 1 > 1){
                 if ($('#form_gestion2').val() < $('#form_gestion1').val()){
                     alert("la gestión del 4to. año de escolaridad no puede ser igual o menor al 3er. año de escolaridad");
                     $(this).val(prevValue);
@@ -355,7 +359,7 @@
                 }
             }
 
-            if(nombre == 'form_gestion3'){
+            if(nombre == 'form_gestion3' && 1 > 1){
                 if ($('#form_gestion3').val() < $('#form_gestion2').val()){
                     alert("la gestión del 5to. año de escolaridad no puede ser igual o menor al 4to. año de escolaridad");
                     $(this).val(prevValue);
@@ -368,7 +372,7 @@
                 }
             }
 
-            if(nombre == 'form_gestion4'){
+            if(nombre == 'form_gestion4' && 1 > 1){
                 if ($('#form_gestion4').val() < $('#form_gestion3').val()){
                     alert("la gestión del 6to. año de escolaridad no puede ser igual o menor al 5to. año de escolaridad");
                     $(this).val(prevValue);

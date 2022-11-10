@@ -265,7 +265,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
         $tarea_id = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $centroinscripcion_id = $datos['centro_inscripcion'];
-        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'TE'));
+        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'NRE'));
         if ($tipotramite == null) {
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));

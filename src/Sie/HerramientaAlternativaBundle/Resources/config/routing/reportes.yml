@@ -62,13 +62,13 @@ herramienta_alter_reporte_edudiv_som_est:
     path:     /reportEst/{dataInfo}
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEst }
 
-herramienta_alter_reporte_edudiv_som_espex:
-    path:     /reportEspEX/{dataInfo}
-    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspEX }
-
 herramienta_alter_reporte_edudiv_som_estex:
     path:     /reportEstEX/{dataInfo}
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEstEX }
+
+herramienta_alter_reporte_edudiv_som_espex:
+    path:     /reportEspEX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspEX }
 
 herramienta_alter_reporte_edudiv_pece_esp:
     path:     /reportEspPece/{dataInfo}
@@ -163,3 +163,31 @@ herramienta_alter_reporte_primaria_pdf:
 herramienta_alter_reporte_primaria_excel:
     path:     /reportAlterPrimX/{dataInfo}
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterPrimariaExcel }
+
+herramienta_alter_reporte_matricula_gestion_pdf:
+    path:     /matricula/gestion/pdf
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterMatriculaGestionPdf }
+
+herramienta_alter_reporte_secundaria_pdf:
+    path:     /reportAlterSecP/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterSecundariaPdf }
+
+herramienta_alter_reporte_secundaria_excel:
+    path:     /reportAlterSecX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterSecundariaExcel }
+
+herramienta_alter_reporte_tecnica_pdf:
+    path:     /reportAlterTecP/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterTecnicaPdf }
+
+herramienta_alter_reporte_tecnica_excel:
+    path:     /reportAlterTecX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterTecnicaExcel }
+
+herramienta_alter_reporte_matricula_modalidad_atencion_pdf:
+    path:     /reportAlterMatriculaModalidadAtencionP/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterMatriculaModalidadAtencionPdf }
+
+herramienta_alter_reporte_matricula_modalidad_atencion_excel:
+    path:     /reportAlterMatriculaModalidadAtencionX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportAlterMatriculaModalidadAtencionExcel }

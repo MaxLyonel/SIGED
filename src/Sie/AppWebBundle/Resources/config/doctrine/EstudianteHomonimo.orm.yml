@@ -1,0 +1,68 @@
+Sie\AppWebBundle\Entity\EstudianteHomonimo:
+    type: entity
+    table: estudiante_homonimo
+    indexes:
+        IDX_722BFE105CE45341:
+            columns:
+                - estudiante_homonimo_id
+        IDX_722BFE1059590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        justificacion:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+        archivo:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudianteHomonimo:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_homonimo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

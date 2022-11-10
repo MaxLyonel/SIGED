@@ -49,6 +49,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
     }
 //Director
     public function indexAction (Request $request) {
+        // dump('ok'); die;
         $id_Institucion =  $request->getSession()->get('ie_id');
         $gestion =  $request->getSession()->get('currentyear');
         //$flujotipo = $request->get('id');
@@ -91,7 +92,16 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             $form= $this->createFormBuilder()
                 ->add('solicitud', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...','choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'validarsolicitud()')))
                 ->getForm();
-               $estado =  $this->validainicioTramite($id_Institucion,$gestion);//dump($estado);die;
+            $estado =  $this->validainicioTramite($id_Institucion,$gestion);
+            
+            /**************temporal solo ues habilitadas 2022 */
+            // $ue = array(81980587, 81980181);
+            // if (in_array($id_Institucion, $ue) and $estado == 0){
+            //     $estado = 0;
+            // }else{
+            //     $estado = 1;
+            // }
+            
             return $this->render('SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index.html.twig',array( 'form' => $form->createView(),
                 'id_institucion'=>$id_Institucion,
                 'idflujo'=>$request->get('id'),
@@ -107,13 +117,25 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT count(institucioneducativa_humanistico_tecnico.id) as cantidad FROM institucioneducativa_humanistico_tecnico 
             WHERE institucioneducativa_humanistico_tecnico_tipo_id  = 1 and grado_tipo_id in (5,6)
-            and institucioneducativa_id = $id_institucion AND gestion_tipo_id = $gestion");
+            and institucioneducativa_id = $id_institucion 
+            AND gestion_tipo_id = $gestion");
         $query->execute();
         $valida_ue = $query->fetch();
         $ue_autorizada = 0;
-        if($id_institucion == '40730065'){
+        // $a = array(81980587,81980181);
+        // if (in_array($id_institucion, $a)) {
+        //     $ue_autorizada = 0;
+        //   /*  dump(id_institucion);
+        //     dump($estado);*/
+        // }else{
+        //     $ue_autorizada = 1;
+        // }
+        /*dump($estado);
+        die;*/
+
+        /*if($id_institucion == '40730065'){
             $ue_autorizada = 1;
-        }
+        }*/
         if((int)$valida_ue['cantidad']==0 or  $ue_autorizada == 0 ){
             $estado = 0; // La Unidad Educativa no plena para los grados(5-6) y no puede hacer la solicitud
         }else{
@@ -207,8 +229,10 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
                                                     WHERE tr.flujo_tipo_id = $idflujotipo AND tr.institucioneducativa_id = $idinstitucion
-                                                    AND tr.gestion_id = $gestion and tr.tramite_tipo= $idsolicitud" );
+                                                    AND tr.gestion_id = $gestion and tr.tramite_tipo= $idsolicitud
+                                                    AND tr.fecha_fin is null ");
         $query->execute();
+        //dump($query);die;
         $tramite = $query->fetchAll();
         $tramite_iniciado=$tramite[0]['cantidad_tramite_bth'];
         if((int)$tramite_iniciado==0){

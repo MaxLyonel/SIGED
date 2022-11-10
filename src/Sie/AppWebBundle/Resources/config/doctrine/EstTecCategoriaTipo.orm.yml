@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\EstTecCategoriaTipo:
+    type: entity
+    table: est_tec_categoria_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        categoriainstituto:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

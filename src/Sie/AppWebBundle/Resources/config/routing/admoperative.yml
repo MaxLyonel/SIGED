@@ -1,0 +1,16 @@
+
+admoperative_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:AdmOperative:index}
+
+admoperative_loadData:
+    path:   /loadData
+    defaults: { _controller: SieAppWebBundle:AdmOperative:loadData}
+    options:
+         expose:  true
+         
+admoperative_requestCentros:
+    path:   /requestCentros
+    defaults: { _controller: SieAppWebBundle:AdmOperative:requestCentros}
+    options:
+         expose:  true

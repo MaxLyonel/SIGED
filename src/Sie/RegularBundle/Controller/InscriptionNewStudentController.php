@@ -302,7 +302,19 @@ class InscriptionNewStudentController extends Controller {
 
       //get values all data
       $form = $request->get('form');
+      $swCorrectInscription = true;
+
       $setNotasInscription=false;
+      if(unserialize($form['newdata'])){
+        
+      }else{ 
+        $message = 'Algunos datos no son correctos, no se puede realizar la inscripción..';
+        $this->addFlash('idNoInscription', $message);
+        $swCorrectInscription = false;
+        return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array());
+
+      }
+
 
       //validtation abuut if the ue close SEXTO
       if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestionIns'])){
@@ -352,10 +364,8 @@ class InscriptionNewStudentController extends Controller {
       }
 
       ///validation
-      $swCorrectInscription = true;
-
+     
       $currentLevelStudent = $dataCurrentInscription['nivelId'].'-'.$dataCurrentInscription['cicloId'].'-'. $dataCurrentInscription['gradoId'];
-    
 
       if (!($dataCurrentInscription['nivelId']>10)) {
         // getCourseOld
@@ -445,6 +455,8 @@ class InscriptionNewStudentController extends Controller {
              $swCorrectInscription = false;
            }else{
              //validate the level selected
+             //dump($newLevelStudent);
+             //dump($this->aCursos[$keyNextLevelStudent]);die;
              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
                //do the inscriptin
              }else{//dump($newInfInscription);die;
@@ -463,6 +475,9 @@ class InscriptionNewStudentController extends Controller {
          }
        }
     }else{ 
+      $message = 'Algunos datos no son correctos, no se puede realizar la inscripción ..';
+      $this->addFlash('idNoInscription', $message);
+      $swCorrectInscription = false;
       //do inscription inicial/ primaria or extranjero
       //get the year of student
 
@@ -548,6 +563,11 @@ class InscriptionNewStudentController extends Controller {
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
          $em->flush();
+
+         $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
+         $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+         $query->bindValue(':sie', $form['institucionEducativa']);
+         $query->execute();
 
          //add the areas to the student
          //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
@@ -965,6 +985,11 @@ class InscriptionNewStudentController extends Controller {
             $studentInscription->setCodUeProcedenciaId(0);
             $em->persist($studentInscription);
             $em->flush();
+
+            $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
+            $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+						$query->bindValue(':sie', $form['institucionEducativa']);
+            $query->execute();
             // Try and commit the transaction
             $em->getConnection()->commit();
             $this->session->getFlashBag()->add('goodext', 'Inscripción Realizada...');
@@ -1081,7 +1106,18 @@ class InscriptionNewStudentController extends Controller {
             //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
             $em->persist($studentInscription);
             $em->flush();
+            
             //add the areas to the student
+            //$query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+            //$query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+            //$query->execute();
+
+            $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
+            $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+						$query->bindValue(':sie', $form['institucionEducativa']);
+            $query->execute();
+
+
             $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
             $em->getConnection()->commit();
             $this->session->getFlashBag()->add('goodext', 'Inscripción realizada sin problemas');

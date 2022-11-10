@@ -294,7 +294,7 @@ class TextoEducativoController extends Controller
 		//select * from periodo_tipo limit 10
 		$em = $this->getDoctrine()->getManager();
 		$db = $em->getConnection();
-		$gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id'=>2021));
+		$gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id'=>2022));
 		$institucioneducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
 			'gestionTipo'=>$gestionTipo,
 			'institucioneducativa'=>$institucioneducativa
@@ -373,6 +373,7 @@ class TextoEducativoController extends Controller
             'rol' => $rol,
             'departamentos'=>$arrayDepartamentos,
             'distritos'=>$arrayDistritos,
+            'currentyear'=> $this->session->get('currentyear')
             //'ues'=>$arrayUE,
         ));
       }
@@ -539,7 +540,7 @@ class TextoEducativoController extends Controller
 								left JOIN institucioneducativa_curso_textos_educativos i on i.institucioneducativa_curso_id = c.id
 			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ? 
 			group by c.id
-			having count(i.trimestre_semestre)>=2
+			having count(i.trimestre_semestre)>=1
 			) as tmp) as cursos_registrados,
 			(select count(distinct c.id)
 			from institucioneducativa_curso  c
@@ -823,6 +824,16 @@ class TextoEducativoController extends Controller
 	              $estInscripcion->setFechaRegistro(new \DateTime('now'));
 	              $em->persist($estInscripcion);
                 $em->flush();
+                
+                //add the areas to the student
+                //$query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+                //$query->bindValue(':estudiante_inscripcion_id', $estInscripcion->getId());
+                //$query->execute();
+                $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
+                $query->bindValue(':estudiante_inscripcion_id', $estInscripcion->getId());
+                $query->bindValue(':sie', $sie);
+                $query->execute();
+                    
               }
 				}	
 				// $dato_string=implode(",",$datos);

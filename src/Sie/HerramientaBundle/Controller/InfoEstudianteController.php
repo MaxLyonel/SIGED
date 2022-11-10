@@ -65,8 +65,8 @@ class InfoEstudianteController extends Controller {
 //        }
 //        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array());
         //get the value to send
-        $form = $request->get('form');
-
+        $formResponse = $request->get('form');
+// dump($formResponse);die;
         $em = $this->getDoctrine()->getManager();
         //find the levels from UE
         //levels gestion -1
@@ -74,8 +74,9 @@ class InfoEstudianteController extends Controller {
         
         // get the QA observactions
         $form['reglas'] = '2,3,6,8,10,12,13,15,16,20,24,25,26';
-        $form['gestion'] = $form['gestion'];
-        $form['sie'] = $form['sie'];
+        $form['sie'] = hex2bin($formResponse['sie']);
+        $form['gestion'] = hex2bin($formResponse['gestion']);                    
+        
         if ($form['gestion'] == $this->session->get('currentyear')) {
             $objObsQA = $this->getObservationQA($form);        
         } else {
@@ -222,6 +223,7 @@ class InfoEstudianteController extends Controller {
         //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
         $gradoId = implode(",",$grado);
+        // dump($this->session->get('pathSystem'));die;
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
                     'sie' => $form['sie'],
@@ -827,7 +829,7 @@ class InfoEstudianteController extends Controller {
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
                 // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2 ) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 3 ) {
                     $imprimirLibreta = true;
                 }
                 // dump($imprimirLibreta);exit();
@@ -2110,19 +2112,30 @@ class InfoEstudianteController extends Controller {
         $persona = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
         $estado = false;
         $mensaje = "";
+        $cedulaTipo = "";
+
+        if ($persona->getCedulaTipo() === null){
+            $cedulaTipo = 1;
+        }else{
+            $cedulaTipo = $persona->getCedulaTipo()->getId();
+        }
+        
         if($persona){
             $datos = array(
                 'complemento'=>$persona->getComplemento(),
                 'primer_apellido'=>$persona->getPaterno(),
                 'segundo_apellido'=>$persona->getMaterno(),
                 'nombre'=>$persona->getNombre(),
-                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y'),
+                'tipo_persona' => $cedulaTipo
             );
+            
             if($persona->getCarnetIdentidad()){
                 $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnetIdentidad(),$datos,'prod','academico');
-
+                
                 if($resultadoPersona){
                     $persona->setSegipId(1);
+                    $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
                     $em->persist($persona);
                     $em->flush();
                     $mensaje = "Válido SEGIP";

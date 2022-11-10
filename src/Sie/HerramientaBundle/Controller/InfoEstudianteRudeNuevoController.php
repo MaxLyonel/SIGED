@@ -121,12 +121,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
             }
             
         }
-
+        
         // OBTENER APODERADOS DEL ESTUDIANTE
         // PADRE
         $padre = $this->obtenerApoderado($idInscripcion,array(1));
-        $formPadre = $this->createFormApoderado($rude, $idInscripcion, $padre[0]);
+        $formPadre = $this->createFormApoderado($rude, $idInscripcion, $padre[0]); 
         // MADRE
+        //dump($formPadre);die;
         $madre = $this->obtenerApoderado($idInscripcion,array(2));
         $formMadre = $this->createFormApoderado($rude, $idInscripcion, $madre[0]);
         // TUTOR
@@ -1550,6 +1551,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         p.celular,
                         p.segipId,
                         p.apellidoEsposo,
+                        ct.id as cedulaTipoId,
                         IDENTITY(p.estadocivilTipo) as estado_civil, 
                         dt.id as expedido,
                         gt.id as genero, 
@@ -1569,6 +1571,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
                     ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
                     ->leftJoin('SieAppWebBundle:DepartamentoTipo','dt','with','p.expedido = dt.id')
+                    ->leftJoin('SieAppWebBundle:CedulaTipo','ct','with','p.cedulaTipo = ct.id')
                     ->where('ai.estudianteInscripcion = :idInscripcion')
                     ->andWhere('at.id in (:tipoApoderado)')
                     ->setParameter('idInscripcion',$idInscripcion)
@@ -1769,7 +1772,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'required'=>true,
                             'data'=>($datos['instruccionTipo'] != null)?$em->getReference('SieAppWebBundle:InstruccionTipo', $datos['instruccionTipo']):''
                         ))
-
+                    ->add('cedulaTipoId', 'hidden', array('required' => true))
                     ->getForm();
 
         return $form;
@@ -1782,7 +1785,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
     * FUNCION AJAX PARA BUSCAR PERSONA APODERADO
     */
     public function buscarPersonaAction(Request $request)
-    {
+    { 
         try
         {
             $carnet = $request->get('carnet');
@@ -1795,7 +1798,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $esExtranjero=filter_var($request->get('esExtranjero'),FILTER_SANITIZE_NUMBER_INT);
             $documentoNro=$request->get('documentoNro');
             $extranjero_segip=$request->get('extranjero_segip');
-
+            //dump($extranjero_segip); die;
             $data=array();
             if($esExtranjero==0)//es nacional
             {
@@ -1806,7 +1809,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     'nombre'=>$nombre,
                     'fecha_nacimiento'=>$fechaNacimiento
                 );
-                if ($extranjero_segip)  $parametros['extranjero'] = '2';
+                if ($extranjero_segip=='true') $parametros['extranjero'] = '2';
 
                 // $respuesta = $this->get('sie_app_web.segip')->verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNacimiento, 'prod', 'academico');
                 $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'prod', 'academico');
@@ -1838,7 +1841,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'paterno'=> $persona['PrimerApellido'],
                         'materno'=> $persona['SegundoApellido'],
                         'nombre'=> $persona['Nombres'],
-                        'fecha_nacimiento'=> $persona['FechaNacimiento']
+                        'fecha_nacimiento'=> $persona['FechaNacimiento'],
+                        'cedula_tipo_id'=> 1, //si es nacional
                     );
                 }
                 else
@@ -1872,7 +1876,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'materno'=> $personaExtranjera->getMaterno(),
                         'nombre'=> $personaExtranjera->getNombre(),
                         ///'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()
-                        'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()->format('d-m-Y')
+                        'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()->format('d-m-Y'),
+                        'cedula_tipo_id'=> 2 // si es extranjero
                     );
                 }
                 else
@@ -1883,10 +1888,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
             $response = new JsonResponse();
             $response->setData($data);
+            
             return $response;
         } catch (Exception $e) {
             
         }
+
     }
 
     private function buscarPersonaExtranjero($documentoNro)
@@ -1910,7 +1917,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
     }
 
     public function saveFormApoderadoAction(Request $request)
-    {
+    { 
+        //dump("aaaaa");die;
         /*
          //////////////////////////////////////////////////////////////////////////
          /////////////////// Registro de apoderado PADRE, MADRE Y TUTOR  /////////////////
@@ -2105,7 +2113,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
                     if(isset($form['apellido_esposo']))
                         $persona->setApellidoEsposo(mb_strtoupper($form['apellido_esposo'],'utf-8'));
-
+                    if(isset($form['cedulaTipoId']))
+                        $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['cedulaTipoId']));
+                     
                     $persona->setCorreo($form['correo']);
                     $em->flush();
                     $idPersona = $persona->getId();
@@ -2243,10 +2253,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     if(isset($form['extranjero']))
                         $arrayDatosPersona['extranjero'] = 'extranjero';
                     
-                    $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
+                    /*$personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
 
                     if($personaValida)//verificamos que se persona valida por segip
-                    {
+                    {*/
                         // REGISTRAMOS LOS DATOS DE LA PERSONA
                         $nuevaPersona = new Persona();
                         //$nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
@@ -2261,6 +2271,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         $nuevaPersona->setPaterno(mb_strtoupper($form['paterno'],'utf-8'));
                         $nuevaPersona->setMaterno(mb_strtoupper($form['materno'],'utf-8'));
                         $nuevaPersona->setNombre(mb_strtoupper($form['nombre'],'utf-8'));
+                        if(isset($form['cedulaTipoId']))
+						{
+							$nuevaPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['cedulaTipoId']));
+						}
                         if(isset($form['estado_civil']))
                         {
                             $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));
@@ -2281,15 +2295,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         $em->persist($nuevaPersona);
                         $em->flush();
                         $idPersona = $nuevaPersona->getId();
-                    }
-                    else
-                    {
+                    /*}else{
                         $response = new JsonResponse();
                         return $response->setData([
                             'status'=>404,
                             'msg'=>'Los datos no son validos según SEGIP.'
                         ]);
-                    }
+                    }*/
                 }
             }
             else
@@ -2304,7 +2316,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
                     $actualizarPersona->setCorreo($form['correo']);
                     $actualizarPersona->setCelular($form['celular']);
-
+                    if(isset($form['cedulaTipoId']))
+					{
+						$actualizarPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['cedulaTipoId']));
+					}
                     if(isset($form['estado_civil']))
                     {
                         $actualizarPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));

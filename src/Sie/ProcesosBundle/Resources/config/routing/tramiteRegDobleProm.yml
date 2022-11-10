@@ -1,0 +1,42 @@
+# DISTRITO
+
+tramite_reg_doble_prom_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:index }
+
+tramite_reg_doble_prom_buscar_estudiante:
+    path:     /buscarEstudiante
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:buscarEstudiante }
+    options:
+        expose: true
+
+tramite_reg_doble_prom_buscar_inscripcion:
+    path:     /buscarInscripcion
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:buscarInscripcion }
+    options:
+        expose: true
+
+tramite_reg_doble_prom_formulario_save:
+    path:     /formulariosave
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:formularioSave }
+    options:
+        expose: true
+
+tramite_reg_doble_prom_formulario_imprimir:
+    path:     /formularioImprimir/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:formularioImprimir }
+
+# DEPARTAMENTO
+
+tramite_reg_doble_prom_recepcion_verifica_departamento:
+    path:     /recepcionaVerificaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:recepcionVerificaDepartamento }
+
+tramite_reg_doble_prom_anula_departamento:
+    path:     /derivaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:anulaDepartamento }
+
+tramite_reg_doble_prom_acta_imprimir:
+    path:     /actaImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:actaImprimir }
+

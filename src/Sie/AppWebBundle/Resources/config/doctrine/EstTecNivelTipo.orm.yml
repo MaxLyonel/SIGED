@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EstTecNivelTipo:
+    type: entity
+    table: est_tec_nivel_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivelTipo:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: nivel_tipo
+    lifecycleCallbacks: {  }

@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\BioPreguntasTipo:
+    type: entity
+    table: bio_preguntas_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        preguntas:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

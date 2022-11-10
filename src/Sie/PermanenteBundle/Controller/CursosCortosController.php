@@ -91,7 +91,7 @@ class CursosCortosController extends Controller {
 
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array( 'subarea' => $uEducativa['subarea'], 'cursocorto' => $uEducativa['cursocorto'],
-                    'ueducativaInfoId' => array('subareaId' => $uEducativa['subareaid'], 'cursocortoid' => $uEducativa['cursocortoid'], 'iecid' => $uEducativa['iecid'],'esabierto'=> $uEducativa['esabierto'])
+                    'ueducativaInfoId' => array('subareaId' => $uEducativa['subareaid'], 'cursocortoid' => $uEducativa['cursocortoid'], 'iecId' => $uEducativa['iecid'],'iecid' => $uEducativa['iecid'],'esabierto'=> $uEducativa['esabierto'])
                 )));
 
                 $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['cursocorto']] [$uEducativa['iecid']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'], 'iecId'=> $uEducativa['iecid']);
@@ -1172,7 +1172,7 @@ class CursosCortosController extends Controller {
         $objStudents = array();
 
         $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.complemento, a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
 
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id

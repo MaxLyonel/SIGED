@@ -211,7 +211,7 @@ class OperativoBonoJPController extends Controller
 
 	private function getObservacionesControlCalidad($data)
 	{
-		$data['reglas'] = '12,13,26,24,25,8,15,20,37,63,60,61,62';
+		$data['reglas'] = '13,8,15,20,63,60';
 		// added to 2021 about qa
 		// $years = $data['gestion'].' ,'.$data['gestion'];
 		$years = $this->session->get('currentyear');
@@ -318,10 +318,10 @@ class OperativoBonoJPController extends Controller
 
 
 
-	/*public function formularioCambiarTutorAction()
+	public function formularioCambiarTutorAction()
 	{
 		return $this->render($this->session->get('pathSystem') .':BonoJP:fomularioCambiarTutor.html.twig');
-	}*/
+	}
 
 	public function buscarInscripcionesAction(Request $request)
 	{
@@ -586,7 +586,8 @@ class OperativoBonoJPController extends Controller
 		$complemento = $request->get('complemento');
 		// echo ">".$inscripcion.">".$ci;exit();
 		$em = $this->getDoctrine()->getManager();
-        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci, 'complemento' => $complemento));
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci, 'complemento' => strtoupper($complemento)));
+
         $estado = false;
         $mensaje = "";
         // dump($persona); exit();
@@ -615,7 +616,9 @@ class OperativoBonoJPController extends Controller
 				    2 => $persona->getMaterno(),
 				    3 => $persona->getNombre(),
 				    4 => $persona->getFechaNacimiento()->format('d-m-Y'),
-				    5 => $persona->getId()
+				    5 => $persona->getId(),
+				    6 => $persona->getComplemento(),
+				    7 => $persona->getSegipId()
 				);
 				/*$datos = array(
 	                'complemento'=>$persona->getComplemento(),
@@ -641,8 +644,9 @@ class OperativoBonoJPController extends Controller
 		        } 	*/ 
         	}
         }else{
-        	$data = array(0=>0,1=>$mensaje);
+        	$data = array(0=>0,1=>$mensaje,7=>0);
         }
+        
    		return new JsonResponse($data);
 	}
 	public function operativo_bono_jp_cambiarEstadoTutoreAction(Request $request){ 
@@ -689,6 +693,7 @@ class OperativoBonoJPController extends Controller
 		$extranjero = $request->get('extranjero');
 		$genero = $request->get('genero');
 		$idpersona = $request->get('idpersona');
+		$segipId = $request->get('segipId');
 		// $tipo_cambio = $request->get('tipo_cambio');
 
 		// echo ">".$ci.">".$form_idfecnac.">".$paterno.">".$materno.">".$nombre.">".$idpersona;exit();
@@ -696,8 +701,9 @@ class OperativoBonoJPController extends Controller
         // $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci));
 
         // dump($persona); die;
+
         $data = array('error'=>0, 'message'=>'Datos registados');
-        if( $idpersona ==0 ){
+        if($segipId==0){
         	$datos = array(
                 'complemento'=>$complemento1,
                 'primer_apellido'=>$paterno,
@@ -705,15 +711,22 @@ class OperativoBonoJPController extends Controller
                 'nombre'=>$nombre,
                 'fecha_nacimiento'=>$form_idfecnac
             );   
-	        $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($ci,$datos,'prod','academico');
+			if($extranjero == 1){
+				$datos['extranjero'] = 'e';
+			}
+
+	        $resultadoPersona = ($segipId==1)?true:$this->get('sie_app_web.segip')->verificarPersonaPorCarnet($ci,$datos,'prod','academico');
 	        // dump($resultadoPersona);exit();
 	        if ($resultadoPersona) {
 	        	
 	        	// $updateBjpE2 = $em->getRepository('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios')->find($id_bjp_estudiante_apoderado_beneficiarios);
 		        // $updateBjpE2->setEstadoId($estado);
 		        // $em->persist($updateBjpE2);
-
-	        	$newPersona = new Persona();
+	        	if( $idpersona == 0 ){
+	        		$newPersona = new Persona();
+	        	}else{
+	        		$newPersona = $em->getRepository('SieAppWebBundle:Persona')->find($idpersona);
+	        	}
 	        	$newPersona->setCarnet($ci);
 	        	$newPersona->setComplemento($complemento1);
 	        	$newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find('0'));
@@ -721,12 +734,15 @@ class OperativoBonoJPController extends Controller
 	        	$newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find('0'));
 	        	$newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find('0'));
 	        	$newPersona->setRda('0');
-	        	$newPersona->setPaterno($paterno);
-	        	$newPersona->setMaterno($materno);
-	        	$newPersona->setNombre($nombre);
+	        	$newPersona->setPaterno(mb_strtoupper($paterno, "utf-8"));
+	        	$newPersona->setMaterno(mb_strtoupper($materno, "utf-8"));
+	        	$newPersona->setNombre(mb_strtoupper($nombre, "utf-8"));
 	        	$newPersona->setFechaNacimiento(new \DateTime($form_idfecnac));
 	        	$newPersona->setSegipId('1');
 	        	$newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find('0'));
+
+            		$newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($extranjero)?2:1));
+
 	        	$em->persist($newPersona);
 	        	// $newPersona->setMaterno($carnet);
 	        	$idpersona = $newPersona->getId();
@@ -736,6 +752,7 @@ class OperativoBonoJPController extends Controller
 	        	$data = array('error'=>1, 'message'=>'Error con la verificacion segip');
 	        }
         }
+
         if(!$data['error']){
         	$query = "select e.codigo_rude,iec.*
 			from estudiante e
@@ -1004,7 +1021,7 @@ class OperativoBonoJPController extends Controller
 			if(is_dir($directorioRaiz))
 			{
 				chdir($directorioRaiz);
-				$ruta = '../web/empfiles/bono_bjp_2021';
+				$ruta = '../web/empfiles/bono_bjp';
 				if(chdir($ruta))
 				{
 					$arrayArchivos = glob("*$nombreArchivo.csv");
@@ -1039,7 +1056,7 @@ class OperativoBonoJPController extends Controller
 			if(is_dir($directorioRaiz))
 			{
 				chdir($directorioRaiz);
-				$ruta = '../web/empfiles/bono_bjp_2021';
+				$ruta = '../web/empfiles/bono_bjp';
 				if(chdir($ruta))
 				{
 					$zip = new ZipArchive;
@@ -1078,7 +1095,7 @@ class OperativoBonoJPController extends Controller
 	public function _generarArchivoZipBonoJP2021($identificador)
 	{
 		// la carpeta donde se descargarel archivo comprimido
-		//$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp_2021/';
+		//$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp/';
 		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir();
 		$msj = '';
 		$estado = false;
@@ -1121,7 +1138,7 @@ class OperativoBonoJPController extends Controller
 
 	public function boton_generar_file_bonoJPAction(Request $request, $identificador)
 	{
-		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp_2021/';
+		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp/';
 		//list($msj, $estado, $nombreArchivo,$nombreFinalArchivo) = $this->_generarArchivoZipBonoJP2021();
 		list($msj, $estado, $nombreArchivo,$nombreFinalArchivo) = $this->_generarArchivoZipBonoJP2021($identificador);
 		if($estado)

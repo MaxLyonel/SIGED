@@ -107,7 +107,11 @@ class RegularizacionDobleInscripcionController extends Controller {
             foreach ($ins as $i) {
 
                 $operativo = $this->get('funciones')->obtenerOperativo($i['sie'], $i['gestion']);
-                $inscripcionActual = $this->get('notas')->regular($i['id'], $operativo);
+                if($i['gestion']==2021){
+                  $inscripcionActual = $this->get('notas')->regularDB($i['id'], $operativo);
+                } else {
+                  $inscripcionActual = $this->get('notas')->regular($i['id'], $operativo);
+                }
 
                 $inscripcionActual['estudiante'] = $i['nombre'].' '.$i['paterno'].' '.$i['materno'];
                 $inscripcionActual['codigoRude'] = $i['codigoRude'];
@@ -172,6 +176,7 @@ class RegularizacionDobleInscripcionController extends Controller {
               $estadosListaArray[$est['estadomatricula_tipo_id']][] = $est['alterno_estadomatricula_tipo_id'];
             }
             $estadosListaJson = 'var estadosListaArray = '.json_encode($estadosListaArray).';';
+            //dump($arrayInscripciones);die;
             //dump($arrayInscripciones);dump($arrayMatriculaLista);dump($estadosLista);dump($estadosListaArray);dump($estadosListaJson);;die;
             //dump($arrayInscripciones);dump($arrayMatriculaLista);dump($estados);die;
             
@@ -225,10 +230,7 @@ class RegularizacionDobleInscripcionController extends Controller {
             //     }
                 
             //     $cont++;
-            // }
-
-            // dump($arrayInscripciones);die;
-
+            // }idEstudianteAsignatura
             // $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(6,9)));
 
             return $this->render('SieRegularBundle:RegularizacionDobleInscripcion:result.html.twig',array(
@@ -265,7 +267,7 @@ class RegularizacionDobleInscripcionController extends Controller {
     public function getEstadoMatriculaDisponibleConNota($gestion) {
       $em = $this->getDoctrine()->getManager();
       $queryEntidad = $em->getConnection()->prepare("
-          select * from estadomatricula_tipo where nota_presentacion_tipo_id in (1,3) and fin_proceso_educativo = false and case ".$gestion." when date_part('year',current_date) then true else id not in (4) end
+          select * from estadomatricula_tipo where nota_presentacion_tipo_id in (1,3) and (fin_proceso_educativo = false or id = 5) and case ".$gestion." when date_part('year',current_date) then true else id not in (4) end
       ");
       $queryEntidad->execute();
       $objEntidad = $queryEntidad->fetchAll();

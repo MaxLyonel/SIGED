@@ -435,3 +435,7 @@ sie_regular_plataformaMoodle:
 crear_especialidades_bth_index:
     resource: "@SieRegularBundle/Resources/config/routing/crearEspecialidadesBTH.yml"
     prefix:   /sie/crearEspecialidadesBTH
+
+sie_app_web_unificacion_inscription_ue:
+    resource: "@SieRegularBundle/Resources/config/routing/unificacionInscriptionUe.yml"
+    prefix:   /acceso/unificacionInscriptionUe

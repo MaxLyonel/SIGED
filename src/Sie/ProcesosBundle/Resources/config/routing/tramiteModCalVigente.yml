@@ -1,0 +1,62 @@
+tramite_mod_cal_vigente_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:index }
+
+tramite_mod_cal_vigente_buscar_estudiante:
+    path:     /buscarEstudiante
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:buscarEstudiante }
+    options:
+        expose: true
+
+tramite_mod_cal_vigente_buscar_calificaciones:
+    path:     /buscarCalificaciones
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:buscarCalificaciones }
+    options:
+        expose: true
+
+tramite_mod_cal_vigente_formulario_save:
+    path:     /formulariosave
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioSave }
+    options:
+        expose: true
+
+tramite_mod_cal_vigente_formulario_imprimir:
+    path:     /formularioImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioImprimir }
+
+
+tramite_mod_cal_vigente_formulario_vista_imprimir_libreta:
+    path:     /formularioVistaImprimirLibreta
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimirLibreta }
+
+tramite_mod_cal_vigente_formulario_vista_imprimir:
+    path:     /famcgv/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimir }
+
+# DISTRITO
+
+tramite_mod_cal_vigente_recepcion_verifica_distrito:
+    path:     /recepcionaVerificaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:recepcionVerificaDistrito }
+
+tramite_mod_cal_vigente_deriva_distrito:
+    path:     /derivaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:derivaDistrito }
+
+# DEPARTAMENTO
+
+tramite_mod_cal_vigente_recepcion_verifica_departamento:
+    path:     /recepcionaVerificaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:recepcionVerificaDepartamento }
+
+tramite_mod_cal_vigente_deriva_departamento:
+    path:     /derivaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:derivaDepartamento }
+
+tramite_mod_cal_vigente_acta_imprimir:
+    path:     /actaImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:actaImprimir }
+
+tramite_mod_cal_vigente_formulario_descarga:
+    path:     famcgv/
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:requestInsCalYearVig }  

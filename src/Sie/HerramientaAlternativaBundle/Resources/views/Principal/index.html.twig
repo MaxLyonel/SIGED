@@ -51,6 +51,71 @@
             </div>
         </div><!-- /.panel -->                            
     </div>
+
+    <div class="col-lg-9 col-md-9 col-sm-8">
+        <!-- Start input fields - basic form -->
+        <div class="panel rounded shadow">
+            <div class="panel panel-teal shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Notificaciones</h3>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding">
+                    
+                    <ul class="list-group">
+                                <ul class="list-group">
+                                    {% for entity in entities|slice(0, 5) %}
+                                        {% if entity.rolTipo.id == app.session.get('roluser') %}
+                                            <li class="list-group-item">
+                                                <span class="badge {% if(entity.notif.noticiaTipo) == 0  %}badge-success{% elseif(entity.notif.noticiaTipo) == 1 %}badge-warning{% else %}badge-danger{% endif %}">{% if(entity.notif.noticiaTipo) == 0  %}Normal{% elseif(entity.notif.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span>
+                                                <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> {% if entity.notif.fechaCrea %}{{ entity.notif.fechaCrea|date('d-m-Y') }}{% endif %} | {{ entity.notif.titulo }}</strong></h5>
+                                                <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> {{ entity.notif.mensaje|raw }}</p>
+                                                <p class="list-group-item-text text-green">
+                                                    {% if entity.notif.adjunto %}
+                                                        Descargar adjunto: <a href="{{ asset('uploads/adjuntos/' ~ entity.notif.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" alt="{{ entity.notif.adjunto }}" width="20" height="20"></a>
+                                                    {% endif %}
+                                                </p>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        {#
+                                        <div class="alert alert-info" role="alert">
+                                            <i class="fa fa-fw fa-info-circle"></i> Sin notificaciones
+                                        </div>
+                                        #}
+                                    {% endfor %}
+                                </ul>
+                    
+                        <li class="list-group-item">
+                            <span class="badge badge-danger">Urgente</span>
+                            <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> La Paz, 16 de marzo de 2022</strong></h5>
+                            <br>
+                            <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> Informamos a nuestros usuarios que debido a ataques del virus informático Redline Stealer, que recopila información de inicios de sesión, contraseñas, datos de autocompletar, cookies y detalles de tarjetas de crédito de todos los navegadores web basados en Gecko y Chromium, solicitamos tomar las siguientes acciones:
+
+
+                            </p>
+                            <br>
+                            <strong>
+                            <ul>
+                                <li>Cambie las contraseñas actuales.</li>
+                                <li>Evitar guardar las contraseñas en el navegador.</li>
+                                <li>Escanee su computadora con un antivirus.</li>
+                            </ul>
+                            </strong>
+                        </li>   
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+
     <div class="col-lg-9 col-md-9 col-sm-8">
         <div class="profile-cover">
             <div class="cover rounded shadow no-overflow">

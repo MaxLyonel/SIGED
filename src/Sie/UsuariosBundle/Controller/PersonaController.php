@@ -20,11 +20,13 @@ use Sie\AppWebBundle\Form\BuscarPersonaType;
 class PersonaController extends Controller
 {
     private $session;
+    public $arrUserAllow;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
+        $this->arrUserAllow = array(5609814,3625644,5062963,8335918,5727128,4300231,1314301,3295554,1897494);
     }
     
     public function personanewAction($ci, $complemento) {        
@@ -45,7 +47,8 @@ class PersonaController extends Controller
     
     public function personainsertAction(Request $request) {
         $form = $request->get('sie_usuarios_persona_edit');
- 
+        // dump($request);
+        // dump($form); die;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $response = new JsonResponse();
@@ -60,18 +63,19 @@ class PersonaController extends Controller
                 'paterno'=>$form['paterno'],
                 'materno'=>$form['materno'],
                 'nombre'=>$form['nombre'],
-                'fecha_nacimiento'=> $fecha
+                'fecha_nacimiento'=> $fecha,
+                'tipo_persona'=>$form['extranjero'],
             );
-            
+            // dump($arrayDatosPersona);
             $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
-
+             
             if($personaValida == false)
             {
                 //throw new \Exception("Datos de Persona no encontrada en el SEGIP", 1);
                 return $response->setData(array('mensaje' => 'Proceso detenido! Datos de Persona no encontrados en el SEGIP')); 
             }
             else
-            {
+            {   
                 $arrayDatosPersona['carnet']=$form['carnet'];
                 $arrayDatosPersona['fechaNacimiento']=str_replace('/','-',$fecha);
                 unset($arrayDatosPersona['fecha_nacimiento']);
@@ -98,6 +102,7 @@ class PersonaController extends Controller
                     $newpersona->setEsvigenteApoderado('1');
                     $newpersona->setCountEdit('1');
                     $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['departamentoTipo']));
+                    $newpersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['extranjero']));
                     $em->persist($newpersona);
                     $em->flush();
                 }
@@ -442,7 +447,12 @@ class PersonaController extends Controller
     }
 
     public function apropiacionpersonaAction() {
-
+        
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }       
         $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>1)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
 
         return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           
@@ -452,6 +462,7 @@ class PersonaController extends Controller
     }
 
     public function apropiacionpersonabuscarAction($ci,$complemento,$extranjero,Request $request){
+        // dump($extranjero);die;
         $em = $this->getDoctrine()->getManager();    
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();

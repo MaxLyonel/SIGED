@@ -334,6 +334,42 @@
                             }
                         });
                     }
+
+                    function cargarNiveles2() {
+                        
+                        var institucion = $('#form_idInstitucion').val();
+                        var gestion = $('#form_idGestion').val();
+                        var turno = $('#form_nuevoTurno').val();
+                       
+                        if (xhr2 && xhr2.readyState != 4) {
+                            xhr2.abort();
+                        }
+                        xhr2 = $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_cargar_niveles', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno}),
+                            beforeSend: function () {
+                                $("#form_nuevoNivel").empty();
+                                $("#form_nuevoGrado").empty();
+                                //$("#form_nuevoParalelo").empty();
+                                $("#form_nuevoNivel").append('<option value="">Buscando...</option>');
+                                $("#form_nuevoGrado").append('<option value="">Buscando...</option>');
+                                //$("#form_nuevoParalelo").append('<option value="">Buscando...</option>');
+                                $('#divAreas').empty();
+                            },
+                            success: function (data) {
+                                $("#form_nuevoNivel").empty();
+                                $("#form_nuevoGrado").empty();
+                                //$("#form_nuevoParalelo").empty();
+                                $("#form_nuevoNivel").append('<option value="">Seleccionar...</option>');
+                                $("#form_nuevoGrado").append('<option value="">Seleccionar...</option>');
+                                //$("#form_Paralelo").append('<option value="">Seleccionar...</option>');
+                                $.each(data.niveles, function (i, value) {
+                                    $("#form_nuevoNivel").append('<option value="' + i + '">' + value + '</option>');
+                                });
+                            }
+                        });
+                    }
+
                     function cargarGrados() {
                         var institucion = $('#form_idInstitucion').val();
                         var gestion = $('#form_idGestion').val();
@@ -363,6 +399,34 @@
                             }
                         });
                     }
+
+                    function cargarGrados2() {
+                        var institucion = $('#form_idInstitucion').val();
+                        var gestion = $('#form_idGestion').val();
+                        var turno = $('#form_nuevoTurno').val();
+                        var nivel = $('#form_nuevoNivel').val();
+                        
+
+                        if (nivel === '11') {                            //primaria
+                            
+                            $("#form_nuevoGrado").empty();
+                            $("#form_nuevoGrado").append('<option value="">Seleccionar...</option>');
+                            $("#form_nuevoGrado").append('<option value="1">Primero</option>');
+                            $("#form_nuevoGrado").append('<option value="2">Segundo</option>');
+                        }else{
+                            $("#form_nuevoGrado").empty();
+                            $("#form_nuevoGrado").append('<option value="">Seleccionar...</option>');
+                            $("#form_nuevoGrado").append('<option value="1">Primero</option>');
+                            $("#form_nuevoGrado").append('<option value="2">Segundo</option>');                            
+                            $("#form_nuevoGrado").append('<option value="3">Tercero</option>');
+                            $("#form_nuevoGrado").append('<option value="4">Cuarto</option>');
+                            $("#form_nuevoGrado").append('<option value="5">Quinto</option>');
+                            $("#form_nuevoGrado").append('<option value="6">Sexto</option>');
+                        }                        
+                        
+                        
+                    }
+
                     function cargarParalelos() {
                         var institucion = $('#form_idInstitucion').val();
                         var gestion = $('#form_idGestion').val();
@@ -389,6 +453,8 @@
                             }
                         });
                     }
+
+                    
 
                     var xhr1;
                     function validateForm() {
@@ -537,7 +603,14 @@
                                     if(data.exito == 1){
                                          alert('Las Areas han sido asignadas con exito !!');
                                     }else{
-                                         alert('No se han podido registrar Areas para este curso !! \nPosiblemente ya existen, por favor revisar.');
+                                        if(data.exito == -1){
+                                            alert(data.mensaje);
+
+                                        }else{
+                                             alert('No se han podido registrar Areas para este curso !! \nPosiblemente ya existen, por favor revisar.');    
+                                        }
+
+                                        
                                     }
                                    
                                 }

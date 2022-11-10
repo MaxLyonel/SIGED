@@ -2,7 +2,21 @@
 
 {% block contentoption %}
 
-
+    <style>
+    .modal-header-danger {
+        color:#fff;
+        padding:9px 15px;
+        border-bottom:1px solid #eee;
+        background-color: #d9534f;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+        -moz-border-radius-topright: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    
+    </style>
 
 
     <!-- Start page header -->
@@ -94,7 +108,7 @@
                                                 {% set items = {
                                                                 'gestion': infoConsolidation.gestion,
                                                                 'id'     : infoConsolidation.unidadEducativa,
-                                                                'tipo'   : 'krlos'
+                                                                'tipo'   : 'history'
                                                 } %}
                                                 {% set jsnFullUeInfo = items|json_encode() %}
                                                 {# if( infoConsolidation.gestion == app.session.get('currentyear')-1 )  and (app.session.get('ue_modular') or app.session.get('ue_plena') or app.session.get('ue_tecteg')) #}
@@ -164,6 +178,46 @@
         </div>
     </div><!-- /.row -->#}
     </div>
+
+    <div class="modal  modal-flex fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+         <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header modal-header-danger">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">¡ Debe realizar las siguientes acciones !</h4>                 
+                </div>
+                <div class="modal-body">
+                    <div id="infoModal2" class="text-center">
+                        <h5>PROCESANDO INFORMACION</h5>
+                        <div class="text-center display: flex; justify-content: center;"><img src="{{asset('img/loading.gif')}}"  /></div>                        
+                    </div>
+                    <div id="infoModal">
+                            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Las siguientes materias no tienen asignado un maestro</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody id='tbodyexample'>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>                    
+                    <button type="button" class="btn btn-default pull-left" id="btnImprimir">Imprimir</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    
+
+
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
@@ -196,6 +250,109 @@
 
         return false;
     }
+
+    document.querySelector("#btnImprimir").addEventListener("click", function() {
+    var div = document.querySelector("#infoModal");
+    imprimirElemento(div);
+    });
+
+    function imprimirElemento(elemento) {
+        var ventana = window.open('', 'PRINT', 'height=400,width=600');
+        ventana.document.write('<html><head><title>' + document.title + '</title>');
+        ventana.document.write('<link rel="stylesheet" href="style.css">'); //Aquí agregué la hoja de estilos
+        ventana.document.write('</head><body >');
+        ventana.document.write(elemento.innerHTML);
+        ventana.document.write('</body></html>');
+        ventana.document.close();
+        ventana.focus();
+        ventana.onload = function() {
+            ventana.print();
+            ventana.close();
+        };
+        return true;
+        }
+
+    $(document).ready(function(){      
+        //$('#example').DataTable();
+        verifica_errores();
+        /*alert(existe);
+        if (existe > 0){
+            mostrarModal();
+        }*/
+    });
+
+    function remove_string(str, startIndex, count) {
+        return str.substr(0, startIndex) + str.substr(startIndex + count);
+    }
+
+    function verifica_errores() {
+        //no importa por que en el controller se tienen estos datos de la sesion
+        console.log('verifica_errores')
+        gestionid = 5;
+        ueid = 50;
+        $.ajax({
+            type: 'get',            
+            url: Routing.generate('observaciones_maestros_ue', {'gestionid': gestionid, 'ueid': ueid }),            
+            success: function (data) {                
+                console.log(data.existe);
+                if(data.existe != 0){
+                    mostrarModal();
+                }else{
+                    console.log('sin observaciones');
+                }
+            },            
+        });        
+     }
+
+    //dcastillo
+    function mostrarModal() {
+        console.log('mostrarModal');
+        gestionid = 5;
+        ueid = 50;
+        $("#infoModal").hide();
+
+        $.ajax({
+            type: 'get',
+            //url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+            url: Routing.generate('observaciones_maestros_ue', {'gestionid': gestionid, 'ueid': ueid }),
+            beforeSend: function () {
+                 $("#infoModal").hide();                   
+                /*$("#infoModal2").empty();
+                $("#infoModal2").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');*/                
+            },
+            success: function (data) {
+                /*console.log(data.data.length);
+                console.log(data);*/
+                $("#infoModal2").remove();
+                $("#infoModal2").empty();
+                //$("#infoModal").append(data);
+                
+                var tbody = $('#tbodyexample');
+                
+                for (var i = 0; i < data.data.length ; i++) {
+                    // create an <tr> element, append it to the <tbody> and cache it as a variable:
+                    var tr = $('<tr/>').appendTo(tbody);                   
+                    tr.append('<td>' + remove_string(data.data[i]['observacion'],0,54) + '</td>');                   
+                }
+
+                $("#infoModal").show();
+                
+               // $('#example').DataTable().ajax.reload();
+
+                
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+
+        $('#newModal').modal('show');
+     }
     
     /*var registroConsol = function (gestionid) {
         $.ajax({
