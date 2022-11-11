@@ -617,7 +617,8 @@ class OperativoBonoJPController extends Controller
 				    3 => $persona->getNombre(),
 				    4 => $persona->getFechaNacimiento()->format('d-m-Y'),
 				    5 => $persona->getId(),
-				    6 => $persona->getComplemento()
+				    6 => $persona->getComplemento(),
+				    7 => $persona->getSegipId()
 				);
 				/*$datos = array(
 	                'complemento'=>$persona->getComplemento(),
@@ -643,7 +644,7 @@ class OperativoBonoJPController extends Controller
 		        } 	*/ 
         	}
         }else{
-        	$data = array(0=>0,1=>$mensaje);
+        	$data = array(0=>0,1=>$mensaje,7=>0);
         }
         
    		return new JsonResponse($data);
@@ -692,6 +693,7 @@ class OperativoBonoJPController extends Controller
 		$extranjero = $request->get('extranjero');
 		$genero = $request->get('genero');
 		$idpersona = $request->get('idpersona');
+		$segipId = $request->get('segipId');
 		// $tipo_cambio = $request->get('tipo_cambio');
 
 		// echo ">".$ci.">".$form_idfecnac.">".$paterno.">".$materno.">".$nombre.">".$idpersona;exit();
@@ -699,8 +701,9 @@ class OperativoBonoJPController extends Controller
         // $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci));
 
         // dump($persona); die;
+
         $data = array('error'=>0, 'message'=>'Datos registados');
-        if( $idpersona ==0 ){
+        if($segipId==0){
         	$datos = array(
                 'complemento'=>$complemento1,
                 'primer_apellido'=>$paterno,
@@ -708,15 +711,22 @@ class OperativoBonoJPController extends Controller
                 'nombre'=>$nombre,
                 'fecha_nacimiento'=>$form_idfecnac
             );   
-	        $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($ci,$datos,'prod','academico');
+			if($extranjero == 1){
+				$datos['extranjero'] = 'e';
+			}
+
+	        $resultadoPersona = ($segipId==1)?true:$this->get('sie_app_web.segip')->verificarPersonaPorCarnet($ci,$datos,'prod','academico');
 	        // dump($resultadoPersona);exit();
 	        if ($resultadoPersona) {
 	        	
 	        	// $updateBjpE2 = $em->getRepository('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios')->find($id_bjp_estudiante_apoderado_beneficiarios);
 		        // $updateBjpE2->setEstadoId($estado);
 		        // $em->persist($updateBjpE2);
-
-	        	$newPersona = new Persona();
+	        	if( $idpersona == 0 ){
+	        		$newPersona = new Persona();
+	        	}else{
+	        		$newPersona = $em->getRepository('SieAppWebBundle:Persona')->find($idpersona);
+	        	}
 	        	$newPersona->setCarnet($ci);
 	        	$newPersona->setComplemento($complemento1);
 	        	$newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find('0'));
@@ -724,9 +734,9 @@ class OperativoBonoJPController extends Controller
 	        	$newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find('0'));
 	        	$newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find('0'));
 	        	$newPersona->setRda('0');
-	        	$newPersona->setPaterno($paterno);
-	        	$newPersona->setMaterno($materno);
-	        	$newPersona->setNombre($nombre);
+	        	$newPersona->setPaterno(mb_strtoupper($paterno, "utf-8"));
+	        	$newPersona->setMaterno(mb_strtoupper($materno, "utf-8"));
+	        	$newPersona->setNombre(mb_strtoupper($nombre, "utf-8"));
 	        	$newPersona->setFechaNacimiento(new \DateTime($form_idfecnac));
 	        	$newPersona->setSegipId('1');
 	        	$newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find('0'));
@@ -742,6 +752,7 @@ class OperativoBonoJPController extends Controller
 	        	$data = array('error'=>1, 'message'=>'Error con la verificacion segip');
 	        }
         }
+
         if(!$data['error']){
         	$query = "select e.codigo_rude,iec.*
 			from estudiante e

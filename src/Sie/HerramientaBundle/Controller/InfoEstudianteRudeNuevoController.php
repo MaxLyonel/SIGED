@@ -121,12 +121,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
             }
             
         }
-
+        
         // OBTENER APODERADOS DEL ESTUDIANTE
         // PADRE
         $padre = $this->obtenerApoderado($idInscripcion,array(1));
-        $formPadre = $this->createFormApoderado($rude, $idInscripcion, $padre[0]);
+        $formPadre = $this->createFormApoderado($rude, $idInscripcion, $padre[0]); 
         // MADRE
+        //dump($formPadre);die;
         $madre = $this->obtenerApoderado($idInscripcion,array(2));
         $formMadre = $this->createFormApoderado($rude, $idInscripcion, $madre[0]);
         // TUTOR
@@ -1784,7 +1785,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
     * FUNCION AJAX PARA BUSCAR PERSONA APODERADO
     */
     public function buscarPersonaAction(Request $request)
-    {
+    { 
         try
         {
             $carnet = $request->get('carnet');
@@ -1916,7 +1917,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
     }
 
     public function saveFormApoderadoAction(Request $request)
-    {
+    { 
+        //dump("aaaaa");die;
         /*
          //////////////////////////////////////////////////////////////////////////
          /////////////////// Registro de apoderado PADRE, MADRE Y TUTOR  /////////////////
@@ -2269,6 +2271,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         $nuevaPersona->setPaterno(mb_strtoupper($form['paterno'],'utf-8'));
                         $nuevaPersona->setMaterno(mb_strtoupper($form['materno'],'utf-8'));
                         $nuevaPersona->setNombre(mb_strtoupper($form['nombre'],'utf-8'));
+                        if(isset($form['cedulaTipoId']))
+						{
+							$nuevaPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['cedulaTipoId']));
+						}
                         if(isset($form['estado_civil']))
                         {
                             $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));
@@ -2310,7 +2316,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
                     $actualizarPersona->setCorreo($form['correo']);
                     $actualizarPersona->setCelular($form['celular']);
-
+                    if(isset($form['cedulaTipoId']))
+					{
+						$actualizarPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['cedulaTipoId']));
+					}
                     if(isset($form['estado_civil']))
                     {
                         $actualizarPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));

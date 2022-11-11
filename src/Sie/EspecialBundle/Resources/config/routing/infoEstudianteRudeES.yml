@@ -101,7 +101,7 @@ info_estudiante_rudees_nuevo_save_formConQuienVive:
 #         expose: true
 #
 
-info_estudiante_rude_nuevo_save_formApoderado:
+info_estudiante_rude_nuevo_save_Especial_formApoderado:
     path:     /saveFormApoderadoEspecial
     defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormApoderadoEspecial" }
     options:
@@ -116,6 +116,8 @@ info_estudiante_rudees_nuevo_save_formLugar:
 downloadRudeEspecial:
     path:    /downloadrudeespecial/{codue}/{rude}/{gestion}/{eins}
     defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:downloadRudeEspecial" }
+    options:
+         expose: true
 #REPORTE ESPECIAL OP2            
 #download_rude_especialOp2:
 #    path:    /downloadrudeespecial/{codue}/{rude}/{gestion}/{eins}

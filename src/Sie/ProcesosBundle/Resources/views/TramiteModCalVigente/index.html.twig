@@ -151,7 +151,7 @@
     </div><!-- /.header-content -->
     <div class="include animated fadeIn">
         {% if idTramite is not null %}
-            {% include 'SieProcesosBundle:TramiteModificacionCalificaciones:historial.html.twig' with { 'historial': historial} %}
+            {% include 'SieProcesosBundle:TramiteModCalVigente:historial.html.twig' with { 'historial': historial} %}
         {% endif %}
     </div>
     <div id="app">
@@ -167,7 +167,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="text-center">
                                 <h3>FORMULARIO DE MODIFICACIÓN DE CALIFICACIONES GESTIÓN VIGENTE</h3>
-                                {# <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p> #}
+                                <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
                             <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
                             <div class="clearfix"></div>
@@ -328,12 +328,6 @@
                                                         Solicitud de modificación de calificaciones
                                                     </label>
                                                 </div>
-                                                {# <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" v-model="checkFormulario">
-                                                        Formulario de adición y/o modificación de calificaciones
-                                                    </label>
-                                                </div> #}
                                             </div>
                                             <div class="text-center">
                                                 <a href="" class="btn btn-default">Cancelar</a>
@@ -443,7 +437,7 @@
                                         <td>${ins.paralelo}</td>
                                         <td>${ins.estadomatricula}</td>
                                         <td>
-                                            <a v-if="(ins.estadomatriculaId == 5 ||ins.estadomatriculaId == 6 ||ins.estadomatriculaId == 10 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.sie == sieActual) && (ins.gestion == new Date().getFullYear())" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                            <a v-if="(ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.sie == sieActual) && (ins.gestion == new Date().getFullYear())" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
                                             {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
                                         </td>
                                     </tr>
@@ -703,6 +697,7 @@
                         }
 
                         this.buscando = false;
+                        console.log(this.inscripciones);
                     })
                     .catch(e => {
                         console.log(e);
@@ -1600,27 +1595,27 @@
 
                             this.formularioEnviado = true;
                             
-                            // console.log(this.idTramite);
-                            // console.log(this.idInscripcion);
-
-                            // console.log(data);
-
                             axios.post(Routing.generate('tramite_mod_cal_vigente_formulario_save'), data)
-                            //axios.get(Routing.generate('tramite_mod_cal_vigente_formulario_save'), data)
                             .then(response => {
-                                // window.location.href = "{{path('wf_tramite_index', { tipo: 3 })}}";
+                                if (response.data.msg == ''){
                                 this.respuestaIdTramite = response.data.idTramite;
                                 this.urlreporte = response.data.urlreporte;
-
                                 document.location.href = "#tramiteEnviado";
+                                } else {
+                                    Swal.fire(
+                                  'No se pudo enviar la solicitud!',
+                                  response.data.msg,
+                                   'error'
+                                ); 
+                                }
                                 
                             })
                             .catch(e => {
                                 this.formularioEnviado = false;
                                 Swal.fire(
                                   'No se pudo enviar la solicitud!',
-                                  '',
-                                  'error'
+                                   '',
+                                   'error'
                                 );
                             });
                         }
@@ -1630,13 +1625,6 @@
             mounted(){
             }
         });
-
-        // $(document).ready(function(){
-        //     $('[data-toggle="tooltip"]').tooltip();
-        //     $('[data-toggle="popover"]').popover();
-        //     // $("td").focus();
-        //     console.log('adsfadsfsadf');
-        // });
 
         $(".jnumbersletters").keypress(function (key) {
             var key = key || window.event;

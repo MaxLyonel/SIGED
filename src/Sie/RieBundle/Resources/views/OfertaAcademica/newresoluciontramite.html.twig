@@ -271,12 +271,11 @@
         function cargarDetalle() {
             operacion = $("#form_operacion").val();
 
-            if(operacion =='RECTIFICACION'){
+            if(operacion =='RECTIFICACION' || operacion =='APERTURA' || operacion =='ADECUACION'){
                  $("#nivelTipo").show();
                  $("#regimenEstudio").show();
                  $("#tiempoEstudio").show();
                  $("#cargaHoraria").show();
-                
 
             }
             else{

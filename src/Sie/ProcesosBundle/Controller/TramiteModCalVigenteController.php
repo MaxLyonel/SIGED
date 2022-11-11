@@ -84,6 +84,7 @@ class TramiteModCalVigenteController extends Controller {
         $flujoTipo = $request->get('flujoTipo');
         $sie = $this->session->get('ie_id');
         $rol = $this->session->get('roluser');
+        $gestionActual = $this->session->get('currentyear');
 
         // VALIDAMOS QUE EL USUARIO QUE ESTA REALIZANDO LA SOLICITUD SEA CON ROL DE DIRECTOR
         // PARA EVITAR ERRORES CUANDO SE SOBREESCRIBEN LAS SESIONES
@@ -95,15 +96,7 @@ class TramiteModCalVigenteController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
-
-        // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DOCUMENTOS EMITIDOS
-        $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
-        if (count($documentos) > 0) {
-            $response->setStatusCode(202);
-            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
-            return $response;
-        }
-        
+       
         // SI EL ESTUDIANTE NO EXISTE, DEVOLVEMOS 204 SIN CONTENIDO
         if(!$estudiante){
             $response->setStatusCode(202);
@@ -127,9 +120,11 @@ class TramiteModCalVigenteController extends Controller {
                             ->innerJoin('SieAppWebBundle:DistritoTipo','dt','with','jg.distritoTipo = dt.id')
                             ->innerJoin('SieAppWebBundle:DepartamentoTipo','dep','with','dt.departamentoTipo = dep.id')
                             ->where('e.codigoRude = :rude')
-                            // ->andWhere('ie.id = :sie')
+                            ->andWhere('ie.id = :sie')
+                            ->andWhere('iec.gestionTipo = :gestionactual')
                             ->setParameter('rude', $codigoRude)
-                            // ->setParameter('sie', $sie)
+                            ->setParameter('sie', $sie)
+                            ->setParameter('gestionactual', $gestionActual)
                             ->addOrderBy('get.id','DESC')
                             ->addOrderBy('nt.id','DESC')
                             ->addOrderBy('gt.id','DESC')
@@ -160,6 +155,14 @@ class TramiteModCalVigenteController extends Controller {
                 'departamento'=>$value['departamento'],
                 'distrito'=>$value['distrito']
             );
+        }
+
+        // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DIPLOMA EMITIDO
+        $documentos = $this->validartieneDiploma($codigoRude);
+        if (count($documentos) > 0) {
+            $response->setStatusCode(202);
+            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
+            return $response;
         }
 
         // OBTENEMOS EL DATO DEL DIRECTOR
@@ -265,7 +268,7 @@ class TramiteModCalVigenteController extends Controller {
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             $sie = $this->session->get('ie_id');
             $gestion = $this->session->get('currentyear');
-
+            
             // OBTENEMOS EL ID DEL TRAMITE SI SE TRATA DE UNA MODIFICACION
             $idTramite = $request->get('idTramite');
             // VERIFICAMOS SI EXISTE EL ARCHIVO
@@ -279,7 +282,7 @@ class TramiteModCalVigenteController extends Controller {
                 $extension = explode('.', $name);
                 $extension = $extension[count($extension)-1];
                 $new_name = date('YmdHis').'.'.$extension;
-
+                
                 // GUARDAMOS EL ARCHIVO
                 $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionNotas/' . $sie;
                 if (!file_exists($directorio)) {
@@ -287,12 +290,12 @@ class TramiteModCalVigenteController extends Controller {
                 }
 
                 $archivador = $directorio.'/'.$new_name;
-
+                
                 if(!move_uploaded_file($tmp_name, $archivador)){
                     $response->setStatusCode(500);
                     return $response;
                 }
-
+                
                 // CREAMOS LOS DATOS DE LA IMAGEN
                 $informe = array(
                     'name' => $name,
@@ -304,7 +307,7 @@ class TramiteModCalVigenteController extends Controller {
             }else{
                 $informe = null;
             }
-
+            
             // OBTENEMOS LA INFORMACION DEL FORMULARIO
             $codigoRude = $request->get('codigoRude');
             $estudiante = $request->get('estudiante');
@@ -331,7 +334,7 @@ class TramiteModCalVigenteController extends Controller {
             $checkInforme = $request->get('checkInforme');
             $checkCuaderno = $request->get('checkCuaderno');
             $checkFormulario = $request->get('checkFormulario');
-
+            
             $dataInscription = array(
                 "gestion"=>$gestionInscripcion ,
                 "nivelId"=>$inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
@@ -350,7 +353,7 @@ class TramiteModCalVigenteController extends Controller {
                 "posSelected"=>0,
                 "codigoRude"=>$codigoRude
             );
-
+            
             // ARMAMOS EL ARRAY DE LA DATA
             $data = array(
                 'idInscripcion'=> $idInscripcion,
@@ -390,12 +393,12 @@ class TramiteModCalVigenteController extends Controller {
 
             // OBTENEMOS EL TIPO DE TRAMITE
             $tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs'=>'MGV'));
-
+            
             if ($idTramite == null) {
                 
                 // OBTENEMOS OPERATIVO ACTUAL Y LO AGREGAMOS AL ARRAY DE DATOS           
                 $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
-
+                
                 // REGISTRAMOS UN NUEVO TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
                     $this->session->get('userId'),
@@ -412,15 +415,27 @@ class TramiteModCalVigenteController extends Controller {
                     '',//$lugarTipoLocalidad,
                     $lugarTipo['lugarTipoIdDistrito']
                 );
-
+                
                 if ($registroTramite['dato'] == false) {
-                    $response->setStatusCode(500);
-                    return $response;
+                    if ($registroTramite['msg'] == "") {
+                        $response->setStatusCode(500);
+                        return $response;
+                    } else {
+                        $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$registroTramite['msg'],
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                        return $response;
+                    }
+
                 }
 
                 $idTramite = $registroTramite['idtramite'];
 
             }else{
+            
                 // RECUPERAMOS EL OPERATIVO DONDE SE INICIO EL TRAMITE Y LO AGREGAMOS AL ARRAY DE DATOS
                 $datosFormulario = $this->datosFormulario($idTramite);
                 $data['operativoActual'] = $datosFormulario['operativoActual'];
@@ -458,8 +473,9 @@ class TramiteModCalVigenteController extends Controller {
 
             $response->setStatusCode(200);
             $response->setData(array(
+                'msg'=>"",
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('tramite_add_mod_download_requet', array('idTramite'=>$idTramite))
+                'urlreporte'=> $this->generateUrl('tramite_mod_cal_vigente_formulario_vista_imprimir', array('idTramite'=>$idTramite))
             ));
 
             $em->getConnection()->commit();
@@ -467,6 +483,7 @@ class TramiteModCalVigenteController extends Controller {
             return $response;
 
         } catch (Exception $e) {
+            
             $em->getConnection()->rollback();
             $response->setStatusCode(500);
             return $response;
@@ -671,15 +688,6 @@ class TramiteModCalVigenteController extends Controller {
         } catch (Exception $e) {
             
         }
-    }
-
-    public function formularioVistaImprimirFinalizarAction(Request $request){
-        try {
-            //NO ES NECESARIO
-        } catch (Exception $e) {
-            
-        }
-
     }
 
     /*=========================================================
@@ -1422,12 +1430,48 @@ class TramiteModCalVigenteController extends Controller {
         }
     }
 
-    public function requestInsCalYearVigAction(Request $request, $idTramite){
+    public function validartieneDiploma($codigoRude){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+                    select *
+                    from documento as d
+                    inner join tramite as t on t.id = d.tramite_id
+                    inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
+                    inner join estudiante as e on e.id = ei.estudiante_id
+                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1 and d.documento_tipo_id = 1
+                    ");
+
+        $query->execute();
+        $documentos = $query->fetchAll();
+
+        return $documentos;
+    }
+
+
+    public function formularioVistaImprimirAction(Request $request, $idTramite){
 
         $response = new Response();
         $gestion = $this->session->get('currentyear');
         $codigoQR = 'FICGP'.$idTramite.'|'.$gestion;
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
+     
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$idTramite.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V2_eea.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+}
 
+    public function requestInsCalYearVigAction(Request $request){
+
+        $response = new Response();
+        $idTramite = $request->get('idtramite');
+        $gestion = $this->session->get('currentyear');
+        $codigoQR = 'FICGP'.$idTramite.'|'.$gestion;
         $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
         //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
         $response->headers->set('Content-type', 'application/pdf');

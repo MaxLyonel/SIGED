@@ -107,7 +107,8 @@ class PreInscriptionController extends Controller
         $response = new JsonResponse();
         //get send values
         $idDepto = $request->get('departamento');
-        $uespreInscription = $this->get('funciones')->getUEspreInscription($idDepto);   
+        $gestion = $this->session->get('currentyear');
+        $uespreInscription = $this->get('funciones')->getUEspreInscription($idDepto, $gestion);  
         $arrUes = array();
         if(sizeof($uespreInscription)>0){
             foreach ($uespreInscription as $value) {

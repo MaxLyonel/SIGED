@@ -91,7 +91,13 @@
                                 <div class="form-line">
                                     {{form_widget(form.operacion) }}
                                 </div>
-                            </div>                                                                                    
+                            </div>          
+                             <label class="form-label">{{form_label(form.descripcion)}}</label>
+                             <div class="form-group">
+                                <div class="form-line">
+								    {{form_widget(form.descripcion) }}                               
+                                </div>                                                                                   
+                            </div>                                                                           
                         </fieldset>
                             {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
                             <a href="{{path('oac_list', {'idRie': institucion.getId()})}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>

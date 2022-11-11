@@ -52,7 +52,7 @@ class CarrerasController extends Controller {
     public function listAction() {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-        $query = "SELECT  afct.id, carrera.nombre, area.area_formacion,(select count(distinct(ca.institucioneducativa_id))
+        $query = "SELECT  carrera.id, carrera.nombre, area.area_formacion,(select count(distinct(ca.institucioneducativa_id))
             FROM ttec_institucioneducativa_carrera_autorizada ca ,  ttec_institucioneducativa_area_formacion_autorizado aa
             WHERE ca.ttec_carrera_tipo_id =afct.ttec_carrera_tipo_id AND aa.ttec_area_formacion_tipo_id =afct.ttec_area_formacion_tipo_id 
             AND ca.institucioneducativa_id = aa.institucioneducativa_id) AS cantidad
@@ -164,16 +164,17 @@ class CarrerasController extends Controller {
      * Muestra formulario para modificar la oferta académica
      */
     public function editAction(Request $request){
+        
         $em = $this->getDoctrine()->getManager();
 
-        $area_carrera = $em->getRepository('SieAppWebBundle:TtecAreaFormacionCarreraTipo')->findOneById($request->get('idCarrera'));
-       
-        $arrayArea = $this->obtieneInstitucionAreaFormArray($area_carrera->getTtecCarreraTipo()->getId());
-
+        $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($request->get('idCarrera'));
+        
+        $arrayArea = $this->obtieneInstitucionAreaFormArray($request->get('idCarrera'));
+        //dump($arrayArea);die;
         $form = $this->createFormBuilder()
         ->setAction($this->generateUrl('carrera_rie_update'))
-        ->add('idCarrera', 'hidden', array('data' =>  $area_carrera->getTtecCarreraTipo()->getId()))
-        ->add('carrera', 'text', array('label' => 'Carrera', 'data' => $area_carrera->getTtecCarreraTipo()->getNombre(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '100') ))
+        ->add('idCarrera', 'hidden', array('data' =>  $carrera->getId()))
+        ->add('carrera', 'text', array('label' => 'Carrera', 'data' => $carrera->getNombre(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '100') ))
         ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
             
         return $this->render('SieRieBundle:Carreras:edit.html.twig', array('form' => $form->getForm()->createView(), 'areas' =>$arrayArea));           

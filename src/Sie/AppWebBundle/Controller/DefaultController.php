@@ -209,7 +209,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.11':                
+            case '172.20.196.18':                
                 // $sysname = 'TRAMITE';
                 // $sysporlet = 'green';
                 // $sysbutton = false;
@@ -224,12 +224,12 @@ class DefaultController extends Controller {
                 // $this->session->set('sistemaid', 1);
                 // $this->session->set('color', 'blue');
                 // break;
-                $sysname = 'UNIVERSIDADES';
-                $sysporlet = 'blue';
-                $sysbutton = false;
-                $layout = 'layoutUniversity.html.twig';
-                $this->session->set('pathSystem', "SieUniversityBundle");
-                break;
+                // $sysname = 'UNIVERSIDADES';
+                // $sysporlet = 'blue';
+                // $sysbutton = false;
+                // $layout = 'layoutUniversity.html.twig';
+                // $this->session->set('pathSystem', "SieUniversityBundle");
+                // break;
                 // $sysname = 'Sistema Académico Educación Regular';
                 // $sysporlet = 'blue';
                 // $sysbutton = true;
@@ -238,6 +238,12 @@ class DefaultController extends Controller {
                 // $this->session->set('color', 'primary');
                 // $this->session->set('sistemaid', 6);
                 // break;
+                $sysname = 'DGESTTLA ESTADISTICO';
+                $sysporlet = 'blue';
+                $sysbutton = false;
+                $layout = 'layoutTecnicaEst.html.twig';
+                $this->session->set('pathSystem', "SieTecnicaEstBundle");
+                break;
                 // $sysname = 'Sistema Académico Educación Alternativa';
                 // $sysporlet = 'blue';
                 // $sysbutton = true;
@@ -245,6 +251,12 @@ class DefaultController extends Controller {
                 // $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 // $this->session->set('color', 'success');
                 // $this->session->set('sistemaid', 2);
+                // break;
+                // $sysname = 'Sistema Académico Educación Permanente';
+                // $sysporlet = 'green';
+                // $sysbutton = false;
+                // $layout = 'layoutPermanente.html.twig';
+                // $this->session->set('pathSystem', "SiePermanenteBundle");
                 // break;
             case 'tramite.sie.gob.bo':
             case 'diplomas.sie.gob.bo':
@@ -673,9 +685,15 @@ class DefaultController extends Controller {
                 if($this->session->get('pathSystem')=='SieUniversityBundle'){
                     return $this->redirect($this->generateUrl('sie_university_homepage'));
                 }
-
+               
                 if($this->session->get('pathSystem')=='SieTecnicaEstBundle'){
-                    return $this->redirect($this->generateUrl('sie_tecnicaest_homepage'));
+                    $estadoUsuarioRol = $this->getAccessUsuarioRol(array("usuarioId"=>$this->session->get('userId'),"rolId"=>8));
+                    if ($estadoUsuarioRol){
+                        return $this->redirect($this->generateUrl('sie_tecnicaest_dashboard'));
+                    } else {
+                        return $this->redirect($this->generateUrl('sie_tecnicaest_homepage'));
+                    }
+                    
                 }
                 //*************************
                 //*************************
@@ -1238,4 +1256,27 @@ class DefaultController extends Controller {
       return $swDoInscription;
 
     }
+
+    public function getAccessUsuarioRol($data){
+
+        //ini DB conexxion
+        $em = $this->getDoctrine()->getManager();
+  
+        $operativo = $this->get('funciones')->obtenerOperativo($data['usuarioId'],$data['rolId']);
+  // dump($operativo);die;
+        //set the flag to do the inscription
+        $estado = false;
+        $objUsuarioRol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array(
+          'usuario' => $data['usuarioId'],
+          'rolTipo' => $data['rolId'],
+          'esactivo' => true,
+        ));
+  
+        if($objUsuarioRol && $objUsuarioRol->getId()){
+          $estado = true;
+        }
+        //return the correct value before the validation
+        return $estado;
+  
+      }
 }

@@ -124,6 +124,7 @@ class OfertaAcademicaController extends Controller {
             ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY','class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
             ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
             ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
+            ->add('descripcion', 'text', array('label' => 'Descripción adicional','required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
             
             return $this->render('SieRieBundle:OfertaAcademica:new.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=>$institucion));
@@ -188,6 +189,7 @@ class OfertaAcademicaController extends Controller {
                 $resolucion->setCargaHoraria($form['cargaHoraria']);
                 $resolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
                 $resolucion->setOperacion($form['operacion']);
+                $resolucion->setDescripcion($form['descripcion']);
                 $em->persist($resolucion);
                 $em->flush();            
             }
@@ -203,10 +205,15 @@ class OfertaAcademicaController extends Controller {
      * Muestra formulario para modificar la oferta académica
      */
     public function editAction(Request $request){
+        
+        
         $em = $this->getDoctrine()->getManager();
         $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')->findOneById($request->get('idresolucion'));
+
+
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
                                                 ->findOneById($datResolucion->getTtecInstitucioneducativaCarreraAutorizada()->getId());
+
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($datAutorizado->getInstitucioneducativa()->getId());
         
         if(!$datAutorizado){
@@ -232,6 +239,7 @@ class OfertaAcademicaController extends Controller {
             ->add('resolucion', 'text', array('label' => 'Resolución', 'data'=>$datResolucion->getNumero(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
             ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data' => $datResolucion->getFecha()->format('d-m-Y') ,'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
             ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'data' => $datResolucion->getOperacion(), 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))                        
+            ->add('descripcion', 'text', array('label' => 'Descripción adicional', 'data' => $datResolucion->getDescripcion(), 'required' => true, 'required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
             return $this->render('SieRieBundle:OfertaAcademica:edit.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'datAutorizado' => $datAutorizado, 'datResolucion'=>$datResolucion));
         }        
@@ -257,6 +265,7 @@ class OfertaAcademicaController extends Controller {
             $datResolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
             $datResolucion->setFechaModificacion(new \DateTime('now'));
             $datResolucion->setOperacion($form['operacion']);
+            $datResolucion->setDescripcion($form['descripcion']);
             $em->persist($datResolucion);
             $em->flush();   
                         
@@ -340,6 +349,7 @@ class OfertaAcademicaController extends Controller {
         ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
         ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
         ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
+        ->add('descripcion', 'text', array('label' => 'Descripción adicional','required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
         ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
         ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
@@ -446,11 +456,30 @@ class OfertaAcademicaController extends Controller {
      * Editar Resolucion ministerial
      */ 
     public function editresolucionAction(Request $request){
+        
         $em = $this->getDoctrine()->getManager();
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
                                                 ->findOneById($request->get('idAutorizado'));
         $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')
                                                 ->findOneById($request->get('idResolucion'));
+
+        $query = $em->getConnection()->prepare(' select a.*
+        from  ttec_resolucion_carrera r, 
+        ttec_institucioneducativa_carrera_autorizada ca, 
+        ttec_area_formacion_carrera_tipo afct, 
+        ttec_institucioneducativa_area_formacion_autorizado aa,
+        ttec_area_formacion_tipo a 
+        where r.id = :idResolucion 
+        and  r.ttec_institucioneducativa_carrera_autorizada_id  = ca.id
+        and afct.ttec_carrera_tipo_id =ca.ttec_carrera_tipo_id 
+        and afct.ttec_area_formacion_tipo_id  = aa.ttec_area_formacion_tipo_id 
+        and aa.institucioneducativa_id = ca.institucioneducativa_id 
+        and aa.ttec_area_formacion_tipo_id = a.id');
+        $query->bindValue(':idResolucion', $request->get('idResolucion'));
+        $query->execute();
+        $data = $query->fetch();
+        //dump($data['area_formacion']);die;
+
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
 
         $regimenEstudioArray = $this->obtieneRegimenEstudio();
@@ -462,7 +491,7 @@ class OfertaAcademicaController extends Controller {
         ->add('idRie', 'hidden', array('data' => $institucion->getId()))
         ->add('idAutorizado', 'hidden', array('data' => $datAutorizado->getId()))
         ->add('idResolucion', 'hidden', array('data' => $datResolucion->getId()))
-        ->add('ttecAreaFormacion', 'text', array('label' => 'Area de Formación', 'data' => $datAutorizado->getTtecCarreraTipo()->getTtecAreaFormacionTipo()->getAreaFormacion(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))        
+        ->add('ttecAreaFormacion', 'text', array('label' => 'Area de Formación', 'data' => $data['area_formacion'], 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))        
         ->add('ttecCarreraTipo', 'text', array('label' => 'Carrera', 'data' => $datAutorizado->getTtecCarreraTipo()->getNombre(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
         ->add('nivelTipo', 'choice', array('label' => 'Nivel de Formación', 'data' => $datResolucion->getNivelTipo()->getId(), 'required' => true,'choices'=>$nivelesArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))                 
         ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'data' => $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
@@ -471,6 +500,8 @@ class OfertaAcademicaController extends Controller {
         ->add('resolucion', 'text', array('label' => 'Resolución', 'data' => $datResolucion->getNumero(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data' => $datResolucion->getFecha()->format('d-m-Y'),'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
         ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'data' => $datResolucion->getOperacion(), 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
+        ->add('descripcion', 'text', array('label' => 'Descripción adicional','data' => $datResolucion->getDescripcion(),'required' => false, 'attr' => array('placeholder'=>'Descripción', 'class' => 'form-control', 'maxlength' => '250')))
+        
         ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
         return $this->render('SieRieBundle:OfertaAcademica:editresolucion.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'idAutorizado' => $datAutorizado->getId()));
     }
@@ -494,6 +525,7 @@ class OfertaAcademicaController extends Controller {
             $datResolucion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($form['nivelTipo']));
             $datResolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
             $datResolucion->setOperacion($form['operacion']);
+            $datResolucion->setDescripcion($form['descripcion']);
             $em->persist($datResolucion);
             $em->flush(); 
 
@@ -662,7 +694,6 @@ $entities = $query->getResult();
                     FROM ttec_institucioneducativa_carrera_autorizada AS autorizado
                     INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
                     INNER JOIN institucioneducativa AS instituto ON autorizado.institucioneducativa_id = instituto.id 
-                    INNER JOIN ttec_area_formacion_tipo AS area ON carrera.ttec_area_formacion_tipo_id = area.id
                     INNER JOIN ttec_area_formacion_carrera_tipo AS afct ON afct.ttec_carrera_tipo_id = carrera .id
                     WHERE instituto.id = '".$idRie."'  and afct.ttec_area_formacion_tipo_id <> 200 "; //200 es cursos de capacitacion
         $stmt = $db->prepare($query);
@@ -741,7 +772,7 @@ $entities = $query->getResult();
         return $dato;
     }
     public function obtieneTipoTramiteNuevaResolucion(){
-        $dato = array('RATIFICACION' => 'RATIFICACIÓN', 'RECTIFICACION' => 'RECTIFICACIÓN', 'CIERRE'=>'CIERRE');
+        $dato = array('APERTURA'=>'APERTURA','ADECUACION' => 'ADECUACIÓN','RATIFICACION' => 'RATIFICACIÓN', 'RECTIFICACION' => 'RECTIFICACIÓN', 'CIERRE'=>'CIERRE');
         return $dato;
     }  
 

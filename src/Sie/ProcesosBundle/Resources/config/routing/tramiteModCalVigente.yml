@@ -29,9 +29,9 @@ tramite_mod_cal_vigente_formulario_vista_imprimir_libreta:
     path:     /formularioVistaImprimirLibreta
     defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimirLibreta }
 
-tramite_mod_cal_vigente_formulario_vista_imprimir_finalizar:
-    path:     /kformularioVistaImprimirFinalizar/{idTramite}
-    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimirFinalizar }
+tramite_mod_cal_vigente_formulario_vista_imprimir:
+    path:     /famcgv/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:formularioVistaImprimir }
 
 # DISTRITO
 
@@ -57,6 +57,6 @@ tramite_mod_cal_vigente_acta_imprimir:
     path:     /actaImprimir
     defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:actaImprimir }
 
-tramite_add_mod_download_requet:
-    path:     /famcgp/{idTramite}
+tramite_mod_cal_vigente_formulario_descarga:
+    path:     famcgv/
     defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:requestInsCalYearVig }  

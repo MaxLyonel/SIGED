@@ -75,7 +75,7 @@
                                             <p><small class="form-text">{{ inscripcion.ue }}</small></p>
                                         {% else %}  
                                             <label><strong>Código S.I.E.</strong></label>
-                                            <input type="text" id="form_sie_{{c}}" name="form[sie]" class="form-control sie" maxlength="8"  placeholder="Ingrese el Código SIE">
+                                            <input type="text" id="form_sie_{{c}}" name="form[sie]" class="form-control" maxlength="8"  placeholder="Ingrese el Código SIE" onkeyup="validaSie(event, this)">
                                             <p><small class="form-text" id="lbl_sie_{{c}}"></small></p>
                                         {% endif %} 
                                     </div>
@@ -378,16 +378,17 @@
         }
 
 
-        $(".sie").keyup(function(event) {
-           if(event.shiftKey)
-           {
-                event.preventDefault();
-           }
+        function validaSie(event,ele){
+            sie = $(ele).val();
+            if(event.shiftKey)
+            {
+                    event.preventDefault();
+            }
 
-           if (event.keyCode == 46 || event.keyCode == 8)    {
-           }
-           else
-           {
+            if (event.keyCode == 46 || event.keyCode == 8)    {
+            }
+            else
+            {
                 if (event.keyCode < 95) {
                   if ((event.keyCode < 48 && event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40 && event.keyCode != 13) || event.keyCode > 57) {
                         event.preventDefault();
@@ -402,12 +403,12 @@
             }
             
 
-            if($(this).val().length>=8){
-                var pos = (($(this).attr('id')).split('_'))[2];
+            if($(ele).val().length>=8){
+                var pos = (($(ele).attr('id')).split('_'))[2];
                 var info = $('#form_habilita_'+pos).val();
                 var formData = new FormData();
                 formData.append('form[data]', info);
-                formData.append('form[sie]', $(this).val());
+                formData.append('form[sie]', $(ele).val());
 
                 peticion = $.ajax({
                     type: 'post',
@@ -426,6 +427,13 @@
                             $("#lbl_sie_"+pos).empty();
                             $("#alert").remove();
                             $("#lbl_sie_"+pos).html('<div class="alert alert-lilac" role="alert" id="alert"><p><i class="fa fa-check-square-o fa-success" aria-hidden="true"></i> '+data.msg+'</p></div>');
+
+                            $("#form_turno_"+pos).empty();
+                            $("#form_turno_"+pos).append('<option value="">Seleccionar Turno</option>');
+                            for (var i in data.turno) {
+                                $("#form_turno_"+pos).append('<option value="' + data.turno[i].id + '">' + data.turno[i].nombre + '</option>');
+                            }
+
                             return true;
                         } else {
                             $("#form_sie_"+pos).val('');
@@ -451,7 +459,7 @@
             } else {
                 false;
             }
-        });
+        }
 
 
         function cargarArchivo(event){
@@ -483,9 +491,13 @@
         function cargarParalelo(pos){
             var turno = $('#form_turno_'+pos).val();
             var info = $('#form_habilita_'+pos).val();
+                      
             var formData = new FormData();
             formData.append('form[data]', info);
             formData.append('form[turno]', turno);
+            if($('#form_sie_'+pos).val() != "" && $('#form_sie_'+pos).val() != 0 && $('#form_sie_'+pos).val() != "0" && $('#form_sie_'+pos).val() != undefined){
+                formData.append('form[sie]', $('#form_sie_'+pos).val());
+            }  
             var contentParalelo = $('#form_paralelo_'+pos).html();
 
             if($('#form_turno_'+pos).val() == ""){
