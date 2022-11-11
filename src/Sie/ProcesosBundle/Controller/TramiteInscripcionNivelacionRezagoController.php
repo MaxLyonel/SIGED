@@ -170,6 +170,10 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 if(isset($dataEstudianteTramite[0]['tramite_id'])){
                     $tramiteId = $dataEstudianteTramite[0]['tramite_id'];
                     $data['tramiteId'] = $tramiteId;
+                    $dataTramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite'=>$tramiteId), array('id'=>'DESC'));
+                    if($dataTramiteDetalle[0]->getFlujoProceso()->getTareaSigId() == null or $dataTramiteDetalle[0]->getFlujoProceso()->getTareaSigId() == '' or $dataTramiteDetalle[0]->getFlujoProceso()->getTareaSigId() == 0){
+                        $tramiteId = 0;
+                    }
                 }
             }
         }    

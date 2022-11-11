@@ -2260,7 +2260,7 @@ class Funciones {
         return $userInscriptions;
     }  
 
-    public function getUEspreInscription($idDepto){
+    public function getUEspreInscription($idDepto, $gestion){
         
         $queryUes = "
          select distinct(g.id),  g.institucioneducativa
@@ -2269,7 +2269,7 @@ class Funciones {
                      inner join distrito_tipo i on h.distrito_tipo_id = i.id
                         inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
                             inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
-                            where dt.id = '".$idDepto."';           
+                            where dt.id = '".$idDepto."' and gestion_tipo_id = '".$gestion."';           
         ";   
 
         $query = $this->em->getConnection()->prepare($queryUes);
