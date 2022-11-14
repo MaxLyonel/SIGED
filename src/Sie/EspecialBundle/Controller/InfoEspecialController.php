@@ -502,7 +502,7 @@ class InfoEspecialController extends Controller{
         ));
      //dump($registroConsol);die;
       $periodo = $this->operativo($form['sie'], $form['gestion']);
-      dump($periodo);die;
+     // dump($periodo);die;
       $estado = '';
       if(!$registroConsol){
         $estado = 'SIN_INSC';
@@ -510,7 +510,7 @@ class InfoEspecialController extends Controller{
         if($registroConsol->getRude()!=1){
           $estado = 'SIN_RUDE';
         }
-        if($registroConsol->getBim1()==2){
+        /*if($registroConsol->getBim1()==2){
           $estado = 'CON_BIM1';
         }
         if($registroConsol->getBim2()==2){
@@ -518,10 +518,10 @@ class InfoEspecialController extends Controller{
         }
         if($registroConsol->getBim3()==2){
           $estado = 'CON_BIM3';
-        }
+        }*/
       }
       $inconsistencia = null;
-     // dump($estado);die;
+      //dump($estado);die;
       if($estado==''){
       
         //sp_validacion_regular_RUDE
@@ -531,8 +531,9 @@ class InfoEspecialController extends Controller{
         $query->bindValue(':ibimestre', $periodo);
         $query->execute();
         $inconsistencia = $query->fetchAll();
-        //dump($inconsistencia);die;
-        if($registroConsol && !$inconsistencia){
+        //dump($registroConsol);
+       // dump($inconsistencia);die;
+        if($registroConsol && !$inconsistencia){ // dump("aaaaaa");die;
               $registroConsol->setBim1('2');
             if($periodo==2)
               $registroConsol->setBim2('2');
