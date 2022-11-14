@@ -275,10 +275,10 @@ class PreInscriptionController extends Controller
         $agrados = array();
         
         foreach ($aGrados as $grado) {
-            if($idnivel == 12 && $grado[1]==1){
+            if($idnivel == 12){
                 $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
             }
-            if($idnivel == 13 && $grado[1]==1){
+            if($idnivel == 13){
                 $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
             }
             if($idnivel == 11){
