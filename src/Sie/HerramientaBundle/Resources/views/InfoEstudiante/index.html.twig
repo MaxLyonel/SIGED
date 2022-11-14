@@ -105,12 +105,14 @@ line-height: 1.83333em;}
                                         </ul>
                                     </div>
                                     {# Opciones: 6to secundaria #}
+                                   
                                     {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
-                                        {% if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  %}
+                                    
+                                        {% if arrLevelandGrado.operativo == 3 and arrLevelandGrado.closeopesextosecc == false  %} 
                                             <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
-                                            <i class="fa fa-group" ></i>xx
+                                            <i class="fa fa-group" ></i>
                                             </button>
-                                        {% else %}
+                                        {% else %} n
                                             <button type="button" disabled class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo'>
                                             <i class="fa fa-group" ></i>
                                             </button>

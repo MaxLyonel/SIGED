@@ -829,13 +829,13 @@ class InfoEstudianteController extends Controller {
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
                 // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 3 ) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo > 3 ) { ///////>=
                     $imprimirLibreta = true;
                 }
                 // dump($imprimirLibreta);exit();
                 // Unidades educativas tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $operativo >= 4){
-                    $imprimirLibreta = true;
+                    $imprimirLibreta = true; 
                 }
             }
 
@@ -845,11 +845,11 @@ class InfoEstudianteController extends Controller {
             if($gestion < $this->session->get('currentyear')){
                 // Para unidades educativas en gestiones pasadas
                 if(in_array($tipoUE['id'], array(1,2,3,4,5,6,7)) and $gestion > 2014 and $gestion < $this->session->get('currentyear') and $operativo >= 4){
-                    $imprimirLibreta = true;
+                    $imprimirLibreta = true; 
                 }
                 // PAra ues tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $gestion >= 2011){
-                    $imprimirLibreta = true;
+                    $imprimirLibreta = true; 
                 }
 
                 // // Caso especial de la unidad educativa AMERINST
@@ -869,10 +869,10 @@ class InfoEstudianteController extends Controller {
             }
         }else{
             if($gestion > 2014 and $operativo >= 4 and $gestion < 2019){
-                $imprimirLibreta = true;
+                $imprimirLibreta = true; 
             }
         }
-
+       // dump($imprimirLibreta);die;
       $aRemovesUeAllowed = array(
       '61710014',
       '61710089',
@@ -983,6 +983,7 @@ class InfoEstudianteController extends Controller {
             $hasgrado = 6;
         }
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+        
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         
         // to enable 1er Trim 
@@ -990,7 +991,7 @@ class InfoEstudianteController extends Controller {
         if(sizeof($objUe1erTrin)>0){
             $this->session->set('unablePrimerTrim',true);
         }
-
+//dump($operativo);die;
     // end add validation to show califications option
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
