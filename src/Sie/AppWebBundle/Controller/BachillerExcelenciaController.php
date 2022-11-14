@@ -29,8 +29,9 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2021-11-30');
-        $this->gestionOperativo =  $this->session->get('currentyear');
+        $this->fechaCorte = new \DateTime('2022-11-30');
+        $this->gestionOperativo =  $this->session->get('currentyear'); //2022        
+
     }
 
     /*
@@ -314,6 +315,8 @@ class BachillerExcelenciaController extends Controller {
         //     return $this->redirect($this->generateUrl('principal_web'));
         // }
 
+        //dump('here');die;
+
         $response = new JsonResponse();
         try {
             $form_aux = $request->get('sie_appwebbundle_maestrocuentabancaria');
@@ -332,7 +335,7 @@ class BachillerExcelenciaController extends Controller {
             $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form_aux['carnet'], $persona, 'prod', 'academico');
 
             if(!$resultado){
-                return $response->setData(array('mensaje' => 'Información no validada por SEGIP.'));
+                return $response->setData(array('mensaje' => 'INFORMACION NO VALIDADA POR SEGIP, REVISE SUS DATOS NUEVAMENTE. PASO 1:ACTUALIZAR DATOS '));
             }
 
             $entidadfinancieraTipoId = $form_aux['entidadfinancieraTipo'];
@@ -379,6 +382,7 @@ class BachillerExcelenciaController extends Controller {
             }
 
             $persona = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
+          
             $inscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroinscripcionId);
             $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucioneducativaId);
             $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->find($cargoTipoId);
@@ -403,7 +407,7 @@ class BachillerExcelenciaController extends Controller {
                 $em->persist($value);
                 $em->flush();
             }
-
+            //dump($persona); die; 
             $maestrocuenta = new MaestroCuentabancaria();
             $maestrocuenta->setPersona($persona);
             $maestrocuenta->setMaestroInscripcion($inscripcion);
@@ -427,6 +431,7 @@ class BachillerExcelenciaController extends Controller {
             $em->persist($maestrocuenta);
             $em->flush();
             $em->getConnection()->commit();
+            //dump($maestrocuenta); die; 
 
             return $response->setData(array('mensaje' => 'Se ha actualizado correctamente la información para: ' . $maestrocuenta->getNombre() . ' ' . $maestrocuenta->getPaterno() . ' ' . $maestrocuenta->getMaterno() . ', con C.I.: ' . $maestrocuenta->getCarnet() . ' y Complemento: ' . $maestrocuenta->getComplemento()));
         } catch (Exception $ex) {
@@ -747,7 +752,10 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
+        
         $em = $this->getDoctrine()->getManager();
+        
+        $usuario_resetea = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
@@ -763,9 +771,32 @@ class BachillerExcelenciaController extends Controller {
         foreach ($directores as $value) {
             $value->setEsactivo('f');
             $value->setEsoficial('f');
+            $value->setUsuario($usuario_resetea);  //dcastillo
             $em->persist($value);
             $em->flush();
         }
+
+        // dcastillo - reseteo de los alumnos
+        $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
+
+        $query = $repository->createQueryBuilder('ed')
+                ->where('ed.institucioneducativa = :institucion')
+                ->andWhere('ed.gestionTipo = :gestion')                
+                ->setParameter('institucion', $ie)
+                ->setParameter('gestion', $this->gestionOperativo)                
+                ->getQuery();
+
+        $bachilleres = $query->getResult();
+       
+        foreach ($bachilleres as $value) {
+            $value->setImpreso('f');
+            $value->setEsoficial('f');
+            $value->setUsuario($usuario_resetea);   //dcastillo
+            $em->persist($value);
+            $em->flush();
+        }
+
+
 
         $this->get('session')->getFlashBag()->add('searchIe', 'Los datos han sido restablecidos correctamente. (Directora/Director)');
         return $this->redirect($this->generateUrl('bach_exc_rst'));
@@ -784,6 +815,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        $usuario_resetea = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+       
 
         $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
@@ -809,6 +843,7 @@ class BachillerExcelenciaController extends Controller {
 
         $bachiller->setImpreso('f');
         $bachiller->setEsoficial('f');
+        $bachiller->setUsuario($usuario_resetea);   //dcastillo
         $em->persist($bachiller);
         $em->flush();
 
@@ -826,10 +861,12 @@ class BachillerExcelenciaController extends Controller {
                 ->getQuery();
 
         $bachilleres = $query->getResult();
+       
 
         foreach ($bachilleres as $value) {
             $value->setImpreso('f');
             $value->setEsoficial('f');
+            $value->setUsuario($usuario_resetea);   //dcastillo
             $em->persist($value);
             $em->flush();
         }
@@ -1143,6 +1180,7 @@ class BachillerExcelenciaController extends Controller {
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
         $gestion = $this->gestionOperativo;
+        
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
@@ -1154,6 +1192,8 @@ class BachillerExcelenciaController extends Controller {
                 ->getQuery();
 
         $directores = $query->getResult();
+        //dump($directores);
+        
 
         foreach ($directores as $value) {
             $value->setEsactivo('t');
