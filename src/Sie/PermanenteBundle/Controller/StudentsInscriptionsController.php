@@ -1052,8 +1052,8 @@ class StudentsInscriptionsController extends Controller {
           
                 if(sizeof($objRequest)>0){
                     // get the acreditacion to set months
-                    $monthsInscription  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?3:5;
-                    $monthsNotas  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?4:6;
+                    $monthsInscription  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest['acreditacion'] == 'TÉCNICO AUXILIAR')?3:5;
+                    $monthsNotas  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest['acreditacion'] == 'TÉCNICO AUXILIAR')?4:6;
                     $f_ini = date('d-m-Y', strtotime($objRequest['fecha_inicio']));
                     if(!$sw){
                         $f_limit = date("d-m-Y", strtotime($f_ini."+".$monthsInscription." month") );

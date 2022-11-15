@@ -999,6 +999,7 @@
 
 					this.swstudent = false;
 
+
                 	Swal.fire({
                         title: 'Eliminar Unidad Educativa seleccionada',
                         text: "Esta seguro de CONTINUAR?",
@@ -1014,6 +1015,9 @@
 								if(ikey == 0){
 	                        		this.dataUnEd.shift();												
 	                        		this.swuned = false;
+
+									this.dataLevel=[];
+									this.dataGrados=[];	                        		
 								}
 								
 							}
