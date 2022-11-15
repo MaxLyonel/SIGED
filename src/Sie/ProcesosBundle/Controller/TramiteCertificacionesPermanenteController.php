@@ -1449,8 +1449,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
             
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Text(163, 76,$ci);         
-            $pdf->Text(158, 80,'SERIE:');         
-            $pdf->Text(163, 85,$numSerieGen);         
+            $pdf->SetFont('helvetica', '', 10);
+            $pdf->Text(156, 80,'SERIE:');         
+            $pdf->Text(156, 85,$numSerieGen);         
             
             $pdf->Ln(25);
             $pdf->SetFont('helvetica', 'B', 11);
@@ -1458,14 +1459,14 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->Cell(22, 5, '', 0, 0, 'L');
             //$pdf->Cell(0, 5, 'Confiere el presente:', 0, 1, 'L'); //0 a 100% whit heigt ancho alto,texto,borde , saltolinea, orientacion, rellenado            
             $pdf->Ln(40);
-            $pdf->Cell(22, 5, '', 0, 0, 'L');            
+            $pdf->Cell(15, 5, '', 0, 0, 'L');            
             $pdf->SetFont('helvetica', 'B', 20);
            $pdf->Cell(0, 2, ($datosParticipante[0]['nombre'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['materno']) , 0, 1, 'C');
            //$pdf->Ln(3);
            $pdf->SetFont('helvetica', '', 14);
            $pdf->Cell(22, 5, '', 0, 0, 'L');
            //$pdf->Cell(0, 2, 'Con la mención de :', 0, 1, 'L');
-           $pdf->Ln(16);
+           $pdf->Ln(13);
            $pdf->SetFont('helvetica', 'B', 15);
            $contenidoMencion='<table border="0" cellpadding="1.5"> ';
            $contenidoMencion.='<tr><td width="10.3%">&nbsp;</td><td  width="79.4%">';
