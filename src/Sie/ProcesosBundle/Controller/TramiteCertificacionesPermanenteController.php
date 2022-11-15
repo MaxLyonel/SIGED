@@ -681,15 +681,17 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $documentoSerie->setObservacionAnulado('false');
         $documentoSerie->setObs('eudper');
         $documentoSerie->setDocumentoTipo($em->getRepository('SieAppWebBundle:documentoTipo')->findOneById($data['typedoc']));
+        $documentoSerie->setFormacionEducacionTipo($em->getRepository('SieAppWebBundle:FormacionEducacionTipo')->find(4));
         $em->persist($documentoSerie);
         // set the code serie on certificadoPermanente table
-        $certificadoPermanente = $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('tramite' => $data['idTramite'] ));
-        $certificadoPermanente ->setEstado(3);
-        $certificadoPermanente ->setDocumentoSerie($em->getRepository('SieAppWebBundle:DocumentoSerie')->find($documentoSerie->getId()));
+        $certificadoPermanente = $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('tramite' => $data['idtramite'] ));
+        $certificadoPermanente->setEstado(3);
+        $certificadoPermanente->setDocumentoSerie($em->getRepository('SieAppWebBundle:DocumentoSerie')->find($documentoSerie->getId()));
+        
         
          $em->flush();
 
-         return true;
+         return $documentoSerie->getId();
 
     }
 
@@ -1326,7 +1328,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
            'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
         );
         
-        $pdf->SetAuthor('Lupita');
+        $pdf->SetAuthor('SIE');
         $pdf->SetTitle('Certificados Permanente');
         $pdf->SetSubject('Report PDF');
         $pdf->SetPrintHeader(false);
@@ -1343,9 +1345,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $arrLevelACre = array('TÉCNICO BÁSICO'=>6,'TÉCNICO AUXILIAR'=>7);
             $arrLevelSerie = array('TÉCNICO BÁSICO'=>'B','TÉCNICO AUXILIAR'=>'A');
             // get the level
-            $nivel = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($idNivel);   
+            $nivelAcre = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($idNivel);   
             // create query to the find the max number            
-            $queryDoc = "SELECT max(left(id,6)) as maximo from documento_serie a WHERE a.documento_tipo_id = ".$arrLevelACre[$nivel->getAcreditacion()]." and a.gestion_id = $gestionId and a.formacion_educacion_tipo_id  = 4";
+            $queryDoc = "SELECT max(left(id,6)) as maximo from documento_serie a WHERE a.documento_tipo_id = ".$arrLevelACre[$nivelAcre->getAcreditacion()]." and a.gestion_id = $gestionId and a.formacion_educacion_tipo_id  = 4";
             $query = $em->getConnection()->prepare($queryDoc);
             $query->execute();
             $maxSerie = $query->fetchAll();
@@ -1413,17 +1415,17 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $depto    = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('departamento'=>$datosCurso['departamento']))->getId();
             $coddepto = str_pad($depto, 2, "0", STR_PAD_LEFT);
             $typeEducation = 'EP';
-            $acreditation  = $arrLevelSerie[$nivel->getAcreditacion()];
+            $acreditation  = $arrLevelSerie[$nivelAcre->getAcreditacion()];
             $codeyear     = date('y');
             $nroSerie = str_pad($numserie.$coddepto.$typeEducation.$acreditation.$codeyear, 13, "0", STR_PAD_LEFT);
 
             $dataSerieTrue = array(
                 'nroSerie'=>$nroSerie,
                 'depto'=>$depto,
-                'typedoc'=>$arrLevelACre[$nivel->getAcreditacion()],
+                'typedoc'=>$arrLevelACre[$nivelAcre->getAcreditacion()],
                 'idtramite'=>$item['idtramite']
             );
-            $confirUpdate = $this->saveAndUpdateCert($dataSerieTrue);
+            $numSerieGen = $this->saveAndUpdateCert($dataSerieTrue);
             /////////////////////////////////////
             // end to generate the SERIE code
             /////////////////////////////////////
@@ -1447,6 +1449,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
             
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Text(163, 76,$ci);         
+            $pdf->Text(158, 80,'SERIE:');         
+            $pdf->Text(163, 85,$numSerieGen);         
             
             $pdf->Ln(25);
             $pdf->SetFont('helvetica', 'B', 11);

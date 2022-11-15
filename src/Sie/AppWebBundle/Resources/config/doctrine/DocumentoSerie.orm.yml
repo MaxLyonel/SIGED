@@ -22,8 +22,8 @@ Sie\AppWebBundle\Entity\DocumentoSerie:
             fixed: false
             comment: ''
             id: true
-            generator:
-                strategy: SEQUENCE
+            # generator:
+            #     strategy: SEQUENCE
     fields:
         esanulado:
             type: boolean
