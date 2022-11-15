@@ -92,7 +92,7 @@ line-height: 1.83333em;}
                                                     </button> #}
                                                     <li><a href="javascript:cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">-Cerrar Operativo Sexto de Secundaria</a></li>
                                                 {% else %}
-                                                    <li><a href="javascript:void();">Operativo Sexto de Secundaria CERRADO </a></li>
+                                                    <li><a href="javascript:void();">Operativo Sexto de Secundaria (pendiente) </a></li>
                                                 {% endif %}
                                             {% endif %}
                                             {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
@@ -112,7 +112,7 @@ line-height: 1.83333em;}
                                             <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
                                             <i class="fa fa-group" ></i>
                                             </button>
-                                        {% else %} n
+                                        {% else %}
                                             <button type="button" disabled class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo'>
                                             <i class="fa fa-group" ></i>
                                             </button>
