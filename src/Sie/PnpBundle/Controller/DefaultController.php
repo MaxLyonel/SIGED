@@ -7747,11 +7747,18 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
     //BUSCAR PERSONA
     $servicioPersona = $this->get('sie_app_web.persona');
     $persona = $servicioPersona->buscarPersona($ci,$complemento,0);  
+    //comement and added new validation to search person - by Waldo and krlos 14-11-2022
+    $dataPer = array('carnet'=>$ci, 'complemento'=>($complemento==0)?'':$complemento);    
+    $personaTrue = $em->getRepository('SieAppWebBundle:Persona')->findOneBy($dataPer);  
+
+    // dump($personaTrue);die;
     $facilitador_existe=0; 
     $facilitador = array(); 
-    if($persona->type_msg === "success"){   
-        $facilitador = array();
-        $facilitador['id'] = $persona->result[0]->id;
+    // if($persona->type_msg === "success"){   
+    $facilitador = array();
+    //comement and added new validation to search person - by Waldo and krlos 14-11-2022
+    if(sizeof($personaTrue)>0){   
+/*        $facilitador['id'] = $persona->result[0]->id;
         $facilitador['paterno'] = $persona->result[0]->paterno;
         $facilitador['materno'] = $persona->result[0]->materno;
         $facilitador['nombre'] = $persona->result[0]->nombre;
@@ -7759,7 +7766,16 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
         $facilitador['fecha_nac'] = $fecha_nac;
         $facilitador['genero'] = $persona->result[0]->genero_tipo_id;
         $facilitador['ci'] = $persona->result[0]->carnet;
-        $facilitador['complemento'] = $persona->result[0]->complemento;
+        $facilitador['complemento'] = $persona->result[0]->complemento;*/
+        $facilitador['id'] = $personaTrue->getId();
+        $facilitador['paterno'] = $personaTrue->getPaterno();
+        $facilitador['materno'] = $personaTrue->getMaterno();
+        $facilitador['nombre'] = $personaTrue->getNombre();
+        $facilitador['fecha_nac'] = $personaTrue->getFechaNacimiento();
+        $facilitador['genero'] = $personaTrue->getGeneroTipo();
+        $facilitador['ci'] = $personaTrue->getcarnet();
+        $facilitador['complemento'] = $personaTrue->getComplemento();
+
         $facilitador_existe=1;    
     }
     /*

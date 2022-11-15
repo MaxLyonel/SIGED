@@ -149,7 +149,9 @@ class EstudianteInformacionController extends Controller {
                         ->innerJoin('SieAppWebBundle:ApoderadoInscripcionDatos', 'aid', 'WITH', 'ai.id = aid.apoderadoInscripcion')
                         ->innerJoin('SieAppWebBundle:ApoderadoTipo', 'at', 'WITH', 'ai.apoderadoTipo = at.id')
                         ->where('e.codigoRude = :rude')
+                        ->andwhere('ic.gestionTipo = :gestion')
                         ->setParameter('rude', $rude)
+                        ->setParameter('gestion', $gestion)
                         ->getQuery();
 
                 $apoderados = $query->getResult();                

@@ -145,7 +145,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
             if(isset($form['rude'])){
                 $rude = $form['rude'];
             }
-        }      
+        }     
         
         $tramiteDevuelto = false;
         // if($tramiteId>0){
@@ -169,10 +169,12 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
             if(count($dataEstudianteTramite)>0){
                 if(isset($dataEstudianteTramite[0]['tramite_id'])){
                     $tramiteId = $dataEstudianteTramite[0]['tramite_id'];
-                    $data['tramiteId'] = $tramiteId;
                     $dataTramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite'=>$tramiteId), array('id'=>'DESC'));
+                    //dump($dataTramiteDetalle[0]->getFlujoProceso()->getTareaSigId());die;
                     if($dataTramiteDetalle[0]->getFlujoProceso()->getTareaSigId() == null or $dataTramiteDetalle[0]->getFlujoProceso()->getTareaSigId() == '' or $dataTramiteDetalle[0]->getFlujoProceso()->getTareaSigId() == 0){
                         $tramiteId = 0;
+                    } else {
+                        $data['tramiteId'] = $tramiteId;
                     }
                 }
             }
@@ -487,7 +489,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
         $data['estudianteInscripcionId'] = $actualEstudianteInscripcionIdR;
         $data['codigoRude'] = $rude;
         $info = bin2hex(serialize($data));       
-                        
+        //dump($dataInscriptionR,$info,$nivelGradoPermitido,$alert,$tramiteId,$data);die;                
         return array(
             'historial'=>$dataInscriptionR,
             'data'=>$info,
@@ -847,6 +849,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                     }
                 }
             } else {
+                //dump($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $datos['procedeNivelacion'], $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);die;
                 $result = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $datos['procedeNivelacion'], $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
             }
             if ($result['dato'] == true) {
