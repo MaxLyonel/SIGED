@@ -376,7 +376,7 @@
                                                         
                                                         {% endif %}   
 
-                                                        {% if  gestion == 2022 and operativo==3  and nivel == 13 and grado == 6  %}  {# se habilita reg notas solo para  6to Secundaria #}
+                                                        {% if  gestion == 2022 and operativo==3  and nivel == 13 and grado == 6  and mostrarUeSinReporte2022 == false %}  {# se habilita reg notas solo para  6to Secundaria #}
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="  body" title="" data-original-title="Calificaciones.... ">
                                                                <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                   <i class="fa fa-list"></i>

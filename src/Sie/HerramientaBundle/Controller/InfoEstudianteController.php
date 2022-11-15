@@ -695,7 +695,7 @@ class InfoEstudianteController extends Controller {
         
 
         //get the values throght the infoUe
-        $sie = $aInfoUeducativa['requestUser']['sie'];
+        $sie = $aInfoUeducativa['requestUser']['sie']; 
         //$swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
         $swRegisterCalifications = true;
         // $swRegisterPersonBjp = $aInfoUeducativa['requestUser']['swRegisterPersonBjp'];
@@ -911,6 +911,11 @@ class InfoEstudianteController extends Controller {
             $mostrarSextoCerrado = true;
         }
     }
+    /**se habilito para validar que registren notas todas excepto de la lista UesSinRepoete2022 */
+    $mostrarUeSinReporte2022 = false;
+    $uESinReporte = $em->getRepository('SieAppWebBundle:UesSinReporte2022')->findOneById($sie);
+    if($uESinReporte)
+        $mostrarUeSinReporte2022 = true;
 
     $this->session->set('optionFormRude', false);
     $this->session->set('optionReporteRude', false);
@@ -1018,6 +1023,7 @@ class InfoEstudianteController extends Controller {
                     'imprimirLibreta'=>$imprimirLibreta,
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
+                    'mostrarUeSinReporte2022'=>$mostrarUeSinReporte2022,
                     'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion),
                     'wenakeyBono'=>$wenayekBono,
                     'dependencia'=>$dependencia,
