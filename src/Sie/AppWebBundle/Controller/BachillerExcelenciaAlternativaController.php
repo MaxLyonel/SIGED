@@ -169,9 +169,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
             $registrado = $query->getResult();
 
-            if(count($registrado) > 1) {
+            /*if(count($registrado) > 1) {
                 return $this->redirect($this->generateUrl('principal_web'));
-            }
+            }*/
 
             /*
             * Verificar si la UE cuenta con aprendizajes especializados
