@@ -406,11 +406,13 @@
                                                             </div> #}
 
                                                         {% else %}
+                                                        {#
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                                                   <i class="fa fa-print" style="color:#FFFFFF"></i> 1
                                                                 </a>
                                                             </div>
+                                                        #}
                                                         {% endif %}
                                                     {% else %}
                                                     
