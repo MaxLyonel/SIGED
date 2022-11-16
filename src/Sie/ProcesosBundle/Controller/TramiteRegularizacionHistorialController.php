@@ -99,12 +99,12 @@ class TramiteRegularizacionHistorialController extends Controller{
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
 
         // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DOCUMENTOS EMITIDOS
-        $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
+       /* $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
         if (count($documentos) > 0) {
             $response->setStatusCode(202);
             $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
             return $response;
-        }
+        }*/
         // dump($documentos);die;
 
         // SI EL ESTUDIANTE NO EXISTE, DEVOLVEMOS 204 SIN CONTENIDO
