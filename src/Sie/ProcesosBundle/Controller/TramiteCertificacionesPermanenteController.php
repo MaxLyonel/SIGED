@@ -1459,8 +1459,15 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->Cell(22, 5, '', 0, 0, 'L');
             //$pdf->Cell(0, 5, 'Confiere el presente:', 0, 1, 'L'); //0 a 100% whit heigt ancho alto,texto,borde , saltolinea, orientacion, rellenado            
             $pdf->Ln(40);
-            $pdf->Cell(15, 5, '', 0, 0, 'L');            
-            $pdf->SetFont('helvetica', 'B', 20);
+            $pdf->Cell(15, 5, '', 0, 0, 'L');  
+            if(strlen($datosParticipante[0]['nombre'].$datosParticipante[0]['paterno'].$datosParticipante[0]['materno'])>=30){
+                $textSize = 19;
+                $breaknext = 19;
+            }else{
+                $textSize = 20;
+                $breaknext = 17;
+            }
+            $pdf->SetFont('helvetica', 'B', $textSize);
            $pdf->Cell(0, 2, ($datosParticipante[0]['nombre'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['materno']) , 0, 1, 'C');
            //$pdf->Ln(3);
            $pdf->SetFont('helvetica', '', 14);
@@ -1492,7 +1499,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';                             
                 $pdf->writeHTML($contenido, true, false, true, false, '');
-                $pdf->Ln(16);
+                $pdf->Ln($breaknext);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
                 $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
@@ -1508,7 +1515,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln(16);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
-                $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
+                $pdf->Cell(0, 3, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
                 $pdf->Ln(5);
                 
             }
