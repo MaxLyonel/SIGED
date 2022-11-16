@@ -62,7 +62,16 @@ line-height: 1.83333em;}
                                     <h5>Cursos</h5>
                                 </div>
                                 <div class="pull-right">
-                                    <div class="btn-group">
+
+                                    Idioma Libreta:
+                                    <select name="idiomasList" id="idiomasList">
+                                        <option value="48">Castellano</option>
+                                        {% for row in idiomasArray %} 
+                                            <option value="{{row.id}}">{{row.idioma}}</option>
+                                        {% endfor %}                            
+                                    </select>
+
+                                    <div class="btn-group">                                    
                                         <button type="button" class="btn btn-sm btn-instagram dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                             Opciones &nbsp; <span class="caret"></span>
                                         </button>
@@ -395,7 +404,7 @@ line-height: 1.83333em;}
         };
 
         var seeStudents = function (infoUe) {
-
+           
             $.ajax({
                 type: 'get',
                 data: ({infoUe: infoUe}),
@@ -420,10 +429,13 @@ line-height: 1.83333em;}
             });
         };
         var seeStudents = function (infoUe) {
+            //impresion libreta
+            var e = document.getElementById("idiomasList");
+            var idiomaId = e.value;
 
             $.ajax({
                 type: 'get',
-                data: ({infoUe: infoUe}),
+                data: ({infoUe: infoUe, idiomaId:idiomaId}),
                 url: Routing.generate('herramienta_info_estudiante_see_students'),
                 beforeSend: function () {
                     $("#idstudents").empty();

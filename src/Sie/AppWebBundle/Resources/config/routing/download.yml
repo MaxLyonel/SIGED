@@ -105,7 +105,7 @@ download_ddjjStudent_web:
     defaults: { _controller: SieAppWebBundle:Download:ddjjStudentWeb }
 
 download_libreta:
-    path:    /downloadLibreta/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
+    path:    /downloadLibreta/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}/{idioma}
     defaults: { _controller: SieAppWebBundle:Download:downloadLibreta }
 
 download_cut:
