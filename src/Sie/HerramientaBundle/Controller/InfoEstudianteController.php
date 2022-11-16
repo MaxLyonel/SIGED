@@ -204,7 +204,7 @@ class InfoEstudianteController extends Controller {
             $hasgrado = 6;
         }
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
-        $closeopesextosecc = true;
+        
         // set variables to show and ejecute the close operativo sexto fo secc 
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         // dump($arrLevelandGrado);die;
@@ -2067,7 +2067,8 @@ class InfoEstudianteController extends Controller {
 
         try {
             // check if the UE has observation in level 13 and grado 6
-            $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
+            //$query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
+            $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web2022_fg('" . $gestion . "','" . $sie . "','" . $bimestre . "');");
             $query->execute();
             $responseOpe = $query->fetchAll();//function db
             $arrResponse = array();
