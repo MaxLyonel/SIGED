@@ -114,6 +114,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
     }
 
     public function resultSearchIeDirAction(Request $request) {
+        //verificacion registro alternativa
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
