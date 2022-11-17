@@ -964,9 +964,7 @@ class BachillerExcelenciaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
-        $sql = "
-            select * from
-            (
+        $sql = "            
             select a.institucioneducativa_id,b.codigo_rude,b.paterno,b.materno,b.nombre,(select genero from genero_tipo where id=a.genero_tipo_id) as genero,a.nota_cuantitativa
             from (
             select *
@@ -995,9 +993,7 @@ class BachillerExcelenciaController extends Controller {
             group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
             order by round(avg(nota_cuantitativa),0) desc limit 3) b) a
                 inner join estudiante b on a.estudiante_id=b.id
-            order by a.genero_tipo_id,a.nota_cuantitativa desc
-            ) as data
-            where genero = 'MASCULINO'
+            order by a.genero_tipo_id,a.nota_cuantitativa desc            
         ";
 
         //dump($sql); die;
