@@ -2084,7 +2084,7 @@ class InfoEstudianteController extends Controller {
         // get the send values
         $sie     = $request->get('sie');
         $gestion = $request->get('gestion');
-        $bimestre = 3;
+        $bimestre = 8;
         $level = 13;
         $grado = 6;
 
@@ -2092,8 +2092,8 @@ class InfoEstudianteController extends Controller {
 
         try {
             // check if the UE has observation in level 13 and grado 6
-            //$query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
-            $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web2022_fg('" . $gestion . "','" . $sie . "','" . $bimestre . "');");
+            $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
+           // $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web2022_fg('" . $gestion . "','" . $sie . "','" . $bimestre . "');");
             $query->execute();
             $responseOpe = $query->fetchAll();//function db
             $arrResponse = array();
