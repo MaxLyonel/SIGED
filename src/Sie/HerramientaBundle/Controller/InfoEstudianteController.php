@@ -204,6 +204,7 @@ class InfoEstudianteController extends Controller {
             $hasgrado = 6;
         }
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+        
         // set variables to show and ejecute the close operativo sexto fo secc 
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         // dump($arrLevelandGrado);die;
@@ -219,6 +220,22 @@ class InfoEstudianteController extends Controller {
         //     $estado =  true;
         // }
         //dump($estado);die;
+
+        /**
+         * idiomas para impresion de libretas
+         */
+
+        $sql="
+        select distinct idioma_tipo.* from trad_paquete_idioma
+        inner join idioma_tipo on idioma_tipo.id = trad_paquete_idioma.idioma_tipo_id and idioma_tipo.id <> 48
+        order by 2";
+
+        $db = $em->getConnection(); 
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $idiomasArray = $stmt->fetchAll();
+        
 
         //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
@@ -237,7 +254,8 @@ class InfoEstudianteController extends Controller {
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'estado'=>$estado,
                     'arrLevelandGrado'=>$arrLevelandGrado,
-                    'gradoId'=>$gradoId
+                    'gradoId'=>$gradoId,
+                    'idiomasArray' => $idiomasArray
         ));
     }
     private function getObservationQA($data){
@@ -688,14 +706,21 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
-
+        //dump('here'); die;
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-        
+
+        /*
+            para seleccion de idioma
+        */
+        $idiomaId = $request->get('idiomaId');
+        if (!isset($idiomaId)) {
+            $idiomaId = 48; //castellano        
+        }
 
         //get the values throght the infoUe
-        $sie = $aInfoUeducativa['requestUser']['sie'];
+        $sie = $aInfoUeducativa['requestUser']['sie']; 
         //$swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
         $swRegisterCalifications = true;
         // $swRegisterPersonBjp = $aInfoUeducativa['requestUser']['swRegisterPersonBjp'];
@@ -829,13 +854,13 @@ class InfoEstudianteController extends Controller {
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
                 // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 3 ) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo > 3 ) { ///////>=
                     $imprimirLibreta = true;
                 }
                 // dump($imprimirLibreta);exit();
                 // Unidades educativas tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $operativo >= 4){
-                    $imprimirLibreta = true;
+                    $imprimirLibreta = true; 
                 }
             }
 
@@ -845,11 +870,11 @@ class InfoEstudianteController extends Controller {
             if($gestion < $this->session->get('currentyear')){
                 // Para unidades educativas en gestiones pasadas
                 if(in_array($tipoUE['id'], array(1,2,3,4,5,6,7)) and $gestion > 2014 and $gestion < $this->session->get('currentyear') and $operativo >= 4){
-                    $imprimirLibreta = true;
+                    $imprimirLibreta = true; 
                 }
                 // PAra ues tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $gestion >= 2011){
-                    $imprimirLibreta = true;
+                    $imprimirLibreta = true; 
                 }
 
                 // // Caso especial de la unidad educativa AMERINST
@@ -869,10 +894,10 @@ class InfoEstudianteController extends Controller {
             }
         }else{
             if($gestion > 2014 and $operativo >= 4 and $gestion < 2019){
-                $imprimirLibreta = true;
+                $imprimirLibreta = true; 
             }
         }
-
+       // dump($imprimirLibreta);die;
       $aRemovesUeAllowed = array(
       '61710014',
       '61710089',
@@ -911,6 +936,11 @@ class InfoEstudianteController extends Controller {
             $mostrarSextoCerrado = true;
         }
     }
+    /**se habilito para validar que registren notas todas excepto de la lista UesSinRepoete2022 */
+    $mostrarUeSinReporte2022 = false;
+    $uESinReporte = $em->getRepository('SieAppWebBundle:UesSinReporte2022')->findOneById($sie);
+    if($uESinReporte)
+        $mostrarUeSinReporte2022 = true;
 
     $this->session->set('optionFormRude', false);
     $this->session->set('optionReporteRude', false);
@@ -983,6 +1013,8 @@ class InfoEstudianteController extends Controller {
             $hasgrado = 6;
         }
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+
+        
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         
         // to enable 1er Trim 
@@ -990,7 +1022,7 @@ class InfoEstudianteController extends Controller {
         if(sizeof($objUe1erTrin)>0){
             $this->session->set('unablePrimerTrim',true);
         }
-
+//dump($operativo);die;
     // end add validation to show califications option
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
@@ -1017,11 +1049,13 @@ class InfoEstudianteController extends Controller {
                     'imprimirLibreta'=>$imprimirLibreta,
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
+                    'mostrarUeSinReporte2022'=>$mostrarUeSinReporte2022,
                     'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion),
                     'wenakeyBono'=>$wenayekBono,
                     'dependencia'=>$dependencia,
                     'cerrarOperativoSexto' => $closeopesextosecc,
-                    'nivelGradoSexto' => $arrLevelandGrado
+                    'nivelGradoSexto' => $arrLevelandGrado,
+                    'idiomaId' =>$idiomaId
         ));
     }
 
@@ -2050,7 +2084,7 @@ class InfoEstudianteController extends Controller {
         // get the send values
         $sie     = $request->get('sie');
         $gestion = $request->get('gestion');
-        $bimestre = 3;
+        $bimestre = 8;
         $level = 13;
         $grado = 6;
 
@@ -2059,13 +2093,14 @@ class InfoEstudianteController extends Controller {
         try {
             // check if the UE has observation in level 13 and grado 6
             $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web_gen('" . $gestion . "','" . $sie . "','" . $bimestre . "','" . $level . "','" . $grado . "');");
+           // $query = $em->getConnection()->prepare("select * from sp_validacion_regular_web2022_fg('" . $gestion . "','" . $sie . "','" . $bimestre . "');");
             $query->execute();
             $responseOpe = $query->fetchAll();//function db
             $arrResponse = array();
             // chek if the validation has error
-            //if(sizeof($responseOpe)>0)
-            if(false) // ya no validamos las observaciones
-            {
+            if(sizeof($responseOpe)>0){
+            //if(false){ // ya no validamos las observaciones, preguntar
+            
                 // error; send the errors to show on the view
                 $swObservations = true;
                 $arrResponse = $responseOpe;                

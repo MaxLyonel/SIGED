@@ -226,6 +226,12 @@
                     {{form_end(form_ed)}}
                 </div>
                 <div id="divAlert"></div>
+
+                <div class="alert alert-info" role="alert">                                
+                    <p><strong>IMPORTANTE:</strong> LA SELECCION DEL ESTUDIANTE Y LAS NOTAS SON TOTAL RESPONSABILIDAD DEL DIRECTOR DE LA UNIDAD EDUCATIVA.
+                    <strong>(SE LE RECUERDA QUE ESTA ES UNA DECLARACION JURADA Y SOLO SE PUEDE REGISTRAR UNA SOLA VEZ)</strong></p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -246,6 +252,12 @@
         msj += '\n\nNota.- Para confirmar los datos ingresados presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".';
 
         if (confirm('Está a punto de registrar la siguiente información: ' + msj)) {
+
+            sem1 = document.getElementById("sie_appwebbundle_estudiantedestacado_promedioSem1").value;
+            sem2 = document.getElementById("sie_appwebbundle_estudiantedestacado_promedioSem2").value;
+            prof = document.getElementById("sie_appwebbundle_estudiantedestacado_promedioFinal").value;
+
+
 
             var formData = $('#sie_appwebbundle_estudiantedestacado').serialize();
             $.ajax({

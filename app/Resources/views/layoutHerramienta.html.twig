@@ -429,13 +429,14 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
+                            {#
                             <li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
                             <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                            {#
-                            del 11-11-2022 al 16-11-2022 solo estas opciones debe estar disponibles
+                            #}
+                            
                             <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
                             <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
-                            #}
+                            
                         </ul>
                     </li>
                     
@@ -518,7 +519,7 @@
                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                         {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
-                            <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
+                            {#<li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>#}
                         </ul>
                         {% endif %}
                     </li>

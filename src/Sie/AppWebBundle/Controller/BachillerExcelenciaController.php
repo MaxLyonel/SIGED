@@ -29,7 +29,7 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2022-11-30');
+        $this->fechaCorte = new \DateTime('2022-11-17');
         $this->gestionOperativo =  $this->session->get('currentyear'); //2022        
 
     }
@@ -39,6 +39,8 @@ class BachillerExcelenciaController extends Controller {
      */
 
     public function indexAction() {
+
+        
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
@@ -47,9 +49,15 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // if($this->fechaActual > $this->fechaCorte) {
-        //     return $this->redirect($this->generateUrl('principal_web'));
-        // }
+        /*if($this->fechaActual > $this->fechaCorte) {
+            dump('here'); die;
+            return $this->redirect($this->generateUrl('principal_web'));
+        }*/
+
+        /*
+            Si la UE aun tiene estudiantes efectivos significa que no ha cerrado , retornar a la pagina principal
+        */
+        
 
         $form = $this->createSearchIeForm();
 
@@ -63,6 +71,7 @@ class BachillerExcelenciaController extends Controller {
      */
 
     private function createSearchIeForm() {
+        // aqui crea el formulario inicial
         $form = $this->createForm(new SelectIeType(), null, array(
             'action' => $this->generateUrl('bach_exc_ie_search'),
             'method' => 'POST',
@@ -87,9 +96,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // if($this->fechaActual > $this->fechaCorte) {
-        //     return $this->redirect($this->generateUrl('principal_web'));
-        // }
+        if($this->fechaActual > $this->fechaCorte) {
+             return $this->redirect($this->generateUrl('principal_web'));
+        }
 
         $form = $this->createSearchIeDirForm();
 
@@ -114,6 +123,8 @@ class BachillerExcelenciaController extends Controller {
     }
 
     public function resultSearchIeDirAction(Request $request) {
+
+        //dump('xxxxxxxxxx'); die;
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
@@ -453,9 +464,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
+        /*if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
-        }
+        }*/
 
         $form = $this->createSearchIeRstForm();
 
@@ -481,7 +492,10 @@ class BachillerExcelenciaController extends Controller {
      */
 
     public function resultSearchIeAction(Request $request) {
+        //aqui prcesa el form de busqueda por UE
         $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
 
@@ -493,12 +507,58 @@ class BachillerExcelenciaController extends Controller {
         //     return $this->redirect($this->generateUrl('principal_web'));
         // }
 
+
         $form = $this->createSearchIeForm();
         $form->handleRequest($request);
 
         if ($form->isValid()) {
 
             $formulario = $form->getData();
+
+            /*
+            dcastillo: si la UE esta en la tabla ues_sin_reporte2022, se retorna a la vista principal
+            */
+            $sql= "
+            SELECT COUNT
+                ( * ) as existe
+            FROM
+                ues_sin_reporte2022                
+            WHERE ues_sin_reporte2022.id =  " .$formulario['institucioneducativa'];
+            
+            $stmt = $db->prepare($sql);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            $ue_no_reporta = $po[0]['existe'];
+            if($ue_no_reporta > 0) {
+                return $this->redirect($this->generateUrl('principal_web'));
+            }
+
+
+            /*
+            dcastillo: si la UE tiene efectivos no ha cerrado, se retorna a la vista principal
+            */
+            $sql= "
+            SELECT COUNT
+                ( * ) as existe
+            FROM
+                institucioneducativa_curso
+                A INNER JOIN estudiante_inscripcion b ON A.ID = b.institucioneducativa_curso_id 
+            WHERE
+                A.institucioneducativa_id = " .$formulario['institucioneducativa'] ." 
+                AND A.gestion_tipo_id = 2022 
+                AND A.nivel_tipo_id = 13 
+                AND A.grado_tipo_id = 6 
+                AND b.estadomatricula_tipo_id = 4;";
+            
+            $stmt = $db->prepare($sql);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            $existe_efectivos = $po[0]['existe'];
+            if($existe_efectivos > 0) {
+                return $this->redirect($this->generateUrl('principal_web'));
+            }
 
             /*
             * verificamos si tiene tuicion
@@ -886,9 +946,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
+        /*if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
-        }
+        }*/
 
         $form = $this->createForm(new EstudianteDestacadoType(), null, array(
             //'action' => $this->generateUrl('bach_exc_create'),
@@ -902,10 +962,56 @@ class BachillerExcelenciaController extends Controller {
 
     public function infoStudentAction(Request $request, $estId, $estinsId, $instId, $genId) {
         $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
 
+        $sql = "            
+            select a.institucioneducativa_id,b.codigo_rude,b.paterno,b.materno,b.nombre,(select genero from genero_tipo where id=a.genero_tipo_id) as genero,a.nota_cuantitativa
+            from (
+            select *
+            from (
+            select a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id,round(avg(nota_cuantitativa),0) as nota_cuantitativa
+            from institucioneducativa_curso a
+                inner join estudiante_inscripcion b on a.id=b.institucioneducativa_curso_id and estadomatricula_tipo_id in (5,55)
+                    inner join estudiante c on b.estudiante_id=c.id
+                    inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
+                        inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
+            where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
+            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$estId."  and genero_tipo_id= " .$genId."
+            group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
+            order by round(avg(nota_cuantitativa),0) desc limit 3) a
+            union 
+            select *
+            from (
+            select a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id,round(avg(nota_cuantitativa),0) as nota_cuantitativa
+            from institucioneducativa_curso a
+                inner join estudiante_inscripcion b on a.id=b.institucioneducativa_curso_id and estadomatricula_tipo_id in (5,55)
+                    inner join estudiante c on b.estudiante_id=c.id
+                    inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
+                        inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
+            where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
+            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$estId."  and genero_tipo_id= " . $genId ."
+            group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
+            order by round(avg(nota_cuantitativa),0) desc limit 3) b) a
+                inner join estudiante b on a.estudiante_id=b.id
+            order by a.genero_tipo_id,a.nota_cuantitativa desc            
+        ";
+
+        //dump($sql); die;
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $posiblesEstudiantes = $stmt->fetchAll();
+        /*for($i = 0; $i < sizeof($data); $i++ ){
+        }*/
+
+        
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($estId);
 
         $form_ed = $this->createEstudianteDestacadoForm();
+
+        //dump($estId); die;
+
+       
 
         return $this->render('SieAppWebBundle:BachillerExcelencia:infoStudent.html.twig', array(
                     'datastudent' => $estudiante,
@@ -913,7 +1019,9 @@ class BachillerExcelenciaController extends Controller {
                     'estId' => $estId,
                     'estinsId' => $estinsId,
                     'instId' => $instId,
-                    'genId' => $genId
+                    'genId' => $genId,
+                    'posiblesEstudiantes' => $posiblesEstudiantes,
+
         ));
     }
 
@@ -928,9 +1036,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
+        /*if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
-        }
+        }*/
 
         $response = new JsonResponse();
         try {

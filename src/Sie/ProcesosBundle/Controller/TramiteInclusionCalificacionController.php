@@ -1420,7 +1420,7 @@ class TramiteInclusionCalificacionController extends Controller {
         }
 
         // update the average
-        if($insNivel==12){
+        if($insNivel==12 && count($datosNotas['notasCualitativas']) > 0){
             $this->get('notas')->updateAveragePrim($idInscripcion);
         }
         // ACTUALIZAMOS EL ESTADO DE MATRICULA

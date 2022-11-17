@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\UesSinReporte2022:
+    type: entity
+    table: ues_sin_reporte2022
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descUe:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: desc_ue
+        codDistrito:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: cod_distrito
+        distrito:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+        idDepartamento:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: id_departamento
+        descDepartamento:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+            column: desc_departamento
+        codDependenciaId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_dependencia_id
+        area:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
