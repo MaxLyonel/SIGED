@@ -4971,13 +4971,15 @@ die;/*
                     break;
                 case '12':
                     $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
-                    if($averagePrim->getNotaCuantitativa()>50){
-                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
-                    }else{
-                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
+                    if($averagePrim){
+                        if($averagePrim->getNotaCuantitativa()>50){
+                            $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                        }else{
+                            $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
+                        }
+                        $this->em->persist($inscripcion);
+                        $this->em->flush();
                     }
-                     $this->em->persist($inscripcion);
-                     $this->em->flush();
                     break;
                 case '11':
                     
