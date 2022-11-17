@@ -221,6 +221,22 @@ class InfoEstudianteController extends Controller {
         // }
         //dump($estado);die;
 
+        /**
+         * idiomas para impresion de libretas
+         */
+
+        $sql="
+        select distinct idioma_tipo.* from trad_paquete_idioma
+        inner join idioma_tipo on idioma_tipo.id = trad_paquete_idioma.idioma_tipo_id and idioma_tipo.id <> 48
+        order by 2";
+
+        $db = $em->getConnection(); 
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $idiomasArray = $stmt->fetchAll();
+        
+
         //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
         $gradoId = implode(",",$grado);
@@ -238,7 +254,8 @@ class InfoEstudianteController extends Controller {
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'estado'=>$estado,
                     'arrLevelandGrado'=>$arrLevelandGrado,
-                    'gradoId'=>$gradoId
+                    'gradoId'=>$gradoId,
+                    'idiomasArray' => $idiomasArray
         ));
     }
     private function getObservationQA($data){
@@ -689,11 +706,18 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
-
+        //dump('here'); die;
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-        
+
+        /*
+            para seleccion de idioma
+        */
+        $idiomaId = $request->get('idiomaId');
+        if (!isset($idiomaId)) {
+            $idiomaId = 48; //castellano        
+        }
 
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie']; 
@@ -1030,7 +1054,8 @@ class InfoEstudianteController extends Controller {
                     'wenakeyBono'=>$wenayekBono,
                     'dependencia'=>$dependencia,
                     'cerrarOperativoSexto' => $closeopesextosecc,
-                    'nivelGradoSexto' => $arrLevelandGrado
+                    'nivelGradoSexto' => $arrLevelandGrado,
+                    'idiomaId' =>$idiomaId
         ));
     }
 

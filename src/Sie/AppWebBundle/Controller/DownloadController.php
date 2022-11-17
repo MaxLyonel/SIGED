@@ -641,7 +641,7 @@ class DownloadController extends Controller {
      * @return object libreta
      */
     public function downloadLibretaAction(Request $request) {
-
+       
         $idInscripcion = $request->get('idInscripcion');
         $rude = $request->get('rude');
         $sie = $request->get('sie');
@@ -651,6 +651,15 @@ class DownloadController extends Controller {
         $paralelo = $request->get('paralelo');
         $turno = $request->get('turno');
         $ciclo = $request->get('ciclo');
+
+        /*
+            para seleccion de idioma
+        */
+        $idiomaId = $request->get('idioma');
+        if (!isset($idiomaId)) {
+            $idiomaId = 48; //castellano        
+        }
+      
 
         $em = $this->getDoctrine()->getManager();
         $informacion = $em->createQueryBuilder()
@@ -705,10 +714,19 @@ class DownloadController extends Controller {
                 $operativo = $operativo - 1;
             }
             if($gestion == 2021 or $gestion == 2022){
-                switch ($nivel) {
-                    case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v5_rcm.rptdesign'; break;
-                    case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v5_rcm.rptdesign'; break;
-                    case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v5_rcm.rptdesign'; break;
+                if($idiomaId == 48)
+                {
+                    switch ($nivel) {
+                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v5_rcm.rptdesign'; break;
+                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v5_rcm.rptdesign'; break;
+                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v5_rcm.rptdesign'; break;
+                    }
+                }else{
+                    switch ($nivel) {
+                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v6_rcm.rptdesign'; break;
+                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v6_rcm.rptdesign'; break;
+                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v6_rcm.rptdesign'; break;
+                    }
                 }
             }else{
                 if($gestion == 2019){
@@ -798,7 +816,12 @@ class DownloadController extends Controller {
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
         
         if($gestion == 2021 or $gestion == 2022){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=9&&__format=pdf&'));
+                if($idiomaId == 48)
+                {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=9&&__format=pdf&'));
+                }else{
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=9&idioma='.$idiomaId.'&&__format=pdf&'));
+                }
         }else{
 
             if($gestion == 2019){

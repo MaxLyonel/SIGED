@@ -4947,7 +4947,7 @@ die;/*
                     $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
-        }else if($igestion == 2021) {
+        }else if($igestion == 2021 || $igestion == 2022) {
             if($inivel_tipo_id == 11) {
                 $complementario = "";
             }else if($inivel_tipo_id == 12) {
@@ -4962,7 +4962,7 @@ die;/*
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
         
-        if($operativo==3 && $igestion == 2021){
+        if($operativo==3 && ($igestion == 2021 || $igestion == 2022 )){
             switch ($inivel_tipo_id) {
                 case '13':
                     $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
