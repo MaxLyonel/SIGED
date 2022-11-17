@@ -110,11 +110,11 @@
                                                             <a class="btn btn-circle btn-success" href="{{path('download_ddjjone_web', {'rude': entity.codigo_rude, 'gestion':entity.gestion_tipo_id , 'sie':entity.insteduid } )}}">
                                                                 <i class="fa fa-download"></i>
                                                             </a>
-                                                            {% if entity.estinsbthid > 0 and (entity.estadomatricula_tipo_id == 5 or entity.estadomatricula_tipo_id == 55) and entity.estado_bth %}
+                                                            {# {% if entity.estinsbthid > 0 and (entity.estadomatricula_tipo_id == 5 or entity.estadomatricula_tipo_id == 55) and entity.estado_bth %}
                                                                 <a class="btn btn-circle btn-primary" href="{{path('download_cut', {'idInscripcion': entity.estinsid, 'rude': entity.codigo_rude, 'sie':entity.insteduid, 'gestion': entity.gestion_tipo_id, 'nivel':0000,'grado':000, 'paralelo':000,'turno':000, 'ciclo':000} )}}">
                                                                     <i class="fa fa-print"></i>
                                                                 </a>
-                                                            {% endif %}
+                                                            {% endif %} #}
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
