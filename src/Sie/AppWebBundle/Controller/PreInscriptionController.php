@@ -360,16 +360,17 @@ class PreInscriptionController extends Controller
             }
             // dump($arrBrother);die;
             // dump($arrBrother);die;
-
-              return $response->setData([
-                    'status'=>'success',
-                    'datos'=>array(
+            $arrResponse = array(
                         'status'=>$status,
                         'code'=>$code,
                         'message'=>$message,                
                         'swbrother'=>$swbrother,                
                         'dataBrother'=>$arrBrother,
-                    )
+                    );
+            
+              return $response->setData([
+                    'status'=>'success',
+                    'datos'=>$arrResponse
                 ]);              
     }
 
@@ -464,7 +465,8 @@ class PreInscriptionController extends Controller
             ////////////////////////////////////////
             $newPreinsEstudianteInscripcion = new PreinsEstudianteInscripcion();
             $newPreinsEstudianteInscripcion->setPreinsEstudiante($em->getRepository('SieAppWebBundle:PreinsEstudiante')->find($newPreinsEstudiante->getId()));  
-            $ojbInstCursoCupo = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findOneBy(array('institucioneducativa' => $ueInfo['sie'], 'nivelTipo'=>$ueInfo['nivel'], 'gradoTipo'=>$ueInfo['grado'],'gestionTipo'=>$this->session->get('currentyear')));
+            $ojbInstCursoCupo = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findOneBy(array('institucioneducativa' => $ueInfo['sie'], 'nivelTipo'=>$ueInfo['nivel'], 'gradoTipo'=>$ueInfo['grado'],'gestionTipoId'=>$this->session->get('currentyear')));
+            
             $newPreinsEstudianteInscripcion->setPreinsInstitucioneducativaCursoCupo($em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($ojbInstCursoCupo->getId()));  
             $newPreinsEstudianteInscripcion->setMunicipioVive(mb_strtoupper($student['municipio'], 'utf-8'));
             $newPreinsEstudianteInscripcion->setZonaVive(mb_strtoupper($student['zona'], 'utf-8'));
