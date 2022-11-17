@@ -789,9 +789,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
+        /*if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
-        }
+        }*/
 
         $em = $this->getDoctrine()->getManager();
 
