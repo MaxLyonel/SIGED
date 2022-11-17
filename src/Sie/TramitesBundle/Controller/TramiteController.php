@@ -1120,7 +1120,7 @@ class TramiteController extends Controller {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl($routing))
                 ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control', 'placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'disabled' => 'disabled', 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control'), 'disabled' => 'disabled', 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
                                 ->where('gt.id > 2008')
@@ -1174,7 +1174,7 @@ class TramiteController extends Controller {
                     $entityParticipantes = $this->getEstudiantesRegularHumanistica($sie,$gestion);
 
                     $datosBusqueda = base64_encode(serialize($form));
-
+                    
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumRegularRegistroIndex.html.twig', array(
                         'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('tramite_diploma_humanistico_regular_registro_lista',$sie,$gestion)->createView(),
                         'titulo' => 'Registro',
@@ -4431,5 +4431,438 @@ class TramiteController extends Controller {
         } else {
             return $response->setData(array('estado' => false, 'obs' => 'Error al enviar el formulario, intente nuevamente'));
         }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra una tramite para bachillerato técnico humanistico
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumRegularRegistroBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // $defaultTramiteController = new defaultTramiteController();
+        // $defaultTramiteController->setContainer($this->container);
+
+        // // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+
+        // $rolPermitido = array(13,14,16,8,10,41,42,43);
+
+        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        // if (!$esValidoUsuarioRol){
+        //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+        // }
+
+        $gestion = $gestionActual->format('Y');
+
+        return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:bachTecHumRegularRegistroIndex.html.twig', array(
+            'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('tramite_bachillerato_tecnico_humanistico_regular_registro_lista',0,0)->createView(),
+            'titulo' => 'Registro',
+            'subtitulo' => 'Trámite - BTH',
+        ));      
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que muestra el listado de bachilleres con técnico humanístico para el registro de su tramite
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumRegularRegistroListaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $sie = $form['sie'];
+                $gestion = $form['gestion'];
+
+                try {
+                    $usuarioRol = $this->session->get('roluser');
+                    $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol, 'TRAMITES');
+
+                    if ($verTuicionUnidadEducativa != ''){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
+                        return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                    }
+
+                    $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
+                    if(count($entityAutorizacionUnidadEducativa)<=0){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                    }
+
+                    $entityParticipantes = $this->getEstudiantesRegularBachillerTecnicoHumanistica($sie,$gestion);
+
+                    $datosBusqueda = base64_encode(serialize($form));
+
+                    return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:bachTecHumRegularRegistroLista.html.twig', array(    
+                        'listaParticipante' => $entityParticipantes,
+                        'infoAutorizacionUnidadEducativa' => $entityAutorizacionUnidadEducativa,
+                        'datosBusqueda' => $datosBusqueda,
+                    ));
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                }
+            }  else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+        }
+        //return $this->redirect($this->generateUrl('login'));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega un listado de bachilleres registrados en educacion regular con bachillerato técnico humanistica
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function getEstudiantesRegularBachillerTecnicoHumanistica($institucionEducativaId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select e.codigo_rude, e.carnet_identidad,e.complemento, e.pasaporte, e.paterno, e.materno, e.nombre, e.fecha_nacimiento,
+            e.genero_tipo_id, ptp.pais,ltd.lugar as departamento,ltp.lugar as provincia, e.localidad_nac , g.genero, ei.estadomatricula_tipo_id,
+            i.institucioneducativa, i.id as insteduid,iec.gestion_tipo_id, iec.nivel_tipo_id as nivel_id, iec.grado_tipo_id, iec.gestion_tipo_id
+            , eiht.id as estinsbthid, ei.id as estinsid, case coalesce(bcte.estudiante_inscripcion_id,0) when 0 then false else true end as estado_bth
+            , e.segip_id, ei.id as estudiante_inscripcion_id, t.id as tramite_id, d.documento_serie_id, emt.estadomatricula, d.id as documento_id
+            , case ptp.id when 1 then ltd.lugar when 0 then '' else ptp.pais end as lugar_nacimiento, ei.estadomatricula_inicio_tipo_id
+            , eid.documento_numero as documento_diplomatico, iec.nivel_tipo_id
+            from estudiante e
+            inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
+            inner join estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
+            inner join genero_tipo g on (e.genero_tipo_id = g.id)
+            inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
+            inner join periodo_tipo pert on (iec.periodo_tipo_id = pert.id)            
+            inner join institucioneducativa i on (iec.institucioneducativa_id = i.id)
+            inner join estudiante_inscripcion_humnistico_tecnico as eiht on eiht.estudiante_inscripcion_id = ei.id
+            left join bth_cut_ttm_estudiante as bcte on bcte.estudiante_inscripcion_id = ei.id
+            left join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo = 13 and t.esactivo = 't'
+            left join documento as d on d.tramite_id = t.id and d.documento_tipo_id = 21 and d.documento_estado_id = 1            
+            left join estudiante_inscripcion_diplomatico as eid on eid.estudiante_inscripcion_id = ei.id
+            left join pais_tipo ptp on (e.pais_tipo_id = ptp.id)
+            left join lugar_tipo ltpa on (e.lugar_nac_tipo_id= ltpa.id)
+            left join lugar_tipo ltp on (e.lugar_prov_nac_tipo_id = ltp.id)
+            left join lugar_tipo ltd on (ltd.id = ltp.lugar_tipo_id)
+            where iec.gestion_tipo_id = :gestionId and i.id = :institucionEducativaId
+            and case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) else (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) end
+            order by e.paterno, e.materno, e.nombre
+        ");
+        $queryEntidad->bindValue(':gestionId', $gestionId);
+        $queryEntidad->bindValue(':institucionEducativaId', $institucionEducativaId);
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+    
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra el trámite de los bachilleres humanisticos regular selecionados
+    // PARAMETROS: estudiantes[], boton
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumRegularRegistroGuardaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+  
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+  
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+  
+        $institucioneducativaId = 0;
+        $gestionId = $gestionActual->format('Y');
+        $flujoTipoId = 33;
+        $tramiteTipoId = 13;
+        $flujoSeleccionado = '';
+
+        $response = new JsonResponse();
+        $result = array('msg' => '', 'estado' => false);
+  
+        if ($request->isMethod('POST')) {
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try {
+                $participantes = $request->get('participantes');
+                
+                $flujoSeleccionado = 'Adelante';
+                
+                $token = $request->get('_token');
+                $datosBusqueda = $request->get('_info');
+                $formBusqueda = unserialize(base64_decode($datosBusqueda));
+                $sie = $formBusqueda['sie'];
+                $gestionId = $formBusqueda['gestion'];
+                
+                if (!$this->isCsrfTokenValid('registrar', $token)) {
+                    $result = array('estado'=>false, 'msg'=>'Error al enviar el formulario, intente nuevamente');
+                    $response->setStatusCode(201);
+                    return $response->setData($result);
+                }
+  
+                $messageCorrecto = "";
+                $messageError = "";
+  
+                foreach ($participantes as $participante) {
+                    $estudianteInscripcionId = (Int) base64_decode($participante);
+  
+                    $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                    $participanteNombre = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+                    $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+                    $msgContenido = "";
+                    if(count($entidadEstudianteInscripcion)>0){
+                        $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                        $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+  
+                        $msg = array('0'=>true, '1'=>$participanteNombre);
+                        $msgContenido = $this->getBachTecHumRegularValidacion($participanteId, $estudianteInscripcionId, $gestionId);
+  
+                        if($msgContenido != ""){
+                            $msg = array('0'=>false, '1'=>$participanteNombre.' ('.$msgContenido.')');
+                        }
+  
+                    } else {
+                        $msg = array('0'=>false, '1'=>'estudiante no encontrado');
+                    }
+  
+                    if ($msg[0]) {
+  
+                        $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
+  
+                        $tramiteProcesoController = new tramiteProcesoController();
+                        $tramiteProcesoController->setContainer($this->container);
+  
+                        $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
+  
+                        $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+                    } else {
+                        $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
+                    }
+                }
+                if($messageCorrecto==""){
+                    $response->setStatusCode(201);
+                    return $response->setData(array('estado'=>false, 'msg'=>$messageError));                    
+                }
+
+                $em->getConnection()->commit();
+                //$this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => $messageCorrecto));
+                $result = array('estado'=>true, 'msg'=>$messageCorrecto);
+                // return $response->setData($result);
+
+                $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
+                $entityParticipantes = $this->getEstudiantesRegularBachillerTecnicoHumanistica($sie,$gestionId);
+                //$datosBusqueda = base64_encode(serialize($form));
+
+                return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:bachTecHumRegularRegistroLista.html.twig', array(    
+                    'listaParticipante' => $entityParticipantes,
+                    'infoAutorizacionUnidadEducativa' => $entityAutorizacionUnidadEducativa,
+                    'datosBusqueda' => $datosBusqueda,
+                    'estado'=>true, 
+                    'msgs'=>array('success'=>$messageCorrecto, 'error'=>$messageError)
+                ));
+
+                // if($messageError!=""){
+                //     //$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
+                //     return $response->setData(array('estado'=>false, 'msg'=>$messageError));
+                // }
+            } catch (\Doctrine\ORM\NoResultException $exc) {
+                $em->getConnection()->rollback();
+                //$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                $response->setStatusCode(201);
+                return $response->setData(array('estado'=>false, 'msg'=>' al procesar la información, intente nuevamente'));
+            }
+  
+            // $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId);
+            // return $this->redirectToRoute('tramite_diploma_humanistico_regular_registro_lista', ['form' => $formBusqueda], 307);
+        } else {
+            //$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            //return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
+            $response->setStatusCode(201);
+            return $response->setData(array('estado'=>false, 'msg'=>' al enviar el formulario, intente nuevamente'));
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que valida el proceso de registro de un trámite bachillerato tecnico humanistico regular segun el participante y gestion
+    // PARAMETROS: estudianteId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getBachTecHumRegularValidacion($participanteId, $estudianteInscripcionId, $gestionId) {
+        $msgContenido = "";
+        $cargaHorariaTotal = 0;
+        $gestionServidor= new \DateTime();
+        $gestionActual = $gestionServidor->format('Y');
+
+        // // VALIDACION DE ASIGNATURAS CON NOTAS COMPLETAS (4 BIMESTRAS O 3 TRIMESTRES EN GESTION ANTERIORES  Y 1ER BIMESTRE EN GESTION ACTUAL )
+        // $objCalificacionesObservados = $this->getDipHumRegularCalificacionObsEstudiante($participanteId);
+        // if(count($objCalificacionesObservados)>0){
+        //     $msgContenido = ($msgContenido=="") ? "cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'] : $msgContenido.", cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'];
+        // }
+
+        // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
+        $valTramiteEstudiante = $this->getBachTecHumTramiteEstudiante($participanteId);
+        if(count($valTramiteEstudiante) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'] : $msgContenido.', ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'];
+        }
+
+        // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
+        $valDocumentoEstudiante = $this->getBachTecHumDocumentoEstudiante($participanteId);
+        if(count($valDocumentoEstudiante) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'] : $msgContenido.', ya cuenta con el Título en Bachillerato Técnico Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
+        }
+
+        return $msgContenido;
+    }
+
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los tramites en curso de un estudiante en educación regular humanisitca
+    // PARAMETROS: estudianteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getBachTecHumTramiteEstudiante($estudianteId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+          SELECT
+          dt.id as dependencia_tipo_id, dt.dependencia,
+          oct.id as orgcurricular_tipo_id,  oct.orgcurricula,
+          ie.le_juridicciongeografica_id, ie.id as institucioneducativa_id, ie.institucioneducativa,
+          iec.gestion_tipo_id, nt.id as nivel_tipo_id, nt.nivel, ct.id as ciclo_tipo_id,  ct.ciclo,
+          iec.grado_tipo_id, pt.id as paralelo_tipo_id, pt.paralelo, tt.id as turno_tipo_id, tt.turno,
+          pet.id as periodo_tipo_id, pet.periodo,
+          e.id as estudiante_id, e.codigo_rude, e.carnet_identidad as carnet, e.complemento,
+          cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
+          e.pasaporte, e.paterno,  e.materno, e.nombre,
+          gt.id as genero_tipo_id, gt.genero, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,  e.localidad_nac,
+          emt.id as estadomatricula_tipo_id, emt.estadomatricula, ei.id as estudiante_inscripcion_id, e.segip_id,
+          case pat.id when 1 then lt2.lugar when 0 then '' else pat.pais end as lugar_nacimiento,
+          CASE
+          WHEN iec.nivel_tipo_id = 13 THEN
+          'Regular Humanística'
+          WHEN iec.nivel_tipo_id = 15 THEN
+          'Alternativa Humanística'
+          WHEN iec.nivel_tipo_id > 17 THEN
+          'Alternativa Técnica'
+          END AS subsistema,
+          e.lugar_prov_nac_tipo_id as lugar_nacimiento_id, lt2.codigo as depto_nacimiento_id, lt2.lugar as depto_nacimiento,
+          t.id as tramite_id--, d.id as documento_id, d.documento_serie_id as documento_serie_id
+          FROM estudiante as e
+          INNER JOIN estudiante_inscripcion as ei on ei.estudiante_id = e.id
+          INNER JOIN institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+          INNER JOIN institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+          INNER JOIN estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
+          INNER JOIN dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+          INNER JOIN orgcurricular_tipo as oct on oct.id = ie.orgcurricular_tipo_id
+          INNER JOIN nivel_tipo as nt on nt.id = iec.nivel_tipo_id
+          INNER JOIN ciclo_tipo as ct on ct.id = iec.ciclo_tipo_id
+          INNER JOIN paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+          INNER JOIN turno_tipo as tt on tt.id = iec.turno_tipo_id
+          INNER JOIN periodo_tipo as pet on pet.id = iec.periodo_tipo_id
+          INNER JOIN genero_tipo as gt on gt.id = e.genero_tipo_id
+          LEFT JOIN lugar_tipo as lt1 on lt1.id = e.lugar_prov_nac_tipo_id
+          LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+          left join pais_tipo as pat on pat.id = e.pais_tipo_id
+          inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (13) and t.esactivo = 't'
+          WHERE e.id = ".$estudianteId." -- and ei.estadomatricula_tipo_id in (4,5,55)
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los documentos (Diplomas de Bachiller Humanistico) vigente de un estudiante en educación regular humanisitca
+    // PARAMETROS: estudianteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getBachTecHumDocumentoEstudiante($estudianteId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+          SELECT
+          dt.id as dependencia_tipo_id, dt.dependencia,
+          oct.id as orgcurricular_tipo_id,  oct.orgcurricula,
+          ie.le_juridicciongeografica_id, ie.id as institucioneducativa_id, ie.institucioneducativa,
+          iec.gestion_tipo_id, nt.id as nivel_tipo_id, nt.nivel, ct.id as ciclo_tipo_id,  ct.ciclo,
+          iec.grado_tipo_id, pt.id as paralelo_tipo_id, pt.paralelo, tt.id as turno_tipo_id, tt.turno,
+          pet.id as periodo_tipo_id, pet.periodo,
+          e.id as estudiante_id, e.codigo_rude, e.carnet_identidad as carnet, e.complemento,
+          cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
+          e.pasaporte, e.paterno,  e.materno, e.nombre,
+          gt.id as genero_tipo_id, gt.genero, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,  e.localidad_nac,
+          emt.id as estadomatricula_tipo_id, emt.estadomatricula, ei.id as estudiante_inscripcion_id, e.segip_id,
+          case pat.id when 1 then lt2.lugar when 0 then '' else pat.pais end as lugar_nacimiento,
+          CASE
+          WHEN iec.nivel_tipo_id = 13 THEN
+          'Regular Humanística'
+          WHEN iec.nivel_tipo_id = 15 THEN
+          'Alternativa Humanística'
+          WHEN iec.nivel_tipo_id > 17 THEN
+          'Alternativa Técnica'
+          END AS subsistema,
+          e.lugar_prov_nac_tipo_id as lugar_nacimiento_id, lt2.codigo as depto_nacimiento_id, lt2.lugar as depto_nacimiento,
+          t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id
+          FROM estudiante as e
+          INNER JOIN estudiante_inscripcion as ei on ei.estudiante_id = e.id
+          INNER JOIN institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+          INNER JOIN institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+          INNER JOIN estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
+          INNER JOIN dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+          INNER JOIN orgcurricular_tipo as oct on oct.id = ie.orgcurricular_tipo_id
+          INNER JOIN nivel_tipo as nt on nt.id = iec.nivel_tipo_id
+          INNER JOIN ciclo_tipo as ct on ct.id = iec.ciclo_tipo_id
+          INNER JOIN paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+          INNER JOIN turno_tipo as tt on tt.id = iec.turno_tipo_id
+          INNER JOIN periodo_tipo as pet on pet.id = iec.periodo_tipo_id
+          INNER JOIN genero_tipo as gt on gt.id = e.genero_tipo_id
+          LEFT JOIN lugar_tipo as lt1 on lt1.id = e.lugar_prov_nac_tipo_id
+          LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+          left join pais_tipo as pat on pat.id = e.pais_tipo_id
+          inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (13) and t.esactivo = 't'
+          inner join documento as d on d.tramite_id = t.id and documento_tipo_id in (21) and d.documento_estado_id = 1
+          WHERE e.id = ".$estudianteId." -- and ei.estadomatricula_tipo_id in (4,5,55)
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
     }
 }

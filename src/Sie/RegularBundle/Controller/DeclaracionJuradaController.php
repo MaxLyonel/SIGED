@@ -125,6 +125,7 @@ class DeclaracionJuradaController extends Controller {
 
             $bachilleres = $this->getBachilleresPerSie($form['sie'], $form['gestion']);
 
+            //dump($bachilleres);die;
             return $this->render($this->session->get('pathSystem') . ':DeclaracionJurada:bachilleres.html.twig', array(
                         'bachilleres' => $bachilleres,
                         'unidadEducativa' => $institucionEducativa,
@@ -164,7 +165,7 @@ class DeclaracionJuradaController extends Controller {
                         select e.codigo_rude, e.carnet_identidad,e.complemento, e.pasaporte, e.paterno, e.materno, e.nombre, e.fecha_nacimiento,
                         e.genero_tipo_id, ptp.pais,ltd.lugar as departamento,ltp.lugar as provincia, e.localidad_nac , g.genero, ei.estadomatricula_tipo_id,
                         i.institucioneducativa, i.id as insteduid,iec.gestion_tipo_id, iec.nivel_tipo_id as nivel_id, iec.grado_tipo_id, sat.id as acre, iec.gestion_tipo_id
-                        , eiht.id as estinsbthid, ei.id as estinsid
+                        , eiht.id as estinsbthid, ei.id as estinsid, case coalesce(bcte.estudiante_inscripcion_id,0) when 0 then false else true end as estado_bth
                         from estudiante e
                         left join pais_tipo ptp on (e.pais_tipo_id = ptp.id)
                         left join lugar_tipo ltpa on (e.lugar_nac_tipo_id= ltpa.id)
@@ -180,6 +181,7 @@ class DeclaracionJuradaController extends Controller {
                         left join superior_acreditacion_tipo as sat on sat.id = sae.superior_acreditacion_tipo_id
                         left join institucioneducativa i on (iec.institucioneducativa_id = i.id)
                         left join estudiante_inscripcion_humnistico_tecnico as eiht on eiht.estudiante_inscripcion_id = ei.id
+                        left join bth_cut_ttm_estudiante as bcte on bcte.estudiante_inscripcion_id = ei.id
                         where iec.gestion_tipo_id = ".$gestion." and i.id = ".$sie."
                         and
                         case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id in (5,15) and sat.codigo = 3 and pert.id = 3/*sat.id in (6,52)*/)

@@ -436,6 +436,29 @@ public function getDocumentoTokenImpreso($token) {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que busca los tipos de serie de un o varios tipos de documento por tipo de educacion
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getSerieEducacionTipo($tipos,$educacion) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+          select distinct
+          case
+          when ds.documento_tipo_id in (1,2,3,4,5)  then (case ds.gestion_id when 2010 then right(ds.id,2) when 2013 then right(ds.id,2) else right(ds.id,1) end)
+          when ds.documento_tipo_id in (6,7,8) then (case when ds.gestion_id >= 2018 then left(right(ds.id,1),1) else left(right(ds.id,4),3) end)  
+          when ds.documento_tipo_id in (9) then right(ds.id,2)
+          else right(ds.id,1)
+          end as serie, gestion_id
+          from documento_serie as ds where ds.documento_tipo_id in (".$tipos.") and formacion_educacion_tipo_id = ".$educacion." order by serie desc
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que busca las gestiones de serie registrados de un o varios tipos de documento
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
@@ -444,6 +467,22 @@ public function getDocumentoTokenImpreso($token) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
             select distinct gestion_id as gestion from documento_serie as ds where ds.documento_tipo_id in (".$tipos.") order by gestion_id desc
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que busca las gestiones de serie registrados de un o varios tipos de documento
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getGestionEducacionTipo($tipos,$educacion) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select distinct gestion_id as gestion from documento_serie as ds where ds.documento_tipo_id in (".$tipos.") and formacion_educacion_tipo_id = ".$educacion." order by gestion_id desc
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();

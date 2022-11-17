@@ -201,3 +201,22 @@ tramite_detalle_diploma_humanistico_entrega_lista_pdf:
 tramite_detalle_diploma_humanistico_entrega_guarda:
     path:     /diploma/humanistico/entrega/guarda
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEntregaGuarda }
+
+
+
+# BACHILLERATO TÉCNICO HUMANISTICO
+tramite_bachillerato_tecnico_humanistico_regular_impresion_busca:
+    path:     /bachillerato/tecnico/humanistico/regular/impresion/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:bachTecHumRegularImpresionBusca }
+
+tramite_bachillerato_tecnico_humanistico_regular_impresion_lista:
+    path:     /bachillerato/tecnico/humanistico/regular/impresion/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:bachTecHumRegularImpresionLista }
+    options:
+         expose: true  
+    
+tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda:
+    path:     /bachillerato/tecnico/humanistico/regular/impresion/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:bachTecHumRegularImpresionGuarda }
+    options:
+         expose: true  
