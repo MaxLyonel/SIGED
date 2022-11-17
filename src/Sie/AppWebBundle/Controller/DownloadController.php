@@ -716,11 +716,20 @@ class DownloadController extends Controller {
             if($gestion == 2021 or $gestion == 2022){
                 if($idiomaId == 48)
                 {
-                    switch ($nivel) {
-                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v5_rcm.rptdesign'; break;
-                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v5_rcm.rptdesign'; break;
-                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v5_rcm.rptdesign'; break;
-                    }
+                    if($gestion >= 2022){
+                        switch ($nivel) {
+                            case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v5_rcm.rptdesign'; break;
+                            case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v5_1_rcm.rptdesign'; break;
+                            case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v5_rcm.rptdesign'; break;
+                        }
+                    }else{
+                        switch ($nivel) {
+                            case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v5_rcm.rptdesign'; break;
+                            case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v5_rcm.rptdesign'; break;
+                            case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v5_rcm.rptdesign'; break;
+                        }
+                    }                
+
                 }else{
                     switch ($nivel) {
                         case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v6_rcm.rptdesign'; break;
