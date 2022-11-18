@@ -1279,7 +1279,7 @@ class MaestroAsignacionController extends Controller {
     }
 
     public function getValidacionFechaSecuencial($listaMaestros, $gestionId, $fechaInicio, $fechaFin, $institucioneducativaCursoOfertaMaestroId){
-        $ingresa = false;
+        $ingresa = true;
         $error = false;
         $msg = "";
         
