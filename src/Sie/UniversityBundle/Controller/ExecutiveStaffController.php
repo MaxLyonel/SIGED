@@ -225,6 +225,8 @@ class ExecutiveStaffController extends Controller{
         
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+        
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
         $arrData['pathDirectory'] = '';
