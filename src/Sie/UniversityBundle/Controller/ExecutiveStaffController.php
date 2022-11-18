@@ -271,10 +271,37 @@ class ExecutiveStaffController extends Controller{
                 $archivador = 'empty';
         }
 
-            if($arrData['newperson'] == true){
+            $sql_aux = "select count(*) as existe from persona
+            where carnet = '".$arrData['carnet'] ."'" ;
+
+            //dump($sql_aux);die;
+            $stmt = $db->prepare($sql_aux);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            $total_filas_aux = $po[0]['existe'];
+           
+            if($total_filas_aux == 0){
                 $newPerson = $this->saveNewPerson($arrData);
                 $arrData['personId'] = $newPerson->getId();
+            }else{
+                $sql_aux = "select id, count(*) as existe from persona
+                where carnet = '".$arrData['carnet'] ."'  group by id" ;
+
+                $stmt = $db->prepare($sql_aux);
+                $params = array();
+                $stmt->execute($params);
+                $po = $stmt->fetchAll();
+                $total_filas_aux = $po[0]['existe'];
+                $id_persona_aux = $po[0]['id'];
+
+                $arrData['personId'] = $id_persona_aux;
             }
+
+            /*if($arrData['newperson'] == true){
+                $newPerson = $this->saveNewPerson($arrData);
+                $arrData['personId'] = $newPerson->getId();
+            }*/
 
             $registerProcess = $this->saveUpdatePersonalInfo($arrData, 0);
 
