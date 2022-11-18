@@ -494,7 +494,7 @@
 			                                                			<button type="button" class="btn btn-md btn-warning mb-2" @click="findBrother"><i  class="fa fa-search"></i> Buscar</button>
 			                                                		</td>
 			                                                	</tr>
-			                                                	{# ${dataBrotherSelected} #}
+			                                                	
 		                                                        <tr v-for="(brother, index) in dataBrother">
 		                                                            <td class="text-left border-right" colspan="2">${ index + 1} - ${brother.paterno} ${brother.materno} ${brother.nombre}
 		                                                            </td>
@@ -504,6 +504,13 @@
 		                                                             #}
 		                                                            
 		                                                        </tr>			                                                	
+		                                                        <tr v-if="!swbrother">
+		                                                        	<td>
+		                                                        		Estudiante no registrado en la U.E. seleccionada
+		                                                        	</td>		                                                        	<td>
+		                                                        		Registro no permitido
+		                                                        	</td>
+		                                                        </tr>
 
 			                                                </tbody>
 			                                            </table>	
@@ -759,7 +766,7 @@
 		    	consultar(){
 		    		this.errores = [];
 		    		this.state.isSending = false;
-		    		
+		    		this.swbrother = true;
 		    		if (this.opcion == 1) {
 		    			if (this.dataParent.carnet == '') {
 		    				this.errores.push('Carnet del solicitante');
@@ -941,7 +948,7 @@
 
                     var me = this;
                     me.swuned = false;
-
+                    this.swbrother = true;
                 	Swal.fire({
                         title: 'Seleccionar Unidad Educativa para la Pre-Inscription',
                         text: "Esta seguro de CONTINUAR?",
@@ -1116,6 +1123,8 @@
                         	// this.showOptionBrothers = val;
                             me.showOptionBrothers=true;
                         }else{
+                        	this.swbrother = true
+                        	this.dataBrother = [];
                         	//this.dataBrother.shift();
                         }
                     });					
@@ -1139,8 +1148,8 @@
 								this.dataBrother=this.datos.dataBrother;
 								this.dataBrother.codigoRude=me.student.codigoRude;
 								// this.allDataRequest['dataBrother']=this.dataBrother;
-								// this.dataBrotherSelected.push(this.dataBrother);
-								
+								this.dataBrotherSelected.push(this.dataBrother);
+								console.log(this.dataBrotherSelected);
 
 	                            $('[data-toggle="tooltip"]').tooltip();
 	                        }
