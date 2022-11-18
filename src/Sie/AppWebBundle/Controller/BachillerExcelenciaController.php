@@ -537,7 +537,7 @@ class BachillerExcelenciaController extends Controller {
             /*
             dcastillo: si la UE tiene efectivos no ha cerrado, se retorna a la vista principal
             */
-            /*$sql= "
+            $sql= "
             SELECT COUNT
                 ( * ) as existe
             FROM
@@ -557,7 +557,7 @@ class BachillerExcelenciaController extends Controller {
             $existe_efectivos = $po[0]['existe'];
             if($existe_efectivos > 0) {
                 return $this->redirect($this->generateUrl('principal_web'));
-            }*/
+            }
 
             /*
             * verificamos si tiene tuicion
