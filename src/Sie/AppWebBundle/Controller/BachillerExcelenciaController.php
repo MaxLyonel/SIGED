@@ -29,7 +29,7 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2022-11-17');
+        $this->fechaCorte = new \DateTime('2022-11-21');
         $this->gestionOperativo =  $this->session->get('currentyear'); //2022        
 
     }
@@ -96,9 +96,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
+        /*if($this->fechaActual > $this->fechaCorte) {
              return $this->redirect($this->generateUrl('principal_web'));
-        }
+        }*/
 
         $form = $this->createSearchIeDirForm();
 
@@ -532,13 +532,12 @@ class BachillerExcelenciaController extends Controller {
             $ue_no_reporta = $po[0]['existe'];
             if($ue_no_reporta > 0) {
                 return $this->redirect($this->generateUrl('principal_web'));
-            }
-
+            }            
 
             /*
             dcastillo: si la UE tiene efectivos no ha cerrado, se retorna a la vista principal
             */
-            $sql= "
+            /*$sql= "
             SELECT COUNT
                 ( * ) as existe
             FROM
@@ -558,7 +557,7 @@ class BachillerExcelenciaController extends Controller {
             $existe_efectivos = $po[0]['existe'];
             if($existe_efectivos > 0) {
                 return $this->redirect($this->generateUrl('principal_web'));
-            }
+            }*/
 
             /*
             * verificamos si tiene tuicion
