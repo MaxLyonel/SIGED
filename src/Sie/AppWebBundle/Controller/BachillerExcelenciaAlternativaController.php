@@ -809,7 +809,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         $bachiller = $query->getOneOrNullResult();
 
         $inscripcion = $bachiller->getEstudianteInscripcion()->getId();
-        $matricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5);
+        $matricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4);
         $beinscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcion);
         $beinscripcion->setEstadomatriculaTipo($matricula);
         $em->persist($beinscripcion);
