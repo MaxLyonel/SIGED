@@ -811,9 +811,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
         $inscripcion = $bachiller->getEstudianteInscripcion()->getId();
         $matricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4);
         $beinscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcion);
-        $beinscripcion->setEstadomatriculaTipo($matricula);
+        /*$beinscripcion->setEstadomatriculaTipo($matricula);
         $em->persist($beinscripcion);
-        $em->flush();
+        $em->flush();*/
 
         $bachiller->setImpreso('f');
         $bachiller->setEsoficial('f');
@@ -938,7 +938,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoTipoId);
             $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->gestionOperativo);
 
-            $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(55));
+            //$inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(55));
 
             $estudiantedestacado = new EstudianteDestacado();
             $estudiantedestacado->setFechaRegistro(new \DateTime('now'));
