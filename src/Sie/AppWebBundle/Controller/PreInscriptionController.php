@@ -367,7 +367,7 @@ class PreInscriptionController extends Controller
                         'swbrother'=>$swbrother,                
                         'dataBrother'=>$arrBrother,
                     );
-            
+            // dupm($arrResponse)
               return $response->setData([
                     'status'=>'success',
                     'datos'=>$arrResponse
@@ -387,7 +387,7 @@ class PreInscriptionController extends Controller
      //dump($dataParent);
      //dump($addrressParent);
      //dump($ueInfo);
-     //dump($brother);
+     // dump($brother);
      //dump($student);
      //dump($justify);
     
@@ -510,18 +510,24 @@ class PreInscriptionController extends Controller
             ////////////////////////////////////////
             // this is to the new  PreinsEstudianteInscripcionHermanos////
             ////////////////////////////////////////
-            if(sizeof($brother)>0 && $student['codigoRude']!=''){
+            if($brother=='false'){
 
-                $newPreinsEstudianteInscripcionHermanos = new PreinsEstudianteInscripcionHermanos();
+            }else{
 
-                $newPreinsEstudianteInscripcionHermanos->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($brother[0]['idEstIns']));
-                $newPreinsEstudianteInscripcionHermanos->setPreinsEstudianteInscripcion($em->getRepository('SieAppWebBundle:PreinsEstudianteInscripcion')->find($newPreinsEstudianteInscripcion->getId()));
+                if( sizeof($brother)>0 && $student['codigoRude']!=''){
 
-                $newPreinsEstudianteInscripcionHermanos->setFechaRegistro(new \DateTime('now'));
+                    $newPreinsEstudianteInscripcionHermanos = new PreinsEstudianteInscripcionHermanos();
 
-                $em->persist($newPreinsEstudianteInscripcionHermanos);            
+                    $newPreinsEstudianteInscripcionHermanos->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($brother[0]['idEstIns']));
+                    $newPreinsEstudianteInscripcionHermanos->setPreinsEstudianteInscripcion($em->getRepository('SieAppWebBundle:PreinsEstudianteInscripcion')->find($newPreinsEstudianteInscripcion->getId()));
 
+                    $newPreinsEstudianteInscripcionHermanos->setFechaRegistro(new \DateTime('now'));
+
+                    $em->persist($newPreinsEstudianteInscripcionHermanos);            
+
+                }
             }
+
 
             // save all data
             $em->flush();            
