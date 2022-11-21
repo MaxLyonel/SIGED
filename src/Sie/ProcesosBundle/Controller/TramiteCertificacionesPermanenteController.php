@@ -1461,7 +1461,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->Ln(40);
             $pdf->Cell(15, 5, '', 0, 0, 'L');  
             if(strlen($datosParticipante[0]['nombre'].$datosParticipante[0]['paterno'].$datosParticipante[0]['materno'])>=30){
-                $textSize = 19;
+                $textSize = 18;
                 $breaknext = 19;
             }else{
                 $textSize = 20;
