@@ -249,90 +249,99 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneById($areaid);
         $em->getConnection()->beginTransaction();
 
-        try {
-            if($estudianteAsignatura) {
-                if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
-                    $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
-        
-                    if($especialidadEstudiante) {
-                        $em->remove($especialidadEstudiante);
-                        $em->flush();
+        $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
+        if(!$estudianteNota) {
+             
+            try {
+                if($estudianteAsignatura) {
+                    if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
+                        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+            
+                        if($especialidadEstudiante) {
+                            $em->remove($especialidadEstudiante);
+                            $em->flush();
+                        }
                     }
+
+                    // $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
+                    // if($estudianteNota) {
+                    //     foreach ($estudianteNota as $key => $nota) {
+                    //         $notaAntLog = [];
+                    //         $notaAntLog['id'] = $nota->getId();
+                    //         $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
+                    //         $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
+                    //         $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
+                    //         $notaAntLog['usuario'] = $nota->getUsuarioId();
+
+                    //         $this->get('funciones')->setLogTransaccion(
+                    //             $nota->getId(),
+                    //             'estudiante_nota',
+                    //             'D',
+                    //             '',
+                    //             '',
+                    //             $notaAntLog,
+                    //             'Academico',
+                    //             json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                                
+                    //         $em->remove($nota);
+                    //         $em->flush();
+                    //     }
+                    // }
+
+                    $eaAntLog = [];
+                    $eaAntLog['id'] = $estudianteAsignatura->getId();
+                    $eaAntLog['gestionTipo'] = $estudianteAsignatura->getGestionTipo()->getId();
+                    $eaAntLog['estudianteInscripcion'] = $estudianteAsignatura->getEstudianteInscripcion()->getId();
+                    $eaAntLog['institucioneducativaCursoOferta'] = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getId();
+
+                    $this->get('funciones')->setLogTransaccion(
+                        $estudianteAsignatura->getId(),
+                        'estudiante_asignatura',
+                        'D',
+                        '',
+                        '',
+                        $eaAntLog,
+                        'Academico',
+                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                    
+                    $em->remove($estudianteAsignatura);
+                    $em->flush();
                 }
 
-                $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
-                if($estudianteNota) {
-                    foreach ($estudianteNota as $key => $nota) {
-                        $notaAntLog = [];
-                        $notaAntLog['id'] = $nota->getId();
-                        $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
-                        $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
-                        $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
-                        $notaAntLog['usuario'] = $nota->getUsuarioId();
+                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
 
-                        $this->get('funciones')->setLogTransaccion(
-                            $nota->getId(),
-                            'estudiante_nota',
-                            'D',
-                            '',
-                            '',
-                            $notaAntLog,
-                            'Academico',
-                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
-                            
-                        $em->remove($nota);
-                        $em->flush();
-                    }
-                }
+                $eiAntLog = [];
+                $eiAntLog['id'] = $inscripcion->getId();
+                $eiAntLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
 
-                $eaAntLog = [];
-                $eaAntLog['id'] = $estudianteAsignatura->getId();
-                $eaAntLog['gestionTipo'] = $estudianteAsignatura->getGestionTipo()->getId();
-                $eaAntLog['estudianteInscripcion'] = $estudianteAsignatura->getEstudianteInscripcion()->getId();
-                $eaAntLog['institucioneducativaCursoOferta'] = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getId();
+                $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+                $em->persist($inscripcion);
+                $em->flush();
+                
+                $eiNuevoLog = [];
+                $eiNuevoLog['id'] = $inscripcion->getId();
+                $eiNuevoLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
 
                 $this->get('funciones')->setLogTransaccion(
-                    $estudianteAsignatura->getId(),
-                    'estudiante_asignatura',
-                    'D',
+                    $inscripcion->getId(),
+                    'estudiante_inscripcion',
+                    'U',
                     '',
-                    '',
-                    $eaAntLog,
+                    $eiNuevoLog,
+                    $eiAntLog,
                     'Academico',
                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
                 
-                $em->remove($estudianteAsignatura);
-                $em->flush();
-            }
-
-            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
-
-            $eiAntLog = [];
-            $eiAntLog['id'] = $inscripcion->getId();
-            $eiAntLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
-
-            $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
-            $em->persist($inscripcion);
-            $em->flush();
-            
-            $eiNuevoLog = [];
-            $eiNuevoLog['id'] = $inscripcion->getId();
-            $eiNuevoLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
-
-            $this->get('funciones')->setLogTransaccion(
-                $inscripcion->getId(),
-                'estudiante_inscripcion',
-                'U',
-                '',
-                $eiNuevoLog,
-                $eiAntLog,
-                'Academico',
-                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
-            
-            $em->getConnection()->commit();
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
-        }        
+                $em->getConnection()->commit();
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+            }   
+        
+        }
+        else {
+            $exception = FlattenException::create(new \Exception(), 404);
+            $response = $controller->showAction($request, $exception, null);
+        }
 
         $areasEstudiante = $this->getAreasEstudiante($inscripcionid);
         $areasCurso = $this->getAreasCurso($inscripcionid);
