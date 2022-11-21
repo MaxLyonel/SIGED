@@ -2123,6 +2123,10 @@ class InfoEstudianteController extends Controller {
                 $em->persist($institucioneducativaOperativoLog);
                 $em->flush();
 
+                // Procesa CUT_TTM BTH
+                $query = $em->getConnection()->prepare("select * from sp_bth_institucioneducativa_cutttm ('" . $sie . "','" . $gestion . "','" . $this->session->get('userId') . "');");
+                $query->execute();
+
                 return $response->setData(array('reloadIt'=>true, 'mssg'=>'Se verifico el operativo Sexto de Secundaria sin problemas'));
 
             }
