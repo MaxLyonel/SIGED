@@ -199,7 +199,7 @@
 
                                             {% if data.estadomatriculaId in [4,6,101,5] %}
                                                 <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                                    {{data.estadomatricula}}
+                                                    <div id="{{data.eInsId}}">{{data.estadomatricula}}</div>
                                                 </button>
                                             {% else %}
                                                <a href="javascript:void(0)" title="" onclick="visualizar_contenido('{{infoUe}}','{{jsnInfoStudent}}')"><strong style="color:#ff0000;border:2px;"> {{data.estadomatricula}} &nbsp;</strong> &nbsp;&nbsp;<button><span class="fa fa-eye"></span></button> </a>
@@ -382,6 +382,7 @@
                                                                 <i class="fa fa-list"></i>
                                                                 </button>
                                                             </div>
+
                                                         {% endif %}
                                                     {% endif %}
                                                     

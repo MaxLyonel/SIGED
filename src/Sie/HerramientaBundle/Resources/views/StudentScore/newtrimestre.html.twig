@@ -30,6 +30,28 @@
 </div><!-- /.modal-dialog -->
 <script>
 
+    var getLastStatus = function(idInscripcion){
+       
+      //get the values to reload
+      infoStudent = $('#infoStudent').val();
+      infoUe = $('#infoUe').val();
+      $.ajax({
+          type: 'post',
+          url: Routing.generate('herramienta_StudentScore_updatestatus'),
+          data: ({idInscripcion:idInscripcion}),
+          beforeSend: function () {
+          },
+          success: function (data) {
+            document.getElementById(data.idInscripcion).innerHTML = data.statusStudent;              
+            // document.getElementById(data.idInscripcion).innerHTML = 'krlos';              
+          },
+          error: function (data) {
+
+          }
+      });
+
+    };    
+
     var registrarNotas = function(){
 
     	var enviar = validarEnvioNotas();
@@ -46,7 +68,11 @@
 		            $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
 		        },
 		        success: function (data) {
+                     
 		            $('#modal').modal('hide');
+                    setTimeout(function(){}, 2200);
+                    document.getElementById(data.idInscripcion).innerHTML = data.statusStudent;
+                    getLastStatus(data.idInscripcion);
 		        },
 		        error: function (data) {
 

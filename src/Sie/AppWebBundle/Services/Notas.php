@@ -1996,9 +1996,9 @@ class Notas{
                 if ($gestion == 2022) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
                         $swCloseOperative = false;
-                        if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 1))){
+                        if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 2))){
                             $swCloseOperative = true;
-                        }                          
+                        }
                         $existe = false;
                         foreach ($cualitativas as $c) {
                             if($c->getNotaTipo()->getId() == $i){
@@ -5019,35 +5019,7 @@ die;/*
         $complementario = "";
         $estado_inicial = $inscripcion->getEstadomatriculaTipo()->getEstadomatricula();
 
-        if($igestion == 2013) {
-            if($inivel_tipo_id == 12) {
-                if($igrado_tipo_id == 1) {
-                    $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
-                } else {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
-                }
-            } else if($inivel_tipo_id == 13) {
-                if($igrado_tipo_id == 1) {
-                    $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
-                } else {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
-                }
-            }
-        } else if($igestion < 2013) {
-            $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
-        } else if($igestion > 2013 && $igestion < 2020) {
-            $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
-        } else if($igestion == 2020) {
-            if($inivel_tipo_id == 12) {
-                if($igrado_tipo_id > 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
-                }
-            } else if($inivel_tipo_id == 13) {
-                if($igrado_tipo_id >= 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
-                }
-            }
-        }else if($igestion == 2021 || $igestion == 2022) {
+        if($igestion == 2021 || $igestion == 2022) {
             if($inivel_tipo_id == 11) {
                 $complementario = "";
             }else if($inivel_tipo_id == 12) {
@@ -5062,13 +5034,14 @@ die;/*
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
         
-        if($operativo==3 && (in_array($igestion, array(2022)))){
+        if($operativo==3 && (in_array($igestion, array(2022) ) ) ){
             switch ($inivel_tipo_id) {
-                case '13':
                 case '12':
+                case '13':
                     $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
                     $query->execute();        
                     $resultado = $query->fetchAll();        
+                    
                     break;
                 case '11':
                     

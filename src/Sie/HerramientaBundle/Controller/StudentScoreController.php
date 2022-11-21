@@ -125,16 +125,65 @@ class StudentScoreController extends Controller{
 
     }
 
-    public function createUpdateAction(Request $request){
+    public function updateStatusAction(Request $request){
     	//dump($request);die;
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $idInscripcion = $request->get('idInscripcion');
+
+        $currentinscription = $em->createQueryBuilder()
+                            ->select('estins')
+                            ->from('SieAppWebBundle:EstudianteInscripcion','estins')
+                            ->where('estins.id = :idInscripcion')
+                            ->setParameter('idInscripcion', $idInscripcion)
+                            ->getQuery()
+                            ->getResult();
+        $statusStudent = '';
+        if(sizeof($currentinscription)>0){
+            $statusStudent = $currentinscription[0]->getEstadomatriculaTipo()->getEstadomatricula();       
+        }
+
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'idInscripcion'=> $idInscripcion,
+            'statusStudent'=> $statusStudent,
+        ));
+
+        return $response;        
+    }   
+
+    public function createUpdateAction(Request $request){
+        //dump($request);die;
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
         $this->get('notas')->regularRegistroDB($request);
         $idInscripcion = $request->get('idInscripcion');
 
         //$this->get('notas')->actualizarEstadoMatriculaDB($idInscripcion);
         // $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);
         $this->get('notas')->updateStatusStudent($idInscripcion);
-        die;
-        return 1;
+
+        $currentinscription = $em->createQueryBuilder()
+                            ->select('estins')
+                            ->from('SieAppWebBundle:EstudianteInscripcion','estins')
+                            ->where('estins.id = :idInscripcion')
+                            ->setParameter('idInscripcion', $idInscripcion)
+                            ->getQuery()
+                            ->getResult();
+        $statusStudent = '';
+        if(sizeof($currentinscription)>0){
+            $statusStudent = $currentinscription[0]->getEstadomatriculaTipo()->getEstadomatricula();       
+        }
+
+        //die;
+        // return 1;
+        $response->setStatusCode(200);
+        $response->setData(array(
+            'idInscripcion'=> $idInscripcion,
+            'statusStudent'=> $statusStudent,
+        ));
+
+        return $response;        
     }    
 
     public function getInfoLibreta($dataCurso){
