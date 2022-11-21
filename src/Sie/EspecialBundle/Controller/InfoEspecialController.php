@@ -158,7 +158,7 @@ class InfoEspecialController extends Controller{
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
                 'data'=>$dataInfo,
                 'closeOperativoform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo',$data, $periodo)->createView(),
-                //'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
+                'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
               //  'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
@@ -441,7 +441,7 @@ class InfoEspecialController extends Controller{
       $em->getConnection()->beginTransaction();
       //get the values
       $form = $request->get('form');
-
+      //dump($form);//die;
       //update the close operativo to registro consolido table
      
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
@@ -450,7 +450,7 @@ class InfoEspecialController extends Controller{
         ));
 
       $periodo = $this->operativo($form['sie'], $form['gestion']);
-//dump($registroConsol);
+      //dump($registroConsol);
       $estado = '';
       if(!$registroConsol){
         $estado = 'SIN_INSC';
@@ -462,24 +462,24 @@ class InfoEspecialController extends Controller{
       $inconsistencia = null;
       //dump($form['gestion']);
       //dump($form['sie']);
-      //die;
+     // die;
       if($estado==''){
-        
+       
         $query = $em->getConnection()->prepare('select * from sp_validacion_especial_rude(:igestion_id, :icod_ue)');
         $query->bindValue(':igestion_id', $form['gestion']);
         $query->bindValue(':icod_ue', $form['sie']);
         $query->execute();
-        $inconsistencia = $query->fetchAll();
-        //dump($inconsistencia);die;
-        if($registroConsol && !$inconsistencia){
+       
+        $inconsistencia = $query->fetchAll(); 
+       
+        if($registroConsol && !$inconsistencia){ 
             $registroConsol->setRude(1);
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
         }
       }
-      
-     // dump($estado); die;
+     // dump($estado);die;
       return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => 100, 'estado' => $estado));
     }
 
