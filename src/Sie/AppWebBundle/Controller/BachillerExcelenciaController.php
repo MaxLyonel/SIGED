@@ -894,11 +894,47 @@ class BachillerExcelenciaController extends Controller {
         $bachiller = $query->getOneOrNullResult();
 
         $inscripcion = $bachiller->getEstudianteInscripcion()->getId();
-        $matricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4);
+        $matricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5);
         $beinscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcion);
-        $beinscripcion->setEstadomatriculaTipo($matricula);
+        
+        $sql = "
+        select ei.institucioneducativa_curso_id, ic.paralelo_tipo_id, turno_tipo_id
+        from estudiante_inscripcion ei
+        inner join institucioneducativa_curso ic on ic.id = ei.institucioneducativa_curso_id
+        where ei.id = " . $inscripcion;
+
+        //dump($sql); die;
+
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $paralelo_tipo_id = $po[0]['paralelo_tipo_id'];
+        $turno_tipo_id = $po[0]['turno_tipo_id'];
+
+
+        $igestion = 2022;
+        $iinstitucioneducativa_id = $ie;
+        $inivel_tipo_id=13;
+        $igrado_tipo_id=6;
+        $iturno_tipo_id = $turno_tipo_id;
+        $iparalelo_tipo_id = $paralelo_tipo_id;
+        $icodigo_rude =  $bachiller->getCodigoRude();
+        $complementario = "'(6,7)','(6,7,8)','(9)','51'";
+
+
+        /*$query = "select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")";
+        dump($query); die;*/
+        
+        $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+        $query->execute();        
+        $resultado = $query->fetchAll(); 
+        
+        
+        
+        /*$beinscripcion->setEstadomatriculaTipo($matricula);
         $em->persist($beinscripcion);
-        $em->flush();
+        $em->flush();*/
 
         $bachiller->setImpreso('f');
         $bachiller->setEsoficial('f');
