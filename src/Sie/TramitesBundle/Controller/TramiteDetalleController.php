@@ -5387,4 +5387,136 @@ class TramiteDetalleController extends Controller {
     }
 
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que descarga lista en formato pdf los trámites donde fueron impresos sus diplomas por la direccion departamental - legalizaciones en formato pdf
+    // PARAMETROS: sie, gestion
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumImpresionActaPdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        try {
+            $info = $request->get('info');
+            $form = unserialize(base64_decode($info));
+
+            $sie = $form['sie'];
+            $ges = $form['gestion'];
+            $tipLis = 162;
+            $participantes = $request->get('participantes');
+            
+            $listaParticipantes = "";
+            if ($participantes != ''){
+                foreach($participantes as $estudiante){
+                    if ($listaParticipantes == ""){
+                        $listaParticipantes = base64_decode($estudiante);
+                    } else {
+                        $listaParticipantes = $listaParticipantes.",".base64_decode($estudiante)."";
+                    }
+                }
+            }
+            
+            $arch = 'ACTA_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));            
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'tram_lst_tituloBachiller_tecnico_humanistico_acta_v1_rcm.rptdesign&sie='.$sie.'&gestion='.$ges.'&tipoLista='.$tipLis.'&ids='.$listaParticipantes.'&&__format=pdf&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
+            // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista', ['form' => $form], 307);
+            
+            return $this->redirectToRoute('tramite_bachillerato_tecnico_humanistico_regular_impresion_busca');
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que descarga Diplomas para imprimir en formato pdf de los trámites que cuentan con numeros de serie asignado por la direccion departamental - legalizaciones
+    // PARAMETROS: sie, gestion
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumImpresionCartonPdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        try {
+            $form = $request->get('form');
+            if ($form) {
+                $tipoImp = 2;
+                $sie = $form['sie'];
+                $ges = $form['gestion'];
+            } else {
+                $tipoImp = 1;
+                $info = $request->get('info');
+                $form = unserialize(base64_decode($info));
+                $sie = $form['sie'];
+                $ges = $form['gestion'];
+            }
+          
+            $tipLis = 162;
+            $ids = "";
+            $rolPermitido = 16;
+
+            $documentoController = new documentoController();
+            $documentoController->setContainer($this->container);
+            $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+
+            $em = $this->getDoctrine()->getManager();
+            $entidadDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $departamentoCodigo));
+
+            $dep = $entidadDepartamento->getSigla();
+            $arch = 'CARTON_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+            $options = array(
+                'http'=>array(
+                    'method'=>"GET",
+                    'header'=>"Accept-language: en\r\n",
+                    "Cookie: foo=bar\r\n",  // check function.stream-context-create on php.net
+                    "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:20.0) Gecko/20100101 Firefox/20.0"
+                )
+            );            
+            $context = stream_context_create($options);
+
+            // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_bth_tituloEstudiante_unidadeducativa_'.$ges.'_v1.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+
+            //dump($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&');die;
+            
+            return $response;
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
+            // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_bachillerato_tecnico_humanistico_regular_impresion_busca');
+            
+        }
+    }
+
+
+
 }

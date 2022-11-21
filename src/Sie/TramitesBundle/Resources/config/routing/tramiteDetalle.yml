@@ -220,3 +220,11 @@ tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda:
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:bachTecHumRegularImpresionGuarda }
     options:
          expose: true  
+
+tramite_bachillerato_tecnico_humanistico_impresion_acta_pdf:
+    path:     /bachillerato/tecnico/humanistico/regular/impresion/acta/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:bachTecHumImpresionActaPdf }
+
+tramite_bachillerato_tecnico_humanistico_impresion_carton_pdf:
+    path:     /bachillerato/tecnico/humanistico/regular/impresion/carton/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:bachTecHumImpresionCartonPdf }
