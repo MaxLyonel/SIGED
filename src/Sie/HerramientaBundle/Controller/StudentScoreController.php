@@ -131,7 +131,8 @@ class StudentScoreController extends Controller{
         $idInscripcion = $request->get('idInscripcion');
 
         //$this->get('notas')->actualizarEstadoMatriculaDB($idInscripcion);
-        $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);
+        // $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);
+        $this->get('notas')->updateStatusStudent($idInscripcion);
         die;
         return 1;
     }    
