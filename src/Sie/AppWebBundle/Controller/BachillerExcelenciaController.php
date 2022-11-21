@@ -874,6 +874,7 @@ class BachillerExcelenciaController extends Controller {
         }*/
 
         $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
 
         $usuario_resetea = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
        
