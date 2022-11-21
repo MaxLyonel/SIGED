@@ -1000,6 +1000,10 @@ class BachillerExcelenciaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
+        $ue_id = $request->get('estId');
+        $genero_id = $request->get('genId');
+        //dump($ue_id); die;
+
         $sql = "            
             select a.institucioneducativa_id,b.codigo_rude,b.paterno,b.materno,b.nombre,(select genero from genero_tipo where id=a.genero_tipo_id) as genero,a.nota_cuantitativa
             from (
@@ -1012,7 +1016,7 @@ class BachillerExcelenciaController extends Controller {
                     inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
                         inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
             where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
-            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$estId."  and genero_tipo_id= " .$genId."
+            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " .$genero_id."
             group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
             order by round(avg(nota_cuantitativa),0) desc limit 3) a
             union 
@@ -1025,7 +1029,7 @@ class BachillerExcelenciaController extends Controller {
                     inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
                         inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
             where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
-            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$estId."  and genero_tipo_id= " . $genId ."
+            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " . $genero_id ."
             group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
             order by round(avg(nota_cuantitativa),0) desc limit 3) b) a
                 inner join estudiante b on a.estudiante_id=b.id
