@@ -617,8 +617,8 @@ class WFTramite {
             ->setParameter('idInstitucion', $sie)
             ->setParameter('gestion', $gestion)
             ->getQuery();
-        $ubicacionUe = $query->getSingleResult();
-
+        $ubicacionUe = $query->getOneOrNullResult();
+       
         return $ubicacionUe;
     }
 

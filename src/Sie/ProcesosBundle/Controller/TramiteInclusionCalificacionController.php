@@ -597,7 +597,7 @@ class TramiteInclusionCalificacionController extends Controller {
             
         }
     }
-
+   
     // OBTENEMOS DATOS DEL FORMULARIO DE LA UNIDAD EDUCATIVA
     public function datosFormulario($idTramite){
         try {
@@ -1159,8 +1159,14 @@ class TramiteInclusionCalificacionController extends Controller {
             $flujoTipo = $tramite->getFlujoTipo()->getId();
             $sie = $tramite->getInstitucioneducativa()->getId();
             $gestion = $tramite->getGestionId();
-
+            
             $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+            
+            if($lugarTipo == null){
+                $gestion =  $this->gestionUeCerrada($idTramite);
+                $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+            }
+            
 
             // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
             $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
@@ -1288,6 +1294,33 @@ class TramiteInclusionCalificacionController extends Controller {
 
         } catch (Exception $e) {
             $em->getConnection()->rollback();
+        }
+    }
+
+    public function gestionUeCerrada($idTramite){
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->getConnection()->prepare("
+                        select wf.datos from tramite t 
+                        inner join tramite_detalle td on td.tramite_id = t.id
+                        inner join flujo_proceso fp on td.flujo_proceso_id = fp.id
+                        inner join proceso_tipo pt on fp.proceso_id = pt.id
+                        inner join rol_tipo rt on fp.rol_tipo_id = rt.id
+                        left JOIN wf_solicitud_tramite wf on td.id=wf.tramite_detalle_id
+                        where ((wf.id is not null and wf.es_valido is true) or td.id is not null) 
+                        and td.tramite_id = ". $idTramite ." 
+                        and wf.es_valido is true
+                        order by fp.orden asc limit 1
+                        ");
+            $query->execute();
+            $dato = $query->fetch();
+            $resultado = json_decode($dato['datos'], true);
+          
+            return $resultado["gestion"];
+
+        } catch (Exception $e) {
+            
         }
     }
 
