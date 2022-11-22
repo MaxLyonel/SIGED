@@ -27,7 +27,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2022-11-22');
+        $this->fechaCorte = new \DateTime('2022-11-21');
         $this->gestionOperativo = $this->session->get('currentyear');
     }
 
@@ -893,9 +893,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        /*if($this->fechaActual > $this->fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
-        }*/
+        }
 
         $response = new JsonResponse();
         try {
