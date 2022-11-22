@@ -1108,6 +1108,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     //IMPRESION
     //====================IMPRESION DE PARTICIPANTES HABILITADOS (QUE SU TRAMITE ESTE CONCLUIDO)================
     public function formularioHabilitadosImpresionAction(Request $request){
+        return $this->redirect($this->generateUrl('login'));
         /*
          * Define la zona horaria y halla la fecha actual
          */
