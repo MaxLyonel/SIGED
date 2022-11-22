@@ -1075,6 +1075,7 @@ class BachillerExcelenciaController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        return $this->redirect($this->generateUrl('principal_web'));
 
         /*if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
