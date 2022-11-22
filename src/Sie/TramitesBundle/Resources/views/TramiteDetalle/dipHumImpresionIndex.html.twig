@@ -209,6 +209,11 @@
                                                     {% set registro = false %}
                                                 {% endif %}
 
+                                                {% if cierreOperativo == false %}
+                                                    <span class="label label-danger rounded">Cerrar operativo</span>
+                                                    {% set registro = false %}
+                                                {% endif %}
+
                                                 {% if registro %}
                                                     {% if participanteObservado %}
                                                         <div class="btn-group">

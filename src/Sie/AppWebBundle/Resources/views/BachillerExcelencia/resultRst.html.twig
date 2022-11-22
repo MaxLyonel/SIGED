@@ -74,11 +74,30 @@
                                     <tr>
                                         <th><strong>Nro. Cta. Bancaria</strong></th><td>{{datadirector.cuentabancaria}}</td>
                                     </tr>
+                                    {#
                                     <tr>
                                         <td colspan="2" class="text-center">
-                                            <a href="{{ path('cta_banc_dir_rst', { 'ie': ieducativa }) }}" class="btn btn-md btn-warning">Clic para restablecer el registro</a>
+                                            <a href="{{ path('cta_banc_dir_rst', { 'ie': ieducativa }) }}" class="btn btn-md btn-warning" onclick="return confirm('ESTA SEGURO DE REESTABLECER EL REGISTRO DEL DIRECTOR?, SE REESTABLECERAN TAMBIEN LOS DATOS DE AMBOS ESTUDIANTES')">Clic para restablecer el registro</a>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="alert alert-warning" role="alert">                                                 
+                                                    <i class="fa fa-info-circle fa-fw"></i> 
+                                                    <strong>ATENCION: AL RESTABLECER EL REGISTRO DEL DIRECTOR DE LA UNIDAD EDUCATIVA, SE REESTABLECERAN TAMBIEN AUTOMATICAMENTE LOS REGISTROS DE LOS DOS ESTUDIANTES.
+                                                    <BR></BR>
+                                                    REQUISITO: ENTREGAR EN OFICINAS DISTRITALES LA DECLARACIÓN JURADA CON LOS DATOS QUE SE DESEAN RESTABLECER COMO CONSTANCIA DE ESTA OPERACIÓN
+                                                    <BR></BR>
+                                                    ES OBLIGACIÓN Y RESPONSABILIDAD DEL DIRECTOR DE LA U.E. VOLVER A REGISTRAR SUS DATOS Y LOS DATOS DE LOS ESTUDIANTES QUE SERAN BENEFICIADOS
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                    #}
                                 </tbody>
                             </table>
                         </div>   
@@ -129,7 +148,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2" class="text-center">
-                                                <a href="{{ path('bach_exc_pf_rst', { 'ie': ieducativa, 'ed': datastudent.edId, 'g': datastudent.gen }) }}" class="btn btn-md btn-danger">Clic para restablecer el registro</a>
+                                                <a href="{{ path('bach_exc_pf_rst', { 'ie': ieducativa, 'ed': datastudent.edId, 'g': datastudent.gen }) }}" class="btn btn-md btn-danger" onclick="return confirm('ESTA SEGURO DE REESTABLECER EL REGISTRO DEL ESTUDIANTE ? ')">Clic para restablecer el registro</a>
                                             </td>
                                         </tr>
                                     </tbody>

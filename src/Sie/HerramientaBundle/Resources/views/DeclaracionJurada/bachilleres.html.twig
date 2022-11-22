@@ -54,8 +54,6 @@
 
 <div class="body-content animated fadeIn">
     <div class="row">
-
-
         <div class="col-xs-12 col-lg-12">
             <div class="row">
                 <div class="col-lg-12">
@@ -112,7 +110,7 @@
                                                             <a class="btn btn-circle btn-success" href="{{path('download_ddjjone_web', {'rude': entity.codigo_rude, 'gestion':entity.gestion_tipo_id , 'sie':entity.insteduid } )}}">
                                                                 <i class="fa fa-download"></i>
                                                             </a>
-                                                            {% if entity.estinsbthid > 0 and (entity.estadomatricula_tipo_id == 5 or entity.estadomatricula_tipo_id == 55) %}                                                            
+                                                            {% if entity.estinsbthid > 0 and (entity.estadomatricula_tipo_id == 5 or entity.estadomatricula_tipo_id == 55) and entity.estado_bth %}
                                                                 <a class="btn btn-circle btn-primary" href="{{path('download_cut', {'idInscripcion': entity.estinsid, 'rude': entity.codigo_rude, 'sie':entity.insteduid, 'gestion': entity.gestion_tipo_id, 'nivel':0000,'grado':000, 'paralelo':000,'turno':000, 'ciclo':000} )}}">
                                                                     <i class="fa fa-print"></i>
                                                                 </a>
@@ -122,13 +120,8 @@
                                                 {% endfor %}
                                             </tbody>
                                         </table>
-
                                     </div>
-
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -171,6 +164,24 @@
                 });
 
             });
+
+            function bth(ins) {
+                console.log('Call')
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('consolidation_checkit_web') }}",
+                    data: {"ins": ins},
+                    contentType: "application/json; charset=UTF-8",
+                    success: function (response) {
+
+                        window.open("data:application/pdf," + escape(response));
+
+                    },
+                    error: function (textStatus, errorThrown) {
+                        alert('Error: ' + errorThrown);
+                    }
+                });
+            }
 
         </script>
 

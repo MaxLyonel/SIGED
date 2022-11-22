@@ -4947,7 +4947,7 @@ die;/*
                     $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
-        }else if($igestion == 2021) {
+        }else if($igestion == 2021 || $igestion == 2022) {
             if($inivel_tipo_id == 11) {
                 $complementario = "";
             }else if($inivel_tipo_id == 12) {
@@ -4962,7 +4962,7 @@ die;/*
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
         
-        if($operativo==3 && $igestion == 2021){
+        if($operativo==3 && ($igestion == 2021 || $igestion == 2022 )){
             switch ($inivel_tipo_id) {
                 case '13':
                     $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
@@ -4971,13 +4971,15 @@ die;/*
                     break;
                 case '12':
                     $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
-                    if($averagePrim->getNotaCuantitativa()>50){
-                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
-                    }else{
-                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
+                    if($averagePrim){
+                        if($averagePrim->getNotaCuantitativa()>50){
+                            $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                        }else{
+                            $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
+                        }
+                        $this->em->persist($inscripcion);
+                        $this->em->flush();
                     }
-                     $this->em->persist($inscripcion);
-                     $this->em->flush();
                     break;
                 case '11':
                     

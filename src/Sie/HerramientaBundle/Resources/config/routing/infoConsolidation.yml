@@ -38,6 +38,10 @@ herramienta_infoconsolidation_enabledOpe:
     path:     /enabledOpe/{sie}/{gestion}
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:enabledOpe }    
 
+herramienta_infoconsolidation_habilitarOpe:
+    path:     /habilitarOpe/{sie}/{gestion}
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:habilitarOpe }   
+    
 herramienta_infoconsolidation_gestion_inconsistencias_index:
     path:     /consolgestionincosistencias
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:consolidacionGestionInconsistencias }

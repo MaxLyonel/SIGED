@@ -273,7 +273,7 @@ class PreinscripcionesController extends Controller
                   inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
                     inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
               --where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
-              where c.id in (select institucioneducativa_id from preins_institucioneducativa_curso_cupo)
+              where c.id in (select institucioneducativa_id from preins_institucioneducativa_curso_cupo where gestion_tipo_id =2022)
             ) a
           where 
           cod_dis = ?

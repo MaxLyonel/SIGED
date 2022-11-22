@@ -1,5 +1,48 @@
 <div class="row">
-    <div class="col-lg-12">
+
+    <div class="col-lg-7">
+
+        <div class="alert alert-info" role="alert">            
+            <p><i class="fa fa-info-circle fa-fw"></i> <strong>   Posibles Candidatos al IBD.</strong></p>
+            <p>En base a calificaciones y calculo de promedios regsitrados en el SIE a la fecha.</p>
+            <hr>
+            <p>El presente listado es una sugerencia para el registro de Bachiller de Excelencia.</p>
+            <hr>
+            <p><strong>IMPORTANTE:</strong> LA SELECCION DEL ESTUDIANTE ES TOTAL RESPONSABILIDAD DEL DIRECTOR DE LA UNIDAD EDUCATIVA.
+            <strong>(SE LE RECUERDA QUE ESTA ES UNA DECLARACION JURADA)</strong></p>
+        </div>
+
+        <div class="table-responsive"  id="bachFem">
+            <table class="table table-bordered table-middle table-info">
+                <thead>
+                    <tr>
+                        <th width="10%">#</th>
+                        <th>Código RUDE</th>                       
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
+                        <th>Nombre(s)</th>                        
+                        <th class="text-center">Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for estudiante in posiblesEstudiantes%}
+                    <tr>
+                        <td style="width: .1em">{{ loop.index }}</td>
+                        <td>{{ estudiante.codigo_rude }}</td>
+                        <td>{{ estudiante.paterno }}</td>
+                        <td>{{ estudiante.materno }}</td>
+                        <td>{{ estudiante.nombre }}</td>
+                        <td>{{ estudiante.nota_cuantitativa }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    <div class="col-lg-5">
         <div class="portlet portlet-blue">
             <div class="portlet-heading">
                 <div class="portlet-title">

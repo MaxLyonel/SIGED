@@ -124,3 +124,24 @@ tramite_dato_personal_verifica:
     defaults: { _controller: SieTramitesBundle:Tramite:datoPersonalVerifica }
     options:
          expose: true  
+
+# BACHILLERATO TÉCNICO HUMANISTICO
+tramite_bachillerato_tecnico_humanistico_regular_registro_busca:
+    path:     /bachillerato/tecnico/humanistico/regular/registro/busca
+    defaults: { _controller: SieTramitesBundle:Tramite:bachTecHumRegularRegistroBusca }
+
+tramite_bachillerato_tecnico_humanistico_regular_registro_lista:
+    path:     /bachillerato/tecnico/humanistico/regular/registro/lista
+    defaults: { _controller: SieTramitesBundle:Tramite:bachTecHumRegularRegistroLista }
+    options:
+         expose: true  
+    
+tramite_bachillerato_tecnico_humanistico_regular_registro_guarda:
+    path:     /bachillerato/tecnico/humanistico/regular/registro/guarda
+    defaults: { _controller: SieTramitesBundle:Tramite:bachTecHumRegularRegistroGuarda }
+    options:
+         expose: true  
+
+tramite_bachillerato_tecnico_humanistico_regular_registro_lista_pdf:
+    path:     /bachillerato/tecnico/humanistico/regular/registro/lista/pdf
+    defaults: { _controller: SieTramitesBundle:Tramite:bachTecHumRegistroListaPdf }
