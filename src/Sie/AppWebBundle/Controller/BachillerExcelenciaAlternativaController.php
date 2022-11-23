@@ -886,7 +886,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
      * Registro del Bachiller de Excelencia.
      *
      */
-    public function beCreateAction(Request $request) {
+    public function xbeCreateAction(Request $request) {
         $id_usuario = $this->session->get('userId');
 
         if (!isset($id_usuario)) {
