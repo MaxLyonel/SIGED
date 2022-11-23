@@ -1848,9 +1848,9 @@ class InboxController extends Controller {
             $registroConsol->setInstitucioneducativaTipoId(1);
 
           }else{
-            if($operativo <= 2 ){
+            if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
-              $registroConsol->$fieldOpe(2);              
+              //$registroConsol->$fieldOpe(2);              
             }
           }
             $em->persist($registroConsol);
