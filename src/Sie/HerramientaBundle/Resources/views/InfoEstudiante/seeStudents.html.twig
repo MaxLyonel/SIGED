@@ -553,7 +553,7 @@
                                             </div>
                                         {% else %}
                                             {# commented by krlos 21.09.21 #}
-                                            {% if  imprimirLibreta == true %}
+                                            {% if  imprimirLibreta == true  and data.estadomatriculaId in [5,26,55,56,57,58,100,102] %}
                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
                                                     <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
                                                       <i class="fa fa-print" style="color:#FFFFFF"></i>
