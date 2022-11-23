@@ -2,21 +2,24 @@ Sie\AppWebBundle\Entity\CertificadoPermanente:
     type: entity
     table: certificado_permanente
     indexes:
-        IDX_82617CEA179FF95:
+        IDX_82617CEA8D486744:
             columns:
-                - gestion_tipo_id
+                - documento_serie_id
         IDX_82617CEA820C2849:
             columns:
                 - tramite_id
-        IDX_82617CEAEC03E4D5:
-            columns:
-                - superior_acreditacion_tipo
         IDX_82617CEAE4E33BC4:
             columns:
                 - superior_especialidad_tipo_id
+        IDX_82617CEAEC03E4D5:
+            columns:
+                - superior_acreditacion_tipo
         IDX_82617CEA3AB163FE:
             columns:
                 - institucioneducativa_id
+        IDX_82617CEA179FF95:
+            columns:
+                - gestion_tipo_id
         IDX_82617CEAA1104027:
             columns:
                 - estudiante_inscripcion_id
@@ -59,13 +62,13 @@ Sie\AppWebBundle\Entity\CertificadoPermanente:
             fixed: false
             comment: ''
     manyToOne:
-        gestionTipo:
-            targetEntity: GestionTipo
+        documentoSerie:
+            targetEntity: DocumentoSerie
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                gestion_tipo_id:
+                documento_serie_id:
                     referencedColumnName: id
             orphanRemoval: false
         tramite:
@@ -77,15 +80,6 @@ Sie\AppWebBundle\Entity\CertificadoPermanente:
                 tramite_id:
                     referencedColumnName: id
             orphanRemoval: false
-        superiorAcreditacionTipo:
-            targetEntity: SuperiorAcreditacionTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                superior_acreditacion_tipo:
-                    referencedColumnName: id
-            orphanRemoval: false
         superiorEspecialidadTipo:
             targetEntity: SuperiorEspecialidadTipo
             cascade: {  }
@@ -95,6 +89,15 @@ Sie\AppWebBundle\Entity\CertificadoPermanente:
                 superior_especialidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
+        superiorAcreditacionTipo:
+            targetEntity: SuperiorAcreditacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_acreditacion_tipo:
+                    referencedColumnName: id
+            orphanRemoval: false
         institucioneducativa:
             targetEntity: Institucioneducativa
             cascade: {  }
@@ -102,6 +105,15 @@ Sie\AppWebBundle\Entity\CertificadoPermanente:
             inversedBy: null
             joinColumns:
                 institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         estudianteInscripcion:
