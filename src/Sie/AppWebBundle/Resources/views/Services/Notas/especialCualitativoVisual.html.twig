@@ -213,7 +213,8 @@
                                                 <option value="{{ef.id}}" {% if ef.id == c.notaCualitativa.estadoEtapa %} selected {% endif %}>{{ef.estadomatricula}}</option>
                                             {% endfor %}
                                         </select>
-                                        {% if app.session.get('roluser') == 8 %} {# Habilitado a tecnico nacionak #}
+                                        {# Habilitado a tecnico nacionak #}
+                                        {% if app.session.get('roluser') == 8 %} 
                                             <a href="{{path('especial_habilitar_etapas_visual', {'id': c.idEstudianteNotaCualitativa })}}" class="btn" data-placement="top" title="Habilitar">
                                              Habilitar prosigue
                                             </a>

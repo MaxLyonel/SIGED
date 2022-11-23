@@ -435,12 +435,9 @@ class InfoNotasController extends Controller {
 
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($cualitativa->getEstudianteInscripcion()->getId());
         $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(79));
-
         $em->flush();  
-
+        
         return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
-        
-        
     }
 
     public function especialDownloadLibretaAction(Request $request){
