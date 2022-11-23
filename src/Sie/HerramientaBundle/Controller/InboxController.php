@@ -1790,9 +1790,13 @@ class InboxController extends Controller {
       switch ($operativo) {
         case 1:
         case 2:
-        case 3:
+        
           $opeTrim = $operativo + 5;
           $dbFunction = 'sp_validacion_regular_web2022_mg';
+          break;
+        case 3: 
+          $opeTrim = $operativo + 5;
+          $dbFunction = 'sp_validacion_regular_web2022_fg';                 
           break;
         
         default:
@@ -1850,7 +1854,7 @@ class InboxController extends Controller {
           }else{
             if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
-              //$registroConsol->$fieldOpe(2);              
+              $registroConsol->$fieldOpe(2);              
             }
           }
             $em->persist($registroConsol);
