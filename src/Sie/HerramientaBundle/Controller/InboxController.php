@@ -1850,7 +1850,7 @@ class InboxController extends Controller {
           }else{
             if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
-              $registroConsol->$fieldOpe(2);              
+              //$registroConsol->$fieldOpe(2);              
             }
           }
             $em->persist($registroConsol);
