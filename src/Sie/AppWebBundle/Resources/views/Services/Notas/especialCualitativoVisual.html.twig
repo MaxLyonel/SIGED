@@ -200,7 +200,7 @@
                                 {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
                                     {% if (c.notaCualitativa == "") or (vista == 2) %}
                                         <input type="hidden" name="idNotaTipoCualitativa" value="{{c.idNotaTipo}}">
-                                        <select class="form-control" name="notaCualitativa" id="" required>
+                                       <select class="form-control" name="notaCualitativa" id="" required>
                                             <option value="">Seleccionar....</option>
                                             {% for ef in notas.estadosFinales %}
                                                 <option value="{{ef.id}}">{{ef.estadomatricula}}</option>
@@ -213,6 +213,11 @@
                                                 <option value="{{ef.id}}" {% if ef.id == c.notaCualitativa.estadoEtapa %} selected {% endif %}>{{ef.estadomatricula}}</option>
                                             {% endfor %}
                                         </select>
+                                        {% if app.session.get('roluser') == 8 %} {# Habilitado a tecnico nacionak #}
+                                            <a href="{{path('especial_habilitar_etapas_visual', {'id': c.idEstudianteNotaCualitativa })}}" class="btn" data-placement="top" title="Habilitar">
+                                             Habilitar prosigue
+                                            </a>
+                                         {% endif %}
                                     {% endif %}
                                 {% else %}
                                     <select class="form-control" name="" id="" disabled>
@@ -222,6 +227,7 @@
                                         {% endfor %}
                                     </select>
                                 {% endif %}
+                                           
                             </td>
                         {% endfor %}    
                     </tr>
@@ -236,6 +242,7 @@
             </div>
         {% endif %}
     </div>
+    
 </div>
 
 <script>

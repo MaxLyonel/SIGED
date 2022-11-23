@@ -17,3 +17,8 @@ especialDownload_libreta:
 especial_etapas_visual:
     path:    /especialEtapasVisual
     defaults: { _controller: SieEspecialBundle:InfoNotas:especialEtapasVisual }
+
+especial_habilitar_etapas_visual:
+    path:    /especialHabEtapasVisual/{id}
+    defaults: { _controller: SieEspecialBundle:InfoNotas:habilitarEspecialEtapasVisual }    
+    methods:  GET
