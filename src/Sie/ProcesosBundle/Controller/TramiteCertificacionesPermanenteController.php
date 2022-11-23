@@ -30,6 +30,7 @@ use Sie\AppWebBundle\Entity\SuperiorEspecialidadTipo;
 use Sie\AppWebBundle\Entity\SuperiorAcreditacionTipo;
 use Sie\AppWebBundle\Entity\TramiteTipo;
 use Sie\AppWebBundle\Entity\CertificadoPermanente;
+use Sie\AppWebBundle\Entity\DocumentoSerie;
 
 class TramiteCertificacionesPermanenteController extends Controller {
     public $session;
@@ -577,6 +578,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }
         }             
     }
+
+
     /**
      * FUNCION QUE REGISTRA EL TRAMITE NUEVO EN LA TABLA DE CERTIFICADO_PERMANENTE
      */
@@ -664,6 +667,32 @@ class TramiteCertificacionesPermanenteController extends Controller {
                     return $mensaje;
                 break;    
         }
+    }
+
+    function saveAndUpdateCert($data){
+        // create the conexion 
+        $em = $this->getDoctrine()->getManager();
+        // create and save the code serie
+        $documentoSerie = new DocumentoSerie();
+        $documentoSerie->setId($data['nroSerie']);
+        $documentoSerie->setGestion($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+        $documentoSerie->setDepartamentoTipo($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($data['depto']));
+        $documentoSerie->setEsanulado(false);
+        $documentoSerie->setObservacionAnulado('false');
+        $documentoSerie->setObs('eudper');
+        $documentoSerie->setDocumentoTipo($em->getRepository('SieAppWebBundle:documentoTipo')->findOneById($data['typedoc']));
+        $documentoSerie->setFormacionEducacionTipo($em->getRepository('SieAppWebBundle:FormacionEducacionTipo')->find(4));
+        $em->persist($documentoSerie);
+        // set the code serie on certificadoPermanente table
+        $certificadoPermanente = $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('tramite' => $data['idtramite'] ));
+        $certificadoPermanente->setEstado(3);
+        $certificadoPermanente->setDocumentoSerie($em->getRepository('SieAppWebBundle:DocumentoSerie')->find($documentoSerie->getId()));
+        
+        
+         $em->flush();
+
+         return $documentoSerie->getId();
+
     }
 
     /**
@@ -1079,6 +1108,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     //IMPRESION
     //====================IMPRESION DE PARTICIPANTES HABILITADOS (QUE SU TRAMITE ESTE CONCLUIDO)================
     public function formularioHabilitadosImpresionAction(Request $request){
+        return $this->redirect($this->generateUrl('login'));
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1299,7 +1329,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
            'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
         );
         
-        $pdf->SetAuthor('Lupita');
+        $pdf->SetAuthor('SIE');
         $pdf->SetTitle('Certificados Permanente');
         $pdf->SetSubject('Report PDF');
         $pdf->SetPrintHeader(false);
@@ -1310,6 +1340,25 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->SetAutoPageBreak(false, 8);
 
         $tramites = json_decode($request->get('datos_certificado'), true);
+
+        //start get info about the num of serie
+            // def the array like documento_tipo
+            $arrLevelACre = array('TÉCNICO BÁSICO'=>6,'TÉCNICO AUXILIAR'=>7);
+            $arrLevelSerie = array('TÉCNICO BÁSICO'=>'B','TÉCNICO AUXILIAR'=>'A');
+            // get the level
+            $nivelAcre = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($idNivel);   
+            // create query to the find the max number            
+            $queryDoc = "SELECT max(left(id,6)) as maximo from documento_serie a WHERE a.documento_tipo_id = ".$arrLevelACre[$nivelAcre->getAcreditacion()]." and a.gestion_id = $gestionId and a.formacion_educacion_tipo_id  = 4";
+            $query = $em->getConnection()->prepare($queryDoc);
+            $query->execute();
+            $maxSerie = $query->fetchAll();
+            $numserie = 0;
+            // check if the exist the number serie
+            if ($maxSerie[0]) {
+                $numserie = $maxSerie[0]['maximo'];
+            } 
+        //end get info about the num of serie
+
         
         foreach($tramites as $index => $item) {
             $pdf->SetFont('helvetica', '', 9, '', true); 
@@ -1359,6 +1408,29 @@ class TramiteCertificacionesPermanenteController extends Controller {
             //SE GENERA CODIGO ALEATORIO PARA EL REGISTRO POR CADA CERTIFICADO GENERADO
             $nroCertificado = 'PER-'.''.$this->generaCodigo(6);
             $respuesta = $this->guardaCertificadopermanente('','',$gestionId,3,'','',$item['idtramite'],$nroCertificado,'',2); 
+
+            /////////////////////////////////////
+            // start to generate the SERIE code 
+            /////////////////////////////////////
+            $numserie = $numserie+1;
+            $depto    = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('departamento'=>$datosCurso['departamento']))->getId();
+            $coddepto = str_pad($depto, 2, "0", STR_PAD_LEFT);
+            $typeEducation = 'EP';
+            $acreditation  = $arrLevelSerie[$nivelAcre->getAcreditacion()];
+            $codeyear     = date('y');
+            $nroSerie = str_pad($numserie.$coddepto.$typeEducation.$acreditation.$codeyear, 13, "0", STR_PAD_LEFT);
+
+            $dataSerieTrue = array(
+                'nroSerie'=>$nroSerie,
+                'depto'=>$depto,
+                'typedoc'=>$arrLevelACre[$nivelAcre->getAcreditacion()],
+                'idtramite'=>$item['idtramite']
+            );
+            $numSerieGen = $this->saveAndUpdateCert($dataSerieTrue);
+            /////////////////////////////////////
+            // end to generate the SERIE code
+            /////////////////////////////////////
+
             //obtenemos la firma aleatoria del DDE
             $resultado = $this->obtieneFirma($lugar_id);
             $firmaDDE = base64_decode($resultado['firma']); 
@@ -1378,6 +1450,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
             
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Text(163, 76,$ci);         
+            $pdf->SetFont('helvetica', '', 10);
+            $pdf->Text(156, 80,'SERIE:');         
+            $pdf->Text(156, 85,$numSerieGen);         
             
             $pdf->Ln(25);
             $pdf->SetFont('helvetica', 'B', 11);
@@ -1385,14 +1460,21 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->Cell(22, 5, '', 0, 0, 'L');
             //$pdf->Cell(0, 5, 'Confiere el presente:', 0, 1, 'L'); //0 a 100% whit heigt ancho alto,texto,borde , saltolinea, orientacion, rellenado            
             $pdf->Ln(40);
-            $pdf->Cell(22, 5, '', 0, 0, 'L');            
-            $pdf->SetFont('helvetica', 'B', 20);
+            $pdf->Cell(15, 5, '', 0, 0, 'L');  
+            if(strlen($datosParticipante[0]['nombre'].$datosParticipante[0]['paterno'].$datosParticipante[0]['materno'])>=30){
+                $textSize = 18;
+                $breaknext = 19;
+            }else{
+                $textSize = 20;
+                $breaknext = 17;
+            }
+            $pdf->SetFont('helvetica', 'B', $textSize);
            $pdf->Cell(0, 2, ($datosParticipante[0]['nombre'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['materno']) , 0, 1, 'C');
            //$pdf->Ln(3);
            $pdf->SetFont('helvetica', '', 14);
            $pdf->Cell(22, 5, '', 0, 0, 'L');
            //$pdf->Cell(0, 2, 'Con la mención de :', 0, 1, 'L');
-           $pdf->Ln(16);
+           $pdf->Ln(13);
            $pdf->SetFont('helvetica', 'B', 15);
            $contenidoMencion='<table border="0" cellpadding="1.5"> ';
            $contenidoMencion.='<tr><td width="10.3%">&nbsp;</td><td  width="79.4%">';
@@ -1418,7 +1500,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';                             
                 $pdf->writeHTML($contenido, true, false, true, false, '');
-                $pdf->Ln(16);
+                $pdf->Ln($breaknext);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
                 $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
@@ -1434,7 +1516,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln(16);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
-                $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
+                $pdf->Cell(0, 3, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
                 $pdf->Ln(5);
                 
             }
@@ -2812,4 +2894,15 @@ class TramiteCertificacionesPermanenteController extends Controller {
         for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
         return $key;
     }
+
+    // public function generateSerie($data){
+    //     $tipoEducation = 'EP';
+    //     $tipoDepto = '01';
+    //     $tipoLevel = 'B';
+    //     $tipoSerie = '22';
+    //     $arrCode = array();
+    //     // for($i=1;$i<=100;$i++){
+    //         $arrCode[$i] = str_pad($i.$tipoDepto.$tipoEducation.$tipoLevel.$tipoSerie, 13, "0", STR_PAD_LEFT);
+    //     // }        
+    // }
 }

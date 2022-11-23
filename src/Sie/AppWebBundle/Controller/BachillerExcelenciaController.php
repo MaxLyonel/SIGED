@@ -29,7 +29,7 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2022-11-21');
+        $this->fechaCorte = new \DateTime('2022-11-22');
         $this->gestionOperativo =  $this->session->get('currentyear'); //2022        
 
     }
@@ -322,9 +322,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // if($this->fechaActual > $this->fechaCorte) {
-        //     return $this->redirect($this->generateUrl('principal_web'));
-        // }
+        if($this->fechaActual > $this->fechaCorte) {
+             return $this->redirect($this->generateUrl('principal_web'));
+        }
 
         //dump('here');die;
 
@@ -1069,12 +1069,13 @@ class BachillerExcelenciaController extends Controller {
      * Registro del Bachiller de Excelencia.
      *
      */
-    public function beCreateAction(Request $request) {
+    public function xbeCreateAction(Request $request) {
         $id_usuario = $this->session->get('userId');
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        return $this->redirect($this->generateUrl('principal_web'));
 
         /*if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));

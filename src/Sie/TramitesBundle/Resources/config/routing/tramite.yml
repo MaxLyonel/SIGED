@@ -141,3 +141,7 @@ tramite_bachillerato_tecnico_humanistico_regular_registro_guarda:
     defaults: { _controller: SieTramitesBundle:Tramite:bachTecHumRegularRegistroGuarda }
     options:
          expose: true  
+
+tramite_bachillerato_tecnico_humanistico_regular_registro_lista_pdf:
+    path:     /bachillerato/tecnico/humanistico/regular/registro/lista/pdf
+    defaults: { _controller: SieTramitesBundle:Tramite:bachTecHumRegistroListaPdf }
