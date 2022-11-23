@@ -367,12 +367,14 @@
                                                         </div>
                                                     {% else %}
                                                         {% if gestion >= 2021 and operativo<=3 %}  {# se habilita libretas para todos los nivesl y con 1ro y 2do oeprativo disponible #}
-                                                            
-                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="reg. Calificaciones.... ">
-                                                                <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                                 <i class="fa fa-list"></i>
-                                                                </button>
-                                                            </div>                                                        
+                                                            {% if gestion == 2022 and nivel == 13 and grado == 6  %} 
+                                                            {% else %}
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="reg. Calificaciones.... ">
+                                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                     <i class="fa fa-list"></i>
+                                                                    </button>
+                                                                </div>                                                        
+                                                            {% endif %}
                                                         
                                                         {% endif %}   
 
