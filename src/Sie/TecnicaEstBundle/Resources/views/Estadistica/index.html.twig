@@ -314,33 +314,72 @@
                             <div class="tab-content">
                                 <div class="tab-pane active" id="home" role="tabpanel">
                                     <div class="card-block">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Total Egresados y Titulados en la Gestion por Genero</h4>
-                                            <h6 class="card-subtitle"></h6>
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead class="bg-info text-white">
-                                                        <tr>
-                                                            <th>Estado</th>
-                                                            <th>Total Masculino</th>
-                                                            <th>Total Femenino</th>
-                                                            <th>Total General</th>
 
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="border border-info">
-                                                        {% for row in tbl_titulados_egresados %}
+                                        <div class="row">
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
 
-                                                        <tr>
-                                                            <td>{{ row.estado_final }}</td>
-                                                            <td>{{ row.total_masculino |number_format }}</td>
-                                                            <td>{{ row.total_femenino |number_format }}</td>
-                                                            <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
-                                                        </tr>
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Egresados y Titulados por Genero - PUBLICAS</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-info text-white">
+                                                                <tr>
+                                                                    <th>Estado</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
 
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_titulados_egresados_publicas %}
+
+                                                                <tr>
+                                                                    <td>{{ row.estado_final }}</td>
+                                                                    <td>{{ row.total_masculino |number_format }}</td>
+                                                                    <td>{{ row.total_femenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Egresados y Titulados por Genero - PRIVADAS</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-info text-white">
+                                                                <tr>
+                                                                    <th>Estado</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-success">
+                                                                {% for row in tbl_titulados_egresados_privadas %}
+
+                                                                <tr>
+                                                                    <td>{{ row.estado_final }}</td>
+                                                                    <td>{{ row.total_masculino |number_format }}</td>
+                                                                    <td>{{ row.total_femenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
