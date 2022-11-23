@@ -1996,9 +1996,9 @@ class Notas{
                 if ($gestion == 2022) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
                         $swCloseOperative = false;
-                        if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 1))){
+                        if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 2))){
                             $swCloseOperative = true;
-                        }                          
+                        }
                         $existe = false;
                         foreach ($cualitativas as $c) {
                             if($c->getNotaTipo()->getId() == $i){
@@ -4997,6 +4997,68 @@ die;/*
                         $this->em->persist($inscripcion);
                         $this->em->flush();
                     }
+                    break;
+                case '11':
+                    
+                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                        $this->em->persist($inscripcion);
+                        $this->em->flush();                    
+            
+
+                    break;                
+                default:
+                    # code...
+                    break;
+            }
+        }else{
+            if( $igestion != 2021 and $igestion != 2022){
+                $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                $query->execute();        
+                $resultado = $query->fetchAll();              
+            }
+        }
+        
+      
+       
+    }
+    public function updateStatusStudent($inscripcionId){
+
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionId);
+        
+        $igestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+        $chooseyear = $igestion;
+        $iinstitucioneducativa_id = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $inivel_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $igrado_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $iturno_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+        $iparalelo_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $icodigo_rude = $inscripcion->getEstudiante()->getCodigoRude();
+        $complementario = "";
+        $estado_inicial = $inscripcion->getEstadomatriculaTipo()->getEstadomatricula();
+
+        if($igestion == 2021 || $igestion == 2022) {
+            if($inivel_tipo_id == 11) {
+                $complementario = "";
+            }else if($inivel_tipo_id == 12) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
+                }
+            } else if($inivel_tipo_id == 13) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
+                }
+            }
+        }
+        $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
+        
+        if($operativo==3 && (in_array($igestion, array(2022) ) ) ){
+            switch ($inivel_tipo_id) {
+                case '12':
+                case '13':
+                    $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                    $query->execute();        
+                    $resultado = $query->fetchAll();        
+                    
                     break;
                 case '11':
                     
