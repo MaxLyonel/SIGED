@@ -62,7 +62,7 @@ class InfoNotasController extends Controller {
 
             $estadosMatricula = null;
             //dump($discapacidad);die;
-            //dump($operativo);die;
+           //dump($operativo);die;
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
@@ -254,7 +254,7 @@ class InfoNotasController extends Controller {
 
     public function createUpdateAction(Request $request){ 
         try {
-           // dump($request); die;
+            //dump($request); die;
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
@@ -263,8 +263,8 @@ class InfoNotasController extends Controller {
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
             if($discapacidad == 2 and $gestion > 2019 and $request->get('nivel') == 411){ //visual //programas
-                if($request->get('notaCualitativa') == 80){
-                    $idEstadoMatriicula = 79;
+                if($request->get('notaCualitativa') == 80){ //extendido 
+                    $idEstadoMatriicula = 79; //prosigue
                 }else{
                     $idEstadoMatriicula = $request->get('notaCualitativa');
                 }

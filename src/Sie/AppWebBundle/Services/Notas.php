@@ -6161,7 +6161,7 @@ die;/*
                                 );
                 $idEstudianteInscripcion = $idInscripcion;
             }
-            //dump($etapasArray);die;
+            dump($etapasArray);//die;
             //dump($cualitativas, $idInscripcion,$gestion,$etapasArray);die;
             $asignaturasC = $this->em->createQueryBuilder()
                                 ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
@@ -6179,7 +6179,7 @@ die;/*
                                 ->getResult();
 
             
-           //dump($asignaturasC,$asignaturas);die;
+          // dump($asignaturasC,$asignaturas);die;
             if($asignaturas){ 
                 foreach ($asignaturasC as $key=>$a) { 
                     //dump($asignaturas,$a,$key);die;
@@ -6237,7 +6237,7 @@ die;/*
                    
                     $cont++;
                 }    
-                 //dump($notasArray);
+                 dump($notasArray);
             }
             //die;
             //dump($notasArray);die;
@@ -6247,13 +6247,13 @@ die;/*
 
             //notas cualitativas
             $arrayCualitativas = array();
-            //dump($inicio);
-            //dump($fin);
+            dump($inicio);
+            dump($fin); //die;
             ///$cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
             //dump($cualitativas[0]);die;
             $existe = false; //dump($inicio); dump($fin);
             for($i=$inicio;$i<=$fin;$i++){ //<=
-                if($cualitativas and $existe == false and $cualitativas[$i]['gestion']<$gestion){ //dump("si");die;
+                if($cualitativas and $existe == false and $cualitativas[$i]['gestion']<=$gestion){ //dump("si");die;
                     $arrayCualitativas[] = array(
                                                 'idInscripcion'=>$cualitativas[0]['idEstudianteInscripcion'],
                                                 'idEstudianteNotaCualitativa'=>$cualitativas[0]['idEstudianteCualitativo'],
@@ -6277,7 +6277,7 @@ die;/*
                 }
                
             }
-            
+            dump($arrayCualitativas);//die;
             $estadosPermitidos = array(0,4,78,79);
             //$estadosPermitidos = array(0);
             //dump($areas);die;
