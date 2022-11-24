@@ -638,7 +638,7 @@ class InboxController extends Controller {
         
         if(isset($dataPre['tipo']) && $dataPre['tipo'] == 'history'){
           $data['gestion'] = $dataPre['gestion'];
-          $arrRol = array(8);
+          $arrRol = array(10,8,7);
           $data['id'] =  ( in_array($this->session->get('roluser'),$arrRol) )? $dataPre['id']: $this->session->get('ie_id');
         }else{
           // start to get the data to open the UE info
@@ -809,7 +809,12 @@ class InboxController extends Controller {
         }
 
         //dump($this->session->get('pathSystem')); die; sieHerramientaBundle
-        $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'3er. Trim.');
+        if(in_array($data['gestion'], array(2022,2021) )){
+            $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'3er. Trim.');
+        }else{
+            $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'4to. Trim.');
+        }
+        
         $dataInfo['messageope']='Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
