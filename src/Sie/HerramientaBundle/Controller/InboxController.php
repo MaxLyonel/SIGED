@@ -809,7 +809,7 @@ class InboxController extends Controller {
         }
 
         //dump($this->session->get('pathSystem')); die; sieHerramientaBundle
-        $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.');
+        $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'3er. Trim.');
         $dataInfo['messageope']='Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
