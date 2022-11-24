@@ -1786,6 +1786,7 @@ class InboxController extends Controller {
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
       //get the operativo number
       $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+      // dump($operativo);die;
       // check the operative to find the correct vars
       switch ($operativo) {
         case 1:
@@ -1796,6 +1797,10 @@ class InboxController extends Controller {
           break;
         case 3: 
           $opeTrim = $operativo + 5;
+          $dbFunction = 'sp_validacion_regular_web2022_fg';                 
+          break;
+        case 4: 
+          $opeTrim = ($operativo-1) + 5;
           $dbFunction = 'sp_validacion_regular_web2022_fg';                 
           break;
         
