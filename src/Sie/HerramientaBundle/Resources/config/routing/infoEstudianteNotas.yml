@@ -35,3 +35,9 @@ herramienta_StudentScore_create_update:
   defaults: { _controller: "SieHerramientaBundle:StudentScore:createUpdate" }
   options:
     expose: true
+
+herramienta_StudentScore_updatestatus:
+  path: /updatestatus
+  defaults: { _controller: "SieHerramientaBundle:StudentScore:updateStatus" }
+  options:
+    expose: true
