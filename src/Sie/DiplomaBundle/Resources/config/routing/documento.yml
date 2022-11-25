@@ -21,3 +21,4 @@ sie_diploma_tramite_documento_certificado_supletorio_qr:
 sie_diploma_tramite_documento_bachiller_humanidades_qr:
     path:     /bachiller/humanidades/qr/{documento}
     defaults: { _controller: SieDiplomaBundle:Documento:bachillerHumanidadesQr }
+

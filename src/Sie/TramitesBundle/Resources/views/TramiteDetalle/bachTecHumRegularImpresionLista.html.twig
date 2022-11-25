@@ -85,7 +85,7 @@
                             <tr>
                                 <th style="width:50px; text-align:center;">#</th>
                                 <th style="text-align:center;">Expediente</th>
-                                <th style="text-align:center;">Documento</th>
+                                <th style="text-align:center;">Especialidad</th>
                                 <th style="text-align:center;">Código RUDEAL</th>
                                 <th style="text-align:center;">C.I.</th>
                                 <th style="text-align:center;">Paterno</th>
@@ -105,7 +105,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Expediente</th>
-                                <th>Documento</th>
+                                <th>Especialidad</th>
                                 <th>Código RUDEAL</th>
                                 <th>C.I.</th>
                                 <th>Paterno</th>
@@ -133,7 +133,7 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ participante.tramite_id }}</td>
-                                    <td>{{ participante.documento_serie_id }}</td>
+                                    <td>{{ participante.especialidad }}</td>
                                     <td>{{ participante.codigo_rude }}</td>
                                     <td>{{ participante.carnet_identidad }}</td>
                                     <td>{{ participante.paterno }}</td>
@@ -225,11 +225,7 @@
                                             {% set registro = false %}
                                         {% endif %}
                                         
-
-                                            <div class="ckbox ckbox-info">
-                                                <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.tramite_id|base64_encode }}"  type="checkbox" onchange="validarFormImpresion(this);">
-                                                <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
-                                            </div>
+                                            
                                         {% if registro %}
                                             {% if participanteObservado %}
                                                 <div class="btn-group">
@@ -407,40 +403,41 @@
         formulario = $('#formtable')[0];
         var formData = new FormData(formulario);
         formData.append('botonAceptar', 1);
-        verificaCampos();
-
-        peticion = $.ajax({
-            type: 'post',
-            url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda') }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
+        r = verificaCampos();
+        if (r == true) {
+            peticion = $.ajax({
+                type: 'post',
+                url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $("#contentMsg").empty();
+                    $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data, textStatus, xhr) {
+                    $("#contentMsg").empty();
+                    if(xhr.status === '200' || xhr.status === 200){                  
+                        $('#contentList').empty();
+                        $("#contentList").append(data);
+                    } else {
+                        //$("#contentMsg").html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class='fa fa-envelope'></i> Correcto </strong> '+data.msg+'</div>');
+                        $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> '+data.msg+'</div>');
+                    }
+                    habilitarBotones();
+                },
+                error: function(xhr) {
+                    $("#contentMsg").empty();
+                    $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible enviar el formulario</div>');
+                    habilitarBotones();
+                },
+            })
+            .fail(function(jqXHR, textStatus, errorThrown ) {
                 $("#contentMsg").empty();
-                $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
-            },
-            success: function (data, textStatus, xhr) {
-                $("#contentMsg").empty();
-                if(xhr.status === '200' || xhr.status === 200){                  
-                    $('#contentList').empty();
-                    $("#contentList").append(data);
-                } else {
-                    //$("#contentMsg").html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class='fa fa-envelope'></i> Correcto </strong> '+data.msg+'</div>');
-                    $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> '+data.msg+'</div>');
-                }
+                $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible procesar el formulario</div>');
                 habilitarBotones();
-            },
-            error: function(xhr) {
-                $("#contentMsg").empty();
-                $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible enviar el formulario</div>');
-                habilitarBotones();
-            },
-        })
-        .fail(function(jqXHR, textStatus, errorThrown ) {
-            $("#contentMsg").empty();
-            $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible procesar el formulario</div>');
-            habilitarBotones();
-        });
+            });
+        }
     }); 
 
     $("#botonDevolver").on('click', function(event){
@@ -448,40 +445,42 @@
         formulario = $('#formtable')[0];
         var formData = new FormData(formulario);
         formData.append('botonDevolver', 1);
-        verificaCampos();
+        r = verificaCampos();
+        if (r == true) {
 
-        peticion = $.ajax({
-            type: 'post',
-            url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda') }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
+            peticion = $.ajax({
+                type: 'post',
+                url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $("#contentMsg").empty();
+                    $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data, textStatus, xhr) {
+                    $("#contentMsg").empty();
+                    if(xhr.status === '200' || xhr.status === 200){                  
+                        $('#contentList').empty();
+                        $("#contentList").append(data);
+                    } else {
+                        //$("#contentMsg").html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class='fa fa-envelope'></i> Correcto </strong> '+data.msg+'</div>');
+                        $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> '+data.msg+'</div>');
+                    }
+                    habilitarBotones();
+                },
+                error: function(xhr) {
+                    $("#contentMsg").empty();
+                    $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible enviar el formulario</div>');
+                    
+                },
+            })
+            .fail(function(jqXHR, textStatus, errorThrown ) {
                 $("#contentMsg").empty();
-                $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
-            },
-            success: function (data, textStatus, xhr) {
-                $("#contentMsg").empty();
-                if(xhr.status === '200' || xhr.status === 200){                  
-                    $('#contentList').empty();
-                    $("#contentList").append(data);
-                } else {
-                    //$("#contentMsg").html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class='fa fa-envelope'></i> Correcto </strong> '+data.msg+'</div>');
-                    $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> '+data.msg+'</div>');
-                }
+                $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible procesar el formulario</div>');
                 habilitarBotones();
-            },
-            error: function(xhr) {
-                $("#contentMsg").empty();
-                $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible enviar el formulario</div>');
-                
-            },
-        })
-        .fail(function(jqXHR, textStatus, errorThrown ) {
-            $("#contentMsg").empty();
-            $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible procesar el formulario</div>');
-            habilitarBotones();
-        });
+            });
+        }
     }); 
 
     $("#botonAnular").on('click', function(event){
@@ -489,40 +488,41 @@
         formulario = $('#formtable')[0];
         var formData = new FormData(formulario);
         formData.append('botonAnular', 1);
-        verificaCampos();
-
-        peticion = $.ajax({
-            type: 'post',
-            url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda') }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
+        r = verificaCampos();
+        if (r == true) {
+            peticion = $.ajax({
+                type: 'post',
+                url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_impresion_guarda') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $("#contentMsg").empty();
+                    $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data, textStatus, xhr) {
+                    $("#contentMsg").empty();
+                    if(xhr.status === '200' || xhr.status === 200){                  
+                        $('#contentList').empty();
+                        $("#contentList").append(data);
+                    } else {
+                        //$("#contentMsg").html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class='fa fa-envelope'></i> Correcto </strong> '+data.msg+'</div>');
+                        $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> '+data.msg+'</div>');
+                    }
+                    habilitarBotones();
+                },
+                error: function(xhr) {
+                    $("#contentMsg").empty();
+                    $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible enviar el formulario</div>');
+                    habilitarBotones();
+                },
+            })
+            .fail(function(jqXHR, textStatus, errorThrown ) {
                 $("#contentMsg").empty();
-                $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
-            },
-            success: function (data, textStatus, xhr) {
-                $("#contentMsg").empty();
-                if(xhr.status === '200' || xhr.status === 200){                  
-                    $('#contentList').empty();
-                    $("#contentList").append(data);
-                } else {
-                    //$("#contentMsg").html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class='fa fa-envelope'></i> Correcto </strong> '+data.msg+'</div>');
-                    $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> '+data.msg+'</div>');
-                }
+                $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible procesar el formulario</div>');
                 habilitarBotones();
-            },
-            error: function(xhr) {
-                $("#contentMsg").empty();
-                $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible enviar el formulario</div>');
-                habilitarBotones();
-            },
-        })
-        .fail(function(jqXHR, textStatus, errorThrown ) {
-            $("#contentMsg").empty();
-            $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> no fue posible procesar el formulario</div>');
-            habilitarBotones();
-        });
+            });
+        }
     });
 
     function habilitarBotones() {
