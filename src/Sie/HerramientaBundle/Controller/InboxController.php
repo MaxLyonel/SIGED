@@ -878,6 +878,7 @@ class InboxController extends Controller {
 
 
         }
+        $form = $form->add('accessuser', 'hidden', array('data' => false));
         $form = $form->getForm();
         return $form;
     }
