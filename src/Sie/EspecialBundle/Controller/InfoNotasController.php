@@ -33,7 +33,7 @@ class InfoNotasController extends Controller {
     /**
      * Formulario para el registro de notas - modal
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request) { 
         try {
 
             $idInscripcionEspecial = $request->get('idInscripcionEspecial');
@@ -53,7 +53,7 @@ class InfoNotasController extends Controller {
             $gestionActual = $this->session->get('currentyear');
 
             $operativo = ($gestion == 2020)?'4':$this->operativo($sie,$gestion);
-//
+        //
             $notas = null;
             $vista = 1;
             $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
@@ -62,7 +62,7 @@ class InfoNotasController extends Controller {
 
             $estadosMatricula = null;
             //dump($discapacidad);die;
-            //dump($operativo);die;
+           //dump($operativo);die;
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
@@ -131,11 +131,12 @@ class InfoNotasController extends Controller {
                                     $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(70,71,72,73)));
                                 }
                             }else{
-                                $actualizarMatricula = false;
+                                $actualizarMatricula = false; 
                                 $notas = $this->get('notas')->especial_cualitativo_visual($idInscripcion,$operativo);   
+                                
                                 $template = 'especialCualitativoVisual';
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(78,79)));
-                               // dump($notas);die;
+                                //dump($notas);die;
                             }
                             
                             
@@ -262,8 +263,8 @@ class InfoNotasController extends Controller {
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
             if($discapacidad == 2 and $gestion > 2019 and $request->get('nivel') == 411){ //visual //programas
-                if($request->get('notaCualitativa') == 80){
-                    $idEstadoMatriicula = 79;
+                if($request->get('notaCualitativa') == 80){ //extendido 
+                    $idEstadoMatriicula = 79; //prosigue
                 }else{
                     $idEstadoMatriicula = $request->get('notaCualitativa');
                 }
@@ -275,11 +276,11 @@ class InfoNotasController extends Controller {
                     $em->flush();  
                 }
             }else{
-                
+                //dump($request);die;
                 $this->get('notas')->especialRegistro($request, $discapacidad);
             }
             // Verificamos si se actualizara el estado de matrícula
-            if($request->get('actualizar') == true){
+            if($request->get('actualizar') == true  or $request->get('actualizar') == 1 ){ 
                 $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
 
             }
@@ -288,7 +289,7 @@ class InfoNotasController extends Controller {
             // y cuando esten en el cuarto bimestre
             
             if(($request->get('operativo') >= 3 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2020 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false) or ($request->get('nivel') == 411 and $discapacidad == 1 and $request->get('actualizar') == false)){
-            
+           
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula');
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -307,6 +308,7 @@ class InfoNotasController extends Controller {
             }
             
             if($request->get('operativo') < 3 and (($discapacidad == 5 or $discapacidad == 4) and ($request->get('nivel') == 410 or $request->get('nivel') == 411)) and $gestion > 2020){
+                
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula'); 
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -417,6 +419,25 @@ class InfoNotasController extends Controller {
         }else{
             return $this->render('SieEspecialBundle:InfoNotas:etapas.html.twig',array('inscripcion'=>$inscripcion));
         }
+    }
+
+    public function habilitarEspecialEtapasVisualAction(Request $request, $id){
+        
+        $em = $this->getDoctrine()->getManager();
+        $cualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($id);
+
+        $dato =  json_decode($cualitativa->getNotaCualitativa());
+        $etapa = $dato->etapa;
+        $fechaEtapa = $dato->fechaEtapa;
+
+        $ajusteNotaCualitativa = array('etapa'=>$etapa,'estadoEtapa'=>79,'fechaEtapa'=>$fechaEtapa);
+        $cualitativa->setNotaCualitativa(json_encode($ajusteNotaCualitativa));
+
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($cualitativa->getEstudianteInscripcion()->getId());
+        $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(79));
+        $em->flush();  
+        
+        return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
     }
 
     public function especialDownloadLibretaAction(Request $request){

@@ -49,7 +49,8 @@ class EstadisticaController extends Controller
         $dataArray = array_merge($dataArrayEstudiantes,$dataArrayInstitutos,$dataArrayPersonas);
 
 
-        $tbl_titulados_egresados = $this->tbl_titulados_egresados($gestionActual);
+        $tbl_titulados_egresados_publicas = $this->tbl_titulados_egresados_publicas($gestionActual);
+        $tbl_titulados_egresados_privadas = $this->tbl_titulados_egresados_privadas($gestionActual);
         
         $tbl_becas_publicas = $this->tbl_becas_publicas($gestionActual);
         $tbl_becas_privadas = $this->tbl_becas_privadas($gestionActual);
@@ -63,7 +64,8 @@ class EstadisticaController extends Controller
         return $this->render('SieTecnicaEstBundle:Estadistica:index.html.twig', array(
             'titulo' => "Estadística",
             "data" => $dataArray,
-            "tbl_titulados_egresados" => $tbl_titulados_egresados,
+            "tbl_titulados_egresados_publicas" => $tbl_titulados_egresados_publicas,
+            "tbl_titulados_egresados_privadas" => $tbl_titulados_egresados_privadas,
             "tbl_becas_publicas" => $tbl_becas_publicas,
             "tbl_becas_privadas" => $tbl_becas_privadas,
             "tbl_matriculas_publicas" => $tbl_matriculas_publicas,
@@ -143,7 +145,7 @@ class EstadisticaController extends Controller
         }
     }
 
-    private function tbl_titulados_egresados($gestion){
+    private function tbl_titulados_egresados_publicas($gestion){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("            
             select  gestion_tipo_id, estado_final, sum(cantidadm) as total_masculino, sum(cantidadf) as total_femenino
@@ -163,8 +165,13 @@ class EstadisticaController extends Controller
                 est_tec_instituto_carrera_estudiante_egresado_titulado
                 ON 
                     est_tec_egresado_titulados_tipo.id = est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
             WHERE
-                gestion_tipo_id = :gestionId and  genero_tipo_id = 1
+                gestion_tipo_id = :gestionId and  genero_tipo_id = 1 and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 1)
             ) as datos
             group by gestion_tipo_id, estado_final
             
@@ -185,8 +192,82 @@ class EstadisticaController extends Controller
                 est_tec_instituto_carrera_estudiante_egresado_titulado
                 ON 
                     est_tec_egresado_titulados_tipo.id = est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
             WHERE
-                gestion_tipo_id = :gestionId  and genero_tipo_id = 2
+                gestion_tipo_id = :gestionId  and genero_tipo_id = 2 and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 1)
+            ) as datos
+            group by gestion_tipo_id, estado_final
+            ) as data2 GROUP BY gestion_tipo_id , estado_final
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_titulados_egresados_privadas($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+            select  gestion_tipo_id, estado_final, sum(cantidadm) as total_masculino, sum(cantidadf) as total_femenino
+            FROM
+            (
+            select gestion_tipo_id, estado_final, sum(cantidadm) as cantidadm, 0 as cantidadf
+            from
+            (
+            SELECT
+                est_tec_egresado_titulados_tipo.estado_final, 
+                est_tec_instituto_carrera_estudiante_egresado_titulado.gestion_tipo_id, 	
+                est_tec_instituto_carrera_estudiante_egresado_titulado.cantidad as cantidadm, 
+                0 as cantidadf
+            FROM
+                est_tec_egresado_titulados_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_egresado_titulado
+                ON 
+                    est_tec_egresado_titulados_tipo.id = est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            WHERE
+                gestion_tipo_id = :gestionId and  genero_tipo_id = 1 and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 2)
+            ) as datos
+            group by gestion_tipo_id, estado_final
+            
+            union all
+            
+            select gestion_tipo_id, estado_final, 0 as cantidadm,  sum(cantidadf) as cantidadf
+            from
+            (
+            SELECT
+                est_tec_egresado_titulados_tipo.estado_final, 
+                est_tec_instituto_carrera_estudiante_egresado_titulado.gestion_tipo_id, 	
+                0 as cantidadm,
+                est_tec_instituto_carrera_estudiante_egresado_titulado.cantidad as cantidadf
+                
+            FROM
+                est_tec_egresado_titulados_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_egresado_titulado
+                ON 
+                    est_tec_egresado_titulados_tipo.id = est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            WHERE
+                gestion_tipo_id = :gestionId  and genero_tipo_id = 2 and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 2)
             ) as datos
             group by gestion_tipo_id, estado_final
             ) as data2 GROUP BY gestion_tipo_id , estado_final

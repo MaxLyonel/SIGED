@@ -52,9 +52,14 @@ class InfoPersonalAdmController extends Controller {
 
         if ($request->getMethod() == 'POST') {
             $form = $request->get('form');
-
-            $form['sie'] = ($form['sie']);
-            $form['gestion'] = ($form['gestion']);            
+            
+            if($form['accessuser']==1){
+                $form['sie'] = ($form['sie']);
+                $form['gestion'] =($form['gestion']);     
+            }else{
+                $form['sie'] = hex2bin($form['sie']);
+                $form['gestion'] =hex2bin($form['gestion']);                
+            }           
 
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
             
@@ -1166,6 +1171,7 @@ class InfoPersonalAdmController extends Controller {
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_index'))
                 ->add('sie', 'text', array('required' => true, 'attr' => array('autocomplete' => 'on', 'maxlength' => 8)))
                 ->add('gestion', 'choice', array('required' => true, 'choices' => $gestiones))
+                ->add('accessuser', 'hidden', array('data' => true))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
         return $form;

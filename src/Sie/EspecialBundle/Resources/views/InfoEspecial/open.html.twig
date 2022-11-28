@@ -109,6 +109,19 @@
             
             
             {% if onlyview == false %} 
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Inscripción">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo Inscripción </h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                    {{form_widget(closeOperativoform.next)}}
+                                {{form_end(closeOperativoform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rudees">
@@ -122,24 +135,22 @@
                         </div>
                     </div>
                 </div>
+               
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
-                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo 1/2/3 Trimestre ">
                         <div class="caption text-center">
-                            <h4>Cerrar Operativo Calificaciones </h4>
+                            <h4>Cerrar Operativo Notas</h4>
                             <div class="thumbnail-action">
-                                {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
-                                    {{form_widget(closeOperativoform.next)}}
-                                {{form_end(closeOperativoform)}}
+                                {{form_start(closeOperativoNotasform, { 'attr':{'id':'formCloseOperativoNotas' }} )}}
+                                    {{form_widget(closeOperativoNotasform.next)}}
+                                {{form_end(closeOperativoNotasform)}}
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
                 {#
-                
-               
-           
-                
+                              
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo ">

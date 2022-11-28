@@ -4558,7 +4558,7 @@ class TramiteController extends Controller {
             , eiht.id as estinsbthid, ei.id as estinsid, case coalesce(bcte.estudiante_inscripcion_id,0) when 0 then false else true end as estado_bth
             , e.segip_id, ei.id as estudiante_inscripcion_id, t.id as tramite_id, d.documento_serie_id, emt.estadomatricula, d.id as documento_id
             , case ptp.id when 1 then ltd.lugar when 0 then '' else ptp.pais end as lugar_nacimiento, ei.estadomatricula_inicio_tipo_id
-            , eid.documento_numero as documento_diplomatico, iec.nivel_tipo_id
+            , eid.documento_numero as documento_diplomatico, iec.nivel_tipo_id, etht.especialidad
             from estudiante e
             inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
             inner join estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
@@ -4567,6 +4567,7 @@ class TramiteController extends Controller {
             inner join periodo_tipo pert on (iec.periodo_tipo_id = pert.id)            
             inner join institucioneducativa i on (iec.institucioneducativa_id = i.id)
             inner join estudiante_inscripcion_humnistico_tecnico as eiht on eiht.estudiante_inscripcion_id = ei.id
+            left join especialidad_tecnico_humanistico_tipo as etht on etht.id = eiht.especialidad_tecnico_humanistico_tipo_id     
             left join bth_cut_ttm_estudiante as bcte on bcte.estudiante_inscripcion_id = ei.id
             left join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo = 13 and t.esactivo = 't'
             left join documento as d on d.tramite_id = t.id and d.documento_tipo_id = 21 and d.documento_estado_id = 1            
