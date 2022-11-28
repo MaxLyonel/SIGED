@@ -3618,7 +3618,11 @@ class TramiteDetalleController extends Controller {
                         } else {
                             $cierreOperativo = true;
                         }
-                    }                    
+                    }
+                    
+                    if ($gestion <= 2018){
+                        $cierreOperativo = true;
+                    }
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaUnidadEducativaHumanistica('tramite_detalle_diploma_humanistico_impresion_lista',$sie,$gestion)->createView(),
