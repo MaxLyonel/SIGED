@@ -1108,7 +1108,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     //IMPRESION
     //====================IMPRESION DE PARTICIPANTES HABILITADOS (QUE SU TRAMITE ESTE CONCLUIDO)================
     public function formularioHabilitadosImpresionAction(Request $request){
-        return $this->redirect($this->generateUrl('login'));
+        
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1454,7 +1454,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->Text(156, 80,'SERIE:');         
             $pdf->Text(156, 85,$numSerieGen);         
             
-            $pdf->Ln(25);
+            $pdf->Ln(17);
             $pdf->SetFont('helvetica', 'B', 11);
             $pdf->SetTextColor(55, 55, 55);
             $pdf->Cell(22, 5, '', 0, 0, 'L');
@@ -1463,10 +1463,10 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->Cell(15, 5, '', 0, 0, 'L');  
             if(strlen($datosParticipante[0]['nombre'].$datosParticipante[0]['paterno'].$datosParticipante[0]['materno'])>=30){
                 $textSize = 18;
-                $breaknext = 19;
+                $breaknext = 20;
             }else{
                 $textSize = 20;
-                $breaknext = 17;
+                $breaknext = 19;
             }
             $pdf->SetFont('helvetica', 'B', $textSize);
            $pdf->Cell(0, 2, ($datosParticipante[0]['nombre'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['materno']) , 0, 1, 'C');
@@ -1483,7 +1483,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
            $contenidoMencion.='</table>';
            $pdf->writeHTML($contenidoMencion, true, false, true, false, '');
            //$pdf->Cell(0, 2, ($request->get('mencion') ? $request->get('mencion') : ''), 0, 1, 'C');
-           $pdf->Ln(5);
+           $pdf->Ln(6);
            $pdf->SetFont('helvetica', '', 14);
            $pdf->Cell(22, 5, '', 0, 0, 'L');
           // $pdf->Cell(0, 2, 'A nivel :', 0, 1, 'L');
@@ -1503,7 +1503,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln($breaknext);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
-                $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
+                $pdf->Cell(198, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
                 $pdf->Ln(10); 
             }else{
                 $pdf->Ln(10);
