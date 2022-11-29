@@ -710,7 +710,7 @@ class InfoPersonalAdmController extends Controller {
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
 
-                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($persona['nacionalidad']=='NA')?1:2))
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($persona['nacionalidad']=='NA')?1:2));
                 
                 $em->persist($newPersona);
                 $em->flush();
