@@ -705,7 +705,8 @@ class InfoMaestroController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'nacionalidad' => $request->get('nacionalidad'),
             ];
         }
 
@@ -777,6 +778,8 @@ class InfoMaestroController extends Controller {
                 $newPersona->setRda('0');
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
+
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($persona['nacionalidad']=='NA')?1:2));
 
                 $em->persist($newPersona);
                 $em->flush();

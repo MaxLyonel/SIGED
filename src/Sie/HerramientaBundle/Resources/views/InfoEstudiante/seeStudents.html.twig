@@ -367,13 +367,13 @@
                                                         </div>
                                                     {% else %}
                                                         {% if gestion >= 2021 and operativo<=3 %}  {# se habilita libretas para todos los nivesl y con 1ro y 2do oeprativo disponible #}
-                                                            {% if app.session.get('userName') == 1894105 %}
-                                                        
+                                                            {% if gestion == 2022 and nivel == 13 and grado == 6  %} 
+                                                            {% else %}
                                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="reg. Calificaciones.... ">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                      <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div>
+                                                                </div>                                                        
                                                             {% endif %}
                                                         
                                                         {% endif %}   
@@ -553,7 +553,7 @@
                                             </div>
                                         {% else %}
                                             {# commented by krlos 21.09.21 #}
-                                            {% if  imprimirLibreta == true %}
+                                            {% if  imprimirLibreta == true  and data.estadomatriculaId in [5,26,55,56,57,58,100,102,11] %}
                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
                                                     <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
                                                       <i class="fa fa-print" style="color:#FFFFFF"></i>

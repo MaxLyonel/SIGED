@@ -220,13 +220,13 @@
 
                 {% if notas.gestion >= 2021 and notas.cualitativas|length > 0 and notas.nivel == 12 and notas.tipoSubsistema != 4 and notas.operativo == 3 %}
                     <tr>
-                        <td align="center" colspan="4">PROMEDIO ANUAL</td>
+                        <td align="center" colspan="4"><!-- PROMEDIO ANUAL --></td>
                         
                         {% for c in notas.cualitativas %}
                             <td align="center">
                                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                                    <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
+                                    <input type="hidden" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
                             </td>
                         {% endfor %}
                     </tr>

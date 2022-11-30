@@ -421,6 +421,25 @@ class InfoNotasController extends Controller {
         }
     }
 
+    public function habilitarEspecialEtapasVisualAction(Request $request, $id){
+        
+        $em = $this->getDoctrine()->getManager();
+        $cualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($id);
+
+        $dato =  json_decode($cualitativa->getNotaCualitativa());
+        $etapa = $dato->etapa;
+        $fechaEtapa = $dato->fechaEtapa;
+
+        $ajusteNotaCualitativa = array('etapa'=>$etapa,'estadoEtapa'=>79,'fechaEtapa'=>$fechaEtapa);
+        $cualitativa->setNotaCualitativa(json_encode($ajusteNotaCualitativa));
+
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($cualitativa->getEstudianteInscripcion()->getId());
+        $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(79));
+        $em->flush();  
+        
+        return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
+    }
+
     public function especialDownloadLibretaAction(Request $request){
         
         $arrInfoUe = unserialize($request->get('infoUe'));

@@ -638,7 +638,7 @@ class InboxController extends Controller {
         
         if(isset($dataPre['tipo']) && $dataPre['tipo'] == 'history'){
           $data['gestion'] = $dataPre['gestion'];
-          $arrRol = array(8);
+          $arrRol = array(10,8,7);
           $data['id'] =  ( in_array($this->session->get('roluser'),$arrRol) )? $dataPre['id']: $this->session->get('ie_id');
         }else{
           // start to get the data to open the UE info
@@ -809,7 +809,12 @@ class InboxController extends Controller {
         }
 
         //dump($this->session->get('pathSystem')); die; sieHerramientaBundle
-        $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.');
+        if(in_array($data['gestion'], array(2022,2021) )){
+            $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'3er. Trim.');
+        }else{
+            $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'4to. Trim.');
+        }
+        
         $dataInfo['messageope']='Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
@@ -873,6 +878,7 @@ class InboxController extends Controller {
 
 
         }
+        $form = $form->add('accessuser', 'hidden', array('data' => false));
         $form = $form->getForm();
         return $form;
     }
@@ -1786,13 +1792,22 @@ class InboxController extends Controller {
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
       //get the operativo number
       $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+      // dump($operativo);die;
       // check the operative to find the correct vars
       switch ($operativo) {
         case 1:
         case 2:
-        case 3:
+        
           $opeTrim = $operativo + 5;
           $dbFunction = 'sp_validacion_regular_web2022_mg';
+          break;
+        case 3: 
+          $opeTrim = $operativo + 5;
+          $dbFunction = 'sp_validacion_regular_web2022_fg';                 
+          break;
+        case 4: 
+          $opeTrim = ($operativo-1) + 5;
+          $dbFunction = 'sp_validacion_regular_web2022_fg';                 
           break;
         
         default:
@@ -1850,7 +1865,7 @@ class InboxController extends Controller {
           }else{
             if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
-              //$registroConsol->$fieldOpe(2);              
+              $registroConsol->$fieldOpe(2);              
             }
           }
             $em->persist($registroConsol);

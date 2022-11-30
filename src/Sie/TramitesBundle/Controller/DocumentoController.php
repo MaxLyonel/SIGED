@@ -127,12 +127,13 @@ public function getDocumentoTokenImpreso($token) {
         , dept.id as departamentoemisionid, dept.departamento as departamentoemision, e.codigo_rude as rude, e.paterno as paterno, e.materno as materno
         , e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, to_char(e.fecha_nacimiento, 'dd/mm/YYYY') as fechanacimiento
         , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
+        , dt.id as documentotipoid, ds.formacion_educacion_tipo_id as educaciontipoid
         , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
         , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, de.id as documentoEstadoId
         , p.nombre || ' ' || p.paterno || ' ' || p.materno as personafirma
         from documento as d
         inner join documento_estado as de on de.id = d.documento_estado_id
-        inner join documento_tipo as dt on dt.id = d.documento_estado_id
+        inner join documento_tipo as dt on dt.id = d.documento_tipo_id
         inner join documento_serie as ds on ds.id = d.documento_serie_id
         inner join tramite as t on t.id = d.tramite_id
         inner join tramite_tipo as tt on tt.id = t.tramite_tipo
@@ -690,6 +691,25 @@ public function getDocumentoTokenImpreso($token) {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que valida la tuicion de un determinado numero de serie segun el lugar geográfico
+    // PARAMETROS: serie, departamento
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function validaNumeroSerieFormacionTuicion($serie, $departamento, $formacion) {
+        /*getDocumento
+         * Halla datos del documento supletorio en caso de existir
+         */
+        $em = $this->getDoctrine()->getManager();
+        $entidad = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $serie, 'departamentoTipo' => $departamento, 'formacionEducacionTipo' => $formacion));
+        if(count($entidad)>0){
+            return "";
+        } else {
+            return "El número de serie ".$serie." no se encuentra en su tuición";
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que lista el codigo del lugar geografico a cargo segun el rol designado
     // PARAMETROS: usuarioId, rolId
     // AUTOR: RCANAVIRI
@@ -876,6 +896,166 @@ public function getDocumentoTokenImpreso($token) {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que registra el documento
+    // PARAMETROS: tramiteId, usuarioId, documentoTipo, numeroSerie, tipoSerie, fecha
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function setDocumentoFirmas($tramiteId, $usuarioId, $documentoTipo, $numeroSerie, $tipoSerie, $fecha, $documentoFirmas) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        //$fecha = new \DateTime($fecha);
+        $em = $this->getDoctrine()->getManager();
+        /*
+         * Define el conjunto de valores a ingresar - Documento
+         */
+        $serie = $numeroSerie.$tipoSerie;
+        $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+        $entityDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->findOneBy(array('id' => $documentoTipo));
+        $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
+        $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
+        $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
+        $entityDocumento = new Documento();
+        $entityDocumento->setDocumento('');
+        $entityDocumento->setDocumentoTipo($entityDocumentoTipo);
+        $entityDocumento->setObs($entityDocumentoTipo->getDocumentoTipo() . ' generado');
+        $entityDocumento->setDocumentoSerie($entityDocumentoSerie);
+        $entityDocumento->setUsuario($entityUsuario);
+        $entityDocumento->setFechaImpresion($fecha);
+        $entityDocumento->setFechaRegistro($fechaActual);
+        $entityDocumento->setTramite($entityTramite);
+        $entityDocumento->setDocumentoEstado($entityDocumentoEstado);
+        $em->persist($entityDocumento);
+        $em->flush();
+
+        $documentoId = $entityDocumento->getId();
+        if($documentoTipo == 1 or $documentoTipo == 2 or $documentoTipo == 6 or $documentoTipo == 7 or $documentoTipo == 8){
+            if (count($documentoFirmas)>0){
+                if($documentoTipo == 2){
+                    $entityDocumentoGenerado = $this->getDocumentoLegalizado($documentoId);
+                } else {
+                    $entityDocumentoGenerado = $this->getDocumento($documentoId);
+                }
+
+                $departamentoEmisionId = $entityDocumentoGenerado['departamentoemisionid'];
+               
+                $arrayFirmas = array();
+                $getDocumentoFirmaId = 0;
+                foreach ($documentoFirmas as $firma) {
+                    $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $firma['documentoFirmaId']));
+
+                    $personaTipoId = 0;
+                    switch ($documentoTipo) {
+                        case 1:
+                            $personaTipoId = 1;
+                            break;
+                        case 2:
+                            $personaTipoId = 2;
+                            break;
+                        case 6:
+                            $personaTipoId = 1;
+                            break;
+                        case 7:
+                            $personaTipoId = 1;
+                            break;
+                        case 8:
+                            $departamentoEmisionId = 0;
+                            $personaTipoId = $firma['personaTipoId'];
+                            break;
+                        default:
+                            $personaTipoId = 0;
+                    }
+                    
+                    $getDocumentoFirma = $this->getDocumentoFirmaLugar($entityDocumentoFirma->getPersona()->getId(), $departamentoEmisionId, $personaTipoId);
+                    
+                    if($getDocumentoFirmaId == 0){
+                        $getDocumentoFirmaId = $getDocumentoFirma['id'];
+                    }
+                    array_push($arrayFirmas, $getDocumentoFirma['id']);
+                }
+
+                // dump($getDocumentoFirma);die;
+                $lugarNacimiento = "";
+                if($entityDocumentoGenerado['departamentonacimiento'] == ""){
+                    $lugarNacimiento = $entityDocumentoGenerado['paisnacimiento'];
+                } else {
+                    $lugarNacimiento = $entityDocumentoGenerado['departamentonacimiento']." - ".$entityDocumentoGenerado['paisnacimiento'];
+                }    
+                
+                // $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
+                // $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
+                $dateNacimiento = ($entityDocumentoGenerado['fechanacimiento']);
+                $dateEmision = ($entityDocumentoGenerado['fechaemision']);
+                // dump($dateNacimiento);dump($dateEmision);dump($dateEmision->format('d/m/Y'));die;
+                            
+                // $datos = array(
+                //     'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
+                //     'tramite'=>$entityDocumentoGenerado['tramite'],
+                //     'serie'=>$entityDocumentoGenerado['serie'],
+                //     'codigorude'=>$entityDocumentoGenerado['rude'],
+                //     'sie'=>$entityDocumentoGenerado['sie'],
+                //     'gestionegreso'=>$entityDocumentoGenerado['gestion'],
+                //     'nombre'=>$entityDocumentoGenerado['nombre'],
+                //     'paterno'=>$entityDocumentoGenerado['paterno'],
+                //     'materno'=>$entityDocumentoGenerado['materno'],
+                //     'nacimientolugar'=>$lugarNacimiento,
+                //     'nacimientofecha'=>date_format($dateNacimiento, 'd/m/Y'),
+                //     'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
+                //     'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
+                //     'emisionfecha'=>date_format($dateEmision, 'd/m/Y'),
+                //     'tokenfirma'=>base64_encode($getDocumentoFirma['id'])
+                // );
+                $datos = array(
+                    'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
+                    'tramite'=>$entityDocumentoGenerado['tramite'],
+                    'serie'=>$entityDocumentoGenerado['serie'],
+                    'codigorude'=>$entityDocumentoGenerado['rude'],
+                    'sie'=>$entityDocumentoGenerado['sie'],
+                    'gestionegreso'=>$entityDocumentoGenerado['gestion'],
+                    'nombre'=>$entityDocumentoGenerado['nombre'],
+                    'paterno'=>$entityDocumentoGenerado['paterno'],
+                    'materno'=>$entityDocumentoGenerado['materno'],
+                    'nacimientolugar'=>$lugarNacimiento,
+                    'nacimientofecha'=>$dateNacimiento->format('d/m/Y'),
+                    'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
+                    'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
+                    'emisionfecha'=>$dateEmision->format('d/m/Y'),
+                    'tokenfirma'=>base64_encode(serialize($arrayFirmas))
+                );
+                $keys = $this->getEncodeRSA($datos);
+
+                // registro de la firma en el documento generado
+                // solo se referencia con la primera firma enviada en caso de emitir documentos con mas de una firma
+                $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $getDocumentoFirmaId));
+                $entityDocumento->setDocumentoFirma($entityDocumentoFirma);
+                $entityDocumento->setTokenPublico($keys['keyPublica']);
+                $entityDocumento->setTokenPrivado($keys['keyPrivada']);
+                $entityDocumento->setTokenImpreso($keys['token']);
+                $em->persist($entityDocumento);
+                // $em->flush();
+
+                // dump($entityDocumento);dump($entityDocumentoFirma);dump($datos);die;    
+                
+                // incremento de la firma usada en la tabla de parametros documentoFirmaAutorizada
+                // $documentoFirmaAutorizadaId = $this->getDocumentoFirmaAutorizadaIncrementar($entityDocumentoFirma->getPersona()->getId(), $documentoTipo);
+                // $entityDocumentoFirmaAutorizada = $em->getRepository('SieAppWebBundle:DocumentoFirmaAutorizada')->findOneBy(array('id' => $documentoFirmaAutorizadaId));
+                // $cantidadIncremento = ($entityDocumentoFirmaAutorizada->getUsado()) + 1;
+                // $entityDocumentoFirmaAutorizada->setUsado($cantidadIncremento);
+                // $em->persist($entityDocumentoFirmaAutorizada);
+                // $em->flush();
+
+                $em->flush();
+            } 
+
+            // $entityDocumentoFirmaAutorizada = $em->getRepository('SieAppWebBundle:DocumentoFirmaAutorizada')->findOneBy(array('id' => $documentoFirmaAutorizadaId['id']));
+        }
+        return $documentoId;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion cambia estado de un determinado documento
     // PARAMETROS: serie
     // AUTOR: RCANAVIRI
@@ -990,6 +1170,63 @@ public function getDocumentoTokenImpreso($token) {
 
         // VALIDACION DE TUICION DEL CARTON
         $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
+        if($valSerieTuicion != "" and $msgContenido == ""){
+            $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+        }
+
+        return $msgContenido;
+    }
+
+    
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que valida la truision de un determinado numero de serie segun el lugar geográfico
+    // PARAMETROS: serie, departamento
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoFormacionValidacion($numeroSerie, $tipoSerie, $fecha, $usuarioId, $rolId, $documentoTipoId, $formacionEducacionId) {
+        $msgContenido = "";
+        $serie = $numeroSerie.$tipoSerie;
+
+        // VALIDACION DE LA EXISTENCIA DEL CARTON
+        $valSerie = $this->getNumeroSerie($serie);
+        if($valSerie != ""){
+            $msgContenido = ($msgContenido=="") ? $valSerie : $msgContenido.", ".$valSerie;
+        }
+
+        // VALIDACION DEl ESTADO ACTIVO DEL CARTON
+        $valSerieActivo = $this->validaNumeroSerieActivo($serie);
+        if($valSerieActivo != "" and $msgContenido == ""){
+            $msgContenido = ($msgContenido=="") ? $valSerieActivo : $msgContenido.", ".$valSerieActivo;
+        }
+
+        // VALIDACION DEl TIPO DE DOCUMENTO DEL CARTON
+        $valSerieActivo = $this->validaNumeroSerieTipoDocumento($serie, $documentoTipoId);
+        if($valSerieActivo != "" and $msgContenido == ""){
+            $msgContenido = ($msgContenido=="") ? $valSerieActivo : $msgContenido.", ".$valSerieActivo;
+        }
+
+        // VALIDACION DE LA ASIGNACION DE UN NUMERO DE SERIE A UN DOCUMENTO
+        $valSerieAsigando = $this->validaNumeroSerieAsignado($serie);
+        if($valSerieAsigando != "" and $msgContenido == ""){
+            $msgContenido = ($msgContenido=="") ? $valSerieAsigando : $msgContenido.", ".$valSerieAsigando;
+        }
+        
+        $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolId);
+        
+        //if ($departamentoCodigo == 0 and $msgContenido == ""){
+        //    $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
+        //} else {
+        //    // VALIDACION DE TUICION DEL CARTON
+        //    $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
+        //    if($valSerieTuicion != "" and $msgContenido == ""){
+        //        $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+        //    }
+        //}
+
+        // VALIDACION DE TUICION DEL CARTON
+        $valSerieTuicion = $this->validaNumeroSerieFormacionTuicion($serie, $departamentoCodigo, $formacionEducacionId);
         if($valSerieTuicion != "" and $msgContenido == ""){
             $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
         }
@@ -1708,7 +1945,11 @@ public function getDocumentoTokenImpreso($token) {
                 $response = new Response();
                 $response->headers->set('Content-type', 'application/pdf');
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_v2.rptdesign&sie='.$sie.'&gestion='.$ges.'&firma='.$documentoFirmaId.'&&__format=pdf&'));
+                if($documentoFirmaId == 211){
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_ch_v2.rptdesign&sie='.$sie.'&gestion='.$ges.'&firma='.$documentoFirmaId.'&&__format=pdf&'));
+                } else { 
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_v2.rptdesign&sie='.$sie.'&gestion='.$ges.'&firma='.$documentoFirmaId.'&&__format=pdf&'));
+                }
                 $response->setStatusCode(200);
                 $response->headers->set('Content-Transfer-Encoding', 'binary');
                 $response->headers->set('Pragma', 'no-cache');
@@ -2607,6 +2848,8 @@ public function getDocumentoTokenImpreso($token) {
         // $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $datosEnviados));
         $entityDocumento = $this->getDocumentoTokenImpreso($datosEnviados);
         //dump(count($entityDocumento));die;
+        $entityDocumentoTipoId = 0;
+        $entityEducacionTipoId = 0;
         
         if(count($entityDocumento)>0){
             if(count($entityDocumento)>1){
@@ -2615,6 +2858,8 @@ public function getDocumentoTokenImpreso($token) {
             } else {
                 $entityDocumento = $entityDocumento[0];
                 $entityDocumentoEstadoId = $entityDocumento['documentoestadoid'];
+                $entityDocumentoTipoId = $entityDocumento['documentotipoid'];
+                $entityEducacionTipoId = $entityDocumento['educaciontipoid'];
                 if($entityDocumentoEstadoId != 1){
                     $msg = 'Documento no vigente, verifique con la Dirección Distrital o Dirección Departamental';
                     $estado = false;
@@ -2639,10 +2884,18 @@ public function getDocumentoTokenImpreso($token) {
                         'cedulaidentidad'=>$entityDocumento['carnetidentidad'],
                         'emisiondepartamento'=>$entityDocumento['departamentoemision'],
                         'emisionfecha'=>$entityDocumento['fechaemision'],
-                        'tokenfirma'=>base64_encode($entityDocumento['documentofirmaid']),
                         'documentotipo'=>$entityDocumento['documentotipo'],
                         'personafirma'=>$entityDocumento['personafirma']
                     );
+                    if($entityDocumentoTipoId == 8) {
+                        if($entityEducacionTipoId == 2){
+                            $datos['tokenfirma']=base64_encode(serialize(array(0=>$entityDocumento['documentofirmaid'], 1=>0)));
+                        } elseif ($entityEducacionTipoId == 2) {
+                            $datos['tokenfirma']=base64_encode(serialize(array(0=>$entityDocumento['documentofirmaid'], 1=>0)));
+                        }                        
+                    } else {                        
+                        $datos['tokenfirma']=base64_encode($entityDocumento['documentofirmaid']);
+                    }
                     // dump($datos);
                     $keys = $this->getEncodeRSA($datos);
                     $datosRegistrados = $datos;
@@ -2653,27 +2906,49 @@ public function getDocumentoTokenImpreso($token) {
                     try {
                         $datosEnviadosDecode = $this->getDecodeRSA($datosEnviados, $keyPrivado);
                         $datosEnviadosDecode = unserialize($datosEnviadosDecode);
-                        // dump($datosEnviadosDecode);die;
-                        if(
-                            $datosEnviadosDecode['inscripcion'] == $datosRegistrados['inscripcion'] and 
-                            $datosEnviadosDecode['tramite'] == $datosRegistrados['tramite'] and 
-                            $datosEnviadosDecode['serie'] == $datosRegistrados['serie'] and 
-                            $datosEnviadosDecode['codigorude'] == $datosRegistrados['codigorude'] and 
-                            $datosEnviadosDecode['sie'] == $datosRegistrados['sie'] and 
-                            $datosEnviadosDecode['gestionegreso'] == $datosRegistrados['gestionegreso'] and 
-                            $datosEnviadosDecode['nombre'] == $datosRegistrados['nombre'] and 
-                            $datosEnviadosDecode['paterno'] == $datosRegistrados['paterno'] and 
-                            $datosEnviadosDecode['materno'] == $datosRegistrados['materno'] and 
-                            $datosEnviadosDecode['cedulaidentidad'] == $datosRegistrados['cedulaidentidad'] and 
-                            $datosEnviadosDecode['emisiondepartamento'] == $datosRegistrados['emisiondepartamento'] and 
-                            $datosEnviadosDecode['tokenfirma'] == $datosRegistrados['tokenfirma']
-                            ){
-                            $msg = 'Documento válido';
-                            $estado = true;
-                            $datosDocumentoValidado = $datosRegistrados;
+                        if($entityDocumentoTipoId == 8) {
+                            if(
+                                $datosEnviadosDecode['inscripcion'] == $datosRegistrados['inscripcion'] and 
+                                $datosEnviadosDecode['tramite'] == $datosRegistrados['tramite'] and 
+                                $datosEnviadosDecode['serie'] == $datosRegistrados['serie'] and 
+                                $datosEnviadosDecode['codigorude'] == $datosRegistrados['codigorude'] and 
+                                $datosEnviadosDecode['sie'] == $datosRegistrados['sie'] and 
+                                $datosEnviadosDecode['gestionegreso'] == $datosRegistrados['gestionegreso'] and 
+                                $datosEnviadosDecode['nombre'] == $datosRegistrados['nombre'] and 
+                                $datosEnviadosDecode['paterno'] == $datosRegistrados['paterno'] and 
+                                $datosEnviadosDecode['materno'] == $datosRegistrados['materno'] and 
+                                $datosEnviadosDecode['cedulaidentidad'] == $datosRegistrados['cedulaidentidad'] and 
+                                $datosEnviadosDecode['emisiondepartamento'] == $datosRegistrados['emisiondepartamento'] 
+                                ){
+                                $msg = 'Documento válido';
+                                $estado = true;
+                                $datosDocumentoValidado = $datosRegistrados;
+                            } else {
+                                $msg = 'Datos modificados, documento no válido';
+                                $estado = false;
+                            }
                         } else {
-                            $msg = 'Datos modificados, documento no válido';
-                            $estado = false;
+                            if(
+                                $datosEnviadosDecode['inscripcion'] == $datosRegistrados['inscripcion'] and 
+                                $datosEnviadosDecode['tramite'] == $datosRegistrados['tramite'] and 
+                                $datosEnviadosDecode['serie'] == $datosRegistrados['serie'] and 
+                                $datosEnviadosDecode['codigorude'] == $datosRegistrados['codigorude'] and 
+                                $datosEnviadosDecode['sie'] == $datosRegistrados['sie'] and 
+                                $datosEnviadosDecode['gestionegreso'] == $datosRegistrados['gestionegreso'] and 
+                                $datosEnviadosDecode['nombre'] == $datosRegistrados['nombre'] and 
+                                $datosEnviadosDecode['paterno'] == $datosRegistrados['paterno'] and 
+                                $datosEnviadosDecode['materno'] == $datosRegistrados['materno'] and 
+                                $datosEnviadosDecode['cedulaidentidad'] == $datosRegistrados['cedulaidentidad'] and 
+                                $datosEnviadosDecode['emisiondepartamento'] == $datosRegistrados['emisiondepartamento'] and 
+                                $datosEnviadosDecode['tokenfirma'] == $datosRegistrados['tokenfirma']
+                                ){
+                                $msg = 'Documento válido';
+                                $estado = true;
+                                $datosDocumentoValidado = $datosRegistrados;
+                            } else {
+                                $msg = 'Datos modificados, documento no válido';
+                                $estado = false;
+                            }
                         }
                     } catch (\Exception $e) {
                         $msg = 'Documento no válido';
@@ -2688,13 +2963,29 @@ public function getDocumentoTokenImpreso($token) {
         }
         // dump($this->session->get('pathSystem'));die;
 
-
+        if($entityDocumentoTipoId == 1 or $entityDocumentoTipoId == 2 or $entityDocumentoTipoId == 9){
+            $subtitulo = "Diploma de Bachiller";
+        } elseif ($entityDocumentoTipoId == 6){
+            $subtitulo = "Técnico Básico";
+        } elseif ($entityDocumentoTipoId == 7){
+            $subtitulo = "Técnico Auxiliar";
+        } elseif ($entityDocumentoTipoId == 8){
+            if($entityEducacionTipoId == 2){                
+                $subtitulo = "Bachillerato Técnico Humanístico";
+            } elseif ($entityEducacionTipoId == 3){
+                $subtitulo = "Técnica Medio";
+            } else {
+                $subtitulo = "";
+            }
+        } else{
+            $subtitulo = "";
+        }
         return $this->render('SieTramitesBundle:Documento:validacion.html.twig',array(
             'listaDocumento' => $datosDocumentoValidado,   
             'estado' => $estado, 
             'msg' => $msg,
             'titulo' => 'Validación del documento',
-            'subtitulo' => 'Diploma de Bachiller',
+            'subtitulo' => $subtitulo,
     	));
         
     }    

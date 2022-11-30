@@ -56,6 +56,10 @@ Sie\AppWebBundle\Entity\TtecInstitucioneducativaHistorico:
             length: 200
             fixed: false
             comment: ''
+        autorizado:
+            type: boolean
+            nullable: true
+            comment: ''
     manyToOne:
         institucioneducativa:
             targetEntity: Institucioneducativa
