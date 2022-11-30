@@ -205,7 +205,7 @@ class Segip {
 			//$tipo_persona = 1;//1: nacional, 2:extranjero
 			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
 			$url = $this->getUrlBase($env)."personas/contrastacion/?lista_campo=$lista_campo&tipo_persona=$tipo_persona";
-			//dump($url); die;
+			dump($url); die;
 			$response = $this->client->request(
 			    'GET', 
 			    $url, 
@@ -234,6 +234,8 @@ class Segip {
 		 * que ya viene en datosVerificacion, si no existe hasta que se adecuen todos los formularios
 		 * pregunta si existe y se queda con 1
 		 */
+
+
 		if (isset($datosVerificacion['tipo_persona'])) {
 			$tipo_persona = $datosVerificacion['tipo_persona'];
 		}
