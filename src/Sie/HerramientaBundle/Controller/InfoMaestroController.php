@@ -314,12 +314,35 @@ class InfoMaestroController extends Controller {
         $form = $request->get('form');
 
         $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
-        
+
+        $dataPer = array('carnet'=>$form['carnet'], 'complemento'=>($form['complemento']=='')?'':$form['complemento']);
+        $personaBus = $em->getRepository('SieAppWebBundle:Persona')->findOneBy($dataPer);        
+        // dump($persona);die;
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
         $data = [
             'carnet' => $form['carnet'],
             'complemento' => $form['complemento'],
+            'id' => '',
+
         ];
+        if($personaBus){
+            if( $personaBus->getSegipId() == 0){
+
+                $data['id']= bin2hex($personaBus->getId());
+                $data['paterno']=$personaBus->getPaterno();
+                $data['materno']=$personaBus->getMaterno();
+                $data['nombre']=$personaBus->getNombre();
+                $data['fecha_nacimiento']=$personaBus->getFechaNacimiento()->format('d-m-Y');
+                
+                $persona = array();
+            }else{
+                $persona['personaCarnet']=$personaBus->getCarnet();
+                $persona['personaComplemento']=$personaBus->getComplemento();
+                $persona['personaPaterno']=$personaBus->getPaterno();
+                $persona['personaMaterno']=$personaBus->getMaterno();
+            }
+
+        }
 
         $formVerificarPersona = $this->createForm(new VerificarPersonaSegipType(), 
             null,
@@ -341,6 +364,7 @@ class InfoMaestroController extends Controller {
     public function verificarPersonaAction(Request $request){
         
         $form = $request->get('sie_verificar_persona_segip');
+
         $tipo_persona = 1;
         //si llega desde el form, estopara que otros formualrio no tengan error
         // mientras son modificados
@@ -361,6 +385,7 @@ class InfoMaestroController extends Controller {
         ];
 
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
+        
         $persona = array();
 
         if($resultado) {
@@ -370,7 +395,8 @@ class InfoMaestroController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'idper' => $form['idper'],
             ];
         }
 
@@ -400,7 +426,6 @@ class InfoMaestroController extends Controller {
 
         //aqui se adiciono un campo hidden en formulario_persona_new.html.twig
         //por que por alguna razon, se hace dos validacione segip
-
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('sie_persona_datos');
         $persona = unserialize($form['persona']);
@@ -440,7 +465,12 @@ class InfoMaestroController extends Controller {
 
             if($personaEncontrada == null)
             {
-                $newPersona = new Persona();
+                if($persona['idper']==''){
+                    $newPersona = new Persona();
+                }else{
+                    $newPersona = $em->getRepository('SieAppWebBundle:Persona')->find(hex2bin($persona['idper']));
+                }
+
                 $newPersona->setCarnet($persona['carnet']);
                 $newPersona->setComplemento(mb_strtoupper($complemento, 'utf-8'));
                 $newPersona->setPaterno(mb_strtoupper($persona['primer_apellido'], 'utf-8'));
@@ -930,6 +960,9 @@ class InfoMaestroController extends Controller {
         try {
             $form = $request->get('form');
 
+            // update the data person if has QA observation
+            $answerMod = $this->updatePerson($form);
+
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
             $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
             $persona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
@@ -994,13 +1027,66 @@ class InfoMaestroController extends Controller {
             }
 
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente');
+            $msg = '';
+            if(!$answerMod){
+                $msg = '. DATOS DE PERSONA NO MODIFICADOS, NO CUMPLE CON LA VALIDACION SEGIP';
+            }
+            $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente '.$msg);
             return $this->redirect($this->generateUrl('herramienta_info_maestro_index', array('op' => 'result')));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
             return $this->redirect($this->generateUrl('herramienta_info_maestro_index', array('op' => 'result')));
         }
+    }
+    private function updatePerson($form){
+        $em = $this->getDoctrine()->getManager();
+
+            $arrParametros = array(
+                'complemento'=>mb_strtoupper($form['complemento'], 'utf-8'),
+                'primer_apellido'=>mb_strtoupper($form['paterno'], 'utf-8'),
+                'segundo_apellido'=>mb_strtoupper($form['materno'], 'utf-8'),
+                'nombre'=>mb_strtoupper($form['nombre'], 'utf-8'),
+                'fecha_nacimiento'=>$form['fechaNacimiento']
+            );
+            if($form['extranjero'] == 1){
+                $arrParametros['extranjero'] = 'e';
+            }      
+            
+            // get info segip
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['carnet'],$arrParametros,'prod', 'academico');   
+            $answer = 0;
+            if($answerSegip){
+                
+                $newPersona = $em->getRepository('SieAppWebBundle:Persona')->find(($form['idPersona']));
+                $oldPersona = clone $newPersona;
+                $newPersona->setPaterno(mb_strtoupper($form['paterno'], 'utf-8'));
+                $newPersona->setMaterno(mb_strtoupper($form['materno'], 'utf-8'));
+                $newPersona->setNombre(mb_strtoupper($form['nombre'], 'utf-8'));
+                $newPersona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));                
+                $newPersona->setSegipId(1);                
+
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($form['extranjero']==1)?2:1));    
+                $em->persist($newPersona);
+                $em->flush();
+                $answer = 1;
+
+                $this->get('funciones')->setLogTransaccion(
+                                       $form['idPersona'],
+                                        'persona',
+                                        'U',
+                                        '',
+                                        $newPersona,
+                                        $oldPersona,
+                                        'ACADEMICO',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                );
+
+
+            }
+        return $answer; 
+
+
     }
 
     /*
