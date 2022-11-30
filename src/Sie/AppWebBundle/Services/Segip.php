@@ -205,7 +205,7 @@ class Segip {
 			//$tipo_persona = 1;//1: nacional, 2:extranjero
 			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
 			$url = $this->getUrlBase($env)."personas/contrastacion/?lista_campo=$lista_campo&tipo_persona=$tipo_persona";
-			dump($url); die;
+			//dump($url); die;
 			$response = $this->client->request(
 			    'GET', 
 			    $url, 
@@ -281,9 +281,9 @@ class Segip {
 			}
 		}
 		//verificacion de si extranjero, aqui nunca entra, no importa ya viene del form
-		/*commente by krlos ... why set tipo_persona =2 ???
+		/*commente by krlos ... why set tipo_persona =2 ???*/
 		if(array_key_exists('extranjero', $datosVerificacion)==true)
-			$tipo_persona=2; //extranjero*/
+			$tipo_persona=2; //extranjero
 
 		//verificacion de si NO tiene complemento
 		if(array_key_exists('complemento', $datosVerificacion)==false)
