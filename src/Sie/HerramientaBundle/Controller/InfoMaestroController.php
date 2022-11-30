@@ -335,13 +335,19 @@ class InfoMaestroController extends Controller {
                 $data['fecha_nacimiento']=$personaBus->getFechaNacimiento()->format('d-m-Y');
                 
                 $persona = array();
-            }else{
+            }else{                
                 $persona['personaCarnet']=$personaBus->getCarnet();
                 $persona['personaComplemento']=$personaBus->getComplemento();
                 $persona['personaPaterno']=$personaBus->getPaterno();
                 $persona['personaMaterno']=$personaBus->getMaterno();
             }
 
+        }else{
+                $data['id']= '';
+                $data['paterno']='';
+                $data['materno']='';
+                $data['nombre']='';
+                $data['fecha_nacimiento']='';
         }
 
         $formVerificarPersona = $this->createForm(new VerificarPersonaSegipType(), 
@@ -1080,7 +1086,7 @@ class InfoMaestroController extends Controller {
                                         $oldPersona,
                                         'ACADEMICO',
                                         json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                );
+                );  
 
 
             }

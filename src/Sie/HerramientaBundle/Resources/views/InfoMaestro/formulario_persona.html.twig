@@ -23,7 +23,7 @@
     <div class="form-group">
         <label>{{form_label(form_verificar.fecha_nacimiento)}} (*):</label>
         {{form_widget(form_verificar.fecha_nacimiento, {'attr': {'class': 'form-control calendario', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)', 'required': true, 'value': data.fecha_nacimiento}})}}
-        <input type="text" id="sie_verificar_persona_segip_idper" name="sie_verificar_persona_segip[idper]" autocomplete="off" class="form-control"  value="{{data.id}}">
+        <input type="hidden" id="sie_verificar_persona_segip_idper" name="sie_verificar_persona_segip[idper]" autocomplete="off" class="form-control"  value="{{data.id}}">
     </div>
 
     <div class="form-group">
