@@ -234,6 +234,8 @@ class Segip {
 		 * que ya viene en datosVerificacion, si no existe hasta que se adecuen todos los formularios
 		 * pregunta si existe y se queda con 1
 		 */
+
+
 		if (isset($datosVerificacion['tipo_persona'])) {
 			$tipo_persona = $datosVerificacion['tipo_persona'];
 		}
@@ -279,9 +281,9 @@ class Segip {
 			}
 		}
 		//verificacion de si extranjero, aqui nunca entra, no importa ya viene del form
-		/*commente by krlos ... why set tipo_persona =2 ???
+		/*commente by krlos ... why set tipo_persona =2 ???*/
 		if(array_key_exists('extranjero', $datosVerificacion)==true)
-			$tipo_persona=2; //extranjero*/
+			$tipo_persona=2; //extranjero
 
 		//verificacion de si NO tiene complemento
 		if(array_key_exists('complemento', $datosVerificacion)==false)
