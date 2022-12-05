@@ -84,14 +84,14 @@ class NoteConsultationUesController extends Controller {
               // get infor about the consolidation  by YEAR and SIE
               $infoConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion, 'unidadEducativa' => $sie));
               
+              
               if($infoConsolidation ){
                     // check if the ue close the operativo
                   $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
                   // if(in_array($this->session->get('roluser'), array(7,8,10)) ){
                   //     $operativo = $operativo - 1;
                   // }
-                  
-                  if($gestion == 2020){
+                  if($gestion >= 2020){
                     if($operativo <= 2){
                       $message = 'Unidad Educativa no cerro el operativo 3er trimestre';
                       $this->addFlash('warningconsultaue', $message);
@@ -205,19 +205,7 @@ class NoteConsultationUesController extends Controller {
                           $this->addFlash('warningconsultaue', $message);
                           $exist = false;
                           $arrValidation['observaciones_incosistencia'] = $inconsistencia;                        
-                        } else{
-                          $em->getConnection()->beginTransaction();
-                          try{
-                              $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion));
-                              $registroConsol->setFecha(new \DateTime("now"));
-                              $registroConsol->setBoletin('1');
-                              $em->persist($registroConsol);
-                              $em->flush();
-                              $em->getConnection()->commit();
-                          } catch (Exception $e) {
-                              $em->getConnection()->rollback();
-                          }
-                        }
+                        } 
 
                       // this for the current year and close this task
                       if($gestion == $this->session->get('currentyear')-1){
@@ -262,7 +250,19 @@ class NoteConsultationUesController extends Controller {
                   'id' => $sie,
               );   
               $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
+              $em->getConnection()->beginTransaction();
+              try{
+                  $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion));
+                  $registroConsol->setFecha(new \DateTime("now"));
+                  $registroConsol->setBoletin('1');
+                  $em->persist($registroConsol);
+                  $em->flush();
+                  $em->getConnection()->commit();
+              } catch (Exception $e) {
+              $em->getConnection()->rollback();
+              }
             }
+            
           }
 
         } else {
