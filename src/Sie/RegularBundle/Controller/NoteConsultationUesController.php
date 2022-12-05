@@ -171,8 +171,7 @@ class NoteConsultationUesController extends Controller {
                           $query->bindValue(':periodo', 1);
                           $query->execute();
                           $inconsistencia = $query->fetchAll();
-                        } else {
-                          if($gestion == 2021){
+                        } elseif($gestion == 2021){
                             $valor_op=array('0'=>6,'1'=>6,'2'=>7,'3'=>8);
 
                             $queryCheckCal = 'select * from sp_validacion_regular_web2021_fg(:gestion,:sie,:ope)';
@@ -180,23 +179,44 @@ class NoteConsultationUesController extends Controller {
                             $query->bindValue(':gestion', $gestion);
                             $query->bindValue(':sie', $sie);
                             $query->bindValue(':ope', $valor_op[$operativo]);
+                            $query->execute();
                             $inconsistencia = $query->fetchAll();                            
-                          }else{                            
+                        } elseif($gestion == 2022){
+                          $valor_op=array('0'=>6,'1'=>6,'2'=>7,'3'=>8);
+                          
+                          $queryCheckCal = 'select * from sp_validacion_regular_web2022_fg(:gestion,:sie,:ope)';
+                          $query = $em->getConnection()->prepare($queryCheckCal);
+                          $query->bindValue(':gestion', $gestion);
+                          $query->bindValue(':sie', $sie);
+                          $query->bindValue(':ope', $valor_op[$operativo]);
+                          $query->execute();
+                          $inconsistencia = $query->fetchAll(); 
+
+                        } else {                            
                             $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
                             $query->bindValue(':gestion', $gestion);
                             $query->bindValue(':sie', $sie);
                             $query->bindValue(':periodo', 4);
                             $query->execute();
                             $inconsistencia = $query->fetchAll();
-                          }
-
                         }
-
                         if ($inconsistencia) {
                           $message = 'Unidad Educativa presenta observaciones de inconsistencia';
                           $this->addFlash('warningconsultaue', $message);
                           $exist = false;
                           $arrValidation['observaciones_incosistencia'] = $inconsistencia;                        
+                        } else{
+                          $em->getConnection()->beginTransaction();
+                          try{
+                              $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion));
+                              $registroConsol->setFecha(new \DateTime("now"));
+                              $registroConsol->setBoletin('1');
+                              $em->persist($registroConsol);
+                              $em->flush();
+                              $em->getConnection()->commit();
+                          } catch (Exception $e) {
+                              $em->getConnection()->rollback();
+                          }
                         }
 
                       // this for the current year and close this task
@@ -250,7 +270,7 @@ class NoteConsultationUesController extends Controller {
             $this->addFlash('warningconsultaue', $message);
             $exist = false;
         }
-
+        
         return $this->render($this->session->get('pathSystem') . ':NoteConsultationUes:result.html.twig', array(
                     'unidadEducativa' => $objUe,
                     'courses' => $objCourses,

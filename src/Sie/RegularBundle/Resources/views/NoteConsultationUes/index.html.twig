@@ -130,7 +130,7 @@
                 alert("Necesita código SIE para realizar la busqueda");
                 return false;
             }
-
+            if(confirm('ESTA SEGURO DE GENERAR EL BOLETÍN CENTRALIZADOR? NOTA: Se consolidara su información y cerraran algunos trámites en la presente gestión.')){
             $.ajax({
                 type: 'post',
                 data: ({sie: sie, gestion: gestion}),
@@ -152,6 +152,9 @@
                     }
                 }
             });
+            }else {
+                return false;
+            }
         }
 
 
