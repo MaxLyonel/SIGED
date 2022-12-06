@@ -629,7 +629,7 @@
                     return false;
                 },
                 claseNotaTipo: function(tiponota, gestion){
-                    console.log(gestion);
+                    // console.log(gestion);
                     if(gestion <= 2020){
                         if(this.inArray(tiponota, [5,6,7,8,9,11]  ) ){
                             if(gestion == 2020)
@@ -713,7 +713,7 @@
                         this.buscando = false;
                     })
                     .catch(e => {
-                        console.log(e);
+                        // console.log(e);
                         this.buscando = false;
                     });
                 },
@@ -765,7 +765,7 @@
                             });
                         }else{
                             this.datos = response.data.datos;
-                            console.log(this.datos);
+                            // console.log(this.datos);
                             this.estadosMatricula = response.data.estadosMatricula;
                             this.promedioGeneral = response.data.promedioGeneral;
                             this.nuevoPromedioGeneral = response.data.promedioGeneral;
@@ -817,8 +817,7 @@
                         var me = this;
 
                         $('body').removeClass('modal-open');
-
-                        console.log(idNotaTipo);   
+ 
                         if(index == -1){
                             // AGREGAR CALIFICACION
                             if(!nuevaNota.nota){   
@@ -881,7 +880,7 @@
                                         this.notas.push(nuevaNota);
                                         this.filas.push(idFila);
                                         $('#'+idFila).addClass('seleccionado');
-                                        console.log('donde');
+                                        //console.log('donde');
                                     },
                                     onClose: () => {
                                         $('body').addClass('modal-open');
@@ -889,7 +888,7 @@
                                 })
                             }
                         }else{
-                            console.log('no');
+                            //console.log('no');
                             // MODIFICAR CALIFICACION
                             // Swal.fire(
                             //   'Aviso!',
@@ -992,10 +991,10 @@
                     // VALIDACIONES TRIMESTRALES
                     if(nota.idNotaTipo == 6 || nota.idNotaTipo == 7 || nota.idNotaTipo == 8){
                         if(nota.gestion == 2020){
-                            console.log('notaaaaaa11'+nota.notaNueva);
+                            // console.log('notaaaaaa11'+nota.notaNueva);
                             if(nota.notaNueva < 0){ nota.notaNueva = 0; }
                             if(nota.notaNueva > 100){ nota.notaNueva = 100; }                            
-                            console.log('notaaaaaa22'+nota.notaNueva);
+                            // console.log('notaaaaaa22'+nota.notaNueva);
                         }else{
                             if(nota.gestion == 2021){
                                 if(nota.notaNueva < 0){ nota.notaNueva = 0; }
@@ -1025,7 +1024,7 @@
                     if(nota.notaNueva != "" && nota.notaNueva != 0){
                         nota.notaNueva = Math.round(nota.notaNueva);
                     }
-                    console.log('notaaaaaa '+nota.notaNueva);
+                    // console.log('notaaaaaa '+nota.notaNueva);
                     // cargamos la nota al valor de nueva nota
                     var me = this;
 
@@ -1085,8 +1084,8 @@
 
                         // CALCULAMOS EL ESTADO DE MATRÍCULA
                         var cantidadMaterias = this.datos.cuantitativas.length;
-                        console.log(cantidadMaterias);
-                        console.log(cantidadPromedios);
+                        // console.log(cantidadMaterias);
+                        // console.log(cantidadPromedios);
 
                         if(cantidadMaterias == cantidadPromedios){
                             var me = this;
@@ -1446,7 +1445,7 @@
                     this.filasCualitativas.splice(index1,1);
 
                     $('#'+row.idFila).removeClass('seleccionado');
-                    console.log(this.filas);
+                    // console.log(this.filas);
                 },
                 validarNotaCualitativa: function(){
                     var key = window.event;
@@ -1495,7 +1494,7 @@
                         }
                     }
                     this.solicitud = event.target.files[0];
-                    console.log(this.solicitud);
+                    // console.log(this.solicitud);
                     this.checkSolicitud = true;
                 },
                 enviarSolicitud: function(){
