@@ -4499,6 +4499,8 @@ class TramiteController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }        
 
+        $response = new JsonResponse();
+
         if ($request->isMethod('POST')) {
             $form = $request->get('form');
             if ($form) {
@@ -4510,13 +4512,17 @@ class TramiteController extends Controller {
                     $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol, 'TRAMITES');
 
                     if ($verTuicionUnidadEducativa != ''){
-                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                        // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
+                        // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                        $response->setStatusCode(201);
+                        return $response->setData(array('estado'=>false, 'msg'=>$verTuicionUnidadEducativa));
                     }
 
                     $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
                     if(count($entityAutorizacionUnidadEducativa)<=0){
-                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                        //$this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                        $response->setStatusCode(201);
+                        return $response->setData(array('estado'=>false, 'msg'=>'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
                     }
 
                     $entityParticipantes = $this->getEstudiantesRegularBachillerTecnicoHumanistica($sie,$gestion);
@@ -4529,16 +4535,22 @@ class TramiteController extends Controller {
                         'datosBusqueda' => $datosBusqueda,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
-                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                    $response->setStatusCode(201);
+                    return $response->setData(array('estado'=>false, 'msg'=>'Error al procesar la información, intente nuevamente'));
                 }
             }  else {
-                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+                $response->setStatusCode(201);
+                return $response->setData(array('estado'=>false, 'msg'=>'Error al enviar el formulario, intente nuevamente'));
             }
         } else {
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+            // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_registro_busca'));
+            $response->setStatusCode(201);
+            return $response->setData(array('estado'=>false, 'msg'=>'Error al enviar el formulario, intente nuevamente'));
         }
         //return $this->redirect($this->generateUrl('login'));
     }

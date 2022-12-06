@@ -114,21 +114,26 @@
                 processData: false,
                 contentType: false,
                 beforeSend: function () {
-                    $("#contentList").empty();
-                    $("#contentList").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    $("#contentMsg").empty();
+                    $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');               
                 },
-                success: function (data) {
-                    $('#contentList').empty();
-                    $("#contentList").append(data);
+                success: function (data, textStatus, xhr) {
+                    $("#contentMsg").empty();
+                    if(xhr.status === '200' || xhr.status === 200){   
+                        $('#contentList').empty();
+                        $("#contentList").append(data);
+                    } else {                        
+                        $("#contentMsg").html('<div class="alert alert-danger alert-dismissible mb-5" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong><i class="fa fa-envelope"></i> Error </strong> '+data.msg+'</div>');
+                    }
                 },
                 error: function(xhr) {
-                    $("#contentList").empty();
-                    $("#contentList").append('<div style="text-align:center">Error, no fue posible enviar el formulario</div>');
+                    $("#contentMsg").empty();
+                    $("#contentMsg").append('<div style="text-align:center">Error, no fue posible enviar el formulario</div>');
                 },
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
-                $("#contentList").empty();
-                $("#contentList").append('<div style="text-align:center">Error, no fue posible procesar el formulario</div>');
+                $("#contentMsg").empty();
+                $("#contentMsg").append('<div style="text-align:center">Error, no fue posible procesar el formulario</div>');
             });
         });
 
