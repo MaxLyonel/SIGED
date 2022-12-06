@@ -1652,7 +1652,7 @@ class PrevImmediateModiVer2Controller extends Controller{
             }
 
             //verificamos si esta en la tabla de olim_estudiante_inscripcion
-            $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $eiid ));
+            $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('estudianteInscripcion' => $eiid ));
             if ($objolim_estudiante_inscripcion) {
                 $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Olimpiadas";
                 $request->getSession()
