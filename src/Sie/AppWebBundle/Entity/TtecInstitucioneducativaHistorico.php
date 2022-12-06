@@ -248,32 +248,5 @@ class TtecInstitucioneducativaHistorico
     {
         return $this->institucioneducativa;
     }
-    /**
-     * @var boolean
-     */
-    private $autorizado;
-
-
-    /**
-     * Set autorizado
-     *
-     * @param boolean $autorizado
-     * @return TtecInstitucioneducativaHistorico
-     */
-    public function setAutorizado($autorizado)
-    {
-        $this->autorizado = $autorizado;
     
-        return $this;
-    }
-
-    /**
-     * Get autorizado
-     *
-     * @return boolean 
-     */
-    public function getAutorizado()
-    {
-        return $this->autorizado;
-    }
 }
