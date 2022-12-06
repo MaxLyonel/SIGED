@@ -165,7 +165,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="text-center">
-                                <h3>FORMULARIO DE INCLUSIÓN DE CALIFICACIONES GESTIONES PASADAS</h3>
+                                <h3>FORMULARIO DE MODIFICACIÓN DE CALIFICACIONES GESTIONES PASADAS</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
                             <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
@@ -796,7 +796,10 @@
                     if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion <= 2021) {
 
                         var index = this.filas.indexOf(idFila);
-                        
+                        var nota_aux = nota;
+                        if(nota === 0){
+                            nota = 1;
+                        }
                         var nuevaNota = {
                             idEstudianteNota: idEstudianteNota,
                             asignatura: asignatura,
@@ -815,15 +818,17 @@
 
                         $('body').removeClass('modal-open');
 
+                        console.log(idNotaTipo);   
                         if(index == -1){
                             // AGREGAR CALIFICACION
-                            if(!nuevaNota.nota){
+                            if(!nuevaNota.nota){   
                                 Swal.fire(
                                 'Aviso!',
-                                'No corresponde a una inclusión de calificación',
+                                'No corresponde a una modificación de calificación',
                                 'warning'
                                 )                                
-                            } else {                                
+                            } else { 
+                                nuevaNota.nota = nota_aux;                  
                                 const {value: calificacion} = Swal.fire({
                                     title: 'Agregar calificación',
                                     input: 'text',
