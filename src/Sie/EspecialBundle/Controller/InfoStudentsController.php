@@ -219,7 +219,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['bono'] = false;
       $areasBono=array(3,1,2,4,5);  
       if( $gestion>2021 and in_array($objArea->getId(), $areasBono) and $modalidad==1){
-        $arrDataLibreta['bono'] = true; //true para activar
+        $arrDataLibreta['bono'] = false; //true para activar
       }
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
