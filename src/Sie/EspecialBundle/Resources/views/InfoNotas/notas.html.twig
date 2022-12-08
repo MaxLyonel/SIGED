@@ -148,10 +148,15 @@
 	    	var formData = $('#formNotasEspecial').serialize();//"textarea[name!=int1]", .not('form[textarea]')
 			//Seguimiento para Talento Extraordinario
 			var notas = [];
+			$("#tbl_nota_existe tbody tr").each(function() {
+				$this = $(this);
+				notas.push({"inter": $this.find("textarea.pie").val(), "desc": $this.find("textarea.dce").val()});
+			});
 			$("#tbl_nota tbody tr").each(function() {
 				$this = $(this);
 				notas.push({"inter": $this.find("textarea.pi").val(), "desc": $this.find("textarea.dc").val()});
 			});
+			
 			if(notas.length > 0) {
 				formData = formData+"&seguimiento="+JSON.stringify(notas);
 			}
