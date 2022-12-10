@@ -438,7 +438,7 @@ class CarrerasController extends Controller
         //dump($fecha_apertura); die;
         $carreraEntity->setFechaApertura(new \DateTime( $fecha_apertura));
         
-        $carreraEntity->setUnivGradoAcademicoTipo($em->getRepository('SieAppWebBundle:UnivGradoacademicoTipo')->find($grado_id));
+        $carreraEntity->setUnivGradoAcademicoTipo($em->getRepository('SieAppWebBundle:UnivGradoTipo')->find($grado_id));
 
         $carreraEntity->setDuracion($request->get('duracion'));
         $carreraEntity->setDuracionAnios($request->get('duracion_anios'));
@@ -468,10 +468,10 @@ class CarrerasController extends Controller
         //TODO: esto de donde ?
         $carrera_id = $request->get('carrera_id');
         $sedeId = $this->session->get('sedeId');
-        /*$nivel_academico_id = $request->get('edit_nivel_academico_id');
+        $nivel_academico_id = $request->get('edit_nivel_academico_id');
         $modalidad_id = $request->get('edit_modalidad_id');
         $regimen_id = $request->get('edit_regimen_id');
-        */
+        
         $grado_id = $request->get('edit_grado_id');
         $duracion = $request->get('edit_duracion');
         $duracion_anios = $request->get('edit_duracion_anios');
@@ -491,18 +491,18 @@ class CarrerasController extends Controller
         //$carreraEntity->setUnivAreaConocimiento($request->get('edit_area_conocimiento'));
 
         //$carreraEntity->setUnivNivelAcademicoTipo($em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->find($nivel_academico_id));
-        //$carreraEntity->setUnivRegimenEstudiosTipo($em->getRepository('SieAppWebBundle:UnivRegimenEstudiosTipo')->find($regimen_id));
-        //$carreraEntity->setUnivModalidadEnsenanzaTipo($em->getRepository('SieAppWebBundle:UnivModalidadEnsenanzaTipo')->find($modalidad_id));
+        $carreraEntity->setUnivRegimenEstudiosTipo($em->getRepository('SieAppWebBundle:UnivRegimenEstudiosTipo')->find($regimen_id));
+        $carreraEntity->setUnivModalidadEnsenanzaTipo($em->getRepository('SieAppWebBundle:UnivModalidadEnsenanzaTipo')->find($modalidad_id));
 
-        //$carreraEntity->setCarrera($request->get('edit_carrera'));
-        //$carreraEntity->setResolucion($request->get('edit_resolucion'));  
+        $carreraEntity->setCarrera(trim($request->get('edit_carrera')));
+        $carreraEntity->setResolucion(trim($request->get('edit_resolucion')));  
         
         //fecha ??
         //rm_apertura ??
         //dump($fecha_apertura); die;
-        //$carreraEntity->setFechaApertura(new \DateTime( $fecha_apertura));
+        $carreraEntity->setFechaApertura(new \DateTime( $fecha_apertura));
         
-        //$carreraEntity->setUnivGradoAcademicoTipo($em->getRepository('SieAppWebBundle:UnivGradoacademicoTipo')->find($grado_id));
+        $carreraEntity->setUnivGradoAcademicoTipo($em->getRepository('SieAppWebBundle:UnivGradoTipo')->find($grado_id));
 
         $carreraEntity->setDuracion($request->get('edit_duracion'));
         $carreraEntity->setDuracionAnios($request->get('edit_duracion_anios'));
@@ -532,7 +532,7 @@ class CarrerasController extends Controller
         //$query->bindValue(':gestion', $gestion);
 		$query->execute();
 		$existe_info = $query->fetchAll();*/
-        $existe_info = true;
+        $existe_info = false;
         if ($existe_info == true){
             $msg = 'No esposible eliminar, existen datos relacionados';
             return $response->setData(array(
@@ -541,11 +541,18 @@ class CarrerasController extends Controller
             ));
         }
 
-        /*$em->remove($em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->findOneById($id));
-        $em->flush();*/
+        $em->remove($em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->findOneById($id));
+        $em->flush();
 
-        $this->get('session')->getFlashBag()->add('carreradeleteok', 'La carrera fue eliminada correctamente');
-        return $this->redirect($this->generateUrl('carreras_index', array('op' => 'result')));
+        $this->get('session')->getFlashBag()->add('carreradeleteok', 'La carrera fue eliminada correctamente');       
+        //return $this->redirect($this->generateUrl('carreras_index', array('op' => 'result')));
+        $msg = 'La carrera y toda la información relacionada ha sido eliminada !';
+            return $response->setData(array(
+                'status'=>201,
+                'msg'=>$msg,                
+            ));
+
+        
     }
 
     public function verifica_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion, $nivel_academico){

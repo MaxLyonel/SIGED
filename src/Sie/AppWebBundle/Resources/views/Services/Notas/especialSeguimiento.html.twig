@@ -11,7 +11,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <table class="table table-bordered" id="tbl_nota">
+            <table class="table table-bordered" id="tbl_nota_existe">
             <thead>
                 <tr>
                     <th><b>Plan de Intervención</b></th>
@@ -19,16 +19,22 @@
                     <th><button type="button" class="btn btn-success btn-sm" id="brow" {% if notas.enota == 1 %} disabled {% endif %}><i class="fa fa-plus"></i></button></th>
                 </tr>
             </thead            
-            {% if notas.enota == 1 %}
-            <tbody>
+            {#% if notas.enota == 1 %#}
+           
+             <tbody>
                 {% for item in notas.cualitativas %}
-                <tr>
-                    <td>{{ item.inter }}</td>
-                    <td>{{ item.desc }}</td>
-                </tr>
+                    <tr>
+                        <td>
+                        <textarea class="form-control jnumbersletters noresize pie" name="inte{{ loop.index }}" maxlength="80" required>{{ item.inter }}</textarea></td>
+                        <td>
+                        <textarea class="form-control jnumbersletters noresize dce" name="dese{{ loop.index }}" maxlength="80" required>{{ item.desc }}</textarea>
+                        </td>
+                    </tr>
                 {% endfor %}
-            </tbody>
-            {% else %}
+            
+             </tbody>
+        </table>
+        <table class="table table-bordered" id="tbl_nota">
             <tbody>
                 <tr>
                     <td>
@@ -40,7 +46,7 @@
                     <td>&nbsp;</td>
                 </tr>
             </tbody>
-            {% endif %}
+            {#% endif %#}
         </table>
     </div>
     <br/>

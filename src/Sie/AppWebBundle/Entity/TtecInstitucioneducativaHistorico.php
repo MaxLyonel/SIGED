@@ -248,4 +248,5 @@ class TtecInstitucioneducativaHistorico
     {
         return $this->institucioneducativa;
     }
+    
 }

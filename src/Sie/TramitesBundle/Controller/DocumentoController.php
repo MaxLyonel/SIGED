@@ -1945,7 +1945,11 @@ public function getDocumentoTokenImpreso($token) {
                 $response = new Response();
                 $response->headers->set('Content-type', 'application/pdf');
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_v2.rptdesign&sie='.$sie.'&gestion='.$ges.'&firma='.$documentoFirmaId.'&&__format=pdf&'));
+                if($documentoFirmaId == 211){
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_ch_v2.rptdesign&sie='.$sie.'&gestion='.$ges.'&firma='.$documentoFirmaId.'&&__format=pdf&'));
+                } else { 
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_v2.rptdesign&sie='.$sie.'&gestion='.$ges.'&firma='.$documentoFirmaId.'&&__format=pdf&'));
+                }
                 $response->setStatusCode(200);
                 $response->headers->set('Content-Transfer-Encoding', 'binary');
                 $response->headers->set('Pragma', 'no-cache');

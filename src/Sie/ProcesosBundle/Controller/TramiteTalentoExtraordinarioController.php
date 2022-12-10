@@ -207,13 +207,25 @@ class TramiteTalentoExtraordinarioController extends Controller {
                     return $response->setData(array('msg' => 'nodpto'));
                 } */
                 $estudianteinscripcion_id = $einscripcion_result[0]->getId();
-                $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+               /*$resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
                     ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
                     ->where('fp.flujoTipo='.$flujotipo_id)
                     ->andWhere('fp.orden=1')
                     ->andWhere("wfd.esValido=true")
+                    ->orderBy("td.flujoProceso")
+                    ->getQuery()
+                    ->getResult();*/
+                $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                    ->select('wfd')
+                    ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                    ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
+                    ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
+                    ->where('fp.flujoTipo='.$flujotipo_id)
+                    ->andWhere('fp.orden=1')
+                    ->andWhere("wfd.esValido=true")
+                    ->andWhere("t.fechaFin is null")
                     ->orderBy("td.flujoProceso")
                     ->getQuery()
                     ->getResult();

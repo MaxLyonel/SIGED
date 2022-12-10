@@ -1399,7 +1399,7 @@ class TramiteInclusionCalificacionController extends Controller {
         if(count($datosNotas['notas']) > 0){
             foreach ($datosNotas['notas'] as $n) {
                 if($n['idNotaTipo']=='10'){
-                    dump("tiene un reforzamiento");die;
+                   // dump("tiene un reforzamiento");die;
                 }
                 if ($n['idEstudianteNota'] == 'nuevo') {
                     // REGISTRAMOS LA NUEVA CALIFICACION

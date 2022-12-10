@@ -431,7 +431,7 @@ class DocumentoFirmaController extends Controller {
             ->add('tipo', 'entity', array('data' => $entidadPersonaTipo, 'empty_value' => 'Seleccione Cargo', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\PersonaTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('pt')
-                                ->where('pt.id in (1,2,3,4)')
+                                ->where('pt.id in (1,2,3,4,5)')
                                 ->orderBy('pt.id', 'ASC');
                     },
             ))

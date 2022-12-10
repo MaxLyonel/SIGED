@@ -1,0 +1,86 @@
+Sie\AppWebBundle\Entity\TtecInstitucioneducativaHistoricoDetalle:
+    type: entity
+    table: ttec_institucioneducativa_historico_detalle
+    indexes:
+        IDX_98C50DDB55298F4:
+            columns:
+                - resolucion_tipo_id
+        IDX_98C50DD7BE335F:
+            columns:
+                - institucioneducativa_historico_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        valorAnterior:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: valor_anterior
+        valorAnteriorId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: valor_anterior_id
+        valorNuevo:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: valor_nuevo
+        valorNuevoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: valor_nuevo_id
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        aprobado:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        resolucionTipo:
+            targetEntity: TtecResolucionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                resolucion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaHistorico:
+            targetEntity: TtecInstitucioneducativaHistorico
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_historico_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

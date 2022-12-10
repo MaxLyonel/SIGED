@@ -273,6 +273,30 @@ class RudeUnificationController extends Controller{
 
         }
 
+        
+        // get the students homonimo
+        $dataHomonimoA = $this->getHomonimo($studenta->getId());
+        $dataHomonimoB = $this->getHomonimo($studentb->getId());
+        
+        // validate the homonimos info students
+        if(sizeof($dataHomonimoA)>0 || sizeof($dataHomonimoB)>0){
+            if($dataHomonimoA)
+                $relacion = "Inconsistencia: El usuario ".$dataHomonimoA[0]["nombre"]." ".$dataHomonimoA[0]["paterno"]." registro que ".$dataHomonimoA[0]["estudiantea"] ." es homónimo de ".$dataHomonimoA[0]["estudiantea"].", por tanto se trata de estudiantes diferentes, esta seguro de realizar la Unificación?"; 
+            if($dataHomonimoB)
+                $relacion = "Inconsistencia: El usuario ".$dataHomonimoB[0]["nombre"]." ".$dataHomonimoA[0]["paterno"]." registro que ".$dataHomonimoA[0]["estudiantea"] ." es homónimo de ".$dataHomonimoA[0]["estudiantea"].", por tanto se trata de estudiantes diferentes, esta seguro de realizar la Unificación?"; 
+                $arrResponse = array(
+                    'status'          => 'error',
+                    'code'            => 400,
+                    'message'         => $relacion,
+                    'swresponse' => false,
+                    'swhistory' => false,
+                    'dataHistoryA' => array(),
+                    'dataHistoryB' => array(),
+                    );
+                    $swresponse = false;
+                    $arrMessage[]=$relacion;
+        }
+
         // valdiate DIPLOMAS
         $tramitea=$this->get('seguimiento')->getDiploma($rudea);
         $tramiteb=$this->get('seguimiento')->getDiploma($rudeb);
@@ -626,6 +650,16 @@ class RudeUnificationController extends Controller{
         $query->execute();
         return $query->fetchAll();
     }  
+
+    public function getHomonimo($id){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select (e.codigo_rude ||'-'||e.nombre||' '|| e.paterno||' '|| e.materno )as estudiantea,
+        (select es.codigo_rude||'-'|| es.nombre||' '|| es.paterno||' '|| es.materno from estudiante es where es.id=h.estudiante_homonimo_id ) as estudianteb, 
+        p.nombre, p.paterno from estudiante_homonimo h, estudiante e , usuario u , persona p
+        where estudiante_id =".$id." and e.id=h.estudiante_id and u.id=h.usuario_id and u.persona_id =p.id");
+        $query->execute();
+        return $query->fetchAll();
+    }  
     public function getVerificaDobleInscripcion($rudea,$rudeb){
         
         $em = $this->getDoctrine()->getManager();
@@ -787,6 +821,21 @@ class RudeUnificationController extends Controller{
                 }                
             }
             
+             //*********** IDENTIFICACION DE HOMONIMOS
+            
+             $homonimo1 = $em->getRepository('SieAppWebBundle:EstudianteHomonimo')->findOneBy(array('estudiante' => $studentinc, 'estudianteHomonimo'=>$studentcor)); 
+             
+             $homonimo2 = $em->getRepository('SieAppWebBundle:EstudianteHomonimo')->findOneBy(array('estudiante' => $studentcor, 'estudianteHomonimo'=>$studentinc)); 
+             
+             if($homonimo1){
+                $em->remove($homonimo1);   
+                $em->flush();   
+             }
+             
+             if($homonimo2){
+                $em->remove($homonimo2);   
+                $em->flush();   
+             }
             //***********to EstudianteDocumento information
             $EstudianteDocumento = $em->getRepository('SieAppWebBundle:EstudianteDocumento')->findBy(array('estudiante' => $studentinc)); 
 

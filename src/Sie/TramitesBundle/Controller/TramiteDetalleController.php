@@ -3618,7 +3618,11 @@ class TramiteDetalleController extends Controller {
                         } else {
                             $cierreOperativo = true;
                         }
-                    }                    
+                    }
+                    
+                    if ($gestion <= 2018){
+                        $cierreOperativo = true;
+                    }
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaUnidadEducativaHumanistica('tramite_detalle_diploma_humanistico_impresion_lista',$sie,$gestion)->createView(),
@@ -5581,6 +5585,386 @@ class TramiteDetalleController extends Controller {
             // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista', ['form' => $form], 307);
             return $this->redirectToRoute('tramite_bachillerato_tecnico_humanistico_regular_impresion_busca');
             
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra una tramite para bachillerato técnico humanistico
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumRegularEntregaBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $tramiteController = new tramiteController();
+        $tramiteController->setContainer($this->container);
+
+        // $defaultTramiteController = new defaultTramiteController();
+        // $defaultTramiteController->setContainer($this->container);
+
+        // // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+
+        // $rolPermitido = array(13,14,16,8,10,41,42,43);
+
+        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        // if (!$esValidoUsuarioRol){
+        //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+        // }
+
+        $gestion = $gestionActual->format('Y');
+
+        return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:bachTecHumRegularEntregaIndex.html.twig', array(
+            'formBusqueda' => $tramiteController->creaFormBuscaUnidadEducativaHumanistica('tramite_bachillerato_tecnico_humanistico_regular_entrega_lista',0,0)->createView(),
+            'titulo' => 'Entrega',
+            'subtitulo' => 'Trámite - BTH',
+        ));      
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que muestra el listado de bachilleres con técnico humanístico para la asignacion de carton de su tramite
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumRegularEntregaListaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+
+        $response = new JsonResponse();
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $sie = $form['sie'];
+                $gestion = $form['gestion'];
+
+                try {
+                    $tramiteController = new tramiteController();
+                    $tramiteController->setContainer($this->container);
+
+                    $usuarioRol = $this->session->get('roluser');
+                    $verTuicionUnidadEducativa = $tramiteController->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol, 'TRAMITES');
+
+                    if ($verTuicionUnidadEducativa != ''){
+                        // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
+                        // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_impresion_busca'));                        
+                        // $result = array('estado'=>false, 'msg'=>$verTuicionUnidadEducativa);
+                        // return $response->setData($result);
+                        $response->setStatusCode(201);
+                        return $response->setData(array('estado'=>false, 'msg'=>$verTuicionUnidadEducativa));
+                    }
+
+                    $entityAutorizacionUnidadEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
+                    if(count($entityAutorizacionUnidadEducativa)<=0){
+                        // $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                        //$result = array('estado'=>false, 'msg'=>'No es posible encontrar la información de la unidad educativa, intente nuevamente');
+                        $response->setStatusCode(201);
+                        return $response->setData(array('estado'=>false, 'msg'=>'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                    }
+
+                    $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
+                    if($entitySubsistemaInstitucionEducativa['msg'] != ''){
+                        // $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
+                        // return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_busca'));
+                        $response->setStatusCode(201);
+                        return $response->setData(array('estado'=>false, 'msg'=>$entitySubsistemaInstitucionEducativa['msg']));
+                    }
+
+                    //$entityParticipantes = $this->getEstudiantesRegularBachillerTecnicoHumanistica($sie,$gestion);
+                    $flujoProcesoId = 162; //codigo del flujo y proceso de los tramites registrados
+                    $entityParticipantes = $this->getBachTecHumTramiteProceso($sie,$gestion,$flujoProcesoId);
+
+                    $datosBusqueda = base64_encode(serialize($form));
+
+                    $documentoController = new documentoController();
+                    $documentoController->setContainer($this->container);
+
+                    $documentoTipoId = 8;
+                    $rolPermitido = 9;
+                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                    // $entityFirma = $documentoController->getPersonaFirmaAutorizada($departamentoCodigo,$documentoTipoId);
+
+                    // $entityDocumentoSerie = $documentoController->getSerieEducacionTipo('8',2);
+                    // $entituDocumentoGestion = $documentoController->getGestionEducacionTipo('8',2);
+
+                    // $firmaHabilitada = true;
+
+                    $cierreOperativo = false;
+                    if($entitySubsistemaInstitucionEducativa['msg'] == ''){
+                        if($entitySubsistemaInstitucionEducativa['id'] == '1' or $entitySubsistemaInstitucionEducativa['id'] == 1){
+                            $cierreOperativo = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+                        } 
+                    }   
+
+                    return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:bachTecHumRegularEntregaLista.html.twig', array(    
+                        'listaParticipante' => $entityParticipantes,
+                        'infoAutorizacionUnidadEducativa' => $entityAutorizacionUnidadEducativa,
+                        'datosBusqueda' => $datosBusqueda,    
+                        'cierreOperativo' => $cierreOperativo
+
+                    ));
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_impresion_busca'));
+                    $response->setStatusCode(201);
+                    return $response->setData(array('estado'=>false, 'msg'=>'Error al procesar la información, intente nuevamente'));
+                }
+            }  else {
+                // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_impresion_busca'));
+                $response->setStatusCode(201);
+                return $response->setData(array('estado'=>false, 'msg'=>'Error al enviar el formulario, intente nuevamente'));
+            }
+        } else {
+            // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            // return $this->redirect($this->generateUrl('tramite_bachillerato_tecnico_humanistico_regular_impresion_busca'));            
+            $response->setStatusCode(201);
+            return $response->setData(array('estado'=>false, 'msg'=>'Error al enviar el formulario, intente nuevamente'));
+        }
+        //return $this->redirect($this->generateUrl('login'));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra la asignacion de cartones a los bachilleres humanísticos (Regular y Alternativa) en direccion departamental - legalizaciones
+    // PARAMETROS: estudiantes[], numeroSerieInicial, tipoSerie, fechaEmision, boton
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumRegularEntregaGuardaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $rolPermitido = 9;
+
+        // $defaultTramiteController = new defaultTramiteController();
+        // $defaultTramiteController->setContainer($this->container);
+
+        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        // if (!$esValidoUsuarioRol){
+        //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+        // }
+
+        $documentoTipoId = 8;
+        $institucioneducativaId = 0;
+        $gestionId = $gestionActual->format('Y');
+        $tramiteTipoId = 0;
+        $flujoSeleccionado = '';
+
+        $info = $request->get('_info');
+        $form = unserialize(base64_decode($info));
+
+        $institucionEducativaId = $form['sie'];
+        $gestionId = $form['gestion'];
+
+        $response = new JsonResponse();
+        
+        if ($request->isMethod('POST')) {
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try {
+                $tramites = $request->get('participantes');
+                if (isset($_POST['botonAceptar'])) {
+                    $flujoSeleccionado = 'Adelante';
+                    $obs = "DIPLOMA DE BACHILLER HUMANÍSTICO GENERADO";
+                }
+                if (isset($_POST['botonDevolver'])) {
+                    $flujoSeleccionado = 'Atras';
+                    $obs = $request->get('obs');
+                }
+                if (isset($_POST['botonAnular'])) {
+                    $flujoSeleccionado = 'Anular';
+                    $obs = "TRAMITE ANULADO";
+                }
+                
+                $datosBusqueda = $request->get('_info');
+                
+                //$fechaCarton = $fechaActual;                
+                $formBusqueda = unserialize(base64_decode($datosBusqueda));
+                $sie = $formBusqueda['sie'];
+                $gestionId = $formBusqueda['gestion'];
+
+                $formacionEducacionId = 2;
+
+                $token = $request->get('_token');
+                if (!$this->isCsrfTokenValid('entregar', $token)) {
+                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                    $response->setStatusCode(201);
+                    return $response->setData(array('estado'=>false, 'msg'=>'Error al enviar el formulario, intente nuevamente'));
+                }                
+                
+                $tramiteController = new tramiteController();
+                $tramiteController->setContainer($this->container);
+
+                $messageCorrecto = "";
+                $messageError = "";
+
+                
+                foreach ($tramites as $tramite) {
+                    $tramiteId = (Int) base64_decode($tramite);
+                    $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+                    $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();
+                    $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
+                    //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                    $msgContenido = "";
+                    $msgContenidoDocumento = "";
+                    if(count($entidadEstudianteInscripcion)>0){
+                        $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+                        $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+
+                        $msg = array('0'=>true, '1'=>$participante);
+
+                        // if ($flujoSeleccionado == 'Adelante'){
+                        //     // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
+                        //     $valDocumentoEstudiante = $tramiteController->getBachTecHumDocumentoEstudiante($participanteId);
+                        //     if(count($valDocumentoEstudiante) > 0){
+                        //         $msgContenido = 'ya cuenta con el Título de Bachillerato Técnico Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
+                        //     }
+                            
+                        //     $msgContenidoDocumento = $documentoController->getDocumentoFormacionValidacion($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId, $formacionEducacionId);
+                        // }
+
+                        if($msgContenido != ""){
+                            if($msgContenidoDocumento != ""){
+                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.', '.$msgContenidoDocumento.')');
+                            } else {
+                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.')');
+                            }
+                        } else {
+                            if($msgContenidoDocumento != ""){
+                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenidoDocumento.')');
+                            }
+                        }
+                    } else {
+                        $msg = array('0'=>false, '1'=>'Estudiante no encontrado');
+                    }
+
+                    if ($msg[0]) {
+                        if ($flujoSeleccionado == 'Adelante'){
+                            $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
+                            //$msgContenidoDocumento = $documentoController->setDocumentoFirmas($tramiteId, $id_usuario, $documentoTipoId, $numCarton, $serCarton, $fechaCarton, $documentoFirmas);
+                            //dump($tramiteDetalleId,$msgContenidoDocumento);die;
+                        }
+
+                        if ($flujoSeleccionado == 'Atras' or $flujoSeleccionado == 'Anular'){
+                            $documentoController = new documentoController();
+                            $documentoController->setContainer($this->container);
+                            $entityDocumento = $documentoController->getDocumentoTramiteTipo($tramiteId,8);
+                            if (count($entityDocumento) > 0){
+                              $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2, $em);
+                            }
+                        }
+
+                        if ($flujoSeleccionado == 'Atras'){
+                            $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
+                        }
+
+                        if ($flujoSeleccionado == 'Anular'){
+                            $tramiteDetalleId = $this->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
+                        }
+
+                        $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+                    } else {
+                        $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
+                    }
+                }
+                if($messageCorrecto==""){
+                    // $em->getConnection()->commit();
+                    // $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => $messageCorrecto));
+                    $response->setStatusCode(201);
+                    return $response->setData(array('estado'=>false, 'msg'=>$messageError)); 
+                }
+                // if($messageError!=""){
+                //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
+                // }
+                
+                $em->getConnection()->commit();
+
+                $flujoProcesoId = 162; //codigo del flujo y proceso de los tramites registrados
+                $entityParticipantes = $this->getBachTecHumTramiteProceso($sie,$gestionId,$flujoProcesoId);
+
+                $entityAutorizacionUnidadEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
+                if(count($entityAutorizacionUnidadEducativa)<=0){
+                    // $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                    //$result = array('estado'=>false, 'msg'=>'No es posible encontrar la información de la unidad educativa, intente nuevamente');
+                    $response->setStatusCode(201);
+                    return $response->setData(array('estado'=>false, 'msg'=>'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                }
+
+                $documentoTipoId = 8;
+                $rolPermitido = 9;
+                              
+                $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($institucionEducativaId);
+                $cierreOperativo = false;
+                if($entitySubsistemaInstitucionEducativa['msg'] == ''){
+                    if($entitySubsistemaInstitucionEducativa['id'] == '1' or $entitySubsistemaInstitucionEducativa['id'] == 1){
+                        $cierreOperativo = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestionId);
+                    } 
+                }  
+
+                return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:bachTecHumRegularEntregaLista.html.twig', array(    
+                    'listaParticipante' => $entityParticipantes,
+                    'infoAutorizacionUnidadEducativa' => $entityAutorizacionUnidadEducativa,
+                    'datosBusqueda' => $datosBusqueda,                        
+                    'msgs'=>array('success'=>$messageCorrecto, 'error'=>$messageError),
+                    'cierreOperativo' => $cierreOperativo
+                ));
+
+
+
+            } catch (\Doctrine\ORM\NoResultException $exc) {
+                $em->getConnection()->rollback();
+                // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                $response->setStatusCode(201);
+                return $response->setData(array('estado'=>false, 'msg'=>'Error al procesar la información, intente nuevamente'));
+            }
+
+            //$datosBusqueda = base64_encode(serialize($form));
+
+            // $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId);
+            // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista', ['form' => $formBusqueda], 307);
+        } else {
+            // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            // return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_busca'));
+            $response->setStatusCode(201);
+            return $response->setData(array('estado'=>false, 'msg'=>'Error al enviar el formulario, intente nuevamente'));
         }
     }
 

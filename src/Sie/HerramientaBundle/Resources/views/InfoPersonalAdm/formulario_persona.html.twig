@@ -10,19 +10,20 @@
     </div>
     <div class="form-group">
         <label>{{form_label(form_verificar.primer_apellido)}} (*):</label>
-        {{form_widget(form_verificar.primer_apellido, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido paterno'}})}}
+        {{form_widget(form_verificar.primer_apellido, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido paterno', 'value': data.paterno}})}}
     </div>
     <div class="form-group">
         <label>{{form_label(form_verificar.segundo_apellido)}} (*):</label>
-        {{form_widget(form_verificar.segundo_apellido, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido materno'}})}}
+        {{form_widget(form_verificar.segundo_apellido, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido materno', 'value': data.materno}})}}
     </div>
     <div class="form-group">
         <label>{{form_label(form_verificar.nombre)}} (*):</label>
-        {{form_widget(form_verificar.nombre, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el nombre', 'required': true}})}}
+        {{form_widget(form_verificar.nombre, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el nombre', 'required': true, 'value': data.nombre}})}}
     </div>
     <div class="form-group">
         <label>{{form_label(form_verificar.fecha_nacimiento)}} (*):</label>
-        {{form_widget(form_verificar.fecha_nacimiento, {'attr': {'class': 'form-control calendario', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)', 'required': true}})}}
+        {{form_widget(form_verificar.fecha_nacimiento, {'attr': {'class': 'form-control calendario', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)', 'required': true, 'value': data.fecha_nacimiento}})}}
+       <input type="hidden" id="sie_verificar_persona_segip_idper" name="sie_verificar_persona_segip[idper]" autocomplete="off" class="form-control"  value="{{data.id}}">        
     </div>
 
     <div class="form-group">

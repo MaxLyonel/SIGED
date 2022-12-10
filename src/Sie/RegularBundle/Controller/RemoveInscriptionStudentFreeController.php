@@ -68,7 +68,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $aGestion = array();
         $currentYear = date('Y');
         if($this->session->get('roluser') == 8){
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 1; $i <= 14; $i++) {
                 $aGestion[$currentYear] = $currentYear;
                 $currentYear--;
             }
@@ -209,7 +209,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         // $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
         if($rolUser == 8)
           // $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO','5'=>'PROMOVIDO');
-          $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO');
+          $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO','5'=>'PROMOVIDO','11'=>'REPROBADO');
         else
           $arrEstados = array();
       }

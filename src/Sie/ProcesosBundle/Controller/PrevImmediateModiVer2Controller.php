@@ -1412,7 +1412,7 @@ class PrevImmediateModiVer2Controller extends Controller{
                         json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
                     );     
 
-                $this->removeDobleInscription($inscripcionSimilar['inscripcion']['id'],$inscripcionSimilar['inscripcion']['gestion'],$idTramite);
+                //$this->removeDobleInscription($inscripcionSimilar['inscripcion']['id'],$inscripcionSimilar['inscripcion']['gestion'],$idTramite);
                 
             }
             /*=====  End of VERIFICACION  ======*/

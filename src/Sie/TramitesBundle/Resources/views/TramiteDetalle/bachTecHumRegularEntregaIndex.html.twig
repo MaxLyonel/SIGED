@@ -12,12 +12,13 @@
             <a href="{{path('tramite_homepage')}}">Inicio</a>
             <i class="fa fa-angle-right"></i>
         </li>
+        <li class="active">Entrega</li>
         {% block contentSearchBread %}
         {% endblock %}
     </ol>
 {% endblock %}
 
-{% block contentoption %}    
+{% block contentoption %}  
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 pb-1">
             <div class="panel mb-5">
@@ -57,25 +58,12 @@
             
         </div>
     </div><!-- /.row -->
-    <aside>
-        <!-- Start table in modal element -->
-        <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div id="participanteHistorial" class="table-responsive">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-        <!--/ End table in modal element -->
-    </aside>
+    
 {% endblock %}
+
 {% block javascripts %}
     {{parent()}}
+
     <script>
         if($('#form_sie').length){
             if($('#form_sie').val().length>=8){
@@ -100,7 +88,6 @@
             }
         }
 
-        // $( "#formBusqueda" ).submit(function( event ) {
         $("#formBusqueda").on('submit', function(event){
             event.preventDefault();
 
@@ -109,13 +96,13 @@
             var formData = new FormData(formulario);
             peticion = $.ajax({
                 type: 'post',
-                url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_registro_lista') }}",
+                url: "{{ path('tramite_bachillerato_tecnico_humanistico_regular_entrega_lista') }}",
                 data: formData,
                 processData: false,
                 contentType: false,
                 beforeSend: function () {
                     $("#contentMsg").empty();
-                    $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');               
+                    $("#contentMsg").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data, textStatus, xhr) {
                     $("#contentMsg").empty();
@@ -281,9 +268,7 @@
                 }
             }
 
-            if((numeroSerie.value === "" || fechaSerie.value === "" || firma.value === "") && estado === true){
-                estado = false;
-            }
+           
 
             if(estado){
                 if(botonAceptar){
