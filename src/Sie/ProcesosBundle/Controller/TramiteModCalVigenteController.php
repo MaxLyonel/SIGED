@@ -784,7 +784,6 @@ class TramiteModCalVigenteController extends Controller {
             $idTramite = $request->get('idTramite');
 
             $procedente = $request->get('procedente');
-            
             $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
             $checkInforme = $request->get('checkInforme');
             $checkCuaderno = $request->get('checkCuaderno');
@@ -795,13 +794,12 @@ class TramiteModCalVigenteController extends Controller {
             $flujoTipo = $tramite->getFlujoTipo()->getId();
             $sie = $tramite->getInstitucioneducativa()->getId();
             $gestion = $tramite->getGestionId();
-
+            
             // OBTENEMOS EL LUGAR TIPO DEL TRAMITE
             $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
 
             // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
             $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
-            
             $tareaActual = '';
             $tareaSiguienteSi = '';
             $tareaSiguienteNo = '';
@@ -814,7 +812,11 @@ class TramiteModCalVigenteController extends Controller {
                     $tareaSiguienteNo = $t['tarea_siguiente'];
                 }
             }
-                        
+            // $tareaActual = $tarea['tarea_actual'];
+            // $tareaSiguienteSi = $tarea['tarea_siguiente'];
+            // dump($tarea);   
+            // dump($tareaActual); 
+            // dump($tareaSiguienteSi); die;
             // VERIFICAMOS SI EXISTE EL INFORME
             if(isset($_FILES['informe'])){
                 $file = $_FILES['informe'];
@@ -854,7 +856,7 @@ class TramiteModCalVigenteController extends Controller {
             }else{
                 $informe = null;
             }
-
+             
             // CREAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
             $datos = json_encode(array(
                 'sie'=>$sie,
@@ -866,10 +868,23 @@ class TramiteModCalVigenteController extends Controller {
                 'checkFormulario'=>($checkFormulario == null)?false:true,
                 'informe'=>$informe
             ), JSON_UNESCAPED_UNICODE);
-            
+             
             // VERIFICAMOS SI EL TRAMITE ES PROCEDENTE PARA REGISTRAR LA VERIFICACION DE GESTION Y BIMESTRE
             if ($procedente == 'SI') {
                 // ENVIAMOS EL TRAMITE
+                // dump($this->session->get('userId'));
+                // dump($this->session->get('roluser'));
+                // dump($flujoTipo);
+                // dump($tareaActual);
+                /*dump('institucioneducativa');
+                dump($sie);
+                dump($observacion);
+                dump($procedente);
+                dump($idTramite);
+                dump($datos);
+                dump('');
+                dump($lugarTipo['lugarTipoIdDistrito']);*/
+                // die;
                 $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
                     $this->session->get('userId'),
                     $this->session->get('roluser'),
@@ -884,9 +899,9 @@ class TramiteModCalVigenteController extends Controller {
                     '',
                     $lugarTipo['lugarTipoIdDistrito']
                 );
-
+                // dump('ok'); die;
             }
-
+            
             // VERIFICAR SI EL TRAMITE NO ES PROCEDENTE PARA REGISTRAR LA TAREA DE OBSERVACION
             if ($procedente == 'NO') {
 
@@ -944,6 +959,7 @@ class TramiteModCalVigenteController extends Controller {
             // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
             // PARA EVITAR DOBLE PROMOCION
             $respuesta = $this->calcularNuevoEstado($idTramite);
+            
             if ($respuesta['nuevoEstado'] == 5) {
                 $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
                 if ($inscripcionSimilar) {
@@ -1099,6 +1115,7 @@ class TramiteModCalVigenteController extends Controller {
             
             if ($aprueba == 'SI') {
                 // RECIBIMOS LA SIGUIENTE TAREA
+                
                 $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
                     $this->session->get('userId'),
                     $tareaSiguiente,
@@ -1109,6 +1126,7 @@ class TramiteModCalVigenteController extends Controller {
 
                 $this->modificarCalificacionesSIE($idTramite);
 
+                // $evaluarEstadomatricula = $this->evaluarEstadomatricula($inscripcionid);
                 /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/                
                 
 
@@ -1278,7 +1296,8 @@ class TramiteModCalVigenteController extends Controller {
             }
         }
 
-        $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);                    
+        //$this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);    
+        $this->evaluarEstadomatricula($idInscripcion);                
 
         return true;
     }
@@ -1313,6 +1332,7 @@ class TramiteModCalVigenteController extends Controller {
             $arrayPromedios = [];
             $cont = 0;
             $asignaturas = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$idInscripcion));
+            
             $notas = [];
             if ($tipo == 'Bimestre') {
                 /*----------  NOTAS BIMESTRALES  ----------*/
@@ -1321,14 +1341,16 @@ class TramiteModCalVigenteController extends Controller {
             }
             if ($tipo == 'Trimestre') {
                 /*----------  NOTAS TRIMESTRALES  ----------*/
-                $notas = array(30,27,31,28,32,29,10);
-                $notaMinima = 36;
+                // $notas = array(30,27,31,28,32,29,10);
+                $notas = array(6,7,8);
+                $notaMinima = 51;
             }
 
             // RECORREMOS LAS ASIGNATURAS Y VERIFICAMOS LAS CALIFICACIONES
             foreach ($asignaturas as $a) {
                 $suma = 0;
                 $array[$cont] = array('id'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId(),'asignatura'=>$a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getAsignatura());                
+                
                 // GENERAMOS UN ARRAY CON LAS CALIFICACIONES
                 foreach ($notas as $n) {
                     $nota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>$n));
@@ -1358,7 +1380,7 @@ class TramiteModCalVigenteController extends Controller {
                             }
                         }
                     }
-
+                   
                     if ($notaSolicitud != 0) {
                         $array[$cont][$n] = $notaSolicitud;
                     }else{
@@ -1369,7 +1391,7 @@ class TramiteModCalVigenteController extends Controller {
                         }
                     }
                 }
-
+                
                 // GENERAMOS EL ARRAY DE PROMEDIOS BIMESTRALES
                 if ($tipo == 'Bimestre') {
                     if ($array[$cont]['1'] != 0 and $array[$cont]['2'] != 0 and $array[$cont]['3'] != 0 and $array[$cont]['4'] != 0) {
@@ -1383,31 +1405,37 @@ class TramiteModCalVigenteController extends Controller {
 
                 // GENERAMOS EL ARRAY DE PROMEDIOS TRIMESTRALES
                 if ($tipo == 'Trimestre') {
-                    $prompt = 0;
-                    $promst = 0;
-                    $promtt = 0;
-                    $promAnual = 0;
-                    $promFinal = 0;
+                    // $prompt = 0;
+                    // $promst = 0;
+                    // $promtt = 0;
+                    // $promAnual = 0;
+                    // $promFinal = 0;
 
-                    $prompt = $array[$cont]['30'] + $array[$cont]['27'];
-                    $promst = $array[$cont]['31'] + $array[$cont]['28'];
-                    $promtt = $array[$cont]['32'] + $array[$cont]['29'];
+                    // $prompt = $array[$cont]['30'] + $array[$cont]['27'];
+                    // $promst = $array[$cont]['31'] + $array[$cont]['28'];
+                    // $promtt = $array[$cont]['32'] + $array[$cont]['29'];
 
-                    $promAnual = round(($prompt + $promst + $promtt) / 3);
-                    if ($promAnual < 36 and $array[$cont]['10'] != 0) {
-                        $promFinal = $promAnual + $array[$cont]['10'];
-                        $arrayPromedios[] = $promFinal;
-                    }else{
-                        $arrayPromedios[] = $promAnual;
+                    // $promAnual = round(($prompt + $promst + $promtt) / 3);
+                    // if ($promAnual < 36 and $array[$cont]['10'] != 0) {
+                    //     $promFinal = $promAnual + $array[$cont]['10'];
+                    //     $arrayPromedios[] = $promFinal;
+                    // }else{
+                    //     $arrayPromedios[] = $promAnual;
+                    // }
+                    if ($array[$cont]['6'] != 0 and $array[$cont]['7'] != 0 and $array[$cont]['8'] != 0) {
+                        $suma = $array[$cont]['6'] + $array[$cont]['7'] + $array[$cont]['8'];
+                        $promedio = round($suma/3);
+                        $arrayPromedios[] = $promedio;
                     }
                 }
 
                 $cont++;
             }
-
+            
             // VERIFICAMOS LOS PROMEDIOS
             $nuevoEstado = $inscripcion->getEstadomatriculaTipo()->getId();
-            if ((count($asignaturas) == count($arrayPromedios)) or ($gestion == 2018 and (count($asignaturas) == count($arrayPromedios) - 2))) {
+           
+            if (count($asignaturas) == count($arrayPromedios)) {
                 $nuevoEstado = 5; // APROBADO
                 $contadorReprobados = 0;
                 foreach ($arrayPromedios as $ap) {
@@ -1415,11 +1443,12 @@ class TramiteModCalVigenteController extends Controller {
                         $contadorReprobados++;
                     }
                 }
+                
                 if ($contadorReprobados > 0) {
-                    $nuevoEstado == 11; // REPROBADO
+                    $nuevoEstado = 11; // REPROBADO
                 }
             }
-
+            
             return array(
                 'nuevoEstado'=>$nuevoEstado,
                 'idInscripcion'=>$idInscripcion
@@ -1485,6 +1514,32 @@ class TramiteModCalVigenteController extends Controller {
     }     
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/
+
+    private function evaluarEstadomatricula($inscripcionid) {
+        $em = $this->getDoctrine()->getManager();            
+        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+        
+        $igestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+        $iinstitucioneducativa_id = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $inivel_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $igrado_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $iturno_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+        $iparalelo_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $icodigo_rude = $inscripcion->getEstudiante()->getCodigoRude();
+        $complementario = "";
+        $estado_inicial = $inscripcion->getEstadomatriculaTipo()->getEstadomatricula();
+
+        if($igestion == 2022) {            
+            $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
+        }
+
+        $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+        $query->execute();        
+        $resultado = $query->fetchAll();
+
+        return $resultado;
+    }
     
 
 }
