@@ -111,7 +111,7 @@ class CursoCapacitacionController extends Controller {
         $form = $this->createFormBuilder()
                             ->setAction($this->generateUrl('cap_create'))
                             ->add('idRie', 'hidden', array('data' => $request->get('idRie')))
-                            ->add('ttecCarreraTipo', 'text', array('label' => 'Curso de Capacitación', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '200', 'style' => 'text-transform:uppercase') ))        
+                            ->add('ttecCarreraTipo', 'text', array('label' => 'Curso de Capacitación (en mayúsculas)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '200') ))        
                             ->add('tiempoEstudio', 'text', array('label' => 'Tiempo de Estudio (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control validar','maxlength' => '2')))
                             //->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'required' => true, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
                             ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control validar', 'maxlength' => '4') ))
