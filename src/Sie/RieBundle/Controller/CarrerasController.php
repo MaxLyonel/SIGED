@@ -97,7 +97,7 @@ class CarrerasController extends Controller {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('carrera_rie_create'))
                 ->add('ttecAreaFormacionTipo', 'choice', array('label' => 'Área de Formación', 'required' => true,'choices'=>$arrayArea ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
-                ->add('carrera', 'text', array('label' => 'Carrera', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '100', 'style' => 'text-transform:uppercase') ))
+                ->add('carrera', 'text', array('label' => 'Carrera (en mayúsculas)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '100') ))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
             
         return $this->render('SieRieBundle:Carreras:new.html.twig', array('form' => $form->getForm()->createView()));
