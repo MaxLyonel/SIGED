@@ -320,6 +320,7 @@ class OperativoBonoJPController extends Controller
 
 	public function formularioCambiarTutorAction()
 	{
+		return $this->redirect($this->generateUrl('login'));
 		return $this->render($this->session->get('pathSystem') .':BonoJP:fomularioCambiarTutor.html.twig');
 	}
 

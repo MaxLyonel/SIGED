@@ -574,6 +574,8 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
 
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($request->get('idPersona'));
+        $cisend = $persona->getCarnet();
+        
         $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($request->get('idMaestroInscripcion'));
         $idiomas = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $request->get('idMaestroInscripcion')));
         $em->getConnection()->commit();
@@ -584,6 +586,7 @@ class InfoPersonalAdmController extends Controller {
                     'institucion' => $institucion,
                     'gestion' => $request->getSession()->get('idGestion'),
                     'persona' => $persona,
+                    'cisend' => bin2hex($cisend),
                     'rangoFecha'=>$arrayRangoFecha
         ));
     }
@@ -781,7 +784,7 @@ class InfoPersonalAdmController extends Controller {
             }      
             
             // get info segip
-            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['carnet'],$arrParametros,'prod', 'academico');   
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( hex2bin($form['carnet']),$arrParametros,'prod', 'academico');   
             $answer = 0;
             if($answerSegip){
                 

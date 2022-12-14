@@ -216,7 +216,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2020')
+                                ->where('gt.id > 2021')
                                 ->orderBy('gt.id', 'DESC');
                     },
                 ))
@@ -1161,7 +1161,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2020')
+                                ->where('gt.id > 2021')
                                 ->orderBy('gt.id', 'DESC');
                     },
                 ))
