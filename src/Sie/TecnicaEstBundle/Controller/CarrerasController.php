@@ -654,8 +654,9 @@ class CarrerasController extends Controller
         $po = $stmt->fetchAll();
         $opestatus = $po[0]['activo'];
         //dump($opestatus); die; 
-		
-		 //para abrir solo 2022
+
+        //para abrir solo 2022
+
         if($opestatus == false and $gestion == 2022){
             $opestatus == true;
         }

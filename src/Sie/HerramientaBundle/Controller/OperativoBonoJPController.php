@@ -1165,4 +1165,321 @@ class OperativoBonoJPController extends Controller
 		}
 	}
 	//70524638
+
+	// VALIDACION BJP
+	public function validaNoPagadosAction(Request $request)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();  
+
+		$sesion = $request->getSession();
+		$ue = $sesion->get('ie_id');
+
+		//$ue = 80640033;
+		//dump($ue); die; 
+		
+		$sql = "
+		SELECT
+			bjp.*, at.apoderado as apoderado_tipo
+		FROM
+			bjp_titular_cobro_validacion bjp
+			INNER JOIN 
+			bjp_apoderado_tipo at on at.id = bjp.bjp_apoderado_tipo_id
+		WHERE
+			institucioneducativa_id = ".$ue." ORDER BY 11, 5,6,7";
+
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$apoderados = $stmt->fetchAll();
+
+		$total_estudiantes = 0;
+		for($i = 0; $i < sizeof($apoderados); $i++ ){
+			$total_estudiantes += $apoderados[$i]['estudiantes_cobrados'];
+		}
+
+		// los ya validados
+		$sql = "
+		SELECT COUNT 
+			(*) as total
+		FROM
+			bjp_titular_cobro_beneficiarios_validacion bjp 
+		WHERE
+			bjp_titular_cobro_validacion_id IN ( SELECT bjp.ID FROM bjp_titular_cobro_validacion bjp WHERE institucioneducativa_id = ".$ue." ) 
+			AND es_pagado = TRUE
+		";
+
+		//dump($sql);die;
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$validados = $stmt->fetchAll();
+		$total_estudiantes_validados = $validados[0]['total'];
+
+		//ya esta cerrado ?
+		$sql = "
+		SELECT es_concluido
+		FROM
+			bjp_titular_cobro_validacion_cierre bjp 
+		WHERE
+			institucioneducativa_id = ".$ue; 			
+		
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$validados = $stmt->fetchAll();
+		$operation_status = $validados[0]['es_concluido'];
+	
+		return $this->render($this->session->get('pathSystem') .':BonoJP:index_valida_no_pagados.html.twig', array(
+            'apoderados' => $apoderados,
+            'total_estudiantes' => $total_estudiantes,
+            'total_estudiantes_validados' => $total_estudiantes_validados,
+			'data'    => bin2hex(serialize($ue)),
+			'operation_status' => $operation_status  //0: abierto 1: cerrado
+        ));
+
+        /*return $this->render('SieHerramientaBundle:bonoJP:index_valida_no_pagados.html.twig', array(
+            'apoderados' => $apoderados,
+            'total_estudiantes' => $total_estudiantes,
+            'total_estudiantes_validados' => $total_estudiantes_validados,
+			'data'    => bin2hex(serialize($ue)),
+			'operation_status' => $operation_status  //0: abierto 1: cerrado
+        ));*/
+	}
+
+	public function validaNoPagadosAlumnosAction(Request $request)
+	{
+		//$form = $request->get('form');
+		//dump($request); die;		
+		$id = $request->get('iduealtadem');		
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();  
+        
+		$sql = "					
+		SELECT
+			bjp.*,
+			n.nivel,
+			g.id as grado,
+			CASE 
+				WHEN es_pagado = true  THEN 1
+				WHEN es_pagado = false  THEN 2    
+				ELSE 0
+			END as opcion
+		FROM
+			bjp_titular_cobro_beneficiarios_validacion bjp
+			INNER JOIN nivel_tipo n ON n.ID = bjp.nivel_tipo_id
+			INNER JOIN grado_tipo G ON G.ID = bjp.grado_tipo_id 
+		WHERE
+			bjp_titular_cobro_validacion_id = ".$id." 
+		ORDER BY
+			nivel, grado, 
+			7,
+			8,9
+		";
+
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$estudiantes = $stmt->fetchAll();
+
+
+		//nombre del titular
+		$sql = "					
+		SELECT
+			concat ( paterno, ' ', materno, ' ', nombre, '     ---     C.I.: ', carnet, complemento ) AS nombre_titular 
+		FROM
+			bjp_titular_cobro_validacion bjp 
+		WHERE
+		id = ".$id;
+		
+		//dump($sql); die;
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$datos = $stmt->fetchAll();
+		$nombre_titular = $datos[0]['nombre_titular'];
+
+
+		return $this->render($this->session->get('pathSystem') .':BonoJP:valida_no_pagados_alumnos.html.twig',array(
+			'estudiantes' => $estudiantes,
+			'nombre_titular' => $nombre_titular
+            
+        ));
+		
+		/*
+        return $this->render('SieHerramientaBundle:bonoJP:valida_no_pagados_alumnos.html.twig', array(
+			'estudiantes' => $estudiantes,
+            
+        ));*/
+	}
+
+	public function validaNoPagadosAlumnosSaveAction(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $response = new JsonResponse();
+
+		
+                
+        //recibe todas las variables del form
+        $form = $request->get('form');
+		//$cheks = $request->get('ckbox');
+		$cblists = $request->get('cbl');
+
+		//dump($cheks); die;
+		/*dump($form);
+		dump($cblists); die;*/
+		
+		try {    
+
+			
+			foreach ($cblists as $clave => $valor) {     				 
+				$id = $clave; 					
+				$value = $valor;
+
+				//dump($id); dump($value); die;
+				
+				if($value <> "0" ){							
+					$pagado = 0;
+					if($value == "1"){$pagado = 1;}
+					$query ="update bjp_titular_cobro_beneficiarios_validacion set es_pagado = ? where id = ?";
+					$stmt = $db->prepare($query);
+					$params = array($pagado, $id);
+					$stmt->execute($params);
+				}
+			}
+			
+
+            foreach ($form as $clave => $valor) {      
+                $id = $clave; 
+                $obs = $valor; 
+				
+				//dump(strlen($obs));  die; 
+				if(strlen($obs) > 1){
+					//update al registro, solo se cambia cantidad
+					$query ="update bjp_titular_cobro_beneficiarios_validacion set observacion = ? where id = ?";
+					$stmt = $db->prepare($query);
+					$params = array($obs, $id);
+					$stmt->execute($params);           
+				}
+            } 
+
+            $msg  = 'Datos registrados correctamente';
+            return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));
+
+        } catch (\Doctrine\ORM\NoResultException $ex) {           
+            $msg  = 'Error al realizar el registro, intente nuevamente';
+            return $response->setData(array('estado' => false, 'msg' => $msg, 'cantidad' => -1));
+        } 
+
+
+	}
+
+	public function closeOpeAction(Request $request){
+       
+        //dump($request->get('ue')); die; 
+		$ue_encrypt = $request->get('ue');
+		$ue = $this->kdecrypt($ue_encrypt);
+        
+		
+		//$ue = '80640033';
+		//dump($ue); die;
+      
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+        $reporte = '';
+        $observations = null;
+        try{
+
+            $observations = null;
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = "
+			select a.institucioneducativa_id,'No reporto validacion del '||(select apoderado from bjp_apoderado_tipo where id=a.bjp_apoderado_tipo_id)||':'||a.paterno||' '||a.materno||' '||a.nombre||', para el estudiante:'||b.codigo_rude||'-'||b.paterno||' '||b.materno||' '||b.nombre as observacion 
+			from bjp_titular_cobro_validacion a
+				inner join bjp_titular_cobro_beneficiarios_validacion b on a.id=b.bjp_titular_cobro_validacion_id 
+			where institucioneducativa_id=".$ue." and es_pagado is null
+			";
+            $stmt = $db->prepare($query);
+            //$params = array($ue);
+            $stmt->execute();
+            $observations = $stmt->fetchAll();
+            //dump($observations); die;
+			// are there observations?
+            if($observations == null){
+                $data=null;
+                $status= 200;
+                $msj='Cierre correcto! No existen inconsistencias en el cierre, proceda a la impresion del reporte: --->   ';
+                // miss save data about the operative to the universite data
+                // close oall year to the UnivSedeId
+                /*$objOperative = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findBy(array('univSede'=>$dataform['sedeId']));
+                if(sizeof($objOperative)>0){
+                    foreach ($objOperative as $value) {
+                        $value->setActivo(0);
+                        $em->persist($value);
+                    }
+                    $em->flush();
+                }*/
+				$id_usuario = $this->session->get('userId');
+				$obs = "Usuario: " . $id_usuario . " - Fecha: " . date('d/m/Y');
+				//dump($obs); die;
+
+				$query ="update bjp_titular_cobro_validacion_cierre set es_concluido = true, observacion = '".$obs ."', fecha_actualizacion = now()  where institucioneducativa_id = ?";
+                $stmt = $db->prepare($query);
+                $params = array($ue);
+                $stmt->execute($params);           
+            }
+            else{
+                $data=null;
+                $status= 200;
+                $msj='No se puedo cerrar el operativo, todavia tiene inconsistencias.';
+            }
+        }catch(Exception $e){
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error al cerrar el operativo, por favor vuelva a intentarlo.';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        $allData = array('data'=>$data,'status'=>$status,'msj'=>$msj,'observations'=>$observations);
+        // dump($allData);die;
+        return $response->setData($allData);   ////////////////////////
+    }    
+
+	private function kdecrypt($data){
+        $data = hex2bin($data);
+        return unserialize($data);
+    }
+
+	public function impresionDDJJAction(Request $request) {
+        $id_usuario = $this->session->get('userId');
+        $username = $this->session->get('userName');
+
+		$sesion = $request->getSession();
+		$ue = $sesion->get('ie_id');
+		//$ue = '80640033';
+
+		//dump($ue); die;
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
+        $gestion = 2022;//$this->gestionOperativo;
+        
+
+        $arch = 'DECLARACION_JURADA_BONO_BJP_' . $arrSieInfo['id'] . '_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_ValidacionEstudiantesMaestro_pagador_v1_EEA.rptdesign&__format=pdf&&ue=' . $ue . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
 }
