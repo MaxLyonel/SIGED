@@ -3620,7 +3620,7 @@ class TramiteDetalleController extends Controller {
                         }
                     }
                     
-                    if ($gestion <= 2018){
+                    if ($gestion <= 2021){
                         $cierreOperativo = true;
                     }
 
