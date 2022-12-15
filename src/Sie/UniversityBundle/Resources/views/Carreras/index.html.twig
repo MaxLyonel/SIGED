@@ -39,7 +39,9 @@
     </div>
     <!-- /.header-content -->
     <!--/ End page header -->
-    <div class="body-content animated fadeIn">        
+    <div class="body-content animated fadeIn">    
+     
+
         <div class="row">
             <div class="panel">
                 {## <div class="panel-heading">
@@ -58,6 +60,11 @@
                     </div>
 
                     <div class="panel-body">
+
+                          <div class="callout callout-warning mb-20">
+                            <p>SE HA ADICIONADO LA POSIBILIDAD DE <strong>ADICIONAR, EDITAR E INCLUSO ELIMINAR </strong> CARRERAS A EFECTOS DE FACILITAR EL OPERATIVO.</p>
+                            <strong>IMPORTANTE:</strong> CAMBIAR UNA CARRERA DE SEMESTRAL/MODULAR A ANUAL O VICEVERSA IMPLICA LA PERDIDA DE INFORMACION QUE YA HUBIESE SIDO REGISTRADA.
+                        </div>
                     
                         {% for flashMessage in app.session.flashbag.get('carreraok') %}
                         <div class="alert alert-success" role="alert">
@@ -66,10 +73,7 @@
                             {{ flashMessage }}
                         </div>
                         {% endfor %}
-                    
-                    
-                    </div>
-                
+                    </div>                
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -79,7 +83,7 @@
                         <!-- Start tabs heading -->
                             <div class="panel-heading no-padding">
                                 <ul class="nav nav-tabs">
-                                    <li class="active">
+                                    <li class="active nav-border nav-border-top-info" >
                                         <a href="component-tabsaccordion.html#tab2-1" data-toggle="tab">                                            
                                             <div>
                                                 <span class="text-strong">PREGRADO</span>                                           
@@ -87,7 +91,7 @@
                                         </a>
                                     </li>
                                    
-                                    <li>
+                                    <li class="nav-border nav-border-top-success">
                                         <a href="component-tabsaccordion.html#tab2-2" data-toggle="tab">                                            
                                             <div>
                                                 <span class="text-strong">POSTGRADO</span>                                            
@@ -105,14 +109,12 @@
 
                                     <div class="tab-pane fade in active" id="tab2-1">
 
-                                        {#
-                                        <button class="btn btn-m btn-primary yearOld" onclick="showModalNew(1)">
+                                        
+                                        <button class="btn btn-m btn-info" onclick="showModalNew(1)">
                                             Adicionar Carrera                       
                                         </button>
-                                        #}
+                                        
                                         <hr>
-                                    
-                                       
 
                                         <div class="formatyears">
                                         <table id="tbl-pregrado" class="table table-bordered table-hover cf dataTable table-primary">
@@ -121,6 +123,13 @@
                                                     
                                                     <th width="30%">
                                                         Nombre Carrera                                      
+                                                    </th>
+                                                    <th width="15%">
+                                                        Regimen Estudios
+                                                    </th>
+
+                                                    <th width="15%">
+                                                        R.M.
                                                     </th>
                                                     <th width="30%">
                                                         Grado Academico                                      
@@ -142,17 +151,26 @@
                                                     </td>
 
                                                     <td>
+                                                    {{ entity.getUnivRegimenEstudiosTipo.getDescripcion() }}
+                                                    </td>
+
+                                                    <td>
+                                                        {{ entity.resolucion }}
+                                                    </td>
+
+
+                                                    <td>
                                                         {{ entity.getUnivGradoAcademicoTipo().getGradoAcademico() |trim }}
                                                     </td>
                                                 
                                                     <td>
-                                                        {#
-                                                        {% if entity.esSiesu == 0 %}
-                                                        <button  style="border-radius: 10px;" class="btn btn-danger" onclick="deleteCarrera('{{ entity.id }}');">
+                                                                                                              
+                                                        <button  style="border-radius: 0px;" class="btn btn-danger btn-push"  data-toggle="tooltip" data-placement="top" data-original-title="Borrar Carrera" onclick="deleteCarrera('{{ entity.id }}');">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
-                                                        {% endif %}
                                                         
+                                                        
+                                                          {#
 
                                                         {% if entity.esSiesu == 0 %}
 
@@ -171,8 +189,8 @@
                                                         {% endif %}
                                                         #}
 
-                                                        <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver datos"
-                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion |trim}}',' {{ entity.duracionAnios |trim}}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
+                                                        <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver/Editar datos"
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera|trim }}',' {{ entity.resolucion|trim }}',' {{ entity.fechaApertura ? entity.fechaApertura|date('d-m-Y'):'' }}',' {{ entity.duracion |trim}}',' {{ entity.duracionAnios |trim}}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
                                                             <i class="fa fa-edit"></i>
                                                         </button>
 
@@ -197,11 +215,11 @@
 
                                     <div class="tab-pane fade " id="tab2-2">
 
-                                        {#
-                                        <button  class="btn btn-m btn-primary yearOld" onclick="showModalNew(2)">
+                                        
+                                        <button  class="btn btn-m btn-success" onclick="showModalNew(2)">
                                             Adicionar Carrera                       
                                         </button>
-                                        #}
+                                        
                                         <hr>
 
                                             <div class="table-responsive">
@@ -211,6 +229,14 @@
                                                             
                                                             <th width="30%">
                                                                 Nombre Carrera                                      
+                                                            </th>
+
+                                                             <th width="15%">
+                                                                Regimen Estudios
+                                                            </th>
+
+                                                            <th width="15%">
+                                                                R.M.
                                                             </th>
 
                                                             <th width="30%">
@@ -233,17 +259,25 @@
                                                             </td>
 
                                                             <td>
-                                                                {{ entity.getUnivGradoAcademicoTipo().getGradoAcademico() |trim }}
+                                                                {{ entity.getUnivRegimenEstudiosTipo.getDescripcion() }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ entity.resolucion }}
+                                                            </td>
+
+
+                                                            <td>
+                                                               {{ entity.getUnivGradoAcademicoTipo().getGradoAcademico() |trim }}
                                                             </td>
                                                         
                                                             <td>
-                                                                {#
-                                                                {% if entity.esSiesu == 0 %}                                                                   
-                                                                    <button style="border-radius: 10px;" class="btn btn-danger"  onclick="deleteCarrera('{{ entity.id }}');">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                {% endif %}
+                                                                <button style="border-radius: 0px;" class="btn btn-danger btn-push"  data-toggle="tooltip" data-placement="top" data-original-title="Borrar Carrera" onclick="deleteCarrera('{{ entity.id }}');">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                                
 
+                                                                 {#
                                                                 {% if entity.esSiesu == 0 %}
 
                                                                 <button  style="border-radius: 10px;" class="btn btn-info"
@@ -261,8 +295,8 @@
                                                                 {% endif %}
                                                                 #}
 
-                                                                <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver datos"
-                                                                    onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
+                                                                <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver/Editar datos"
+                                                                    onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera|trim }}',' {{ entity.resolucion|trim }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
                                                                     <i class="fa fa-edit"></i>
                                                                 </button>
 
@@ -379,21 +413,21 @@
                     
                     </h4>
                 </div>
-                <form action="{{ path('carreras_new') }}" method="post">
+                <form action="{{ path('carreras_new') }}" method="post" onsubmit="return confirm('Desea adicionar la Carrera ?');">
                     <div class="modal-body">
                     <div class="form-body no-padding">
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="carrera">
-                                Carrera
+                                Carrera (*)
                                 </label>
-                                <input type="text" class="form-control" id="carrera" name= "carrera" placeholder="" maxlength="60">
+                                <input type="text" class="form-control" id="carrera" name= "carrera" placeholder="" onkeyup="this.value = this.value.toUpperCase();" maxlength="200" minlength="10" required> 
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="modalidad">
-                                    Area de Conocimiento
+                                    Area de Conocimiento (*)
                                 </label>
                                 <select name="area_conocimiento_id" id="area_conocimiento_id" class="custom-select js-example-basic-multiple form-control">
                                 {% for c in area_conocimiento %}
@@ -415,16 +449,16 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="fecha_apertura">
-                                Fecha Apertura
+                                Fecha Apertura (*)
                                 </label>
-                                <input type="text" class="form-control fecha" id="fecha_apertura" name="fecha_apertura" placeholder="" maxlength="60">
+                                <input type="text" class="form-control fecha" id="fecha_apertura" name="fecha_apertura" placeholder="" maxlength="60" required>
                             </div>
                             <input type="hidden"  id="nivel_academico_id" name="nivel_academico_id" value="">
                             <div class="col-sm-6">
                                 <label for="resolucion">
-                                Resolución
+                                Resolución (*)
                                 </label>
-                                <input type="text" class="form-control" id="resolucion" name="resolucion" placeholder="" maxlength="15">
+                                <input type="text" class="form-control" id="resolucion" name="resolucion" placeholder="" maxlength="15" required>
                             </div>
                             
                             {# 
@@ -445,7 +479,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="modalidad">
-                                Modalidad Enseñanza
+                                Modalidad Enseñanza (*)
                                 </label>
                                 <select name="modalidad_id" id="modalidad_id" class="custom-select js-example-basic-multiple form-control">
                                 {% for c in modalidad %}
@@ -458,7 +492,7 @@
                            
                             <div class="col-sm-6">
                                 <label for="grado">
-                                Grado Académico
+                                Grado Académico (*)
                                 </label>
                                 <select name="grado_id" id="grado_id" class="custom-select js-example-basic-multiple form-control">
                                 
@@ -469,7 +503,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="modalidad">
-                                Régimen de Estudios
+                                Régimen de Estudios (*)
                                 </label>
                                 <select name="regimen_id" id="regimen_id" class="custom-select js-example-basic-multiple form-control">
                                 {% for c in regimen_estudios %}
@@ -496,17 +530,17 @@
                             ##}
                             <div class="col-sm-6">
                                 <label for="modalidad">
-                                Duracion (Semestres)
+                                Duracion Semestres (*)<strong> (solo números)</strong>
                                 </label>
-                                <input type="text" class="form-control" id="duracion" name="duracion" placeholder="" maxlength="15">
+                                <input type="text" class="form-control" id="duracion" name="duracion" placeholder="9 o 9.5 segun corresponda" maxlength="3" data-type="currency" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="grado">
-                                Duracion Años
+                                Duracion Años (*)<strong> (solo números)</strong>
                                 </label>
-                                <input type="numeric" class="form-control" id="duracion_anios" name="duracion_anios" placeholder="" maxlength="15">
+                                <input type="numeric" class="form-control" id="duracion_anios" name="duracion_anios" placeholder="4 o 4.5 segun corresponda" maxlength="3" required>
                             </div>
                         </div>
                         
@@ -546,9 +580,9 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="carrera">
-                                Carrera dsadad
+                                Nombre de la Carrera
                                 </label>
-                                <input type="text" class="form-control" id="edit_carrera" name= "edit_carrera" placeholder="" maxlength="50">
+                                <input type="text" class="form-control" id="edit_carrera" name= "edit_carrera" placeholder=""  onkeyup="this.value = this.value.toUpperCase();" maxlength="200" minlength="10">
                             </div>
                         </div>
                         <div class="row">
@@ -570,7 +604,7 @@
                                 <label for="resolucion">
                                 Resolución
                                 </label>
-                                <input type="text" class="form-control" id="edit_resolucion" name="edit_resolucion" placeholder="" maxlength="15">
+                                <input type="text" class="form-control" id="edit_resolucion" name="edit_resolucion" placeholder="" maxlength="30">
                             </div>
                         </div>
                         <div class="row">
@@ -646,7 +680,7 @@
                             </div>##}
                             <div class="col-sm-6">
                                 <label for="modalidad">
-                                Duracion Semestres
+                                Duracion Semestres (solo números)
                                 </label>
                                 <input type="text" class="form-control decimales" id="edit_duracion" name="edit_duracion" placeholder="9 o 9.5 segun corresponda" maxlength="3" data-type="currency" required>
                             </div>
@@ -654,7 +688,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="grado">
-                                Duracion Años
+                                Duracion Años (solo números)
                                 </label>
                                 <input type="text" class="form-control decimales" id="edit_duracion_anios" name="edit_duracion_anios" placeholder="4 o 4.5 segun corresponda" maxlength="3" required>
                             </div>
@@ -708,18 +742,51 @@
 
     $(function(){
         $(".fecha").inputmask({ "alias": "dd-mm-yyyy" });
+        $("#edit_fecha_apertura").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
+
         $('#tbl-pregrado').DataTable();
         $('#tbl-postgrado').DataTable();
+
+        
     });
 
     function showModalNew(nivel_id) {
         console.log(nivel_id);
 
+        preValues = { "5": "LICENCIATURA", "6": "TÉCNICO SUPERIOR", "10": "FORMACION COMPLEMENTARIA" };
+        postValues = { "2": "ESPECIALIDAD", "4": "MAESTRIA", "1": "DOCTORADO", "7": "DIPLOMADO CONDUCENTE", "9": "POST-DOCTORADO", "3": "ESPECIALIDAD Y MAESTRIA", "8": "DIPLOMADO NO CONDUCENTE" };
+
+
+        $("#grado_id").empty();
+
         if(nivel_id == 1){
             $("#titulo").html('Nueva Carrera PREGRADO');
+
+            $.each(preValues, function(key, value) {
+                $('#grado_id')
+                    .append($('<option>', { value : key })
+                    .text(value));
+            });
+            
+            /*select = document.getElementById('grado_id');
+            var opt = document.createElement('option');
+            opt.value = 1;
+            opt.innerHTML = 'ESPECIALIDAD' ;
+            select.appendChild(opt)*/
+
         }else{
             $("#titulo").html('Nueva Carrera POSTGRADO');
+
+             $.each(postValues, function(key, value) {
+                $('#grado_id')
+                    .append($('<option>', { value : key })
+                    .text(value));
+            });
         }
+
+
+        
+
 
         document.getElementById("nivel_academico_id").setAttribute('value', nivel_id);
         
@@ -770,8 +837,8 @@
 
 
         document.getElementById("carrera_id").value = id;
-        document.getElementById("edit_carrera").value = carrera;
-        document.getElementById("edit_resolucion").value = resolucion;
+        document.getElementById("edit_carrera").value = carrera.trim();
+        document.getElementById("edit_resolucion").value = resolucion.trim();
         document.getElementById("edit_fecha_apertura").value = fecha_apertura;
 
         document.getElementById("edit_duracion").value = duracion.replace(/\s+/g, "");
@@ -783,9 +850,10 @@
         $('#edit_regimen_id').val(regimen_id);  
         
         $('#edit_area_conocimiento_id').val(area_conocimiento_id);
+        $('#edit_nivel_academico_id').prop('disabled', true);
 
         console.log(sw);
-        if(sw == 1){
+        /*if(sw == 1){
 
             document.getElementById("edit_carrera").readOnly = true;
             document.getElementById("edit_resolucion").readOnly = true;
@@ -800,7 +868,7 @@
             $('#edit_nivel_academico_id').prop('disabled', true);
 
             /*var button = document.getElementById("btn_save_edit");
-            button.style.display = "none";*/
+            button.style.display = "none";
 
         }else{
 
@@ -814,7 +882,7 @@
             $('#edit_regimen_id').prop('disabled', false);
             $('#edit_nivel_academico_id').prop('disabled', false);
 
-        }
+        }*/
 
         $("#modal-edit").modal('show');
     
@@ -831,7 +899,7 @@
     }
 
     function deleteCarrera(id) {
-        var msj = '\n\n ¿Esta seguro de continuar?';
+        /*var msj = '\n\n ¿Esta seguro de continuar?';
       
         if (confirm('Está por eliminar una carrera:' + msj)) {
             console.log('begin delete');
@@ -841,10 +909,12 @@
                 success: function (data) {
                     console.log(data);
                     console.log('deleted !');
-                    if(data.status == 201){
+                    //if(data.status == 201){
                         // tiene datos
                         swal({ title: "Atencion !", text: data.msg});
-                    }
+                        //return $this->redirect($this->generateUrl('carreras_index'));
+                         location.href = "{{ path('carreras_index') }}";
+                    //}
                 },
                 error: function () {
 
@@ -853,7 +923,46 @@
 
         }
 
-        return false;
+        return false;*/
+
+         swal({
+            title: "¿Está Seguro de Eliminar la carrera ?",
+            text: "Al borrar la carrera se borran tambien TODOS los datos relacionados y no se podrán restablecer o recuperar",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+        })
+        .then(function(willDelete)  {
+            if (willDelete) {
+                 var imagen = '{{ asset("img/loading.gif") }}';             
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('carreras_delete', {'id': id}),                      
+                    beforeSend: function () {
+                        swal({
+                            title: "eliminando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                        swal({ title: "Atencion !", text: data.msg});                       
+                        location.href = "{{ path('carreras_index') }}";
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".alert").slideUp(1000);
+                        });
+                    }
+                });
+            }
+        });
+
+
     }
 
     function validateForm() {

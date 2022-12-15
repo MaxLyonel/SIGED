@@ -1,0 +1,356 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <style>
+        .checkbox {
+    width: 100%;
+    /*margin: 15px auto;*/
+    position: relative;
+    display: block;
+}
+
+.checkbox input[type="checkbox"] {
+    width: auto;
+    opacity: 0.00000001;
+    position: absolute;
+    left: 0;
+    margin-left: -20px;
+}
+.checkbox label {
+    position: relative;
+}
+.checkbox label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 4px;
+    width: 22px;
+    height: 22px;
+    transition: transform 0.28s ease;
+    border-radius: 3px;
+    border: 2px solid #be7281;
+}
+.checkbox label:after {
+  content: '';
+    /*display: block;*/
+    width: 10px;
+    height: 5px;
+    border-bottom: 2px solid #be7281;
+    border-left: 2px solid #be7281;
+    -webkit-transform: rotate(-45deg) scale(0);
+    transform: rotate(-45deg) scale(0);
+    transition: transform ease 0.25s;
+    will-change: transform;
+    position: absolute;
+    top: 12px;
+    left: 10px;
+}
+.checkbox input[type="checkbox"]:checked ~ label::before {
+    color: #be7281;
+}
+
+.checkbox input[type="checkbox"]:checked ~ label::after {
+    -webkit-transform: rotate(-45deg) scale(1);
+    transform: rotate(-45deg) scale(1);
+}
+
+.checkbox label {
+   /* min-height: 34px;
+    display: block;*/
+    padding-left: 40px;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+    vertical-align: sub;
+}
+.checkbox label span {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.checkbox input[type="checkbox"]:focus + label::before {
+    outline: 0;
+}
+    
+    </style>
+    <div class="header-content">
+        <h2>
+            <i class="fa fa-table"></i>
+            Bono Juancito Pinto - 2022
+                        
+            <span>
+                Módulo de Validación
+                            
+            </span>
+        </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">
+                Usted esta aquí:
+                            
+            </span>
+            <ol class="breadcrumb">
+                <li class="active">
+                    Index
+                                    
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    VALIDACION POR ESTUDIANTE
+                                    
+                </h2>
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">
+                            Estudiantes por los que se cobro como "TITULAR DE COBRO"
+                        </h3>
+                    </div>
+                <!-- /.panel-heading -->
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">
+                        TITULAR DE COBRO: {{nombre_titular}}
+                        </h3>
+                    </div>
+                <!-- /.panel-heading -->
+                </div>
+
+                <form name="formeentregados" method="post" role="form" id="formeentregados">
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-bordered  table-primary" role="grid" aria-describedby="myTable_info">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        #
+                                                                        
+                                    </th>
+                                    <th>
+                                        CODUGO RUDE
+                                                                        
+                                    </th>
+                                
+                                    <th>
+                                        PATERNO
+                                                                        
+                                    </th>
+                                    <th>
+                                        MATERNO
+                                                                        
+                                    </th>
+                                    <th>
+                                        NOMBRES
+                                                                        
+                                    </th>
+                                    <th>
+                                    NIVEL
+                                                                        
+                                    </th>
+                                    <th>
+                                    GRADO                                                                    
+                                    </th>
+                                    <th>
+                                        ENTREGADO                                                                    
+                                    </th>
+                                    <th>
+                                        OBS
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set var = 1 %}
+                                {% for entity in estudiantes %}
+                                    <tr>
+                                        <td>
+                                            {{ var }}
+                                        </td>
+                                        <td>
+                                        <strong> {{ entity.codigo_rude }} </strong>
+                                        </td>
+                                    
+                                        <td>
+                                            {{ entity.paterno }}
+                                        </td>
+                                        <td>
+                                            {{ entity.materno }}
+                                        </td>
+                                        <td>
+                                            {{ entity.nombre }}
+                                        </td>
+                                        <td>
+                                            {{ entity.nivel }}
+                                        </td>
+                                        <td>
+                                            {{ entity.grado }}
+                                        </td>
+                                        <td>
+                                            {#
+                                            <div class="checkbox">
+                                                <input type="checkbox" id="ckbox{{ entity.id }}" name="ckbox[{{ entity.id }}]" {% if entity.es_pagado %} checked="checked"  {% endif %}>
+                                                    <label for="ckbox{{ entity.id }}">
+                                                        <span></span>
+                                                    </label>
+                                            </div>
+                                            #}
+
+                                            <select name="cbl[{{ entity.id }}]" id="cbl{{ entity.id }}" class="mycbl">
+                                                <option value="0" {% if entity.opcion == 0 %} selected="selected" {% endif %}>Sin Validar</option>
+                                                <option value="1" {% if entity.opcion == 1 %} selected="selected" {% endif %}>Pagado</option>
+                                                <option value="2" {% if entity.opcion == 2 %} selected="selected" {% endif %} data-estado="{{entity.id}}">No Pagado</option>                                               
+                                            </select>
+
+                                        </td>
+                                        <td>
+                                            <input type="text" size="30" max="150" style="font-weight: bold; background-color: #FEF9E7;"
+                                                id="{{ entity.id }}" name="form[{{entity.id}}]"
+                                                value="{{ entity.observacion }}"
+                                                onclick="this.select();"
+                                                onkeyup="this.value = this.value.toUpperCase();"
+                                                class="form-control clase00" 
+                                                    />
+                                        </td>
+
+                                        </tr>
+                                        {% set var = var + 1 %}
+                                    {% endfor %}
+                                </tbody>
+                        </table>                        
+                    </div>
+                </form>
+
+                <br><br>
+                <div class="messageegresadostitulados" id="messageegresadostitulados"></div> 
+                <div class="row">
+                    <div class="col-md-2">                        
+                        <a href="#" class="btn btn-danger btn-block" id="form_save_gral">GRABAR VALIDACIÓN</a> 
+                    </div>
+                    <div class="col-md-2">                        
+                        <a href="{{ path('operativo_bono_jp_ValidaNoPagados') }}" class="btn btn-teal btn-block">
+                            VOLVER AL LISTADO
+                        </a>                
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+       
+        <br><br>
+
+
+        <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal"></div>
+    <!-- /.modal -->
+    {% endblock %}
+    
+    {% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#form_save_gral').on("click", function () {
+
+            var ok=true;
+            var cont = 0;
+            /* Validar los NO revisados*/
+            $(".mycbl option:selected").each(function () {                
+                if($(this).text() == 'Sin Validar'){cont = cont + 1;}
+            });
+            
+            if(cont > 0){
+               
+                if ( confirm("Existen " + cont + " estudiantes sin validar, desea continuar ?") == true) {
+                    //console.log(1);
+                } else {
+                    return
+                }
+            }
+
+            /* Validar los NO pagados*/            
+            $(".mycbl option:selected").each(function () {                
+                if($(this).text() == 'No Pagado'){
+
+                    id=$(this).attr('data-estado');                                        
+                    console.log(id);
+                    //ver el input de este id
+                    obs = document.getElementById(id).value;                    
+                    if(obs === '') { 
+                        alert(' DEBE ESPECIFICAR UNA OBSERVACION PARA LOS QUE NO FUERON PAGADOS !!');
+                        console.log('exit');
+                        ok=false;
+                        return false;
+                     }                    
+
+                }
+            });
+            
+            if(ok == true){
+        
+            swal({
+                title: "¿Grabar Validación?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Grabar"],
+            })
+                .then(function (respuesta) {
+                    if (respuesta) {
+                        var imagen = '{{ asset("img/loading.gif") }}';                      
+    
+                        var formulario = document.getElementById("formeentregados"); //$('#formBecas');
+                        var formData = new FormData(formulario);
+                        console.log(formulario);
+    
+                        formData.append('key1', 'value1');
+                        console.log(formData);
+                        
+                        $.ajax({
+                            type: 'post',
+                            url: Routing.generate('operativo_bono_jp_ValidaNoPagadosAlumnosSave'),
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function () {
+                                swal({
+                                    title: "Registrando la informacion...",
+                                    text: "Espere un momento por favor",
+                                    icon: imagen,
+                                    buttons: false
+                                });
+                                //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                            },
+                            success: function (data) {
+                                $('#messageegresadostitulados').empty();
+                                if (data.estado) {
+                                    $("#messageegresadostitulados").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                                } else {
+                                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                                }
+                            },
+                            complete: function () {
+                                swal.stopLoading();
+                                swal.close();
+                                $(".messageegresadostitulados").fadeTo(3000, 1000).slideUp(1000, function () {
+                                    $(".messageegresadostitulados").slideUp(1000);
+                                });
+                            },
+                            error: function (error) {
+                                $('#message').empty();
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                                //boton.show();
+                            },
+                        });
+                        
+    
+                    }
+    
+                })
+
+            }
+        });
+    </script>
+    
+    {% endblock %}

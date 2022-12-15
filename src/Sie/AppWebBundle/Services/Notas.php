@@ -7003,22 +7003,24 @@ die;/*
             //dump($discapacidad); die;
             // Datos del siguimiento
             if($gestion > 2019 and $discapacidad != 7 and ($discapacidad == 4 or ($discapacidad == 5 and ($nivel == 411 or $nivel==410)) or $discapacidad == 6 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
-                
-                $seguimientoNota = new EstudianteNotaCualitativa();
-                $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));
-                $seguimientoNota->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion')));
-                $seguimientoNota->setNotaCuantitativa(0);
-                $seguimientoNota->setNotaCualitativa($request->get('seguimiento'));
-                $seguimientoNota->setRecomendacion('');
-                $seguimientoNota->setUsuarioId($this->session->get('userId'));
-                $seguimientoNota->setFechaRegistro(new \DateTime('now'));
+                $seguimientoNota  = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion' => $request->get('idInscripcion'), 'notaTipo' => $request->get('tipoNota')));
+                if(!$seguimientoNota){
+                    $seguimientoNota = new EstudianteNotaCualitativa();
+                    $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));
+                    $seguimientoNota->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion')));
+                    $seguimientoNota->setNotaCuantitativa(0);
+                    $seguimientoNota->setRecomendacion('');
+                    $seguimientoNota->setUsuarioId($this->session->get('userId'));
+                    $seguimientoNota->setFechaRegistro(new \DateTime('now'));
+                }
+                $seguimientoNota->setNotaCualitativa($request->get('seguimiento'));                
                 $seguimientoNota->setFechaModificacion(new \DateTime('now'));
                 $seguimientoNota->setObs('');
                 $this->em->persist($seguimientoNota);
                 $this->em->flush();
             }
             if(!empty($request->get('progserv')) and $gestion > 2018 and $discapacidad == 1 and $request->get('progserv') == 19){
-                
+               
                 $seguimiento = array();
                 $seguimiento['anho'] = $request->get('anho');
                 $seguimiento['resumen'] = mb_strtoupper($request->get('resumen'), 'utf-8');
@@ -7145,7 +7147,7 @@ die;/*
                 $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$idNotaTipo));
                 if($notaCualitativas) {
                     $arrayCualitativas = json_decode($notaCualitativas->getNotaCualitativa(), true);
-                    $enota = 1;
+                    $enota = 0; // 1
                 } else {
                     $enota = 0;
                 }

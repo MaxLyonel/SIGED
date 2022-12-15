@@ -1,0 +1,283 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2>
+            <i class="fa fa-table"></i>
+            Bono Juancito Pinto - 2022
+            <span>
+                Módulo de Validación
+            </span>
+        </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">
+                Usted esta aquí:
+            </span>
+            <ol class="breadcrumb">
+                <li class="active">
+                    Index
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    RESUMEN POR TITULAR DE COBRO 
+                </h2>
+
+                <div class="row">
+                    <div class="col-md-5">
+
+                        <!-- Start list bank table -->
+                        <div class="panel">                            
+                            <div class="panel-body no-padding">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <span class="pull-left text-capitalize">TOTAL ESTUDIANTES CON MAESTRO O DIRECTOR COMO TITULAR DE COBRO</span>
+                                                <span class=" pull-right label label-primary" style="border-style:double;font-size:15px;">{{total_estudiantes}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="pull-left text-capitalize">TOTAL ESTUDIANTES VALIDADOS</span>
+                                                <span class=" pull-right label label-success" style="border-style:double;font-size:15px;">{{total_estudiantes_validados}}</span>
+                                            </td>
+                                        </tr>                                        
+                                        <tr>
+                                            <td>
+                                                <span class="pull-left text-capitalize">TOTAL ESTUDIANTES POR VALIDAR</span>
+                                                <span class=" pull-right label label-danger" style="border-style:double;font-size:15px;">{{total_estudiantes - total_estudiantes_validados}}</span>
+                                            </td>
+                                        </tr>                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                        <!--/ End list bank table -->
+
+                    </div>     
+                    
+                    <div class="col-md-5">
+
+                    <div class="panel-sub-heading">
+                        <div class="callout callout-info">                       
+                        <p>
+                            PARA UN CORRECTO LLENADO, REVISE LA INFORMACION A VALIDAR, COMPRUEBE LOS TOTALES Y REGISTRE LAS OBSERVACIONES SEGUN CORRESPONDA.
+                        </p>
+                        <HR></HR>
+                        <P>
+                            <span class="text-danger">AL FINALIZAR LA VALIDACION DEBE CERRAR EL OPERATIVO DE VALIDACION, CON EL BOTON AL PIE DE LA PÁGINA</span>
+                        </P>
+                        
+                        </div>
+                    </div>
+                
+                    </div>
+                </div>
+               
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">Lista de Maestro o Directores registrados como "TITULAR DE COBRO" en esta Unidad Educativa</h3>
+                    </div><!-- /.panel-heading -->
+                </div>
+                <div class="table-responsive">
+                    <table id="myTable" class="table table-bordered dataTable table-success" role="grid" aria-describedby="myTable_info">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    CARNET TITULAR
+                                </th>
+                                <th>
+                                    COMPLEMENTO
+                                </th>
+                                <th>
+                                    PATERNO
+                                </th>
+                                <th>
+                                    MATERNO
+                                </th>
+                                <th>
+                                    NOMBRES
+                                </th>
+                                <th>
+                                    TIPO APODERADO
+                                </th>
+                                <th>
+                                    CANTIDAD ESTUDIANTES COBRADOS
+                                </th>
+                                <th>
+                                    VALIDAR
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set var = 1 %}
+                            {% for entity in apoderados %}
+                                <tr>
+                                    <td>
+                                        {{ var }}
+                                    </td>
+                                    
+                                    <td>
+                                        {{ entity.carnet }}
+                                    </td>
+                                    <td>
+                                        {{ entity.complemento }}
+                                    </td>
+                                    
+                                    <td>
+                                        {{ entity.paterno }}
+                                    </td>
+                                    <td>
+                                        {{ entity.materno }}
+                                    </td>
+                                    <td>
+                                        {{ entity.nombre }}
+                                    </td>
+                                    <td>
+                                        {{ entity.apoderado_tipo }}
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="label label-primary" style="border-style:double;font-size:15px;">
+                                        {{ entity.estudiantes_cobrados }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if operation_status == 0 %}
+                                        <form action="{{ path('operativo_bono_jp_ValidaNoPagadosAlumnos') }}" method="post" style="display:inline-block">
+                                            <input type="hidden" name="iduealtadem" value="{{ entity.id }}">
+                                                <button  class="btn btn-teal btn-block" style="border-radius: 2px;" type="submit">
+                                                    <i class="fa fa-edit"></i>  Validar Estudiantes
+                                                </button>
+                                            </form> 
+                                        {% else %}
+                                            <span class="label label-danger" style="border-style:double;font-size:11px;"> OPERATIVO CERRADO</span>                                         
+                                        {% endif %}                                                                              
+                                        </td>
+                                    </tr>
+                                    {% set var = var + 1 %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {% if operation_status == 0 %}
+
+                <br><br>        
+                <div class="row">
+                    <form name="formcloseopeId" method="post" role="form" id="formcloseopeId">
+                        <input type="hidden" id="ue" name="ue" value="{{data}}">
+                        <div class="col-md-3">  
+                            <button id="btn_close_ope" type="submit" class="btn btn-theme">
+                                CERRAR OPERATIVO DE VALIDACIÓN
+                            </button>                                                  
+                        </div>          
+                    </form>  
+                </div>
+
+                {% else %}
+
+                <br><br>        
+                <div class="row">
+                    <div class="col-md-3">  
+                        <a href="{{ path('operativo_bono_valida_imprime') }}" class="btn btn-success btn-block" id="print_report">IMPRIMIR REPORTE DDJJ </a>    
+                    </div>
+                </div>
+
+                {% endif %}
+
+                <br><br>        
+                <div class="row">                    
+                    <div id="closeopediv" style="overflow: scroll; width: 100%; height:300px" class="col-lg-4 col-md-6 col-sm-12 col-xs-12"></div>
+                </div>
+
+            </div>
+        </div>
+
+    <!-- /.modal -->
+    {% endblock %}
+
+
+    
+{% block javascripts %}
+{{ parent() }}
+<script>
+
+    $('#formcloseopeId').on('submit',function (e)
+    {
+        e.preventDefault();
+        closeOperative();
+    });
+
+    function closeOperative(){
+        if(confirm('¿Está segura/o de cerrar el operativo de Validación ?')){
+            formData = $('#formcloseopeId').serialize();
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('operativo_bono_jp_ValidaNoPagados_closeope'),
+                data: formData,
+                beforeSend: function () {
+                    $("#closeopediv").empty();
+                    $("#closeopediv").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                },
+                success: function (data)
+                {
+                    var res= data;
+                    var status = res.status;
+                    var msj = res.msj;
+                    // var urlReporte = res.urlReporte;
+                    var observations = [];//res.observations;
+                    if(status==200)
+                    {
+                        if(observations && observations.length>0)
+                        {
+                            $("#closeopediv").empty();
+                            var obs ='<ol class="list-group"><li class="list-group-item" style="background-color:#63D3E9;color:white"><h5>'+observations.length+' Inconsistencias / Observaciones</h5></li>';
+                            for (var i in observations)
+                            {
+                                obs+='<li class="list-group-item list-group-item-danger">'+observations[i].observacion+'</li>';
+                            }
+                            obs+='</ol>';
+                            $("#closeopediv").html(obs);
+                        }
+                        else
+                        {
+                            
+                            $("#closeopediv").empty();
+                            obs='<li class="list-group-item list-group-item-success">'+msj+'         <a href="#">  IMPRIMIR REPORTE </a>  </li>';
+                            $("#closeopediv").html(obs);
+                        }
+                    }
+                    else
+                    {
+                        alert('Ocurrio un error por favor vuelva a intentarlo.');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+                        alert('Acaba de ocurrir un error de servidor.');
+                    },
+                    404: function () {
+                        alert('Ocurrio un error por favor vuelva a intentarlo.');
+                    }
+                }
+            });
+        } else{ 
+            return false;
+        }
+    };        
+
+
+</script>
+    
+{% endblock %}

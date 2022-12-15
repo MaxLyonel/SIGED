@@ -130,4 +130,33 @@ generar_reporte_pdf_cambio_tutor:
     options:
          expose: true  
 
+operativo_bono_jp_ValidaNoPagados:
+    path:     /operativo_bono_jp_valida_no_pagados
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:validaNoPagados"}
+    options:
+         expose: true
+
+operativo_bono_jp_ValidaNoPagadosAlumnos:
+    path:     /operativo_bono_jp_valida_no_pagados_alumnos
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:validaNoPagadosAlumnos" }
+
+
+operativo_bono_jp_ValidaNoPagadosAlumnosSave:
+    path:     /operativo_bono_jp_valida_no_pagados_alumnos/save
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:validaNoPagadosAlumnosSave" }
+    options:
+        expose: true
+
+operativo_bono_jp_ValidaNoPagados_closeope:
+    path:     /operativo_bono_jp_valida_no_pagados/closeope
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:closeOpe"}
+    options:
+         expose: true
+
+
+operativo_bono_valida_imprime:
+    path:     /imprime-ddj
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:impresionDDJJ" }
+    
+
 # generar file menu fin

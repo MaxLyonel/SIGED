@@ -182,6 +182,10 @@ class NoteConsultationUesController extends Controller {
                             $query->execute();
                             $inconsistencia = $query->fetchAll();                            
                         } elseif($gestion == 2022){
+                          
+                          if(in_array($this->session->get('roluser'), array(9)) ){
+                                 $operativo = $operativo - 1;
+                          }
                           $valor_op=array('0'=>6,'1'=>6,'2'=>7,'3'=>8);
                           
                           $queryCheckCal = 'select * from sp_validacion_regular_web2022_fg(:gestion,:sie,:ope)';
@@ -191,7 +195,6 @@ class NoteConsultationUesController extends Controller {
                           $query->bindValue(':ope', $valor_op[$operativo]);
                           $query->execute();
                           $inconsistencia = $query->fetchAll(); 
-
                         } else {                            
                             $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
                             $query->bindValue(':gestion', $gestion);

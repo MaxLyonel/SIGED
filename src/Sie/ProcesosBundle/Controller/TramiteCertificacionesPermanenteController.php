@@ -216,7 +216,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2020')
+                                ->where('gt.id > 2021')
                                 ->orderBy('gt.id', 'DESC');
                     },
                 ))
@@ -672,26 +672,34 @@ class TramiteCertificacionesPermanenteController extends Controller {
     function saveAndUpdateCert($data){
         // create the conexion 
         $em = $this->getDoctrine()->getManager();
-        // create and save the code serie
-        $documentoSerie = new DocumentoSerie();
-        $documentoSerie->setId($data['nroSerie']);
-        $documentoSerie->setGestion($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
-        $documentoSerie->setDepartamentoTipo($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($data['depto']));
-        $documentoSerie->setEsanulado(false);
-        $documentoSerie->setObservacionAnulado('false');
-        $documentoSerie->setObs('eudper');
-        $documentoSerie->setDocumentoTipo($em->getRepository('SieAppWebBundle:documentoTipo')->findOneById($data['typedoc']));
-        $documentoSerie->setFormacionEducacionTipo($em->getRepository('SieAppWebBundle:FormacionEducacionTipo')->find(4));
-        $em->persist($documentoSerie);
-        // set the code serie on certificadoPermanente table
-        $certificadoPermanente = $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('tramite' => $data['idtramite'] ));
-        $certificadoPermanente->setEstado(3);
-        $certificadoPermanente->setDocumentoSerie($em->getRepository('SieAppWebBundle:DocumentoSerie')->find($documentoSerie->getId()));
-        
-        
-         $em->flush();
 
-         return $documentoSerie->getId();
+        $certificadoPermanente = $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('tramite' => $data['idtramite'] ));
+
+        if(!$certificadoPermanente->getDocumentoSerie()){
+
+            // create and save the code serie
+            $documentoSerie = new DocumentoSerie();
+            $documentoSerie->setId($data['nroSerie']);
+            $documentoSerie->setGestion($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+            $documentoSerie->setDepartamentoTipo($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($data['depto']));
+            $documentoSerie->setEsanulado(false);
+            $documentoSerie->setObservacionAnulado('false');
+            $documentoSerie->setObs('eudper');
+            $documentoSerie->setDocumentoTipo($em->getRepository('SieAppWebBundle:documentoTipo')->findOneById($data['typedoc']));
+            $documentoSerie->setFormacionEducacionTipo($em->getRepository('SieAppWebBundle:FormacionEducacionTipo')->find(4));
+            $em->persist($documentoSerie);
+            // set the code serie on certificadoPermanente table
+            $certificadoPermanente->setEstado(3);
+            $certificadoPermanente->setDocumentoSerie($em->getRepository('SieAppWebBundle:DocumentoSerie')->find($documentoSerie->getId()));
+            
+            $em->flush();
+
+            return $documentoSerie->getId();
+        }else{
+            return $certificadoPermanente->getDocumentoSerie()->getId();
+        }
+        
+
 
     }
 
@@ -1153,7 +1161,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2020')
+                                ->where('gt.id > 2021')
                                 ->orderBy('gt.id', 'DESC');
                     },
                 ))
