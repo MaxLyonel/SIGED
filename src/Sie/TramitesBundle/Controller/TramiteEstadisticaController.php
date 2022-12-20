@@ -233,5 +233,200 @@ class TramiteEstadisticaController extends Controller {
 			return array();
 		}		
     }    
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que lista la estadística de bachilleres tecnico humanisticos impresos segun la gestión de egreso del estudiante y el nivel autorizado que tiene el usuario
+    // PARAMETROS: usuarioId, rolId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function bachTecHumEgresoAction(Request $request) {    
+    	/*
+    	 * Define la zona horaria y halla la fecha actual
+    	 */
+    	date_default_timezone_set('America/La_Paz');
+    	$fechaActual = new \DateTime(date('Y-m-d'));
+    	$gestionActual = date_format($fechaActual,'Y');
+        $route = $request->get('_route');
+		// dump($gestionActual);die;
+		$sesion = $request->getSession();
+		$id_usuario = $sesion->get('userId');	
+
+		//validation if the user is logged
+		if (!isset($id_usuario)) {
+			return $this->redirect($this->generateUrl('login'));
+		}
+
+		$defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+		// $activeMenu = $defaultTramiteController->setActiveMenu($route);
+		
+		// if(empty($activeMenu)){
+		// 	$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+		// } 	
+
+		if ($request->isMethod('POST')) {
+			$gestion = $request->get('gestion');
+			$lugarNivel = base64_decode($request->get('nivel'));
+			$lugar = base64_decode($request->get('codigo'));
+		} else {
+			$gestion = $gestionActual;
+			$entidadUsuarioRol = $defaultTramiteController->getUserRoles($id_usuario);	
+			if(!empty($entidadUsuarioRol)){
+				$em = $this->getDoctrine()->getManager();
+				$entidadLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $entidadUsuarioRol[0]['rollugarid']));
+				$lugar = $entidadLugarTipo->getCodigo();	
+				$lugarNivel = $entidadUsuarioRol[0]['orden'];
+			} else {
+				$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Su usuario no esta autorizado para acceder al sistema, comuniquese con su Técnico SIE y verifique los roles de acceso'));
+            	return $this->redirect($this->generateUrl('tramite_homepage'));
+			}
+		}
+		
+		$entidad = $this->buscaBachTecHumGestionEgreso($lugarNivel,$lugar,$gestion);
+		
+		$entityGestion = $defaultTramiteController->getGestiones(2009);
+
+		$total_general = 0;
+		foreach ($entidad as $key => $dato) {
+			$total_general = $total_general + $dato['cantidad'];
+		}
+
+		if(count($entidad)>0 and isset($entidad)){
+            foreach ($entidad as $key => $dato) {
+                $entidad[$key]['total_general'] = $total_general;
+            }
+		} 
+
+		if(count($entidad)>0){
+			return $this->render($this->session->get('pathSystem') . ':Estadistica:bachTecHumEgreso.html.twig', array(
+				'infoEntidad'=>$entidad,
+				'gestiones'=>$entityGestion,
+				'gestion'=>$gestion,
+			)); 
+		} else {
+			return $this->render($this->session->get('pathSystem') . ':Estadistica:bachTecHumEgreso.html.twig', array(
+				'gestiones'=>$entityGestion,
+				'gestion'=>$gestion,
+			)); 
+		}		
+	}
+
+
+	public function buscaBachTecHumGestionEgreso($lugarNivel,$lugar,$gestion) {
+		$em = $this->getDoctrine()->getManager();	
+		if ($lugarNivel == 1) {
+			$queryEntidad = $em->getConnection()->prepare("
+				select 'Departamentos' as nombre_nivel, lt4.id, lt4.codigo, lt4.lugar as nombre
+				, ".$lugarNivel." as nivel_id, 2 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
+				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
+				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
+				, count(*) as cantidad 
+				from estudiante_inscripcion as ei
+				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+				inner join tramite as t on t.estudiante_inscripcion_id = ei.id
+				inner join documento as d on d.tramite_id = t.id 
+				--inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 1
+				--inner join flujo_proceso as fp on fp.id = td.flujo_proceso_id
+				--inner join proceso_tipo as pt on pt.id = fp.proceso_id
+				inner join institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+				inner join jurisdiccion_geografica AS jg ON ie.le_juridicciongeografica_id = jg.id
+				inner join lugar_tipo AS lt ON lt.id = jg.lugar_tipo_id_localidad
+				inner join lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+				inner join lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+				inner join lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+				inner join lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and d.documento_tipo_id = 8 and d.documento_estado_id = 1
+				group by lt4.id, lt4.lugar
+				order by lt4.id, lt4.lugar
+            ");
+		} elseif ($lugarNivel == 2) {
+			$queryEntidad = $em->getConnection()->prepare("
+				select 'Distritos Educativos' as nombre_nivel, lt5.id, lt5.codigo, lt5.lugar as nombre
+				, ".$lugarNivel." as nivel_id, 7 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
+				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
+				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
+				, count(*) as cantidad 
+				from estudiante_inscripcion as ei
+				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+				inner join tramite as t on t.estudiante_inscripcion_id = ei.id
+				inner join documento as d on d.tramite_id = t.id 
+				--inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 1
+				--inner join flujo_proceso as fp on fp.id = td.flujo_proceso_id
+				--inner join proceso_tipo as pt on pt.id = fp.proceso_id
+				inner join institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+				inner join jurisdiccion_geografica AS jg ON ie.le_juridicciongeografica_id = jg.id
+				inner join lugar_tipo AS lt ON lt.id = jg.lugar_tipo_id_localidad
+				inner join lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+				inner join lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+				inner join lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+				inner join lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+				inner join lugar_tipo AS lt5 ON lt5.id = jg.lugar_tipo_id_distrito
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and lt4.codigo = '".$lugar."' and d.documento_tipo_id = 8 and d.documento_estado_id = 1
+				group by lt5.id, lt5.lugar
+				order by lt5.id, lt5.lugar
+            ");
+				
+		} elseif ($lugarNivel == 7) {
+			$queryEntidad = $em->getConnection()->prepare("
+				select 'U.E./C.E.A.' as nombre_nivel, ie.id as id, ie.id as codigo, ie.institucioneducativa as nombre
+				, ".$lugarNivel." as nivel_id, 0 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
+				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
+				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
+				, count(*) as cantidad 
+				from estudiante_inscripcion as ei
+				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+				inner join tramite as t on t.estudiante_inscripcion_id = ei.id
+				inner join documento as d on d.tramite_id = t.id 
+				--inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 1
+				--inner join flujo_proceso as fp on fp.id = td.flujo_proceso_id
+				--inner join proceso_tipo as pt on pt.id = fp.proceso_id
+				inner join institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+				inner join jurisdiccion_geografica AS jg ON ie.le_juridicciongeografica_id = jg.id
+				inner join lugar_tipo AS lt5 ON lt5.id = jg.lugar_tipo_id_distrito
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and lt5.codigo = '".$lugar."' and d.documento_tipo_id = 8 and d.documento_estado_id = 1
+				group by ie.id, ie.institucioneducativa
+				order by ie.id, ie.institucioneducativa
+
+            ");
+		} else {
+			$queryEntidad = $em->getConnection()->prepare("
+				select 'Departamentos' as nombre_nivel, lt4.id, lt4.codigo, lt4.lugar as nombre
+				, ".$lugarNivel." as nivel_id, 2 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
+				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
+				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
+				, count(*) as cantidad 
+				from estudiante_inscripcion as ei
+				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+				inner join tramite as t on t.estudiante_inscripcion_id = ei.id
+				inner join documento as d on d.tramite_id = t.id 
+				--inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 1
+				--inner join flujo_proceso as fp on fp.id = td.flujo_proceso_id
+				--inner join proceso_tipo as pt on pt.id = fp.proceso_id
+				inner join institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+				inner join jurisdiccion_geografica AS jg ON ie.le_juridicciongeografica_id = jg.id
+				inner join lugar_tipo AS lt ON lt.id = jg.lugar_tipo_id_localidad
+				inner join lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+				inner join lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+				inner join lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+				inner join lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and d.documento_tipo_id = 8 and d.documento_estado_id = 1
+				group by lt4.id, lt4.lugar
+				order by lt4.id, lt4.lugar
+            ");		
+		}
+		
+		$queryEntidad->execute();
+		$objEntidad = $queryEntidad->fetchAll();
+		if (count($objEntidad)>0 ){
+			return $objEntidad;
+		} else {
+			return array();
+		}		
+    } 
+
 }
 

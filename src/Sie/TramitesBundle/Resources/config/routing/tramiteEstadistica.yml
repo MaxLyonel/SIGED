@@ -25,3 +25,8 @@ tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad_completa:
 tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad_seleccion:
     path:     /certificado/tecnico/emitido/descarga/especialidad/seleccion
     defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaEspecialidadSeleccion }
+
+
+tramite_estadistica_bachiller_tecnico_humanistico_egreso:
+    path:     /bachiller/tecnico/humanistico/egreso
+    defaults: { _controller: SieTramitesBundle:TramiteEstadistica:bachTecHumEgreso }

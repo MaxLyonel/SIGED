@@ -3620,7 +3620,8 @@ class TramiteDetalleController extends Controller {
                         }
                     }
                     
-                    if ($gestion <= 2021){
+                    $sieHomologacion = array(1,2,3,4,5,6,7,8,9);
+                    if ($gestion <= 2021 or in_array($sie,$sieHomologacion)){
                         $cierreOperativo = true;
                     }
 

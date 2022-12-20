@@ -19,12 +19,12 @@
                 <div class="panel shadow">
                         <div class="panel-heading">
                             <div id="tour-12" class="pull-left">
-                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Diplomas impresos</h3>
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Títulos impresos</h3>
                             </div>
                             <div class="pull-right">
                                 <div class="btn-green date-picker">
                                     {% if infoEntidad is defined  %}
-                                        <form name="form" role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" action="" method="POST" >
+                                        <form name="form" role="form" action="{{ path('tramite_estadistica_bachiller_tecnico_humanistico_egreso') }}" action="" method="POST" >
                                             <input type="hidden" name="codigo" id="codigo" value="{{infoEntidad[0]['lugar_codigo']|base64_encode }}" />
                                             <input type="hidden" name="nivel" id="nivel" value="{{infoEntidad[0]['nivel_id']|base64_encode}}" />
                                             <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
@@ -38,7 +38,7 @@
                                             </select>
                                         </form>
                                     {% else %}
-                                        <form name="form" role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" action="" method="POST" >
+                                        <form name="form" role="form" action="{{ path('tramite_estadistica_bachiller_tecnico_humanistico_egreso') }}" action="" method="POST" >
                                             <input type="hidden" name="codigo" id="codigo" value="{{ 0|base64_encode }}" />
                                             <input type="hidden" name="nivel" id="nivel" value="{{ 1|base64_encode}}" />
                                             <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
@@ -60,6 +60,7 @@
                         {% if infoEntidad is defined  %}
                             {% set count = 0 %}
                             {% set cantidadTotalGeneral = 0 %}
+
                             <table class="table table-issue-tracker table-middle table-info" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -71,21 +72,19 @@
                                 <tbody>
                                     {% for data in infoEntidad %}
                                         {% set count = count + 1 %}
+                                        {% set cantidadTotal = data.cantidad %}
                                         {% set cantidadReg = data.cantidad_reg %}
                                         {% set cantidadAlt = data.cantidad_alt %}
-                                        {% set cantidadTotal = data.cantidad %}
                                         {% if count == 1 %}
                                             {% set cantidadTotalGeneral = data.total_general %}
                                             {% if cantidadTotalGeneral == 0 %}
                                                 {% set cantidadTotalGeneral = 1 %}
                                             {% endif %}
                                         {% endif %}
-                                        {% set porcentajeReg = (cantidadReg * 100 )/ cantidadTotal %}
-                                        {% set porcentajeAlt = (cantidadAlt * 100) / cantidadTotal %}
                                         {% set id = data.id %}
                                         {% set codigo = data.codigo %}
                                         {% set nombre = data.nombre %} 
-                                        {% if infoEntidad[0]['siguiente_nivel_id'] == 0  %}          
+                                        {% if infoEntidad[0]['siguiente_nivel_id'] == 0  %}    
                                             <tr>
                                                 <td>
                                                     {{ id }} - {{ nombre }}
@@ -96,19 +95,18 @@
                                                 <td class="text-center">
                                                     {{ cantidadAlt }}
                                                 </td>                                                   
-                                            </tr>   
+                                            </tr> 
                                         {% else %}                                
-                                            <form role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" method="POST"> 
+                                            <form role="form" action="{{ path('tramite_estadistica_bachiller_tecnico_humanistico_egreso') }}" method="POST"> 
                                                 <input type="hidden" name="codigo" id="codigo" value="{{data.codigo|base64_encode }}" />
                                                 <input type="hidden" name="nivel" id="nivel" value="{{(data.siguiente_nivel_id)|base64_encode}}" />
                                                 <input type="hidden" name="gestion" id="gestion" value="{{gestion}}" />
-                                                <button type="submit" id="submit{{id}}" style="display:none;"></button>
-
+                                                <button type="submit" id="submit{{id}}" style="display:none;"></button>                                                 
                                                 <tr>
                                                     <td>
                                                         <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
                                                             {{ nombre }}
-                                                        </a>  
+                                                        </a>
                                                     </td>
                                                     <td class="text-center">
                                                         {{ cantidadReg }}
@@ -121,7 +119,7 @@
                                         {% endif %}
                                     {% endfor %}
                                 </tbody>
-                            </table> 
+                            </table>                            
                         {% endif %}
                         </div><!-- /.panel-body -->
                     </div>
