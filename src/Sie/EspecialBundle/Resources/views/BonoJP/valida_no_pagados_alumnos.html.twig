@@ -80,7 +80,7 @@
             Bono Juancito Pinto - 2022
                         
             <span>
-                Módulo de Validación
+                Módulo de Validaciónyyyyyyyyyyyy
                             
             </span>
         </h2>
@@ -247,11 +247,13 @@
         <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal"></div>
     <!-- /.modal -->
     {% endblock %}
-    
-    {% block javascripts %}
+    {% block javascripts %}        
     {{ parent() }}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $('#form_save_gral').on("click", function () {
+
+            alert('here');
 
             var ok=true;
             var cont = 0;
@@ -286,7 +288,7 @@
 
                 }
             });
-            
+
             if(ok == true){
         
             swal({
@@ -350,6 +352,8 @@
                 })
 
             }
+
+           
         });
     </script>
     
