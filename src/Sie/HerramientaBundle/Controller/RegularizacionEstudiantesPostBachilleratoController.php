@@ -2549,7 +2549,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 	 * @author lnina
 	 **/
 	public function postRegularizacionDetalleSolicitudesRecibidasUEAction(Request $request)
-	{
+	{	
 		$em 					= $this->getDoctrine()->getManager();
 		$form 					= $request->request->all();
 		$tramite_id				= isset($form['tramite_id'])?$form['tramite_id']:-1;
@@ -2636,7 +2636,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			{
 				$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
 			}
-
+			
 			return $this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:ue_detalleSolicitudesRecibidas.html.twig',array(
 				'estudiante'=>$estudiante,
 				'path' => $this->path,
@@ -2965,8 +2965,19 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 								$idCurso = $curso->getId();
 								$materias = $this->get('areas')->getAreas($idCurso);
 
+								
 								if($materias && isset($materias['cursoOferta']))
 								{
+									
+									//****NO EXISTE TTG - TTE EN POSTBACHILLERATO***/
+									if ($nivel == 13 && $grado >= 3){ 
+										foreach ( $materias['cursoOferta'] as $key => $item) {
+											if ((isset($item['idAsignatura']) && $item['idAsignatura'] == 1038)|| (isset($item['idAsignatura']) && $item['idAsignatura'] == 1039)) {
+												unset($materias['cursoOferta'][$key]) ;
+											}
+										}
+									}
+									//*****/
 									$data = json_encode(array(
 										'inscripcion' => $inscripcion_retornar,
 										//'paralelos'=> $paralelos,
