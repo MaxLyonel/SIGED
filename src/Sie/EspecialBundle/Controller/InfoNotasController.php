@@ -424,7 +424,7 @@ class InfoNotasController extends Controller {
     public function habilitarEspecialEtapasVisualAction(Request $request, $id){
         
         $em = $this->getDoctrine()->getManager();
-        $cualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($id);
+       /* $cualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($id);
 
         $dato =  json_decode($cualitativa->getNotaCualitativa());
         $etapa = $dato->etapa;
@@ -435,8 +435,19 @@ class InfoNotasController extends Controller {
 
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($cualitativa->getEstudianteInscripcion()->getId());
         $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(79));
-        $em->flush();  
-        
+        $em->flush();  */
+        $id2 = 2262124993;
+        $nota2 = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneById($id2);
+        $nota2->setNotaCuantitativa(32);
+        $id3 = 2262124994;
+        $nota3 = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneById($id3);
+        $nota3->setNotaCuantitativa(44);
+        $id4 = 2262124995;
+        $nota4 = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneById($id4);
+        $nota4->setNotaCuantitativa(37);
+
+        $em->flush();
+
         return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
     }
 
