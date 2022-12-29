@@ -51,6 +51,12 @@
                                 <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
                             </form>
                         {% endif %}
+                         {% if app.session.get('roluser') == 8 %}
+                            <form action="{{path('historico_new')}}" method="post" style="display:inline-block">
+                                <input type="hidden" name="idRie" value="{{entity.id}}">
+                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
+                            </form>
+                        {% endif %}
                         </div>
                     </div>                
                     <div class="table-responsive">

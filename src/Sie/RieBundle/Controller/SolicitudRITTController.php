@@ -302,12 +302,21 @@ class SolicitudRITTController extends Controller {
     }
     public function vistaPreviaCertificadoAction(Request $request){
         $idRie= $request->get('idRie');
+        //tienen ratificaciones
+        
+        $query = $em->getConnection()->prepare("select * from ttec_institucioneducativa_historico h, ttec_institucioneducativa_ratificacion r where r.ttec_institucioneducativa_historico_id =h.id  and h.institucioneducativa_id =".$idRie." ");
+        $query->execute();
+        $resultados = $query->fetchAll();
+
+        $file = 'rie_cert_certificadottec_vp_v3_afv.rptdesign';
+        if(count($resultados)>0)
+            $file = 'rie_cert_certificadottec_vp_v3_ratificado_cvm.rptdesign';
 
         $arch = 'CERTIFICADO_VP_'.$idRie.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_cert_certificadottec_vp_v3_afv.rptdesign&institucioneducativa_id='.$idRie.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . ''.$file.'&institucioneducativa_id='.$idRie.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -329,11 +338,20 @@ class SolicitudRITTController extends Controller {
         $em->persist($entityDocumento);
         $em->flush();
 
+        $query = $em->getConnection()->prepare("ttec_institucioneducativa_historico h, ttec_institucioneducativa_ratificacion r, tramite t, documento d where r.ttec_institucioneducativa_historico_id =h.id and t.institucioneducativa_id = h.institucioneducativa_id and t.id=d.tramite_id and d.id=".$entityDocumento->getId()." ");
+        $query->execute();
+        $resultados = $query->fetchAll();
+        
+        $file = 'rie_cert_certificadottec_v3_afv.rptdesign';
+        if(count($resultados)>0)
+            $file = 'rie_cert_certificadottec_v3_ratificado_cvm.rptdesign';
+
+
         $arch = 'CERTIFICADO_'.$idRie.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_cert_certificadottec_v3_afv.rptdesign&documento_id='.$entityDocumento->getId().'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . ' '.$file.'&documento_id='.$entityDocumento->getId().'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
