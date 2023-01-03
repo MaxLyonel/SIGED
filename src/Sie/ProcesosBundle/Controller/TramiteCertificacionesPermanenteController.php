@@ -659,11 +659,12 @@ class TramiteCertificacionesPermanenteController extends Controller {
                     }
                 break;   
             default: //Departamental o Nacional 
-                    $certificadoPermanente =  $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('institucioneducativa'=>$idInstitucion,'gestionTipo'=>$this->session->get('currentyear'),'tramite'=>$idTramite));
+                    $certificadoPermanente =  $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('institucioneducativa'=>$idInstitucion,'tramite'=>$idTramite));
                     $certificadoPermanente->setEstado(2);
                     $em->flush();
                     $mensaje['dato'] = true;
                     $mensaje['msg'] = 'Se actualizó correctamente';
+
                     return $mensaje;
                 break;    
         }
