@@ -327,15 +327,129 @@ class SolicitudRITTController extends Controller {
     public function guardaTramiteNacImprimeConcluidoAction(Request $request){
         $idRie= $request->get('idRie');
         $idTramite= $request->get('idTramite');
+        $id_usuario= $this->session->get('userId');
         $em = $this->getDoctrine()->getManager();
         //dump($this->container->getParameter('urlreportweb'));
         //dump($idTramite);die;
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tramite'=>$idTramite));
 
-        $obs = $entityDocumento->getObs();
-        $entityDocumento->setObs( $obs.' reimpreso '.date('YmdHis')) ;
-        $em->persist($entityDocumento);
-        $em->flush();
+        if($entityDocumento){
+            $obs = $entityDocumento->getObs();
+            $entityDocumento->setObs( $obs.' reimpreso '.date('YmdHis')) ;
+            $em->persist($entityDocumento);
+            $em->flush();
+
+        }else{
+
+            $entityDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->findOneById(11);
+            $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneById(1);
+            $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneById($id_usuario);
+            $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($idTramite);
+            $fechaActual = new \DateTime(date('Y-m-d'));
+
+            $DocumentoController = new DocumentoController();
+            $DocumentoController->setContainer($this->container);
+
+            $query = $em->getConnection()->prepare("
+                SELECT
+                inst.id AS ie_id,
+                inst.institucioneducativa,
+                inst.fecha_resolucion,
+                inst.nro_resolucion,
+                instipo.descripcion AS tipo,
+                string_agg(nivt.nivel,', ') as nivelautorizado,
+                lt4.lugar AS departamento,
+                case when dept.id = 3 then 'PRIVADO' else dept.dependencia end as dependencia,
+                inst.le_juridicciongeografica_id,
+                jurg.zona,
+                jurg.direccion,
+                case when dependencia_tipo_id = '3' then TO_CHAR(inst.fecha_resolucion + interval '6 year', 'dd/mm/yyyy') else 'INDEFINIDO' end as vigente,
+                case when sede.sede <> inst.id then 'SUBSEDE' END AS subsede
+                FROM
+                institucioneducativa AS inst
+                INNER JOIN ttec_institucioneducativa_sede AS sede ON sede.institucioneducativa_id = inst.id
+                INNER JOIN institucioneducativa_tipo AS instipo ON inst.institucioneducativa_tipo_id = instipo.id
+                INNER JOIN jurisdiccion_geografica AS jurg ON inst.le_juridicciongeografica_id = jurg.id
+                LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
+                LEFT JOIN lugar_tipo AS lt1 ON lt1.id = lt.lugar_tipo_id
+                LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
+                LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
+                LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
+                INNER JOIN dependencia_tipo AS dept ON inst.dependencia_tipo_id = dept.id
+                INNER JOIN institucioneducativa_nivel_autorizado AS instnivaut ON instnivaut.institucioneducativa_id = inst.id
+                INNER JOIN nivel_tipo AS nivt ON instnivaut.nivel_tipo_id = nivt.id
+                WHERE inst.id = '".$idRie."' AND
+                inst.institucioneducativa_tipo_id IN (7,8,9)
+                GROUP BY
+                inst.id,
+                inst.institucioneducativa,
+                inst.fecha_resolucion,
+                inst.nro_resolucion,
+                instipo.descripcion,
+                lt4.lugar,
+                dept.id,
+                inst.le_juridicciongeografica_id,
+                jurg.zona,
+                jurg.direccion,
+                subsede
+                ");
+                $query->execute();
+                $ritt = $query->fetchAll();
+
+
+            $serie = 1;
+            $query = $em->getConnection()->prepare("
+            SELECT max(id::INTEGER) as maximo
+            FROM documento_serie a
+            WHERE a.documento_tipo_id = 11");
+            $query->execute();
+            $maxSerie = $query->fetchAll();
+            //dump($maxSerie);die;
+            if ($maxSerie[0]) {
+                $serie = $maxSerie[0]['maximo'] + 1;
+            }
+            
+            $entityDocumentoSerie = new DocumentoSerie();
+            $entityDocumentoSerie->setId($serie);
+            $entityDocumentoSerie->setGestion($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($this->session->get('currentyear')));
+            $entityDocumentoSerie->setDepartamentoTipo($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById(0));
+            $entityDocumentoSerie->setEsanulado(false);
+            $entityDocumentoSerie->setObservacionAnulado('false');
+            $entityDocumentoSerie->setObs('Serie Certificado RITT');
+            $entityDocumentoSerie->setDocumentoTipo($entityDocumentoTipo);
+            $em->persist($entityDocumentoSerie);
+
+            $entityDocumento = new Documento();
+            $entityDocumento->setDocumento('');
+            $entityDocumento->setDocumentoTipo($entityDocumentoTipo);
+            $entityDocumento->setObs($entityDocumentoTipo->getDocumentoTipo() . ' generado');
+            $entityDocumento->setDocumentoSerie($entityDocumentoSerie);
+            $entityDocumento->setUsuario($entityUsuario);
+            $entityDocumento->setFechaImpresion($fechaActual);
+            $entityDocumento->setFechaRegistro($fechaActual);
+            $entityDocumento->setTramite($entityTramite);
+            $entityDocumento->setDocumentoEstado($entityDocumentoEstado);
+            $em->persist($entityDocumento);
+
+            $datos = array(
+                'tramite'=>$entityTramite->getId(),
+                'serie'=>$entityDocumentoSerie->getId(),
+                'documento'=>$entityDocumento->getId(),
+                'impresionusuario'=>$entityUsuario->getId(),
+                'impresionfecha'=>date_format($fechaActual, 'd/m/Y'),
+                'ie_id'=>$ritt[0]['ie_id'],
+                'le_juridicciongeografica_id'=>$ritt[0]['le_juridicciongeografica_id'],
+                'subsede'=>$ritt[0]['subsede'] ? $ritt[0]['subsede'] : '',
+            );
+            $keys = $DocumentoController->getEncodeRSA($datos);
+
+            $entityDocumento->setTokenPublico($keys['keyPublica']);
+            $entityDocumento->setTokenPrivado($keys['keyPrivada']);
+            $entityDocumento->setTokenImpreso($keys['token']);
+            $em->persist($entityDocumento);
+            $em->flush();
+
+        }
 
         $query = $em->getConnection()->prepare("select * from ttec_institucioneducativa_historico h, ttec_institucioneducativa_ratificacion r, tramite t, documento d where r.ttec_institucioneducativa_historico_id =h.id and t.institucioneducativa_id = h.institucioneducativa_id and t.id=d.tramite_id and d.id=".$entityDocumento->getId()." ");
         $query->execute();
