@@ -2348,6 +2348,7 @@ class PrevImmediateModiVer2Controller extends Controller{
                                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
                                 break;                                
                     case 2021:
+                    case 2022:
                                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
                                 break;                                                                
                     default:
