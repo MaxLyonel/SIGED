@@ -200,7 +200,7 @@ class PrevImmediateModiVer2Controller extends Controller{
                 // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
 
-            if($value['gestion'] == 2021){
+            if($value['gestion'] == $this->session->get('currentyear')-1){
                 $sieselected = $value['sie'];
             }
         }
@@ -248,7 +248,9 @@ class PrevImmediateModiVer2Controller extends Controller{
             'inscripciones'=>$inscripcionesArray,
             'directorNombre'=>$directorNombre,
             'directorCarnet'=>$directorCarnet,
-            'directorComplemento'=>$directorComplemento
+            'directorComplemento'=>$directorComplemento,
+            'yearflow'=>$this->session->get('currentyear')-1,
+
         ));
 
         return $response;
@@ -1412,7 +1414,7 @@ class PrevImmediateModiVer2Controller extends Controller{
                         json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
                     );     
 
-                $this->removeDobleInscription($inscripcionSimilar['inscripcion']['id'],$inscripcionSimilar['inscripcion']['gestion'],$idTramite);
+                //$this->removeDobleInscription($inscripcionSimilar['inscripcion']['id'],$inscripcionSimilar['inscripcion']['gestion'],$idTramite);
                 
             }
             /*=====  End of VERIFICACION  ======*/
