@@ -446,7 +446,7 @@
                                         <td>${ins.paralelo}</td>
                                         <td>${ins.estadomatricula}</td>
                                         <td>
-                                            <a v-if="(ins.estadomatriculaId == 5 ||ins.estadomatriculaId == 6 ||ins.estadomatriculaId == 10 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.gestion ==2021)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                            <a v-if="(ins.estadomatriculaId == 5 ||ins.estadomatriculaId == 6 ||ins.estadomatriculaId == 10 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.gestion ==yearflow)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
                                             {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
                                         </td>
                                     </tr>
@@ -558,6 +558,7 @@
             data: {
                 idTramite: '{{idTramite}}',
                 sieActual: '{{sieActual}}',
+                yearflow:0,
                 buscando: false,
                 // rudeBuscar: '8073037620108571',
                 rudeBuscar: '',
@@ -699,6 +700,7 @@
                             this.directorNombre = response.data.directorNombre;
                             this.directorCarnet = response.data.directorCarnet;
                             this.directorComplemento = response.data.directorComplemento;
+                            this.yearflow = response.data.yearflow;
 
                             $('[data-toggle="tooltip"]').tooltip();
                         }
