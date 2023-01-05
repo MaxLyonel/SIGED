@@ -492,7 +492,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="datos.gestion >= 2021 && datos.cualitativas.length > 0 && datos.nivel != 11 && datos.nivel != 13 && datos.tipoSubsistema != 4">
+                                <tr v-if="datos.gestion >= 2022 && datos.cualitativas.length > 0 && datos.nivel != 11 && datos.nivel != 13 && datos.tipoSubsistema != 4">
                                     <td align="center" colspan="4">PROMEDIO ANUAL</td>
                                     <td v-for="c in datos.cualitativas" align="center">
                                         {# <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" v-bind:value="c.notaCuantitativa" v-bind:class="['form-control','input-sm', 'p'+c.idNotaTipo]" v-model="promedioGeneral"> #}
@@ -867,8 +867,8 @@
                                         return 'La calificación no puede ser mayor a 100!'
                                     }
 
-                                    // NOTAS trimestrales - 2021
-                                    if ( gestion == 2021 && ((idNotaTipo == 6 || idNotaTipo == 7 || idNotaTipo == 8 ) && value > 100) ){
+                                    // NOTAS trimestrales - 2022
+                                    if ( gestion == 2022 && ((idNotaTipo == 6 || idNotaTipo == 7 || idNotaTipo == 8 ) && value > 100) ){
                                         return 'La calificación no puede ser mayor a 100!'
                                     }                                    
 
@@ -994,7 +994,7 @@
                             if(nota.notaNueva > 100){ nota.notaNueva = 100; }                            
                             console.log('notaaaaaa22'+nota.notaNueva);
                         }else{
-                            if(nota.gestion == 2021){
+                            if(nota.gestion == 2022){
                                 if(nota.notaNueva < 0){ nota.notaNueva = 0; }
                                 if(nota.notaNueva > 100){ nota.notaNueva = 100; }
                             }else{
@@ -1048,7 +1048,7 @@
                     var cantidadPromedios = 0;
                     var arrayPromedios = [];
                     //to year 2020 and avg trim
-                    if(this.gestion == 2021){
+                    if(this.gestion == 2022){
                         $.each(this.datos.cuantitativas, function(index, val) {
                             nulos = 0;
                             suma = 0;
