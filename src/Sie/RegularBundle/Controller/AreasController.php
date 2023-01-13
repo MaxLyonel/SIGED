@@ -79,6 +79,11 @@ class AreasController extends Controller {
                     $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
                     return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
+               
+                if ($institucioneducativa->getEstadoinstitucionTipo()->getId()==19) {
+                    $this->get('session')->getFlashBag()->add('noSearch', 'No puede crear cursos, la Unidad Educativa se encuentra cerrada');
+                    return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
+                }
                 /*
                  * verificamos si tiene tuicion
                  */

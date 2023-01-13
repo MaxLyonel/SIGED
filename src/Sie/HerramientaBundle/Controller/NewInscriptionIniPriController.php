@@ -143,12 +143,11 @@ class NewInscriptionIniPriController extends Controller
 	      foreach ($objExpedido as $value) {
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
-		   // get CedulaTipo
-		 $objCedula = $em->getRepository('SieAppWebBundle:CedulaTipo')->findAll();
-		 $arrCedula = array();
-		 $arrCedula[0] = array('cedulaTipoId' => 1,'cedulaTipo' => 'Nacional'); 
-		 $arrCedula[1] = array('cedulaTipoId' => 2,'cedulaTipo' => 'Extranjero'); 
-	   
+		  $objCedula = $em->getRepository('SieAppWebBundle:CedulaTipo')->findAll();
+		  $arrCedula = array();
+		  $arrCedula[0] = array('cedulaTipoId' => 1,'cedulaTipo' => 'Nacional'); 
+		  $arrCedula[1] = array('cedulaTipoId' => 2,'cedulaTipo' => 'Extranjero'); 
+		
 		//dump($this->session->get('pathSystem'));die;
 	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
        	return $this->render($this->session->get('pathSystem') .':NewInscriptionIniPri:index.html.twig', array(
@@ -225,11 +224,12 @@ class NewInscriptionIniPriController extends Controller
 			        'nombre'=>$nombre,
 			        'fecha_nacimiento'=>$fecNac
 		      	);
-
+		      	
 				if($cedulaTipoId == 2){
 					$arrParametros['extranjero'] = 'E';
 				}
 		      	
+
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
 			if($answerSegip && sizeof($objStudent)>0){
@@ -659,7 +659,7 @@ class NewInscriptionIniPriController extends Controller
 	                ->orderBy('iec.nivelTipo', 'ASC')
 	                ->distinct()
 	                ->getQuery();
-	        $aNiveles = $query->getResult();
+	        $aNiveles = $query->getResult(); dump($aNiveles);die;
 	        if($aNiveles){
 		        $aniveles = array();
 		        foreach ($aNiveles as $nivel) {
@@ -1052,7 +1052,6 @@ class NewInscriptionIniPriController extends Controller
 						$complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
 						$expedidoId = $arrDatos['expedidoIdfind'];
 						$cedulaTipoId =$arrDatos['cedulaTipoId'];
-
 								      	// create rude code to the student
 		                
 				                $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
@@ -1082,10 +1081,10 @@ class NewInscriptionIniPriController extends Controller
 				                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
 				                    $estudiante->setLocalidadNac('');
 				                }
-
 								$estudiante->setCarnetIdentidad($carnet); //se añadio por calidacion CI not null
 				                if(!$withoutcifind){
-					                
+									$estudiante->setCarnetIdentidad($carnet);
+
 					                $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
 					                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
 					                $estudiante->setSegipId(1);
@@ -1096,7 +1095,6 @@ class NewInscriptionIniPriController extends Controller
                           				$estudiante->setCarnetIdentidad('');
 				                	$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
 				                }
-								
 				                
 				                $em->persist($estudiante);
 				                $em->flush();

@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
+use Sie\AppWebBundle\Entity\InstitucioneducativaAreaEspecialAutorizado;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 use Sie\AppWebBundle\Entity\EspecialModalidadTipo;
 use Sie\AppWebBundle\Entity\EspecialMomentoTipo;
@@ -130,9 +131,8 @@ class CreacionCursosEspecialController extends Controller {
                     ORDER BY ie.turnoTipo,iec.especialAreaTipo, ie.nivelTipo, ie.gradoTipo, ie.paraleloTipo')
                                 ->setParameter('idInstitucion', $institucion)
                                 ->setParameter('gestion', $gestion);
-
+               
             $cursos = $query->getResult();
-
            //dump($cursos);die;
             /*
              * obtenemos los datos de la unidad educativa
@@ -210,11 +210,27 @@ class CreacionCursosEspecialController extends Controller {
                 $momentos[$t->getId()] = $t->getMomento();
                 }
             
+/*
+             * Listamos las areas autorizadas segun el RUE
+             */
+                $query = $em->createQuery(
+                    'SELECT a FROM SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado a
+                                    WHERE a.institucioneducativa = (:id) ORDER BY a.especialAreaTipo'
+                     )->setParameter('id', $institucion->getId());
+                    $areas_result = $query->getResult();
+                    
+                    $areas = array();
+                    foreach ($areas_result as $a){
+                        //TODO consultar si se quita multiple a pesar que esta acreditada
+
+                        $areas[$a->getEspecialAreaTipo()->getId()] = $a->getEspecialAreaTipo()->getAreaEspecial();
+                    }
+                    
 
             /*
              * Listamos las areas validas
              */
-            $query = $em->createQuery(
+         /*   $query = $em->createQuery(
                     'SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
                                     WHERE a.id IN (:id) ORDER BY a.areaEspecial'
                      )->setParameter('id',array(1,2,3,4,5,6,7));
@@ -223,7 +239,7 @@ class CreacionCursosEspecialController extends Controller {
                     $areas = array();
                     foreach ($areas_result as $a){
                         $areas[$a->getId()] = $a->getAreaEspecial();
-                    }
+                    }*/
 
             /*
              * Listamos los niveles validos
@@ -357,6 +373,7 @@ class CreacionCursosEspecialController extends Controller {
         try{
            
             $form = $request->get('form');
+           // dump($form);die;
             $nivelTecnico = 99;
             if(isset($form['nivelTecnico'])){
                 $nivelTecnico = $form['nivelTecnico']?$form['nivelTecnico']:99;
@@ -461,7 +478,7 @@ class CreacionCursosEspecialController extends Controller {
                 $em->persist($nuevo_curso_sie);
 
                 $em->flush();
-
+            
                 $nuevo_curso = new InstitucioneducativaCursoEspecial();
                 $nuevo_curso->setInstitucioneducativaCurso($nuevo_curso_sie);
                 $nuevo_curso->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($form['area']));
@@ -473,11 +490,12 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialMomentoTipo($em->getRepository('SieAppWebBundle:EspecialMomentoTipo')->find($momento));
                 $em->persist($nuevo_curso);
                 $em->flush();
-
+            
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('newCursoOk', 'La oferta fué creada correctamente');
                 return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
             }
+            
         }catch(Exception $ex){
             $em->getConnection()->rollback();
         }
