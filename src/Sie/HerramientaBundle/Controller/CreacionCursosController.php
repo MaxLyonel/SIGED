@@ -406,9 +406,9 @@ class CreacionCursosController extends Controller {
                 and turno_tipo_id = ". $turno."
                 and grado_tipo_id = ". $grado."
                 order by 1
-                )";
+                ) order by 2";
             
-                //dump($query); die;
+                dump($query); die;
             $stmt = $db->prepare($query);
             $params = array();
             $stmt->execute($params);
