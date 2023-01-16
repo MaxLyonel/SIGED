@@ -278,6 +278,8 @@ class CreacionCursosController extends Controller {
             foreach ($grados_result as $g){
                 $grados[$g->getId()] = $g->getGrado();
             }
+
+
             /*
              * Listamos los paralelos validos 
              */
@@ -295,7 +297,7 @@ class CreacionCursosController extends Controller {
             //TODOS LOS DEMAS DE LA B A LA Z
             //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
 
-            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
+            /*$RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();
@@ -318,7 +320,21 @@ class CreacionCursosController extends Controller {
 
             }else{
                 // es fiscal u otro tipo
-                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                
+                //solo los del año pasado //TODO: esto en ajax
+                $RAW_QUERY = "select id,paralelo from paralelo_tipo
+                where id in 
+                (
+                select distinct paralelo_tipo_id from institucioneducativa_curso where gestion_tipo_id = 2022
+                and institucioneducativa_id  = 80730460
+                and nivel_tipo_id = 11 
+                and turno_tipo_id = 1
+                and grado_tipo_id = 1
+                order by 1
+                )";
+
+
                 $statement = $em->getConnection()->prepare($RAW_QUERY);
                 $statement->execute();
                 $result = $statement->fetchAll();
@@ -328,10 +344,10 @@ class CreacionCursosController extends Controller {
                     $paralelos[$paralelosx[$i]['id']] = $paralelosx[$i]['paralelo'];
 
                 }
-            }           
+            }  */         
 
-
-
+            $paralelos = [];
+            //dump($this->session->get('roluser')); die; 
             if($this->session->get('roluser') != 8){
                 $form = $this->createFormBuilder()
                         ->setAction($this->generateUrl('herramienta_creacioncursos_create'))
@@ -339,7 +355,7 @@ class CreacionCursosController extends Controller {
                         ->add('idGestion','hidden',array('data'=>$request->get('idGestion')))
                         ->add('turno','choice',array('label'=>'Turno','choices'=>$turnosArray,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
                         ->add('nivel','choice',array('label'=>'Nivel','choices'=>$niveles,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))      
-                        ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarParalelos2023(this.value)')))
                         ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
                         ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
                         ->getForm();
@@ -350,7 +366,7 @@ class CreacionCursosController extends Controller {
                         ->add('idGestion','hidden',array('data'=>$request->get('idGestion')))
                         ->add('turno','choice',array('label'=>'Turno','choices'=>$turnosArray,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
                         ->add('nivel','choice',array('label'=>'Nivel','choices'=>$niveles,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarGrados(this.value)')))
-                        ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarParalelos2023(this.value)')))
                         ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
                         ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
                         ->getForm();
@@ -362,6 +378,47 @@ class CreacionCursosController extends Controller {
             $em->getConnection()->rollback();
         }
         
+    }
+
+    public function getParalelos2023Action($nivel, $turno,$grado ){
+
+        //dump($request); die;
+        /*dump($nivel);
+        dump($turno);
+        dump($grado);
+        die;*/
+        
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            $db = $em->getConnection();  
+           
+            $query = "select id, paralelo from paralelo_tipo
+                where id in
+                (
+                select distinct paralelo_tipo_id from institucioneducativa_curso 
+                where institucioneducativa_id = 80980148
+                and gestion_tipo_id = 2022
+                and nivel_tipo_id = 11
+                and turno_tipo_id = 2
+                and grado_tipo_id = 1
+                order by 1
+                )";
+            
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $paralelos = $stmt->fetchAll();
+
+            
+            $response = new JsonResponse();
+            $em->getConnection()->commit();
+            return $response->setData(array('paralelos' => $paralelos));
+        }catch(Exception $ex){
+            $em->getConnection()->rollback();
+        }
+
+
     }
 
 
@@ -380,6 +437,7 @@ class CreacionCursosController extends Controller {
         $gestion_id = $form['idGestion'];
 
         $em = $this->getDoctrine()->getManager();      
+        //dump("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') "); die;
         $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
         $query->execute();
         $valor= $query->fetchAll();

@@ -141,5 +141,38 @@
                 }
             });
         }
+
+        function listarParalelos2023(idGrado){
+            
+            grado = idGrado;
+            
+            var select = document.getElementById('form_turno');
+            var turno = select.options[select.selectedIndex].value;
+            
+            var selectnivel = document.getElementById('form_nivel');
+            var nivel = selectnivel.options[select.selectedIndex].value;
+            
+
+            console.log(nivel, turno, grado);
+
+            peticion = $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_getparalelos2023', {'nivel': nivel, 'turno': turno, 'grado': grado}),
+                beforeSend: function () {
+                    document.body.style.cursor='wait';
+                },
+                success: function (data) {
+                    document.body.style.cursor='default';
+                    //console.log(data.paralelos);
+                    $('#form_paralelo').empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                    
+                    for (var i = 0; i <= data.paralelos.length; i++) {
+                        $("#form_paralelo").append('<option value="' + data.paralelos[i].id + '">' + data.paralelos[i].paralelo + '</option>');
+                    }
+                }
+            });
+
+        }
     </script>
 {% endblock %}

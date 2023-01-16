@@ -29,6 +29,12 @@ herramienta_clistargrados:
     options:
         expose: true
 
+herramienta_getparalelos2023:
+    path:     /getparalelos2023/{nivel}/{turno}/{grado}
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:getParalelos2023" }
+    options:
+        expose: true
+
 herramienta_acurso_getareas:
     path:     /acursos/
     defaults: { _controller: "SieHerramientaBundle:CreacionCursos:getAreas" }
