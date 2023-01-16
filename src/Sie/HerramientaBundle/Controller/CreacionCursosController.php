@@ -380,7 +380,7 @@ class CreacionCursosController extends Controller {
         
     }
 
-    public function getParalelos2023Action($nivel, $turno,$grado ){
+    public function getParalelos2023Action(Request $request, $nivel, $turno,$grado ){
 
         //dump($request); die;
         /*dump($nivel);
@@ -393,18 +393,22 @@ class CreacionCursosController extends Controller {
             $em->getConnection()->beginTransaction();
             $db = $em->getConnection();  
            
+            $institucion_ed = $request->getSession()->get('idInstitucion');
+
+            //se veri
             $query = "select id, paralelo from paralelo_tipo
                 where id in
                 (
                 select distinct paralelo_tipo_id from institucioneducativa_curso 
-                where institucioneducativa_id = 80980148
+                where institucioneducativa_id = ". $institucion_ed."
                 and gestion_tipo_id = 2022
-                and nivel_tipo_id = 11
-                and turno_tipo_id = 2
-                and grado_tipo_id = 1
+                and nivel_tipo_id = ". $nivel."
+                and turno_tipo_id = ". $turno."
+                and grado_tipo_id = ". $grado."
                 order by 1
                 )";
             
+                //dump($query); die;
             $stmt = $db->prepare($query);
             $params = array();
             $stmt->execute($params);
