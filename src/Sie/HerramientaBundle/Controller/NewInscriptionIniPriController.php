@@ -127,7 +127,7 @@ class NewInscriptionIniPriController extends Controller
          	$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
          		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
          	));
-        	
+        	//dump($objRegConsolidation);die;
 	         if($objRegConsolidation){
 	             $status = 'error';
 		 		$code = 400;
@@ -638,7 +638,7 @@ class NewInscriptionIniPriController extends Controller
             $aTuicion = $query->fetchAll();
 
         $aniveles = array();
-         if ($aTuicion[0]['get_ue_tuicion']) {
+         if ($aTuicion[0]['get_ue_tuicion'] ) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
         if($institucion){
@@ -659,12 +659,15 @@ class NewInscriptionIniPriController extends Controller
 	                ->orderBy('iec.nivelTipo', 'ASC')
 	                ->distinct()
 	                ->getQuery();
-	        $aNiveles = $query->getResult(); dump($aNiveles);die;
+	        $aNiveles = $query->getResult(); 
+			//mp($aNiveles);
 	        if($aNiveles){
+				
 		        $aniveles = array();
 		        foreach ($aNiveles as $nivel) {
 		            $aniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
 		        }
+			//	dump($aniveles);die;
 		        $status = 'success';
 				$code = 200;
 				$message = "Datos encontrados";
@@ -981,10 +984,11 @@ class NewInscriptionIniPriController extends Controller
             // validate the year old on the student
 	      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 	        $yearStudent = $arrYearStudent['age'];		
-		//dump($arrYearStudent);die;			
+		//dump($arrYearStudent);
 		switch($typeInscription){
 		case 0:
 			$swinscription = $this->correctOldYearValidation($yearStudent,$nivel,$grado);
+			//dump($swinscription);die;
 			break;
 		case 1:
 			$swinscription = $this->articuletenYearValidation($yearStudent,$nivel,$grado);
@@ -1052,6 +1056,7 @@ class NewInscriptionIniPriController extends Controller
 						$complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
 						$expedidoId = $arrDatos['expedidoIdfind'];
 						$cedulaTipoId =$arrDatos['cedulaTipoId'];
+						//$cedulaTipoId =1;
 								      	// create rude code to the student
 		                
 				                $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
@@ -1097,6 +1102,7 @@ class NewInscriptionIniPriController extends Controller
 				                }
 				                
 				                $em->persist($estudiante);
+								//dump($estudiante);die;
 				                $em->flush();
 
 				                $studentId = $estudiante->getId();
@@ -1237,7 +1243,7 @@ class NewInscriptionIniPriController extends Controller
             }else{
             	$status = 'error';
 				$code = 400;
-				$message = "El estudiante no cumple con los requerimientos para la INSCRIPCIÓN";
+				$message = "El estudiante no cumple con los requerimientos para la INSCRIPCIÓN (cuenta con $yearStudent años al 30/06)";
 				$swinscription = false; 
             }
 
