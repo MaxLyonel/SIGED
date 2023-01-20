@@ -989,7 +989,7 @@ class CreacionCursosEspecialController extends Controller {
         }elseif ($area == "10" and $nivel == "411" and  $grado == "99" ) { // MENTAL PSIQUICA + PROGRAMAS
            
                 if($modalidad == 1){
-                    $programas = array(50,51,52,53,54,55,56,57,58,59,60);   
+                    $programas = array(50,51,52,53,54,55,56,57,58,59);   
                 }
             
         }else{
