@@ -48,19 +48,30 @@
                         </div>
                         <div class="clearfix"></div>
                     </div>
+
+                    <div class="alert alert-warning">
+                        <strong>IMPORTANTE:</strong> PARA LA CREACION DE UN NUEVO CURSO, EL ORDEN DE SELECCION ES:
+                            <ul>
+                                <li>1: NIVEL</li>
+                                <li>2: TURNO</li>
+                                <li>3: GRADO</li>
+                            </ul>
+                            CON ESTOS DATOS Y EN ESTE ORDEN SE LLENAN LAS OPCIONES DE PARALELOS
+                    </div>
+
                     <div class="panel-collapse collapse in" id="panelnuevocurso">
                         <div class="portlet-body">
                             <div class="panel-body">
                                 {{form_start(form)}}
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.nivel)}}
+                                        1.- {{form_label(form.nivel)}}
                                         {{form_widget(form.nivel) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
                                     
                                     <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.turno)}}
+                                        2.- {{form_label(form.turno)}}
                                         {{form_widget(form.turno) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
@@ -68,12 +79,12 @@
                                 </div>
                                 <div class="row"> 
                                     <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.grado)}}
+                                        3.- {{form_label(form.grado)}}
                                         {{form_widget(form.grado) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.paralelo)}}
+                                        4.- {{form_label(form.paralelo)}}
                                         {{form_widget(form.paralelo) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
