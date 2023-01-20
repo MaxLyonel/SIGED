@@ -36,6 +36,12 @@ listar_nivelestecnicos_especial:
     options:
          expose: true
 
+listar_modalidades_especial:
+    path:     /listarModalidades/{area}
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarModalidades"}
+    options:
+         expose: true
+
 listar_servicios_especial:
     path:     /listarServicios/{area}/{nivel}/{grado}/{modalidad}
     defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarServicios"}

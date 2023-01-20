@@ -222,14 +222,7 @@
             var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
             
-             if(nivel== 410){
-                $("#divservicio").show();
-                $("#divprograma").hide();
-            }
-            if(nivel== 411){
-                $("#divprograma").show();
-                $("#divservicio").hide();
-            }
+           
             if(nivel == 410 || nivel == 411){
                 $('#idparalelo').text("Grupo");
                 $("#divgrado").hide();
@@ -239,12 +232,23 @@
                 $('#idparalelo').text("Paralelo");
                 $("#divgrado").show();
             }
+            
             if(nivel != 405){
                 $("#divtecnica").hide();
                 $("#divniveltec").hide();
             }else{
                 $("#divtecnica").show();
                 $("#divniveltec").show();
+            }
+             if(nivel == 410){
+                $("#divservicio").show();
+                $("#divprograma").hide();
+            }
+            if(nivel== 411 || nivel == 409){
+                $("#divprograma").show();
+                $("#divservicio").hide();
+                $("#divgrado").hide();
+                $("#divniveltec").hide();
             }
            
             $.ajax({
@@ -263,7 +267,7 @@
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
                     $("#form_nivelTecnico").empty();
-                    if(nivel != 410 && nivel != 411){
+                    if(nivel != 410 && nivel != 411 && nivel != 409){
                         $("#form_grado").append('<option value="">Seleccionar...</option>');
                     }
                     $("#form_programa").append('<option value="">Seleccionar...</option>');
@@ -411,6 +415,7 @@
         function reseteaTodo() {
             var area  = $('#form_area').val();
             $("#form_nivel").html('<option value="">Seleccionar...</option>');
+            $("#form_modalidad").html('<option value="">Seleccionar...</option>');
             $("#form_grado").html('<option value="">Seleccionar...</option>');
             $("#form_programa").html('<option value="">Seleccionar...</option>');
             $("#form_servicio").html('<option value="">Seleccionar...</option>');
@@ -457,6 +462,28 @@
                 $("#divtecnica").show();
                 $("#divniveltec").show();
             }
+
+             listarModalidades();
+        }
+
+         function listarModalidades() {
+            var area = $('#form_area').val();
+           
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listar_modalidades_especial', {'area':area}),
+                  beforeSend: function () {
+                        $("#modalidad").empty();
+                    },
+                success: function (data) {
+                    $("#form_nivelTecnico").append('<option value="">Seleccionar...</option>');    
+                    $.each(data.modalidades, function (i, value) {
+                        $("#form_modalidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    
+                    dropdown("#form_modalidad");
+                }
+            });
         }
     </script>
 {% endblock %}
