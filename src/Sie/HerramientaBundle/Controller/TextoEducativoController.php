@@ -734,23 +734,25 @@ class TextoEducativoController extends Controller
         $grado1 = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado)->getGrado();
         $nivel1 = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel)->getNivel();
         $paralelo1 = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo)->getParalelo();
-        $gestion_a=$gestion-1;
+        $gestion_a = $gestion-1;
 
 
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('gestionTipo'=>$gestion, 'institucioneducativa'=>$sie, 'nivelTipo'=>$nivel, 'gradoTipo'=>$grado, 'paraleloTipo'=>$paralelo ));
         $id_inst_curso=$entity->getId();
-        //dump($nivel, $grado, $id_inst_curso );die;
+       
+       // dump($nivel, $grado, $id_inst_curso );die;
         $query = $em->getConnection()->prepare("create temporary table estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." as select * from sp_regular_listado_inscripcion_ig('".$gestion_a."','".$gestion."','".$sie."','".$nivel."','".$grado."','".$id_inst_curso."') order by paterno,materno,nombre");
 		    $query->execute();
 
 
         $query1 = $em->getConnection()->prepare("select * from estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." ");
-		$query1->execute();
-		$dataInscription = $query1->fetchAll();
-		if (!$dataInscription) {
-			$query3 = $em->getConnection()->prepare("drop table if exists estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." ");
-			$query3->execute();
-		}
+		    $query1->execute();
+        $dataInscription = $query1->fetchAll();
+        //dump($dataInscription);die;
+        if (!$dataInscription) {
+          $query3 = $em->getConnection()->prepare("drop table if exists estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." ");
+          $query3->execute();
+        }
 		// dump($dataInscription); die();
 
 
@@ -851,6 +853,7 @@ class TextoEducativoController extends Controller
 			$dat=array('0'=>0);
 		}
 		return $response->setData($dat);
+    
     } 
 
 }

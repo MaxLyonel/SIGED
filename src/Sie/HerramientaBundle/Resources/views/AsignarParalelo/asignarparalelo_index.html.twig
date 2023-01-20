@@ -24,7 +24,7 @@ input[type=checkbox] + label{
     <div class="modal-content">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h1 class="panel-title1" align="center">ASIGNAR PARALELO ESTUDIANTES</h1>
+                <h1 class="panel-title1" align="center">REGISTRO DE INSCRIPCIÓN AUTOMÁTICA </h1>
                 <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="panel-body panel-default" >
@@ -33,14 +33,17 @@ input[type=checkbox] + label{
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 							<table class="table table-condensed table-bordered">
-								<tr>
-									<th>TURNO:</th><td>{{ turno }}</td>
-									<th>GRADO:</th><td>{{ grado }}</td>
-								</tr>
-								<tr>
+							<tr>
 									<th>NIVEL:</th><td>{{ nivel }}</td>
-									<th>PARALELO:</th><td>"{{ paralelo }}"</td>
+									<th>TURNO:</th><td>{{ turno }}</td>
+									
 								</tr>
+								<tr>
+									
+									<th>GRADO:</th><td>{{ grado }}</td>
+									<th>PARALELO:</th><td><B>"{{ paralelo }}"</B></td>
+								</tr>
+								
 							</table>
 						</div>
 					</div>
@@ -154,6 +157,7 @@ $("#guardar_datos_asignacion_paralelo").submit(function(event) {
 				document.getElementById('boton').disabled=false;
 				alertify.error("Datos no ejecutados...");
 			}
+			
         }
     });
 });

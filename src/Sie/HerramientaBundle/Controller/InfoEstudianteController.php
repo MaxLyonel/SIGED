@@ -106,8 +106,9 @@ class InfoEstudianteController extends Controller {
         }
         $objObsQA = null;
         $objObsQA = $objObsQAbjp;
-
+        //dump($form);die;
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
+        //dump($objUeducativa);die;
         $exist = true;
         $tieneSextoSec = false;
         $aInfoUnidadEductiva = array();
@@ -133,6 +134,7 @@ class InfoEstudianteController extends Controller {
             $this->addFlash('warninresult', $message);
             $exist = false;
         }
+        //dump($aInfoUnidadEductiva);die;
         // check if the UE close the rude task
         $objinstitucioneducativaOperativoLogExist = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
           'institucioneducativa' => $form['sie'],
@@ -708,7 +710,8 @@ class InfoEstudianteController extends Controller {
     public function seeStudentsAction(Request $request) {
         //dump('here'); die;
         //get the info ue
-        $infoUe = $request->get('infoUe');
+        $infoUe = $request->get('infoUe'); 
+      //  dump($infoUe);die;
         $aInfoUeducativa = unserialize($infoUe);
 
         /*
