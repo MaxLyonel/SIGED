@@ -99,7 +99,7 @@
                         </div>
                     </div>
                 {% endif %}
-                 {% if  data.gestion==app.session.get('currentyear') %}
+                 {% if  data.gestion==app.session.get('currentyear') and  data.gestion ==2025 %} <!--Se deshabilito hasta nueva instruccion 240123-->
                  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
@@ -132,7 +132,7 @@
                 {% endif %}
                  #}
             {% endif %}
-            {% if data.gestion == app.session.get('currentyear') %}
+            {% if data.gestion == app.session.get('currentyear') and  data.gestion ==2025 %} <!--Se deshabilito hasta nueva instruccion 240123-->
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rude">
@@ -147,6 +147,7 @@
                     </div>
                 </div>
             {% endif %}
+           {% if data.gestion ==2025 %} <!--Se deshabilito hasta nueva instruccion 240123-->
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
@@ -165,7 +166,7 @@
                     </div>
                 </div>
             </div>            
-
+        {% endif %}
         </div>
         <div class="row">
             <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
