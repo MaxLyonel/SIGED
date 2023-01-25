@@ -282,8 +282,13 @@ class Segip {
 		}
 		//verificacion de si extranjero, aqui nunca entra, no importa ya viene del form
 		/*commente by krlos ... why set tipo_persona =2 ???*/
-		if(array_key_exists('extranjero', $datosVerificacion)==true)
-			$tipo_persona=2; //extranjero
+		if(array_key_exists('extranjero', $datosVerificacion)==true){
+			// BUG asignacion de director
+			if($datosVerificacion['extranjero'] == 'E'){
+				$tipo_persona=2; //extranjero
+			}
+		}
+			
 
 		//verificacion de si NO tiene complemento
 		if(array_key_exists('complemento', $datosVerificacion)==false)
