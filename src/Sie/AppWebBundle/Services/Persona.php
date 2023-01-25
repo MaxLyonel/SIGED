@@ -16,7 +16,7 @@ class Persona {
         $this->em = $entityManager;
         $this->router = $router;
         //token valido hasta el 3/11/2021 $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTYwNDM5MDczOCwiZXhwIjoxNjM1OTI2NzM4fQ.lhmPSSfLEXxosLYSNryV_x5WsL2KOOgU-ovqbSiVenc';
-        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJzaXN0ZW1hIjoicG5wIiwidXN1YXJpbyI6IldhbGRvIFZlcmEiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE2MzYxMjg0NzAsImV4cCI6MTY3MzI4MDQ3MH0.d2bf3ockcQqfg6lytj2ZknJXh_QARrZ3_BzGvMWDyAM';
+        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTM4MTkxMTUsImlhdCI6MTY3NDY4MjY0OCwiZXhwIjoxNzA2MjE4NjQ4fQ.KS94BnWHDTff7bhPeJPrXDQ3ynYOEn4pZRY5B-CZ450';
     }
 
     public function buscarPersona($carnet, $complemento, $extranjero) {
