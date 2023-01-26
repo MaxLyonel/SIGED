@@ -2084,6 +2084,7 @@ class TramiteRueController extends Controller
         //dump($form,$file);die;
         $datos=array();
         $solicitudTramite = $em->getRepository('SieAppWebBundle:SolicitudTramite')->findOneBy(array('codigo'=>$form['codigo']));
+        $gestion_solicitud = $solicitudTramite->getFechaRegistro()->format('Y');
         $datosSolicitud = json_decode($solicitudTramite->getDatos(),true);
         //dump($form);die;
         $gestion = $form['tramite']==''?$gestionActual:$em->getRepository('SieAppWebBundle:Tramite')->find($form['tramite'])->getGestionId();
@@ -2151,7 +2152,7 @@ class TramiteRueController extends Controller
                 
                 $wfdatos->setDatos(json_encode($datos));
                 $em->flush();
-                $origen = '/../web/uploads/archivos/flujos/rue/solicitud/'.$gestion.'/'.$form['codigo'];
+                $origen = '/../web/uploads/archivos/flujos/rue/solicitud/'.$gestion_solicitud.'/'.$form['codigo'];
                 $destino = '/../web/uploads/archivos/flujos/rue/apertura/'.$gestion.'/'.$mensaje['idtramite'];
                 $this->copiarArchivos($origen, $destino);
             } 
