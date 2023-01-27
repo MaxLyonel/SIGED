@@ -1295,7 +1295,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $nivel = $request->get('nivel');
         $idNivel = $request->get('idnivel');
         $idMencion = $request->get('idMencion');
-        $gestionId= $request->get('gestion');//$sesion->get('currentyear'); //pendiente
+        $gestionId= $sesion->get('currentyear'); //pendiente
               
         //RECUPERAMOS LOS DATOS DEL DIRECTOR DEL CENTRO
         $queryMaestroUE =  $this->datosDirector($sie,$gestionId);
