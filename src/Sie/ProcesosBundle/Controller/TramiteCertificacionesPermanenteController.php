@@ -1195,6 +1195,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                  //validacion de tuicion sobre el centro
                 $usuarioRol = $this->session->get('roluser');
                 $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol);
+                
                 if ($verTuicionUnidadEducativa != ''){
                     $this->session->getFlashBag()->set('newError', array('message' => $verTuicionUnidadEducativa));
                     return $this->redirect($this->generateUrl('tramite_impresion_certificacion_per'));
@@ -1211,7 +1212,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 }
                 $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
                 $mencionDatos = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($especialidad);
-                $nivelDatos = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($nivel);              
+                $nivelDatos = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($nivel); 
+                           
                 try {
                     //SE OBTIENE LA LISTA DE PARTICIPANTES CON TRAMITE CONLUIDO
                     $entityParticipantes = $this->getEstudiantesHabilitadosPermanente($sie,$gestion,$especialidad,$nivel);
@@ -1293,14 +1295,15 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $nivel = $request->get('nivel');
         $idNivel = $request->get('idnivel');
         $idMencion = $request->get('idMencion');
-        $gestionId=$sesion->get('currentyear'); //pendiente
-        
-        
+        $gestionId= $request->get('gestion');//$sesion->get('currentyear'); //pendiente
+              
         //RECUPERAMOS LOS DATOS DEL DIRECTOR DEL CENTRO
         $queryMaestroUE =  $this->datosDirector($sie,$gestionId);
+        
         //RECUPERAMOS LOS DATOS DEL LUGAR FECHA INICIO - FIN DEL CURSO LARGO
         $datosCurso = $this->datosCurso($sie,$gestionId,$idNivel,$idMencion);
         //Se idintifica el codigo para el DEPARTAMENTO debido a la variacion de CENSO en los sistemas de certificaciones vs permanente
+        
         $lugarDefault=31655; //la paz
         switch ($datosCurso['lugar_tipo_id']){
             case 31655: //LA PAZ
