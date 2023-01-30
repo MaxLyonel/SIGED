@@ -513,7 +513,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			$nivel = '-1';
 		}
 
-		if( in_array($request_gestion,range(2009,2022)) )
+		if( in_array($request_gestion,range(2009,2023)) )
 		{
 			$niveles_por_gestion=array();
 			
@@ -525,7 +525,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 				//con esto nos aseguramos que solo sea de secundaria
 				$niveles_por_gestion=[3];
 			}
-			else if( in_array($request_gestion,range(2011,2022)) )
+			else if( in_array($request_gestion,range(2011,2023)) )
 			{
 				//lo haces de esta manera por que no este momento del trámite no tenemos mas datos
 				//$niveles_por_gestion=[11,12,13];
@@ -646,7 +646,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			$grado = '-1';
 		}
 
-		if( in_array($request_gestion,range(2009,2022)) )
+		if( in_array($request_gestion,range(2009,2023)) )
 		{
 			$grados_por_nivel=array();
 
@@ -1007,7 +1007,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 	}
 
 
-	/**17/05/2022
+	/**17/05/2023
 	 * 
 	 *
 	 * @return void
@@ -3909,7 +3909,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			$estudianteInscripcion = new EstudianteInscripcion();
 			$estudianteInscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
 			$estudianteInscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
-			//HAY QUE VERIFICAR ESTO DEL ESTADO DE LA MATRICULA se creara la matricula ID (100) con estadomatricula:PROMOVIDO POR RGP-PB-RPM 265/2022
+			//HAY QUE VERIFICAR ESTO DEL ESTADO DE LA MATRICULA se creara la matricula ID (100) con estadomatricula:PROMOVIDO POR RGP-PB-RPM 265/2023
 			$estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(100));
 			$estudianteInscripcion->setEstudiante($estudiante);
 			$estudianteInscripcion->setFechaInscripcion(new \DateTime('now'));
@@ -3993,7 +3993,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		            $complementario = "'(6,7)','(6,7,8)','(9)','51'";
 		        }
 		    }
-		} else if($igestion == 2022) {
+		} else if($igestion == 2023) {
 		    $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
 		}
 
@@ -4237,7 +4237,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 						}
 					}
 			}
-			else if($gestion == 2022)
+			else if($gestion == 2023)
 			{
 				//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
 				$notaAprobacion = 51;
