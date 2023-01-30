@@ -569,14 +569,15 @@ class RemoveInscriptionStudentFreeController extends Controller {
         //create the DB conexion
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+        $id_usuario = $this->session->get('userId');
 
         try {
-
+          $justificacion =  $form['justificacionCE']==null?'':$form['justificacionCE'];
           //find the estudent's inscription to do the change
           $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
           $oldInscriptionStudent = clone $inscriptionStudent;
           $inscriptionStudent->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoNew']));
-          $inscriptionStudent->setObservacion($form['justificacionCE']==null?'':$form['justificacionCE']);//$form['justificacionCE']
+          $inscriptionStudent->setObservacion($justificacion.' - usuario: '.$id_usuario);//$form['justificacionCE']
           $em->persist($inscriptionStudent);
           $em->flush();
           
