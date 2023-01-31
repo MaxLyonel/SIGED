@@ -1295,13 +1295,15 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $nivel = $request->get('nivel');
         $idNivel = $request->get('idnivel');
         $idMencion = $request->get('idMencion');
+        $idgestion= $request->get('gestion'); //pendiente
         $gestionId= $sesion->get('currentyear'); //pendiente
               
         //RECUPERAMOS LOS DATOS DEL DIRECTOR DEL CENTRO
         $queryMaestroUE =  $this->datosDirector($sie,$gestionId);
         
         //RECUPERAMOS LOS DATOS DEL LUGAR FECHA INICIO - FIN DEL CURSO LARGO
-        $datosCurso = $this->datosCurso($sie,$gestionId,$idNivel,$idMencion);
+        $datosCurso = $this->datosCurso($sie,$idgestion,$idNivel,$idMencion);
+        //$datosCurso = $this->datosCurso($sie,$gestionId,$idNivel,$idMencion); //anterior no jala gestion del curso
         //Se idintifica el codigo para el DEPARTAMENTO debido a la variacion de CENSO en los sistemas de certificaciones vs permanente
         
         $lugarDefault=31655; //la paz
