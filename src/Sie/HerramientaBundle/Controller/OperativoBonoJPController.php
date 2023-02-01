@@ -305,19 +305,6 @@ class OperativoBonoJPController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public function formularioCambiarTutorAction()
 	{
 		return $this->redirect($this->generateUrl('login'));
@@ -1481,5 +1468,311 @@ class OperativoBonoJPController extends Controller
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+
+	//solo para el tecnico departamental	
+	public function seguimientoDeptoAction(Request $request){
+
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();  
+		$sesion = $request->getSession();
+
+		$id_usuario = $this->session->get('userId');
+		//$id_usuario = 92519630;// 13833357;//13833732; //13851223; //$this->session->get('userId');
+        $username = $this->session->get('userName');
+		
+		//obtenemos el depto
+		$sql = "select codigo from lugar_tipo where id in (select lugar_tipo_id from usuario_rol where rol_tipo_id = 7 and usuario_id = " . $id_usuario.")";		
+		//dump($sql); die;
+		$stmtaux = $em->getConnection()->prepare($sql);
+		$stmtaux->execute();
+        $currentdata = $stmtaux->fetchAll();
+		$codigo_depto = $currentdata[0]['codigo'];e
+
+
+
+		$sql = "
+			select
+			'ABIERTO' as estado,
+			bjp.* , u.*
+				from bjp_titular_cobro_validacion_cierre  as bjp
+					inner join (
+				select a.cod_ue_id, a.desc_ue, a.cod_le_id, a.direccion, a.zona, a.cod_distrito, a.distrito,
+				(case when a.tipo_area = 'R' then 'RURAL' when a.tipo_area = 'U' then 'URBANO' else '' end) as area,
+				a.id_departamento, a.desc_departamento, a.id_provincia, a.desc_provincia, a.id_seccion, a.desc_seccion, a.id_canton, a.desc_canton, a.id_localidad, a.desc_localidad,
+				a.cod_convenio_id, a.convenio,case when a.cod_dependencia_id <>3 then 'Publico' else 'Privado' end as dependencia_gen, a.cod_dependencia_id, a.dependencia, c.ini, c.pri, c.sec, c.epa, c.esa, c.eta, c.esp, c.perm,c.perm_tec,c.perm_otros, c.eja, a.fecha_last_update, a.estadoinstitucion,a.cordx,a.cordy, a.nro_resolucion, a.fecha_resolucion
+				from 
+				(select  a.id as cod_ue_id,a.institucioneducativa as desc_ue,a.orgcurricular_tipo_id,a.estadoinstitucion_tipo_id, h.estadoinstitucion, a.le_juridicciongeografica_id as cod_le_id,a.orgcurricular_tipo_id as cod_org_curr_id,f.orgcurricula
+				,a.dependencia_tipo_id as cod_dependencia_id, e.dependencia,a.convenio_tipo_id as cod_convenio_id,g.convenio,d.cod_dep as id_departamento,d.des_dep as desc_departamento
+				,d.cod_pro as id_provincia, d.des_pro as desc_provincia, d.cod_sec as id_seccion, d.des_sec as desc_seccion, d.cod_can as id_canton, d.des_can as desc_canton
+				,d.cod_loc as id_localidad,d.des_loc as desc_localidad,d.area2001 as tipo_area,d.cod_dis as cod_distrito,d.des_dis as distrito,d.direccion,d.zona
+				,d.cod_nuc,d.des_nuc,0 as usuario_id,current_date as fecha_last_update, a.fecha_creacion,d.cordx,d.cordy, a.nro_resolucion, a.fecha_resolucion
+				from institucioneducativa a 
+				inner join 
+				(select a.id as cod_le,cod_dep,des_dep,cod_pro,des_pro,cod_sec,des_sec,cod_can,des_can,cod_loc,des_loc,area2001,cod_dis,des_dis,a.cod_nuc,a.des_nuc,a.direccion,a.zona,a.cordx,cordy
+				from jurisdiccion_geografica a inner join 
+				(select e.id,cod_dep,a.lugar as des_dep,cod_pro,b.lugar as des_pro,cod_sec,c.lugar as des_sec,cod_can,d.lugar as des_can,cod_loc,e.lugar as des_loc,area2001
+				from (select id,codigo as cod_dep,lugar_tipo_id,lugar
+				from lugar_tipo
+				where lugar_nivel_id=1) a inner join (
+				select id,codigo as cod_pro,lugar_tipo_id,lugar from lugar_tipo
+				where lugar_nivel_id=2) b on a.id=b.lugar_tipo_id inner join (
+				select id,codigo as cod_sec,lugar_tipo_id,lugar from lugar_tipo
+				where lugar_nivel_id=3) c on b.id=c.lugar_tipo_id inner join (
+				select id,codigo as cod_can,lugar_tipo_id,lugar from lugar_tipo
+				where lugar_nivel_id=4) d on c.id=d.lugar_tipo_id inner join (
+				select id,codigo as cod_loc,lugar_tipo_id,lugar,area2001 from lugar_tipo
+				where lugar_nivel_id=5) e on d.id=e.lugar_tipo_id) b on a.lugar_tipo_id_localidad=b.id
+				left join 
+				(select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo
+				where lugar_nivel_id=7) c on a.lugar_tipo_id_distrito=c.id) d on a.le_juridicciongeografica_id=d.cod_le  and institucioneducativa_acreditacion_tipo_id=1 --and estadoinstitucion_tipo_id=10
+				INNER JOIN dependencia_tipo e ON a.dependencia_tipo_id = e.id
+				INNER JOIN orgcurricular_tipo f ON a.orgcurricular_tipo_id = f.id
+				INNER JOIN convenio_tipo g ON a.convenio_tipo_id = g.id
+				INNER JOIN estadoinstitucion_tipo h ON a.estadoinstitucion_tipo_id = h.id
+				where a.institucioneducativa_acreditacion_tipo_id = 1) as a
+				LEFT JOIN (
+				select institucioneducativa_id
+				,sum(case when nivel_tipo_id=11 then 1 else 0 end) as ini
+				,sum(case when nivel_tipo_id=12 then 1 else 0 end) as pri
+				,sum(case when nivel_tipo_id=13 then 1 else 0 end) as sec
+				,sum(case when nivel_tipo_id=6 then 1 else 0 end) as esp
+				,sum(case when nivel_tipo_id=8 then 1 else 0 end) as eja
+				,sum(case when nivel_tipo_id=201 then 1 else 0 end) as epa
+				,sum(case when nivel_tipo_id=202 then 1 else 0 end) as esa
+				,sum(case when nivel_tipo_id in (203,204,205,206) then 1 else 0 end) as eta
+				,sum(case when nivel_tipo_id in (207) then 1 else 0 end) as alfproy
+				,sum(case when nivel_tipo_id in (208) then 1 else 0 end) as alfcam
+				,sum(case when nivel_tipo_id in (211,212,213,214,215,216,217,218) then 1 else 0 end) as perm
+				,sum(case when nivel_tipo_id in (219,220,224) then 1 else 0 end) as perm_tec
+				,sum(case when nivel_tipo_id in (221,222,223) then 1 else 0 end) as perm_otros
+				from institucioneducativa_nivel_autorizado
+				group by institucioneducativa_id
+				) as c on a.cod_ue_id=c.institucioneducativa_id 
+				inner join dependencia_tipo d on a.cod_dependencia_id=d.id
+					inner join orgcurricular_tipo e on e.id=a.cod_org_curr_id
+						inner join convenio_tipo f on f.id=a.cod_convenio_id) u on u.cod_ue_id = bjp.institucioneducativa_id 
+				WHERE
+					id_departamento = '". $codigo_depto ."' AND 
+					bjp.gestion_tipo_id = 2022 AND
+					es_concluido is null
+					order by desc_departamento, desc_provincia, distrito
+		";
+
+		//dump($sql); die; 
+
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$data = $stmt->fetchAll();
+
+
+		// los cerrados
+		$sql = "
+			select
+			'CERRADO' as estado,
+			bjp.* , u.*
+				from bjp_titular_cobro_validacion_cierre  as bjp
+					inner join (
+				select a.cod_ue_id, a.desc_ue, a.cod_le_id, a.direccion, a.zona, a.cod_distrito, a.distrito,
+				(case when a.tipo_area = 'R' then 'RURAL' when a.tipo_area = 'U' then 'URBANO' else '' end) as area,
+				a.id_departamento, a.desc_departamento, a.id_provincia, a.desc_provincia, a.id_seccion, a.desc_seccion, a.id_canton, a.desc_canton, a.id_localidad, a.desc_localidad,
+				a.cod_convenio_id, a.convenio,case when a.cod_dependencia_id <>3 then 'Publico' else 'Privado' end as dependencia_gen, a.cod_dependencia_id, a.dependencia, c.ini, c.pri, c.sec, c.epa, c.esa, c.eta, c.esp, c.perm,c.perm_tec,c.perm_otros, c.eja, a.fecha_last_update, a.estadoinstitucion,a.cordx,a.cordy, a.nro_resolucion, a.fecha_resolucion
+				from 
+				(select  a.id as cod_ue_id,a.institucioneducativa as desc_ue,a.orgcurricular_tipo_id,a.estadoinstitucion_tipo_id, h.estadoinstitucion, a.le_juridicciongeografica_id as cod_le_id,a.orgcurricular_tipo_id as cod_org_curr_id,f.orgcurricula
+				,a.dependencia_tipo_id as cod_dependencia_id, e.dependencia,a.convenio_tipo_id as cod_convenio_id,g.convenio,d.cod_dep as id_departamento,d.des_dep as desc_departamento
+				,d.cod_pro as id_provincia, d.des_pro as desc_provincia, d.cod_sec as id_seccion, d.des_sec as desc_seccion, d.cod_can as id_canton, d.des_can as desc_canton
+				,d.cod_loc as id_localidad,d.des_loc as desc_localidad,d.area2001 as tipo_area,d.cod_dis as cod_distrito,d.des_dis as distrito,d.direccion,d.zona
+				,d.cod_nuc,d.des_nuc,0 as usuario_id,current_date as fecha_last_update, a.fecha_creacion,d.cordx,d.cordy, a.nro_resolucion, a.fecha_resolucion
+				from institucioneducativa a 
+				inner join 
+				(select a.id as cod_le,cod_dep,des_dep,cod_pro,des_pro,cod_sec,des_sec,cod_can,des_can,cod_loc,des_loc,area2001,cod_dis,des_dis,a.cod_nuc,a.des_nuc,a.direccion,a.zona,a.cordx,cordy
+				from jurisdiccion_geografica a inner join 
+				(select e.id,cod_dep,a.lugar as des_dep,cod_pro,b.lugar as des_pro,cod_sec,c.lugar as des_sec,cod_can,d.lugar as des_can,cod_loc,e.lugar as des_loc,area2001
+				from (select id,codigo as cod_dep,lugar_tipo_id,lugar
+				from lugar_tipo
+				where lugar_nivel_id=1) a inner join (
+				select id,codigo as cod_pro,lugar_tipo_id,lugar from lugar_tipo
+				where lugar_nivel_id=2) b on a.id=b.lugar_tipo_id inner join (
+				select id,codigo as cod_sec,lugar_tipo_id,lugar from lugar_tipo
+				where lugar_nivel_id=3) c on b.id=c.lugar_tipo_id inner join (
+				select id,codigo as cod_can,lugar_tipo_id,lugar from lugar_tipo
+				where lugar_nivel_id=4) d on c.id=d.lugar_tipo_id inner join (
+				select id,codigo as cod_loc,lugar_tipo_id,lugar,area2001 from lugar_tipo
+				where lugar_nivel_id=5) e on d.id=e.lugar_tipo_id) b on a.lugar_tipo_id_localidad=b.id
+				left join 
+				(select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo
+				where lugar_nivel_id=7) c on a.lugar_tipo_id_distrito=c.id) d on a.le_juridicciongeografica_id=d.cod_le  and institucioneducativa_acreditacion_tipo_id=1 --and estadoinstitucion_tipo_id=10
+				INNER JOIN dependencia_tipo e ON a.dependencia_tipo_id = e.id
+				INNER JOIN orgcurricular_tipo f ON a.orgcurricular_tipo_id = f.id
+				INNER JOIN convenio_tipo g ON a.convenio_tipo_id = g.id
+				INNER JOIN estadoinstitucion_tipo h ON a.estadoinstitucion_tipo_id = h.id
+				where a.institucioneducativa_acreditacion_tipo_id = 1) as a
+				LEFT JOIN (
+				select institucioneducativa_id
+				,sum(case when nivel_tipo_id=11 then 1 else 0 end) as ini
+				,sum(case when nivel_tipo_id=12 then 1 else 0 end) as pri
+				,sum(case when nivel_tipo_id=13 then 1 else 0 end) as sec
+				,sum(case when nivel_tipo_id=6 then 1 else 0 end) as esp
+				,sum(case when nivel_tipo_id=8 then 1 else 0 end) as eja
+				,sum(case when nivel_tipo_id=201 then 1 else 0 end) as epa
+				,sum(case when nivel_tipo_id=202 then 1 else 0 end) as esa
+				,sum(case when nivel_tipo_id in (203,204,205,206) then 1 else 0 end) as eta
+				,sum(case when nivel_tipo_id in (207) then 1 else 0 end) as alfproy
+				,sum(case when nivel_tipo_id in (208) then 1 else 0 end) as alfcam
+				,sum(case when nivel_tipo_id in (211,212,213,214,215,216,217,218) then 1 else 0 end) as perm
+				,sum(case when nivel_tipo_id in (219,220,224) then 1 else 0 end) as perm_tec
+				,sum(case when nivel_tipo_id in (221,222,223) then 1 else 0 end) as perm_otros
+				from institucioneducativa_nivel_autorizado
+				group by institucioneducativa_id
+				) as c on a.cod_ue_id=c.institucioneducativa_id 
+				inner join dependencia_tipo d on a.cod_dependencia_id=d.id
+					inner join orgcurricular_tipo e on e.id=a.cod_org_curr_id
+						inner join convenio_tipo f on f.id=a.cod_convenio_id) u on u.cod_ue_id = bjp.institucioneducativa_id 
+				WHERE
+					id_departamento = '". $codigo_depto ."' AND 
+					bjp.gestion_tipo_id = 2022 AND
+					es_concluido = true
+				order by desc_departamento, desc_provincia, distrito
+		";
+
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$dataclosed = $stmt->fetchAll();
+
+		$numopen = sizeof($data);
+		$numclosed = sizeof($dataclosed);
+
+		return $this->render($this->session->get('pathSystem') .':BonoJP:index_valida_depto.html.twig', array(
+            'data' => $data,            
+            'dataclosed' => $dataclosed,            
+            'numopen' => $numopen,            
+            'numclosed' => $numclosed,            
+        ));
+	}
+
+	public function seguimientoOpenUeAction(Request $request)
+	{
+		$em      = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $response = new JsonResponse();
+
+		// se recibe el id de la tabla bjp_titular_cobro_validacion_cierre
+		$codigo_sie = $request->get('id');
+		//dump($codigo_sie); die; 
+
+		$query = "select observacion from bjp_titular_cobro_validacion_cierre where id = " . $codigo_sie;
+		$stmtaux = $em->getConnection()->prepare($query);
+		$stmtaux->execute();
+        $currentdata = $stmtaux->fetchAll();
+		$observacion = $currentdata[0]['observacion'];
+		
+		$fecha_actual = date("Y-m-d H:i:s");
+		$observacion .= '-reopen:'. $fecha_actual;
+		//dump($observacion); die; 
+
+		$query ="update bjp_titular_cobro_validacion_cierre set es_concluido = NULL, observacion = ?, fecha_actualizacion = ? where id = ?";
+		$stmt = $db->prepare($query);
+		$params = array($observacion, $fecha_actual, $codigo_sie);
+		$stmt->execute($params);
+		$tmp=$stmt->fetchAll();
+
+
+		$msg = 'La U.E. se ha aperturado correctamente !';
+        return $response->setData(array('status' => 200, 'msg' => $msg, 'tipo' => 0));
+		
+	}
+
+	public function seguimientoInfoUeAction(Request $request) {
+
+		$em      = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $response = new JsonResponse();
+
+		$query = "select institucioneducativa_id from bjp_titular_cobro_validacion_cierre where id = " . $request->get('id');
+		$stmtaux = $em->getConnection()->prepare($query);
+		$stmtaux->execute();
+        $currentdata = $stmtaux->fetchAll();
+		$codigo_sie = $currentdata[0]['institucioneducativa_id'];
+
+		//$codigo_sie ='80590006'; //$request->get('id');
+		 
+		$query = $em->createQuery(
+            'SELECT ie
+        FROM SieAppWebBundle:Institucioneducativa ie
+        WHERE ie.id = :id
+        and ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
+        ORDER BY ie.id')
+                    ->setParameter('id',  $codigo_sie )
+                ->setParameter('ieAcreditacion', 1)
+                ;
+        
+        $ue = $query->getResult();
+		//dump($ue); die; 
+		$sie= $ue[0]->getId();
+		$nombreue = $ue[0]->getInstitucioneducativa();
+		$dependencia = $ue[0]->getDependenciaTipo()->getDependencia();
+		$tipo = $ue[0]->getInstitucioneducativaTipo()->getDescripcion();
+		$depto = $ue[0]->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugar();
+		$distrito = $ue[0]->getLeJuridicciongeografica()->getDistritoTipo()->getDistrito() ;
+		$zona = $ue[0]->getLeJuridicciongeografica()->getZona();
+		$direccion = $ue[0]->getLeJuridicciongeografica()->getDireccion();
+
+		//datos del bono
+		$sql = "
+		SELECT
+			bjp.*, at.apoderado as apoderado_tipo
+		FROM
+			bjp_titular_cobro_validacion bjp
+			INNER JOIN 
+			bjp_apoderado_tipo at on at.id = bjp.bjp_apoderado_tipo_id
+		WHERE
+			institucioneducativa_id = ".$codigo_sie." ORDER BY 11, 5,6,7";
+
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$apoderados = $stmt->fetchAll();
+
+		$total_estudiantes = 0;
+		for($i = 0; $i < sizeof($apoderados); $i++ ){
+			$total_estudiantes += $apoderados[$i]['estudiantes_cobrados'];
+		}
+
+		// los ya validados
+		$sql = "
+		SELECT COUNT 
+			(*) as total
+		FROM
+			bjp_titular_cobro_beneficiarios_validacion bjp 
+		WHERE
+			bjp_titular_cobro_validacion_id IN ( SELECT bjp.ID FROM bjp_titular_cobro_validacion bjp WHERE institucioneducativa_id = ".$codigo_sie." ) 
+			AND es_pagado = TRUE
+		";
+
+		//dump($sql);die;
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$validados = $stmt->fetchAll();
+		$total_estudiantes_validados = $validados[0]['total'];
+
+
+
+		$msg = 'La U.E. se ha aperturado correctamente !';
+        return $response->setData(array(
+			'status' => 200, 
+			'msg' => $msg, 
+			'sie' => $sie,
+			'nombreue' => $nombreue,
+			'dependencia' => $dependencia,
+			'depto' => $depto,
+			'distrito' => $distrito,
+			'total_estudiantes' => $total_estudiantes,
+			'total_estudiantes_validados' => $total_estudiantes_validados
+		));
+	}
+
 
 }

@@ -136,6 +136,24 @@ operativo_bono_jp_ValidaNoPagados:
     options:
          expose: true
 
+operativo_bono_jp_ValidaNoPagadosSeguimiento:
+    path:     /operativo_bono_jp_valida_no_pagados_seguimiento
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:seguimientoDepto"}
+    options:
+         expose: true
+
+operativo_bono_jp_ValidaNoPagadosOpenUe:
+    path:     /operativo_bono_jp_valida_no_pagados_seguimiento_openue
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:seguimientoOpenUe"}
+    options:
+         expose: true
+
+operativo_bono_jp_ValidaNoPagadosInfoUe:
+    path:     /operativo_bono_jp_valida_no_pagados_seguimiento_infoue
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:seguimientoInfoUe"}
+    options:
+         expose: true
+
 operativo_bono_jp_ValidaNoPagadosAlumnos:
     path:     /operativo_bono_jp_valida_no_pagados_alumnos
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:validaNoPagadosAlumnos" }

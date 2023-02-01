@@ -1,0 +1,511 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2>
+            <i class="fa fa-table"></i>
+            Bono Juancito Pinto - 2022
+                                          
+                                    
+                        
+            <span>
+                Módulo de Validación
+                                                      
+                                            
+                            
+            </span>
+        </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">
+                Usted esta aquí:
+                                                      
+                                            
+                            
+            </span>
+            <ol class="breadcrumb">
+                <li class="active">
+                    Index
+                                                                     
+                                                        
+                                    
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    SEGUIMIENTO OPERATIVO BJP - 2022
+                                                                     
+                                                        
+                                    
+                </h2>
+                <div class="row">
+                    <div class="col-md-5">
+                        <!-- Start list bank table -->
+                        <div class="panel">
+                            <div class="panel-body no-padding">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <span class="pull-left text-capitalize">
+                                                        TOTAL UES ABIERTAS A LA FECHA                                                                                                            
+                                                                                                            
+                                                    </span>
+                                                    <span class=" pull-right label label-primary" style="border-style:double;font-size:15px;">
+                                                        {{ numopen }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="pull-left text-capitalize">
+                                                        TOTAL UES QUE CERRARON OPERATIVO                                                                                                                                                                                                                        
+                                                                                                            
+                                                    </span>
+                                                    <span class=" pull-right label label-success" style="border-style:double;font-size:15px;">
+                                                        {{ numclosed }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        <!-- /.panel-body -->
+                        </div>
+                    <!--/ End list bank table -->
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">
+                            Lista de Unidades Educativas
+                                                                                
+                                                    
+                        </h3>
+                    </div>
+                <!-- /.panel-heading -->
+                </div>
+                <div class="panel panel-tab panel-tab-double rounded shadow">
+                    <!-- Start tabs heading -->
+                    <div class="panel-heading no-padding">
+                        <ul class="nav nav-tabs">
+                            <li class="active nav-border nav-border-top-info">
+                                <a href="component-tabsaccordion.html#tab2-1" data-toggle="tab">
+                                    <div>
+                                        <span class="text-strong">
+                                            UES NO CERRARON OPERATIVO
+                                                                                                                                
+                                                                                    
+                                        </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-border nav-border-top-success">
+                                <a href="component-tabsaccordion.html#tab2-2" data-toggle="tab">
+                                    <div>
+                                        <span class="text-strong">
+                                            UES CERRARON OPERATIVO
+                                                                                                                                
+                                                                                    
+                                        </span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab2-1">
+                                <div class="table-responsive">
+                                    <table id="myTable1" class="table table-bordered dataTable table-success">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">
+                                                    #                                         
+                                                </th>
+                                                <th width="10%">
+                                                    DEPARTAMENTO
+                                                </th>
+                                                <th width="10%">
+                                                    PROVINCIA
+                                                </th>
+                                                <th width="10%">
+                                                    DISTRITO
+                                                </th>
+                                                <th width="10%">
+                                                    CODIGO SIE                                 
+                                                </th>
+                                                <th width="35%">
+                                                    UNIDAD EDUCATIVA                                
+                                                </th>
+                                                <th width="10%">
+                                                    ESTADO                                
+                                                </th>
+                                                <th width="10%">
+                                                    OPCIONES                                        
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set var = 1 %}
+                                            {% for entity in data %}
+                                                <tr>
+                                                    <td>
+                                                        {{ var }}
+                                                    </td>
+                                                    <td>
+                                                        {{ entity.desc_departamento }}
+                                                    </td>
+                                                    <td>
+                                                        {{ entity.desc_provincia }}
+                                                    </td>
+                                                    <td>
+                                                        {{ entity.distrito }}
+                                                    </td>
+                                                    <td>
+                                                        {{ entity.cod_ue_id }}
+                                                    </td>
+                                                    <td>
+                                                        {{ entity.desc_ue }}
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-primary" style="border-style:double;font-size:15px;">
+                                                            {{ entity.estado }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button style="border-radius: 0px;" class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="" onclick="infoUe('{{ entity.id }}');">
+                                                            INFORMACION U.E.                                        
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                {% set var = var + 1 %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab2-2">
+                                <div class="table-responsive">
+                                    <table id="myTable" class="table table-bordered dataTable table-info">
+                                        <thead>
+                                            <th width="5%">
+                                                    #                                         
+                                                </th>
+                                                <th width="10%">
+                                                    DEPARTAMENTO
+                                                </th>
+                                                <th width="10%">
+                                                    PROVINCIA
+                                                </th>
+                                                <th width="10%">
+                                                    DISTRITO
+                                                </th>
+                                                <th width="10%">
+                                                    CODIGO SIE                                 
+                                                </th>
+                                                <th width="25%">
+                                                    UNIDAD EDUCATIVA                                
+                                                </th>
+                                                <th width="10%">
+                                                    ESTADO                                
+                                                </th>
+                                                <th width="20%">
+                                                    OPCIONES                                        
+                                                </th>
+                                        </thead>
+                                        <tbody>
+                                            {% set var = 1 %}
+                                            {% for entity in dataclosed %}
+                                                <tr>
+                                                    <td width="5%">
+                                                        {{ var }}
+                                                    </td>
+                                                    <td width="10%">
+                                                        {{ entity.desc_departamento }}
+                                                    </td>
+                                                    <td width="10%">
+                                                        {{ entity.desc_provincia }}
+                                                    </td>
+                                                    <td width="10%">
+                                                        {{ entity.distrito }}
+                                                    </td>
+                                                    <td width="10%">
+                                                        {{ entity.cod_ue_id }}
+                                                    </td>
+                                                    <td width="25%">
+                                                        {{ entity.desc_ue }}
+                                                    </td>
+                                                    <td width="10%">
+                                                        <span class="label label-danger" style="border-style:double;font-size:15px;">
+                                                            {{ entity.estado }}
+                                                        </span>
+                                                    </td>
+                                                    <td width="20%">
+                                                        <button style="border-radius: 0px;" class="btn btn-info " data-toggle="tooltip" data-placement="top" data-original-title="" onclick="infoUe('{{ entity.id }}');">
+                                                            INFORMACION U.E.                                        
+                                                        </button>
+                                                        <button style="border-radius: 0px;" class="btn btn-danger " data-toggle="tooltip" data-placement="top" data-original-title="HABILITAR PARA REGISTRO" onclick="openOperative('{{ entity.id }}');">
+                                                            APERTURAR U.E.                                        
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                {% set var = var + 1 %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+                <br>
+                    <div class="row">
+                        <div id="closeopediv" style="overflow: scroll; width: 100%; height:300px" class="col-lg-4 col-md-6 col-sm-12 col-xs-12"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="modal-info" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">                            
+                            <h4 id="titulo" class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <span class="alert-icon">
+                                    <i class="fa fa-info"></i>
+                                </span>
+                                <div class="notification-info">
+                                    <ul class="clearfix notification-meta">
+                                        <li class="pull-left notification-sender">
+                                            <strong>
+                                                INFORMACION U.E.
+                                            </strong>
+                                        </li>
+                                    </ul>
+                                    <p>
+                                        Datos Referenciales
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                Código SIE:                                                                                            
+                                            </th>
+                                            <td id="lbl_sie">                               
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Unidad Educativa:
+                                                                                            
+                                            </th>
+                                            <td id="lbl_ue">                                               
+                                                                                            
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Dependencia:
+                                                                                            
+                                            </th>
+                                            <td id="lbl_depen">                                                
+                                                                                            
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Departamento:
+                                                                                            
+                                            </th>
+                                            <td id="lbl_depto">                                                
+                                                                                            
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Distrito Educativo:
+                                                                                            
+                                            </th>
+                                            <td id="lbl_distrito">                                                
+                                                                                            
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span class="pull-left text-capitalize">
+                                                    TOTAL ESTUDIANTES CON MAESTRO O DIRECTOR COMO TITULAR DE COBRO
+                                                </span>
+                                                <span class=" pull-right label label-primary" style="border-style:double;font-size:15px;">
+                                                <label id = "lbl_total1">                                                    
+                                                </label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="pull-left text-capitalize">
+                                                    TOTAL ESTUDIANTES VALIDADOS
+                                                </span>
+                                                <span class=" pull-right label label-success" style="border-style:double;font-size:15px;">
+                                                <label id = "lbl_total2">                                                    
+                                                </label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="pull-left text-capitalize">
+                                                    TOTAL ESTUDIANTES POR VALIDAR
+                                                </span>
+                                                <span class=" pull-right label label-danger" style="border-style:double;font-size:15px;">
+                                                <label id = "lbl_total3">                                                    
+                                                </label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary btn-close">Cerrar</button>
+                        </div>
+                    </div>
+                <!-- /.modal-content -->
+                </div>
+            </div>
+        <!-- /.modal -->
+        {% endblock %}
+        {% block javascripts %}
+            {{ parent() }}
+            <script>  
+
+                $(".btn-close").click(function(){
+                    $("#modal-info").modal('hide');
+                });
+   
+                function openOperative(id){
+                        swal({
+                            title: "¿ APERTURAR LA U.E. PARA REGISTRO/MODIFICACION DE DATOS ?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                            text: "Aperturar la U.E. significa que el director debe registrar la informacion correspondiente y despues cerrar el operativo.",
+                            buttons: ["Cancelar", "Aperturar"],
+                        }).then(function (respuesta) {
+                            if (respuesta) {
+
+                                var imagen = '{{ asset("img/loading.gif") }}';                      
+                                console.log(id);
+                            
+                                $.ajax({
+                                    type: 'post',
+                                    url: Routing.generate('operativo_bono_jp_ValidaNoPagadosOpenUe',  {'id': id}),                    
+                                    processData: false,
+                                    contentType: false,
+                                    beforeSend: function () {
+                                        swal({
+                                            title: "Habilitando Unidad Educativa...",
+                                            text: "Espere un momento por favor",
+                                            icon: imagen,
+                                            buttons: false
+                                        });
+                                        //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{ asset('img / loading.gif') }}" class="loading img-responsive" /></div>');
+                                    },
+                                    success: function (data) {
+                                        /*$('#message_titulo').empty();
+                                        $("#message_titulo").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');*/
+
+                                        swal({
+                                            icon: 'info',                
+                                            text: data.msg,                
+                                        });
+
+                                        location.href = "{{ path('operativo_bono_jp_ValidaNoPagadosSeguimiento') }}";
+
+
+                                    },
+                                    complete: function () {
+                                        swal.stopLoading();
+                                        swal.close();
+                                    },
+                                    error: function (error) {
+                                        
+                                    },
+                                });
+                                
+
+                            }
+
+                        })
+                }      
+
+                function infoUe(id){
+
+                    var imagen = '{{ asset("img/loading.gif") }}';   
+
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('operativo_bono_jp_ValidaNoPagadosInfoUe',  {'id': id}),                    
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Obteniendo informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{ asset('img / loading.gif') }}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            
+                            document.getElementById('lbl_sie').innerHTML = data.sie;
+                            document.getElementById('lbl_ue').innerHTML = data.nombreue;
+                            document.getElementById('lbl_depen').innerHTML = data.dependencia;
+                            document.getElementById('lbl_depto').innerHTML = data.depto;
+                            document.getElementById('lbl_distrito').innerHTML = data.distrito;
+                            
+                            document.getElementById('lbl_total1').innerHTML = data.total_estudiantes;
+                            document.getElementById('lbl_total2').innerHTML = data.total_estudiantes_validados;
+                            document.getElementById('lbl_total3').innerHTML = data.total_estudiantes - data.total_estudiantes_validados;
+                            
+        
+                            $("#modal-info").modal('show');
+
+
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                        },
+                        error: function (error) {
+                            
+                        },
+                    });
+
+                    
+                }
+   
+   
+            </script>
+        {% endblock %}
+        
