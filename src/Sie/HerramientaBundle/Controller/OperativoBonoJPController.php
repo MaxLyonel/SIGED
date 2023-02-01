@@ -1487,9 +1487,7 @@ class OperativoBonoJPController extends Controller
 		$stmtaux = $em->getConnection()->prepare($sql);
 		$stmtaux->execute();
         $currentdata = $stmtaux->fetchAll();
-		$codigo_depto = $currentdata[0]['codigo'];e
-
-
+		$codigo_depto = $currentdata[0]['codigo'];
 
 		$sql = "
 			select
