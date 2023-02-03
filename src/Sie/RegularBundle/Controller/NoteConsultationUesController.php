@@ -46,9 +46,15 @@ class NoteConsultationUesController extends Controller {
         //set new gestion to the select year
         $arrGestion = array();
         $currentYear = date('Y');
-        for ($i = 0; $i <= 12; $i++) {
-            $arrGestion[$currentYear] = $currentYear;
-            $currentYear--;
+        // for ($i = 0; $i <= 12; $i++) {
+        //     $arrGestion[$currentYear] = $currentYear;
+        //     $currentYear--;
+        // }
+
+        //dump(($currentYear - 2009));die;
+
+        for ($i = $currentYear; $i >= 2009; $i--) {
+          $arrGestion[$i] = $i;
         }
 
         return $this->createFormBuilder()
@@ -256,11 +262,17 @@ class NoteConsultationUesController extends Controller {
               $em->getConnection()->beginTransaction();
               try{
                   $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion));
-                  $registroConsol->setFecha(new \DateTime("now"));
-                  $registroConsol->setBoletin('1');
-                  $em->persist($registroConsol);
-                  $em->flush();
-                  $em->getConnection()->commit();
+                  if (!$registroConsol){
+                    $message = 'Unidad Educativa no consolido su informacion en la gestion indicada';
+                    $this->addFlash('warningconsultaue', $message);
+                    $exist = false;
+                  } else {
+                    $registroConsol->setFecha(new \DateTime("now"));
+                    $registroConsol->setBoletin('1');
+                    $em->persist($registroConsol);
+                    $em->flush();
+                    $em->getConnection()->commit();
+                  }                  
               } catch (Exception $e) {
               $em->getConnection()->rollback();
               }
