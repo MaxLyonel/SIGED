@@ -306,7 +306,7 @@
 								      <td  v-if="allowwithoutci"><button v-on:click="oldInscription(DBstudent.idStudent, rindex)" type="button" class="btn btn-info"><i class="fa fa-book"></i> INSCRIBIR </button></td>
 								    </tr>
 
-								    <tr v-if="allowwithoutci">
+								    <tr v-if="allowwithoutci && !swci">
 								    	<th colspan="3" align="center">
 								    		<button v-on:click="goHomonimo()" type="button" class="btn btn-warning"><i class="fa fa-book"></i> HOMONIMO PERFECTO</button>								    		
 								    	</th>
@@ -710,7 +710,8 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
                 buscandoue:false,
                 existStudent:false,
                 swhomonimo:false,
-            	message:'',           	
+            	message:'',  
+              swci:'',         	
             	messageue:'',           	
                 DBPais: {},
                 DBDepto: {},
@@ -842,6 +843,7 @@ I                                           <option value="0">INICIAL(1Y2)/PRIMA
                         if (response.status == 200) {
                         	this.responseprocess = response.data.swcreatestudent;
                         	this.message = response.data.message;
+                          this.swci = response.data.swci;
                         	this.DBGenero= response.data.arrGenero;
                         	this.DBPais= response.data.arrPais;
                         	this.DBstudentExist= response.data.arrStudentExist;
