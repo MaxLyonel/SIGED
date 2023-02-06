@@ -395,8 +395,32 @@ class CreacionCursosController extends Controller {
            
             $institucion_ed = $request->getSession()->get('idInstitucion');
 
-            //se veri
-            $query = "select id, paralelo from paralelo_tipo
+            //si es fiscal o particular
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $dependencia = $result;
+            //dump($dependencia[0]['dependencia_tipo_id']); die;
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+            
+            if( $dependencia_tipo_id == 3) {
+                //es particular
+
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) >= 1;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $paralelos = $statement->fetchAll();
+                /*$paralelosx = $result;
+                $paralelos = array();
+                for ($i = 0; $i < count($paralelosx); $i++) {
+                    $paralelos[$paralelosx[$i]['id']] = $paralelosx[$i]['paralelo'];
+
+                }*/
+
+            }else{
+                //es fiscal u otro               
+                $query = "select id, paralelo from paralelo_tipo
                 where id in
                 (
                 select distinct paralelo_tipo_id from institucioneducativa_curso 
@@ -407,12 +431,13 @@ class CreacionCursosController extends Controller {
                 and grado_tipo_id = ". $grado."
                 order by 1
                 ) order by 2";
-            
+                
                 //dump($query); die;
-            $stmt = $db->prepare($query);
-            $params = array();
-            $stmt->execute($params);
-            $paralelos = $stmt->fetchAll();
+                $stmt = $db->prepare($query);
+                $params = array();
+                $stmt->execute($params);
+                $paralelos = $stmt->fetchAll();
+            }
 
             
             $response = new JsonResponse();
