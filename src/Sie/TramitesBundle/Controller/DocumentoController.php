@@ -3239,7 +3239,7 @@ public function getDocumentoTokenImpreso($token) {
                     if($msgContenido != ""){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido." ; no será posible reactivar el documento solicitado"));
                     }
-                    // $msgContenido = "";
+                    //$msgContenido = "";
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                         'formBusqueda' => $this->creaFormReactivaDocumentoSerie('tramite_documento_reactiva_guarda',$serie,$obs,$documentoId)->createView(),
@@ -3369,7 +3369,8 @@ public function getDocumentoTokenImpreso($token) {
                             $obs = "DOCUMENTO REACTIVADO Y PROCESADO COMO IMPRESO (".$fecha->format('d/m/Y h:i:s')."): ".$obs; 
                             $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProceso->getId(),$id_usuario,$obs,$em);
                             $documentoAnuladoId = $this->setDocumentoEstado($documentoId, 1, $em); 
-                            $retEstadoUltimoProcesoTramite = $tramiteProcesoController->setEstadoUltimoProcesoTramite($tramiteId,3,$id_usuario,$fecha,$em);
+                            //$retEstadoUltimoProcesoTramite = $tramiteProcesoController->setEstadoUltimoProcesoTramite($tramiteId,3,$id_usuario,$fecha,$em);
+                            $retEstadoUltimoProcesoTramite = "";
                             $msgContenido = ($msgContenido=="") ? $retEstadoUltimoProcesoTramite : $msgContenido.", ".$retEstadoUltimoProcesoTramite;         
                             if ($procesosId == 1 and $tramiteEstado == false) {
                                 $entityTramite->setEsactivo(true);
