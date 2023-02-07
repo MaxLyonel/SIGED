@@ -61,10 +61,11 @@
                 <div class="panel shadow">
                         <div class="panel-heading">
                             <div id="tour-12" class="pull-left">
-                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Certificados impresos</h3>
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> {% if gestiones is defined  %}Certificados impresos{% endif %}</h3>
                             </div>
                             <div class="pull-right">
                                 <div class="btn-green date-picker">
+                                {% if gestiones is defined  %}
                                     <form name="formtable" role="form" action="{{ path('tramite_homepage') }}" action="" method="POST" >
                                         <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
                                             {% for ges in gestiones %}
@@ -76,6 +77,7 @@
                                             {% endfor %}
                                         </select>
                                     </form>
+                                {% endif %}
                                 </div>
                             </div>
                             <div class="clearfix"></div>
