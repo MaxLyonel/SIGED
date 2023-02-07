@@ -910,7 +910,7 @@ class CreacionCursosEspecialController extends Controller {
                 $programas = array(19, 20, 21, 22);
             }
             if ($this->session->get('idGestion') >= 2023) {
-                $programas = array(39,19,22,40,41,42,43,44,45,46);
+                $programas = array(39,19,22,41,42,43,44,45,46);
             }
             
         }
