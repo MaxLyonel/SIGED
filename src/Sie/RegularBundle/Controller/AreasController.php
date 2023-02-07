@@ -1342,8 +1342,27 @@ class AreasController extends Controller {
         iparalelo character varying)
         */
        
+        $em = $this->getDoctrine()->getManager();     
+        $response = new JsonResponse(); 
+        $msg = "";
 
-        $em = $this->getDoctrine()->getManager();      
+        // vemos si tiene director
+        $sql = "
+            select count(*) as existe_director
+            from institucioneducativa_sucursal is2 
+            where is2.institucioneducativa_id = " .$institucion_id . "
+            and is2.gestion_tipo_id = " . $gestion_id ;
+        
+        $statement = $em->getConnection()->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        if($result[0]['existe_director'] == 0){
+            $msg = "La UE no tiene director asignado en la gestion !";
+            return $response->setData(array('exito'=>0,'mensaje'=>$msg));
+        }
+
+
+        
         $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
         //dump($query); die;
         $query->execute();
@@ -1358,10 +1377,9 @@ class AreasController extends Controller {
         dump($result); die;*/
 
 
-        $res= $valor[0]['sp_crea_nuevo_curso'];
-       
-        $response = new JsonResponse();
-        return $response->setData(array('exito'=>$res,'mensaje'=>''));
+        $res= $valor[0]['sp_crea_nuevo_curso'];       
+      
+        return $response->setData(array('exito'=>$res,'mensaje'=>$msg));
        
     }   
 

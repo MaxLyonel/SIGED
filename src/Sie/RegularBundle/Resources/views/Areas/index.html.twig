@@ -551,7 +551,11 @@
                                         $("#divNuevoCurso").append('<div class="alert alert-success"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso se ha creado con exito.</div>');
                                     }else{
                                         $("#divNuevoCurso").empty();
-                                        $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado.</div>');    
+                                        if(data.mensaje === ''){
+                                            $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado.</div>');    
+                                        }else{
+                                        $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> ' + data.mensaje + '</div>');    
+                                        }
                                     }
                                     
                                     //$(".tooltips").tooltip();
