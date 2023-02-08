@@ -614,7 +614,7 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif ($area == "2" ) { //VISUAL
             if($modalidad == 1){
-                $nivelesArray = array(410,411); 
+                $nivelesArray = array(411); 
             }else{
                 $nivelesArray = array(410);
             }
@@ -855,10 +855,10 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9")  and $nivel == "410" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
-                $servicios = array(1,2,3,4,5);
+                $servicios =array(); // array(1,2,3,4,5);
             }else{
                 if($modalidad == 1 and ($area == "1" or $area == "3" or $area == "5" or $area == "4")){
-                    $servicios = array(1,2,3,4,5,25,26,27,28,29);
+                    $servicios = array(1,2,3,4,5,25,26,27,28,29,40);
                 }else{
                     $servicios = array(20);
                 }
@@ -872,7 +872,7 @@ class CreacionCursosEspecialController extends Controller {
                 $servicios = array(21);
             }//array(1,2,3,4,5,21)
             if($modalidad == 3){
-                $servicios = array(35,36,37,38,39);
+                $servicios = array(1,2,3,4,5,28,35,36,37,38);
             }
             
         }
