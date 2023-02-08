@@ -910,7 +910,7 @@ class CreacionCursosEspecialController extends Controller {
                 $programas = array(19, 20, 21, 22);
             }
             if ($this->session->get('idGestion') >= 2023) {
-                $programas = array(39,19,22,40,41,42,43,44,45,46);
+                $programas = array(39,19,22,41,42,43,44,45,46);
             }
             
         }
@@ -929,7 +929,7 @@ class CreacionCursosEspecialController extends Controller {
                         $programas = array(7,8,12,25,26,29);   //--- se agrego nuevos programas cambio denom en BD 24=25
                     }
                     if ($this->session->get('idGestion') >=2023) {
-                        $programas = array(26,27,47,48);   //
+                        $programas = array(7,8,25,26,27,47,48);   //
                     }
                 }else{ //INDIRECTA
                     $programas = array(10);

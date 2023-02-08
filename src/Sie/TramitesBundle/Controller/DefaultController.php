@@ -131,7 +131,7 @@ class DefaultController extends Controller {
         $reporteTramiteController = new reporteTramiteController();
         $reporteTramiteController->setContainer($this->container);
         //$reporteCertificadoTecnicoAlternativaNacional = $reporteTramiteController->certificadoTecnicoAlternativaNacional($gestionActual->format('Y'));
-        $reporteCertificadoTecnicoAlternativaNacional = $reporteTramiteController->certificadoTecnicoAlternativaNacional($gestion);
+        //$reporteCertificadoTecnicoAlternativaNacional = $reporteTramiteController->certificadoTecnicoAlternativaNacional($gestion);
         
         $entityGestion = $this->getGestiones(2016);
         $datosUsuario = array();
@@ -139,12 +139,11 @@ class DefaultController extends Controller {
 
         $datosUsuario = array('personaNombre'=>$personaNombre,'personaCedula'=>$personaCedula,'personaFechaNacimiento'=>$personaFechaNacimiento,'usuarioNombre'=>$usuarioNombre,'usuarioRegistro'=>$usuarioRegistro,'personaCorreo'=>$personaCorreo,'personaCelular'=>$personaCelular);
         return $this->render($this->session->get('pathSystem') . ':Default:perfil.html.twig', array(
-            'gestiones' => $entityGestion,
+            
             'gestion' => $gestion,
             'titulo' => 'Perfil',
             'subtitulo' => 'Usuario',
             'datosUsuario' => $datosUsuario,
-            'reporte' => $reporteCertificadoTecnicoAlternativaNacional,
             ));
     }
 
