@@ -263,9 +263,11 @@ class NoteConsultationUesController extends Controller {
               try{
                   $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion));
                   if (!$registroConsol){
-                    $message = 'Unidad Educativa no consolido su informacion en la gestion indicada';
-                    $this->addFlash('warningconsultaue', $message);
-                    $exist = false;
+                    if($gestion > 2013){
+                      $message = 'Unidad Educativa no consolido su informacion en la gestion indicada';
+                      $this->addFlash('warningconsultaue', $message);
+                      $exist = false;
+                    } 
                   } else {
                     $registroConsol->setFecha(new \DateTime("now"));
                     $registroConsol->setBoletin('1');
