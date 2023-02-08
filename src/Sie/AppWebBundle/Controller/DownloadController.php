@@ -456,8 +456,10 @@ class DownloadController extends Controller {
                 $boletin_oficial = true;
             }
         } else {
-            if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
-                $boletin_oficial = true;
+            if ($gestion > 2013){
+                if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+                    $boletin_oficial = true;
+                }
             }
         }
 
