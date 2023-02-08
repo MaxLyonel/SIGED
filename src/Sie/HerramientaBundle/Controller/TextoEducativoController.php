@@ -740,7 +740,7 @@ class TextoEducativoController extends Controller
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('gestionTipo'=>$gestion, 'institucioneducativa'=>$sie, 'nivelTipo'=>$nivel, 'gradoTipo'=>$grado, 'paraleloTipo'=>$paralelo ));
         $id_inst_curso=$entity->getId();
        
-       // dump($nivel, $grado, $id_inst_curso );die;
+        //dump($nivel, $grado, $id_inst_curso );die;
         $query = $em->getConnection()->prepare("create temporary table estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." as select * from sp_regular_listado_inscripcion_ig('".$gestion_a."','".$gestion."','".$sie."','".$nivel."','".$grado."','".$id_inst_curso."') order by paterno,materno,nombre");
 		    $query->execute();
 
@@ -774,6 +774,8 @@ class TextoEducativoController extends Controller
             'gradoid' => $grado
         ));
     }
+
+
     public function guardar_datos_asignacion_paraleloAction(Request $request){
     	  $em = $this->getDoctrine()->getManager();
     	  $response = new JsonResponse();
@@ -784,6 +786,7 @@ class TextoEducativoController extends Controller
         $gestion = $request->get('gestion');
         $estudiante_id = $request->get('estudiante_id');
 
+        // dump("-----------------------"); 
         if(is_array($estudiante_id)){
         	// $em->getConnection()->beginTransaction();
 			try {
@@ -791,23 +794,42 @@ class TextoEducativoController extends Controller
 				for($i=0;$i<count($estudiante_id);$i++){	
 					// $datos[]=$estudiante_id[$i];
 
-          $inscriptionsGestionSelected = $em->createQueryBuilder()
-          ->select('ei.id as idInscripcion')
-          ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-          ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
-          ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
-          ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
-          ->where('e.id = :idEstudiante')
-          ->andWhere('ei.estadomatriculaTipo = 4')
-          ->andWhere('iec.gestionTipo = :gestion')
-          ->andWhere('i.institucioneducativaTipo = :tipoue')
-          ->setParameter('idEstudiante', $estudiante_id[$i])
-          ->setParameter('gestion',  $gestion)
-          ->setParameter('tipoue', 1)
-          ->getQuery()
-          ->getResult();
+          // $inscriptionsGestionSelected = $em->createQueryBuilder()
+          // ->select('ei.id as idInscripcion')
+          // ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+          // ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+          // ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+          // ->innerJoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+          // ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
+          // ->where('e.id = :idEstudiante')
+          // ->andWhere('ei.estadomatriculaTipo = 4')
+          // ->andWhere('gt.id = :gestion')
+          // ->andWhere('i.institucioneducativaTipo = :tipoue')
+          // ->setParameter('idEstudiante', $estudiante_id[$i])
+          // ->setParameter('gestion',  $gestion)
+          // ->setParameter('tipoue', 1)
+          // ->getQuery()
+          // ->getResult();
+
+            $query = $em->getConnection()->prepare("
+              SELECT e0_.id AS id00 FROM estudiante_inscripcion e0_ 
+              INNER JOIN estudiante e1_ ON (e0_.estudiante_id = e1_.id) 
+              INNER JOIN institucioneducativa_curso i2_ ON (e0_.institucioneducativa_curso_id = i2_.id) 
+              INNER JOIN institucioneducativa i3_ ON (i2_.institucioneducativa_id = i3_.id) 
+              WHERE e1_.id = :estudianteId AND e0_.estadomatricula_tipo_id = 4 AND i2_.gestion_tipo_id = :gestionId::double precision AND i3_.institucioneducativa_tipo_id = 1
+            ");
+            $query->bindValue(':estudianteId', $estudiante_id[$i]);
+            $query->bindValue(':gestionId', $gestion);
+            $query->execute();
+            $inscriptionsGestionSelected = $query->fetchAll();
+
+            // dump("-----------------------"); 
             // dump($inscriptionsGestionSelected); die;
             //check if the student has more than one inscription
+
+
+
+
             if(sizeof($inscriptionsGestionSelected)>0){
                 //already register
                
