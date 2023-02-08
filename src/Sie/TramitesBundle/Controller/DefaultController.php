@@ -131,7 +131,7 @@ class DefaultController extends Controller {
         $reporteTramiteController = new reporteTramiteController();
         $reporteTramiteController->setContainer($this->container);
         //$reporteCertificadoTecnicoAlternativaNacional = $reporteTramiteController->certificadoTecnicoAlternativaNacional($gestionActual->format('Y'));
-        $reporteCertificadoTecnicoAlternativaNacional = $reporteTramiteController->certificadoTecnicoAlternativaNacional($gestion);
+        //$reporteCertificadoTecnicoAlternativaNacional = $reporteTramiteController->certificadoTecnicoAlternativaNacional($gestion);
         
         $entityGestion = $this->getGestiones(2016);
         $datosUsuario = array();
