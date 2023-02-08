@@ -353,10 +353,11 @@ class AreasController extends Controller {
                 $es_modular = true;
             }
 
+            /* 2023 en coordinacion con IVER se omite esto que era para el 2022
             if($sw_nivel_secundario == false and $es_modular == true){
                     $nivelesArray[13] = 'Secundaria Comunitaria Productiva';
                     $paralelosArray[1] = 'A';
-            }
+            }*/
 
             
 
