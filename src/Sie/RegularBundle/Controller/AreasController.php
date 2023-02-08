@@ -37,6 +37,7 @@ class AreasController extends Controller {
         }
 
        
+       
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -302,6 +303,8 @@ class AreasController extends Controller {
             $statement->execute();
             $result = $statement->fetchAll();
             $niveles = $result;
+
+            //dump($niveles); die; 
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
                 $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
@@ -370,7 +373,7 @@ class AreasController extends Controller {
              $RAW_QUERY = '
              SELECT count(*) as existe_multigrado FROM institucioneducativa_curso 
              where institucioneducativa_id = ' .$institucion . ' and gestion_tipo_id = ' . $gestion . ' and nivel_tipo_id = 12' ;                   
-
+             
              $statement = $em->getConnection()->prepare($RAW_QUERY);
              $statement->execute();
              $result = $statement->fetchAll();
@@ -386,13 +389,14 @@ class AreasController extends Controller {
              dump($es_multigrado);
              die;*/
 
+             /* 2023 se coodino con IVER no se debe tomar en cuenta multigrados
              if($sw_nivel_primario == true and $sw_nivel_inicial == false and $dependencia_tipo_id != 3 and $es_multigrado == true)
              {
                  //tiene nivel primario pero no tiene nivel incial, entonces aumentamos nivel incial
                  $nivelesArray[11] = 'Inicial en Familia Comunitaria';
                  //array_push($nivelesArray,[11,'Inicial en Familia Comunitaria']);
                  $sw_habilita_multigrado= true;
-             }
+             }*/
             
 
             // grados menos 7,8,14,15,16,17,41,42,43,99
