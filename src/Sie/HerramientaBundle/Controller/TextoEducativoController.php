@@ -830,7 +830,7 @@ class TextoEducativoController extends Controller
 
 
 
-            if(sizeof($inscriptionsGestionSelected)>0){
+            if(count($inscriptionsGestionSelected)>0){
                 //already register
                
             }else{
