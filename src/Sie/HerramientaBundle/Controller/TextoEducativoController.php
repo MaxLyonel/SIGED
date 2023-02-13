@@ -816,7 +816,7 @@ class TextoEducativoController extends Controller
               INNER JOIN estudiante e1_ ON (e0_.estudiante_id = e1_.id) 
               INNER JOIN institucioneducativa_curso i2_ ON (e0_.institucioneducativa_curso_id = i2_.id) 
               INNER JOIN institucioneducativa i3_ ON (i2_.institucioneducativa_id = i3_.id) 
-              WHERE e1_.id = :estudianteId AND e0_.estadomatricula_tipo_id = 4 AND i2_.gestion_tipo_id = :gestionId::double precision AND i3_.institucioneducativa_tipo_id = 1
+              WHERE e1_.id = :estudianteId AND e0_.estadomatricula_tipo_id in (4,6,9,10,11,55) AND i2_.gestion_tipo_id = :gestionId::double precision AND i3_.institucioneducativa_tipo_id = 1
             ");
             $query->bindValue(':estudianteId', $estudiante_id[$i]);
             $query->bindValue(':gestionId', $gestion);
@@ -830,7 +830,7 @@ class TextoEducativoController extends Controller
 
 
 
-            if(sizeof($inscriptionsGestionSelected)>0){
+            if(count($inscriptionsGestionSelected)>0){
                 //already register
                
             }else{

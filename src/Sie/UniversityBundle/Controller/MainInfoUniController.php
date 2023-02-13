@@ -42,6 +42,19 @@ class MainInfoUniController extends Controller{
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $sede_id = ($this->baseData['sedeId']);
+
+        $sql = "select count(*) as operativos from univ_registro_consolidacion
+        where univ_sede_id = ". $sede_id." and activo = true";
+        $statement = $em->getConnection()->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        
+        $cerrado = false;
+        if($result[0]['operativos'] == 0){
+            $cerrado = true;
+        }
+
         return $this->render('SieUniversityBundle:MainInfoUni:index.html.twig', array(
             'tuicion'                   => true,
             'enablePersonalStaffOption' => $enablePersonalStaffOption,
@@ -50,6 +63,7 @@ class MainInfoUniController extends Controller{
             'uni_statisticssede' 		=> $this->buildOptionUni('sie_university_sede_docenteadministrativo_index', 'Estadística Sede/sub Sede Central', $data)->createView(),
             'uni_statistics'     		=> $this->buildOptionUni('carreras_index', 'Estadísticas', $data)->createView(),
             'closeform'            => $this->buildOptionUni('maininfouni_closeope', 'Cerrar operativo', $data)->createView(),
+            'cerrado'   => $cerrado,
 
             ));    
     }
