@@ -2,6 +2,10 @@ sie_university_homepage:
     path:     /homepage
     defaults: { _controller: SieUniversityBundle:Default:index }
 
+sie_university_dashboard:
+    path:     /uni/inicio
+    defaults: { _controller: SieUniversityBundle:Default:indexSuperUser }
+
 sie_university_menu:
     path:     /menu
     defaults: { _controller: SieUniversityBundle:Default:menu }
