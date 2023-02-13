@@ -1531,11 +1531,12 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                         } 
                         $studentInscription = new EstudianteInscripcion();
                         $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucionEducativaId));
-                        if($esUltimo){
-                            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
-                        } else {
-                            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(57));
-                        }
+                        // if($esUltimo){
+                        //     $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+                        // } else {
+                        //     $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(57));
+                        // }
+                        $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(57));
                         $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($objEst->getId()));
                         $studentInscription->setObservacion('INRE');
                         $studentInscription->setObservacionId(76);
@@ -1600,11 +1601,12 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                                 $idNotaTipoInicio = 6;
                             }
                             $newNota = new EstudianteNota();
-                            if($esUltimo){
-                                $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($idNotaTipoInicio));
-                            } else {
-                                $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($idNotaTipoPromedio));
-                            }                            
+                            // if($esUltimo){
+                            //     $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($idNotaTipoInicio));
+                            // } else {
+                            //     $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($idNotaTipoPromedio));
+                            // }
+                            $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($idNotaTipoPromedio));
                             $newNota->setEstudianteAsignatura($registro);
                             $newNota->setNotaCuantitativa($notaCuantitativa);
                             $newNota->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
