@@ -188,4 +188,85 @@ class DefaultController extends Controller
         ));        
         // $info = json_decode(base64_decode($request->get('info')), true);
     }
+
+    public function indexSuperUserAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $id_usuario = $this->session->get('userId');
+        $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
+        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
+
+        $sedes = array();
+
+        // totales que cerraron
+        $sql = "
+            select count(*) as total_cerrados from
+            (
+            SELECT
+                univ_universidad.universidad, 
+                univ_universidad.abreviacion, 
+                univ_sede.sede,
+                univ_sede.id,
+                (select count(*) from univ_registro_consolidacion
+                where univ_sede_id = univ_sede.id and activo = true
+                ) as operativo
+            FROM
+                univ_universidad
+                INNER JOIN
+                univ_sede
+                ON 
+                    univ_universidad.id = univ_sede.univ_universidad_id		
+                order by 1
+                ) as data
+                WHERE operativo = 5
+                ";
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $result = $stmt->fetchAll();
+        $total_cerradas = $result[0]['total_cerrados'];
+
+
+        $sql = "
+        SELECT
+            univ_universidad.universidad, 
+            univ_universidad.abreviacion, 
+            univ_sede.sede, univ_sede.id,
+            (select count(*) from univ_registro_consolidacion
+            where univ_sede_id = univ_sede.id and activo = true
+            ) as operativo
+        FROM
+            univ_universidad
+            INNER JOIN
+            univ_sede
+            ON 
+                univ_universidad.id = univ_sede.univ_universidad_id		
+            order by 1
+        ";
+
+        $stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$data = $stmt->fetchAll();
+
+        $total_registros = sizeof($data);
+
+        for ($i=0; $i < sizeof($data); $i++) {            
+            $data[$i]['id'] = bin2hex(serialize($data[$i]['id']));              
+        }
+
+        return $this->render('SieUniversityBundle:Default:indexadmin.html.twig', array(
+            'usuario' => $entityUsuario,
+            'titulo' => "Sedes",
+            'sedes' => $sedes,
+            'central' => $entityUnivSedeCentral,
+            'data' => $data,
+            'total_cerradas' =>  $total_cerradas,
+            'total_registros' => $total_registros
+        ));
+       
+    }
 }
