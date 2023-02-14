@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </div>
-           
+            {% if cerrado == false %}
                 
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
@@ -94,7 +94,19 @@
                         </div>
                     </div>
                 </div>            
-            
+            {% else %}
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/uni_close.png')}}" alt="">
+                        <div class="caption text-center" >
+                            <h5>Cerrar Operativo</h5>
+                            <div class="thumbnail-action" >
+                              <h5> <strong>OPERATIVO CERRADO</strong></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
             
         
 
