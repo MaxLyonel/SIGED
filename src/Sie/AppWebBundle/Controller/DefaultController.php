@@ -692,7 +692,17 @@ class DefaultController extends Controller {
 
                 
                 if($this->session->get('pathSystem')=='SieUniversityBundle'){
-                    return $this->redirect($this->generateUrl('sie_university_homepage'));
+                    $useruni_id = $this->session->get('userId');
+                    $useruni_name = $this->session->get('userName');
+                    
+                    $estadoUsuarioRol = $this->getAccessUsuarioRol(array("usuarioId"=>$this->session->get('userId'),"rolId"=>20));                    
+                    if ($estadoUsuarioRol){
+                        $this->session->set('roluser', 20); // 20 es de consultas
+                        return $this->redirect($this->generateUrl('sie_university_dashboard'));
+                    } else {
+                        return $this->redirect($this->generateUrl('sie_university_homepage'));
+                    }
+                    
                 }
                
                 if($this->session->get('pathSystem')=='SieTecnicaEstBundle'){
