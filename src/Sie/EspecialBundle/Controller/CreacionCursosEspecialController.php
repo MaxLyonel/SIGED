@@ -629,7 +629,7 @@ class CreacionCursosEspecialController extends Controller {
                     $nivelesArray = array(400,402,405,410,408,411);
                 }
                 if ($this->session->get('idGestion') >= 2023) { //nuevo plan
-                    $nivelesArray = array(409,401,412,410,411);
+                    $nivelesArray = array(409,401,405,412,410,411);
                 }
                 
             }else{
