@@ -858,9 +858,12 @@ class CreacionCursosEspecialController extends Controller {
                 $servicios =array(); // array(1,2,3,4,5);
             }else{
                 if($modalidad == 1 and ($area == "1" or $area == "3" or $area == "5" or $area == "4")){
-                    $servicios = array(1,2,3,4,5,25,26,27,28,29,40);
+                    $servicios = array(1,2,3,4,5,25,26,27,28,29);
                 }else{
                     $servicios = array(20);
+                }
+                if($area == 1 and $this->session->get('idGestion') > 2022){
+                    $servicios = array(1,2,3,4,5,25,26,27,28,29,40);
                 }
             }
             //array(1,2,3,4,5,20)
