@@ -350,17 +350,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             default :
-                $sysname = 'RITT';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutRie.html.twig';
-                $this->session->set('pathSystem', "SieRieBundle");
-                /*$sysname = 'ESPECIAL';
-                $sysporlet = '#F44336';//red
-                $sysbutton = true;
-                $layout = 'layoutEspecialSie.html.twig';
-                $this->session->set('pathSystem', "SieEspecialBundle");
-
+                /*
                 $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -369,14 +359,13 @@ class DefaultController extends Controller {
                 $this->session->set('sistemaid', 1);
                 $this->session->set('color', 'blue');
                 */
-                
-              /*  $sysname = 'Sistema Académico Educación Regular';
+                $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 $this->session->set('color', 'primary');
-                $this->session->set('sistemaid', 6);*/
+                $this->session->set('sistemaid', 6);
                 
             break;            
             
