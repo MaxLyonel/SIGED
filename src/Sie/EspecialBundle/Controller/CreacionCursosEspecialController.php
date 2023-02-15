@@ -853,11 +853,11 @@ class CreacionCursosEspecialController extends Controller {
                 }
             }//array(8,9,10,11,12,14,15)
         }
-        elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9")  and $nivel == "410" and  $grado == "99" ) {
+        elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9"  or $area == "12")  and $nivel == "410" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
                 $servicios =array(); // array(1,2,3,4,5);
             }else{
-                if($modalidad == 1 and ($area == "1" or $area == "3" or $area == "5" or $area == "4")){
+                if($modalidad == 1 and ($area == "1" or $area == "3" or $area == "5" or $area == "4" or $area == "12")){
                     $servicios = array(1,2,3,4,5,25,26,27,28,29);
                 }else{
                     $servicios = array(20);
