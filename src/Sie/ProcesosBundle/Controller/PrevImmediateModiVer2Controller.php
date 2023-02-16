@@ -200,7 +200,7 @@ class PrevImmediateModiVer2Controller extends Controller{
                 // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
 
-            if($value['gestion'] == $this->session->get('currentyear')-1){
+            if($value['gestion'] == $this->session->get('currentyear')-1 and (in_array($value['estadomatriculaId'], array(4,5,11))) ){
                 $sieselected = $value['sie'];
             }
         }
