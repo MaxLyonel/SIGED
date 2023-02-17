@@ -6,6 +6,10 @@ sie_tecnicaest_dashboard:
     path:     /tecest/inicio
     defaults: { _controller: SieTecnicaEstBundle:Estadistica:index }
 
+sie_tecnicaest_dashboard_listado:
+    path:     /tecest/inicio_listado
+    defaults: { _controller: SieTecnicaEstBundle:Estadistica:indexListado }
+
 sie_tecnica_est_menu:
     path:     /tecest/menu
     defaults: { _controller: SieTecnicaEstBundle:Default:menu }

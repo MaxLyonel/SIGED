@@ -59,7 +59,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
-            case '172.20.196.8:8025':
+            case '172.20.196.191:8025':
             case 'sieitt.sie.gob.bo':
                 $sysname = 'DGESTTLA ESTADISTICO';
                 $sysporlet = 'blue';
@@ -67,7 +67,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutTecnicaEst.html.twig';
                 $this->session->set('pathSystem', "SieTecnicaEstBundle");
                 break;
-            case '172.20.196.8:8022':
+            case '172.20.196.191:8022':
             case 'sieuni.sie.gob.bo':
                 $sysname = 'UNIVERSIDADES';
                 $sysporlet = 'blue';
@@ -86,7 +86,7 @@ class DefaultController extends Controller {
                 break;
             case 'academico.sie.gob.bo':
             case 'academico.local':
-            case '172.20.196.13:8013':
+            case '172.20.196.191:8013':
             case '172.20.0.53:8013':
                 $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
@@ -103,7 +103,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 break;
-            case '172.20.196.13:8016':
+            case '172.20.196.191:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
             case 'alternativa.local':
@@ -350,7 +350,12 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             default :
-                /*
+                /*$sysname = 'ESPECIAL';
+                $sysporlet = '#F44336';//red
+                $sysbutton = true;
+                $layout = 'layoutEspecialSie.html.twig';
+                $this->session->set('pathSystem', "SieEspecialBundle");
+
                 $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -359,6 +364,7 @@ class DefaultController extends Controller {
                 $this->session->set('sistemaid', 1);
                 $this->session->set('color', 'blue');
                 */
+                
                 $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -404,7 +410,7 @@ class DefaultController extends Controller {
                 $this->session->set('color', 'primary');
                 $this->session->set('sistemaid', 6);
                 break;
-            case '172.20.196.5:9009':
+            case '172.20.196.191:9009':
                 $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -700,7 +706,7 @@ class DefaultController extends Controller {
                 }
                
                 if($this->session->get('pathSystem')=='SieTecnicaEstBundle'){
-                    $estadoUsuarioRol = $this->getAccessUsuarioRol(array("usuarioId"=>$this->session->get('userId'),"rolId"=>8));
+                    $estadoUsuarioRol = $this->getAccessUsuarioRol(array("usuarioId"=>$this->session->get('userId'),"rolId"=>20));
                     if ($estadoUsuarioRol){
                         return $this->redirect($this->generateUrl('sie_tecnicaest_dashboard'));
                     } else {

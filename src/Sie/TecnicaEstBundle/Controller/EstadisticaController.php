@@ -24,7 +24,7 @@ class EstadisticaController extends Controller
         //dump($request->query->get('gestion')); die;
 
         if ($request->query->get('gestion') == null) {
-            $gestionActual = $fechaActual->format('Y');
+            $gestionActual = 2022; //$fechaActual->format('Y');
         }else{
             $gestionActual = $request->query->get('gestion');
         }
@@ -74,6 +74,84 @@ class EstadisticaController extends Controller
             "tbl_personal_privadas" => $tbl_personal_privadas,
             "gestionActual" => $gestionActual
 
+        ));
+    }
+
+    public function indexListadoAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $id_usuario = $this->session->get('userId');     
+        $sedes = array();
+
+        // totales que cerraron
+       
+        $total_cerradas = 0;
+
+
+        $sql = "
+        select 
+            *,
+            case
+                when operativo = 0 then 'CERRADO'
+                else 'ABIERTO'
+            end as estado
+            from 
+            (
+            SELECT
+                est_tec_instituto.id, 	
+                est_tec_instituto.instituto, 	
+                est_tec_sede.id as sede_id, 
+                est_tec_sede.sede, 
+                est_tec_naturalezajuridica_tipo.naturalezajuridica,
+                (select count(*) from est_tec_registro_consolidacion
+                        where est_tec_sede_id = est_tec_sede.id and activo = true
+                        ) as operativo
+            FROM
+                est_tec_instituto
+                INNER JOIN
+                est_tec_sede
+                ON 
+                    est_tec_instituto.id = est_tec_sede.est_tec_instituto_id
+                INNER JOIN
+                est_tec_naturalezajuridica_tipo
+                ON 	
+                    est_tec_sede.est_tec_naturalezajuridica_tipo_id = est_tec_naturalezajuridica_tipo.id
+                order by 2,4
+                ) as data
+        ";
+
+        $stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$data = $stmt->fetchAll();
+
+        $total_registros = sizeof($data);
+        
+
+        $total_cerradas = 0;
+        for ($i=0; $i < sizeof($data); $i++) {            
+            $data[$i]['id'] = bin2hex(serialize($data[$i]['sede_id']));              
+            if($data[$i]['estado'] == 'CERRADO'){
+                $total_cerradas++;
+            }
+
+        }
+
+        return $this->render('SieTecnicaEstBundle:Estadistica:indexlistado.html.twig', array(       
+            'titulo' => "Sedes",
+            'data' => $data,
+            'total_cerradas' =>  $total_cerradas,
+            'total_registros' => $total_registros,
+           
+
+        ));
+
+
+        return $this->render('SieTecnicaEstBundle:Estadistica:indexlistado.html.twig', array(
+            'titulo' => "Estadística",
         ));
     }
 
