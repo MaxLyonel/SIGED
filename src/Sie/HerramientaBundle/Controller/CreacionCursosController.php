@@ -160,6 +160,8 @@ class CreacionCursosController extends Controller {
         try{
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
+            $db = $em->getConnection(); 
+
             $this->session = new Session();
             /*
              * opciones para los usuarios no nacionales
@@ -346,6 +348,31 @@ class CreacionCursosController extends Controller {
                 }
             }  */         
 
+            //todos los turnos si es privada
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $dependencia = $result;            
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+            
+            if( $dependencia_tipo_id == 3) {
+                $turnosArray = array();
+
+                $query = 'SELECT id, turno from turno_tipo where id in (1,2,4)';
+                
+                
+                $stmt = $db->prepare($query);
+                $params = array();
+                $stmt->execute($params);
+                $turnos = $stmt->fetchAll();
+
+                $turnosArray = array();
+                for ($i = 0; $i < count($turnos); $i++) {
+                    $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+                }
+            }
+
             $paralelos = [];
             //dump($this->session->get('roluser')); die; 
             if($this->session->get('roluser') != 8){
@@ -392,8 +419,22 @@ class CreacionCursosController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $db = $em->getConnection();  
+            $msg ="";
            
             $institucion_ed = $request->getSession()->get('idInstitucion');
+
+            /*$sql = "
+                select count(*) as existe_director
+                from institucioneducativa_sucursal is2 
+                where is2.institucioneducativa_id = " .$institucion_ed . "
+                and is2.gestion_tipo_id = 2023            
+            ";
+            $statement = $em->getConnection()->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            if($result[0]['existe_director'] == 0){
+                $msg = "La UE no tiene director asigando enla gestion !";
+            }*/
 
             //si es fiscal o particular
             $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
@@ -442,7 +483,7 @@ class CreacionCursosController extends Controller {
             
             $response = new JsonResponse();
             $em->getConnection()->commit();
-            return $response->setData(array('paralelos' => $paralelos));
+            return $response->setData(array('paralelos' => $paralelos, 'msg' => $msg));
         }catch(Exception $ex){
             $em->getConnection()->rollback();
         }
