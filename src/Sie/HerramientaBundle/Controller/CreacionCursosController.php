@@ -359,7 +359,7 @@ class CreacionCursosController extends Controller {
             if( $dependencia_tipo_id == 3) {
                 $turnosArray = array();
 
-                $query = 'SELECT id, turno from turno_tipo where id in (1,2,4)';
+                $query = 'SELECT id, turno from turno_tipo where id in (1,2)';
                 
                 
                 $stmt = $db->prepare($query);
