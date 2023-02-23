@@ -79,9 +79,6 @@ class CarrerasController extends Controller
             return $this->redirect($this->generateUrl('login'));
         }
 
-
-     
-
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
 
         $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
@@ -1533,7 +1530,7 @@ class CarrerasController extends Controller
             est_tec_estadomatricula_tipo
             ON 
                 est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id = est_tec_estadomatricula_tipo.id
-            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion.  $periodosql.  " order by est_tec_estadomatricula_tipo.estadomatricula";        
+            where est_tec_instituto_carrera_id = ".$carrera_id." and est_tec_estadomatricula_tipo.orden <> 0 and gestion_tipo_id = ". $gestion.  $periodosql.  " order by est_tec_estadomatricula_tipo.orden";        
 
         $stmt = $db->prepare($query);
         $params = array();
