@@ -303,6 +303,7 @@ class MaestroAsignacionController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function asignarMaestroMaterialistaCursoAsignaturaAction(Request $request) {
+        dump('here'); die; 
         $turnoId = $request->get('turno');       
         $nivelId = $request->get('nivel');      
         $asignaturaId = $request->get('asignatura');        
@@ -1170,6 +1171,16 @@ class MaestroAsignacionController extends Controller {
         $financiamientoId = $form['financiamiento'];
         $fechaInicio = new \DateTime($form['fechaInicio']);
         $fechaFin = new \DateTime($form['fechaFin']);
+        $horasMes = 0;
+        if(isset($form['horas']) == true)
+        {
+            $horasMes = $form['horas'];
+        }
+
+        $observacion = '---';
+        if(isset($form['horas']) == true){
+            $observacion = $form['observacion'];
+        }
 
         $response = new JsonResponse();
         
@@ -1253,6 +1264,10 @@ class MaestroAsignacionController extends Controller {
             $institucioneducativaCursoOfertaMaestroEntity->setFinanciamientoTipo($financiamientoTipoEntity);
             $institucioneducativaCursoOfertaMaestroEntity->setAsignacionFechaInicio($fechaInicio);
             $institucioneducativaCursoOfertaMaestroEntity->setAsignacionFechaFin($fechaFin);
+            //dcastillo
+            $institucioneducativaCursoOfertaMaestroEntity->setHorasMes($horasMes);
+            $institucioneducativaCursoOfertaMaestroEntity->setObservacion($observacion);
+
             $em->persist($institucioneducativaCursoOfertaMaestroEntity);
             $em->flush();
             $em->getConnection()->commit();
