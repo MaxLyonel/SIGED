@@ -176,9 +176,15 @@ class InscriptionNewStudentController extends Controller {
             $infoInscription=array();
             //look for the next level inscrption if it has
             while($sw &&  ($inscription = current($inscriptions))){
-                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
-                  $infoInscription = $inscription;
-                  $sw=false;
+                /*get the last year inscription*/
+                if($this->session->get('currentyear')-1 == $inscription['gestion'] and in_array($inscription['estadoMatriculaId'], array(11)) ){
+                    $infoInscription = $inscription;
+                    $sw = false;
+                }else{
+                    if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
+                      $infoInscription = $inscription;
+                      $sw=false;
+                    }
                 }
               next($inscriptions);
             }
@@ -737,6 +743,9 @@ class InscriptionNewStudentController extends Controller {
             # promovido
             $levelStudent = $keyLevel + 1;
             break;
+          case 11:
+            #repro
+            $levelStudent = $keyLevel;
           default:
             # no next level
             $levelStudent = $keyLevel;
