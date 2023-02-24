@@ -271,7 +271,9 @@
                                     </a>
                             </li>
                         {% endif %}  
-                        {% if app.session.get('userId') == '92506087' or app.session.get('userId') == '92506090' %}
+                        {# SOLO GESTION 2023 AREAS: PD#}
+                        {% if app.session.get('userId') == '13816503' %} 
+                        {#or app.session.get('userId') == '92506090' %}#}
                         <li class="panel">
                             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas">
                                 <i class="fa fa-bar-chart-o"></i> Áreas <i class="fa fa-caret-down"></i>
@@ -282,11 +284,11 @@
                                         <i class="fa fa-edit"></i> Adición/Eliminación de Áreas
                                     </a>
                                 </li>
-                                <li>
+                                {#<li>
                                     <a href="{{ path('modificacionNotasCero') }}">
                                         <i class="fa fa-edit"></i> Modificación Calificaciones en Cero
                                     </a>
-                                </li>
+                                </li>#}
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
