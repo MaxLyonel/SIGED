@@ -303,7 +303,7 @@ class MaestroAsignacionController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function asignarMaestroMaterialistaCursoAsignaturaAction(Request $request) {
-        dump('here'); die; 
+        //dump('here'); die; 
         $turnoId = $request->get('turno');       
         $nivelId = $request->get('nivel');      
         $asignaturaId = $request->get('asignatura');        
