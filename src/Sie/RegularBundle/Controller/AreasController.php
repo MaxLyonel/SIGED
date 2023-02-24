@@ -245,7 +245,7 @@ class AreasController extends Controller {
 
             //2023 esto para mostrar todos, para el rol de departamento siged
             //TODO: ver otros casos y en que circunstancias se habilitan los demas turnos
-            $RAW_QUERY = 'SELECT * FROM turno_tipo where id  in (1,2);';            
+            $RAW_QUERY = 'SELECT * FROM turno_tipo where id  in (1,2,4,8);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();                  
