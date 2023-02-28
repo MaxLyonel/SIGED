@@ -246,7 +246,7 @@ class AreasController extends Controller {
                 ->setParameter('areas', array(1,2,3,5));
             }else{
                 $query = $query
-                ->setParameter('areas', array(1,2,3,4,5,6,7));
+                ->setParameter('areas', array(1,2,3,4,5,6,7,10,12));
             }
             $query = $query
             //->addOrderBy('eat.id')
@@ -544,6 +544,7 @@ class AreasController extends Controller {
                                 )->setParameter('ids',array(468,469,470,471,472,473,474))
                                 ->getResult();
                   break;
+                case 412: //Independencia social 2023 
                 case 402: $asignaturas = $em->createQuery( //Independencia Social
                             'SELECT at
                             FROM SieAppWebBundle:AsignaturaTipo at
