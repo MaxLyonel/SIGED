@@ -6,7 +6,7 @@
         <h2>REGISTRO - DATOS HISTÓRICOS</h2>
     </div>
     <ol class="breadcrumb breadcrumb-bg-cyan">
-        <li><a href="{{path('historico_list_itt')}}">Listado de Institutos</a></li>
+        <li><a href="{{path('rie_list')}}">Listado de Institutos</a></li>
         <li class="active">Listado de Datos Históricos</li>
     </ol>    
 
@@ -36,27 +36,24 @@
             <div class="card">
                 <div class="header bg-blue-grey">
                     <h2>
-                        {{entity.id}}  - {{entity.institucioneducativa}} - {{entity.dependenciaTipo.dependencia}}
+                       {{entity.id}}  - {{entity.institucioneducativa}} - {{entity.dependenciaTipo.dependencia}}
                     </h2>
                 </div>
 
                 <div class="body">
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 text-right">
+                        
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">+ Nueva Resolución</button>
+
                         {# % abierto caso regularizacion certiicados 
                             if app.session.get('roluser') == 7 and esAcreditado == false and entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario % #}
-                        {% if app.session.get('roluser') == 7  and entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
+                        {#% if app.session.get('roluser') == 8  %}
                             <form action="{{path('historico_new')}}" method="post" style="display:inline-block">
                                 <input type="hidden" name="idRie" value="{{entity.id}}">
-                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
+                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nueva Resolución</button>
                             </form>
-                        {% endif %}
-                         {% if app.session.get('roluser') == 8 %}
-                            <form action="{{path('historico_new')}}" method="post" style="display:inline-block">
-                                <input type="hidden" name="idRie" value="{{entity.id}}">
-                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
-                            </form>
-                        {% endif %}
+                        {% endif %#}
                         </div>
                     </div>                
                     <div class="table-responsive">
@@ -66,6 +63,7 @@
                                 <thead>
                                     <tr>
                                         <th>Acciones</th>
+                                        <th>Cambios/Adecuaciones</th>
                                         <th>R.M.</th>  
                                         <th>Fecha R.M.</th>  
                                         <th>Descripción</th>
@@ -75,34 +73,38 @@
                                 </thead>
                                 
                                 <tbody>
+
                                     {% for historico in historicos %}
-                                        <tr>
-                                            <td style="text-align:center">
-                                                {# % if historico.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  and esAcreditado == false % #}
-                                                {% if historico.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  %}
-                                                    <form action="{{path('historico_edit')}}" method="post" style="display:inline-block">
-                                                        <input type="hidden" name="idRie" value="{{entity.id}}">
-                                                        <input type="hidden" name="id" value="{{historico.id}}">
-                                                        <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">mode_edit</i></button>
-                                                    </form>
-                                                    <a href="{{path('historico_delete', {'idhistorico': historico.id} )}}" onclick="return confirmar('{{historico.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a> 
-                                                {% else %}
-                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="">
-                                                        <i class="material-icons">mode_edit</i></button>
-                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="">
-                                                        <i class="material-icons">delete_forever</i>
-                                                {% endif %}
-                                            </td>
-                                            <td>{{historico.nroResolucion}}</td>   
-                                            <td>{{historico.fechaResolucion|date('d/m/Y')}}</td>
-                                            <td>{{historico.descripcion}}</td>
-                                            <td>{{historico.datoAdicional}}</td>
-                                            <td>
-                                                {% if historico.archivo != ''  %}
-                                                    <a href="{{asset('uploads/archivos/')}}{{historico.archivo}}" target="_blank"/><img src="{{asset('img/pdf11.png')}}" width="55" height="55" title="Ver archivo"/></a/>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td style="text-align:center">
+                                                    {# % if historico.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  and esAcreditado == false % #}
+                                                    
+                                                        <form action="{{path('historico_edit')}}" method="post" style="display:inline-block">
+                                                            <input type="hidden" name="idRie" value="{{entity.id}}">
+                                                            <input type="hidden" name="id" value="{{historico.0.id}}">
+                                                            <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">mode_edit</i></button>
+                                                        </form>
+                                                        <a href="{{path('historico_delete', {'idhistorico': historico.0.id} )}}" onclick="return confirmar('{{historico.0.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a> 
+                                                    
+                                                    
+                                                </td>
+                                                <td>
+                                                <a href="{{path('historico_detalle', {'idhistorico': historico.0.id} )}}" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Adicionar Cambios/Adecuaciones"><i class="material-icons">description</i></a> 
+                                                ({{historico.total}})
+                                                </td>
+
+                                                <td>{{historico.0.nroResolucion}}</td>   
+                                                <td>{{historico.0.fechaResolucion|date('d/m/Y')}}</td>
+                                                <td>{{historico.0.descripcion}}</td>
+                                                <td>{{historico.0.datoAdicional}}</td>
+                                                <td>
+                                                    {% if historico.0.archivo != ''  %}
+                                                        <a href="{{asset('uploads/archivos/')}}{{historico.0.archivo}}" target="_blank"/><img src="{{asset('img/pdf11.png')}}" width="55" height="55" title="Ver archivo"/></a/>
+                                                    {% endif %}
+                                                </td>
+                                               
+                                            </tr>
+                                        
                                     {% endfor %}
                                 </tbody>
                             </table>
@@ -112,6 +114,85 @@
             </div>
         </div>
     </div>   
+
+    <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+            
+            <!-- Modal content-->
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                   <h3>
+                        Formulario Registro de nueva Resolución de Histórico
+                    </h3>  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    
+                      {{ form_start(form, { 'enctype ' : ' multipart / form-data ' }) }}
+                        <fieldset>
+                            <label class="form-label">Denominación del Instituto</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{entity.id}} - {{entity.institucioneducativa}} ({{entity.dependenciaTipo.dependencia }})
+                                </div>
+                            </div>
+						    <div class="row">
+
+                                 <div class="col-sm-4">
+                                    <label class="form-label">{{form_label(form.nroResolucion)}}</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            {{form_widget(form.nroResolucion) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="col-sm-4">
+                                    <label class="form-label">{{form_label(form.fechaResolucion)}}</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            {{form_widget(form.fechaResolucion) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                  <label class="form-label">{{form_label(form.documentos)}}</label>
+                                    <div class="form-line">
+                                        {{form_widget(form.documentos) }}  
+                                    </div>
+                                </div>
+                            </div>
+
+                          
+                            <label class="form-label">{{form_label(form.descripcion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.descripcion) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.datoAdicional)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.datoAdicional) }}
+                                </div>
+                            </div>	
+                            <label class="form-label">{{form_label(form.archivo)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.archivo) }}
+									<br>
+                                </div>
+                            </div>							
+        	                
+                                    			
+                        </fieldset>
+                        {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                        <a href="{{path('historico_list', {'idRie': entity.id} )}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            </div>
+        </div>
 
 {% endblock %}
 
@@ -147,6 +228,15 @@
 		    return false;
 
     }
+     function listarFechas() {
+            if($("#form_vigencia").is(':checked')){
+                $("#divFechaInicio").show();
+                $("#divFechaFin").show();
+            }else{
+                $("#divFechaInicio").hide();
+                $("#divFechaFin").hide();
+            }
+        }
 
     </script>
 {% endblock %}

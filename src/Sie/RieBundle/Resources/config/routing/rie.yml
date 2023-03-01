@@ -41,6 +41,10 @@ rie_delete_itt:
     defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:deleteitt" }
     methods:  GET
 
+rie_show:
+    path:     /show/{idRie}
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:show" }
+    methods:  GET
 
 rie_result:
     path:     /findinstitucion

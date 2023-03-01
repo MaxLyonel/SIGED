@@ -213,14 +213,14 @@
                                 <span>Reportes</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="{{path('seguimiento_tramite')}}">
-                            <i class="material-icons">donut_large</i>
-                            <span>Seguimiento - Trámites RITT</span>
+                       
+                    {% if app.session.get('roluser') == 8 %}
+                         <li>
+                            <a href="{{path('solicitud_ritt_index')}}">
+                                <i class="material-icons">card_travel</i>
+                                <span>Trámites - Solicitud RITT</span>
                             </a>
                         </li>
-                    {% if app.session.get('roluser') == 8 %}
-                        
                         <li>
                             <a href="{{path('solicitud_ritt_lista_Nac')}}">
                                 <i class="material-icons">card_travel</i>
@@ -240,15 +240,12 @@
                             </a>
                         </li>
                     {% endif %}
-
-                    {% if app.session.get('roluser')==7 %}
-                        <li>
-                            <a href="{{path('solicitud_ritt_index')}}">
-                                <i class="material-icons">card_travel</i>
-                                <span>Trámites - Solicitud RITT</span>
+                     <li>
+                            <a href="{{path('seguimiento_tramite')}}">
+                            <i class="material-icons">donut_large</i>
+                            <span>Seguimiento - Trámites RITT</span>
                             </a>
                         </li>
-                    {% endif %}
                     
                 </ul>
             </div>

@@ -690,7 +690,7 @@ $entities = $query->getResult();
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
-        $query = "SELECT autorizado.id AS id, carrera.id AS idcarrera, carrera.nombre AS carr 
+        $query = "SELECT autorizado.id AS id, carrera.id AS idcarrera, carrera.nombre AS carr , afct.ttec_area_formacion_tipo_id AS area_id
                     FROM ttec_institucioneducativa_carrera_autorizada AS autorizado
                     INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
                     INNER JOIN institucioneducativa AS instituto ON autorizado.institucioneducativa_id = instituto.id 
@@ -714,7 +714,7 @@ $entities = $query->getResult();
             $query->setParameter('idCaAutorizada', $li['id']);
             $query->setMaxResults(1);
             $resolucion = $query->getResult();   
-
+            $area = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneBy(array('id'=>$li["area_id"]));
             $list[] = array(
                                 'id' => $li['id'],
                                 'idcarrera' => $li['idcarrera'],
@@ -729,6 +729,7 @@ $entities = $query->getResult();
                                 'operacion' => ($resolucion) ? $resolucion[0]->getOperacion():" ",
                                 'total' => count($resolucion),
                                 'total_materias' => $total_materias,
+                                'area' => $area->getAreaFormacion(),
                             );
         }                                    
         return $list;
