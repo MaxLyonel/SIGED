@@ -54,7 +54,7 @@ class RegistroInstitucionEducativaController extends Controller {
     /**
      * Muestra listado de institutos técnicos/tecnológicos
      */    
-    public function listAction(Request $request){
+    public function listActionAntes(Request $request){
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
@@ -63,6 +63,7 @@ class RegistroInstitucionEducativaController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+        
 
         $query = $em->createQuery('SELECT se
             FROM SieAppWebBundle:TtecInstitucioneducativaSede se
@@ -81,6 +82,151 @@ class RegistroInstitucionEducativaController extends Controller {
             'entities' => $entities,
             'lugarUsuario' => intval($lugar->getCodigo())
         ));
+    }
+        /**
+     * Muestra listado de institutos técnicos/tecnológicos con fechas de caducidad
+     */    
+    public function listAction(Request $request){
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');        
+        $id_lugar = $sesion->get('roluserlugarid');
+       // dump($id_usuario);
+        $id_rol = $sesion->get('roluser');        
+        $em = $this->getDoctrine()->getManager();
+        // para tecnicos departamentales 
+        
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+        $departamento = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('codigo' => $lugar->getCodigo(), 'lugarNivel'=> 1));
+        
+       /* $regionesArray = array();
+        $region = $em->getRepository('SieAppWebBundle:TtecEncargadoRegion')->findOneBy(array('usuarioId' => $id_usuario));
+        
+        if(!$region->getEstado())
+            $regionesArray =  explode(',', $region->getRegion()); //los departamentos asignados
+        else*/
+            $regionesArray = array(1,2,3,4,5,6,7,8,9);
+
+        if($id_rol==7)
+            $regionesArray = str_split($departamento->getId());  //para el departamental
+
+        $qb = $em->createQueryBuilder();
+        $qb
+                ->select("ie.id, se.sede, iea.id as acreditacion, lt5.lugar, ie.institucioneducativa, ie.nroResolucion, ie.fechaResolucion, dt.id as dependenciaId, dt.dependencia, it.descripcion, jg.id as local_ie ")
+                ->from('SieAppWebBundle:TtecInstitucioneducativaSede', 'se')
+                ->innerjoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = se.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica') 
+                ->innerJoin('SieAppWebBundle:DependenciaTipo','dt','WITH','dt.id = ie.dependenciaTipo') 
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaAcreditacionTipo','iea','WITH','iea.id = ie.institucioneducativaAcreditacionTipo') 
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaTipo','it','WITH','it.id = ie.institucioneducativaTipo') 
+                ->innerJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
+                ->innerJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
+                ->innerJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
+                ->innerJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
+                ->innerJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+                ->where('ie.institucioneducativaTipo in (:idTipo)')
+                ->andwhere('ie.estadoinstitucionTipo in (:idEstado)')
+                ->andwhere('se.estado = :estadoSede')
+                ->andwhere('lt5.id in (:regiones)')
+                ->setParameter('idTipo', array(7, 8, 9,11,12,13))
+                ->setParameter('idEstado',10)
+                ->setParameter('estadoSede', TRUE)
+                ->setParameter('regiones', $regionesArray)
+                
+        ;
+        $entities =  $qb->getQuery()->getResult();
+        //dump($entities);die;
+        $lista = array();
+        
+        for($i=0; $i<count($entities); $i++){
+            $alerta = 0;
+            $fecha_alerta = '';
+            $fecha_inicio = '';
+            $fecha_alerta_leve = '';
+            $vcmto = "";
+            if($entities[$i]["dependenciaId"] == 3 and $entities[$i]["acreditacion"]==2){ 
+              
+                $id =  $entities[$i]["id"];
+                $ratificacion = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->createQueryBuilder('h')
+                ->select('r.fechaFin')
+                ->innerJoin('SieAppWebBundle:TtecInstitucioneducativaRatificacion', 'r', 'with', 'h.id = r.ttecInstitucioneducativaHistorico')
+                ->where ('h.institucioneducativa = '. $id)
+                ->orderBy('r.fechaFin','DESC')
+                ->getQuery()
+                ->getResult();
+                $fechaSistema =  $entities[$i]["fechaResolucion"];
+                
+                $fecha = date("Y-m-d",strtotime($fechaSistema->format('Y-m-d')."+ 6 year")); 
+                if($ratificacion){
+                    $fechaSistema =  $ratificacion[0]["fechaFin"];
+                    $fecha = date("Y-m-d",strtotime($fechaSistema->format('Y-m-d')."+ 6 year")); 
+                   // $fecha = $ratificacion[0]["fechaFin"];
+                }   
+                   // $fecha_6nios = date("Y-m-d",strtotime($fecha->format('Y-m-d')."+ 6 year")); 
+                   // dump($fecha_6nios);
+                    //$fecha_inicio = date("Y-m-d",strtotime($fecha_6nios->format('Y-m-d')."- 6 month")); // iniciar tramite 180 dias antes
+                    $fecha_inicio = date("Y-m-d",strtotime($fecha."- 6 month")); // iniciar tramite 180 dias antes
+                    //dump($fecha_inicio);die;
+                    $fecha_alerta = date("Y-m-d",strtotime($fecha."- 7 month"));  // alertar 210 dias antes
+                    $fecha_alerta_leve = date("Y-m-d",strtotime($fecha."- 8 month"));  // alertar 240 dias antes
+                    $hoy = Date("Y-m-d");
+                    
+                    if($hoy >= $fecha_alerta_leve && $hoy <= $fecha_alerta)
+                        $alerta = 1; //alerta naranja leve
+                    
+                    if($hoy > $fecha_alerta)
+                        $alerta = 2; //alerta roja 
+                    if($hoy > $fecha)
+                        $alerta = 3; //alerta roja 
+                    if($alerta>0)
+                      $vcmto = "Iniciar ".$fecha_alerta_leve;
+            }
+            $lista[$i] = array(
+                'id' => $entities[$i]["id"],
+                'departamento' => $entities[$i]["lugar"],
+                'denominacion'=> $entities[$i]["institucioneducativa"],
+                'acreditacion'=> $entities[$i]["acreditacion"],
+                'sede' => $entities[$i]["sede"],
+                'rm'=> $entities[$i]["nroResolucion"],
+                'fecha'=>$entities[$i]["fechaResolucion"],
+                'caracter'=> $entities[$i]["dependencia"],
+                'tipo'=>$entities[$i]["descripcion"],
+                'codigoLe' => $entities[$i]["local_ie"],
+                'alerta' => $alerta,
+                'vcmto' =>$vcmto,
+            );
+            
+        }
+       //dump($lista);die;    
+        
+        //die;
+        return $this->render('SieRieBundle:RegistroInstitucionEducativa:list.html.twig', array(
+            'entities' => $lista,
+            'lugarUsuario' => ''
+        ));
+    }
+
+     /**
+     * Muestra formulario de mostrar de Institución Educativa 
+     */
+    public function showAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+        $niveles = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa'=>$entity->getId()));
+        $OfertaController = new  OfertaAcademicaController();
+        $OfertaController->setContainer($this->container);
+        $carreras = $OfertaController->listadoOfertaAcademica($entity->getId());
+        $CursoController = new  CursoCapacitacionController();
+        $CursoController->setContainer($this->container);
+        $cursos = $CursoController->listadoCursosCapacitacion($entity->getId());
+       //dump($carreras);die;
+        return $this->render('SieRieBundle:RegistroInstitucionEducativa:show.html.twig', array('entity' => $entity, 'niveles' => $niveles,'carreras' => $carreras,'cursos' => $cursos));
     }
 
     /**

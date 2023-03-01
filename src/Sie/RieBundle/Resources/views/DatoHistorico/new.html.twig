@@ -64,7 +64,7 @@
                             </div>							
 
                     	    <div class="form-group col-lg-6 col-md-12" id="divEc" {% if entity.dependenciaTipo.id == 3 %} style="display:show" {% else %}style="display:none" {% endif %}>
-                            <label class="form-label">Marque si corresponde a</label>
+                                <label class="form-label">Marque si corresponde a</label>
                                 <div class="ckbox ckbox-primary text-primary">
                                     
                                       {{form_widget(form.vigencia,{ 'attr':{'onchange':'listarFechas()'}  }) }}

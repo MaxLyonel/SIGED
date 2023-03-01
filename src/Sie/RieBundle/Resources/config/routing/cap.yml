@@ -85,3 +85,8 @@ cap_edit_tramite_delete:
     path:     /deleteresolucion
     defaults: { _controller: "SieRieBundle:CursoCapacitacion:deleteresolucion" }
     methods:  POST   
+
+cap_list_get:
+    path:     /list/{idRie}
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:list } 
+    methods:  GET 

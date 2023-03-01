@@ -33,4 +33,28 @@ historico_update:
 historico_delete:
      path:    /delete/{idhistorico}
      defaults: { _controller: "SieRieBundle:DatoHistorico:delete" }
-     methods:  GET                   
+     methods:  GET 
+
+historico_list_get:
+    path:     /list/{idRie}
+    defaults: { _controller: SieRieBundle:DatoHistorico:list }    
+    methods:  GET  
+
+historico_detalle_new:
+    path:     /detallenew
+    defaults: { _controller: "SieRieBundle:DatoHistorico:newDetalle" }
+    methods:  [POST]
+
+historico_detalle_create:
+    path:     /createdetalle
+    defaults: { _controller: "SieRieBundle:DatoHistorico:createDetalle" }
+    methods:  [POST]   
+
+historico_detalle_delete:
+    path:    /deletedetalle/{id}
+    defaults: { _controller: "SieRieBundle:DatoHistorico:deleteDetalle" }
+    methods:  GET 
+    
+historico_detalle:
+    path:     /detalle
+    defaults: { _controller: "SieRieBundle:DatoHistorico:detalle" }

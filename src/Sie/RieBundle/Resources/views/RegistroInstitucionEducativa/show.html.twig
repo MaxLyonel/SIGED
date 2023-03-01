@@ -7,7 +7,7 @@
     </div>
 
 	<ol class="breadcrumb breadcrumb-bg-cyan">
-        <li><a href="{{path('rie_list')}}">Inicio</a></li>
+        <li><a href="{{path('rie_list')}}">Listado de Institutos</a></li>
         <li class="active">Ver Instituto Técnico/Tecnológico</li>
     </ol>
 
@@ -105,10 +105,103 @@
 											Dirección:
 											<span class="pull-right"><b>{{entity.leJuridicciongeografica.direccion}}</b>
 										</li>
+										<h5 class="col-teal">3.- Niveles</h5>
+										{% for ni in niveles %}
+											<li>
+												{{ni.nivelTipo.nivel}}
+											</li>
+										{% endfor %}
 									</ul>
 								</div>
 							</div>
 						</div><!-- end Ubicación del edificio escolar -->
+
+					</div>
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-9 col-xs-9">
+							<div class="card">
+								<div class="body">
+									<h4 class="col-teal">3.- Areas y Carreras</h4>
+
+
+										<table class="table table-striped table-hover">
+											<thead>
+												<tr>
+													
+													<th>Area</th> 
+													<th>Carrera</th> 
+													<th>R.M.</th>  
+													<th>Fecha R.M.</th>  
+													<th>Nivel de Formación</th>
+													<th>Tiempo de Estudios</th>
+													<th>Régimen de Estudios</th>
+													<th>Carga Horaria</th>
+													<th>Tipo Trámite</th>
+												</tr>
+											</thead>
+											
+											<tbody>
+												{% for dato in carreras %}
+													<tr>
+														
+														<td>{{dato.area}}</td>   
+														<td>{{dato.carrera}}</td>   
+														<td>{{dato.resolucion}}</td>
+														<td>{{dato.fecharesol|date('d/m/Y')}}</td>
+														<td>{{dato.nivelformacion}}</td>
+														<td>{{dato.tiempoestudio}}</td>
+														<td>{{dato.regimen}}</td>
+														<td>{{dato.cargahoraria}}</td>
+														<td>{{dato.operacion}}</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									
+								</div>
+							</div>
+						</div><!-- end Ubicación del edificio escolar -->
+						
+					</div>
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-9 col-xs-9">
+							<div class="card">
+								<div class="body">
+									<h4 class="col-teal">4.- Cursos de Capacitación</h4>
+										<table class="table table-striped table-hover">
+											<thead>
+												 <tr>
+													
+													<th>Curso</th> 
+													<th>R.M.</th>  
+													<th>Fecha R.M.</th>  
+													<th>Nivel de Formación</th>
+													<th>Tiempo de Estudios</th>
+													<th>Régimen de Estudios</th>
+													<th>Carga Horaria</th>
+													<th>Tipo Trámite</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for dato in cursos %}
+													<tr>
+														<td>{{dato.carrera}}</td>   
+														<td>{{dato.resolucion}}</td>
+														<td>{{dato.fecharesol|date('d/m/Y')}}</td>
+														<td>{{dato.nivelformacion}}</td>
+														<td>{{dato.tiempoestudio}}</td>
+														<td>{{dato.regimen}}</td>
+														<td>{{dato.cargahoraria}}</td>
+														<td>{{dato.operacion}}</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									
+								</div>
+							</div>
+						</div><!-- end Ubicación del edificio escolar -->
+						
 					</div>
 				</div>
 			</div>

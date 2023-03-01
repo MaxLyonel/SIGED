@@ -1,0 +1,152 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+{% block contentoption%}
+
+    
+    <div class="block-header">
+        <h2>REGISTRO - DATOS HISTÓRICOS</h2>
+    </div>
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('historico_list_itt')}}">Listado de Institutos</a></li>
+        <li class="active">Listado de Datos Históricos</li>
+    </ol>    
+
+    {% for flashMessage in app.session.flashbag.get('msgSearch') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        {{entity.id}}  - {{entity.institucioneducativa}} - {{entity.dependenciaTipo.dependencia}}
+                    </h2>
+                </div>
+
+                <div class="body">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 text-right">
+                        {# % abierto caso regularizacion certiicados 
+                            if app.session.get('roluser') == 7 and esAcreditado == false and entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario % #}
+                        {% if app.session.get('roluser') == 7  and entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
+                            <form action="{{path('historico_new')}}" method="post" style="display:inline-block">
+                                <input type="hidden" name="idRie" value="{{entity.id}}">
+                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
+                            </form>
+                        {% endif %}
+                         {% if app.session.get('roluser') == 8 %}
+                            <form action="{{path('historico_new')}}" method="post" style="display:inline-block">
+                                <input type="hidden" name="idRie" value="{{entity.id}}">
+                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
+                            </form>
+                        {% endif %}
+                        </div>
+                    </div>                
+                    <div class="table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable">-->
+                            <table id="miexample" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>R.M.</th>  
+                                        <th>Fecha R.M.</th>  
+                                        <th>Descripción</th>
+                                        <th>Dato Adicional</th>
+                                        <th>Archivo</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for historico in historicos %}
+                                        <tr>
+                                            <td style="text-align:center">
+                                                {# % if historico.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  and esAcreditado == false % #}
+                                                {% if historico.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  %}
+                                                    <form action="{{path('historico_edit')}}" method="post" style="display:inline-block">
+                                                        <input type="hidden" name="idRie" value="{{entity.id}}">
+                                                        <input type="hidden" name="id" value="{{historico.id}}">
+                                                        <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">mode_edit</i></button>
+                                                    </form>
+                                                    <a href="{{path('historico_delete', {'idhistorico': historico.id} )}}" onclick="return confirmar('{{historico.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a> 
+                                                {% else %}
+                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="">
+                                                        <i class="material-icons">mode_edit</i></button>
+                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="">
+                                                        <i class="material-icons">delete_forever</i>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{historico.nroResolucion}}</td>   
+                                            <td>{{historico.fechaResolucion|date('d/m/Y')}}</td>
+                                            <td>{{historico.descripcion}}</td>
+                                            <td>{{historico.datoAdicional}}</td>
+                                            <td>
+                                                {% if historico.archivo != ''  %}
+                                                    <a href="{{asset('uploads/archivos/')}}{{historico.archivo}}" target="_blank"/><img src="{{asset('img/pdf11.png')}}" width="55" height="55" title="Ver archivo"/></a/>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+    // Para configurar tabla 
+    $(document).ready(function() {
+       $('#miexample').DataTable( {
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No existen registros.",
+            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sSearch":         "Buscar:",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sSearch":         "Buscar:",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
+    } );
+
+    function confirmar(id_historico){
+        if(confirm('¿Estas seguro de eliminar el dato histórico?'))
+		    return true;
+	    else
+		    return false;
+
+    }
+
+    </script>
+{% endblock %}

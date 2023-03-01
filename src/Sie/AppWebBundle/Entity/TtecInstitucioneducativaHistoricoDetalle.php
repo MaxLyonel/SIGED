@@ -5,7 +5,7 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TtecInstitucioneducativaHistoricoDetalle
+ ** TtecInstitucioneducativaHistoricoDetalle
  */
 class TtecInstitucioneducativaHistoricoDetalle
 {

@@ -1,0 +1,183 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>REGISTRO - INSTITUTOS</h2>
+    </div>
+
+    {% for flashMessage in app.session.flashbag.get('msgSearch') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert bg-green text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Listado de Institutos
+                    </h2>
+                </div>
+                <div class="body">
+                    {% if app.session.get('roluser') == 7 %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                            <a href="{{path('rie_new')}}" class="btn btn-md bg-orange waves-effect">
+                                <i class="material-icons">add_box</i>Nueva Sede Central
+                            </a>
+                        </div>
+                    </div>                
+                    {% endif %}
+                    <div class="table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable">-->
+                            <table class="table table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Acciones</th>                                    
+                                        <th>Depto.</th>
+                                        <th>Cód. RITT</th>                                     
+                                        <th>Denominación</th>
+                                        <th>Acreditación</th>
+                                        <th>Sede/Subsede</th>
+                                        <th>R.M.</th>
+                                        <th>Fecha R.M.</th>
+                                        <th>Carácter<br>Jurídico</th>
+                                        <th>Tipo<br>Institución</th>
+                                        <th>Cód. LE</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tfoot>
+                                    <tr>
+                                        <th>Acciones</th>                                    
+                                        <th>Depto.</th>
+                                        <th>Cód. RITT</th>
+                                        <th>Denominación</th>
+                                        <th>Acreditación</th>
+                                        <th>Sede/Subsede</th>
+                                        <th>R.M.</th>
+                                        <th>Fecha R.M.</th>
+                                        <th>Carácter<br>Jurídico</th>
+                                        <th>Tipo<br>Institución</th>
+                                        <th>Cód. LE</th>
+                                    </tr>
+                                </tfoot>
+                                
+                                <tbody>
+                                    {% for entity in entities %}
+                                        <tr>
+                                            <td>
+                                                
+                                                {# % if entity.institucioneducativa.id == entity.sede and entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %#}
+                                                
+                                                {% if entity.institucioneducativa.id == entity.sede %}
+                                                    <a href="{{path('rie_new_subsede', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Registrar Subsede">
+                                                        <i class="material-icons">widgets</i>
+                                                    </a>
+                                                {% else %}
+                                                    <button class="btn btn-grey btn-circle waves-effect waves-circle waves-float" disabled="disabled" title={% if entity.institucioneducativa.id != entity.sede %}"No puede registrar Subsede, no es SEDE."{% else %}"Instituto fuera de su jurisdicción, no puede registrar Subsede"{% endif %}>
+                                                        <i class="material-icons">widgets</i></button>
+                                                {% endif %}
+                                                
+
+                                                {% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 3 and entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  %}
+                                                        <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-success btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar" >
+                                                            <i class="material-icons">mode_edit</i>
+                                                        </a>
+                                                        <a href="{{path('rie_delete', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-success btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar" {% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}disabled{% endif %}>
+                                                            <i class="material-icons">delete_forever</i>
+                                                        </a>
+                                                {% else %}
+                                                        {#  Se habilito para corrección de datos 
+                                                        {% if  entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  %}
+                                                                <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-success btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar" >
+                                                                    <i class="material-icons">mode_edit</i>
+                                                                </a>
+                                                        {% endif %} #}
+
+
+                                                            {#  Se habilito para corrección de datos
+                                                                <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title={% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}"Instituto Acreditado, no puede modificar"{% else %}"Instituto fuera de su jurisdicción, no puede modificar"{% endif %}>
+                                                                    <i class="material-icons">mode_edit</i></button>
+                                                            #}
+                                                            {% if app.session.get('roluser') == 8 %}
+                                                            <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar" >
+                                                                    <i class="material-icons">mode_edit</i>
+                                                            </a>
+                                                        {% else %}
+                                                        
+                                                            <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title={% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}"Instituto Acreditado, no puede eliminar"{% else %}"Instituto fuera de su jurisdicción, no puede eliminar"{% endif %}>
+                                                                <i class="material-icons">delete_forever</i>
+                                                                {% endif %}
+                                                {% endif %}
+                                                
+                                               
+                                            </td>
+                                            <td>{{ entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>                                            
+                                            <td>{{ entity.institucioneducativa.id }}</td> 
+                                            <td>{{ entity.institucioneducativa.institucioneducativa }}</td> 
+                                            <td>
+                                                {% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 3 %}
+                                                    <span class="label label-danger">
+                                                        No acreditada
+                                                    </span>
+                                                {% elseif entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}
+                                                    <span class="label label-success">
+                                                        Acreditada
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if entity.institucioneducativa.id == entity.sede %}
+                                                    SEDE
+                                                {% else %}   
+                                                    <label data-toggle="tooltip" data-placement="top" title="Sede:{{entity.sede }}">
+                                                    SUBSEDE
+                                                    <label>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ entity.institucioneducativa.nroResolucion }}</td>
+                                            <td>{{ entity.institucioneducativa.fechaResolucion|date('d/m/Y')}}</td>
+                                            <td>{{ entity.institucioneducativa.dependenciaTipo.dependencia }}</td>
+                                            <td>
+                                                {{ entity.institucioneducativa.institucioneducativaTipo.descripcion }}
+                                            </td>
+                                            <td>{{ entity.institucioneducativa.leJuridicciongeografica.id }}</td>
+                                            {#<td>
+                                                <form action="{{path('reporte_rie_uno')}}" method="post">
+                                                    <input type="hidden" name="idInstitucion" value="{{entity.institucioneducativa.id}}">
+                                                    <button type="submit" class="btn btn-xs bg-blue waves-effect"><i class="fa fa-save"></i> Certificado</button>
+                                                </form>
+                                            </td>#}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Examples -->
+
+{% endblock %}
+
+
