@@ -271,9 +271,8 @@
                                     </a>
                             </li>
                         {% endif %}  
-                        {# SOLO GESTION 2023 AREAS: PD#}
-                        {% if app.session.get('userId') == '13816503' %} 
-                        {#or app.session.get('userId') == '92506090' %}#}
+                        {# SOLO GESTION 2023 AREAS: PD-VER#}
+                        {% if app.session.get('userId') == '13816503' or app.session.get('userId') == '95011409' %}
                         <li class="panel">
                             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas">
                                 <i class="fa fa-bar-chart-o"></i> Áreas <i class="fa fa-caret-down"></i>
