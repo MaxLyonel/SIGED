@@ -1366,7 +1366,24 @@ class AreasController extends Controller {
             return $response->setData(array('exito'=>0,'mensaje'=>$msg));
         }
 
+        // vemos si ya existe el curso
+        $sql = "
+            select count(*) as existe_curso
+            from institucioneducativa_curso
+            where institucioneducativa_id = " . $institucion_id . "
+            and gestion_tipo_id = " . $gestion_id . "
+            and turno_tipo_id = " . $turno_id . "
+            and grado_tipo_id = " . $grado_id . "
+            and nivel_tipo_id = " . $nivel_id . "
+            and paralelo_tipo_id = '" . $paralelo_id . "'";
 
+        $statement = $em->getConnection()->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        if ($result[0]['existe_curso'] != 0) {
+            $msg = "EL CURSO YA EXISTE !";
+            return $response->setData(array('exito' => 0, 'mensaje' => $msg));
+        }
         
         $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
         //dump($query); die;
