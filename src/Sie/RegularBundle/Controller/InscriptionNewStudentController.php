@@ -206,7 +206,7 @@ class InscriptionNewStudentController extends Controller {
               }
             }
 
-// dump($infoInscription);die;
+      // dump($infoInscription);die;
             $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($student->getCodigoRude(), $form['gestion']);
 
             //check if the student was Approved on the gestion selected
@@ -352,7 +352,7 @@ class InscriptionNewStudentController extends Controller {
 
       //dato actual de inscription
       $dataCurrentInscription = unserialize($form['newdata']);
-       
+     //  dump($dataCurrentInscription);
       //validate allow access
       $arrAllowAccessOption = array(7,8);
       if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
@@ -381,13 +381,13 @@ class InscriptionNewStudentController extends Controller {
       }
       // dump($currentLevelStudent);die;
       $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];// dump($newLevelStudent);die;
-
-//dump(str_replace('-','',$currentLevelStudent) );die;
+   // dump($newLevelStudent); //12-1-1
+    //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
      
-    if( (str_replace('-','',$currentLevelStudent) )!=''){
+    if( (str_replace('-','',$currentLevelStudent) )!=''){ 
       $arrIniPriLevel = array('11-1-0','11-1-1','11-1-2','12-1-1');
-      if(in_array($currentLevelStudent, $arrIniPriLevel)){
+      if(in_array($currentLevelStudent, $arrIniPriLevel)){ 
         
         //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
@@ -395,7 +395,7 @@ class InscriptionNewStudentController extends Controller {
           $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
           $yearStudent = $arrYearStudent['age'];  
       // //new student validation
-
+        //  dump($yearStudent);
         if ($yearStudent<=6){
             switch ($yearStudent) {
               case 4:
@@ -422,7 +422,8 @@ class InscriptionNewStudentController extends Controller {
         }//end new student validation
         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
         $nextDataLevelStudent = str_replace('-','',$this->aCursos[$keyNextLevelStudent]);
-        //dump($nextDataLevelStudent);
+
+        //dump($nextDataLevelStudent); 
         //dump($newLevelStudent);
         if($nextDataLevelStudent > str_replace('-','',$newLevelStudent) && $nextDataLevelStudent!='1112'){
           $swCorrectInscription = false;
@@ -431,6 +432,9 @@ class InscriptionNewStudentController extends Controller {
           $swCorrectInscription = true;
         }
         
+        if($yearStudent >= 6 && str_replace('-','',$newLevelStudent)!='1211' && $nextDataLevelStudent<'1211'){
+          $swCorrectInscription = false;
+        }
        
         /////////////////////////////////
          // $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
@@ -527,8 +531,8 @@ class InscriptionNewStudentController extends Controller {
       $this->addFlash('idNoInscription', $message);
       $swCorrectInscription = false;
     }
-  //dump($swCorrectInscription);
-//die;
+      //dump($swCorrectInscription);
+    //die;
     //check the inscription
        if($swCorrectInscription){
          //get the id of course
@@ -732,6 +736,7 @@ class InscriptionNewStudentController extends Controller {
             next($cursos);
         }
         switch ($matricula) {
+          
           case 4:
             # efectivo
             $levelStudent = -1;
@@ -1322,6 +1327,7 @@ class InscriptionNewStudentController extends Controller {
           $nombreIE = 'No tiene Tuición';
           } */
 
+     
         $response = new JsonResponse();
 
         return $response->setData(array('nombre' => $nombreIE, 'aniveles' => $aniveles));
