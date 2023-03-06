@@ -74,7 +74,7 @@ class DocumentoController extends Controller {
  
         $queryEntidad = $em->getConnection()->prepare("
             select
-            d.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, to_char(d.fecha_impresion, 'dd/mm/YYYY') as fechaemision
+            d.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, case d.documento_tipo_id when 2 then to_char(d1.fecha_impresion, 'dd/mm/YYYY') else to_char(d.fecha_impresion, 'dd/mm/YYYY')  end as fechaemision
             , dept.id as departamentoemisionid, dept.departamento as departamentoemision, e.codigo_rude as rude, e.paterno as paterno, e.materno as materno
             , e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, to_char(e.fecha_nacimiento, 'dd/mm/YYYY') as fechanacimiento
             , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
@@ -98,6 +98,7 @@ class DocumentoController extends Controller {
             left join persona as p on p.id = df.persona_id
             left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
             left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
+            left join documento as d1 on d1.tramite_id = d.tramite_id and d1.documento_tipo_id in (1,9) and d1.documento_estado_id = 1
             where md5(cast(d.id as varchar)) = :id and dt.id in (1,2,3,4,5,6,7,8,9) and de.id in (1)
             order by e.paterno, e.materno, e.nombre
         ");
