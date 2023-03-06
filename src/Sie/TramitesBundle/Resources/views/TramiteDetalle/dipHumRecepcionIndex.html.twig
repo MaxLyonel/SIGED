@@ -101,20 +101,20 @@
                                             <td>{{ participante.fecha_nacimiento }} - {{ participante.lugar_nacimiento }}</td>
                                             <td>
                                                 {% if participante.gestion_tipo_id == "now"|date("Y") %}
-                                                  {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 %}
+                                                  {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 and participante.estadomatricula_tipo_id != 104 %}
                                                     {{ participante.estadomatricula }}
                                                   {% else %}
                                                     {{ participante.estadomatricula }}
                                                   {% endif %}
                                                 {% else %}
                                                   {% if participante.nivel_tipo_id == 13 %}
-                                                    {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 %}
+                                                    {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 and participante.estadomatricula_tipo_id != 104 %}
                                                         {{ participante.estadomatricula }}
                                                     {% else %}
                                                       {{ participante.estadomatricula }}
                                                     {% endif %}
                                                   {% else %}
-                                                    {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 %}
+                                                    {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 and participante.estadomatricula_tipo_id != 104 %}
                                                         {{ participante.estadomatricula }}
                                                     {% else %}
                                                       {{ participante.estadomatricula }}
@@ -127,16 +127,16 @@
                                                 {% set anular = false %}
 
                                                 {% if participante.gestion_tipo_id == "now"|date("Y") %}
-                                                  {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 %}
+                                                  {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 and participante.estadomatricula_tipo_id != 104 %}
                                                     {% set registro = false %}
                                                   {% endif %}
                                                 {% else %}
                                                   {% if participante.nivel_tipo_id == 13 %}
-                                                    {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 %}
+                                                    {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 and participante.estadomatricula_tipo_id != 104 %}
                                                       {% set registro = false %}
                                                     {% endif %}
                                                   {% else %}
-                                                    {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 %}
+                                                    {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 and participante.estadomatricula_tipo_id != 100 and participante.estadomatricula_tipo_id != 104 %}
                                                       {% set registro = false %}
                                                     {% endif %}
                                                   {% endif %}
