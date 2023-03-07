@@ -1195,7 +1195,6 @@ class TramiteCertificacionesPermanenteController extends Controller {
                  //validacion de tuicion sobre el centro
                 $usuarioRol = $this->session->get('roluser');
                 $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol);
-                
                 if ($verTuicionUnidadEducativa != ''){
                     $this->session->getFlashBag()->set('newError', array('message' => $verTuicionUnidadEducativa));
                     return $this->redirect($this->generateUrl('tramite_impresion_certificacion_per'));
@@ -1212,8 +1211,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 }
                 $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
                 $mencionDatos = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($especialidad);
-                $nivelDatos = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($nivel); 
-                           
+                $nivelDatos = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($nivel);
                 try {
                     //SE OBTIENE LA LISTA DE PARTICIPANTES CON TRAMITE CONLUIDO
                     $entityParticipantes = $this->getEstudiantesHabilitadosPermanente($sie,$gestion,$especialidad,$nivel);
@@ -1295,17 +1293,14 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $nivel = $request->get('nivel');
         $idNivel = $request->get('idnivel');
         $idMencion = $request->get('idMencion');
-        $idgestion= $request->get('gestion'); //pendiente
-        $gestionId= $sesion->get('currentyear'); //pendiente
-              
+        $gestionId=$request->get('gestion');
+        // $sesion->get('currentyear'); //pendiente        
         //RECUPERAMOS LOS DATOS DEL DIRECTOR DEL CENTRO
         $queryMaestroUE =  $this->datosDirector($sie,$gestionId);
-        
         //RECUPERAMOS LOS DATOS DEL LUGAR FECHA INICIO - FIN DEL CURSO LARGO
-        $datosCurso = $this->datosCurso($sie,$idgestion,$idNivel,$idMencion);
-        //$datosCurso = $this->datosCurso($sie,$gestionId,$idNivel,$idMencion); //anterior no jala gestion del curso
-        //Se idintifica el codigo para el DEPARTAMENTO debido a la variacion de CENSO en los sistemas de certificaciones vs permanente
+        $datosCurso = $this->datosCurso($sie,$gestionId,$idNivel,$idMencion);
         
+        //Se idintifica el codigo para el DEPARTAMENTO debido a la variacion de CENSO en los sistemas de certificaciones vs permanente
         $lugarDefault=31655; //la paz
         switch ($datosCurso['lugar_tipo_id']){
             case 31655: //LA PAZ
@@ -1504,6 +1499,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
            $pdf->SetFont('helvetica', 'B', 20);
            //$pdf->Cell(0, 2, ($request->get('nivel') ? $request->get('nivel') : ''), 0, 1, 'C');
            $pdf->SetFont('helvetica', '', 14);
+           // get info UE by sie
+           $dataLocationUE = $this->getDataLocationUE($sie, $gestionId);
             if($request->get('idnivel')==1 || $request->get('idnivel')==20  ){ // CORRESPONDE A NIVEL BASICO O AUXILIAR                
                 //de 500 horas, desarrollado por el Centro de Educación Permanente:
                 //de 1000 horas, desarrollado por el Centro de Educación Permanente
@@ -1517,7 +1514,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln($breaknext);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
-                $pdf->Cell(198, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
+                $pdf->Cell(198, 2, ($dataLocationUE[0]['des_dep'] ? $dataLocationUE[0]['des_dep'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
                 $pdf->Ln(10); 
             }else{
                 $pdf->Ln(10);
@@ -1530,7 +1527,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln(16);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
-                $pdf->Cell(0, 3, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
+                $pdf->Cell(0, 3, ($dataLocationUE[0]['des_dep'] ? $dataLocationUE[0]['des_dep'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
                 $pdf->Ln(5);
                 
             }
@@ -1548,6 +1545,36 @@ class TramiteCertificacionesPermanenteController extends Controller {
         //$pdf->Output('example_050.pdf', 'I');
         $pdf->Output($queryMaestroUE['sie']."Impresion_Certificados_Permanente".date('YmdHis').".pdf", 'D');
         //return true;
+    }
+
+    private function getDataLocationUE($sie,$gestion){
+       $em = $this->getDoctrine()->getManager();
+            
+            $query = $em->getConnection()->prepare("
+                    select *
+                    from (
+                            institucioneducativa a 
+                            inner join dependencia_tipo as dt on dt.id = a.dependencia_tipo_id
+                            inner join institucioneducativa_sucursal b on a.id=b.institucioneducativa_id 
+                            --inner join turno_tipo as tt on tt.id = b.turno_tipo_id
+                            inner join (select a.id as cod_le,cod_dep,des_dep,cod_pro,des_pro,cod_sec,des_sec,cod_can,des_can,cod_loc,des_loc,area2001,cod_dis,des_dis,a.cod_nuc,a.des_nuc,desc_area
+                                    from jurisdiccion_geografica a 
+                                    inner join (select e.id,cod_dep,a.lugar as des_dep,cod_pro,b.lugar as des_pro,cod_sec,c.lugar as des_sec,cod_can,d.lugar as des_can,cod_loc,e.lugar as des_loc,area2001, e.area2001 as desc_area
+                                                from (select id,codigo as cod_dep,lugar_tipo_id,lugar   from lugar_tipo where lugar_nivel_id=1) a 
+                                                inner join (select id,codigo as cod_pro,lugar_tipo_id,lugar from lugar_tipo where lugar_nivel_id=2) b on a.id=b.lugar_tipo_id 
+                                                inner join (select id,codigo as cod_sec,lugar_tipo_id,lugar from lugar_tipo where lugar_nivel_id=3) c on b.id=c.lugar_tipo_id 
+                                                inner join (select id,codigo as cod_can,lugar_tipo_id,lugar from lugar_tipo where lugar_nivel_id=4) d on c.id=d.lugar_tipo_id
+                                                inner join (select id,codigo as cod_loc,lugar_tipo_id,lugar,area2001 from lugar_tipo where lugar_nivel_id=5) e on d.id=e.lugar_tipo_id
+                                                ) b on a.lugar_tipo_id_localidad=b.id
+                                                inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) c on a.lugar_tipo_id_distrito=c.id
+                                    ) d on a.le_juridicciongeografica_id=d.cod_le )                 
+                    where a.id=".$sie." and b.gestion_tipo_id=".$gestion.";
+                ");
+            
+            $query->execute();
+            $ueEntity = $query->fetchAll();   
+
+            return $ueEntity;
     }
     /**
      * FUNCION QUE OBTIENE EL MES EN LITERAL
