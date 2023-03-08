@@ -186,7 +186,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
         
         $tuisionEstudiante = $this->getTuisionEstudianteUnidadEducativa($rude, $codigoSie, $fechaActual->format("Y"));
         if(count($tuisionEstudiante)<=0){
-            $alert = array('estado'=>false, 'msg'=>"LA UNIDAD EDUCATIVA NO TIENE TUISIÓN SOBRE EL ESTUDIANTE");
+            $alert = array('estado'=>false, 'msg'=>"LA UNIDAD EDUCATIVA NO TIENE TUICIÓN SOBRE EL ESTUDIANTE");
             return $this->render('SieProcesosBundle:TramiteInscripcionNivelacionRezago:formulario.html.twig', array('alert'=>$alert));
         }
         
