@@ -99,7 +99,7 @@ class RegularizacionDobleInscripcionController extends Controller {
             $arrayEstados = [];
             $estadosFinales = [5,26,37,55,56,57,58,11,28];
             $estadosFinalSinNota = [56,57,58,26];
-            $estadosFinalConNota = [5,55,37,11,28,5,55];
+            $estadosFinalConNota = [5,55,37,11,28];
             $tieneEstadoFinal = false;
             $arrayInscripciones = array();
             $arrayMatriculaLista = array();
@@ -107,7 +107,7 @@ class RegularizacionDobleInscripcionController extends Controller {
             foreach ($ins as $i) {
 
                 $operativo = $this->get('funciones')->obtenerOperativo($i['sie'], $i['gestion']);
-                if($i['gestion']==2021){
+                if($i['gestion']>=2021){
                   $inscripcionActual = $this->get('notas')->regularDB($i['id'], $operativo);
                 } else {
                   $inscripcionActual = $this->get('notas')->regular($i['id'], $operativo);
@@ -140,7 +140,7 @@ class RegularizacionDobleInscripcionController extends Controller {
                   if ($inscripcionActual['cantidadRegistrados'] == 0){
                     $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleSinNota($inscripcionActual['gestion']);
                   } else {
-                    $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleConNota($inscripcionActual['gestion']);
+                    $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleConNota($inscripcionActual['gestion'],$inscripcionActual['estadomatriculaId']);
                   }
                 }
                 
@@ -152,8 +152,8 @@ class RegularizacionDobleInscripcionController extends Controller {
                   }                  
                   //dump(array_keys(array_column($inscripcionActual['estadosCambiar'], 'id'), 9));
                 }
-                //dump($ins);dump($inscripcionActual['estadosCambiar']);
-                // die;
+                //dump($inscripcionActual['estadomatriculaId']);dump($inscripcionActual['estadosCambiar']);
+                
                 //$arrayMatriculaLista = $arrayMatriculaLista + $inscripcionActual['estadosCambiar'];
                 $arrayMatriculaLista = array_merge($arrayMatriculaLista, $inscripcionActual['estadosCambiar']);
                 //dump($arrayMatriculaLista);
@@ -168,7 +168,7 @@ class RegularizacionDobleInscripcionController extends Controller {
                 //     $tieneEstadoFinal = true;
                 // }
             }
-            
+            //die;
             //$arrayInscripciones['estadoMatriculaLista'] = array_unique($arrayInscripciones['estadoMatriculaLista']);
             $estadosLista = $this->getEstadoMatriculaReglaLista(implode(',',array_column($arrayMatriculaLista,'id')));
             $estadosListaArray = array();
@@ -264,11 +264,19 @@ class RegularizacionDobleInscripcionController extends Controller {
       return $objEntidad;
     }
 
-    public function getEstadoMatriculaDisponibleConNota($gestion) {
+    public function getEstadoMatriculaDisponibleConNota($gestion,$estadomatriculaactual) {
+      // No se modifican estados finales
+      $estadosFinales = [5,26,37,55,56,57,58,11,28];
       $em = $this->getDoctrine()->getManager();
+      if ( in_array($estadomatriculaactual, $estadosFinales)){
+        $queryEntidad = $em->getConnection()->prepare("
+          select * from estadomatricula_tipo where id = ".$estadomatriculaactual."
+      ");
+      }else {
       $queryEntidad = $em->getConnection()->prepare("
           select * from estadomatricula_tipo where nota_presentacion_tipo_id in (1,3) and (fin_proceso_educativo = false or id = 5) and case ".$gestion." when date_part('year',current_date) then true else id not in (4) end
       ");
+      }
       $queryEntidad->execute();
       $objEntidad = $queryEntidad->fetchAll();
       return $objEntidad;
