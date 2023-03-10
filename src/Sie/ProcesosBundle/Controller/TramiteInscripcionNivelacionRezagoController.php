@@ -470,7 +470,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 }            
             }
             //dump($actualEdadR,$keyUltimaInscripcion);die;
-            if(($actualEdadR-$keyUltimaEdadRegistro)<2){
+            if(($actualEdadR-$keyUltimaEdadRegistro) < 3){
                 $alert = array('estado'=>false, 'msg'=>"NO CUENTA CON 2 O MAS AÑOS DE REZAGO ESCOLAR RESPECTO A SU GRUPO ETARIO");
             }
             
