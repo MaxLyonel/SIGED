@@ -26,6 +26,10 @@ tramite_reg_doble_prom_formulario_imprimir:
     path:     /formularioImprimir/{idTramite}
     defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:formularioImprimir }
 
+tramite_reg_doble_prom_formulario_descarga:
+    path:     fmepdescarga/
+    defaults: { _controller: SieProcesosBundle:TramiteRegDobleProm:forumlarioDescargaMEP }      
+
 # DEPARTAMENTO
 
 tramite_reg_doble_prom_recepcion_verifica_departamento:

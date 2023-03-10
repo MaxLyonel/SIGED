@@ -493,6 +493,23 @@ class TramiteRegDoblePromController extends Controller {
     }     
    /*=====  End of RECEPCION Y VERIFICACION DESTRITO  ======*/
     
+   public function forumlarioDescargaMEPAction(Request $request){
+
+    $response = new Response();
+    $idTramite = $request->get('idtramite');
+    $gestion = $this->session->get('currentyear');
+    $codigoQR = 'FMEP'.$idTramite.'|'.$gestion;
+    $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
+    //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+    $response->headers->set('Content-type', 'application/pdf');
+    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$idTramite.'_'.$this->session->get('currentyear'). '.pdf'));
+    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V2_eea.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
+    $response->setStatusCode(200);
+    $response->headers->set('Content-Transfer-Encoding', 'binary');
+    $response->headers->set('Pragma', 'no-cache');
+    $response->headers->set('Expires', '0');
+    return $response;
+}  
 
 
     /*=============================================================
