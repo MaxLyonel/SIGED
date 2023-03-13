@@ -238,9 +238,11 @@ class TramiteInclusionCalificacionController extends Controller {
         //dump($idInscripcion);
         //dump($operativo);
        // die;
-           // $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
-            $datos = $this->get('notas')->regular($idInscripcion, $operativo);
-           //  dump($datos);die;
+            if($gestion >2019)
+                $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
+            else
+                $datos = $this->get('notas')->regular($idInscripcion, $operativo);
+            //dump($datos);die;
             
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
                 foreach ($datos['cualitativas'] as $key => $value) {
