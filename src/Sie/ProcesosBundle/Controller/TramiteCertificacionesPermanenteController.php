@@ -1426,7 +1426,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $coddepto = str_pad($depto, 2, "0", STR_PAD_LEFT);
             $typeEducation = 'EP';
             $acreditation  = $arrLevelSerie[$nivelAcre->getAcreditacion()];
-            $codeyear     = date('y');
+            $codeyear     = substr( $gestionId, -2);
             $nroSerie = str_pad($numserie.$coddepto.$typeEducation.$acreditation.$codeyear, 13, "0", STR_PAD_LEFT);
 
             $dataSerieTrue = array(
