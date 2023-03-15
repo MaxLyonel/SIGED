@@ -124,7 +124,7 @@ class TramiteCursosController extends Controller
         }else{
 
             $depto = 'NACIONAL';
-            
+
             $query = $em->getConnection()->prepare("
                select data.*,
                 substring(c.cod_dis,1,1)  as codigo_depto,
@@ -1746,6 +1746,8 @@ class TramiteCursosController extends Controller
                 tramite_crea_curso.gestion_tipo_id, 
                 tramite_crea_curso.institucioneducativa_id,
                 tramite_crea_curso.aprobado,
+                tramite_crea_curso.ancho,
+                tramite_crea_curso.largo,
                 CASE 
                     WHEN aprobado = false THEN 2
                     WHEN aprobado = true THEN 1      
