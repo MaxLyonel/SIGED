@@ -1,0 +1,97 @@
+creacion_cursos_solicitud:
+    path:     /{op}
+    defaults: { _controller: SieRegularBundle:CreacionCursosSolicitud:index, op:search }
+
+creacion_cursos_solicitud_new:
+    path:     /new/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:new" }
+    methods:  POST
+
+creacion_cursos_solicitud_create:
+    path:     /create/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:listargrados" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:cargarNiveles"}
+    options:
+         expose: true
+
+creacion_cursos_solicitud_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:cargarGrados"}
+    options:
+         expose: true
+
+creacion_cursos_solicitud_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:cargarParalelos"}
+    options:
+         expose: true
+
+creacion_cursos_solicitud_listar_cursos:
+    path:     /lista_cursos/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:lista_cursos" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_listar_solicitudes:
+    path:     /lista_solicitudes/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:lista_solicitudes_cursos" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_listar_areas_nuevo_curso:
+    path:     /lista_areas_curso_a_nuevo/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:crear_areas_curso" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}/{institucioneducativa}/{gestionTipo}/{turnoTipo}/{nivelTipo}/{gradoTipo}/{paraleloTipo}
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:lista_areas_nivel" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_eliminar_solicitud:
+    path:     /eliminar_solicitud/{solicitudnum}
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:eliminar_solicitud" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:asignar_maestro" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:delete" }
+    options:
+         expose: true
+
+creacion_cursos_solicitud_build_file:
+    path:     /sie/build/
+    defaults: { _controller: SieRegularBundle:CreacionCursosSolicitud:build }
+    options:
+         expose: true          
+
+creacion_cursos_solicitud_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:maestros"}
+    options:
+         expose: true
+
+creacion_cursos_solicitud_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:maestrosAsignar"}
+    options:
+         expose: true

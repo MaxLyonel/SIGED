@@ -1,0 +1,39 @@
+{% if areas is not empty %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center border-right">No.</th>
+                    <th>Turno</th>
+                    <th>Nivel</th>
+                    <th>Grado</th>
+                    <th class="text-center">Paralelo</th>
+                    <th>Ancho</th>
+                    <th>Largo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for co in areas %}
+                    <tr>
+                        <td class="text-center border-right">{{loop.index}}</td>
+                        <td>{{co.turno}}</td>
+                        <td>{{co.nivel}}</td>
+                        <td>{{co.grado}}</td>
+                        <td class="text-center">{{co.paralelo}}</td>
+                        <td><input type="text" id="a{{co.paralelo}}" name="a{{co.paralelo}}" value="{{co.paralelo}}" size="5" required/></td>
+                        <td><input type="text" id="l{{co.paralelo}}" name="l{{co.paralelo}}" value="{{co.paralelo}}" size="5" required/></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        
+    </script>
+
+{% else %}
+    <div class="alert alert-warning"><i class="fa fa-warning"></i> El curso no tiene cursos ni paralelos en ese nivel y grado</div>
+{% endif %}
+
+</strong>

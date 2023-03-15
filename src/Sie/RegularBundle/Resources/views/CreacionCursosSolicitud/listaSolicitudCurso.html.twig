@@ -1,0 +1,58 @@
+<div class="portlet-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="no-more-tables">
+
+                <table id="myTable" class="table table-bordered table-hover cf dataTable">
+
+                    <thead class="">
+                        <tr class="">
+                            <th>No.</th>
+                            <th>Turno</th>
+                            <th>Nivel</th>
+                            <th>Grado</th>
+                            <th>Paralelo</th>
+                            <th>Fecha Solicitud</th>
+                            <th class="text-center">Acción</th>
+                            {# <th >Form</th> #}
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ns in areas %}
+                            <tr>
+                                <td data-title="No.">{{ loop.index }}</td>
+                                <td data-title="Turno" >{{ ns.turno }}</td>
+                                <td data-title="Nivel">{{ ns.nivel }}</td>
+                                <td data-title="Grado">{{ ns.grado }}</td>
+                                <td data-title="Paralelo" class="text-center">{{ ns.paralelo }}</td>
+                                <td data-title="Fsolicitud" class="text-center">{{ns.fecha_solicitud}}</td>
+
+                                <td class="text-center">
+                                    {# <a href="#" class="btn btn-link" id="viewList" > #}
+                                    <a href="#" class="btn btn-link" id="viewList" onclick="eliminarSolicitudes({{ns.tccid}})" >
+                                        Eliminar
+                                    </a>
+                                </td>
+
+                                {# <td class="text-center">
+                                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %}
+                                        <a href="{{path('donwload_listStudentPerCourse', {'ue': unidadEducativa.id, 'gestion': gestionSelected, 'nivel':entity.nivelId,'grado':entity.gradoId, 'paralelo':entity.paraleloId,'turno':entity.turnoId } )}}">
+                                        <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="40" width="40"   class="hisrc img-responsive" alt=
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td> #}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
