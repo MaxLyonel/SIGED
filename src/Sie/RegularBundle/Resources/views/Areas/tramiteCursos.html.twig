@@ -1,0 +1,534 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+	{{parent()}}
+	<link href="{{asset('css/chosen.css')}}" rel="stylesheet">
+	<link href="{{asset('bootstrap-wizard/css/bwizard.min.css')}}" rel="stylesheet">
+	<style>
+		.arrow-before {
+			width: 0;
+			height: 0;
+			border-left: 6px solid transparent; /* izquierda flecha */
+			border-right: 6px solid transparent; /* derecha flecha */
+			border-bottom: 6px solid #906094; /* base flecha y color*/
+			font-size: 0;
+			line-height: 0;
+			top: 6px;
+			left: 3px;
+			position: relative;
+		}
+		.arrow-after {
+			width: 0;
+			height: 0;
+			border-left: 6px solid transparent; /* izquierda flecha */
+			border-right: 6px solid transparent; /* derecha flecha */
+			border-bottom: 6px solid #906094; /* base flecha y color*/
+			font-size: 0;
+			line-height: 0;
+			top: 1px;
+			left: 3px;
+			position: relative;
+		}
+		#popover-head {
+			width: 300px;
+			background-color: #6E89FF;
+		}
+	</style>
+{% endblock %}
+{% block contentoption %}
+
+	<style>
+		.checkbox {
+			width: 100%;
+			/*margin: 15px auto;*/
+			position: relative;
+			display: block;
+		}
+
+		.checkbox input[type="checkbox"] {
+			width: auto;
+			opacity: 0.00000001;
+			position: absolute;
+			left: 0;
+			margin-left: -20px;
+		}
+		.checkbox label {
+			position: relative;
+		}
+		.checkbox label:before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			margin: 4px;
+			width: 22px;
+			height: 22px;
+			transition: transform 0.28s ease;
+			border-radius: 3px;
+			border: 2px solid #be7281;
+		}
+		.checkbox label:after {
+			content: '';
+			/*display: block;*/
+			width: 10px;
+			height: 5px;
+			border-bottom: 2px solid #be7281;
+			border-left: 2px solid #be7281;
+			-webkit-transform: rotate(-45deg) scale(0);
+			transform: rotate(-45deg) scale(0);
+			transition: transform ease 0.25s;
+			will-change: transform;
+			position: absolute;
+			top: 12px;
+			left: 10px;
+		}
+		.checkbox input[type="checkbox"]:checked ~ label::before {
+			color: #be7281;
+		}
+
+		.checkbox input[type="checkbox"]:checked ~ label::after {
+			-webkit-transform: rotate(-45deg) scale(1);
+			transform: rotate(-45deg) scale(1);
+		}
+
+		.checkbox label {
+			/* min-height: 34px;
+    display: block;*/
+			padding-left: 40px;
+			margin-bottom: 0;
+			font-weight: normal;
+			cursor: pointer;
+			vertical-align: sub;
+		}
+		.checkbox label span {
+			position: absolute;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
+		.checkbox input[type="checkbox"]:focus + label::before {
+			outline: 0;
+		}
+	</style>
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="page-title">
+				<h1>{{ app.session.get('tituloTipo') }}
+					<small></small>
+				</h1>
+				<ol class="breadcrumb">
+					<li>
+						<i class="fa fa-search"></i>
+						<a href="{{path('areas')}}">Buscar</a>
+					</li>
+					<li>
+						<i class="fa fa-list"></i>
+						<a href="{{path('areas',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a>
+					</li>
+				</ol>
+			</div>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
+	<div class="row">
+		<div class="alert alert-danger">
+			<h4>
+				<strong>IMPORTANTE!</strong>
+			</h4>
+			<strong>
+				<p>1: PARA CREAR EL CURSO SOLICITADO; DEBE LLENAR LA OBSERVACION CORRESPONDIENTE Y HACER CLIK EN EL BOTON "CREAR CURSO"</p>
+				<p>2: EN CASO DE NO PROCEDER LA CREACION DEL CURSO SOLICITADO; DEBE LLENAR LA OBSERVACION CORRESPONDIENTE Y HACER CLIK EN EL BOTON "NO PROCEDE"</p>
+				<p>3: UNA VEZ FINALIZADO EL PROCEDIMIENTO, DEBE IMPRIMIR EL REPORTE CORRESPONDIENTE, HACIENDO CLICK EN EL BOTON "IMPRIMIR REPORTE DDJJ"</p>
+				<p style="font-style: italic;">NOTA: ESTA OPERACION SOLO PODRA REALIZARSE UNA SOLA VEZ !!
+					<span class="badge badge-danger">POR FAVOR SU ATENCION</span>
+				</p>
+			</strong>
+		</div>
+	</div>
+
+	<table class="table table-bordered table-striped table-hover" style='font-size:100%'>
+		<tbody>
+			<tr>
+				<th>
+					Código SIE:
+				</th>
+				<td>
+					{{ ue.id }}
+				</td>
+
+				<th>
+					Unidad Educativa:
+				</th>
+				<td>
+					{{ ue.institucioneducativa }}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Dependencia:
+				</th>
+				<td>
+					{{ ue.dependenciaTipo.dependencia }}
+				</td>
+
+				<th>
+					Tipo
+				</th>
+				<td>
+					{{ ue.institucioneducativaTipo.descripcion }}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Departamento
+				</th>
+				<td>
+					{{ ue.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}
+				</td>
+
+				<th>
+					Distrito
+				</th>
+				<td>
+					{{ ue.leJuridicciongeografica.distritoTipo.distrito }}
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<div class="row">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">LISTA DE SOLICITUDES DE APERTURAS DE PARALELOS - GESTION {{gestion}}</h3>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="portlet portlet-green">
+					<div class="portlet-heading">
+						<div class="portlet-title">
+							<h4>CREAR CURSOS  -  NIVEL DEPARTAMENTAL</h4>
+						</div>
+						<div class="portlet-widgets">
+							<a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion">
+								<i class="fa fa-chevron-down"></i>
+							</a>
+						</div>
+						<div class="clearfix"></div>
+
+					</div>
+
+					<div id="panelinstitucion2" class="panel-collapse collapse in">
+						<div class="portlet-body">
+							<div class="panel-body panel-primary">
+
+
+								<div class="table-responsive">
+									<table id="myTable1" class="table table-bordered dataTable table-success">
+										<thead>
+											<tr>
+												<th width="2%">
+													#
+												</th>
+												<th width="8%">
+													CODIGO SIE
+												</th>
+												<th width="20%">
+													UNIDAD EDUCATIVA
+												</th>
+												<th width="10%">
+													NIVEL
+												</th>
+												<th width="10%">
+													GRADO
+												</th>
+												<th width="10%">
+													TURNO
+												</th>
+												<th width="5%">
+													PARALELO
+												</th>
+												<th width="20%">
+													OBSERVACION
+												</th>
+												<th width="15%">
+													OPCIONES
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% set var = 1 %}
+											{% for entity in data %}
+												<tr>
+													<td width="2%">
+														{{ var }}
+													</td>
+													<td width="8%">
+														{{entity.institucioneducativa_id}}
+													</td>
+													<td width="20%">
+														{{entity.institucioneducativa}}
+													</td>
+													<td width="10%">
+														{{entity.nivel}}
+													</td>
+													<td width="10%">
+														{{entity.grado}}
+													</td>
+													<td width="10%">
+														{{entity.turno}}
+													</td>
+													<td width="5%">
+														{{entity.paralelo}}
+													</td>
+													<td width="20%">
+														<input type="text" size="30" max="150" style="font-weight: bold; background-color: #FEF9E7;" id="txt{{ entity.id }}" name="txt{{entity.id}}" value="{{ entity.observacion }}" class="form-control clase00"/>
+													</td>
+													<td width="15%">                                                   
+
+                                                        {% if entity.aprobadoestado == 0 %}                                                            
+                                                        
+                                                            <button id="btnc_{{entity.id}}" style="border-radius: 0px;" class="btn btn-info " data-toggle="tooltip" data-placement="top" data-original-title="" onclick="infoUe({{entity.id}});">
+                                                                APROBAR
+                                                            </button>
+                                                            <button id="btnn_{{entity.id}}" style="border-radius: 0px;" class="btn btn-danger " data-toggle="tooltip" data-placement="top" data-original-title="" onclick="noProcede({{entity.id}});">
+                                                                NO PROCEDE
+                                                            </button>
+                                                            <div id="div_{{entity.id}}"></div>                                                        
+
+                                                        {% endif %}
+
+                                                        {% if entity.aprobadoestado == 1 %}
+                                                            <h5> EL CURSO FUE APROBADO/CREADO </h5>
+                                                        {% endif %}
+
+                                                        {% if entity.aprobadoestado == 2 %}
+                                                            <h5>NO PROCEDENTE</h5>
+                                                        {% endif %}
+
+													</td>
+												</tr>
+												{% set var = var + 1 %}
+											{% endfor %}
+
+										</tbody>
+									</table>
+								</div>
+
+
+								<br><br>
+								<div class="row">
+									<div class="col-md-3"> 
+										<a href="{{ path('areas_tramite_printddjj',{sie: ue.id, fechasol: fechasol}) }}" class="btn btn-success btn-block" id="print_report">IMPRIMIR REPORTE DDJJ
+										</a>
+									</div>
+									<div class="col-md-3"> 
+										<a href="javascript:history.back()" class="btn btn-danger btn-block" id="backtoprevouspage">REGRESAR AL LISTADO DE SOLICITUDES
+										</a>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal modal-flex fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form name="formAreasModal" id="formAreasModal" action="" onsubmit="enviarAreas();
+													                        return false">
+						<input type="hidden" name="divResultado" id="divResultado">
+						<input type="hidden" name="idInstitucionCurso" id="idInstitucionCurso">
+						<input type="hidden" name="idNivel" id="idNivel">
+						<input type="hidden" name="educacionTipo" id="educacionTipo" value="{{app.session.get('sysname')}}">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							<h4 class="modal-title" id="flexModalLabel">Adición de áreas</h4>
+							<span id="nivelModal"></span>
+							-
+							<span id="gradoModal"></span>
+							-
+							<span id="paraleloModal"></span>
+						</div>
+						<div class="modal-body">
+							<div id="areasModal"></div>
+						</div>
+
+					</form>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	{% endblock %}
+	{% block javascripts %}
+		{{parent()}}
+		<script src="{{asset('js/chosen.jquery.js')}}"></script>
+		<script src="{{asset('bootstrap-wizard/js/bwizard.js')}}"></script>
+		<script src="{{asset('bootstrap-wizard/jquery-ui.min.js')}}"></script>
+		<script>
+
+            function infoUe(id) {
+                swal({
+                    title: "¿ DESEA APROBAR LA CREACION DE ESTE CURSO ?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    buttons: ["CANCELAR", "APROBAR Y CREAR CURSO"]
+                }).then(function(respuesta) {
+                    if (respuesta) {
+                        var imagen = '{{ asset("img/loading.gif") }}';
+
+                        var formData = new FormData();
+
+                        //la observacion
+                        obs = document.getElementById('txt' + id).value;
+                        console.log('obs:', obs);
+
+
+                        formData.append('tramite_id', id);
+                        formData.append('obs', obs);
+                        console.log(formData);
+
+
+                        $.ajax({
+                            type: 'post',
+                            url: Routing.generate('areas_tramite_si_procede'),
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function() {
+                                swal({
+                                    title: "Registrando la informacion...",
+                                    text: "Espere un momento por favor",
+                                    icon: imagen,
+                                    buttons: false
+                                });
+                                // $("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                            },
+                            success: function(data) {
+                                if (data.tipo === 0) {
+                                    swal({
+                                        icon: 'info',
+                                        text: data.msg
+                                    });
+
+                                    document.getElementById("btnc_" + id).style.display = "none";
+                                    document.getElementById("btnn_" + id).style.display = "none";
+
+                                    var myDiv = document.getElementById("div_" + id);
+                                    myDiv.innerHTML = "EL CURSO FUE APROBADO/CREADO";
+                                }else{
+                                    swal({
+                                        icon: 'error',
+                                        text: data.msg
+                                    });
+                                }
+                            },
+                            complete: function() {
+                                swal.stopLoading();
+                                swal.close();
+                                $(".messageegresadostitulados").fadeTo(3000, 1000).slideUp(1000, function() {
+                                    $(".messageegresadostitulados").slideUp(1000);
+                                });
+                            },
+                            error: function(error) {
+                                $('#message').empty();
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                                // boton.show();
+                            }
+                        });
+
+
+                    }
+
+                })
+
+            }
+
+            function noProcede(id) {
+                swal({
+                    title: "¿ DESEA REGISTRAR ESTA SOLICITUD COMO 'NO PROCEDENTE' ?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    buttons: ["CANCELAR", "NO PROCEDE"]
+                }).then(function(respuesta) {
+                    if (respuesta) {
+                        var imagen = '{{ asset("img/loading.gif") }}';
+
+                        var formData = new FormData();
+
+                         //la observacion
+                        obs = document.getElementById('txt' + id).value;
+                        console.log('obs:', obs);
+
+
+                        formData.append('tramite_id', id);
+                        formData.append('obs', obs);
+                        console.log(formData);
+
+
+                        $.ajax({
+                            type: 'post',
+                            url: Routing.generate('areas_tramite_no_procede'),
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function() {
+                                swal({
+                                    title: "Registrando la informacion...",
+                                    text: "Espere un momento por favor",
+                                    icon: imagen,
+                                    buttons: false
+                                });
+                                // $("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                            },
+                            success: function(data) {
+                                if (data.tipo === 0) {
+                                    swal({
+                                        icon: 'info',
+                                        text: data.msg
+                                    });
+
+                                    document.getElementById("btnc_" + id).style.display = "none";
+                                    document.getElementById("btnn_" + id).style.display = "none";
+
+                                    var myDiv = document.getElementById("div_" + id);
+                                    myDiv.innerHTML = "NO PROCEDE";
+                                }
+                            },
+                            complete: function() {
+                                swal.stopLoading();
+                                swal.close();
+                                $(".messageegresadostitulados").fadeTo(3000, 1000).slideUp(1000, function() {
+                                    $(".messageegresadostitulados").slideUp(1000);
+                                });
+                            },
+                            error: function(error) {
+                                $('#message').empty();
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                                // boton.show();
+                            }
+                        });
+
+
+                    }
+
+                })
+
+            }
+			
+		</script>
+	{% endblock %}
+
