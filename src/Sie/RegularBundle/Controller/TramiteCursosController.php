@@ -48,7 +48,11 @@ class TramiteCursosController extends Controller
         $stmtaux = $em->getConnection()->prepare($sql);
         $stmtaux->execute();
         $currentdata = $stmtaux->fetchAll();
-        $codigo_depto = $currentdata[0]['codigo'];
+
+        $codigo_depto = 0;
+        if($currentdata){
+            $codigo_depto = $currentdata[0]['codigo'];
+        }
         //dump($codigo_depto); die;
        //$codigo_depto = 2;
         $depto = '';
@@ -82,8 +86,10 @@ class TramiteCursosController extends Controller
                 $depto = 'Pando';
                 break;
         }
+
+        if( $depto !== ''){
        
-        $query = $em->getConnection()->prepare("
+            $query = $em->getConnection()->prepare("
                select data.*,
                 substring(c.cod_dis,1,1)  as codigo_depto,
                 case substring(c.cod_dis,1,1) 
@@ -115,6 +121,44 @@ class TramiteCursosController extends Controller
                                 where lugar_nivel_id=7) c on b.lugar_tipo_id_distrito=c.id	
                 where substring(c.cod_dis,1,1) = '". $codigo_depto ."' order by 2 desc 
                 ");
+        }else{
+
+            $depto = 'NACIONAL';
+            
+            $query = $em->getConnection()->prepare("
+               select data.*,
+                substring(c.cod_dis,1,1)  as codigo_depto,
+                case substring(c.cod_dis,1,1) 
+                when '1' then 'Chuquisaca'
+                when '2' then 'La Paz'
+                when '3' then 'Cochabamba'
+                when '4' then 'Oruro'
+                when '5' then 'Potosí'
+                when '6' then 'Tarija'
+                when '7' then 'Santa Cruz'
+                when '8' then 'Beni'
+                when '9' then 'Pando' end as depto,
+                c.cod_dis,c.des_dis 
+                from
+                (
+                select  
+                institucioneducativa_id,
+                fecha_solicitud,		
+                institucioneducativa,
+                le_juridicciongeografica_id,
+                count(*) as nrosol
+                from tramite_crea_curso 
+                inner join 
+                institucioneducativa on institucioneducativa.id = institucioneducativa_id
+                group by institucioneducativa_id,fecha_solicitud,institucioneducativa,le_juridicciongeografica_id
+                ) as data
+                inner join jurisdiccion_geografica b on data.le_juridicciongeografica_id=b.id
+                        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo
+                                where lugar_nivel_id=7) c on b.lugar_tipo_id_distrito=c.id	
+                order by 2 desc 
+                ");                
+
+        }
         $query->execute();
         $data = $query->fetchAll();
 
