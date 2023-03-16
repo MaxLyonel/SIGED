@@ -238,7 +238,7 @@
 												<th width="8%">
 													CODIGO SIE
 												</th>
-												<th width="15%">
+												<th width="20%">
 													UNIDAD EDUCATIVA
 												</th>
 												<th width="10%">
@@ -253,9 +253,9 @@
 												<th width="5%">
 													PARALELO
 												</th>
-												<th width="5%">
+												{#<th width="5%">
 													DIMENSIONES AULA
-												</th>
+												</th>#}
 												<th width="20%">
 													OBSERVACION
 												</th>
@@ -274,7 +274,7 @@
 													<td width="8%">
 														{{entity.institucioneducativa_id}}
 													</td>
-													<td width="15%">
+													<td width="20%">
 														{{entity.institucioneducativa}}
 													</td>
 													<td width="10%">
@@ -289,9 +289,9 @@
 													<td width="5%">
 														{{entity.paralelo}}
 													</td>
-													<td width="5%">
+													{#<td width="5%">
 														{{entity.ancho}}m x {{entity.largo}}m
-													</td>
+													</td>#}
 													<td width="20%">
 														<input type="text" size="30" max="150" style="font-weight: bold; background-color: #FEF9E7;" id="txt{{ entity.id }}" name="txt{{entity.id}}" value="{{ entity.observacion }}" class="form-control clase00"/>
 													</td>
