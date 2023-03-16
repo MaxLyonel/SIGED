@@ -471,10 +471,10 @@ class CreacionCursosSolicitudController extends Controller {
             ->add('nuevoNivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $nivelesArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados2()')))            
             //->add('nivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados()')))
             //->add('grado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))
-            ->add('nuevoGrado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $gradosArray, 'attr' => array('class' => 'form-control')))            
+            ->add('nuevoGrado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $gradosArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))            
             ->add('nuevoParalelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $paralelosArray, 'attr' => array('class' => 'form-control', 'onchange' => 'validateForm()'))) 
-            ->add('nuevoAncho', 'number', array('label' => 'Ancho', 'required' => true,'rounding_mode' => 0, 'precision' => 2, 'attr' => array('autocomplete' => 'off','class' => 'form-control', 'min'=> 0, 'max' => 100)))//'pattern' => '[.0-9]{5,10}', 'maxlength' => '6')))            
-            ->add('nuevoLargo', 'number', array('label' => 'Largo', 'required' => true,'rounding_mode' => 0, 'precision' => 2, 'attr' => array('autocomplete' => 'off','class' => 'form-control', 'min'=> 0, 'max' => 100))) //'pattern' => '[.0-9]{5,10}', 'maxlength' => '6')))            
+            // ->add('nuevoAncho', 'number', array('label' => 'Ancho', 'required' => true,'rounding_mode' => 0, 'precision' => 2, 'attr' => array('autocomplete' => 'off','class' => 'form-control', 'min'=> 0, 'max' => 100)))//'pattern' => '[.0-9]{5,10}', 'maxlength' => '6')))            
+            // ->add('nuevoLargo', 'number', array('label' => 'Largo', 'required' => true,'rounding_mode' => 0, 'precision' => 2, 'attr' => array('autocomplete' => 'off','class' => 'form-control', 'min'=> 0, 'max' => 100))) //'pattern' => '[.0-9]{5,10}', 'maxlength' => '6')))            
             //->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
             ->add('crear', 'submit', array('label' => 'Solicitar Crear Curso', 'attr' => array('class' => 'btn btn-success btn-block')))
             ->getForm();
@@ -658,6 +658,7 @@ class CreacionCursosSolicitudController extends Controller {
 
     public function cargarParalelosAction($idInstitucion, $gestion, $turno, $nivel, $grado) {
         try {
+            
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $query = $em->createQuery(
@@ -1148,8 +1149,8 @@ class CreacionCursosSolicitudController extends Controller {
         $nivel_id = $form['nuevoNivel'];
         $grado_id = $form['nuevoGrado'];
         $paralelo_id = $form['nuevoParalelo'];
-        $ancho_id = $form['nuevoAncho'];
-        $largo_id = $form['nuevoLargo'];
+        // $ancho_id = $form['nuevoAncho'];
+        // $largo_id = $form['nuevoLargo'];
         
         $institucion_id = $form['idInstitucion'];
         $gestion_id = $form['idGestion'];
@@ -1193,30 +1194,30 @@ class CreacionCursosSolicitudController extends Controller {
             return $response->setData(array('exito' => 0, 'mensaje' => $msg));
         }
 
-        $sql = " select count(*) as noexiste_infra
-        from (
-        select ic.id, ic.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo, tcci.ancho, tcci.largo 
-        from institucioneducativa_curso ic 
-            inner join turno_tipo tt on ic.turno_tipo_id = tt.id
-            inner join nivel_tipo nt on ic.nivel_tipo_id = nt.id
-            inner join grado_tipo gt on ic.grado_tipo_id = gt.id
-            inner join paralelo_tipo pt on ic.paralelo_tipo_id = pt.id
-            left join tramite_crea_curso_infra tcci on tcci.institucioneducativa_curso_id = ic.id
-            where ic.gestion_tipo_id = " . $gestion_id . "
-            and ic.institucioneducativa_id = " . $institucion_id . "
-            and ic.nivel_tipo_id = " . $nivel_id . "
-            and ic.grado_tipo_id = " . $grado_id . "
-            order by ic.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo
-        ) a
-        where  a.ancho is null or a.largo is null";
+        // $sql = " select count(*) as noexiste_infra
+        // from (
+        // select ic.id, ic.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo, tcci.ancho, tcci.largo 
+        // from institucioneducativa_curso ic 
+        //     inner join turno_tipo tt on ic.turno_tipo_id = tt.id
+        //     inner join nivel_tipo nt on ic.nivel_tipo_id = nt.id
+        //     inner join grado_tipo gt on ic.grado_tipo_id = gt.id
+        //     inner join paralelo_tipo pt on ic.paralelo_tipo_id = pt.id
+        //     left join tramite_crea_curso_infra tcci on tcci.institucioneducativa_curso_id = ic.id
+        //     where ic.gestion_tipo_id = " . $gestion_id . "
+        //     and ic.institucioneducativa_id = " . $institucion_id . "
+        //     and ic.nivel_tipo_id = " . $nivel_id . "
+        //     and ic.grado_tipo_id = " . $grado_id . "
+        //     order by ic.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo
+        // ) a
+        // where  a.ancho is null or a.largo is null";
 
-        $statement = $em->getConnection()->prepare($sql);
-        $statement->execute();
-        $result = $statement->fetchAll();
-        if ($result[0]['noexiste_infra'] != 0) {
-            $msg = "DEBE PREVIAMENTE LLENAR DATOS DE INFRAESTRUCTURA!";
-            return $response->setData(array('exito' => 0, 'mensaje' => $msg));
-        }
+        // $statement = $em->getConnection()->prepare($sql);
+        // $statement->execute();
+        // $result = $statement->fetchAll();
+        // if ($result[0]['noexiste_infra'] != 0) {
+        //     $msg = "DEBE PREVIAMENTE LLENAR DATOS DE INFRAESTRUCTURA!";
+        //     return $response->setData(array('exito' => 0, 'mensaje' => $msg));
+        // }
 
         $sql = " select count(*) as sol_existe
         from (
@@ -1239,7 +1240,7 @@ class CreacionCursosSolicitudController extends Controller {
         }
 
         $usuario_id = $this->session->get('userId');
-        $query = $em->getConnection()->prepare("select * FROM sp_crea_nueva_solicitud_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id','$ancho_id','$largo_id','$usuario_id') ");
+        $query = $em->getConnection()->prepare("select * FROM sp_crea_nueva_solicitud_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id','0','0','$usuario_id') ");
       
         $query->execute();
         $valor= $query->fetchAll();

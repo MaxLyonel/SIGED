@@ -196,30 +196,30 @@
                             <div style="background: #EEE; padding:3px 10px 10px 10px">                               
                                 {{form_start(formNuevo,{'attr':{'id':'formCursos','onsubmit':'return validateFormNuevoCurso()'} })}}
                                 <div class="row">
-                                    <div class="col-lg-2 col-md-6">
+                                    <div class="col-lg-3 col-md-6">
                                         {{form_label(formNuevo.nuevoTurno)}}
                                         {{form_widget(formNuevo.nuevoTurno)}}
                                     </div>
-                                    <div class="col-lg-2 col-md-6">
+                                    <div class="col-lg-3 col-md-6">
                                         {{form_label(formNuevo.nuevoNivel)}}
                                         {{form_widget(formNuevo.nuevoNivel)}}
                                     </div>
-                                    <div class="col-lg-2 col-md-6">
+                                    <div class="col-lg-3 col-md-6">
                                         {{form_label(formNuevo.nuevoGrado)}}
                                         {{form_widget(formNuevo.nuevoGrado)}}
                                     </div>
-                                    <div class="col-lg-2 col-md-6">
+                                    <div class="col-lg-3 col-md-6">
                                         {{form_label(formNuevo.nuevoParalelo)}}
                                         {{form_widget(formNuevo.nuevoParalelo)}}
                                     </div>
-                                    <div class="col-lg-2 col-md-6">
+                                    {# <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoAncho)}}
                                         {{form_widget(formNuevo.nuevoAncho)}}
                                     </div>
                                     <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoLargo)}}
                                         {{form_widget(formNuevo.nuevoLargo)}}
-                                    </div>
+                                    </div> #}
                                     <div class="col-lg-4 col-lg-offset-4" style="text-align:center;">
                                         <br>                                       
                                         {{form_widget(formNuevo.crear)}}
@@ -312,7 +312,7 @@
                         }
                         xhr2 = $.ajax({
                             type: 'get',
-                            url: Routing.generate('areas_cargar_niveles', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno}),
+                            url: Routing.generate('creacion_cursos_solicitud_cargar_niveles', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno}),
                             beforeSend: function () {
                                 $("#form_nivel").empty();
                                 $("#form_grado").empty();
@@ -381,7 +381,7 @@
                         }
                         xhr3 = $.ajax({
                             type: 'get',
-                            url: Routing.generate('areas_cargar_grados', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno, 'nivel': nivel}),
+                            url: Routing.generate('creacion_cursos_solicitud_cargar_grados', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno, 'nivel': nivel}),
                             beforeSend: function () {
                                 $("#form_grado").empty();
                                 $("#form_paralelo").empty();
@@ -394,7 +394,7 @@
                                 $("#form_paralelo").empty();
                                 $("#form_grado").append('<option value="">Seleccionar...</option>');
                                 $("#form_paralelo").append('<option value="">Seleccionar...</option>');
-                                $.each(data.grados, function (i, value) {
+                                $.each(data.grados, function (i, value) {cargarParalelos
                                     $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
                                 });
 
@@ -432,28 +432,38 @@
                     function cargarParalelos() {
                         var institucion = $('#form_idInstitucion').val();
                         var gestion = $('#form_idGestion').val();
-                        var turno = $('#form_turno').val();
-                        var nivel = $('#form_nivel').val();
-                        var grado = $('#form_grado').val();
-                        if (xhr4 && xhr4.readyState != 4) {
-                            xhr4.abort();
-                        }
-                        xhr4 = $.ajax({
-                            type: 'get',
-                            url: Routing.generate('areas_cargar_paralelos', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno, 'nivel': nivel, 'grado': grado}),
-                            beforeSend: function () {
-                                $("#form_paralelo").empty();
-                                $("#form_paralelo").append('<option value="">Buscando...</option>');
-                                $('#divAreas').empty();
-                            },
-                            success: function (data) {
-                                $("#form_paralelo").empty();
-                                $("#form_paralelo").append('<option value="">Seleccionar...</option>');
-                                $.each(data.paralelos, function (i, value) {
-                                    $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
-                                });
-                            }
-                        });
+                        var turno = $('#form_nuevoturno').val();
+                        var nivel = $('#form_nuevonivel').val();
+                        var grado = $('#form_nuevogrado').val();
+
+                        $("#form_nuevoParalelo").empty();
+                            $("#form_nuevoParalelo").append('<option value="">Seleccionar...</option>');
+                            $("#form_nuevoParalelo").append('<option value="1">A</option>');
+                            $("#form_nuevoParalelo").append('<option value="2">B</option>');                            
+                            $("#form_nuevoParalelo").append('<option value="3">C</option>');
+                            $("#form_nuevoParalelo").append('<option value="4">D</option>');
+                            $("#form_nuevoParalelo").append('<option value="5">E</option>');
+                            $("#form_nuevoParalelo").append('<option value="6">F</option>');
+
+                        // if (xhr4 && xhr4.readyState != 4) {
+                        //     xhr4.abort();
+                        // }
+                        // xhr4 = $.ajax({
+                        //     type: 'get',
+                        //     url: Routing.generate('creacion_cursos_solicitud_cargar_paralelos', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno, 'nivel': nivel, 'grado': grado}),
+                        //     beforeSend: function () {
+                        //         $("#form_nuevoparalelo").empty();
+                        //         $("#form_nuevoparalelo").append('<option value="">Buscando...</option>');
+                        //         $('#divAreas').empty();
+                        //     },
+                        //     success: function (data) {
+                        //         $("#form_nuevoparalelo").empty();
+                        //         $("#form_nuevoparalelo").append('<option value="">Seleccionar...</option>');
+                        //         $.each(data.paralelos, function (i, value) {
+                        //             $("#form_nuevoparalelo").append('<option value="' + i + '">' + value + '</option>');
+                        //         });
+                        //     }
+                        // });
                     }
 
                     
@@ -463,7 +473,7 @@
                         var turno = $('#form_nuevoturno').val();
                         var nivel = $('#form_nuevonivel').val();
                         var grado = $('#form_nuevogrado').val();
-                        // var paralelo = $('#form_nuevoparalelo').val();
+                        var paralelo = $('#form_nuevoparalelo').val();
                         if (turno == '') {
                             alert('Debe seleccionar un turno');
                             return false;
@@ -476,10 +486,10 @@
                             alert('Debe seleccionar un grado');
                             return false;
                         }
-                        // if (paralelo == '') {
-                        //     alert('Debe seleccionar un paralelo');
-                        //     return false;
-                        // }
+                        if (paralelo == '') {
+                            alert('Debe seleccionar un paralelo');
+                            return false;
+                        }
 
                         if (xhr1 && xhr1.readyState != 4) {
                             xhr1.abort();
@@ -517,8 +527,8 @@
                         var nivel = $('#form_nuevoNivel').val();
                         var grado = $('#form_nuevoGrado').val();
                         var paralelo = $('#form_nuevoParalelo').val();
-                        var ancho = $('#form_nuevoAncho').val();
-                        var largo = $('#form_nuevoLargo').val();
+                        // var ancho = $('#form_nuevoAncho').val();
+                        // var largo = $('#form_nuevoLargo').val();
                         if (turno == '') {
                             alert('Debe seleccionar un turno');
                             return false;
@@ -535,14 +545,14 @@
                             alert('Debe seleccionar un paralelo');
                             return false;
                         }
-                        if (ancho == '') {
-                            alert('Debe registrar ancho del curso');
-                            return false;
-                        }
-                        if (largo == '') {
-                            alert('Debe registrar largo del curso');
-                            return false;
-                        }
+                        // if (ancho == '') {
+                        //     alert('Debe registrar ancho del curso');
+                        //     return false;
+                        // }
+                        // if (largo == '') {
+                        //     alert('Debe registrar largo del curso');
+                        //     return false;
+                        // }
 
                         if (xhr2 && xhr2.readyState != 4) {
                             xhr2.abort();

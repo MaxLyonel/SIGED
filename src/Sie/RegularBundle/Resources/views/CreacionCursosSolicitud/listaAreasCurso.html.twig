@@ -1,6 +1,6 @@
 {% if areas is not empty %}
     <div class="table-responsive">
-        <form action="{{path('creacion_cursos_solicitud_cursos_infra')}}" name="form" id="form" method="post" class="form-inline">
+        {# <form action="{{path('creacion_cursos_solicitud_cursos_infra')}}" name="form" id="form" method="post" class="form-inline"> #}
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -9,8 +9,8 @@
                     <th>Nivel</th>
                     <th>Grado</th>
                     <th class="text-center">Paralelo</th>
-                    <th>Ancho</th>
-                    <th>Largo</th>
+                    {# <th>Ancho</th>
+                    <th>Largo</th> #}
                 </tr>
             </thead>
             <tbody>
@@ -22,14 +22,14 @@
                         <td>{{co.nivel}}</td>
                         <td>{{co.grado}}</td>
                         <td class="text-center">{{co.paralelo}}</td>
-                        <td><input type="number" min="0" id="form_ancho" name="ancho[]" value="{{co.ancho}}" size="5" required/></td>
-                        <td><input type="number" min="0" id="form_largo" name="largo[]" value="{{co.largo}}" size="5" required/></td>
+                        {# <td><input type="number" min="0" id="form_ancho" name="ancho[]" value="{{co.ancho}}" size="5" required/></td>
+                        <td><input type="number" min="0" id="form_largo" name="largo[]" value="{{co.largo}}" size="5" required/></td> #}
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <button class="btn btn-blue" type="submit">Guardar datos Infraestructura</button> 
-        </form>
+        {# <button class="btn btn-blue" type="submit">Guardar datos Infraestructura</button> 
+        </form> #}
     </div>
     
     <script>
