@@ -43,7 +43,8 @@ class TramiteCursosController extends Controller
 
 
         $id_usuario = $this->session->get('userId');
-        $sql = "select codigo from lugar_tipo where id in (select lugar_tipo_id from usuario_rol where rol_tipo_id = 7 and usuario_id = " . $id_usuario . ")";
+        $rol_usuario = $this->session->get('roluser');
+        $sql = "select codigo from lugar_tipo where id in (select lugar_tipo_id from usuario_rol where rol_tipo_id = ". $rol_usuario ." and usuario_id = " . $id_usuario . ")";
         //dump($sql); die;
         $stmtaux = $em->getConnection()->prepare($sql);
         $stmtaux->execute();
