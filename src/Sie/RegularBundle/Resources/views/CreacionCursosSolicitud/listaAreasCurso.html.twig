@@ -1,0 +1,43 @@
+{% if areas is not empty %}
+    <div class="table-responsive">
+        {# <form action="{{path('creacion_cursos_solicitud_cursos_infra')}}" name="form" id="form" method="post" class="form-inline"> #}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center border-right">No.</th>
+                    <th>Turno</th>
+                    <th>Nivel</th>
+                    <th>Grado</th>
+                    <th class="text-center">Paralelo</th>
+                    {# <th>Ancho</th>
+                    <th>Largo</th> #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for co in areas %}
+                    <input type="hidden" name="icid[]" value="{{co.icid}}">
+                    <tr>
+                        <td class="text-center border-right">{{loop.index}}</td>
+                        <td>{{co.turno}}</td>
+                        <td>{{co.nivel}}</td>
+                        <td>{{co.grado}}</td>
+                        <td class="text-center">{{co.paralelo}}</td>
+                        {# <td><input type="number" min="0" id="form_ancho" name="ancho[]" value="{{co.ancho}}" size="5" required/></td>
+                        <td><input type="number" min="0" id="form_largo" name="largo[]" value="{{co.largo}}" size="5" required/></td> #}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {# <button class="btn btn-blue" type="submit">Guardar datos Infraestructura</button> 
+        </form> #}
+    </div>
+    
+    <script>
+        
+    </script>
+
+{% else %}
+    <div class="alert alert-warning"><i class="fa fa-warning"></i> El curso no tiene cursos ni paralelos en ese nivel y grado</div>
+{% endif %}
+
+</strong>

@@ -34,6 +34,10 @@ sie_app_web_creacion_cursos:
     resource: "@SieRegularBundle/Resources/config/routing/creacioncursos.yml"
     prefix:   /sie/creacionCursos
 
+sie_app_web_creacion_cursos_solicitud:
+    resource: "@SieRegularBundle/Resources/config/routing/creacioncursossolicitud.yml"
+    prefix:   /sie/creacionCursosSolicitud
+
 sie_regular_adicion_notas:
     resource: "@SieRegularBundle/Resources/config/routing/adicionNotas.yml"
     prefix:   /sie/adicionCalificaciones

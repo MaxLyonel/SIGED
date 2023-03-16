@@ -1,0 +1,11 @@
+<h4>Seleccionar la asignatura que desea agregar</h4>
+<select class="form-control">
+    <option value="">Seleccionar...</option>
+    {% for a in areasNivel %}
+        <option value="{{a.codigo}}">{{a.asignatura}}</option>
+    {% endfor %}
+</select>
+<hr>
+<h4>Asignar maestros</h4>
+
+
