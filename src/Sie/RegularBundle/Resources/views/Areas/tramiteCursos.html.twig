@@ -379,6 +379,8 @@
 	{% endblock %}
 	{% block javascripts %}
 		{{parent()}}
+
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<script src="{{asset('js/chosen.jquery.js')}}"></script>
 		<script src="{{asset('bootstrap-wizard/js/bwizard.js')}}"></script>
 		<script src="{{asset('bootstrap-wizard/jquery-ui.min.js')}}"></script>
