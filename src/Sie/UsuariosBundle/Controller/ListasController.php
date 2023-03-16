@@ -283,8 +283,7 @@ class ListasController extends Controller
                             inner join persona d on a.persona_id = d.id
                     where e.lugar_tipo_id = ".$sesion->get('dep_id')."
                     and c.id in (10,37) 
-                    and b.esactivo is true
-                            
+                    and b.esactivo is true                            
                     order by e.codigo, d.paterno, d.materno, d.nombre";
         $stmt = $db->prepare($query);
         $params = array();
