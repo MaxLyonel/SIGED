@@ -1,5 +1,6 @@
 {% if areas is not empty %}
     <div class="table-responsive">
+        <form action="{{path('creacion_cursos_solicitud_cursos_infra')}}" name="form" id="form" method="post" class="form-inline">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -14,18 +15,21 @@
             </thead>
             <tbody>
                 {% for co in areas %}
+                    <input type="hidden" name="icid[]" value="{{co.icid}}">
                     <tr>
                         <td class="text-center border-right">{{loop.index}}</td>
                         <td>{{co.turno}}</td>
                         <td>{{co.nivel}}</td>
                         <td>{{co.grado}}</td>
                         <td class="text-center">{{co.paralelo}}</td>
-                        <td><input type="text" id="a{{co.paralelo}}" name="a{{co.paralelo}}" value="{{co.paralelo}}" size="5" required/></td>
-                        <td><input type="text" id="l{{co.paralelo}}" name="l{{co.paralelo}}" value="{{co.paralelo}}" size="5" required/></td>
+                        <td><input type="number" min="0" id="form_ancho" name="ancho[]" value="{{co.ancho}}" size="5" required/></td>
+                        <td><input type="number" min="0" id="form_largo" name="largo[]" value="{{co.largo}}" size="5" required/></td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <button class="btn btn-blue" type="submit">Guardar datos Infraestructura</button> 
+        </form>
     </div>
     
     <script>

@@ -196,21 +196,29 @@
                             <div style="background: #EEE; padding:3px 10px 10px 10px">                               
                                 {{form_start(formNuevo,{'attr':{'id':'formCursos','onsubmit':'return validateFormNuevoCurso()'} })}}
                                 <div class="row">
-                                    <div class="col-lg-3 col-md-6">
+                                    <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoTurno)}}
                                         {{form_widget(formNuevo.nuevoTurno)}}
                                     </div>
-                                    <div class="col-lg-3 col-md-6">
+                                    <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoNivel)}}
                                         {{form_widget(formNuevo.nuevoNivel)}}
                                     </div>
-                                    <div class="col-lg-3 col-md-6">
+                                    <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoGrado)}}
                                         {{form_widget(formNuevo.nuevoGrado)}}
                                     </div>
-                                    <div class="col-lg-3 col-md-6">
+                                    <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoParalelo)}}
                                         {{form_widget(formNuevo.nuevoParalelo)}}
+                                    </div>
+                                    <div class="col-lg-2 col-md-6">
+                                        {{form_label(formNuevo.nuevoAncho)}}
+                                        {{form_widget(formNuevo.nuevoAncho)}}
+                                    </div>
+                                    <div class="col-lg-2 col-md-6">
+                                        {{form_label(formNuevo.nuevoLargo)}}
+                                        {{form_widget(formNuevo.nuevoLargo)}}
                                     </div>
                                     <div class="col-lg-4 col-lg-offset-4" style="text-align:center;">
                                         <br>                                       
@@ -509,6 +517,8 @@
                         var nivel = $('#form_nuevoNivel').val();
                         var grado = $('#form_nuevoGrado').val();
                         var paralelo = $('#form_nuevoParalelo').val();
+                        var ancho = $('#form_nuevoAncho').val();
+                        var largo = $('#form_nuevoLargo').val();
                         if (turno == '') {
                             alert('Debe seleccionar un turno');
                             return false;
@@ -523,6 +533,14 @@
                         }
                         if (paralelo == '') {
                             alert('Debe seleccionar un paralelo');
+                            return false;
+                        }
+                        if (ancho == '') {
+                            alert('Debe registrar ancho del curso');
+                            return false;
+                        }
+                        if (largo == '') {
+                            alert('Debe registrar largo del curso');
                             return false;
                         }
 

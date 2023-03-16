@@ -36,6 +36,10 @@ creacion_cursos_solicitud_cargar_paralelos:
     options:
          expose: true
 
+creacion_cursos_solicitud_cursos_infra:
+    path:     /cursos_infra/
+    defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:cursos_infra" }
+    
 creacion_cursos_solicitud_listar_cursos:
     path:     /lista_cursos/
     defaults: { _controller: "SieRegularBundle:CreacionCursosSolicitud:lista_cursos" }
