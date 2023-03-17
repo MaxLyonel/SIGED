@@ -379,7 +379,8 @@ class DatoHistoricoController extends Controller {
         $historico = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($request->get('idhistorico'));
         $detalleHistorico = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistoricoDetalle')->findBy(array('institucioneducativaHistorico' => $historico));
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($historico->getInstitucioneducativa()->getId());
-       
+        $areafArray        = $this->obtieneAreaFormacionArray($entity->getInstitucioneducativaTipo()->getId());
+        $areformInstitucionArray = $this->obtieneInstitucionAreaFormArray($entity->getId());
         $tiposArray = $this->obtieneTipoFlujosResolucionArray();
         $dependenciasArray = $this->obtieneDependenciaArray();
         $form = $this->createFormBuilder()
@@ -397,6 +398,7 @@ class DatoHistoricoController extends Controller {
         ->add('localidad', 'text', array('label' => 'Localidad', 'disabled' => true, 'attr' => array('class' => 'form-control')))
         ->add('zona', 'text', array('label' => 'Zona', 'disabled' => true, 'attr' => array('class' => 'form-control')))
         ->add('direccion', 'text', array('label' => 'Dirección', 'disabled' => true, 'attr' => array('class' => 'form-control')))
+        ->add('areaFormacionTipo', 'choice', array('label' => 'Area de Formación', 'choices'=>$areafArray,  'required' => false  , 'multiple' => true,'expanded' => true, 'data' => $areformInstitucionArray))
         ->add('guardar', 'submit', array('label' => 'Guardar datos', 'attr' => array('class' => 'btn btn-primary')));
 
         return $this->render('SieRieBundle:DatoHistorico:list_detalle.html.twig', array('entity' => $entity,'resolucion' => $historico,'detalle' => $detalleHistorico,  'form' => $form->getForm()->createView() ));
@@ -429,6 +431,8 @@ class DatoHistoricoController extends Controller {
             $this->get('session')->getFlashBag()->add('mensaje', 'Error, debe ingresar el codigo de la nueva localizacion.');
             return $this->redirect($this->generateUrl('historico_detalle', array('idhistorico'=>$form['idhistorico'])));
         }
+
+
         try {
             
             $valor_anterior = '';
@@ -476,7 +480,39 @@ class DatoHistoricoController extends Controller {
                
 
             }
-           
+             //elimina areas de formacion
+             if($form['tipos']==8){ //areas de formacion
+                $anterior = '';
+                $x = 1;
+                $areasFormElim = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaAreaFormacionAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+                if($areasFormElim){
+                    
+                    foreach($areasFormElim as $area){
+                       // dump($area->getTtecAreaFormacionTipo()->getAreaFormacion());die;
+                        //$anterior = $anterior.'_'.$area->getTtecAreaFormacionTipo()->getId();
+                        $anterior = $anterior.' '.$x.'-'.$area->getTtecAreaFormacionTipo()->getAreaFormacion().' ';
+                        $em->remove($area);
+                        $x++;
+                    }
+                    $em->flush();
+                    $valor_anterior =  $anterior;
+                }
+    
+                $areas = (isset($form['areaFormacionTipo']))?$form['areaFormacionTipo']:array();
+                $nuevo = '';
+                for($i=0;$i<count($areas);$i++){
+                    $darea = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById($areas[$i]);
+                    $areaf = new TtecInstitucioneducativaAreaFormacionAutorizado();
+                    $areaf->setFechaRegistro(new \DateTime('now'));
+                    $areaf->setInstitucioneducativa($entity);
+                    $areaf->setTtecAreaFormacionTipo($darea); 
+                    $ii =  $i+1;
+                    $nuevo = $nuevo.' '.$ii.'-'.$darea->getAreaFormacion().' ';
+                    $em->persist($areaf);
+                }   
+                $valor_nuevo =  $nuevo;
+                $em->flush();
+            }
             $historicod = new TtecInstitucioneducativaHistoricoDetalle();
             $historicod->setInstitucioneducativaHistorico($em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($form['idhistorico']));
             $historicod->setResolucionTipo($tipo);
@@ -628,4 +664,52 @@ class DatoHistoricoController extends Controller {
     			'direccion' => $stmt,
     	));
     }
+    public function obtieneAreaFormacionArray($id){
+        
+        $em = $this->getDoctrine()->getManager();
+        switch($id){
+            case '999': //instituto técnico Y técnologico
+                $nuevoArray = array();
+                //areas técnicas
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(7)));
+                foreach($datos as $dato){
+                    $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
+                }
+                //areas tecnológicas
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(8)));
+                foreach($datos as $dato){
+                    $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
+                }
+            break;
+            case '11': //CENTROS de capacitación artistica
+            case '12': //instituto de formación artistica
+            case '13': //escuelas
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(12)));
+                $nuevoArray = array();
+                foreach($datos as $dato){
+                    $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
+                }
+            break;
+            default: //instituto técnico ó tecnológico
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findAll();
+                $nuevoArray = array();
+                foreach($datos as $dato){
+                    $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
+                }
+               
+            break;
+        }
+        return $nuevoArray; 
+    }
+    public function obtieneInstitucionAreaFormArray($id){
+        $em = $this->getDoctrine()->getManager();
+        $datos = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaAreaFormacionAutorizado')->findBy(array('institucioneducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->findById($id)));
+        $nuevoArray = array();
+        foreach($datos as $dato){
+            $nuevoArray[] = $dato->getTtecAreaFormacionTipo()->getId();
+        }
+        return $nuevoArray; 
+    }
 }
+
+
