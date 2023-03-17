@@ -285,6 +285,7 @@
         }
 
         function cargarDetalle() {
+
             tipo = $("#form_tipos").val();
             if(tipo =='2'){
                  $("#divFechas").show();
@@ -312,6 +313,7 @@
             }
         }
          function buscarEdificioEscolar(idLe) {
+            
             $.ajax({
                     type: 'get',
                     url: Routing.generate('rie_buscar_edificio', {'idLe': idLe}),
