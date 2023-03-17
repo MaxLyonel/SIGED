@@ -326,3 +326,10 @@ sie_preinscripcion_sorteo_padre:
     resource: "@SieHerramientaBundle/Resources/config/routing/preinscripcionsorteohijo.yml"
     prefix: /sie/sorteopreinscripcion
 
+
+sie_chees_event:
+     resource: "@SieHerramientaBundle/Resources/config/routing/cheesevent.yml"
+     prefix:   /sie/cheesevent
+# index:
+#     path:     /index
+#     defaults: { _controller: SieHerramientaBundle:ChessEvent:index }
