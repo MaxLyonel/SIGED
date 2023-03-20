@@ -1,0 +1,85 @@
+Sie\AppWebBundle\Entity\EveEstudianteInscripcionEvento:
+    type: entity
+    table: eve_estudiante_inscripcion_evento
+    indexes:
+        IDX_D44843D2A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_D44843D289073932:
+            columns:
+                - eve_categorias_tipo_id
+        IDX_D44843D248733C82:
+            columns:
+                - eve_fase_tipo_id
+        IDX_D44843D21456CCBB:
+            columns:
+                - eve_modalidades_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        eveCategoriasTipo:
+            targetEntity: EveCategoriasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                eve_categorias_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        eveFaseTipo:
+            targetEntity: EveFaseTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                eve_fase_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        eveModalidadesTipo:
+            targetEntity: EveModalidadesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                eve_modalidades_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
