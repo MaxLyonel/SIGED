@@ -13,14 +13,16 @@ use Sie\AppWebBundle\Entity\Estudiante;
 use Sie\AppWebBundle\Entity\Institucioneducativa; 
 use Sie\AppWebBundle\Entity\EveEstudianteInscripcionEvento; 
 
-class ChessEventController extends Controller{
+class ChessEventAdmController extends Controller{
+
     public $session;
     public function __construct() {
         $this->session = new Session();
-    }       
-    public function index1Action(){
+    }   
 
-        return $this->render('SieHerramientaBundle:ChessEvent:index.html.twig', array(
+    public function index1Action()
+    {
+        return $this->render('SieHerramientaBundle:ChessEventAdm:index.html.twig', array(
                 // ...
             ));    }
 
@@ -44,7 +46,7 @@ class ChessEventController extends Controller{
             }
 
 
-            return $this->render('SieHerramientaBundle:ChessEvent:index.html.twig',array(
+            return $this->render('SieHerramientaBundle:ChessEventAdm:index.html.twig',array(
                 'codsie'=>$sie,
                 'disableElement'=>$disableElement,
                 
@@ -154,6 +156,7 @@ class ChessEventController extends Controller{
 
     public function dataSelectedAction(Request $request){
         
+        
         // get the vars send        
         $sie = $request->get('sie');
         $institucioneducativa = $request->get('institucioneducativa');
@@ -165,28 +168,12 @@ class ChessEventController extends Controller{
         $modalidadLabel = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->find($modalidadId);
         $faseLabel = $em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseId);
         $categorieLabel = $em->getRepository('SieAppWebBundle:EveCategoriasTipo')->find($categorieId);
-        
-        $genderRequest = (( trim(explode('(',$categorieLabel->getCategoria())[0] )) ==  'Varones' )?1:2;
-
-        //get the allow grades
-        preg_match_all('/[0-9]+/', $categorieLabel->getCategoria(), $rangeLevel);
-        // check if the exist numbers
-        if(sizeof($rangeLevel)>0){
-            $arrRangeLevel = $rangeLevel[0];
-
-            $arrAllowGrade = array();
-            for ($i=$arrRangeLevel[0]; $i <= $arrRangeLevel[sizeof($arrRangeLevel)-1 ]; $i++) { 
-                $arrAllowGrade[]=array('id'=>$i, 'grade'=>$i);
-            }            
-        }else{
-            $arrAllowGrade=array();
-        }
-
+      
 
         // get students data
 
         $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
-        // dump($arrEveStudents);die;
+        
         $arrResponse = array(
             'modalidadId'    => $modalidadId,
             'faseId'         => $faseId,
@@ -195,8 +182,8 @@ class ChessEventController extends Controller{
             'faseLabel'      => $faseLabel->getDescripcion(),
             'categorieLabel' => $categorieLabel->getCategoria(),
             'arrEveStudents' => $arrEveStudents,
-            'arrAllowGrade' => $arrAllowGrade,
-            'genderRequest' => $genderRequest,
+            // 'arrAllowGrade' => $arrAllowGrade,
+            // 'genderRequest' => $genderRequest,
             'existSelectData'         => 1,    )
         ; 
 
@@ -499,8 +486,4 @@ class ChessEventController extends Controller{
 
 
 
-
-
-
 }
- 

@@ -1,0 +1,51 @@
+cheeseventadm_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:index }
+
+cheeseventadm_findUEData:
+    path:     /findUEData
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:findUEData }
+    options:
+         expose: true
+
+cheeseventadm_getInfoEvent:
+    path:     /getInfoEvent
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:getInfoEvent }
+    options:
+         expose: true
+
+cheeseventadm_dataSelected:
+    path:     /dataSelected
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:dataSelected }
+    options:
+         expose: true
+         
+cheeseventadm_findStudent:
+    path:     /findStudent
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:findStudent }
+    options:
+         expose: true
+         
+cheeseventadm_showStudents:
+    path:     /showStudents
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:showStudents }
+    options:
+         expose: true
+         
+cheeseventadm_getParalelos:
+    path:     /getParalelos
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:getParalelos }
+    options:
+         expose: true
+         
+cheeseventadm_doInscription:
+    path:     /doInscription
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:doInscription }
+    options:
+         expose: true
+         
+cheeseventadm_removeInscriptionChees:
+    path:     /removeInscriptionChees
+    defaults: { _controller: SieHerramientaBundle:ChessEventAdm:removeInscriptionChees }
+    options:
+         expose: true

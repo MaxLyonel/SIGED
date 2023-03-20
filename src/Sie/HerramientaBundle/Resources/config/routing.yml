@@ -330,6 +330,11 @@ sie_preinscripcion_sorteo_padre:
 sie_chees_event:
      resource: "@SieHerramientaBundle/Resources/config/routing/cheesevent.yml"
      prefix:   /sie/cheesevent
+
+sie_chees_event_adm:
+     resource: "@SieHerramientaBundle/Resources/config/routing/cheeseventadm.yml"
+     prefix:   /sie/cheeseventadm
+
 # index:
 #     path:     /index
-#     defaults: { _controller: SieHerramientaBundle:ChessEvent:index }
+#     defaults: { _controller: SieHerramientaBundle:ChessEventAdm:index }
