@@ -43,3 +43,9 @@ cheesevent_doInscription:
     defaults: { _controller: SieHerramientaBundle:ChessEvent:doInscription }
     options:
          expose: true
+         
+cheesevent_removeInscriptionChees:
+    path:     /removeInscriptionChees
+    defaults: { _controller: SieHerramientaBundle:ChessEvent:removeInscriptionChees }
+    options:
+         expose: true

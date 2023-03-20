@@ -139,7 +139,7 @@
 										<form class="form-row">
 											<div class="form-group">
 												<label for="rude">Código SIE: </label>
-												<input type="text" v-model="infoUE.sie"  class="form-control" id="exampleInputPassword1" placeholder="SIE">
+												<input type="text" v-model="infoUE.sie"  class="form-control" id="exampleInputPassword1" placeholder="SIE" :readonly="disableElement>0">
 											</div>
 											<button v-on:click="findUEData()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Continuar </button>
 										</form>																
@@ -299,12 +299,10 @@
 											<td>${rindex+1}</td>
 											<td>${student.codigo_rude | uppercase}</td>
 											<td>${student.carnet_identidad} ${student.complemento}</td>
-											<td>${student.paterno | uppercase}</td>
-											<td>${student.materno | uppercase}</td>
-											<td>${student.nombre | uppercase}</td>
+											<td colspan="3">${student.paterno | uppercase} ${student.materno | uppercase} ${student.nombre | uppercase}</td>
 											<td>${student.genero | uppercase}</td>
 											{#  #}
-											<td><a href="#" v-on:click="doInscription(infoUE, student.inscriptionid)" v-bind:id="student.inscriptionid" :class="{disabled: linkDisabled}"> Inscribir  </td>										
+											<td v-bind:id="student.inscriptionid"><a href="#" v-on:click="doInscription(infoUE, student.inscriptionid)"  :class="{disabled: linkDisabled}"> Inscribir  </td>										
 										</tr>
 
 										<tr >
@@ -350,6 +348,47 @@
 									  </tbody>
 									</table>									
 								</div>
+								<hr>
+								<small>
+									<div class="table-responsive">
+		                            	<table class="table table-dark" >
+											<tbody>
+											<tr>
+												
+												<th>#</th>
+												<th>Cod. RUDE</th>
+												<th>CI-COMPL.</th>
+												<th>Estudiante</th>
+												<th>Nivel / Grado / Paralelo</th>
+												<th>option</th>	
+											</tr>
+											<tr v-for="(competitor, index) in DBEveStudents">
+
+												<td>${index+1}</td>
+												<td><strong>${competitor.codigo_rude}</strong> </td>
+												<td>${competitor.carnet_identidad} ${competitor.complemento}</td>
+												<td>
+												${competitor.paterno} ${competitor.materno} ${competitor.nombre}
+												</td>
+												<td>${competitor.nivel} / ${competitor.grado} /<strong>${competitor.paralelo}</strong> </td>
+												<th><a href="#" v-on:click="removeInscriptionChees(competitor.eveinscriptionid)" v-bind:id="competitor.eveinscriptionid" :class="{disabled: linkDisabled}"> <i class="fa fa-trash"></i> </td>										
+
+											</tr>
+											
+
+
+											<tr >
+												<th colspan="6" align="left">
+												{# <button v-on:click="doInscription()" type="button" class="btn btn-success" title="C"> Inscribir </button>								    		 #}
+												</th>
+											</tr>
+											</tbody>
+										</table>
+									</div>	
+								</small>							
+
+
+
 							</div>
 
 						</div>
@@ -388,8 +427,9 @@
 		el: '#app',
 		data: {
 			opcion: 1,
+			disableElement: '{{disableElement}}',
 			infoUE:{
-				sie:80730460,
+				sie: '{{codsie}}',
 				institucioneducativa:'',
 				modalidadLabel:'',
 				faseLabel:'',
@@ -412,6 +452,7 @@
 			DBstudent: {},
 			DBParallels: {},
 			DBInscriptionLevel: {},
+			DBEveStudents: {},
 			existSelectData:false,
 			existStudent:false,
 			existParall:false,
@@ -424,15 +465,9 @@
 				
 			],
 
-			
-		
-
-			buscando: false,
-		
-			
+			buscando: false,			
 			showbuttonPDF:false,
 			swCertification:false,
-
 			procesar: false,
 			
 			
@@ -538,6 +573,7 @@
 				this.DBParallels={};
 				this.existStudent=false;
 				this.DBstudent={};				
+				this.DBEveStudents={};				
 				axios.post(Routing.generate('cheesevent_dataSelected', this.infoUE ))
 				.then(response => {
 					if (response.status == 200) {
@@ -552,6 +588,7 @@
 								this.infoUE.categorieLabel = response.data.categorieLabel;
 								this.infoUE.genderRequest = response.data.genderRequest;
 								this.DBInscriptionLevel = response.data.arrAllowGrade;
+								this.DBEveStudents = response.data.arrEveStudents;
 								this.existSelectData = response.data.existSelectData;
 
 								// this.infoUE2.krlos = 'krlos';
@@ -695,378 +732,128 @@
 				});					
 
 			},
-			doInscription:function(infoUE, inscriptionid){				
-				this.infoUE.inscriptionid=inscriptionid;
-				$('#'+inscriptionid).addClass('seleccionado');
-				axios.post(Routing.generate('cheesevent_doInscription', this.infoUE ))
-				.then(response => {
-					if (response.status == 200) {
-						this.DBselectedData = response.data.selectedData;
-							// console.log(response.data);
+			doInscription:function(infoUE, inscriptionid){
 
-							if(response.data.existStudent == true){
-								
-								// this.DBselectedData = response.data.selectedData;
-								this.infoUE.modalidadId = response.data.modalidadId;
-								this.infoUE.faseId = response.data.faseId;
-								this.infoUE.categorieId = response.data.categorieId;
-								this.infoUE.sie = response.data.sie;
-								this.DBstudent = response.data.arrStudents;
+                    Swal.fire({
+                        title: '¿Realizar el registro??',
+                        text: "Se registrará al estudiante seleccionado...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
 
-								this.existStudent = response.data.existStudent;
+							this.DBEveStudents ={};
+							this.infoUE.inscriptionid=inscriptionid;
+							$('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('cheesevent_doInscription', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
 
-								// this.infoUE2.krlos = 'krlos';
-								// this.DBCategories = response.data.arrCategories;
-								
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'no answer...',
-								'warning'
-								);
-							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});						
+										if(response.data.existStudent == true){
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBEveStudents = response.data.arrEveStudents;
+
+											// this.existStudent = response.data.existStudent;
+
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		
+
+	                    
+	                    }                    
+                    });
+
+
+			},
+			removeInscriptionChees:function(inscriptionid){
+
+                    Swal.fire({
+                        title: '¿Realizar la eliminación??',
+                        text: "Se eliminará al estudiante seleccionado...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							this.infoUE.remoinscriptionid=inscriptionid;
+							// $('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('cheesevent_removeInscriptionChees', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.existRemoveStudent == true){
+											this.DBEveStudents ={};
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBEveStudents = response.data.arrEveStudents;
+
+											// this.existStudent = response.data.existStudent;
+
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		                    	
+
+						}		
+					 });
+
 
 
 			},
 			/////////////////////////////////////////////////////////////////////
-			lookforrude: function(){
-				console.log('lookforrude');
 
-				this.procesar = false;
-
-				this.buscando = true;
-				this.responseprocess = false;
-				this.swinscription = false;
-				this.swoldinscription = false;
-				this.swprocessue = false;
-				this.DBstudentExist=false;
-				this.oldStudent=false;
-				this.existStudent=false;
-				this.message = '';
-				this.dataNewStudent.generoId= '';
-				this.dataNewStudent.paisId= '';
-				this.DBDepto= '';
-				this.DBProvincia= '';
-				this.dataNewStudent.localidad='';
-				this.dataNewStudent.sie = '';
-				this.swhomonimo = false;
-				this.dataNewStudent.nivelId='';
-				this.dataNewStudent.gradoId='';
-				this.dataNewStudent.paraleloId='';
-				this.dataNewStudent.turnoId='';
-				this.oldStudent = false;
-
-
-				if (typeof this.dataNewStudent.rude === "undefined") {
-					Swal.fire(
-						'Atencion !',
-						'Debe ingresar el  CÓDIGO RUDE DEL ESTUDIANTE',
-						'warning'
-						);
-					this.buscando = false;
-					return;
-				}
-
-				axios.get(Routing.generate('registerforeignerperson_lookforrude', this.dataNewStudent ))
-				.then(response => {
-					console.log(response);
-					if (response.status == 200) {
-							console.log(response.data);
-
-							if(response.data.existStudent == true){
-
-								this.responseprocess = response.data.swcreatestudent;
-								this.message = response.data.message;
-								this.DBGenero= response.data.arrGenero;
-								this.DBPais= response.data.arrPais;
-								this.DBstudentExist= response.data.arrStudentExist;
-								this.dataNewStudent.fecnacfind = this.DBstudentExist.fecnacfind;
-								this.existStudent = response.data.existStudent;
-
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'CÓDIGO RUDE DEL ESTUDIANTE NO EXISTE',
-								'warning'
-								);
-							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});
-
-			},
-
-			mostrarFormulario() {
-				console.log('mostrarFormulario');
-
-				this.swhomonimo = false;
-				this.swoldinscription = false;
-				this.oldStudent = false;
-				this.swprocessue = false;
-
-				this.dataNewStudent.swnewforeign = 1;
-
-				axios.get(Routing.generate('newForeign_gohomonimo', this.dataNewStudent ))
-				.then(response => {
-					if (response.status == 200) {
-						console.log(response.data);
-						this.responseprocess = response.data.swcreatestudent;
-						this.message = response.data.message;
-						this.DBGenero= response.data.arrGenero;
-						this.DBPais= response.data.arrPais;
-						// this.DBstudentExist= response.data.arrStudentExist;
-						this.existStudent = response.data.existStudent;
-						this.swhomonimo = response.data.swhomonimo;
-
-					}                        
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});
-
-
-			},
-
-			enviarFormulario(){
-
-				
-				var me = this;
-
-				Swal.fire({
-				title: 'Registrar la informacion ?',
-				text: "Verifique los datos antes de efectuar la operacion",	
-				type: 'question',		
-				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
-				cancelButtonText: 'Cancelar',
-				confirmButtonText: 'Registrar',
-				
-				}).then((result) => {
-					console.log(result);
-					if (result.value == true) {
-
-						//TODO: VALIDAR front
-						faltan_datos = false;
-						console.log(me.dataNewStudent);
-						
-						if(me.dataNewStudent.paisId == 0){
-							faltan_datos = true;
-						}
-						if(me.dataNewStudent.categoriaId == 0){
-							faltan_datos = true;
-						}
-						if(me.dataNewStudent.numero_documento == ''){
-							faltan_datos = true;
-						}
-						if(me.dataNewStudent.fecha_vencimiento == ''){
-							faltan_datos = true;
-						}else{
-							//es valida ?
-
-							if ( me.dataNewStudent.fecha_vencimiento !== 10 ){
-								console.log('error');
-							}
-
-
-							var vregexNaix = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/;
-							console.log(vregexNaix.test(me.dataNewStudent.fecha_vencimiento));
-							if(vregexNaix.test(me.dataNewStudent.fecha_vencimiento) == false){
-								Swal.fire(
-									'Atencion !',
-									'La fecha de vencimiento es invalida !',
-									'warning'
-									);
-								this.buscando = false;
-								return;
-							}else{
-								//el formato es valido...y los datos ?
-								var fecha = me.dataNewStudent.fecha_vencimiento.split("/");
-								var day = parseInt(fecha[0]);
-								var month = parseInt(fecha[1]);
-								var year = parseInt(fecha[2]);
-
-								error = false;
-
-								var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
-								if ( month === 1 || month > 2 )
-									if ( day > ListofDays[month-1] || day < 0 || ListofDays[month-1] === undefined )
-										error = true;
-
-								// Detecta si es año bisiesto y asigna a febrero 29 dias
-								if ( month === 2 ) {
-									var lyear = ( (!(year % 4) && year % 100) || !(year % 400) );
-									if ( lyear === false && day >= 29 )
-										error = true;
-									if ( lyear === true && day > 29 )
-										error = true;
-								}
-
-								if ( error === true ) {
-
-									Swal.fire(
-										'Atencion !',
-										'La fecha de vencimiento es invalida !',
-										'warning'
-										);
-									this.buscando = false;
-									return;
-
-								}
-
-
-							}						
-								
-						}
-
-
-						if(me.dataNewStudent.embajada == ''){
-							faltan_datos = true;
-						}
-						if(me.dataNewStudent.cargo == ''){
-							faltan_datos = true;
-						}
-
-
-						if(faltan_datos == true){
-							Swal.fire(
-								'Atencion !',
-								'Todos los datos son requeridos',
-								'warning'
-								);
-							this.buscando = false;
-							return;
-						}
-
-						
-
-
-						var data = new FormData();
-						data.append('datos', JSON.stringify(this.dataNewStudent));
-						//data.append('datos', this.dataNewStudent);
-						data.append('informe', this.informe);
-
-
-						//axios.post(Routing.generate('registerforeignerperson_register',{ datos:me.dataNewStudent }  ))
-						axios.post(Routing.generate('registerforeignerperson_register'), data)
-						.then(response => {
-							console.log(response);
-							if (response.status == 200) {
-
-								if(response.data.existe == 0)
-								{
-									Swal.fire(
-										'Datos Registrados!',
-										'El registro ha sido exitoso.',
-										'success'
-									);
-
-									//limpiar form
-									me.limpiarFormulario();			
-
-								}
-								if(response.data.existe == 1){
-									Swal.fire(
-										'Error!',
-										'El registro ya existe \n (RUDe y Nro.Credencial)',
-										'warning'
-									);
-
-								}	
-								if(response.data.existe == -1){
-									Swal.fire(
-										'Atencion!',
-										'Debe seleccionar el archivo corespondiente',
-										'warning'
-									);
-
-								}	
-
-							}else{
-								Swal.fire(
-									'Error!',
-									'Se ha producido un error en el registro de la informacion',
-									'warning'
-								);
-							}
-							//this.buscando = false;
-						})
-						.catch(e => {
-							console.log(e);
-							this.buscando = false;
-						});
-
-
-
-
-					}
-
-				});	
-                    
-			},
-
-			getImage: function(event){
-				console.log('archivo');
-
-				var informe = event.target.files[0];
-				var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
-				if(!allowedExtensions.exec(event.target.value)){
-					event.target.value = '';
-					Swal.fire(
-							'Archivo incorrecto!',
-							'El archivo adjunto debe ser una imagen o un archivo pdf',
-							'warning'
-						);
-					this.informe = '';
-					return false;
-				}else{
-					var megas = (informe.size / 1024)/1024;
-					if (megas > 2) {
-						event.target.value = '';
-						Swal.fire(
-							'Tamaño no permitido!',
-							'El archivo debe tener un tamaño menor a 2MB',
-							'warning'
-						);
-						this.informe = '';
-						return false;
-					}
-				}
-				this.informe = event.target.files[0];
-
-			},
-
-			limpiarFormulario(){
-				console.log('limpiando');
-
-				this.dataNewStudent.numero_documento = '';
-				this.dataNewStudent.fecha_vencimiento = '';
-				this.dataNewStudent.nro_pasaporte = '';
-				this.dataNewStudent.embajada = '';
-				this.dataNewStudent.cargo = '';
-				this.dataNewStudent.paisId = 0;
-				this.dataNewStudent.rude = '';
-
-				this.buscando = false;
-				this.responseprocess = false;
-				this.existStudent = '';
-				
-			}
 			
 		},
 		

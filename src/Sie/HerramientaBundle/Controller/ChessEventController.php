@@ -11,6 +11,7 @@ use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
 use Sie\AppWebBundle\Entity\Estudiante; 
 use Sie\AppWebBundle\Entity\Institucioneducativa; 
+use Sie\AppWebBundle\Entity\EveEstudianteInscripcionEvento; 
 
 class ChessEventController extends Controller{
     public $session;
@@ -18,6 +19,7 @@ class ChessEventController extends Controller{
         $this->session = new Session();
     }       
     public function index1Action(){
+
         return $this->render('SieHerramientaBundle:ChessEvent:index.html.twig', array(
                 // ...
             ));    }
@@ -31,8 +33,20 @@ class ChessEventController extends Controller{
             if (!isset($id_usuario)) {
                 return $this->redirect($this->generateUrl('login'));
             }        
+            $disableElement=0;
+            if(in_array($this->session->get('roluser'),array(9))){
+                $sie=$ie_id=$this->session->get('ie_id');
+                $disableElement=1;
+            }else{
+                if(in_array($this->session->get('roluser'),array(7,8,10))){
+                    $sie='';
+                }
+            }
+
 
             return $this->render('SieHerramientaBundle:ChessEvent:index.html.twig',array(
+                'codsie'=>$sie,
+                'disableElement'=>$disableElement,
                 
             ));        
     }
@@ -42,37 +56,63 @@ class ChessEventController extends Controller{
         $sie = $request->get('sie');
         // create db conexion
         $em = $this->getDoctrine()->getManager();
-        $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
+
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
+        $query->bindValue(':user_id', $this->session->get('userId'));
+        $query->bindValue(':sie', $sie);
+        $query->bindValue(':roluser', $this->session->get('roluser'));
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+        
+        $existUE = 0;
+        $arrModalidades = array();        
         $arrLevel = array(
             array('id'=>12,'level'=>'Educación Primaria Comunitaria Vocacional'),
             array('id'=>13,'level'=>'Educación Secundaria Comunitaria Productiva'),
-        );        
-        $existUE = 0;
-        $arrModalidades = array();
-        if(sizeof($objUE)>0){
-            $existUE = 1;
-            $objModalidades = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->findAll();
-            if(sizeof($objModalidades) > 0 ){
-                foreach ($objModalidades as $value) {
-                    $arrModalidades[]=array('id'=>$value->getId(), 'modalidad'=>$value->getDescripcion() );
+        ); 
+            
+        // if ($aTuicion[0]['get_ue_tuicion'] == true){
+        if (1){
+            $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
+            
+            if(sizeof($objUE)>0){
+                $existUE = 1;
+                $objModalidades = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->findAll();
+                if(sizeof($objModalidades) > 0 ){
+                    foreach ($objModalidades as $value) {
+                        $arrModalidades[]=array('id'=>$value->getId(), 'modalidad'=>$value->getDescripcion() );
+                    }
                 }
-            }
-            $arrResponse = array(
-                'sie'                 => $objUE->getId(),
-                'institucioneducativa'=> $objUE->getInstitucioneducativa(),
-                'existUE'         => $existUE,                
-                'arrModalidades'         => $arrModalidades,                
-                'arrLevel'         => $arrLevel,                
-            );               
+                $arrResponse = array(
+                    'sie'                 => $objUE->getId(),
+                    'institucioneducativa'=> $objUE->getInstitucioneducativa(),
+                    'existUE'         => $existUE,                
+                    'arrModalidades'         => $arrModalidades,                
+                    'arrLevel'         => $arrLevel,                
+                );               
+            }else{
+                $arrResponse = array(
+                    'sie'                 => '',
+                    'institucioneducativa'=> 'No tiene tuición sobre la institución educatia o no existe codigo SIE ',
+                    'existUE'             => $existUE,
+                    'arrModalidades'      => $arrModalidades,
+                    'arrLevel'            => $arrLevel,
+                );   
+            }            
         }else{
-            $arrResponse = array(
-                'sie'                 => '',
-                'institucioneducativa'=> '',
-                'existUE'         => $existUE,
-                'arrModalidades'         => $arrModalidades,
-                'arrLevel'         => $arrLevel,
-            );   
+                $arrResponse = array(
+                    'sie'                 => '',
+                    'institucioneducativa'=> 'N',
+                    'existUE'         => $existUE,
+                    'arrModalidades'         => $arrModalidades,
+                    'arrLevel'         => $arrLevel,
+                ); 
         }
+
+
+
+
+
         
 
 
@@ -144,23 +184,9 @@ class ChessEventController extends Controller{
 
 
         // get students data
-        $query = "SELECT * 
-                FROM eve_estudiante_inscripcion_evento eeie
-                inner join estudiante_inscripcion ei on (eeie.estudiante_inscripcion_id = ei.id)
-                inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
-                where 
-                eeie.eve_categorias_tipo_id = $categorieId and  
-                eeie.eve_fase_tipo_id = $faseId and  
-                eeie.eve_modalidades_tipo_id = $modalidadId and  
-                iec.institucioneducativa_id = " . $sie ;
 
-        $statement = $em->getConnection()->prepare($query);
-        $statement->execute();
-        $arrEveStudents = $statement->fetchAll();
-
+        $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
         // dump($arrEveStudents);die;
-               
-
         $arrResponse = array(
             'modalidadId'    => $modalidadId,
             'faseId'         => $faseId,
@@ -168,7 +194,7 @@ class ChessEventController extends Controller{
             'modalidadLabel' => $modalidadLabel->getDescripcion(),
             'faseLabel'      => $faseLabel->getDescripcion(),
             'categorieLabel' => $categorieLabel->getCategoria(),
-            // 'categorieId' => $categorieId,
+            'arrEveStudents' => $arrEveStudents,
             'arrAllowGrade' => $arrAllowGrade,
             'genderRequest' => $genderRequest,
             'existSelectData'         => 1,    )
@@ -178,6 +204,31 @@ class ChessEventController extends Controller{
         $response->setStatusCode(200);
         $response->setData($arrResponse);
         return $response;  
+    }
+
+    private function getAllRegisteredInscription($categorieId,$faseId,$modalidadId,$sie){
+        $em = $this->getDoctrine()->getManager();
+        $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid 
+                FROM eve_estudiante_inscripcion_evento eeie
+                inner join estudiante_inscripcion ei on (eeie.estudiante_inscripcion_id = ei.id)
+                inner join estudiante e on (ei.estudiante_id = e.id)
+                inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
+                inner join nivel_tipo nt on (iec.nivel_tipo_id=nt.id)
+                inner join grado_tipo gt on (iec.grado_tipo_id=gt.id)
+                inner join paralelo_tipo pt on (iec.paralelo_tipo_id=pt.id)
+                where 
+                eeie.eve_categorias_tipo_id = $categorieId and  
+                eeie.eve_fase_tipo_id = $faseId and  
+                eeie.eve_modalidades_tipo_id = $modalidadId and  
+                iec.institucioneducativa_id = " . $sie ;
+
+        $statement = $em->getConnection()->prepare($query);
+        $statement->execute();
+        $arrEveStudents = $statement->fetchAll();
+        // dump($arrEveStudents);
+        // die;
+        return $arrEveStudents;        
+
     }
 
     public function getParalelosAction(Request  $request){
@@ -251,16 +302,35 @@ class ChessEventController extends Controller{
 
         $statement = $em->getConnection()->prepare($query);
         $statement->execute();
-        $arrStudents = $statement->fetchAll();        
-// dump($arrStudents);die;
+        $arrStudents = $statement->fetchAll();
+        $arrStudents2 = array();
+        foreach ($arrStudents  as $value) {
+            $query = "SELECT * 
+                    FROM eve_estudiante_inscripcion_evento eeie
+                    where 
+                    eeie.eve_categorias_tipo_id = $categorieId and  
+                    eeie.eve_fase_tipo_id = $faseId and  
+                    eeie.eve_modalidades_tipo_id = $modalidadId and  
+                    eeie.estudiante_inscripcion_id = " . $value['inscriptionid'] ;
 
+
+                $statement = $em->getConnection()->prepare($query);
+                $statement->execute();
+                $arrRegStudent = $statement->fetchAll();  
+                if(sizeof(($arrRegStudent))>0){
+                }else{
+                    $arrStudents2[]=$value;
+                }
+             }     
+             
+// dump($arrStudents);die;
 
         $arrResponse = array(
             'sie'            => $sie,
             'modalidadId'    => $modalidadId,
             'faseId'         => $faseId,
             'categorieId'    => $categorieId,
-            'arrStudents' => $arrStudents,
+            'arrStudents' => $arrStudents2,
             'existStudent'         => 1,    ); 
 
 
@@ -271,7 +341,98 @@ class ChessEventController extends Controller{
     }
 
     public function doInscriptionAction(Request $request){
-        dump($request);die;
+        // get the send values
+        $sie = $request->get('sie');
+        $institucioneducativa = $request->get('institucioneducativa');
+        $modalidadId = $request->get('modalidadId');
+        $faseId = $request->get('faseId');
+        $categorieId = $request->get('categorieId');
+        $levelId = $request->get('levelId');
+        $gradeId = $request->get('gradeId');
+        $parallelId = $request->get('parallelId');
+        $inscriptionid = $request->get('inscriptionid');
+        $genderRequest = $request->get('genderRequest');
+        $year = $this->session->get('currentyear')-1;
+
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+        
+        $objEveStudentInscription = new EveEstudianteInscripcionEvento();
+        $objEveStudentInscription->setFechaRegistro(new \DateTime('now'));
+        $objEveStudentInscription->setEsVigente(1);
+        $objEveStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionid));
+        $objEveStudentInscription->setEveCategoriasTipo($em->getRepository('SieAppWebBundle:EveCategoriasTipo')->find($categorieId));
+        $objEveStudentInscription->setEveFaseTipo($em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseId));
+        $objEveStudentInscription->setEveModalidadesTipo($em->getRepository('SieAppWebBundle:EveModalidadesTipo')->find($modalidadId));
+
+        $em->persist($objEveStudentInscription);
+        $em->flush();
+
+        $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
+
+        $arrResponse = array(
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrEveStudents' => $arrEveStudents,
+            'existStudent'         => 1,    ); 
+
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;  
+    }
+
+
+    public function removeInscriptionCheesAction(Request $request){
+
+
+        // get the send values
+        $sie = $request->get('sie');
+        $institucioneducativa = $request->get('institucioneducativa');
+        $modalidadId = $request->get('modalidadId');
+        $faseId = $request->get('faseId');
+        $categorieId = $request->get('categorieId');
+        $levelId = $request->get('levelId');
+        $gradeId = $request->get('gradeId');
+        $parallelId = $request->get('parallelId');
+        // $inscriptionid = $request->get('inscriptionid');
+        $remoinscriptionid = $request->get('remoinscriptionid');
+        $genderRequest = $request->get('genderRequest');
+        $year = $this->session->get('currentyear')-1;
+
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+        
+        $existRemoveStudent=0;
+        $objEveStudentInscription = $em->getRepository('SieAppWebBundle:EveEstudianteInscripcionEvento')->find($remoinscriptionid);
+        // dump($remoinscriptionid);
+        // dump($objEveStudentInscription);
+        // die;
+        if(is_object($objEveStudentInscription) ){
+            $em->remove($objEveStudentInscription);
+            // $em->persist($objEveStudentInscription);
+            $em->flush();
+            $existRemoveStudent=1;
+        }
+        
+        $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
+
+        $arrResponse = array(
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrEveStudents' => $arrEveStudents,
+            'existRemoveStudent'         => $existRemoveStudent,    ); 
+
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;  
     }
 
 
