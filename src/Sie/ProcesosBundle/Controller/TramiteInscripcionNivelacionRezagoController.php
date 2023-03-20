@@ -186,7 +186,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
         
         $tuisionEstudiante = $this->getTuisionEstudianteUnidadEducativa($rude, $codigoSie, $fechaActual->format("Y"));
         if(count($tuisionEstudiante)<=0){
-            $alert = array('estado'=>false, 'msg'=>"LA UNIDAD EDUCATIVA NO TIENE TUISIÓN SOBRE EL ESTUDIANTE");
+            $alert = array('estado'=>false, 'msg'=>"LA UNIDAD EDUCATIVA NO TIENE TUICIÓN SOBRE EL ESTUDIANTE");
             return $this->render('SieProcesosBundle:TramiteInscripcionNivelacionRezago:formulario.html.twig', array('alert'=>$alert));
         }
         
@@ -470,7 +470,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 }            
             }
             //dump($actualEdadR,$keyUltimaInscripcion);die;
-            if(($actualEdadR-$keyUltimaEdadRegistro)<2){
+            if(($actualEdadR-$keyUltimaEdadRegistro) < 3){
                 $alert = array('estado'=>false, 'msg'=>"NO CUENTA CON 2 O MAS AÑOS DE REZAGO ESCOLAR RESPECTO A SU GRUPO ETARIO");
             }
             

@@ -168,6 +168,23 @@
                                     </div>	
                                 </div>  
                             </div> 
+                             <div class="form-group col-lg-6 col-md-12" id="divAmplicacionArea" style="display:none">
+                                <label class="form-label"> AREAS DE FORMACIÓN</label>
+                            
+                                <div class="form-group">
+                                    <ul>
+                                    <div id="divAreas">
+                                        {% for r in form.areaFormacionTipo %}
+                                            <div>
+                                                {{ form_widget(r) }}
+                                                {{ form_label(r) }}
+                                            </div>
+                                        {% endfor %}   
+
+                                    </div>
+                                    </ul>
+                                </div>
+                            </div> 
 
                             <div class="form-group col-lg-6 col-md-12" id="divLocalizacion" style="display:none">
                                 <label class="form-label"> Ingrese nueva ubicacion</label>
@@ -268,24 +285,35 @@
         }
 
         function cargarDetalle() {
+
             tipo = $("#form_tipos").val();
             if(tipo =='2'){
                  $("#divFechas").show();
                  $("#divCaracterJuridico").hide();
                  $("#divLocalizacion").hide();
+                 $("#divAmplicacionArea").hide();
             }
             if(tipo =='6'){
                  $("#divFechas").hide();
                  $("#divCaracterJuridico").show();
                  $("#divLocalizacion").hide();
+                 $("#divAmplicacionArea").hide();
             }
             if(tipo =='7'){
                  $("#divFechas").hide();
                  $("#divCaracterJuridico").hide();
                  $("#divLocalizacion").show();
+                 $("#divAmplicacionArea").hide();
+            }
+            if(tipo =='8'){
+                 $("#divFechas").hide();
+                 $("#divCaracterJuridico").hide();
+                 $("#divLocalizacion").hide();
+                 $("#divAmplicacionArea").show();
             }
         }
          function buscarEdificioEscolar(idLe) {
+            
             $.ajax({
                     type: 'get',
                     url: Routing.generate('rie_buscar_edificio', {'idLe': idLe}),

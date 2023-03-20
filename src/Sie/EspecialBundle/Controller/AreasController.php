@@ -545,12 +545,21 @@ class AreasController extends Controller {
                                 ->getResult();
                   break;
                 case 412: //Independencia social 2023 
-                case 402: $asignaturas = $em->createQuery( //Independencia Social
+                case 402: 
+                    if ($this->session->get('idGestion') > 2022) {
+                        $asignaturas = array(415,464,416,417,418,2010,469,615);
+                    }
+                    else{
+                        $asignaturas = array(468,469,470,471,472,473,474);
+                    }
+                        
+
+                        $asignaturas = $em->createQuery( //Independencia Social
                             'SELECT at
                             FROM SieAppWebBundle:AsignaturaTipo at
                             WHERE at.id IN (:ids)
                             ORDER BY at.id ASC'
-                            )->setParameter('ids',array(468,469,470,471,472,473,474))
+                            )->setParameter('ids',$asignaturas)
                             ->getResult();
                   break;
                 case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId(); //programas

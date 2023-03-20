@@ -1,3 +1,30 @@
+areas_tramite:
+    path:     tramite/{op}
+    defaults: { _controller: SieRegularBundle:TramiteCursos:index, op:search }
+
+areas_tramite_revisa:
+    path:     tramiterevisa/{ue}/{fechasol}
+    defaults: { _controller: SieRegularBundle:TramiteCursos:indexRevisa}
+    options:
+        expose: true
+
+
+areas_tramite_no_procede:
+    path:     tramite_no_procede/
+    defaults: { _controller: SieRegularBundle:TramiteCursos:noProcede}
+    options:
+        expose: true
+
+areas_tramite_si_procede:
+    path:     tramite_si_procede/
+    defaults: { _controller: SieRegularBundle:TramiteCursos:siProcede}
+    options:
+        expose: true
+
+areas_tramite_printddjj:         
+    path:     /tramiteimprimeddjj/{sie}/{fechasol}
+    defaults: { _controller: "SieRegularBundle:TramiteCursos:ddjj" }
+
 areas:
     path:     /{op}
     defaults: { _controller: SieRegularBundle:Areas:index, op:search }

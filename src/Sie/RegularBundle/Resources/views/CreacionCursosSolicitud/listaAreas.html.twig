@@ -1,0 +1,113 @@
+{% if areasNivel is not empty %}
+<div class="alert alert-info">
+    <i class="fa fa-warning"></i> Solo debe adicionar las asignaturas que correspondan a la gestion y nivel seleccionados. Cualquier error de adición sera bajo su responsabilidad. <br>
+    Nota: Si la asignatura que desea adicionar no aparece, por favor informe a los responsables del sistema.
+</div>
+<div id="wizard">
+    <ol>
+        <li>Seleccionar Áreas</li>
+        <li>Asignar Maestros</li>
+    </ol>
+    <div id="step1">
+        <div class="checkbox" style="display:none">
+            <label class="label green">Marcar Todos
+            <input type="checkbox" name="marcarTodos" id="marcarTodos" onclick="marcarTodasAreas()">
+            </label>
+        </div>
+        <div class="alert-info"><i class="fa fa-info-circle"></i> Seleccione las áreas que desea adicionar al curso, luego presione siguiente</div>
+        <div id="no-more-tables">
+        <table class="table table-bordered cf">
+            <thead class="cf">
+                <tr>
+                    <th></th>
+                    <th>Código</th>
+                    <th>Área</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for areas in areasNivel %}
+                    <tr {% if areas.bloqueado == '' %} class='' {% endif %}>
+                        <td data-title="">
+                            <div class="checkbox {{areas.bloqueado}}">
+                                <label>
+                                <input type="checkbox" name="areas[]" {{areas.marcado}} value="{{areas.codigo}}" {{areas.bloqueado}} class="form-control" onclick="cargarMaestro(this,this.value)">
+                                </label>
+                            </div>
+                        </td>
+                        <td data-title="Código">{{areas.codigo}}</td>
+                        <td data-title='Área'>{{areas.asignatura}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <div id="step2">
+        <div class="row">
+
+                <div id="divAdicionMaestros" style="display:none">
+                    <div class="alert-info"><i class="fa fa-info-circle"></i>
+                        NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.
+                    </div>
+                    <div id="no-more-tables">
+                        <table class="table table-bordered cf" id="tablaAdicionMaestros">
+                            <thead class="cf">
+                                <tr>
+                                    <th class="col-lg-4">Área</th>
+                                    <th class="col-lg-8">Maestro</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for areas in areasNivel %}
+                                    <tr id="fila{{areas.codigo}}" style="display:none">
+                                        <td data-title='Área'>{{areas.asignatura}}</td>
+                                        <td data-title="Maestro">
+                                            <select name="{{areas.codigo}}" id="{{areas.codigo}}" class="chosen-select form-control">
+                                                <option value="">Seleccionar...</option>
+                                                {% for ma in maestros %}
+                                                    <option value="{{ma.id}}">{{ma.paterno}} {{ma.materno}} {{ma.nombre}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div style="text-align: right">
+                    <button type="submit" class="btn btn-green" onclick="return confirm('¿Esta completamente seguro de agregar el curso?, Nota: Una vez agregado no se puede eliminar el curso')">Adicionar Área(s)</button>
+                </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    $(function () {
+        $('.chosen-select').chosen({allow_single_deselect:false});
+        $('.chosen-container').css('width','100%');
+    });
+
+    $('#wizard').bwizard();
+    function cargarMaestro(control,curso){
+        if(control.checked == true){
+            $("#fila" +curso).css('display','table-row');
+            $("#"+curso).attr('required','required');
+        }else{
+            $("#fila" +curso).css('display','none');
+            $("#"+curso).removeAttr('required');
+        }
+        if ($('#tablaAdicionMaestros >tbody >tr').length == 0){
+            $('#divAdicionMaestros').css('display','none');
+        }else{
+            $('#divAdicionMaestros').css('display','block');
+        }
+
+    }
+</script>
+{% else %}
+    <div class="alert alert-warning">
+        <i class="fa fa-warning"></i> No hay áreas que adicionar al curso
+    </div>
+{% endif %}
