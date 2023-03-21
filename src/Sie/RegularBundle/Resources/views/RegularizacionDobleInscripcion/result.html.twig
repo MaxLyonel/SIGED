@@ -347,8 +347,7 @@
             var c = true;
             var cc = false;
             for (var i=0; i < estMatNue.length; i++){
-                if(selectId != estMatNue[i].id && c == true && estMatNue[i].value != ""){
-                    //alert(estMatNue[i].value);    
+                if(selectId != estMatNue[i].id && c == true && estMatNue[i].value != ""&&estMatNue[i].value != 9){
                     cc = false;
                     for (j in estadoLista[estado]){
                         if(estMatNue[i].value == estadoLista[estado][j]){
