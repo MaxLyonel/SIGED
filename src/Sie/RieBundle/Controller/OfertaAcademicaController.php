@@ -764,7 +764,7 @@ $entities = $query->getResult();
         return $dato;
     }
     public function obtieneTipoTramiteNuevo(){
-        $dato = array('ADECUACION' => 'ADECUACIÓN', 'APERTURA'=>'APERTURA', 'AMPLIACION' =>'AMPLIACIÓN');
+        $dato = array('ADECUACION' => 'ADECUACIÓN', 'APERTURA'=>'APERTURA', 'AMPLIACION' =>'AMPLIACIÓN', 'RATIFICACION' => 'RATIFICACIÓN');
         return $dato;
     }   
 
