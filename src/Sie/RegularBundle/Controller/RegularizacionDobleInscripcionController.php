@@ -143,7 +143,7 @@ class RegularizacionDobleInscripcionController extends Controller {
                     $inscripcionActual['estadosCambiar'] = $this->getEstadoMatriculaDisponibleConNota($inscripcionActual['gestion'],$inscripcionActual['estadomatriculaId']);
                   }
                 }
-                
+                // dump($inscripcionActual['estadosCambiar']);
                 // dump($ins);dump($inscripcionActual['estadosCambiar']);
                 if(count($ins) <= 1){
                   $keysTraslado = array_keys(array_column($inscripcionActual['estadosCambiar'], 'id'), 9);
@@ -168,7 +168,7 @@ class RegularizacionDobleInscripcionController extends Controller {
                 //     $tieneEstadoFinal = true;
                 // }
             }
-            //die;
+            // die;
             //$arrayInscripciones['estadoMatriculaLista'] = array_unique($arrayInscripciones['estadoMatriculaLista']);
             $estadosLista = $this->getEstadoMatriculaReglaLista(implode(',',array_column($arrayMatriculaLista,'id')));
             $estadosListaArray = array();
@@ -274,7 +274,9 @@ class RegularizacionDobleInscripcionController extends Controller {
       ");
       }else {
       $queryEntidad = $em->getConnection()->prepare("
-          select * from estadomatricula_tipo where nota_presentacion_tipo_id in (1,3) and (fin_proceso_educativo = false or id = 5) and case ".$gestion." when date_part('year',current_date) then true else id not in (4) end
+          select * from estadomatricula_tipo 
+          where nota_presentacion_tipo_id in (1,3) 
+          and (fin_proceso_educativo = false) and case ".$gestion." when date_part('year',current_date) then true else id not in (4) end
       ");
       }
       $queryEntidad->execute();
