@@ -29,20 +29,21 @@
                                 <td data-title="Fsolicitud" class="text-center">{{ns.fecha_solicitud}}</td>
 
                                 <td class="text-center">
-                                    {# <a href="#" class="btn btn-link" id="viewList" > #}
-                                    <a href="#" class="btn btn-link" id="viewList" onclick="eliminarSolicitudes({{ns.tccid}})" >
-                                        Eliminar
-                                    </a>
+                                    {# <td class="text-center"> #}
+                                        {# <a href="#" class="btn btn-link" id="viewList" > #}
+                                        {% if ns.aprobado is null %}
+                                            <a href="#" class="btn btn-link" id="viewList" onclick="eliminarSolicitudes({{ns.tccid}})" >
+                                                Eliminar
+                                            </a>
+                                        {% else %}
+                                            {% if ns.aprobado == true %}
+                                                <button type="button" class="btn btn-success">Aprobado</button>
+                                            {% else %}
+                                                <button type="button" class="btn btn-danger">Rechazado</button>
+                                            {% endif %}    -
+                                        {% endif %}
+                                    {# </td> #}
                                 </td>
-
-                                {# <td class="text-center">
-                                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %}
-                                        <a href="{{path('donwload_listStudentPerCourse', {'ue': unidadEducativa.id, 'gestion': gestionSelected, 'nivel':entity.nivelId,'grado':entity.gradoId, 'paralelo':entity.paraleloId,'turno':entity.turnoId } )}}">
-                                        <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="40" width="40"   class="hisrc img-responsive" alt=
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td> #}
                             </tr>
                         {% endfor %}
                     </tbody>
