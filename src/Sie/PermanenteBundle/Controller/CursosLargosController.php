@@ -105,7 +105,7 @@ class CursosLargosController extends Controller {
     }
 
     public function newCursoLargoAction(Request $request){
-            //($request);die;
+            // dump($request);die;
         try {
 
             $this->session = $request->getSession();
@@ -126,6 +126,7 @@ class CursosLargosController extends Controller {
             $cursosCortos = $em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findAll();
             $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findAll();
            // $especialidad= $em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->findAll();
+            $gestion = $this->session->get('ie_gestion');
 
             $em = $this->getDoctrine()->getManager();
             $query = $em->getConnection()->prepare('select * from superior_facultad_area_tipo	
@@ -144,13 +145,19 @@ class CursosLargosController extends Controller {
             }
 
             $subareaArray = array();
-
+           
             foreach ($subarea as $value) {
+                    
                     if (($value->getId() != 0 && $value->getEsActivo() === true)) {
-                    $subareaArray[$value->getId()] = $value->getSubArea();
+                        if (($value->getId() != 9 && $gestion < 2023)) {
+                            $subareaArray[$value->getId()] = $value->getSubArea();
+                        }
+                        if (($gestion >= 2023)) {
+                            $subareaArray[$value->getId()] = $value->getSubArea();
+                        }
                 }
-            }          
-
+            }     
+           
             $programaArray = array();
             foreach ($programa as $value) {
                 if (($value->getId() ==1 )||($value->getId() ==2 )||($value->getId() ==3 ))
