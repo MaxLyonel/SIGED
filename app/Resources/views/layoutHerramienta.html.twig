@@ -674,9 +674,23 @@
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                                 
                                 #}
-                                <li><a href="{{ path('cheesevent_index')}}">Registro Evento Ajedrez</a></li>
                             </ul>
                         </li>
+                    {% endif %}
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">    
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Evento Ajedrez</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('cheesevent_index')}}">Registro Evento Ajedrez</a></li>
+                                {% if app.session.get('roluser') in [7,8,10] %}
+                                    <li><a href="{{ path('cheeseventadm_index')}}">Clasificado Evento Ajedrez</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>  
                     {% endif %}
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
