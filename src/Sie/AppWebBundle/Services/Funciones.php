@@ -1779,7 +1779,9 @@ class Funciones {
                         $cantidad = $cantidad + 1;
                     }
                 }
-                if(($programa == 14 and $cantidad >= 4) or ($programa == 8 and $cantidad >= 6) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 7) or ($programa == 11  and $cantidad >= 3) or ($programa == 12  and $cantidad >= 8)){
+               // Se ha quitado el cupo de inscripcion
+               // if(($programa == 14 and $cantidad >= 4) or ($programa == 8 and $cantidad >= 6) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 7) or ($programa == 11  and $cantidad >= 3) or ($programa == 12  and $cantidad >= 8)){ 
+                if(($programa == 14 and $cantidad >= 444) or ($programa == 8 and $cantidad >= 966) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 777) or ($programa == 11  and $cantidad >= 333) or ($programa == 12  and $cantidad >= 888)){
                     $data['cupo'] = "NO";
                     $data['msg'] = "El curso para este programa no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
                 }else{
@@ -1795,7 +1797,7 @@ class Funciones {
                         $cantidad = $cantidad + 1;
                     }
                 }
-                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) and $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
+                if($cantidad >= 222 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) and $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
                     $data['cupo'] = "NO";
                     $data['msg'] = "El curso o grupo no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
                 }else{

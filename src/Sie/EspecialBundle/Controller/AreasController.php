@@ -709,13 +709,24 @@ class AreasController extends Controller {
                                     $progSer = "Programa";
 
                                     if ($idmomento==1) {
+
+                                        if ($this->session->get('idGestion') > 2022) {
+                                            $lasignaturas = array(32840,32832);
+                                        }
+                                        else{
+                                            $lasignaturas = array(32832,3185,32833);
+                                        }
+                                        
                                         $asignaturas = $em->createQuery(
                                             'SELECT at
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
-                                        )->setParameter('ids',array(32832,3185,32833))
+                                        )->setParameter('ids',$lasignaturas)
                                         ->getResult();
+                                        //dump($asignaturas);
+                                        //dump(count($asignaturas));die;
+
                                     }
                                     if ($idmomento==2) {
                                         $asignaturas = $em->createQuery(
