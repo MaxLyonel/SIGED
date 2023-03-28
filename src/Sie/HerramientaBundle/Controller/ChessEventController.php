@@ -46,7 +46,7 @@ class ChessEventController extends Controller{
 
 
             return $this->render('SieHerramientaBundle:ChessEvent:index.html.twig',array(
-                'codsie'=>80730460,//$sie,
+                'codsie'=>$sie,
                 'disableElement'=>$disableElement,
                 
             ));        
