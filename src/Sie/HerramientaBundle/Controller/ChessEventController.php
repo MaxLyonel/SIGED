@@ -452,7 +452,7 @@ class ChessEventController extends Controller{
             $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
           }
           
-          $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(1));
+          $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(11));
           $objDownloadFilenewOpe->setGestionTipoId($this->session->get('currentyear'));
           $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
           $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
@@ -495,7 +495,7 @@ class ChessEventController extends Controller{
 
           $objDownloadFilenewOpe = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
             'institucioneducativa'=>$sie,
-            'institucioneducativaOperativoLogTipo'=>1,
+            'institucioneducativaOperativoLogTipo'=>11,
             'gestionTipoId'=>$this->session->get('currentyear')
           ));
 
