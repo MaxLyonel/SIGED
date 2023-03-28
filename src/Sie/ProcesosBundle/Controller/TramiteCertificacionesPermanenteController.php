@@ -1507,7 +1507,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln(10);
                 $contenido='<table border="0" cellpadding="1.5"> ';
                 $contenido.='<tr><td width="10.3%">&nbsp;</td><td  width="79.4%">';
-                $contenido.='<p style="text-align: justify;">Por haber logrado de manera satisfactoria los objetos del curso en el marco de los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
+                $contenido.='<p style="text-align: justify;">Por haber logrado de manera satisfactoria los objetivos del curso en el marco de los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';                             
                 $pdf->writeHTML($contenido, true, false, true, false, '');
