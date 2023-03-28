@@ -244,7 +244,7 @@ class ChessEventController extends Controller{
         $levelId = $request->get('levelId');
         $gradeId = $request->get('gradeId');
         $genderRequest = $request->get('genderRequest');
-        $year = $this->session->get('currentyear')-1;
+        $year = $this->session->get('currentyear');
 
         // create db conexion
         $em=$this->getDoctrine()->getManager();
@@ -289,7 +289,7 @@ class ChessEventController extends Controller{
         $gradeId = $request->get('gradeId');
         $parallelId = $request->get('parallelId');
         $genderRequest = $request->get('genderRequest');
-        $year = $this->session->get('currentyear')-1;
+        $year = $this->session->get('currentyear');
 
         // create db conexion
         $em=$this->getDoctrine()->getManager();
@@ -353,7 +353,7 @@ class ChessEventController extends Controller{
         $parallelId = $request->get('parallelId');
         $inscriptionid = $request->get('inscriptionid');
         $genderRequest = $request->get('genderRequest');
-        $year = $this->session->get('currentyear')-1;
+        $year = $this->session->get('currentyear');
 
         // create db conexion
         $em=$this->getDoctrine()->getManager();
@@ -402,7 +402,7 @@ class ChessEventController extends Controller{
         // $inscriptionid = $request->get('inscriptionid');
         $remoinscriptionid = $request->get('remoinscriptionid');
         $genderRequest = $request->get('genderRequest');
-        $year = $this->session->get('currentyear')-1;
+        $year = $this->session->get('currentyear');
 
         // create db conexion
         $em=$this->getDoctrine()->getManager();
@@ -516,7 +516,7 @@ class ChessEventController extends Controller{
         
         
         // get students data
-        $yearIns = $this->session->get('currentyear')-1;
+        $yearIns = $this->session->get('currentyear');
         $query = "
                 select
                 e.codigo_rude, e.carnet_identidad ,
