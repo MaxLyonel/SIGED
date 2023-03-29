@@ -1,0 +1,45 @@
+admcheesevent_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:index }
+
+admcheesevent_getMainInfo:
+    path:     /buscar
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:getMainInfo }
+    options:
+         expose: true
+
+admcheesevent_getDistrito:
+    path:     /getDistrito
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:getDistritomain }
+    options:
+         expose: true         
+
+admcheesevent_getAllUE:
+    path:     /getAllUE
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:getAllUE }
+    options:
+         expose: true         
+
+admcheesevent_registerUEModality:
+    path:     /registerUEModality
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:registerUEModality }
+    options:
+         expose: true
+         
+admcheesevent_saveUEModality:
+    path:     /saveUEModality
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:saveUEModality }
+    options:
+         expose: true   
+         
+admcheesevent_showReport:
+    path:     /showReport
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:showReport }
+    options:
+         expose: true         
+
+cheesevent_restartEvent:
+    path:     /restartEvent
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:restartEvent }
+    options:
+         expose: true         
