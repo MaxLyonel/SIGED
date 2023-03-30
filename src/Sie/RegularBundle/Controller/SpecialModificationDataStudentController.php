@@ -954,19 +954,29 @@ class SpecialModificationDataStudentController extends Controller{
                 'nombre'=>$nombre,
                 'fecha_nacimiento'=>$fechaNacimiento);
 
-        //dump($cedulaTipoId);die();
-        if($cedulaTipoId == 2){
-            $arrParametros['extranjero'] = 'E';
-        } 
+        //dump($carnet);die();
+        if ($carnet===''){
+            $response->setStatusCode(200); 
+            $response->setData(array(
+                'answerSegip'=>true,
+            ));
+            return $response;
+        } else {
 
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
+            if($cedulaTipoId == 2){
+                $arrParametros['extranjero'] = 'E';
+            } 
+
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
+            
+
+            $response->setStatusCode(200);
+            $response->setData(array(
+                'answerSegip'=>$answerSegip,
+            ));
         
-        $response->setStatusCode(200);
-        $response->setData(array(
-            'answerSegip'=>$answerSegip,
-        ));
-       
-        return $response;  
+            return $response;  
+        }
     }
 
     
