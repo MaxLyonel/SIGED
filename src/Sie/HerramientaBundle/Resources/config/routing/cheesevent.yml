@@ -55,3 +55,7 @@ cheesevent_closeEventChees:
     defaults: { _controller: SieHerramientaBundle:ChessEvent:closeEventChees }
     options:
          expose: true
+
+cheesevent_reportChessInscription:
+    path:     /reportChessInscription/{sie}
+    defaults: { _controller: SieHerramientaBundle:ChessEvent:reportChessInscription }
