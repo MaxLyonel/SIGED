@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
@@ -93,7 +94,8 @@ class ChessEventController extends Controller{
                     'existUE'         => $existUE,                
                     'arrModalidades'         => $arrModalidades,                
                     'arrLevel'         => $arrLevel,                
-                    'swcloseevent'         => $swcloseevent,                
+                    'swcloseevent'         => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 );               
             }else{
                 $arrResponse = array(
@@ -103,6 +105,7 @@ class ChessEventController extends Controller{
                     'arrModalidades'      => $arrModalidades,
                     'arrLevel'            => $arrLevel,
                     'swcloseevent'            => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 );   
             }            
         }else{
@@ -113,9 +116,9 @@ class ChessEventController extends Controller{
                     'arrModalidades'         => $arrModalidades,
                     'arrLevel'         => $arrLevel,
                     'swcloseevent'         => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 ); 
         }
-
 
         
         $response = new JsonResponse();
@@ -479,6 +482,8 @@ class ChessEventController extends Controller{
         $arrResponse = array(
             'sie'          => $sie,
             'swcloseevent' => $swcloseevent,
+            'swcloseevent' => $swcloseevent,
+            'urlreporte'=> $this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie))
         ); 
 
 
@@ -502,6 +507,23 @@ class ChessEventController extends Controller{
         return $objDownloadFilenewOpe;        
     }
 
+    public function reportChessInscriptionAction(Request $request, $sie){
+
+        $response = new Response();
+        $gestion = $this->session->get('currentyear');
+        $codigoQR = 'EVEAJE'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$sie;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_v1_EEA_ue.rptdesign&institucioneducativa_id='.$sie.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }     
 
     public function findStudentAction(Request $request){
         
