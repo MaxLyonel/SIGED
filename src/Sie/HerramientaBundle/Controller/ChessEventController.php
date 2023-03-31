@@ -302,7 +302,7 @@ class ChessEventController extends Controller{
                 inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
                 inner join institucioneducativa_curso ic on (ei.institucioneducativa_curso_id=ic.id)
                 inner join genero_tipo gt on (e.genero_tipo_id=gt.id)
-                where ic.nivel_tipo_id =$levelId and ic.grado_tipo_id =$gradeId and ic.gestion_tipo_id =$year and e.genero_tipo_id = $genderRequest and ic.paralelo_tipo_id = '".$parallelId."' and ic.institucioneducativa_id =$sie
+                where ic.nivel_tipo_id =$levelId and ic.grado_tipo_id =$gradeId and ic.gestion_tipo_id =$year and e.genero_tipo_id = $genderRequest and ic.paralelo_tipo_id = '".$parallelId."' and ic.institucioneducativa_id =$sie and  ei.estadomatricula_tipo_id = 4
         ";
 
 
