@@ -598,6 +598,14 @@ class ControlCalidadController extends Controller {
                 $query->execute();
                 $resultado = $query->fetchAll();
                 break;
+            
+            case 11://INSCRIPCIÓN INCORRECTA
+                $query = $em->getConnection()->prepare("SELECT sp_sist_calidad_desdoble (:tipo, :rude)");
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':rude', $form['llave']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
 
             case 12://INSCRIPCIÓN INCORRECTA
                 $query = $em->getConnection()->prepare("SELECT sp_sist_calidad_incorr_insc (:tipo, :rude, :param, :gestion)");

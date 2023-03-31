@@ -292,6 +292,14 @@
                                         {% endif %}
                                         {% if regla.id == 11 %}
                                             <button type="submit" class="btn btn-link" onclick="mostrarSolucionApropiacionRudes({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_solucion" name="form[solucion]" value="{{detalle.solucionTipoId}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del estado actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
                                         {% endif %}
                                         {% if regla.id == 13 %}
                                             <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
@@ -978,9 +986,9 @@
     var mostrarSolucionApropiacionRudes = function(reglaId, solucionId){
         var htmlTitulo = "<h4>{{ regla.descripcion }}</h4>";
         var htmlCuerpo = "<p>Paso 1.- Encuentre el RUDE correcto a través de la búsqueda de estudiante.<br />"+
-                        "Paso 2.-  Ingresar al módulo Unidad Educativa -> Apropiación de RUDES.<br />"+
-                        "Paso 3.- Introduzca el RUDE observado y el RUDE al que se llevará parte del historial.<br />"+
-                        "Paso 4.- Seleccione la inscripción que moverá al RUDE correcto.</p>";
+                        "Paso 2.-  Inicie proceso de desglose por apropiacion de rude mediante informe.<br />"+
+                        "Paso 3.- Si existe la doble promoción para el mismo estudiante aplique trámite.<br />"+
+                        "Paso 4.- Posterior a la correccion click en Verificar.</p>";
 
         $('#idTitulo').html(htmlTitulo);
         $('#idCuerpo').html(htmlCuerpo);
