@@ -516,7 +516,7 @@ class ChessEventController extends Controller{
         $data = $this->session->get('userId').'|'.$gestion.'|'.$sie;
         //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'eventChees'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_v1_EEA_ue.rptdesign&institucioneducativa_id='.$sie.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
