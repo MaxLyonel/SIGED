@@ -281,12 +281,12 @@ class Segip {
 			}
 		}
 		//verificacion de si extranjero, aqui nunca entra, no importa ya viene del form
-		/*commente by krlos ... why set tipo_persona =2 ???*/
+		/*commente by krlos ... why set tipo_persona =2 ???, if foreign a value is sent(e,E,True...), empty in the other case*/
 		if(array_key_exists('extranjero', $datosVerificacion)==true){
 			// BUG asignacion de director
-			if($datosVerificacion['extranjero'] == 'E'){
+			// if($datosVerificacion['extranjero'] == 'E'){
 				$tipo_persona=2; //extranjero
-			}
+			// }
 		}
 			
 
