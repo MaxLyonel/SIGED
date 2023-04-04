@@ -859,7 +859,7 @@ class NewInscriptionExtranjeroController extends Controller{
         $paterno = mb_strtoupper($arrDatos['paterno'], 'utf-8') ;
         $materno = mb_strtoupper($arrDatos['materno'], 'utf-8');
         $nombre = mb_strtoupper($arrDatos['nombre'], 'utf-8');
-        $cedulaTipoId =$arrDatos['cedulaTipoId'];
+        
 
         $carnet = isset($arrDatos['cifind'])?$arrDatos['cifind']:'';
         $complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
@@ -868,6 +868,7 @@ class NewInscriptionExtranjeroController extends Controller{
         $swnewforeign = $arrDatos['swnewforeign'];
           if($swnewforeign == 1){
             $fecNac = $arrDatos['fecnacfind'];
+            $cedulaTipoId =$arrDatos['cedulaTipoId'];
           }else{
             $fecNac = $arrDatos['fecNac'];
           }
