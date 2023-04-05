@@ -17,8 +17,10 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 
 class ChessEventController extends Controller{
     public $session;
+    public $limitDay;
     public function __construct() {
         $this->session = new Session();
+        $this->limitDay = '08-04-2023';
     }       
     public function index1Action(){
 
@@ -73,9 +75,11 @@ class ChessEventController extends Controller{
             array('id'=>13,'level'=>'Educación Secundaria Comunitaria Productiva'),
         ); 
 
-        
-        $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;            
-                     
+        $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;   
+        // start this secction validate the last day to report the inscription INFO
+        $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);          
+        // end this secction validate the last day to report the inscription INFO                     
+
         // if ($aTuicion[0]['get_ue_tuicion'] == true){
         if (1){
             $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
@@ -125,6 +129,12 @@ class ChessEventController extends Controller{
         $response->setStatusCode(200);
         $response->setData($arrResponse);
         return $response;        
+    }
+
+    private function getLastDayRegistryOpeCheesEventStatus($limitDay){
+        $today = date('d-m-Y');
+        $swcloseevent =  (strtotime($today) == strtotime($limitDay))?1:0;  
+        return $swcloseevent;
     }
 
     public function getInfoEventAction(Request $request){
@@ -186,8 +196,10 @@ class ChessEventController extends Controller{
             $arrAllowGrade=array();
         }
 
-        
         $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;            
+        // start this secction validate the last day to report the inscription INFO
+        $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);  
+        // end this secction validate the last day to report the inscription INFO        
         // get students data
         $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
         // dump($arrEveStudents);die;
@@ -516,7 +528,7 @@ class ChessEventController extends Controller{
         $data = $this->session->get('userId').'|'.$gestion.'|'.$sie;
         //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'eventChees'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_v1_EEA_ue.rptdesign&institucioneducativa_id='.$sie.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
