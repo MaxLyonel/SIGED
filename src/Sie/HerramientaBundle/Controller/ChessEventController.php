@@ -17,8 +17,10 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 
 class ChessEventController extends Controller{
     public $session;
+    public $limitDay;
     public function __construct() {
         $this->session = new Session();
+        $this->limitDay = '08-04-2023';
     }       
     public function index1Action(){
 
@@ -73,9 +75,11 @@ class ChessEventController extends Controller{
             array('id'=>13,'level'=>'Educación Secundaria Comunitaria Productiva'),
         ); 
 
-        
-        $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;            
-                     
+        $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;   
+        // start this secction validate the last day to report the inscription INFO
+        $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);          
+        // end this secction validate the last day to report the inscription INFO                     
+
         // if ($aTuicion[0]['get_ue_tuicion'] == true){
         if (1){
             $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
@@ -125,6 +129,12 @@ class ChessEventController extends Controller{
         $response->setStatusCode(200);
         $response->setData($arrResponse);
         return $response;        
+    }
+
+    private function getLastDayRegistryOpeCheesEventStatus($limitDay){
+        $today = date('d-m-Y');
+        $swcloseevent =  (strtotime($today) == strtotime($limitDay))?1:0;  
+        return $swcloseevent;
     }
 
     public function getInfoEventAction(Request $request){
@@ -186,8 +196,10 @@ class ChessEventController extends Controller{
             $arrAllowGrade=array();
         }
 
-        
         $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;            
+        // start this secction validate the last day to report the inscription INFO
+        $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);  
+        // end this secction validate the last day to report the inscription INFO        
         // get students data
         $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
         // dump($arrEveStudents);die;
