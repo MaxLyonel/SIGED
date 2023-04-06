@@ -173,9 +173,11 @@ class AdmCheesEventController extends Controller{
         $params = array($distrito);
         $stmt->execute($params);
         $distritoInfo=$stmt->fetchAll();   
-        // dump($distritoInfo);die;
+        dump($distrito);
+        dump($distritoInfo);
+        die;
         $urlreportedepto = $this->generateUrl('cheesevent_reportDepto', array('departamento_id'=>$departamento));
-        $urlreportedistrito = $this->generateUrl('cheesevent_reportDistrito', array('lugar_tipo_id'=>$distritoInfo[0]['lugar_tipo_id']));
+        $urlreportedistrito = $this->generateUrl('cheesevent_reportDistrito', array('lugar_tipo_id'=>$distritoInfo[0]['id']));
         // end get data to report
 
         //$datos=$this->getUnidadesEducativasDetalle($departamento,$distrito,$ue,$gestion);
