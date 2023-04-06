@@ -142,6 +142,9 @@ class AdmCheesEventController extends Controller{
 
     public function getAllUEAction(Request $request){
         $response = new JsonResponse();
+        
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
 
         $departamento = $request->get('sendDepto');
         $distrito = $request->get('sendDistrito');
@@ -161,6 +164,20 @@ class AdmCheesEventController extends Controller{
         $distrito = is_numeric($distrito)?$distrito:-1;
         $gestion = is_numeric($gestion)?$gestion:-1;
 
+        // start get data to report
+        $query ="
+                select * from lugar_tipo  where codigo = ?
+        ";
+
+        $stmt = $db->prepare($query);
+        $params = array($distrito);
+        $stmt->execute($params);
+        $distritoInfo=$stmt->fetchAll();   
+        
+        $urlreportedepto = $this->generateUrl('cheesevent_reportDepto', array('departamento_id'=>$departamento));
+        $urlreportedistrito = $this->generateUrl('cheesevent_reportDistrito', array('lugar_tipo_id'=>$distritoInfo[0]['id']));
+        // end get data to report
+
         //$datos=$this->getUnidadesEducativasDetalle($departamento,$distrito,$ue,$gestion);
         $arrUEs=$this->getUnidadesEducativas($departamento,$distrito,$gestion);
 
@@ -168,11 +185,13 @@ class AdmCheesEventController extends Controller{
         $em = $this->getDoctrine()->getManager();
         
       $arrResponse = array(
-        'arrUEs'=>$arrUEs,
-        'arrModalidad'=>array(),
         'today'=> date("d-m-Y"),
+        'arrUEs'=>$arrUEs,
         'currentyear'=> $gestion,
-        'answerResponse'=> $answerResponse
+        'arrModalidad'=>array(),
+        'answerResponse'=> $answerResponse,
+        'urlreportedepto'=> $urlreportedepto,
+        'urlreportedistrito'=> $urlreportedistrito,
       );
       
       $response->setStatusCode(200);
@@ -183,6 +202,41 @@ class AdmCheesEventController extends Controller{
 
 
     }
+
+    public function reportDeptoAction(Request $request, $departamento_id){
+
+        $response = new Response();
+        $gestion = $this->session->get('currentyear');
+        
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$departamento_id;
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reportDeptoeventChees'.$departamento_id.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_depto_v1_EEA_ue.rptdesign&departamento_id='.$departamento_id.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }     
+    
+    public function reportDistritoAction(Request $request, $lugar_tipo_id){
+
+        $response = new Response();
+        $gestion = $this->session->get('currentyear');
+        
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$lugar_tipo_id;
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reportDisteventChees'.$lugar_tipo_id.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_depo_dist_v1_EEA_ue.rptdesign&lugar_tipo_id='.$lugar_tipo_id.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }             
 
     public function registerUEModalityAction(Request $request){
         // set var ini

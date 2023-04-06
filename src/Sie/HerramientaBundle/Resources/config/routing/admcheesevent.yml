@@ -42,4 +42,16 @@ cheesevent_restartEvent:
     path:     /restartEvent
     defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:restartEvent }
     options:
-         expose: true         
+         expose: true
+
+cheesevent_reportDepto:
+    path:     /reportDepto/{departamento_id}
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:reportDepto }
+    options:
+         expose: true
+
+cheesevent_reportDistrito:
+    path:     /reportDistrito/{lugar_tipo_id}
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:reportDistrito }
+    options:
+         expose: true
