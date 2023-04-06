@@ -305,7 +305,7 @@ class RudeUnificationController extends Controller{
             $arrResponse = array(
             'status'          => 'error',
             'code'            => 400,
-            'message'         => 'Estudiante cuenta con tramite de DIPLOMAS',
+            'message'         => 'Estudiante cuenta con tramite de DIPLOMAS hable con el area de legalizaciónes',
             'swresponse' => false,
             'swhistory' => false,
             'dataHistoryA' => array(),
@@ -635,6 +635,7 @@ class RudeUnificationController extends Controller{
             select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_tipo_id_fin_r as estadomatricula_rude_b
             from sp_genera_estudiante_historial('".$rudeinc."') 
             where institucioneducativa_tipo_id_raep = 1
+            and nivel_tipo_id_r in (2,3,12,13)
             and estadomatricula_tipo_id_fin_r not in ('6','9')
             ) b 
             INNER JOIN
@@ -642,6 +643,7 @@ class RudeUnificationController extends Controller{
             select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_tipo_id_fin_r as estadomatricula_rude_c
             from sp_genera_estudiante_historial('".$rudecor."') 
             where institucioneducativa_tipo_id_raep = 1
+            and nivel_tipo_id_r in (2,3,12,13)
             and estadomatricula_tipo_id_fin_r not in ('6','9') and estadomatricula_fin_r in ('PROMOVIDO','PROMOVIDO BACHILLER DE EXCELENCIA','REPROBADO')
             ) c 
             ON b.gestion_rude_b = c.gestion_rude_c
