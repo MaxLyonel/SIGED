@@ -213,7 +213,32 @@ caption {
 					<div class="alert alert-primary" role="alert">
 					  Resultado de la Busqueda...
 					</div>                
-
+					<div class="table-responsive">
+						<table class="table table-striped table-condensed table-hover">
+						  <thead class="thead-dark">
+						    <tr>
+						      <th scope="col"></th>
+						      <th scope="col"></th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						 	<tr>
+						 	 	
+								<td>
+								{% if app.session.get('roluser') in [7,8] %}
+									<a v-bind:href="urlreportedepto" ><b> <i class="fa fa-file-pdf-o fa-2x"></i> Reporte Nivel Departamento</b></a>
+								{% endif %}		
+								</td>
+								<td>
+								{% if app.session.get('roluser') in [7,8,10] %}
+									<a v-bind:href="urlreportedistrito" ><b> <i class="fa fa-file-pdf-o fa-2x"></i> Reporte Nivel Distrital</b></a>
+								</td>
+								{% endif %}
+						    </tr>
+						  </tbody>
+						</table>
+					</div>  
+					
 
 					<div class="table-responsive">
 						<table class="table table-striped table-condensed table-hover">
@@ -308,6 +333,8 @@ caption {
 				sieSelected:'',
 				answerResponse:false,
 				answerHistory:false,
+				urlreportedepto:'',
+				urlreportedistrito:'',
 
 			    /*options: [
 			      { text: 'One', value: 'A' },
@@ -399,6 +426,8 @@ caption {
                             this.answerResponse = response.data.answerResponse;
                             this.DBModalidad = response.data.arrModalidad;
                             this.today = response.data.today;
+                            this.urlreportedepto = response.data.urlreportedepto;
+                            this.urlreportedistrito = response.data.urlreportedistrito;
                             
                         })
                         .catch(e = {
