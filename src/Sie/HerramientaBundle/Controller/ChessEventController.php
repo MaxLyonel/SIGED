@@ -133,7 +133,7 @@ class ChessEventController extends Controller{
 
     private function getLastDayRegistryOpeCheesEventStatus($limitDay){
         $today = date('d-m-Y');
-        $swcloseevent =  (strtotime($today) == strtotime($limitDay))?1:0;  
+        $swcloseevent =  (strtotime($today) >= strtotime($limitDay))?1:0;  
         return $swcloseevent;
     }
 
