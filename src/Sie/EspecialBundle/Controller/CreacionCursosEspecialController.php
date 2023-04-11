@@ -450,7 +450,7 @@ class CreacionCursosEspecialController extends Controller {
 
                 $lugar = "";
                 //dump($form['educacionCasa']);die;
-                if ((isset($form['educacionCasa']) and ($form['educacionCasa'] == 1 or $form['educacionCasa']==true)) or $form['area'] == 4 ){
+                if ((isset($form['educacionCasa']) and ($form['educacionCasa'] == 1 or $form['educacionCasa']==true))){
                     if(isset($form['multiple'])){
                         $lugar="EDUCACION SOCIOCOMUNITARIA EN CASA" . '-' . $form['multiple'];
                     }elseif(isset($form['fisicoMotor']) and $form['fisicoMotor'] != 'Otro'){
