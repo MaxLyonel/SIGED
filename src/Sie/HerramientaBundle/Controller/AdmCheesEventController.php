@@ -554,11 +554,9 @@ class AdmCheesEventController extends Controller{
             'gestionTipoId'=>$this->session->get('currentyear')
           ));
           if(is_object($objDownloadFilenewOpe)){
-              //$em->remove($objDownloadFilenewOpe);
-              //$em->flush();
-          }
-
-          
+              $em->remove($objDownloadFilenewOpe);
+              $em->flush();
+          }          
 
         $arrResponse = array(
             'sie'          => $sie,
