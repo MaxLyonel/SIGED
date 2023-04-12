@@ -288,7 +288,7 @@ class InscriptionNewStudentController extends Controller {
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 3,4,5,6,10 ))
+                ->setParameter('mat', array( 3,4,5,6,10,57 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
@@ -339,7 +339,7 @@ class InscriptionNewStudentController extends Controller {
 
       //validation inscription in the same U.E
       $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']);
-
+//dump($objCurrentInscriptionStudent);die;
         if($objCurrentInscriptionStudent){
           if ($objCurrentInscriptionStudent[0]['sie']==$form['institucionEducativa']){
             $message = 'Estudiante ya cuenta con inscripción en la misma Unidad Educativa, realize el cambio de estado';
@@ -389,31 +389,31 @@ class InscriptionNewStudentController extends Controller {
       $arrIniPriLevel = array('11-1-0','11-1-1','11-1-2','12-1-1');
       if(in_array($currentLevelStudent, $arrIniPriLevel)){ 
         
-        //|| ($currentLevelStudent == '12-1-1')
+          //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
           $dataStudent = unserialize($form['newdata']);
           $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
           $yearStudent = $arrYearStudent['age'];  
-      // //new student validation
+        // //new student validation
         //  dump($yearStudent);
-        if ($yearStudent<=6){
-            switch ($yearStudent) {
-              case 4:
-              # check level
-              $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
-              break;
-              case 5:
-              # check level
-              $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
-              break;
-              case 6:
-              # check level
-              $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
-              break;
-              default:
-                # code...
+          if ($yearStudent<=6){
+              switch ($yearStudent) {
+                case 4:
+                # check level
+                $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
                 break;
-            }
+                case 5:
+                # check level
+                $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
+                break;
+                case 6:
+                # check level
+                $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
+                break;
+                default:
+                  # code...
+                  break;
+              }
 
         }else{
           //do inscription
