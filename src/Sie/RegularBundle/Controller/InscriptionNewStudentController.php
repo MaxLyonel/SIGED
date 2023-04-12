@@ -288,7 +288,7 @@ class InscriptionNewStudentController extends Controller {
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 3,4,5,6,10,57))
+                ->setParameter('mat', array( 3,4,5,6,10))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
