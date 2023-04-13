@@ -105,14 +105,14 @@
                                                         <a href="{{path('rie_delete', {'idRie': entity.id})}}" class="btn btn-secondary btn-sm" title="Eliminar" {% if entity.acreditacion == 2 %}disabled{% endif %}>
                                                             <span class='glyphicon glyphicon-trash'></span> Eliminar
                                                         </a>
+                                                     {% else %}
                                                         <a href="{{path('rie_edit', {'idRie': entity.id})}}" class="btn btn-secondary btn-sm" title="Editar" >
                                                             <span class="glyphicon glyphicon-edit"></span> Editar
                                                         </a>
-                                                        {% else %}
                                                         <a href="{{path('rie_show', {'idRie': entity.id})}}" class="btn btn-secondary btn-sm" title="Ver" >
                                                         <span class='glyphicon glyphicon-eye-open'></span> Ver datos
                                                         </a>
-                                                        {% endif %}
+                                                     {% endif %}
                                                 </li>
                                                 <li>
                                                      <a href="{{path('historico_list_get', {'idRie': entity.id})}}" class="btn btn-secondary btn-sm" title="Historial" >
