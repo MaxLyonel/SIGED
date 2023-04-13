@@ -20,7 +20,7 @@ class ChessEventController extends Controller{
     public $limitDay;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '08-04-2023';
+        $this->limitDay = '30-04-2023';
     }       
     public function index1Action(){
 
@@ -133,7 +133,7 @@ class ChessEventController extends Controller{
 
     private function getLastDayRegistryOpeCheesEventStatus($limitDay){
         $today = date('d-m-Y');
-        $swcloseevent =  (strtotime($today) == strtotime($limitDay))?1:0;  
+        $swcloseevent =  (strtotime($today) >= strtotime($limitDay))?1:0;  
         return $swcloseevent;
     }
 

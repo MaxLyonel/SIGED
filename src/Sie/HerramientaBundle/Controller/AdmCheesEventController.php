@@ -556,9 +556,7 @@ class AdmCheesEventController extends Controller{
           if(is_object($objDownloadFilenewOpe)){
               $em->remove($objDownloadFilenewOpe);
               $em->flush();
-          }
-
-          
+          }          
 
         $arrResponse = array(
             'sie'          => $sie,
