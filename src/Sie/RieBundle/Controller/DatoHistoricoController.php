@@ -194,7 +194,7 @@ class DatoHistoricoController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
             $tipo_res = $form['documentos'];
-            $nro_resolucion = $tipo_res.' '.mb_strtoupper($form['nroResolucion'], 'utf-8');
+            $nro_resolucion = mb_strtoupper($form['nroResolucion'], 'utf-8');
 
             // $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
             $nombre_pdf = $this->upFileToServer($_FILES);
