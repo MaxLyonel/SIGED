@@ -290,7 +290,26 @@
                         <ul>
                             <li><a href="{{path('tecest_reports_index')}}">Reporte General</a></li>
                         </ul>
-                    </li>                    
+                    </li> 
+
+
+
+                    {% if app.session.get('roluser') == 20 %}
+                        <li>
+                            <a href="{{path('sie_tecnicaest_dashboard')}}">
+                                <span class="icon">
+                                    <i class="fa fa-home"></i>
+                                </span>
+                                <span class="text">
+                                    Administrador</span>
+                                {# <span class="selected"></span> #}
+                            </a>
+                        </li>
+                    {% endif %}
+
+
+                    
+
 
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
