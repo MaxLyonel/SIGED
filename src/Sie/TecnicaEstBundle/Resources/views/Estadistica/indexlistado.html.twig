@@ -271,7 +271,7 @@
              </div>
             
              <div class="row">
-                <form action="{{path('sie_university_menu')}}" method="post" name="form" id="form">
+                <form action="{{path('sie_tecnica_est_menu')}}" method="post" name="form" id="form">
                     <input type="hidden" id="form_sede" name="form[sede]" value="">
                 </form>
                 <div class="col-sm-12" >
@@ -302,11 +302,11 @@
                                         <th >
                                             ESTADO
                                         </th>   
-                                        {#                                 
+                                        
                                         <th >
                                             OPCIONES                                        
                                         </th>
-                                        #}
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -340,15 +340,18 @@
                                                     ABIERTO
                                                     </span>
                                                 {% endif %}
-                                                
+
+                                                                                                
                                             </td>
-                                            {#
+                                            
+                                            
                                             <td>
                                                 <button class="btn btn-success text-white" data-toggle="tooltip" data-placement="top" data-original-title="" onclick="ingresoSede('{{ entity.id }}');">
                                                     Acceder                                        
                                                 </button>
                                             </td>
-                                            #}
+                                            
+                                            
                                         </tr>
                                         {% set var = var + 1 %}
                                     {% endfor %}
@@ -435,6 +438,14 @@
     $(document).ready(function() {
         $('.dataTable').dataTable();
         } );
+
+         var ingresoSede = function (sede){
+            var formSede = $('#form_sede');
+            var formulario = $('#form')[0];
+            formSede.val(sede);
+            formulario.submit();        
+            return true;
+        };
 
   
 
