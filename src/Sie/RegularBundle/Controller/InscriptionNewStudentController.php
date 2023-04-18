@@ -1116,6 +1116,7 @@ class InscriptionNewStudentController extends Controller {
             $studentInscription->setObservacion(1);
             $studentInscription->setFechaInscripcion(new \DateTime('now'));
             $studentInscription->setFechaRegistro(new \DateTime('now'));
+            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));
             $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
             //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
             $em->persist($studentInscription);
