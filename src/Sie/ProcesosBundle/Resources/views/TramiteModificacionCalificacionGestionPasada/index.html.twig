@@ -614,12 +614,12 @@
                     var sw = false;
                     $.each(this.datos.cuantitativas, function(index, val) {
                         $.each(val['notas'], function(index2, val2) {
-                            if (val2['nota'] == '' && val2['notaNueva'] =='') {
-                               sw = true;  
+                            if (val2['nota'] == '' && val2['notaNueva'] =='' && val2['idNotaTipo'] !== 10 && val2['idNotaTipo'] !== 11 ) {
+                                sw = true;  
                             }
                         });
                     }); 
-                   return sw;
+                    return sw;
                 },
                 inArray: function(needle, haystack) {
                     var length = haystack.length;
