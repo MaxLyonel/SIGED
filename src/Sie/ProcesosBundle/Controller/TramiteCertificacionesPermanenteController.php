@@ -670,7 +670,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         }
     }
 
-    function saveAndUpdateCert($data){
+    function saveAndUpdateCert($data, $arrDataGenCode){
         // create the conexion 
         $em = $this->getDoctrine()->getManager();
 
@@ -678,30 +678,46 @@ class TramiteCertificacionesPermanenteController extends Controller {
 
         if(!$certificadoPermanente->getDocumentoSerie()){
 
-            // create and save the code serie
-            $documentoSerie = new DocumentoSerie();
-            $documentoSerie->setId($data['nroSerie']);
-            $documentoSerie->setGestion($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
-            $documentoSerie->setDepartamentoTipo($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($data['depto']));
-            $documentoSerie->setEsanulado(false);
-            $documentoSerie->setObservacionAnulado('false');
-            $documentoSerie->setObs('eudper');
-            $documentoSerie->setDocumentoTipo($em->getRepository('SieAppWebBundle:documentoTipo')->findOneById($data['typedoc']));
-            $documentoSerie->setFormacionEducacionTipo($em->getRepository('SieAppWebBundle:FormacionEducacionTipo')->find(4));
-            $em->persist($documentoSerie);
-            // set the code serie on certificadoPermanente table
-            $certificadoPermanente->setEstado(3);
-            $certificadoPermanente->setDocumentoSerie($em->getRepository('SieAppWebBundle:DocumentoSerie')->find($documentoSerie->getId()));
-            
-            $em->flush();
+            $swgenerate=true;
+            $nroSerie =$data['nroSerie'];
 
-            return $documentoSerie->getId();
+            while( $swgenerate ){
+                $objDocSeri = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $nroSerie ));
+                
+                if(!is_object($objDocSeri)){
+
+                    // create and save the code serie
+                    $documentoSerie = new DocumentoSerie();
+                    $documentoSerie->setId($nroSerie);
+                    $documentoSerie->setGestion($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+                    $documentoSerie->setDepartamentoTipo($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($data['depto']));
+                    $documentoSerie->setEsanulado(false);
+                    $documentoSerie->setObservacionAnulado('false');
+                    $documentoSerie->setObs('eudper');
+                    $documentoSerie->setDocumentoTipo($em->getRepository('SieAppWebBundle:documentoTipo')->findOneById($data['typedoc']));
+                    $documentoSerie->setFormacionEducacionTipo($em->getRepository('SieAppWebBundle:FormacionEducacionTipo')->find(4));
+                    $em->persist($documentoSerie);
+                    // set the code serie on certificadoPermanente table
+                    $certificadoPermanente->setEstado(3);
+                    $certificadoPermanente->setDocumentoSerie($em->getRepository('SieAppWebBundle:DocumentoSerie')->find($documentoSerie->getId()));
+                    
+                    $em->flush();
+                    $swgenerate=false;
+
+                    return $documentoSerie->getId();
+
+                    
+
+                }
+            
+                $arrDataGenCode['numserie']=$arrDataGenCode['numserie']+1;
+                $nroSerie = str_pad($arrDataGenCode['numserie'].$arrDataGenCode['coddepto'].$arrDataGenCode['typeEducation'].$arrDataGenCode['acreditation'].$arrDataGenCode['codeyear'], 13, "0", STR_PAD_LEFT);    
+            }
         }else{
+
+          
             return $certificadoPermanente->getDocumentoSerie()->getId();
         }
-        
-
-
     }
 
     /**
@@ -1367,7 +1383,6 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $numserie = $maxSerie[0]['maximo'];
             } 
         //end get info about the num of serie
-
         
         foreach($tramites as $index => $item) {
             $pdf->SetFont('helvetica', '', 9, '', true); 
@@ -1429,13 +1444,23 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $codeyear     = substr( $gestionId, -2);
             $nroSerie = str_pad($numserie.$coddepto.$typeEducation.$acreditation.$codeyear, 13, "0", STR_PAD_LEFT);
 
+            $arrDataGenCode = array(
+                'numserie' => $numserie,
+                'depto'    => $depto,
+                'coddepto' => $coddepto,
+                'typeEducation' => $typeEducation,
+                'acreditation'  => $acreditation,
+                'codeyear'     => $codeyear,
+                'nroSerie' => $nroSerie,
+            );
+
             $dataSerieTrue = array(
                 'nroSerie'=>$nroSerie,
                 'depto'=>$depto,
                 'typedoc'=>$arrLevelACre[$nivelAcre->getAcreditacion()],
                 'idtramite'=>$item['idtramite']
-            );
-            $numSerieGen = $this->saveAndUpdateCert($dataSerieTrue);
+            );            
+            $numSerieGen = $this->saveAndUpdateCert($dataSerieTrue, $arrDataGenCode);
             /////////////////////////////////////
             // end to generate the SERIE code
             /////////////////////////////////////
@@ -1507,7 +1532,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln(10);
                 $contenido='<table border="0" cellpadding="1.5"> ';
                 $contenido.='<tr><td width="10.3%">&nbsp;</td><td  width="79.4%">';
-                $contenido.='<p style="text-align: justify;">Por haber logrado de manera satisfactoria los objetos del curso en el marco de los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
+                $contenido.='<p style="text-align: justify;">Por haber logrado de manera satisfactoria los objetivos del curso en el marco de los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';                             
                 $pdf->writeHTML($contenido, true, false, true, false, '');
@@ -1542,6 +1567,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $firmas.='</table>';           
             $pdf->writeHTML($firmas, true, false, true, false, '');
        }// FIN DEL FOR 
+       
         //$pdf->Output('example_050.pdf', 'I');
         $pdf->Output($queryMaestroUE['sie']."Impresion_Certificados_Permanente".date('YmdHis').".pdf", 'D');
         //return true;

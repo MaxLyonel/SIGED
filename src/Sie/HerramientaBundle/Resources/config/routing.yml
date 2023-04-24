@@ -335,6 +335,10 @@ sie_chees_event_adm:
      resource: "@SieHerramientaBundle/Resources/config/routing/cheeseventadm.yml"
      prefix:   /sie/cheeseventadm
 
+sie_adm_chees_event:
+     resource: "@SieHerramientaBundle/Resources/config/routing/admcheesevent.yml"
+     prefix:   /sie/admcheesevent
+
 # index:
 #     path:     /index
 #     defaults: { _controller: SieHerramientaBundle:ChessEventAdm:index }

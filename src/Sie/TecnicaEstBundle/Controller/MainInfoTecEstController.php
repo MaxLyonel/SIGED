@@ -33,7 +33,23 @@ class MainInfoTecEstController extends Controller{
      * @return type obj form
      */    
     public function indexAction(){
+        
     	$em      = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        //para habilitar el menu de adminstrador
+        $userId =  $this->session->get('userId');
+        //dump($userId); die;
+        $query = "select count(*) from usuario_rol where rol_tipo_id  = 20 and usuario_id = " . $userId;
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $esadministrador = $po[0]['count'];
+        if($esadministrador == 1){
+            $this->session->set('roluser', 20); // 20 es de consultas
+        }
+
     	$data    = bin2hex(serialize($this->baseData));
     	$objSede = $em->getRepository('SieAppWebBundle:EstTecSede')->find($this->baseData['sedeId']);
         $enablePersonalStaffOption = ($objSede->getEstTecSedeTipo()->getId()==1)?true:false;

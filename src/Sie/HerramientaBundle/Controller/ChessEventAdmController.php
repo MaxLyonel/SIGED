@@ -171,8 +171,31 @@ class ChessEventAdmController extends Controller{
       
 
         // get students data
+        $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId-1,$modalidadId,$sie);
+        // get students data
+        $arrNextEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
+        // check if the student exist 
+        $arrStudents2 = array();
+        foreach ($arrEveStudents  as $value) {
+            $query = "SELECT * 
+                    FROM eve_estudiante_inscripcion_evento eeie
+                    where 
+                    eeie.eve_categorias_tipo_id = $categorieId and  
+                    eeie.eve_fase_tipo_id = $faseId and  
+                    eeie.eve_modalidades_tipo_id = $modalidadId and  
+                    eeie.estudiante_inscripcion_id = " . $value['estinscriptionid'] ;
 
-        $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
+
+                $statement = $em->getConnection()->prepare($query);
+                $statement->execute();
+                $arrRegStudent = $statement->fetchAll();  
+                if(sizeof(($arrRegStudent))>0){
+                }else{
+                    $arrStudents2[]=$value;
+                }
+             }   
+
+
         
         $arrResponse = array(
             'modalidadId'    => $modalidadId,
@@ -181,7 +204,8 @@ class ChessEventAdmController extends Controller{
             'modalidadLabel' => $modalidadLabel->getDescripcion(),
             'faseLabel'      => $faseLabel->getDescripcion(),
             'categorieLabel' => $categorieLabel->getCategoria(),
-            'arrEveStudents' => $arrEveStudents,
+            'arrEveStudents' => $arrStudents2,
+            'arrNextEveStudents' => $arrNextEveStudents,
             // 'arrAllowGrade' => $arrAllowGrade,
             // 'genderRequest' => $genderRequest,
             'existSelectData'         => 1,    )
@@ -195,7 +219,7 @@ class ChessEventAdmController extends Controller{
 
     private function getAllRegisteredInscription($categorieId,$faseId,$modalidadId,$sie){
         $em = $this->getDoctrine()->getManager();
-        $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid 
+        $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid, eeie.estudiante_inscripcion_id as estinscriptionid
                 FROM eve_estudiante_inscripcion_evento eeie
                 inner join estudiante_inscripcion ei on (eeie.estudiante_inscripcion_id = ei.id)
                 inner join estudiante e on (ei.estudiante_id = e.id)
@@ -212,8 +236,7 @@ class ChessEventAdmController extends Controller{
         $statement = $em->getConnection()->prepare($query);
         $statement->execute();
         $arrEveStudents = $statement->fetchAll();
-        // dump($arrEveStudents);
-        // die;
+        
         return $arrEveStudents;        
 
     }
@@ -244,7 +267,6 @@ class ChessEventAdmController extends Controller{
         $statement->execute();
         $arrParallels = $statement->fetchAll();        
 
-        // dump($arrParallels);die;
 
         $arrResponse = array(
             'sie'            => $sie,
@@ -326,6 +348,7 @@ class ChessEventAdmController extends Controller{
     }
 
     public function doInscriptionAction(Request $request){
+
         // get the send values
         $sie = $request->get('sie');
         $institucioneducativa = $request->get('institucioneducativa');
@@ -393,9 +416,7 @@ class ChessEventAdmController extends Controller{
         
         $existRemoveStudent=0;
         $objEveStudentInscription = $em->getRepository('SieAppWebBundle:EveEstudianteInscripcionEvento')->find($remoinscriptionid);
-        // dump($remoinscriptionid);
-        // dump($objEveStudentInscription);
-        // die;
+        
         if(is_object($objEveStudentInscription) ){
             $em->remove($objEveStudentInscription);
             // $em->persist($objEveStudentInscription);

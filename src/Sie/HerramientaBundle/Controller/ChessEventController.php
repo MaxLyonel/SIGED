@@ -6,17 +6,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
 use Sie\AppWebBundle\Entity\Estudiante; 
 use Sie\AppWebBundle\Entity\Institucioneducativa; 
 use Sie\AppWebBundle\Entity\EveEstudianteInscripcionEvento; 
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog; 
 
 class ChessEventController extends Controller{
     public $session;
+    public $limitDay;
     public function __construct() {
         $this->session = new Session();
+        $this->limitDay = '30-04-2023';
     }       
     public function index1Action(){
 
@@ -70,7 +74,12 @@ class ChessEventController extends Controller{
             array('id'=>12,'level'=>'Educación Primaria Comunitaria Vocacional'),
             array('id'=>13,'level'=>'Educación Secundaria Comunitaria Productiva'),
         ); 
-            
+
+        $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;   
+        // start this secction validate the last day to report the inscription INFO
+        $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);          
+        // end this secction validate the last day to report the inscription INFO                     
+
         // if ($aTuicion[0]['get_ue_tuicion'] == true){
         if (1){
             $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
@@ -89,6 +98,8 @@ class ChessEventController extends Controller{
                     'existUE'         => $existUE,                
                     'arrModalidades'         => $arrModalidades,                
                     'arrLevel'         => $arrLevel,                
+                    'swcloseevent'         => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 );               
             }else{
                 $arrResponse = array(
@@ -97,6 +108,8 @@ class ChessEventController extends Controller{
                     'existUE'             => $existUE,
                     'arrModalidades'      => $arrModalidades,
                     'arrLevel'            => $arrLevel,
+                    'swcloseevent'            => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 );   
             }            
         }else{
@@ -106,21 +119,22 @@ class ChessEventController extends Controller{
                     'existUE'         => $existUE,
                     'arrModalidades'         => $arrModalidades,
                     'arrLevel'         => $arrLevel,
+                    'swcloseevent'         => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 ); 
         }
-
-
-
-
-
-        
-
 
         
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData($arrResponse);
         return $response;        
+    }
+
+    private function getLastDayRegistryOpeCheesEventStatus($limitDay){
+        $today = date('d-m-Y');
+        $swcloseevent =  (strtotime($today) >= strtotime($limitDay))?1:0;  
+        return $swcloseevent;
     }
 
     public function getInfoEventAction(Request $request){
@@ -182,22 +196,26 @@ class ChessEventController extends Controller{
             $arrAllowGrade=array();
         }
 
-
+        $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;            
+        // start this secction validate the last day to report the inscription INFO
+        $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);  
+        // end this secction validate the last day to report the inscription INFO        
         // get students data
-
         $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
         // dump($arrEveStudents);die;
         $arrResponse = array(
-            'modalidadId'    => $modalidadId,
-            'faseId'         => $faseId,
-            'categorieId'    => $categorieId,
-            'modalidadLabel' => $modalidadLabel->getDescripcion(),
-            'faseLabel'      => $faseLabel->getDescripcion(),
-            'categorieLabel' => $categorieLabel->getCategoria(),
-            'arrEveStudents' => $arrEveStudents,
-            'arrAllowGrade' => $arrAllowGrade,
-            'genderRequest' => $genderRequest,
-            'existSelectData'         => 1,    )
+            'modalidadId'     => $modalidadId,
+            'faseId'          => $faseId,
+            'categorieId'     => $categorieId,
+            'modalidadLabel'  => $modalidadLabel->getDescripcion(),
+            'faseLabel'       => $faseLabel->getDescripcion(),
+            'categorieLabel'  => $categorieLabel->getCategoria(),
+            'arrEveStudents'  => $arrEveStudents,
+            'arrAllowGrade'   => $arrAllowGrade,
+            'genderRequest'   => $genderRequest,
+            'existSelectData' => 1,    
+            'swcloseevent'    => $swcloseevent,    
+        )
         ; 
 
         $response = new JsonResponse();
@@ -296,7 +314,7 @@ class ChessEventController extends Controller{
                 inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
                 inner join institucioneducativa_curso ic on (ei.institucioneducativa_curso_id=ic.id)
                 inner join genero_tipo gt on (e.genero_tipo_id=gt.id)
-                where ic.nivel_tipo_id =$levelId and ic.grado_tipo_id =$gradeId and ic.gestion_tipo_id =$year and e.genero_tipo_id = $genderRequest and ic.paralelo_tipo_id = '".$parallelId."' and ic.institucioneducativa_id =$sie
+                where ic.nivel_tipo_id =$levelId and ic.grado_tipo_id =$gradeId and ic.gestion_tipo_id =$year and e.genero_tipo_id = $genderRequest and ic.paralelo_tipo_id = '".$parallelId."' and ic.institucioneducativa_id =$sie and  ei.estadomatricula_tipo_id = 4
         ";
 
 
@@ -433,9 +451,91 @@ class ChessEventController extends Controller{
         return $response;  
     }
 
+    public function closeEventCheesAction(Request $request) {
+        // DUMP($request);die;
+        // get the send values
+        $sie = $request->get('sie');        
+        //conexion to DB
+        $em = $this->getDoctrine()->getManager();
+        // $em->getConnection()->beginTransaction();
+        try {
+          //save the log data
+          
+          // dump(is_object($objDownloadFilenewOpe));die;
+          $objDownloadFilenewOpe = $this->checkOperativeChees($sie);
+          if(!is_object($objDownloadFilenewOpe)){
+            $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+          }
+          
+          $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(11));
+          $objDownloadFilenewOpe->setGestionTipoId($this->session->get('currentyear'));
+          $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+          $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+          $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+          $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
+          $objDownloadFilenewOpe->setDescripcion('AJEDREZ');
+          $objDownloadFilenewOpe->setEsexitoso('t');
+          $objDownloadFilenewOpe->setEsonline('t');
+          $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+          $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+          $objDownloadFilenewOpe->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+          $em->persist($objDownloadFilenewOpe);
+          $em->flush();
+           // $em->getConnection()->commit();
+
+          $swcloseevent = 1;
+
+        } catch (Exception $e) {
+            $swcloseevent = 0;
+          $em->getConnection()->rollback();
+          echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }   
+
+        $arrResponse = array(
+            'sie'          => $sie,
+            'swcloseevent' => $swcloseevent,
+            'swcloseevent' => $swcloseevent,
+            'urlreporte'=> $this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie))
+        ); 
 
 
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;                
+    }
 
+
+    private function checkOperativeChees($sie){
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+
+          $objDownloadFilenewOpe = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
+            'institucioneducativa'=>$sie,
+            'institucioneducativaOperativoLogTipo'=>11,
+            'gestionTipoId'=>$this->session->get('currentyear')
+          ));
+
+        return $objDownloadFilenewOpe;        
+    }
+
+    public function reportChessInscriptionAction(Request $request, $sie){
+
+        $response = new Response();
+        $gestion = $this->session->get('currentyear');
+        $codigoQR = 'EVEAJE'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$sie;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'eventChees'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_v1_EEA_ue.rptdesign&institucioneducativa_id='.$sie.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }     
 
     public function findStudentAction(Request $request){
         
