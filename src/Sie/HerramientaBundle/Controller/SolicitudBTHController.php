@@ -188,14 +188,12 @@ class SolicitudBTHController extends Controller {
         $datosForm = $this->datosFormulario($institucion_id, $gestion_sucursal);
         
         /**********teporal para regulariza ues 2022 ***/
-        // $ue = array(31920031,
-        //             70420099,
-        //             80830104);
-        // if (in_array($institucion_id, $ue)){
-        //     $verificarinicioTramite = 0; 
-        // }else{
-        //     $verificarinicioTramite = 1;
-        // }
+        $ue = array(80720196);
+        if (in_array($institucion_id, $ue)){
+            $verificarinicioTramite = 0; 
+        }else{
+            $verificarinicioTramite = 1;
+        }
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDirector.html.twig',
             array('institucion' => $datosForm[0],
                 'ubicacion' => $datosForm[1],
