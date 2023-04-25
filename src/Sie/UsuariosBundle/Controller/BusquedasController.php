@@ -125,6 +125,29 @@ class BusquedasController extends Controller
 
                 $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
                 
+                $us = array(7,1,2,3,5,6);
+                if(in_array($this->session->get('roluser'), $us)){
+                    $idperson = $personaEncontrada->getId();
+                    // dump($personaEncontrada);
+                    // dump($idperson);die;
+                    
+                    $em = $this->getDoctrine()->getManager();
+                    $db = $em->getConnection();
+                    $query = '  select distinct u.id, u.persona_id, u.username 
+                                from usuario u 
+                                inner join usuario_rol ur on u.id = ur.usuario_id 
+                                where u.persona_id = ?
+                                and ur.rol_tipo_id in (7,8,16,17,20,23,28,31,32,34,35,38,39,40,41,42,43,46,47) and ur.esactivo = true ';
+                        $stmt = $db->prepare($query);
+                        $params = array($idperson);
+                        $stmt->execute($params);
+                        $po=$stmt->fetchAll();
+
+                    if (count($po) >= 1){
+                        $this->session->getFlashBag()->add('error', 'Proceso detenido. No tiene tuicion sobre estos datos.');
+                        return $this->redirectToRoute('sie_usuarios_homepage');
+                    }
+                }
                 if($personaEncontrada != null) //ALTERNATIVA A resultService->type_msg === 'success'
                 {
                     $idperson = $personaEncontrada->getId();

@@ -198,7 +198,6 @@
                                     <ul class="collapse nav" id="menuBusquedas">         
                                         {# <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>                                          #}
                                         <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>
-                                        <li><a class="fa fa-user" href="{{ path('sie_usuario_busqueda_nombreusuario') }}"> Por nombre de usuario.</a></li>
                                         <li><a class="glyphicon glyphicon-home" href="{{ path('sie_personas_usuario_cod_ie') }}"> Buscar por código de institución educativa.</a></li>
                                     </ul>
                                 </li>
@@ -221,16 +220,6 @@
                                         </ul>
                                     </li>                                    
                                 {% endif %}
-                                <li class="panel">
-                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuGestion">
-                                        <i class="fa fa-bullseye"></i> Gestión <i class="fa fa-caret-down"></i>
-                                    </a>
-                                    <ul class="collapse nav" id="menuGestion">                      
-                                        <li><a class="fa fa-users" href="{{ path('sie_persona_apropiacion') }}"> Apropiación de Carnet. </a></li>                                        
-                                        <li><a class="glyphicon glyphicon-stats" href="{{ path('sie_usuarios_estadisticas') }}"> Estadisticas.</a></li>
-                                        <li><a class="fa fa-arrow-circle-o-right" href="{{ path('sie_usuarios_rol_change_in_hot') }}"> Cambiar Rol.</a></li>                                        
-                                    </ul>
-                                </li>
                             {% endif %}
                             
                             {# DISTRITALES #}
