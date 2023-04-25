@@ -1428,10 +1428,9 @@ class TramiteInclusionCalificacionController extends Controller {
                                     $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
                                 }
                                 break;
-                    case 2020:
-                                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
-                                break;                                
+                    case 2020:                                
                     case 2021:
+                    case 2022:
                                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
                                 break;                                                                
                     default:
