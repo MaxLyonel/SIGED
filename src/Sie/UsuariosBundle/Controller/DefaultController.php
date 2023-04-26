@@ -52,7 +52,7 @@ class DefaultController extends Controller
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        $arrRolAllow = array(7,8);
+        $arrRolAllow = array(7,8,31);
         if(!in_array($this->session->get('roluser'), $arrRolAllow)){
             return $this->redirectToRoute('principal_web');
         }
