@@ -125,7 +125,7 @@ class BusquedasController extends Controller
 
                 $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
                 
-                $us = array(7,1,2,3,5,6);
+                $us = array(7,8,1,2,3,5,6);
                 if(in_array($this->session->get('roluser'), $us)){
                     $idperson = $personaEncontrada->getId();
                     // dump($personaEncontrada);
