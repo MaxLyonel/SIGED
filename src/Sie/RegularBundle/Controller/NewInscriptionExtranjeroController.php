@@ -385,9 +385,11 @@ class NewInscriptionExtranjeroController extends Controller{
                 ->where('e.codigoRude = :id')
                 ->andwhere('iec.gestionTipo = :gestion')
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+                ->andWhere('i.institucioneducativaTipo = :typeUE')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('mat', array( 3,4,5,6,10 ))
+                ->setParameter('typeUE', 1)
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
