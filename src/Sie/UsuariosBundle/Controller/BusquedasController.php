@@ -66,7 +66,8 @@ class BusquedasController extends Controller
     
     public function formcarnetAction() {
 
-        if(!($this->session->get('roluser') == 8)){
+        $us = array(8,31);
+        if(!(in_array($this->session->get('roluser'), $us))){
             if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
                 return $this->redirectToRoute('sie_usuarios_homepage');
             }
