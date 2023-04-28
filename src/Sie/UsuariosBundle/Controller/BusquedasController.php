@@ -66,7 +66,8 @@ class BusquedasController extends Controller
     
     public function formcarnetAction() {
 
-        if(!($this->session->get('roluser') == 8)){
+        $us = array(8,31);
+        if(!(in_array($this->session->get('roluser'), $us))){
             if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
                 return $this->redirectToRoute('sie_usuarios_homepage');
             }
@@ -126,7 +127,7 @@ class BusquedasController extends Controller
                 $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
                 
                 $us = array(7,8,1,2,3,5,6);
-                if(in_array($this->session->get('roluser'), $us)){
+                if((in_array($this->session->get('roluser'), $us)) and (count($personaEncontrada)>0)){
                     $idperson = $personaEncontrada->getId();
                     // dump($personaEncontrada);
                     // dump($idperson);die;

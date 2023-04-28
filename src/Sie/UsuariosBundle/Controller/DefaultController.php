@@ -777,7 +777,7 @@ class DefaultController extends Controller
     }
     
     public function userroleditAction($usuarioid) {
-        $arrRolAllow = array(8);
+        $arrRolAllow = array(8,31);
         
         if(!in_array($this->session->get('roluser'), $arrRolAllow)){
             die('Lo sentimos... temporalmente fuera de servicio...');
