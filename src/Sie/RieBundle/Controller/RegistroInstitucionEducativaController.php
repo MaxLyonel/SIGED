@@ -105,7 +105,7 @@ class RegistroInstitucionEducativaController extends Controller {
         if(!$region->getEstado())
             $regionesArray =  explode(',', $region->getRegion()); //los departamentos asignados
         else*/
-            $regionesArray = array(1,2,3,4,5,6,7,8,9);
+            $regionesArray = array(2,3,4,5,6,7,8,9,10);
 
         if($id_rol==7)
             $regionesArray = str_split($departamento->getId());  //para el departamental
