@@ -422,7 +422,8 @@
 
                     {% if app.session.get('roluser') == 9 %}
                     
-                    <li class="submenu">
+                    <!--MENU BACHILLER DE EXCELENCIA PARA UE -->
+                    {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -432,13 +433,13 @@
                             {#
                             <li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
                             #}
-                            <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>                           
+                            {# <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>                            #}
                             
                             {#<li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
-                            <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
+                            {# <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li> #}
                             
-                        </ul>
-                    </li>
+                        {# </ul>
+                    </li> #} 
                     
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -507,7 +508,8 @@
                     {#
                     #}
                     
-                    <li class="submenu">
+                    <!--MENU BACHILLER DE EXCELENCIA PARA SIE NAL Y DDE -->
+                    {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -517,13 +519,13 @@
                         {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
                         {% if app.session.get('roluser') in [7,8,10] %}
                            {#<li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>#}
-                        {% endif %}
+                        {# {% endif %} #}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                             {#<li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>#}
-                        </ul>
+                        {# </ul>
                         {% endif %}
-                    </li>
-                    
+                    </li>  #}
+                    <!--MENU BACHILLER DE EXCELENCIA -->
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -649,7 +651,8 @@
                                 <li><a href="{{ path('history_new_inscription_index')}}">Historial</a></li>
                             </ul>                            
                         </li>
-                        <li class="submenu">    
+                        <!--sub menu inscripciones UE -->
+                        {# <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Inscripciones</span>
@@ -658,13 +661,13 @@
                             <ul>
                                 <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('newForeign_index')}}">Extranjeros</a></li>
-                                <li><a href="{{ path('inscription_new_student_index')}}">Nuevo Estudiante en la UE</a></li>
+                                <li><a href="{{ path('inscription_new_student_index')}}">Nuevo Estudiante en la UE</a></li> #}
                                 <!--li><a href="{{ path('inscription_ini_pri_rue_index')}}"> Gestión</a></li -->
-                                {% if app.session.get('roluser') in [7,8,10] %}
+                                {# {% if app.session.get('roluser') in [7,8,10] %} #}
                                 <!-- li><a href="{{ path('remove_inscription_sie_index')}}">Eliminar Inscripción</a></li-->
                                 <!--li><a href="{{ path('inscriptionSpecialNew_find')}}">Centros de Educación Especial</a></li -->
                                 <!-- li><a href="{{ path('inscription_reza_omi_exten_index')}}">Omitidos/Extemporáneos</a></li -->
-                                {% endif %}
+                                {# {% endif %} #}
                                 <!--li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li-->
                                 <!--li><a href="{{ path('updateSudentLevel_index')}}">Modificar Nivel y Grado</a></li-->
                                 <!--li><a href="{{ path('rudeunificationinscription_index')}}">Unificar Rudes de Inscripción</a></li-->
@@ -673,9 +676,10 @@
                                 {#
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                                 
-                                #}
+                               
                             </ul>
-                        </li>
+                        </li> #}
+                        <!--FIN sub menu inscripciones UE -->
                     {% endif %}
                     {% if app.session.get('roluser') in [7,8,9,10] %}
                         <li class="submenu">    
@@ -721,8 +725,8 @@
                             {% endif %}
                             #}
                     
-                    
-                    {% if  (app.session.get('roluser') in [7,10,9,8])  %}
+                    <!--OPERATIVO COVID -->
+                    {# {% if  (app.session.get('roluser') in [7,10,9,8])  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -741,7 +745,7 @@
                             {% endif %}
                             
                         </li>
-                    {% endif %}                    
+                    {% endif %}                     #}
 {#                     
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                         <li class="submenu">
@@ -768,7 +772,7 @@
                         </li>
                     {% endif %}
                     {# Preinscripciones #}
-                    {% if app.session.get('roluser') in [9,10,8,7] %}
+                    {# {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -785,7 +789,7 @@
                                 <li><a href="{{path('uealtademanda')}}">Modificar cupo</a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
 
                     {# Cambio de tutor BJP 2021  #}
                     
