@@ -1,0 +1,86 @@
+Sie\AppWebBundle\Entity\CenEstudianteInscripcionCenso:
+    type: entity
+    table: cen_estudiante_inscripcion_censo
+    indexes:
+        IDX_80679FAFA1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_80679FAF507C3B49:
+            columns:
+                - apoderado_inscripcion_id
+        IDX_80679FAF3AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        documentoPath:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: documento_path
+        email:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        celnumero:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        apoderadoInscripcion:
+            targetEntity: ApoderadoInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
