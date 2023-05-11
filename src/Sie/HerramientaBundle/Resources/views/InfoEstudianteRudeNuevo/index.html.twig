@@ -36,7 +36,7 @@
         border-radius: 15px;
         /* color: #34495e; */
         float: right;
-        background-color: #7BB841 !important;
+        background-color: #35B7E5 !important;
         color: #FFFFFF !important;
     }
 
@@ -107,7 +107,7 @@
         text-align: left !important;
     }
     .tituloNombre{
-        background:#64CBE2;
+        background:#35B7E5;
         color:#FFFFFF;
         padding: 5px;
         font-weight: bold;
@@ -145,6 +145,7 @@
         display: none;
         cursor: no-drop;
     }
+
 </style>
 <div class="modal-dialog" style="width: 1000px">
     <div class="modal-content">
@@ -154,7 +155,7 @@
         </div>
         <div class="panel panel-tab panel-tab-double">
             <div class="panel-heading no-padding">
-                <div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;">
+                <div style="height:50px; background:#35B7E5; color:#FFFFFF; margin-top:-10px;">
                     <h4 style="padding:10px 0px 0px 10px; text-align:center">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         FORMULARIO DE INSCRIPCIÓN / ACTUALIZACIÓN <br>
@@ -321,29 +322,41 @@
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Oficialia Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
+                                                    {% if formEstudiante.oficialia.vars.value != '' %}
+                                                        <b>{{ formEstudiante.oficialia.vars.value }}</b>
+                                                    {% else %}
                                                          {{ form_widget(formEstudiante.oficialia, {'attr':{'class':'form-control '} , 'value': formEstudiante.oficialia.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.oficialia.vars.value }}</b>#}
+                                                    {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Libro Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
+                                                    {% if formEstudiante.libro.vars.value != '' %}
+                                                        <b>{{ formEstudiante.libro.vars.value }}</b>
+                                                    {% else %}
                                                          {{ form_widget(formEstudiante.libro, {'attr':{'class':'form-control '} , 'value': formEstudiante.libro.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.libro.vars.value }}</b>#}
+                                                    {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Partida Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
+                                                    {% if formEstudiante.partida.vars.value != '' %}
+                                                        <b>{{ formEstudiante.partida.vars.value }}</b>
+                                                    {% else %}
                                                          {{ form_widget(formEstudiante.partida, {'attr':{'class':'form-control '} , 'value': formEstudiante.partida.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.partida.vars.value }}</b>#}
+                                                    {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Folio Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
+                                                    {% if formEstudiante.folio.vars.value != '' %}
+                                                        <b>{{ formEstudiante.folio.vars.value }}</b>
+                                                    {% else %}
                                                          {{ form_widget(formEstudiante.folio, {'attr':{'class':'form-control '} , 'value': formEstudiante.folio.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.folio.vars.value }}</b>#}
+                                                    {% endif %}
                                                     </div>
                                                 </div>
                                             </div>
