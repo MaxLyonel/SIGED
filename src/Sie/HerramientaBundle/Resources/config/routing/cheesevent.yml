@@ -26,6 +26,18 @@ cheesevent_findStudent:
     options:
          expose: true
          
+cheesevent_startInscription:
+    path:     /startInscription
+    defaults: { _controller: SieHerramientaBundle:ChessEvent:startInscription }
+    options:
+         expose: true
+                  
+cheesevent_registerClassified:
+    path:     /registerClassified
+    defaults: { _controller: SieHerramientaBundle:ChessEvent:registerClassified }
+    options:
+         expose: true
+         
 cheesevent_showStudents:
     path:     /showStudents
     defaults: { _controller: SieHerramientaBundle:ChessEvent:showStudents }
@@ -47,6 +59,12 @@ cheesevent_doInscription:
 cheesevent_removeInscriptionChees:
     path:     /removeInscriptionChees
     defaults: { _controller: SieHerramientaBundle:ChessEvent:removeInscriptionChees }
+    options:
+         expose: true
+   
+cheesevent_removeInscriptionCheesNextLevel:
+    path:     /removeInscriptionCheesNextLevel
+    defaults: { _controller: SieHerramientaBundle:ChessEvent:removeInscriptionCheesNextLevel }
     options:
          expose: true
          

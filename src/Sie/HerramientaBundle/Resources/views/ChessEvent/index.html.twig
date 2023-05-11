@@ -62,14 +62,14 @@
 
 				    <div class="panel panel-info">
 					    	<div class="panel-heading">
-					    	    <h4>Inscripcion:</br> ${infoUE.modalidadLabel} </br>${infoUE.faseLabel} </br>${infoUE.categorieLabel} </h4>
+					    	    <h4>${infoUE.modalidadLabel} </br>${infoUE.faseLabel} </br>${infoUE.categorieLabel} </h4>
 					    	</div>
 					    <div class="panel-body">
 					    </div>  
 				   </div>
 
 
-					<form class="form-row">
+					<form class="form-row" v-if="swRegistryClassi">
 						<div class="form-group">
 							<label for="rude">Código RUDE: </label>
 							<input type="text" v-model="infoUE.codigoRude"  class="form-control" id="exampleInputPassword1" placeholder="RUDE">
@@ -78,9 +78,9 @@
 					</form>					   
 
 
-					<div class="table-responsive" v-if="existStudent">
+					<div class="table-responsive" v-if="existStudentpre">
 						<div class="alert alert-info" role="alert">Resultado de la busqueda</div>    									
-                    	<table class="table table-dark">
+                    	<table class="table table-dark" v-if="swRegistryClassi">
                     		<thead>
                     			<tr ><th colspan="5">Resultado de la busqueda</th></tr>
                     		</thead>
@@ -91,21 +91,55 @@
 								<th>Paterno</th>
 								<th>Materno</th>
 								<th>Nombre(s)</th>
+								
 							</tr>
-
 							<tr>
-								<th>Institucion Educativa</th>
-								<th>${infoUE.institucioneducativa}</th>
-							</tr>									
-							{# 
-							<tr >
-								<th colspan="6" align="left">
-								<button v-on:click="mostrarFormulario()" type="button" class="btn btn-success" title="Caso de Homónimo"> Proceder con  el Registro de Datos </button>								    		
-								</th>
-							</tr> #}
+								<td>${DBstudentPreCla.codigo_rude}</td>
+								<td>${DBstudentPreCla.carnet_identidad}</td>
+								<td>${DBstudentPreCla.paterno}</td>
+								<td>${DBstudentPreCla.materno}</td>
+								<td>${DBstudentPreCla.nombre}</td>
+							</tr>
+							<tr  >
+								<td colspan="5"><button v-on:click="registerClassified(infoUE)" type="button" class="btn btn-success" title="Clasificado" > Registrar </button>	</td>
+							</tr>
 							</tbody>
 						</table>							
-					</div>				                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+					</div>	
+					</br>
+								<small>
+								<div class="table-responsive">
+	                            	<table class="table table-dark">
+										<tbody>
+										<tr>
+											
+											<th>#</th>
+											<th>Cod. RUDE</th>
+											<th>CI-COMPL.</th>
+											<th>Paterno</th>
+											<th>Materno</th>
+											<th>Nombre(s)</th>
+											<th>option</th>	
+										</tr>
+										
+										<tr v-for="(student,rindex) in DBstudentClasificado">
+											<td>${rindex+1}</td>
+											<td>${student.codigo_rude }</td>
+											<td>${student.carnet_identidad} ${student.complemento}</td>
+											<td colspan="3">${student.paterno } ${student.materno } ${student.nombre }</td>
+											{#  #}
+											<td v-bind:id="student.inscriptionid"><a href="#" v-on:click="removeInscriptionCheesNextLevel( student.eveinscriptionid)"  :class="{disabled: linkDisabled}" v-if="true"> Eliminar </a> </td>
+										</tr>
+
+										<tr >
+											<th colspan="6" align="left">
+											{# <button v-on:click="doInscription()" type="button" class="btn btn-success" title="C"> Inscribir </button>								    		 #}
+											</th>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+								</small>
 
                 </div>
             </div>
@@ -330,7 +364,10 @@
 									<table class="table table-bordered">
 									  <thead>
 									  	<tr>
-									  		<th colspan="3">Inscritos</th>
+									  		<th colspan="2">Inscritos</th>
+									  		<th colspan="2">
+												<a v-if="infoUE.modalidadId == 1" href="#" v-on:click="startInscription(infoUE)" type="button" class="">Registro de clasificados</a>
+									  		</th>
 									  	</tr>
 									    <tr>
 									      <th>Modalidad</th>
@@ -456,11 +493,15 @@
 			DBCategories: {},
 			DBselectedData: {},
 			DBstudent: {},
+			DBstudentPreCla: {},
+			DBstudentClasificado: {},
 			DBParallels: {},
 			DBInscriptionLevel: {},
 			DBEveStudents: {},
 			existSelectData:false,
 			existStudent:false,
+			existStudentpre:false,
+			swRegistryClassi:false,
 			existParall:false,
 			linkDisabled:false,
 			/////////////////////////////
@@ -582,7 +623,8 @@
 				this.DBParallels={};
 				this.existStudent=false;
 				this.DBstudent={};				
-				this.DBEveStudents={};				
+				this.DBEveStudents={};
+
 				axios.post(Routing.generate('cheesevent_dataSelected', this.infoUE ))
 				.then(response => {
 					if (response.status == 200) {
@@ -623,25 +665,31 @@
 				});					
 			},
 			startInscription:function(infoUEsend){
-				$('#modalNewInscription').modal('show');
-			},
-			findStudent:function(infoUEsel){
-				axios.post(Routing.generate('cheesevent_findStudent', infoUEsel ))
+				// console.log(infoUEsend);
+				this.DBstudentPreCla = {};
+				this.DBstudentClasificado = {};
+				this.infoUE.codigoRude = '';
+				this.existStudentpre = false;
+				this.swRegistryClassi = false;
+
+				axios.post(Routing.generate('cheesevent_startInscription', infoUEsend ))
 				.then(response => {
 					if (response.status == 200) {
 						this.DBselectedData = response.data.selectedData;
 							// console.log(response.data);
 
-							if(response.data.existStudent == true){
+							if(response.data.existStudentClassi == true){
 								
 								// this.DBselectedData = response.data.selectedData;
 								this.infoUE.modalidadId = response.data.modalidadId;
 								this.infoUE.faseId = response.data.faseId;
 								this.infoUE.categorieId = response.data.categorieId;
 								this.infoUE.sie = response.data.sie;
-								this.DBstudent = response.data.arrStudents;
+								// this.infoUE.inscriptionidCla = response.data.arrStudents.estinscid;
+								this.DBstudentClasificado = response.data.arrEveStudentsClassified;
 
-								this.existStudent = response.data.existStudent;
+								this.existStudentpre = response.data.existStudentpre;
+								this.swRegistryClassi = response.data.swRegistryClassi;
 
 								// this.infoUE2.krlos = 'krlos';
 								// this.DBCategories = response.data.arrCategories;
@@ -649,7 +697,93 @@
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'no answer...',
+								'no existe Resultado...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+
+
+
+				$('#modalNewInscription').modal('show');
+			},
+			findStudent:function(infoUEsel){
+				this.DBstudentPreCla = {};
+				this.existStudentpre = false;
+				axios.post(Routing.generate('cheesevent_findStudent', infoUEsel ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudentpre == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								this.infoUE.inscriptionidCla = response.data.arrStudents.estinscid;
+								this.DBstudentPreCla = response.data.arrStudents;
+
+								this.existStudentpre = response.data.existStudentpre;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no existe Resultado...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+			},
+			registerClassified:function(infoUEsel){
+				
+				// this.loadingpre = false;
+				this.swRegistryClassi = false;
+				axios.post(Routing.generate('cheesevent_registerClassified', infoUEsel ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudentpre == true){
+							// console.log(response.data.arrEveStudentsClassified);return;
+								// this.DBstudentClasificado = {};
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								this.DBstudentClasificado = response.data.arrEveStudentsClassified;
+								this.existStudentpre = response.data.existStudentpre;
+								this.swRegistryClassi = response.data.swRegistryClassi;
+								// this.infoUE.inscriptionidCla = response.data.arrStudents.estinscid;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no existe Resultado...',
 								'warning'
 								);
 							}
@@ -804,6 +938,68 @@
 
 
 			},
+			removeInscriptionCheesNextLevel:function(inscriptionid){
+
+                    Swal.fire({
+                        title: '¿Realizar la eliminación??',
+                        text: "Se eliminará al estudiante seleccionado...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							this.infoUE.remoinscriptionid=inscriptionid;
+							// $('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('cheesevent_removeInscriptionCheesNextLevel', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.existRemoveStudent == true){
+											// this.DBEveStudents ={};
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBstudentClasificado = response.data.arrEveStudentsClassified;
+											this.swRegistryClassi = response.data.swRegistryClassi;
+											// this.DBEveStudents = response.data.arrEveStudents;
+
+											// this.existStudent = response.data.existStudent;
+
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		                    	
+
+						}		
+					 });
+
+
+
+			},			
 			removeInscriptionChees:function(inscriptionid){
 
                     Swal.fire({
