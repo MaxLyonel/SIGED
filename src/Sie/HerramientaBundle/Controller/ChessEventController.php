@@ -701,16 +701,32 @@ class ChessEventController extends Controller{
 
         $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
 
-        $objEveStudentInscription = new EveEstudianteInscripcionEvento();
-        $objEveStudentInscription->setFechaRegistro(new \DateTime('now'));
-        $objEveStudentInscription->setEsVigente(1);
-        $objEveStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionid));
-        $objEveStudentInscription->setEveCategoriasTipo($em->getRepository('SieAppWebBundle:EveCategoriasTipo')->find($categorieId));
-        $objEveStudentInscription->setEveFaseTipo($em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseIdddis));
-        $objEveStudentInscription->setEveModalidadesTipo($em->getRepository('SieAppWebBundle:EveModalidadesTipo')->find($modalidadId));
 
-        $em->persist($objEveStudentInscription);
-        $em->flush();
+        $objexistInscription = $em->getRepository('SieAppWebBundle:EveEstudianteInscripcionEvento')->findOneBy(array(
+            'estudianteInscripcion' =>$inscriptionid,
+            'eveCategoriasTipo' =>$categorieId,
+            'eveFaseTipo' => $faseIdddis,
+            'eveModalidadesTipo' =>$modalidadId,
+
+        ));
+
+        $existStudentpre = 1;
+        if(sizeof($objexistInscription)>0){
+            $existStudentpre = 0;
+        }else{
+
+            $objEveStudentInscription = new EveEstudianteInscripcionEvento();
+            $objEveStudentInscription->setFechaRegistro(new \DateTime('now'));
+            $objEveStudentInscription->setEsVigente(1);
+            $objEveStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionid));
+            $objEveStudentInscription->setEveCategoriasTipo($em->getRepository('SieAppWebBundle:EveCategoriasTipo')->find($categorieId));
+            $objEveStudentInscription->setEveFaseTipo($em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseIdddis));
+            $objEveStudentInscription->setEveModalidadesTipo($em->getRepository('SieAppWebBundle:EveModalidadesTipo')->find($modalidadId));
+
+            $em->persist($objEveStudentInscription);
+            $em->flush();
+        }
+
 
         $arrEveStudentsClassified = $this->getAllRegisteredInscription( $categorieId,$faseIdddis,$modalidadId,$sie);
 // dump($arrEveStudentsClassified);die;
@@ -720,7 +736,7 @@ class ChessEventController extends Controller{
             'faseId'         => $faseId,
             'categorieId'    => $categorieId,
             'arrEveStudentsClassified' => $arrEveStudentsClassified,
-            'existStudentpre'         => 1,    
+            'existStudentpre'         => $existStudentpre,    
             'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==2)?0:1
         ); 
 

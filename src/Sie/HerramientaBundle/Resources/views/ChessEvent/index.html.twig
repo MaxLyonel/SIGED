@@ -589,6 +589,7 @@
 			},
 			resetAllvalues: function(modalidadId, levelId, selectModalidad){
 				this.existSelectData=false;
+				DBLevel = {};
 				this.DBFases = {};
 				this.DBCategories = {};
 			},
@@ -788,7 +789,7 @@
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'no existe Resultado...',
+								'no existe Resultado o registro duplicado...',
 								'warning'
 								);
 							}
