@@ -402,6 +402,66 @@ class ChessEventController extends Controller{
     }
 
 
+    public function removeInscriptionCheesNextLevelAction(Request $request){
+
+        // get the send values
+        $sie = $request->get('sie');
+        $institucioneducativa = $request->get('institucioneducativa');
+        $modalidadId = $request->get('modalidadId');
+        $faseId = $request->get('faseId');
+        $categorieId = $request->get('categorieId');
+        $levelId = $request->get('levelId');
+        $gradeId = $request->get('gradeId');
+        $parallelId = $request->get('parallelId');
+        // $inscriptionid = $request->get('inscriptionid');
+        $remoinscriptionid = $request->get('remoinscriptionid');
+        $genderRequest = $request->get('genderRequest');
+        $year = $this->session->get('currentyear');
+
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+        
+        $existRemoveStudent=0;
+        $objEveStudentInscription = $em->getRepository('SieAppWebBundle:EveEstudianteInscripcionEvento')->find($remoinscriptionid);
+        
+        if(is_object($objEveStudentInscription) ){
+            $em->remove($objEveStudentInscription);
+            // $em->persist($objEveStudentInscription);
+            $em->flush();
+            $existRemoveStudent=1;
+        }
+
+            $query = "
+                    select * 
+                    from eve_fase_tipo  
+                    where eve_modalidades_tipo_id = $modalidadId and descripcion = 'Fase II. Distrital'
+            ";
+            $statement = $em->getConnection()->prepare($query);
+            $statement->execute();
+            $objFase = $statement->fetchAll();   
+
+        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+
+        $arrEveStudentsClassified = $this->getAllRegisteredInscription( $categorieId,$faseIdddis,$modalidadId,$sie);
+        
+        $arrResponse = array(
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrEveStudentsClassified' => $arrEveStudentsClassified,
+            'existRemoveStudent'       => $existRemoveStudent,    
+            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==2)?0:1            
+
+        ); 
+
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;  
+    }
+
     public function removeInscriptionCheesAction(Request $request){
 
 
@@ -554,7 +614,7 @@ class ChessEventController extends Controller{
         $query = "
                 select
                 e.codigo_rude, e.carnet_identidad ,
-                e.nombre, e.paterno, e.materno, ei.id as studentId, nt.nivel, gt.grado, pt.paralelo  
+                e.nombre, e.paterno, e.materno, ei.id as studentId, nt.nivel, gt.grado, pt.paralelo, ei.id as estInscId
                 from estudiante e 
                 inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
                 inner join institucioneducativa_curso ic on (ei.institucioneducativa_curso_id=ic.id)
@@ -568,9 +628,27 @@ class ChessEventController extends Controller{
         $statement->execute();
         $arrStudents = $statement->fetchAll();
 
+        $existStudent=0;
         if(sizeof($arrStudents)>0 ){
-            $existStudent=1;
             $arrStudents=$arrStudents[0];
+
+            $query = "
+                    select * 
+                    from eve_estudiante_inscripcion_evento eeie 
+                    where eeie.estudiante_inscripcion_id = '".$arrStudents['estinscid']."' and eeie.eve_categorias_tipo_id = '".$request->get('categorieId')."' and eeie.eve_fase_tipo_id = '".$request->get('faseId')."' and eeie.eve_modalidades_tipo_id = '".$request->get('modalidadId') ."'        
+            ";
+            
+            $statement = $em->getConnection()->prepare($query);
+            $statement->execute();
+            $arrInscription = $statement->fetchAll();
+
+            if(sizeof($arrInscription)>0){
+                $existStudent=1;
+            }else{
+                $existStudent=0;
+                $arrStudents=array();                
+            }
+          
         }else{
             $existStudent=0;
             $arrStudents=array();
@@ -584,7 +662,7 @@ class ChessEventController extends Controller{
             'faseId'         => $faseId,
             'categorieId'    => $categorieId,
             'arrStudents' => $arrStudents,
-            'existStudent'         => 1,    ); 
+            'existStudentpre'         => $existStudent,    ); 
 
 
         $response = new JsonResponse();
@@ -594,8 +672,114 @@ class ChessEventController extends Controller{
     }
 
 
+    public function registerClassifiedAction(Request $request){
+
+        // get the send values
+        $sie = $request->get('sie');
+        $institucioneducativa = $request->get('institucioneducativa');
+        $modalidadId = $request->get('modalidadId');
+        $faseId = $request->get('faseId');
+        $categorieId = $request->get('categorieId');
+        $levelId = $request->get('levelId');
+        $gradeId = $request->get('gradeId');
+        $parallelId = $request->get('parallelId');
+        $inscriptionid = $request->get('inscriptionidCla');
+        $genderRequest = $request->get('genderRequest');
+        $year = $this->session->get('currentyear');
+
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+
+            $query = "
+                    select * 
+                    from eve_fase_tipo  
+                    where eve_modalidades_tipo_id = $modalidadId and descripcion = 'Fase II. Distrital'
+            ";
+            $statement = $em->getConnection()->prepare($query);
+            $statement->execute();
+            $objFase = $statement->fetchAll();   
+
+        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+
+        $objEveStudentInscription = new EveEstudianteInscripcionEvento();
+        $objEveStudentInscription->setFechaRegistro(new \DateTime('now'));
+        $objEveStudentInscription->setEsVigente(1);
+        $objEveStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionid));
+        $objEveStudentInscription->setEveCategoriasTipo($em->getRepository('SieAppWebBundle:EveCategoriasTipo')->find($categorieId));
+        $objEveStudentInscription->setEveFaseTipo($em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseIdddis));
+        $objEveStudentInscription->setEveModalidadesTipo($em->getRepository('SieAppWebBundle:EveModalidadesTipo')->find($modalidadId));
+
+        $em->persist($objEveStudentInscription);
+        $em->flush();
+
+        $arrEveStudentsClassified = $this->getAllRegisteredInscription( $categorieId,$faseIdddis,$modalidadId,$sie);
+// dump($arrEveStudentsClassified);die;
+        $arrResponse = array(
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrEveStudentsClassified' => $arrEveStudentsClassified,
+            'existStudentpre'         => 1,    
+            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==2)?0:1
+        ); 
 
 
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;  
+    }
+
+
+    public function startInscriptionAction(Request $request){
+
+        // get the send values
+        $sie = $request->get('sie');
+        $institucioneducativa = $request->get('institucioneducativa');
+        $modalidadId = $request->get('modalidadId');
+        $faseId = $request->get('faseId');
+        $categorieId = $request->get('categorieId');
+        $levelId = $request->get('levelId');
+        $gradeId = $request->get('gradeId');
+        $parallelId = $request->get('parallelId');
+        $inscriptionid = $request->get('inscriptionidCla');
+        $genderRequest = $request->get('genderRequest');
+        $year = $this->session->get('currentyear');
+
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+
+            $query = "
+                    select * 
+                    from eve_fase_tipo  
+                    where eve_modalidades_tipo_id = $modalidadId and descripcion = 'Fase II. Distrital'
+            ";
+            $statement = $em->getConnection()->prepare($query);
+            $statement->execute();
+            $objFase = $statement->fetchAll();   
+
+        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+
+        $arrEveStudentsClassified = $this->getAllRegisteredInscription( $categorieId,$faseIdddis,$modalidadId,$sie);
+// dump( sizeof($arrEveStudentsClassified) );die;
+        $arrResponse = array(
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrEveStudentsClassified' => $arrEveStudentsClassified,
+            'existStudentClassi'         => 1,    
+            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==2)?0:1
+
+        ); 
+
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;  
+    }
 
 
 
