@@ -1803,7 +1803,7 @@ class InboxController extends Controller {
         case 2:
         
           $opeTrim = $operativo + 5;
-          $dbFunction = 'sp_validacion_regular_web2022_mg';
+          $dbFunction = 'sp_validacion_regular_web2023_mg';
           break;
         case 3: 
           $opeTrim = $operativo + 5;
@@ -1819,6 +1819,8 @@ class InboxController extends Controller {
           $dbFunction = 'sp_validacion_regular_inscripcion_ig_web';
           break;
       }
+
+      // dump($dbFunction);die;
       
       // $operativo = ($operativo < 1)?1:$operativo;
       $query = $em->getConnection()->prepare('select * from '.$dbFunction.'(:gestion, :sie, :valor)');

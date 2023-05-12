@@ -423,9 +423,9 @@
                                                         #}
                                                         {% endif %}
                                                     {% else %}
-                                                    
+                                                                                                            
                                                         {% if app.session.get('donwloadLibreta') == true %}
-                                                            
+                                                        
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
                                                                   <i class="fa fa-print" style="color:#FFFFFF"></i>2
@@ -434,19 +434,27 @@
                                                             
                                                         {% else %}
 
-                                                            {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %} 
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
-                                                                    <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                                        <i class="fa fa-list"></i>
-                                                                    </button>
-                                                                </div> #}
+                                                            {% if gestion >= 2021 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') %} 
+                                                                {% if gestion <= 2022 and nivel == 13 and grado == 4 %} 
+                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                            <i class="fa fa-list"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                {% else %}                                          
+                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
+                                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                            <i class="fa fa-list"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                {% endif %}
                                                             {% else %}                                          
                                                              
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
-                                                                    <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div> #}
+                                                                </div>
                                                             {% endif %}
                                                             
                                                         {% endif %}
