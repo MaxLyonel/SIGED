@@ -231,7 +231,7 @@
 								  <div class="form-row">
 								    <div class="form-group col-md-6">
 								      <label for="mod">Modalidad</label>
-										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.modalidadId" class="custom-select js-example-basic-multiple form-control" >
+										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.modalidadId" class="custom-select js-example-basic-multiple form-control" v-on:change="resetAllvalues(infoUE.modalidadId, infoUE.levelId, this.value)">
 											<option v-for="item in DBModalidades"  v-text="item.modalidad" :id="item.id" :value="item.id" >${ item.modalidad }</option>       
 										</select>								      
 								    </div>
@@ -587,6 +587,12 @@
 				});				
 
 			},
+			resetAllvalues: function(modalidadId, levelId, selectModalidad){
+				this.existSelectData=false;
+				DBLevel = {};
+				this.DBFases = {};
+				this.DBCategories = {};
+			},
 			getInfoEvent: function(modalidadId, levelId, selectModalidad){
 				// console.log(event.target.value);
 				this.existSelectData=false;
@@ -783,7 +789,7 @@
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'no existe Resultado...',
+								'no existe Resultado o registro duplicado...',
 								'warning'
 								);
 							}
