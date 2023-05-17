@@ -39,7 +39,24 @@ class InstitucionEducativaInformacionController extends Controller {
     }
     
     private function creaFormularioBuscador($routing, $value1, $value2, $value3, $identificador) {        
-        $form = $this->createFormBuilder()
+        $rolUsuario = $this->session->get('roluser');     
+        if ($rolUsuario == 42){       
+            $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('value' => $value1, 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('gestion', 'entity', array('data' => $value2, 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->andWhere('gt.id = :gestion')
+                                ->setParameter('gestion', $this->session->get('currentyear'))
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+                ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
+                ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
+                ->getForm();
+        } else{
+            $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl($routing))
                 ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('value' => $value1, 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('gestion', 'entity', array('data' => $value2, 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
@@ -51,6 +68,7 @@ class InstitucionEducativaInformacionController extends Controller {
                 ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
                 ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
                 ->getForm();
+        }
         return $form;
     }   
     
@@ -87,11 +105,12 @@ class InstitucionEducativaInformacionController extends Controller {
             $query->bindValue(':roluser', $rolUsuario);
             $query->execute();
             $aTuicion = $query->fetchAll();
-
-            if (!$aTuicion[0]['get_ue_tuicion']) {
+            $currentYear = date('Y');
+            
+            if (!$aTuicion[0]['get_ue_tuicion'] and $rolUsuario !=42){
                 $this->session->getFlashBag()->set('danger',array('title' => 'Error','message' => 'No tiene tuición sobre la Unidad Educativa'));
                 return $this->redirectToRoute('sie_ue_informacion_general');
-            }            
+            } 
                         
             $query = $em->getConnection()->prepare("
                     select a.id as cod_ue_id,a.institucioneducativa as desc_ue,b.sucursal_tipo_id as sub_cea,b.gestion_tipo_id as gestion_id,2 as operativo_id,b.periodo_tipo_id as periodo_id
