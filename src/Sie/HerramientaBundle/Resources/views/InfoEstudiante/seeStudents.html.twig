@@ -397,9 +397,10 @@
                                                     {{dump(nivelGradoSexto.closeopesextosecc)}}
                                                     {{dump(nivelGradoSexto.gestion)}}
                                                     {{dump(nivelGradoSexto.operativo) #}
-                                                
-                                                    {% if  nivel == 13 and  grado == 6  and  gestion >= 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %}
-                                                   
+                                                    
+                                                    
+                                                    {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %} {# OJO CON ESTE CASO se elimina #}
+                                                    
                                                         {% if nivelGradoSexto.closeopesextosecc == true and data.estadomatriculaId in [5,11,55] and nivel == 13 and  grado == 6  and  gestion == 2022 %}
                                                               <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
@@ -423,7 +424,6 @@
                                                         #}
                                                         {% endif %}
                                                     {% else %}
-                                                                                                            
                                                         {% if app.session.get('donwloadLibreta') == true %}
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
@@ -440,7 +440,8 @@
                                                                             <i class="fa fa-list"></i>
                                                                         </button>
                                                                     </div>
-                                                                {% else %}                                          
+                                                                {% else %}          
+                                                              
                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
                                                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                             <i class="fa fa-list"></i>
