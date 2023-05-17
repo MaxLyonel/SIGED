@@ -643,7 +643,7 @@ class DownloadController extends Controller {
      * @return object libreta
      */
     public function downloadLibretaAction(Request $request) {
-       
+        
         $idInscripcion = $request->get('idInscripcion');
         $rude = $request->get('rude');
         $sie = $request->get('sie');
@@ -661,8 +661,7 @@ class DownloadController extends Controller {
         if (!isset($idiomaId)) {
             $idiomaId = 48; //castellano        
         }
-      
-
+        
         $em = $this->getDoctrine()->getManager();
         $informacion = $em->createQueryBuilder()
                     ->select('pt.id as periodo, st.id as sucursal')
@@ -676,7 +675,7 @@ class DownloadController extends Controller {
                     ->getResult();
         $periodo = $informacion[0]['periodo'];
         $sucursal = $informacion[0]['sucursal'];
-
+        
         //$datos = "2869471|624600252014167A|62460025|2015|11|2|1|1|0";
         $datos = $idInscripcion.'|'.$rude.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$grado.'|'.$periodo.'|'.$turno.'|'.$sucursal;
 
@@ -711,11 +710,12 @@ class DownloadController extends Controller {
         // Validamos que tipo de libreta se ha de imprimir
         // Modular y plena
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        
         if($this->session->get('ue_tecteg') == false){
             if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
                 $operativo = $operativo - 1;
             }
-            if($gestion == 2021 or $gestion == 2022){
+            if($gestion == 2021 or $gestion == 2022 or $gestion == 2023){
                 if($idiomaId == 48)
                 {
                     if($gestion >= 2022){
@@ -826,9 +826,12 @@ class DownloadController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
         
-        if($gestion == 2021 or $gestion == 2022){
+        if($gestion == 2021 or $gestion == 2022 or $gestion == 2023){
+            // dump($idiomaId);
+            // dump($reporte);
+            // dump($idInscripcion); die;
                 if($idiomaId == 48)
-                {
+                {   
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=9&&__format=pdf&'));
                 }else{
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=9&idioma='.$idiomaId.'&&__format=pdf&'));

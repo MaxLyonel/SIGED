@@ -398,7 +398,7 @@
                                                     {{dump(nivelGradoSexto.gestion)}}
                                                     {{dump(nivelGradoSexto.operativo) #}
                                                 
-                                                    {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %}
+                                                    {% if  nivel == 13 and  grado == 6  and  gestion >= 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %}
                                                    
                                                         {% if nivelGradoSexto.closeopesextosecc == true and data.estadomatriculaId in [5,11,55] and nivel == 13 and  grado == 6  and  gestion == 2022 %}
                                                               <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
@@ -425,10 +425,9 @@
                                                     {% else %}
                                                                                                             
                                                         {% if app.session.get('donwloadLibreta') == true %}
-                                                        
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
-                                                                  <i class="fa fa-print" style="color:#FFFFFF"></i>2
+                                                                  <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                                 </a>
                                                             </div>
                                                             
