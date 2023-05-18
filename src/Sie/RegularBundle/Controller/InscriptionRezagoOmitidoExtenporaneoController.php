@@ -274,6 +274,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
+
             $objInfoInscription = $query->getResult();
             if(sizeof($objInfoInscription)>=1)
               return $objInfoInscription;
