@@ -274,6 +274,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
+
             $objInfoInscription = $query->getResult();
             if(sizeof($objInfoInscription)>=1)
               return $objInfoInscription;
@@ -1181,7 +1182,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('insteducativaTipo', 1)
-                ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
+                ->setParameter('mat', array( 4,5,26,37,55,56,58 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
         try {
