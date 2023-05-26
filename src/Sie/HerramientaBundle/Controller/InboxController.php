@@ -1871,9 +1871,20 @@ class InboxController extends Controller {
           }else{
             if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
-              $registroConsol->$fieldOpe(2);              
+              $registroConsol->$fieldOpe(2);
+
+              $data = array(
+                  'operativoTipo' => 3,
+                  'gestion' => $form['gestion'],
+                  'id' => $form['sie'],
+                  'operativo' => $operativo,
+              );   
+              $this->saveLog($data);
+
+              
             }
           }
+
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
@@ -1894,6 +1905,30 @@ class InboxController extends Controller {
 
     }
 
+    private function saveLog($data){
+      $em = $this->getDoctrine()->getManager();
+
+        $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+        
+        //save the log data
+        $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($data['operativoTipo']));
+        $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
+        $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+        $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['id']));
+        $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+        $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['operativo']+5));
+        $objDownloadFilenewOpe->setDescripcion('...');
+        $objDownloadFilenewOpe->setEsexitoso('t');
+        $objDownloadFilenewOpe->setEsonline('t');
+        $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+        $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+        $dataClient = json_encode(array('userAgent'=>$_SERVER['HTTP_USER_AGENT'], 'ip'=>$_SERVER['HTTP_HOST']));
+        $objDownloadFilenewOpe->setClienteDescripcion($dataClient);
+        $em->persist($objDownloadFilenewOpe);
+        $em->flush();      
+
+      return 1;
+    }
      
 
 }
