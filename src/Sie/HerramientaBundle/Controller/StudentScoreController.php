@@ -104,22 +104,24 @@ class StudentScoreController extends Controller{
 
         }
         
-        return $this->render('SieHerramientaBundle:StudentScore:newtrimestre.html.twig',array(
-            'notas'=>$notas,
-            'swspeciality'=>$swspeciality,
-            'grado'=>$grado,
-            'objLevelModular'=>$objLevelModular,
-            'inscripcion'=>$inscripcion,
-            'vista'=>$vista,
-            'plantilla'=>$plantilla,
-            'infoUe'=>$infoUe,
-            'infoStudent'=>$infoStudent
-        ));   
+        // habilita formulario calificaciones
+
+        // return $this->render('SieHerramientaBundle:StudentScore:newtrimestre.html.twig',array(
+        //     'notas'=>$notas,
+        //     'swspeciality'=>$swspeciality,
+        //     'grado'=>$grado,
+        //     'objLevelModular'=>$objLevelModular,
+        //     'inscripcion'=>$inscripcion,
+        //     'vista'=>$vista,
+        //     'plantilla'=>$plantilla,
+        //     'infoUe'=>$infoUe,
+        //     'infoStudent'=>$infoStudent
+        // ));   
 
 
-    /*
+    
     $data = $this->getNotas($infoUe,$infoStudent);
-    return $this->render('SieHerramientaBundle:InfoEstudianteNotas:notasTrimestre.html.twig',$data);*/
+    return $this->render('SieHerramientaBundle:InfoEstudianteNotas:notasTrimestre.html.twig',$data);
          	
 
 
