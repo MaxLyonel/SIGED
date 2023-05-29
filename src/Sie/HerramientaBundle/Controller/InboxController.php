@@ -1829,11 +1829,13 @@ class InboxController extends Controller {
       $query->bindValue(':valor',$opeTrim);      
       $query->execute();
       $inconsistencia = $query->fetchAll();
-      //dump($this->session->get('pathSystem'));die;
+     
       if($inconsistencia){
         $observation = true;
       }
-      if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
+     
+      // if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
+           
       if($observation){ 
         $this->session->set('donwloadLibreta', false);              
         return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
