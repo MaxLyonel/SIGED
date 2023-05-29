@@ -20,7 +20,7 @@ class ChessEventController extends Controller{
     public $limitDay;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '30-04-2023';
+        $this->limitDay = '30-06-2023';
     }       
     public function index1Action(){
 
