@@ -232,8 +232,10 @@ caption {
 								<td>
 								{% if app.session.get('roluser') in [7,8,10] %}
 									<a v-bind:href="urlreportedistrito" ><b> <i class="fa fa-file-pdf-o fa-2x"></i> Reporte Nivel Distrital</b></a>
+                                    <a v-bind:href="urlreportedistritostudent" ><b> <i class="fa fa-file-pdf-o fa-2x"></i> Reporte Nivel Distrital Estudiantes</b></a>
+                                    
 								</td>
-								{% endif %}
+								{% endif %}                                
 						    </tr>
 						  </tbody>
 						</table>
@@ -335,6 +337,7 @@ caption {
 				answerHistory:false,
 				urlreportedepto:'',
 				urlreportedistrito:'',
+                urlreportedistritostudent:'',
 
 			    /*options: [
 			      { text: 'One', value: 'A' },
@@ -428,6 +431,7 @@ caption {
                             this.today = response.data.today;
                             this.urlreportedepto = response.data.urlreportedepto;
                             this.urlreportedistrito = response.data.urlreportedistrito;
+                            this.urlreportedistritostudent = response.data.urlreportedistritostudent;
                             
                         })
                         .catch(e = {
