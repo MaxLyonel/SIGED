@@ -196,6 +196,9 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = false;
       }
        $programasSinNotas = array(19, 26,27,29); //No esta definido la forma de registro de las notas por tanto calificaciones=0
+
+      
+
       if(in_array($aInfoUeducativa['ueducativaInfoId']['programaId'], $programasSinNotas)  and $gestion>2020){
           $arrDataLibreta['calificaciones'] = false;
       }
@@ -205,7 +208,18 @@ class InfoStudentsController extends Controller {
           $arrDataLibreta['calificaciones'] = false;
       }
 
-      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
+       //2023 llenado de calificaciones trimestrales
+       $nivelesConNotas = array(401,412,403,404);
+       $programasConNotas = array(25,8); 
+       
+      if($gestion == 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+        $arrDataLibreta['calificaciones'] = true;
+      }
+      else{
+        $arrDataLibreta['calificaciones'] = false;
+      }
+
+      if( (in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
         $arrDataLibreta['libreta'] = true;
       }else{
         $arrDataLibreta['libreta'] = false;
