@@ -176,6 +176,7 @@ class AdmCheesEventController extends Controller{
         
         $urlreportedepto = $this->generateUrl('cheesevent_reportDepto', array('departamento_id'=>$departamento));
         $urlreportedistrito = $this->generateUrl('cheesevent_reportDistrito', array('lugar_tipo_id'=>$distritoInfo[0]['id']));
+        $urlreportedistritostudent = $this->generateUrl('cheesevent_reportDistritoStudent', array('distrito_id'=>$distrito));
         // end get data to report
 
         //$datos=$this->getUnidadesEducativasDetalle($departamento,$distrito,$ue,$gestion);
@@ -192,6 +193,7 @@ class AdmCheesEventController extends Controller{
         'answerResponse'=> $answerResponse,
         'urlreportedepto'=> $urlreportedepto,
         'urlreportedistrito'=> $urlreportedistrito,
+        'urlreportedistritostudent'=> $urlreportedistritostudent,
       );
       
       $response->setStatusCode(200);
@@ -231,6 +233,23 @@ class AdmCheesEventController extends Controller{
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reportDisteventChees'.$lugar_tipo_id.'_'.$this->session->get('currentyear'). '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_depo_dist_v1_EEA_ue.rptdesign&lugar_tipo_id='.$lugar_tipo_id.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }      
+    
+    public function reportDistritoStudentAction(Request $request, $distrito_id){
+
+        $response = new Response();
+        $gestion = $this->session->get('currentyear');
+        
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$distrito_id;
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reportDisteventChees'.$distrito_id.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_v1_EEA_dist_als.rptdesign&distrito_id='.$distrito_id.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
