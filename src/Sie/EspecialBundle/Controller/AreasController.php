@@ -515,12 +515,18 @@ class AreasController extends Controller {
                 case 401: switch ($grado) { //Independencia personal 1
                                 case 1:
                                 case 2:
+                                    if ($this->session->get('idGestion') > 2022) {
+                                        $asignaturas = array(1003,497,498,499);
+                                    }
+                                    else{
+                                        $asignaturas = array(464,465,466,467);
+                                    }
                                     $asignaturas = $em->createQuery(
                                     'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(464,465,466,467))
+                                    )->setParameter('ids',$asignaturas)
                                     ->getResult();
                                     break;
                              /*  case 3:
