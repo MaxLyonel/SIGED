@@ -55,3 +55,9 @@ cheesevent_reportDistrito:
     defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:reportDistrito }
     options:
          expose: true
+
+cheesevent_reportDistritoStudent:
+    path:     /reportDistritoStudent/{distrito_id}
+    defaults: { _controller: SieHerramientaBundle:AdmCheesEvent:reportDistritoStudent }
+    options:
+         expose: true
