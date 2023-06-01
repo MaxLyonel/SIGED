@@ -1020,6 +1020,7 @@ select idsae,idacr
     public function mallanuevaacreditacionAction(Request $request) {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        return $this->redirectToRoute('herramienta_alter_malla_tecnica_index');///temporal
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
