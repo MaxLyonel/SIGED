@@ -96,7 +96,7 @@
                         </div>
 
                         <div id="uno" class="tabcontent " >
-                            <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre>
+                            {# <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre> #}
                             <small>
                                 <div class="tree well">
 
@@ -150,11 +150,11 @@
 
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
                                         {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                            <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacion();">
+                                            {# <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacion();">
                                                 <i class="fa fa-outdent"></i> Nueva Acreditación
-                                            </button>
+                                            </button> #}
                                         {% endif %}
-                                        {#<a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>#}
+                                        {# <a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a> #}
                                     </div>
                                     {% for facultad_areaKey, datafacultad_area in newaInfoUnidadEductiva %}
                                         <ul>
