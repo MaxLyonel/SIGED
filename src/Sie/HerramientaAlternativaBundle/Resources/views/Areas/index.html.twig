@@ -96,19 +96,19 @@
                                     <tr id="mallaDiv">
                                         <td colspan="5">
                                             <div class="col-md-12 alert alert-warning">
-                                                El curso no tiene módulos asignados, seleccione la malla (Nueva o antigua)
+                                                El curso no tiene módulos asignados, seleccione la malla {#(Nueva o antigua)#}
                                             </div>
                                             <div class="col-md-12 text-center">
                                                 <form id="mallaForm" name="mallaForm">
-                                                    <div class="col-md-2 col-md-offset-3">
+                                                    {# <div class="col-md-2 col-md-offset-3">
                                                         Nueva <input type="radio" id="mallaNueva" name="malla" value="1" {% if (mallaActual == 1) %}checked{% endif %} />
-                                                    </div>
-                                                    <div class="col-md-2">
+                                                    </div> #}
+                                                    {# <div class="col-md-2">
                                                         Antigua <input type="radio" id="mallaAntigua" name="malla" value="0" {% if (mallaActual == 0 or mallaActual == null) %}checked{% endif %} />
-                                                    </div>
-                                                    <div class="col-md-2">
+                                                    </div> #}
+                                                    {# <div class="col-md-2">
                                                         <button type="button" onclick="guardarMalla('{{infoUe}}')" class="btn btn-success">Guardar Cambios</button>
-                                                    </div>
+                                                    </div> #}
                                                 </form>
                                             </div>
                                         </td>
