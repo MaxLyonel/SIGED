@@ -44,7 +44,7 @@ class AreasController extends Controller {
         $idCurso = $arrInfoUe['ueducativaInfoId']['iecId'];
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
         $mallaActual = $curso->getModalidadTipoId();
-        
+        // dump($curso); die;
         // check if the course is PRIMARIA
         if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe)
           ){
@@ -57,8 +57,8 @@ class AreasController extends Controller {
             // $templateToView = 'index.html.twig';
         }
         $templateToView = 'index.html.twig';
-
         $data = $this->getAreas($infoUe);
+        // dump($data); die;
         $data['primaria'] = $primaria;
         $data['mallaActual'] = $mallaActual;
         
@@ -288,6 +288,7 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($iecId);
+        // dump($curso);die;
 
         if($curso->getModalidadTipoId() == 1) {
             $nuevamalla = true;
@@ -877,7 +878,9 @@ class AreasController extends Controller {
         $response = new JsonResponse();
         $infoUe = $request->get('infoUe');
         $mallaId = $request->get('mallaId');
-        $malla = $mallaId == 1 ? 'Nueva' : 'Antigua';
+        //$malla = $mallaId == 1 ? 'Nueva' : 'Antigua';
+        $malla = 'Nueva';
+        $mallaId == 1; 
         $gestion = $this->session->get('ie_gestion');
         $aInfoUeducativa = unserialize($infoUe);
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
