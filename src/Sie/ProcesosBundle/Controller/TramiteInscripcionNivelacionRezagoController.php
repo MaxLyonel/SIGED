@@ -1184,9 +1184,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
     }
 
     public function departamentoRecepcionGuardaAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        try {
+        
 
             $idTramite = $request->get('idTramite');
 
@@ -1362,13 +1360,13 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
 
             if ($resAdm == null and $aprueba == 'SI'){
                 $request->getSession()->getFlashBag()->add('error', "La resolucion administrativa no fue registrada");
-                $em->getConnection()->rollback();
+                //$em->getConnection()->rollback();
                 return $this->redirectToRoute('wf_tramite_index', array('tipo'=>2));
             } 
 
             if ($informe == null and $aprueba == 'NO'){
                 $request->getSession()->getFlashBag()->add('error', "El informe no fue registrado");
-                $em->getConnection()->rollback();
+                //$em->getConnection()->rollback();
                 return $this->redirectToRoute('wf_tramite_index', array('tipo'=>2));
             } 
 
@@ -1487,6 +1485,11 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 /*----------  do the new inscription and register the califications  ----------*/
                 $valoresInvalidos = array(null,0,'0','');
                 $esUltimo = false;
+
+                $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                try {
+
                 foreach ($datosNivelacion['datos']['nivelacion'] as $clave1 => $nivelacion) {
                     if(!isset($datosNivelacion['datos']['nivelacion'][$clave1+1])){
                         $esUltimo = true;
@@ -1649,8 +1652,17 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                     //dump($objCurso);
                     
                 }
-                //die;         
                 
+                $em->flush();
+                $em->getConnection()->commit();
+                //die;    
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $request->getSession()
+                        ->getFlashBag()
+                        ->add('error', "El Tramite ". $idTramite ." no fue registrado, intente nuevamente");
+                    return $this->redirectToRoute('wf_tramite_index', array('tipo'=>2));
+                }     
 
                 // ARMAMOS EL ARRAY DE DATOS
                 $datos = json_encode(array(
@@ -1713,18 +1725,10 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 $request->getSession()->getFlashBag()->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
             }
 
-            $em->flush();
-            $em->getConnection()->commit();
 
             return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
 
-        } catch (Exception $e) {
-            $em->getConnection()->rollback();
-            $request->getSession()
-                ->getFlashBag()
-                ->add('error', "El Tramite ". $idTramite ." no fue registrado, intente nuevamente");
-            return $this->redirectToRoute('wf_tramite_index', array('tipo'=>2));
-        }
+        
     }
 
 
