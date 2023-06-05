@@ -6055,7 +6055,7 @@ die;/*
             }
             
             // Tipos de notas
-            if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 7) and $gestion > 2019){
+            if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 12 or $discapacidad == 7) and $gestion > 2019){
                 $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,4));
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(5,28));
             }else{
