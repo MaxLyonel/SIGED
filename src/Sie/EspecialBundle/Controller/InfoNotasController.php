@@ -151,7 +151,7 @@ class InfoNotasController extends Controller {
                         break;
                 case 3: //Intelectual
                 case 5: //Multiple
-                case 12: //Multiple
+                case 12: //Autista
                     
                         switch ($nivel) {
                             case 400:
@@ -181,6 +181,8 @@ class InfoNotasController extends Controller {
                                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,28)));
                                         }
                                     }
+                                   // dump($notas);
+                                   // dump($template);die;
                                 }
                                 
                                 break;
@@ -228,9 +230,11 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            //dump($template); die;
+           // dump($template); 
           // dump($notas);die;
-           //dump($estadosMatricula);die;
+          //
+          
+          //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
                     'notas'=>$notas,
