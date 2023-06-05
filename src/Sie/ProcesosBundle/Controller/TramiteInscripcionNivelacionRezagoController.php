@@ -1585,8 +1585,8 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                             $notaCualitativa = "";
 
                             // Reiniciamos la secuencia de la tabla notas
-                            $em1 = $this->getDoctrine()->getManager();
-                            $em1->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
+                            // $em1 = $this->getDoctrine()->getManager();
+                            // $em1->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                             
                             $idNotaTipoPromedio = 9;
                             $idNotaTipoInicio = 6;
