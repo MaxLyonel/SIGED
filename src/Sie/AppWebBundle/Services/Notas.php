@@ -5904,7 +5904,7 @@ die;/*
                         }
                         
                         if($i == $an['idNotaTipo']){
-                            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
+                            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 12)){
                                 $notasArray[$cont]['notas'][] =   array(
                                     'id'=>$cont."-".$i,
                                     'idEstudianteNota'=>$an['idNota'],
