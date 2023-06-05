@@ -5836,7 +5836,7 @@ die;/*
 
             // if($tipoNota == 'Bimestre'){
             if( in_array($tipoNota,array('newTemplateDB','Bimestre', 'Etapa') )  ){
-//dump($operativo);
+                //dump($operativo);
                 $inicio = 6;
                 $fin = $inicio + ($operativo-1);
                 // switch ($operativo) {
@@ -5888,6 +5888,7 @@ die;/*
                         * 401 Independencia personal
                         * 408 Independencia personal
                         * 402 Independencia solcial
+                        * 412 Independencia solcial
                         * 403 Educacion inicial
                         * 404 Educacion primaria
                         * 405 Formacion tecnica
@@ -5896,7 +5897,7 @@ die;/*
                         * 410 Servicios
                         * 411 Programas
                         */
-                        if($nivel != 400 and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411){
+                        if($nivel != 400 and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $nivel != 412){
                             $valorNota = $an['notaCuantitativa'];
                         }else{
                             $valorNota = $an['notaCualitativa'];
@@ -5941,7 +5942,7 @@ die;/*
                                                 );
                     }
                 }
-                if($nivel != 400  and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $operativo >= 3){
+                if($nivel != 400  and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $nivel != 412 and $operativo >= 3){
                     
                     // Para el promedio
                     foreach ($asignaturasNotas as $an) {
@@ -5979,13 +5980,13 @@ die;/*
 
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
             //  dump($cualitativas);die;
-            if($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel != 411){
+            if($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel == 412 or $nivel != 411){
                 // Para inicial
                 $existe = false;
                 foreach ($cualitativas as $c) {
                     if($c->getNotaTipo()->getId() == 18){
                        
-                        if (($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403) and $gestion > 2019){
+                        if (($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel == 412) and $gestion > 2019){
                        //json validar
                             $nota['notaCualitativa'] = json_decode($c->getNotaCualitativa(),true)['notaCualitativa'];
                             $nota['promovido'] = json_decode($c->getNotaCualitativa(),true)['promovido'];
