@@ -1186,6 +1186,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
     public function departamentoRecepcionGuardaAction(Request $request){
         
 
+        $em = $this->getDoctrine()->getManager();
             $idTramite = $request->get('idTramite');
 
             // this is the new
@@ -1486,7 +1487,6 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 $valoresInvalidos = array(null,0,'0','');
                 $esUltimo = false;
 
-                $em = $this->getDoctrine()->getManager();
                 $em->getConnection()->beginTransaction();
                 try {
 
