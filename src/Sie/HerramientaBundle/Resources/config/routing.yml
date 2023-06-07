@@ -339,9 +339,16 @@ sie_adm_chees_event:
      resource: "@SieHerramientaBundle/Resources/config/routing/admcheesevent.yml"
      prefix:   /sie/admcheesevent
 
+sie_talentoinscription:
+     resource: "@SieHerramientaBundle/Resources/config/routing/talentoinscription.yml"
+     prefix:   /sie/evetalento
+
+
+
 # sie_censoinscription:
 #      resource: "@SieHerramientaBundle/Resources/config/routing/censoinscription.yml"
 #      prefix:   /sie/censo
+
 
 # index:
 #     path:     /index
