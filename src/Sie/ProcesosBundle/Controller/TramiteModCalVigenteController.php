@@ -1530,7 +1530,7 @@ class TramiteModCalVigenteController extends Controller {
         $complementario = "";
         $estado_inicial = $inscripcion->getEstadomatriculaTipo()->getEstadomatricula();
 
-        if($igestion == 2022) {            
+        if($igestion >= 2022) {            
             $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
         }
 
