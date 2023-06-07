@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\HabextrAreasCamposTipo:
+    type: entity
+    table: habextr_areas_campos_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        areasCampos:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: areas_campos
+        observacion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        edad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    lifecycleCallbacks: {  }
