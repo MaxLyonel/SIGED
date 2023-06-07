@@ -1,0 +1,1162 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+        .readData{
+            background-color: lightblue;
+            color:  #000;
+            opacity: 0.8;
+         
+
+        }
+		.jupper{
+			text-transform: uppercase;
+		}
+
+        .seleccionado{
+			  color: currentColor;
+			  display: inline-block;  /* For IE11/ MS Edge bug */
+			  pointer-events: none;
+			  text-decoration: none;        	
+            background: #111406 !important;
+            pointer-events: none;
+        }		     
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+<!-- Start page header -->
+<div class="header-content">
+	<h2><i class="fa fa-table"></i> Registro <span></span></h2>
+	<div class="breadcrumb-wrapper hidden-xs">
+		<span class="label">Usted esta aquí:</span>
+		<ol class="breadcrumb">
+			<li>
+				<i class="fa fa-home"></i>
+				<a href="#">Registro</a>
+				<i class="fa fa-angle-right"></i>
+			</li>
+			<li class="active"></li>
+		</ol>
+	</div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- /.row -->
+<div id="app" v-cloak>
+
+    <div class="modal fade" id="modalNewInscription" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+
+				    <div class="panel panel-info">
+					    	<div class="panel-heading">   
+					    		Registro 
+					    	</div>
+					    <div class="panel-body">
+							<div class="table-responsive" v-if="existStudent">
+								<div class="alert alert-primary" role="alert">Estudiante Seleccionado</div>
+		                    	<table class="table table-dark">
+		                    		<thead>
+										<tr>
+											<th>RUDE</th>
+											<th>CI</th>
+											<th>Paterno</th>
+											<th>Materno</th>
+											<th>Nombre(s)</th>
+										</tr>
+		                    			
+		                    		</thead>
+									<tbody>
+									<tr>
+										<td>${DBinfoSelectStudent.codigo_rude}</td>
+										<td>${DBinfoSelectStudent.carnet_identidad} ${DBinfoSelectStudent.complemento}</td>
+										<td>${DBinfoSelectStudent.paterno}</td>
+										<td>${DBinfoSelectStudent.materno}</td>
+										<td>${DBinfoSelectStudent.nombre}</td>
+										
+									</tr>				
+									</tbody>
+								</table>							
+							</div>
+							</br>
+							<div class="alert alert-primary" role="alert">Formulario Inscripción</div>
+							<div>
+								<form>
+								  <div class="form-row">
+								    <div class="form-group col-md-12">
+								      <label for="pat">Título</label>
+								      <input type="text" class="form-control jupper" id="pat" placeholder="Título" v-model="infoUE.inscriptionData.titulo">
+								    </div>	
+								  </div>
+
+								  <div class="form-row">
+								    <div class="form-group col-md-12">
+								      <label for="inputPassword4">url/link</label>
+								      <input type="text" class="form-control" id="inputPassword4" placeholder="url/link" v-model="infoUE.inscriptionData.url">
+								    </div>
+
+								  </div>
+								  <div class="form-row">
+								    <div class="form-group col-md-6">
+								      <label for="pat">Subir foto/pdf<strong></strong></label>
+                                      <input type="file" name="image" id="image" @change="getImage" accept="file/*" class="form-control">
+								    </div>
+								    <div class="form-group col-md-6">
+								      <label for="inputEmail4">Descripción</label>
+										<textarea name="textarea" rows="10" cols="40" placeholder="Descripción" v-model='infoUE.inscriptionData.descripcion' class="jupper"></textarea>
+								    </div>
+								  </div>
+								  <div style="text-align: right;">
+								  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="abortMission">Cancelar</button>
+								  <button type="button" class="btn btn-primary" v-on:click="saveStudent(infoUE, DBinfoSelectStudent)">Registrar Estudiante</button>								  	
+								  	{# <button type="button" class="btn btn-primary" v-on:click="validateTutor(DBinfoSelectStudent)">Validar Apoderado/Tutor</button>								  	 #}
+								  </div>								  
+								</form>		
+							</div>
+					    </div>  
+				   </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+
+	{#<div v-if="cortina" class="cortina">
+		<i class="fa fa-refresh fa-spin"></i> Procesando... 
+	</div>#}
+	<div class="body-content animated fadeIn">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<h3 class="titulo">Registro Talento</h3>
+						</br>
+						{#
+						<a href="../../assets/docs/AutorizacionpadredefamiliaCPVPPv2.pdf" target="_blank">
+			              <i class="fa fa-file-pdf-o"></i>
+			              Descargar Autorización 
+			            </a> #}
+
+						<div class="col-md-5">
+							<div role="tabpanel">
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+										<a role="tab" data-toggle="tab">Buscar por SIE</a>
+									</li>
+								</ul>
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+
+										<form class="form-row">
+											<div class="form-group">
+												<label for="rude">Código SIE: </label>
+												<input type="text" v-model="infoUE.sie"  class="form-control" id="exampleInputPassword1" placeholder="SIE" :readonly="disableElement>0">
+											</div>
+											<button v-on:click="findUEData()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Continuar </button>
+										</form>																
+									</div>
+								</div>
+							</div>							
+						</div>
+						<div class="col-md-7">
+							<div v-if="buscando" class="text-center">
+								<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+							</div>						
+							<div class="table-responsive" v-if="infoUE.existUE">
+								<button v-on:click="closeEventGral(infoUE)" type="button" class="btn btn-danger btn-xs" title="Caso de Homónimo"> Cierre Registro </button>
+		                        <div class="" v-if="infoUE.swcloseevent" >
+									<a v-bind:href="infoUE.urlreporte" ><b> <i class="fa fa-file-pdf-o fa-2x"></i> Descargar Lista Inscritos</b></a>
+		                        </div>								
+	                        	<table class="table table-dark">
+	                        		<thead>
+	                        			<tr ><th colspan="2">Resultado de la busqueda</th></tr>
+	                        		</thead>
+									<tbody>
+									<tr>
+										<th >Cod. SIE</th>
+										<th>${infoUE.sie}</th>
+									</tr>
+									<tr>
+										<th>Institucion Educativa</th>
+										<th>${infoUE.institucioneducativa}</th>
+									</tr>
+									</tbody>
+								</table>								
+							</div>
+
+						</div>
+
+						<div class="col-md-12">
+						
+
+							{# tabla con los datos encontrados #}
+							<div v-if="buscando" class="text-center">
+								<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+							</div>
+
+							<div style="padding: 15px;" v-if='infoUE.existUE'>
+								<h4 style="text-align: center;background-color:#4694e8 ;color: white;" >Seleccionar Información para el Registro</h4>
+								<hr>
+
+								<form>	
+								  <div class="form-row">
+								    <div class="form-group col-md-6">
+								      <label for="mod">Fase</label>
+										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.habextrFaseId" class="custom-select js-example-basic-multiple form-control" {# v-on:change="getAllInfoUE(infoUE)" #} >
+											<option v-for="item in DBHabextrFase"  v-text="item.fase" :id="item.id" :value="item.id" >${ item.fase }</option>       
+										</select>
+								    </div>
+								    <div class="form-group col-md-6">
+								      <label for="mod">Área</label>
+										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.habextrAreaId" class="custom-select js-example-basic-multiple form-control" v-on:change="getAllInfoUE(infoUE)" >
+											<option v-for="item in DBHabextrArea"  v-text="item.areas_campos" :id="item.id" :value="item.id" >${ item.areas_campos } - ${ item.observacion }</option>
+										</select>
+								    </div>
+								  </div>								  
+
+								  <div class="form-row">
+								    <div class="form-group col-md-5">
+								      <label for="mod">Nivel</label>
+										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.levelId" class="custom-select js-example-basic-multiple form-control" v-on:change="getGrado(infoUE.levelId, this.value)" >
+											<option id="">Seleccionar Nivel</option>
+											<option v-for="item in DBLevel"  v-text="item.level" :id="item.id" :value="item.id" >${ item.level }</option>       
+										</select>								      
+								    </div>
+								    <div class="form-group col-md-2">
+								      <label for="lvel">Grado</label>
+										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.gradoId" class="custom-select js-example-basic-multiple form-control" v-on:change="getParallel(infoUE.levelId,infoUE.gradoId, this.value)">
+											<option v-for="item in DBGrados" :id="item.id" :value="item.id" >${ item.grado }</option>       
+										</select>
+								    </div>
+
+								    <div class="form-group col-md-2">
+								      <label for="fase">Paralelo</label>
+										<select name="arrFase" id="idarrPais_p" v-model="infoUE.parallelId" class="custom-select js-example-basic-multiple form-control" v-on:change="getTurno(infoUE.levelId,infoUE.gradoId, infoUE.parallelId)">
+											<option v-for="item in DBParallels"  :value="item.id">${ item.paralelo }</option>       
+										</select>							      
+								    </div>
+								    <div class="form-group col-md-3">
+								      <label for="Categoría">Turno</label>
+										<select name="arrCategoria" id="idarrPais_p" v-model="infoUE.turnoId" class="custom-select js-example-basic-multiple form-control">
+											<option v-for="item in DBTurnos"  :value="item.id">${ item.turno }</option>       
+										</select>
+								    </div>
+
+								  </div>
+								  
+								  <div class="form-row">
+
+								  </div>								  
+								  <button v-on:click="dataSelected(infoUE)" type="button" class="btn btn-primary mb-2">Seleccinoar</button>
+								</form>
+
+  
+							</div>
+						</div>	
+						
+						<div class="col-md-6" v-if="existSelectData">
+							<div clsas="row">
+								<div class="table-responsive">
+									<table class="table table-bordered">
+									  <thead>
+									  	<tr>
+									  		<th colspan="4">${infoUE.faseLabel} - ${infoUE.areaLabel} - Edad: ${infoUE.ruleYearOld} </th>
+									  	</tr>
+									  	<tr>
+									  		<th colspan="4">Seleccionar Estudiantes</th>
+									  	</tr>									  
+									    <tr>
+									      <th>Nivel</th>
+									      <th>Grado</th>
+									      <th>Paralelo</th>
+									      <th>Turno</th>
+									      {# <th></th> #}
+									    </tr>
+									  </thead>
+									  <tbody>
+									    <tr>
+									      <td>${infoUE.levelLabel}</td>
+									      <td>${infoUE.gradoLabel}</td>
+									      <td>${infoUE.parallelLabel}</td>
+									      <td>${infoUE.turnoLabel}</td>
+									      {# <td><a href="#" v-on:click="startInscription(infoUE)" type="button" class="">Inscribir</a></td> #}
+									    </tr>
+									  </tbody>
+									</table>									
+								</div>
+							</div>
+
+							<div v-if=" existStudent ">
+                            	<!-- data new studen  -->
+                            	<p class=" bg-primary">&nbsp&nbsp  INFORMACIÓN ESTUDIANTE</p>
+								<small>
+								<div class="table-responsive">
+	                            	<table class="table table-dark">
+										<tbody>
+										<tr>
+											
+											<th>#</th>
+											<th>Cod. RUDE</th>
+											<th>CI-COMPL.</th>
+											<th>Paterno</th>
+											<th>Materno</th>
+											<th>Nombre(s)</th>
+											<th>Fecha Nacimiento</th>
+											<th>option</th>	
+										</tr>
+										
+										<tr v-for="(student,rindex) in DBstudent">
+											<td>${rindex+1}</td>
+											<td><strong> ${student.codigo_rude | uppercase}</strong></td>
+											<td>${student.carnet_identidad} ${student.complemento}</td>
+											<td colspan="3">${student.paterno | uppercase} ${student.materno | uppercase} ${student.nombre | uppercase}</td>
+											<td>${new Date(student.fecha_nacimiento).toLocaleDateString('en-GB')}</td>
+											{# <td>${student.genero | uppercase}</td> #}
+											{# v-if="!infoUE.swcloseevent" #}
+											<td v-bind:id="student.inscriptionid"><a href="#" v-on:click="doInscription(infoUE, student.inscriptionid, student)"  :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent"> Registrar </a> </td>										
+										</tr>
+
+										<tr >
+											<th colspan="6" align="left">
+											{# <button v-on:click="doInscription()" type="button" class="btn btn-success" title="C"> Inscribir </button>								    		 #}
+											</th>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+								</small>
+                        	</div>
+
+
+
+						</div>
+
+						<div class="col-md-6" v-if="existSelectData">
+
+							<div clsas="row">
+								<div class="table-responsive">
+									<table class="table table-bordered">
+									  <thead>
+									  	<tr>
+									  		<th colspan="3">${infoUE.faseLabel} - ${infoUE.areaLabel} - Edad: ${infoUE.ruleYearOld} </th>
+									  	</tr>									  
+									  	<tr>
+									  		<th colspan="3">Lista Inscritos Talento</th>
+									  	</tr>
+									  </thead>
+									  <tbody>
+									  </tbody>
+									</table>									
+								</div>
+								<hr>
+								<small>
+									<div class="table-responsive">
+		                            	<table class="table table-dark" >
+											<tbody>
+											<tr>
+												
+												<th>#</th>
+												<th>Cod. RUDE</th>
+												<th>CI-COMPL.</th>
+												<th>Paterno</th>
+												<th>Materno</th>
+												<th>Nombre(s)</th>
+												<th>Nivel / Grado / Paralelo</th>
+												<th>option</th>	
+											</tr>
+											<tr v-for="(competitor, index) in DBEveStudents">
+
+												<td>${index+1}</td>
+												<td><strong>${competitor.codigo_rude}</strong> </td>
+												<td>${competitor.carnet_identidad} ${competitor.complemento}</td>
+												<td colspan="3">
+												${competitor.paterno} ${competitor.materno} ${competitor.nombre}
+												</td>
+												<td>${competitor.nivel} / ${competitor.grado} /<strong>${competitor.paralelo}</strong> </td>
+												<th>
+												<a href="#" v-on:click="removeInscriptionCenso(competitor.eveinscriptionid)" v-bind:id="competitor.eveinscriptionid" :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent" style="color: red;"> <i class="fa fa-trash fa-4"></i> </a> 
+												&nbsp;&nbsp;
+												{# <a href="../../assets/docs/AutorizacionpadredefamiliaCPVPPv2.pdf" target="_blank">
+									              <i class="fa fa-eye fa-4"></i>
+									            </a>	 
+									            v-bind:href="urlreporte"
+									            v-on:click="seeDocumentUpload(competitor.eveinscriptionid)"
+									            ../../uploads/archivos/opecenso/80480002/489561207-20230522104252.jpeg
+									            #}
+												<a v-bind:href="competitor.pathdoc"  v-bind:id="competitor.eveinscriptionid" :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent" style="color: green;" target="_blank"> <i class="fa fa-eye fa-4"></i> </a>
+												</td>										
+
+											</tr>
+											
+
+
+											<tr >
+												<th colspan="6" align="left">
+												{# <button v-on:click="doInscription()" type="button" class="btn btn-success" title="C"> Inscribir </button>								    		 #}
+												</th>
+											</tr>
+											</tbody>
+										</table>
+									</div>	
+								</small>							
+
+
+
+							</div>
+
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>	
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+    // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+  </script>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-the-mask/0.11.1/vue-the-mask.min.js" integrity="sha512-qXurwUG9teY1KFtbBifUHInCiNK/POQqJeFRSoaHg1pHEB1tBUlFKRsfPzm1D6b6ueeQOCKldvXYCtOsPURrcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+<script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+
+
+
+<script type="text/javascript">
+// $("#fecNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+	var app = new Vue({
+		delimiters: ['${', '}'],
+		el: '#app',
+		data: {
+			opcion: 1,
+			swcloseevent: 0,
+			disableElement: '{{disableElement}}',
+			infoUE:{
+				sie: '{{codsie}}',
+				// sie: '80730460',
+				institucioneducativa:'',
+				modalidadLabel:'',
+				faseLabel:'',
+				// categorieLabel:'',
+				existUE:0,
+				swcloseevent:0,
+				urlreport:'',
+				levelId:'',
+				gradoId:'',
+				email:'',
+				celular:'',
+				inscriptionData:{
+					  'titulo' : '',
+					  'url' : '',
+					  'descripcion' : '',
+				}
+			},
+
+			DBModalidades: {},
+			DBLevel:  {},
+			DBHabextrFase:  {},
+			DBHabextrArea:  {},
+			DBGrados: {},
+			DBParallels: {},
+			DBTurnos: {},
+			DBinfoSelectStudent: {},
+
+			DBCategories: {},
+			DBselectedData: {},
+			DBstudent: {},
+			DBInscriptionLevel: {},
+			DBEveStudents: {},
+			DBApoderado: {},
+			informe: '',
+			existSelectData:false,
+			existStudent:false,
+			existParall:false,
+			swParent:false,
+			linkDisabled:false,
+			/////////////////////////////
+			categorias: [
+				{'id': 'A', 'description': 'Cat.A'},
+				{'id': 'B', 'description': 'Cat.B'},
+				{'id': 'C', 'description': 'Cat.C'},
+				
+			],
+
+			buscando: false,			
+			buscandoParent: false,			
+			showbuttonPDF:false,
+			swCertification:false,
+			procesar: false,
+			
+			
+		},
+		filters: {
+			uppercase: function(v) {
+				return v.toUpperCase();
+			}
+		},	
+
+		components: {
+			//vuejsDatepicker
+		},
+
+		mounted(){	
+			//this.loadData(); 
+			//var selector = document.getElementById("fecha_vencimiento");
+			//Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);              
+		
+		},
+
+		methods: {
+			abortMission: function(){
+				this.infoUE.inscriptionData = {
+					  'titulo' : '',
+					  'url' : '',
+					  'descripcion' : '',
+				}
+                // $('#image').val()='';
+
+				$('#modalNewInscription').modal('hide');
+				this.swParent = false;
+			},
+			findUEData:function(){
+				this.existSelectData=false;
+				this.DBModalidades={};
+				this.DBFases={};
+				this.DBCategories={};
+				this.infoUE.existUE = 0;
+				this.buscando=true;
+				if (typeof this.infoUE.sie === "undefined") {
+					Swal.fire(
+						'Atencion !',
+						'Debe ingresar el  CÓDIGO SIE',
+						'warning'
+						);
+					this.buscando = false;
+					return;
+				}				
+
+				axios.post(Routing.generate('talentoinscription_findUEData', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.infoUE.institucioneducativa = response.data.institucioneducativa;
+								this.infoUE.existUE = response.data.existUE;
+								// this.DBModalidades = response.data.arrModalidades;
+								// this.DBLevel = response.data.arrLevel;
+								this.swcloseevent = response.data.swcloseevent;
+								this.infoUE.swcloseevent = this.swcloseevent;
+								this.infoUE.urlreporte = response.data.urlreporte;
+								this.DBHabextrFase = response.data.arrFases;
+								this.DBHabextrArea = response.data.arrAreas;
+								// console.log(this.DBModalidades);
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO SIE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});				
+
+			},
+			getAllInfoUE:function(infoUE){
+				this.existSelectData=false;
+				this.DBGrados={};
+				this.DBParallels={};
+				this.DBTurnos={};
+				axios.post(Routing.generate('talentoinscription_getAllInfoUE', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+								// this.infoUE.sie = response.data.sie;
+								// this.infoUE.institucioneducativa = response.data.institucioneducativa;
+								// this.infoUE.existUE = response.data.existUE;
+								this.DBModalidades = response.data.arrModalidades;
+								this.DBLevel = response.data.arrLevel;
+								// this.swcloseevent = response.data.swcloseevent;
+								// this.infoUE.swcloseevent = this.swcloseevent;
+								// this.infoUE.urlreporte = response.data.urlreporte;
+								// this.DBHabextrFase = response.data.arrFases;
+								// this.DBHabextrArea = response.data.arrAreas;							
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});						
+
+			},
+			getGrado: function(levelid2, levelId){
+
+				this.existSelectData=false;
+				this.DBGrados={};
+				this.DBParallels={};
+				this.DBTurnos={};
+				axios.post(Routing.generate('talentoinscription_getGrado', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+								this.DBGrados = response.data.arrGrado;								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+
+			},
+			getParallel: function(levelid, gradoId, parallelId){
+
+				this.existSelectData=false;
+
+				this.DBParallels={};
+				this.DBTurnos={};
+				axios.post(Routing.generate('talentoinscription_getParallel', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+								this.DBParallels = response.data.arrParalelo;								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+
+			},
+			getTurno: function(levelid, gradoId, parallelId){
+
+				this.existSelectData=false;
+				this.DBTurnos={};
+				axios.post(Routing.generate('talentoinscription_getTurno', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+								this.DBTurnos = response.data.arrTurno;								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+
+			},
+
+			
+			dataSelected: function(selectedData){
+				// this.infoUE.apoderado = {};
+				this.existSelectData=false;
+				// this.existParall = false;
+				// this.DBParallels={};
+				// this.existStudent=false;
+				// this.DBstudent={};				
+				// this.DBEveStudents={};				
+				axios.post(Routing.generate('talentoinscription_dataSelected', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existSelectData == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.levelLabel = response.data.levelLabel;
+								this.infoUE.gradoLabel = response.data.gradoLabel;
+								this.infoUE.parallelLabel = response.data.parallelLabel;
+								this.infoUE.turnoLabel = response.data.turnoLabel;
+								
+								this.infoUE.faseLabel = response.data.faseLabel;
+								this.infoUE.areaLabel = response.data.areaLabel;
+								this.infoUE.ruleYearOld = response.data.ruleYearOld;
+
+								
+								this.DBstudent = response.data.arrStudents;
+								this.DBEveStudents = response.data.arrEveStudentsTalento;
+								this.existSelectData = response.data.existSelectData;
+
+								this.swcloseevent = response.data.swcloseevent;
+								this.infoUE.swcloseevent = this.swcloseevent;
+								this.existStudent = response.data.existStudent;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+			},
+            getImage: function(event){
+                var informe = event.target.files[0];
+                var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                if(!allowedExtensions.exec(event.target.value)){
+                    event.target.value = '';
+                    Swal.fire(
+                          'Archivo incorrecto!',
+                          'El archivo adjunto debe ser una imagen o un archivo pdf',
+                          'warning'
+                        );
+                    this.informe = '';
+                    this.checkInforme = false;
+                    return false;
+                }else{
+                    var megas = (informe.size / 1024)/1024;
+                    if (megas > 2) {
+                        event.target.value = '';
+                        Swal.fire(
+                          'Tamaño no permitido!',
+                          'El archivo debe tener un tamaño menor a 2MB',
+                          'warning'
+                        );
+                        this.informe = '';
+                        this.checkInforme = false;
+                        return false;
+                    }
+                }
+                this.informe = event.target.files[0];                
+                // this.checkInforme = true;
+            },			
+			/////////////////////////////////////////////////////////////////////			
+			startInscription:function(infoUEsend){
+				$('#modalNewInscription').modal('show');
+			},
+			findStudent:function(infoUEsel){
+				axios.post(Routing.generate('talentoinscription_findStudent', infoUEsel ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudent == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								this.DBstudent = response.data.arrStudents;
+
+								this.existStudent = response.data.existStudent;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+			},
+			getParalelos:function(infoUEAll){
+				this.existParall = false;
+				this.DBParallels={};
+				this.existStudent=false;
+				this.DBstudent={};
+				axios.post(Routing.generate('talentoinscription_getParalelos', infoUEAll ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existParall == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								// this.infoUE.modalidadId = response.data.modalidadId;
+								// this.infoUE.faseId = response.data.faseId;
+								// this.infoUE.categorieId = response.data.categorieId;
+								// this.infoUE.sie = response.data.sie;
+								this.DBParallels = response.data.arrParallels;
+
+								this.existParall = response.data.existParall;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+			},
+			showStudents:function(infoUEAll){
+				this.existStudent=false;
+				this.DBstudent={};
+				axios.post(Routing.generate('talentoinscription_showStudents', infoUEAll ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudent == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								this.DBstudent = response.data.arrStudents;
+
+								this.existStudent = response.data.existStudent;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+			},
+			validateTutor: function(dataStudent){
+				
+
+				this.buscandoParent = true;
+				this.infoUE.dataStudent = dataStudent;
+				
+				axios.post(Routing.generate('talentoinscription_validateTutor', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.swparent == true){
+											this.swParent = response.data.swparent;
+											this.DBApoderado = response.data.apoderadoOutput;
+											this.infoUE.apoderadoinscripid = response.data.apoderadoOutput.apoderadoinscripid;
+											// this.buscandoParent = false;
+											/*this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;											
+											this.DBEveStudents = response.data.arrEveStudents;*/											
+										}else{
+											this.swParent = false;
+											Swal.fire(
+											'Atencion !',
+											'Datos no encontrandos, validiacion realizada con la informacion operativo RUDE gestion 2022',
+											'warning'
+											);
+
+											setTimeout(() => { $('#modalNewInscription').modal('hide'); }, 3000);
+
+
+										}
+										
+								}
+								this.buscandoParent = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});					
+
+			},
+			saveStudent:function(infoUE,dataStudent){
+				this.infoUE.dataStudent = dataStudent;
+                if (typeof this.informe != 'object') {
+                    Swal.fire(
+                      'Adjuntar foto/pdf',
+                      'Debe adjuntar la foto/pdf, puede ser un archivo de imagen o PDF, y debe tener un tamaño menor a 2MB',
+                      'warning'
+                    );
+                    return;
+                }				
+
+				var data = new FormData();
+				data.append('infoUE', JSON.stringify(this.infoUE));
+				data.append('informe', this.informe);
+				$('#'+infoUE.dataStudent.inscriptionid).addClass('seleccionado');
+	            axios.post(Routing.generate('talentoinscription_saveStudent'), data)
+	            .then(response => {
+	                $('#modalNewInscription').modal('hide');
+					this.DBEveStudents = response.data.arrEveStudentsTalento;
+					this.abortMission();
+	                // this.respuestaIdTramite = response.data.idTramite;
+	                // this.urlreporte = response.data.urlreporte;
+
+	                // document.location.href = "#tramiteEnviado";
+	                
+	            })
+	            .catch(e => {
+	                this.formularioEnviado = false;
+	                Swal.fire(
+	                  'No se pudo enviar la solicitud!',
+	                  '',
+	                  'error'
+	                );
+	            });				
+				this.infoUE.apoderado = {
+					  'paterno' : '',
+					  'materno' : '',
+					  'nombre' : '',
+					  'carnet' : '',
+					  'complemento' : '',
+					  'fecNacimiento' : '',
+				};
+			},
+			doInscription:function(infoUE, inscriptionid, infoSelectStudent){
+				this.DBinfoSelectStudent = infoSelectStudent;
+					$('#modalNewInscription').modal('show');
+					this.swParent = false;
+					// console.log(infoSelectStudent);
+					// return false;
+			},
+			removeInscriptionCenso:function(inscriptionid){
+
+                    Swal.fire({
+                        title: '¿Realizar la eliminación??',
+                        text: "Se eliminará al estudiante seleccionado...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							this.infoUE.remoinscriptionid=inscriptionid;
+							// $('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('talentoinscription_removeInscriptionCenso', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.existRemoveStudent == true){
+											this.DBEveStudents ={};
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBEveStudents = response.data.arrEveStudents;
+
+											// this.existStudent = response.data.existStudent;
+
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		                    	
+
+						}		
+					 });
+
+
+
+			},
+			closeEventGral: function(infoUE){
+                    Swal.fire({
+                        title: '¿Realizar el cierre del Registro?',
+                        text: "Si acepta, se deshabilitan las opciones de registro al evento...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, aceptar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							// this.infoUE.remoinscriptionid=inscriptionid;
+							// $('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('talentoinscription_closeEventGral', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.swcloseevent == true){
+											this.DBEveStudents ={};
+											this.swcloseevent = response.data.swcloseevent;
+											this.infoUE.swcloseevent = this.swcloseevent;
+											this.infoUE.urlreporte = response.data.urlreporte;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		                    	
+
+						}		
+					 });				
+
+			},
+			
+
+			
+		},
+		
+	});
+
+	$(document).ready(function(){
+		// $('[data-toggle="tooltip"]').tooltip();
+		// $("td").focus();
+		// $("#fecNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+		//$("#idarrPais_p").select2();
+	});      
+
+	$(".js-example-basic-multiple").select2({
+            tags: "true",
+            placeholder: "Seleccione una opción",
+            allowClear: true
+        });  
+
+
+
+</script>
+{%endblock%}
