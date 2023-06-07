@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\HabextrFaseTipo:
+    type: entity
+    table: habextr_fase_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fase:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        observacion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
