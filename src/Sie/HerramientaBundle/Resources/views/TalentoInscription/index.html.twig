@@ -143,7 +143,7 @@
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<h3 class="titulo">Registro Talento</h3>
+						<h3 class="titulo">Registro de Estudiantes con Productos, Habilidades y Talento Extraordinario </h3>
 						</br>
 						{#
 						<a href="../../assets/docs/AutorizacionpadredefamiliaCPVPPv2.pdf" target="_blank">
@@ -263,7 +263,7 @@
 								  <div class="form-row">
 
 								  </div>								  
-								  <button v-on:click="dataSelected(infoUE)" type="button" class="btn btn-primary mb-2">Seleccinoar</button>
+								  <button v-on:click="dataSelected(infoUE)" type="button" class="btn btn-primary mb-2">Seleccionar</button>
 								</form>
 
   
@@ -378,6 +378,7 @@
 												<th>Materno</th>
 												<th>Nombre(s)</th>
 												<th>Nivel / Grado / Paralelo</th>
+												<th>link/url</th>
 												<th>option</th>	
 											</tr>
 											<tr v-for="(competitor, index) in DBEveStudents">
@@ -389,6 +390,7 @@
 												${competitor.paterno} ${competitor.materno} ${competitor.nombre}
 												</td>
 												<td>${competitor.nivel} / ${competitor.grado} /<strong>${competitor.paralelo}</strong> </td>
+												<td>${competitor.urldocumento}</td>
 												<th>
 												<a href="#" v-on:click="removeInscriptionCenso(competitor.eveinscriptionid)" v-bind:id="competitor.eveinscriptionid" :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent" style="color: red;"> <i class="fa fa-trash fa-4"></i> </a> 
 												&nbsp;&nbsp;
@@ -400,7 +402,7 @@
 									            ../../uploads/archivos/opecenso/80480002/489561207-20230522104252.jpeg
 									            #}
 												<a v-bind:href="competitor.pathdoc"  v-bind:id="competitor.eveinscriptionid" :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent" style="color: green;" target="_blank"> <i class="fa fa-eye fa-4"></i> </a>
-												</td>										
+												</th>										
 
 											</tr>
 											
