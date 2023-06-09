@@ -667,7 +667,7 @@ class TalentoInscriptionController extends Controller
 
     private function getAllRegisteredInscription($sie, $faseId, $areaId){
         $em = $this->getDoctrine()->getManager();
-        $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid,  concat('../../uploads/archivos/habiltalen/', docadjunto) as pathdoc
+        $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid,  concat('../../uploads/archivos/habiltalen/', docadjunto) as pathdoc, eeie.urldocumento
                 FROM habextr_estudiante_inscripcion eeie
                 inner join estudiante_inscripcion ei on (eeie.estudiante_inscripcion_id = ei.id)
                 inner join estudiante e on (ei.estudiante_id = e.id)
