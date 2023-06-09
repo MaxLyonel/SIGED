@@ -232,7 +232,6 @@ class InfoNotasController extends Controller {
             }
            // dump($template); 
           // dump($notas);die;
-          //
           
           //dump($estadosMatricula);die;
             if($notas){
@@ -484,6 +483,7 @@ class InfoNotasController extends Controller {
                 break;
             case 3:
             case 5:
+            case 12:
                 //dump($arrInfoStudent['estInsId']);die;
                 $archivo = "esp_est_LibretaEscolar_Intelectual_Multiple_v1_pvc.rptdesign";
                 $nombre = 'libreta_especial_intelectual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
