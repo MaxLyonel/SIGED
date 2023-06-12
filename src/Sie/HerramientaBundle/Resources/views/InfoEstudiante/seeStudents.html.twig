@@ -306,13 +306,13 @@
 
                                     {#Sea añadio el boton de reporte formulario RUDE#}
                                     {# if true #}
-                                    {# {% if app.session.get('roluser') in [9] and app.session.get('optionReporteRude') %}
+                                    {% if app.session.get('roluser') in [9] and app.session.get('optionReporteRude') %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Rude ">
                                            <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('download_formulario_rude', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                            </a>
                                         </div>
-                                   {% endif %}                                     #}
+                                    {% endif %}
 
                                     {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
