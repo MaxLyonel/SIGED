@@ -343,7 +343,9 @@ sie_talentoinscription:
      resource: "@SieHerramientaBundle/Resources/config/routing/talentoinscription.yml"
      prefix:   /sie/evetalento
 
-
+sie_adm_inscriptalento_event:
+     resource: "@SieHerramientaBundle/Resources/config/routing/adminscriptalento.yml"
+     prefix:   /sie/adminscriptalento
 
 # sie_censoinscription:
 #      resource: "@SieHerramientaBundle/Resources/config/routing/censoinscription.yml"
@@ -353,3 +355,11 @@ sie_talentoinscription:
 # index:
 #     path:     /index
 #     defaults: { _controller: SieHerramientaBundle:ChessEventAdm:index }
+
+# index:
+#     path:     /index
+#     defaults: { _controller: SieHerramientaBundle:newInscriptiontoDirector:index }
+
+# index:
+#     path:     /index
+#     defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:index }
