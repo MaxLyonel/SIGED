@@ -216,6 +216,7 @@ class TramiteModCalVigenteController extends Controller {
         $tramitePendiente = $query->fetchAll();
 
         $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+        $operativo = $operativo - 1;
         $datos = [];
         $promedioGeneral = ''; // PARA PRIMARIA 2019
         if(count($tramitePendiente)<=0) {
