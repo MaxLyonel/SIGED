@@ -35,7 +35,7 @@ class TalentoInscriptionController extends Controller
     public $limitDay;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '30-06-2023';
+        $this->limitDay = '20-06-2023';
     }       
 
     public function indexAction(){

@@ -1,0 +1,63 @@
+adminscriptalento_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:index }
+
+adminscriptalento_getMainInfo:
+    path:     /buscar
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:getMainInfo }
+    options:
+         expose: true
+
+adminscriptalento_getDistrito:
+    path:     /getDistrito
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:getDistritomain }
+    options:
+         expose: true         
+
+adminscriptalento_getAllUE:
+    path:     /getAllUE
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:getAllUE }
+    options:
+         expose: true         
+
+adminscriptalento_registerUEModality:
+    path:     /registerUEModality
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:registerUEModality }
+    options:
+         expose: true
+         
+adminscriptalento_saveUEModality:
+    path:     /saveUEModality
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:saveUEModality }
+    options:
+         expose: true   
+         
+adminscriptalento_showReport:
+    path:     /showReport
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:showReport }
+    options:
+         expose: true         
+
+adminscriptalento_restartEvent:
+    path:     /restartEvent
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:restartEvent }
+    options:
+         expose: true
+
+cheesevent_reportDepto:
+    path:     /reportDepto/{departamento_id}
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:reportDepto }
+    options:
+         expose: true
+
+cheesevent_reportDistrito:
+    path:     /reportDistrito/{lugar_tipo_id}
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:reportDistrito }
+    options:
+         expose: true
+
+cheesevent_reportDistritoStudent:
+    path:     /reportDistritoStudent/{distrito_id}
+    defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:reportDistritoStudent }
+    options:
+         expose: true
