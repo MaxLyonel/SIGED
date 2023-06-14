@@ -1,0 +1,96 @@
+talentoinscription_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:index }
+
+talentoinscription_findUEData:
+    path:     /findUEData
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:findUEData }
+    options:
+         expose: true
+
+talentoinscription_getAllInfoUE:
+    path:     /getAllInfoUE
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:getAllInfoUE }
+    options:
+         expose: true
+
+talentoinscription_getGrado:
+    path:     /getGrado
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:getGrado }
+    options:
+         expose: true
+
+talentoinscription_getParallel:
+    path:     /getParallel
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:getParallel }
+    options:
+         expose: true
+
+talentoinscription_getTurno:
+    path:     /getTurno
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:getTurno }
+    options:
+         expose: true
+
+talentoinscription_dataSelected:
+    path:     /dataSelected
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:dataSelected }
+    options:
+         expose: true
+
+talentoinscription_validateTutor:
+    path:     /validateTutor
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:validateTutor }
+    options:
+         expose: true
+
+talentoinscription_saveStudent:
+    path:     /saveStudent
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:saveStudent }
+    options:
+         expose: true
+
+         
+talentoinscription_closeEventGral:
+    path:     /closeEventGral
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:closeEventGral }
+    options:
+         expose: true
+
+
+
+
+         
+talentoinscription_findStudent:
+    path:     /findStudent
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:findStudent }
+    options:
+         expose: true
+         
+talentoinscription_showStudents:
+    path:     /showStudents
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:showStudents }
+    options:
+         expose: true
+         
+talentoinscription_getParalelos:
+    path:     /getParalelos
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:getParalelos }
+    options:
+         expose: true
+         
+talentoinscription_doInscription:
+    path:     /doInscription
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:doInscription }
+    options:
+         expose: true
+         
+talentoinscription_removeInscriptionCenso:
+    path:     /removeInscriptionCenso
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:removeInscriptionCenso }
+    options:
+         expose: true
+
+talentoinscription_reportChessInscription:
+    path:     /reportChessInscription/{sie}
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:reportChessInscription }
