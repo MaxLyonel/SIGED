@@ -983,6 +983,7 @@
 
 			},
 			saveStudent:function(infoUE,dataStudent){
+				
 				this.infoUE.dataStudent = dataStudent;
                 if (typeof this.informe != 'object') {
                     Swal.fire(
@@ -991,7 +992,32 @@
                       'warning'
                     );
                     return;
-                }				
+                }	
+
+                if (this.infoUE.inscriptionData.titulo == '') {
+                    Swal.fire(
+                      'Título',
+                      'Debe introducir un Título para el registro',
+                      'warning'
+                    );
+                    return;
+                }  
+                if (this.infoUE.inscriptionData.descripcion == '') {
+                    Swal.fire(
+                      'Descripción',
+                      'Debe introducir la Descripción para el registro',
+                      'warning'
+                    );
+                    return;
+                }   
+                if (this.infoUE.inscriptionData.url == '') {
+                    Swal.fire(
+                      'URL/LINK',
+                      'Debe introducir la URL/LINK para el registro',
+                      'warning'
+                    );
+                    return;
+                }                			
 
 				var data = new FormData();
 				data.append('infoUE', JSON.stringify(this.infoUE));
@@ -1035,13 +1061,13 @@
 			removeInscriptionCenso:function(inscriptionid){
 
                     Swal.fire({
-                        title: '¿Realizar la eliminación??',
+                        title: '¿Realizar la eliminación?',
                         text: "Se eliminará al estudiante seleccionado...",
                         type: 'question',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Si, registrar',
+                        confirmButtonText: 'Si, eliminar',
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
 	                    if (result.value) {
