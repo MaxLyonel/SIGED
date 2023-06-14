@@ -320,6 +320,12 @@
             var grado = $('#form_grado').val();
             var modalidad = $('#form_modalidad').val();
             var programa = $('#form_programa').val();
+            if((area== 1 && programa==43 )|| (area== 2 && programa==26)){
+                    $("#divEc").show();
+                }else{
+                    $("#divEc").hide();
+                }
+
             if(programa == 26 && area==2){ // Solo para visual y programa multiple: hab momentos
                 $("#divmomento").show();
             }else{
@@ -336,6 +342,8 @@
                 var nivel = $('#form_nivel').val();
                 var grado = $('#form_grado').val();
                 var modalidad = $('#form_modalidad').val();
+                
+
                 $.ajax({
                     type: 'get',
                     url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
