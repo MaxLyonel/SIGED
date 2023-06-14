@@ -419,6 +419,7 @@ class InfoCentroController extends Controller {
                 $gestionesArray[$value->getId()] = $value->getGestion();
             }
         }
+        
         return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:index_gestion.html.twig', array(
             'consol' => $consol,
             'gestiones' => $gestionesArray,
@@ -426,7 +427,8 @@ class InfoCentroController extends Controller {
             'title' => $title,
             'label' => $label,
             'label_distrito' => $label_distrito,
-            'ues' => $ues
+            'ues' => $ues,
+            'instipoid' => $instipoid
         ));
     }
 
