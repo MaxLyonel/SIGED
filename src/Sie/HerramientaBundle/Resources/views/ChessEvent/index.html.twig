@@ -74,7 +74,7 @@
 							<label for="rude">Código RUDE: </label>
 							<input type="text" v-model="infoUE.codigoRude"  class="form-control" id="exampleInputPassword1" placeholder="RUDE">
 						</div>
-						<button v-on:click="findStudent(infoUE)" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
+						<button v-on:click="findStudent(infoUE)" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar para clasificar </button>
 					</form>					   
 
 
@@ -366,7 +366,7 @@
 									  	<tr>
 									  		<th colspan="2">Inscritos</th>
 									  		<th colspan="2">
-												<a v-if="infoUE.modalidadId == 1" href="#" v-on:click="startInscription(infoUE)" type="button" class="">Registro de clasificados</a>
+												<a v-if="infoUE.modalidadId == 1" href="#" v-on:click="startInscription(infoUE)" type="button" class="btn btn-success">Registro de clasificados</a>
 									  		</th>
 									  	</tr>
 									    <tr>
