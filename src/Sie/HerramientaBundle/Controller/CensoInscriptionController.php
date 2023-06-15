@@ -22,15 +22,23 @@ class CensoInscriptionController extends Controller
 {
     public $session;
     public $limitDay;
+    public $arrUesCapinota;
     public function __construct() {
         $this->session = new Session();
         $this->limitDay = '30-06-2023';
+        $this->arrUesCapinota = $this->setUEs();
     }       
 
     public function indexAction(){
         
         $ie_id=$this->session->get('ie_id');
         
+        if(in_array($ie_id, $this->arrUesCapinota)){
+
+        }else{
+            return $this->redirect($this->generateUrl('login'));            
+        }
+
             $swregistry = false;
             $id_usuario = $this->session->get('userId');
             if (!isset($id_usuario)) {
@@ -679,7 +687,52 @@ class CensoInscriptionController extends Controller
         return $response;  
     }
 
-
+    public function setUEs(){
+        return array(
+                        80850035,
+                        80850059,
+                        80850067,
+                        80850063,
+                        80850058,
+                        80850060,
+                        80850065,
+                        80850031,
+                        60850010,
+                        80850024,
+                        80850020,
+                        80850027,
+                        80850064,
+                        80850008,
+                        80850010,
+                        80850009,
+                        80850005,
+                        80850006,
+                        80850004,
+                        80850007,
+                        80850042,
+                        80850012,
+                        80850011,
+                        80850013,
+                        80850014,
+                        80850043,
+                        80850057,
+                        80850016,
+                        80850021,
+                        80850023,
+                        80850025,
+                        80850030,
+                        80850028,
+                        80850029,
+                        80850038,
+                        80850033,
+                        80850039,
+                        80850040,
+                        80850053,
+                        80850002,
+                        80850001,
+                        80850041
+        );
+    }
 //////////////////////////////////////////////////////////////////////////////////////
 /*
 
