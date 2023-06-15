@@ -57,7 +57,24 @@ talentoinscription_closeEventGral:
     options:
          expose: true
 
+         
+talentoinscription_classifiedRecord:
+    path:     /classifiedRecord
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:classifiedRecord }
+    options:
+         expose: true
+         
+talentoinscription_registerClassifiedsave:
+    path:     /registerClassifiedsave
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:registerClassifiedsave }
+    options:
+         expose: true
 
+talentoinscription_removeInscriptionCheesNextLevel:
+    path:     /removeInscriptionCheesNextLevel
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:removeInscriptionCheesNextLevel }
+    options:
+         expose: true
 
 
          
@@ -91,6 +108,6 @@ talentoinscription_removeInscriptionCenso:
     options:
          expose: true
 
-talentoinscription_reportChessInscription:
-    path:     /reportChessInscription/{sie}
-    defaults: { _controller: SieHerramientaBundle:TalentoInscription:reportChessInscription }
+talentoinscription_reportInscription:
+    path:     /reportInscription/{sie}
+    defaults: { _controller: SieHerramientaBundle:TalentoInscription:reportInscription }
