@@ -1,0 +1,90 @@
+censoinscription_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:index }
+
+censoinscription_findUEData:
+    path:     /findUEData
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:findUEData }
+    options:
+         expose: true
+
+censoinscription_getGrado:
+    path:     /getGrado
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:getGrado }
+    options:
+         expose: true
+
+censoinscription_getParallel:
+    path:     /getParallel
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:getParallel }
+    options:
+         expose: true
+
+censoinscription_getTurno:
+    path:     /getTurno
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:getTurno }
+    options:
+         expose: true
+
+censoinscription_dataSelected:
+    path:     /dataSelected
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:dataSelected }
+    options:
+         expose: true
+
+censoinscription_validateTutor:
+    path:     /validateTutor
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:validateTutor }
+    options:
+         expose: true
+
+censoinscription_saveStudent:
+    path:     /saveStudent
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:saveStudent }
+    options:
+         expose: true
+
+         
+censoinscription_closeEventChees:
+    path:     /closeEventChees
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:closeEventChees }
+    options:
+         expose: true
+
+
+
+
+         
+censoinscription_findStudent:
+    path:     /findStudent
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:findStudent }
+    options:
+         expose: true
+         
+censoinscription_showStudents:
+    path:     /showStudents
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:showStudents }
+    options:
+         expose: true
+         
+censoinscription_getParalelos:
+    path:     /getParalelos
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:getParalelos }
+    options:
+         expose: true
+         
+censoinscription_doInscription:
+    path:     /doInscription
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:doInscription }
+    options:
+         expose: true
+         
+censoinscription_removeInscriptionCenso:
+    path:     /removeInscriptionCenso
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:removeInscriptionCenso }
+    options:
+         expose: true
+
+censoinscription_reportChessInscription:
+    path:     /reportChessInscription/{sie}
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:reportChessInscription }
