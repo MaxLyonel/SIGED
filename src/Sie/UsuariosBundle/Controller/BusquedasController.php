@@ -66,7 +66,7 @@ class BusquedasController extends Controller
     
     public function formcarnetAction() {
 
-        $us = array(8,31);
+        $us = array(8,31,7);
         if(!(in_array($this->session->get('roluser'), $us))){
             if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
                 return $this->redirectToRoute('sie_usuarios_homepage');
@@ -664,8 +664,9 @@ class BusquedasController extends Controller
 
     public function formcodieAction() {
 
-        if(!($this->session->get('roluser') == 8)){
-            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+        $arrRolAllow = array(7,8,31,10);
+        if(!in_array($this->session->get('roluser'), $arrRolAllow)){
+                    if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
                 return $this->redirectToRoute('sie_usuarios_homepage');
             }
         }
