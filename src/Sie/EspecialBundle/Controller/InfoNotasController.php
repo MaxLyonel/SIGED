@@ -151,12 +151,14 @@ class InfoNotasController extends Controller {
                         break;
                 case 3: //Intelectual
                 case 5: //Multiple
+                case 12: //Autista
                     
                         switch ($nivel) {
                             case 400:
                             case 401:
                             case 408:
                             case 402:
+                            case 412:
                                 if($grado <= 6){
                                     $notas = $this->get('notas')->especial_cualitativoEsp($idInscripcion,$operativo);
                                     //dump($notas);die;
@@ -179,6 +181,8 @@ class InfoNotasController extends Controller {
                                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,28)));
                                         }
                                     }
+                                   // dump($notas);
+                                   // dump($template);die;
                                 }
                                 
                                 break;
@@ -226,9 +230,10 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            //dump($template); die;
+           // dump($template); 
           // dump($notas);die;
-           //dump($estadosMatricula);die;
+          
+          //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
                     'notas'=>$notas,
@@ -478,6 +483,7 @@ class InfoNotasController extends Controller {
                 break;
             case 3:
             case 5:
+            case 12:
                 //dump($arrInfoStudent['estInsId']);die;
                 $archivo = "esp_est_LibretaEscolar_Intelectual_Multiple_v1_pvc.rptdesign";
                 $nombre = 'libreta_especial_intelectual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';

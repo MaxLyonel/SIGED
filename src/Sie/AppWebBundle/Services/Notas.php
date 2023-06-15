@@ -1808,7 +1808,7 @@ class Notas{
                     if($this->session->get('ue_modular') == true and $nivel == 13){
                         $operativo = 3;
                         $fin = 3;
-                        if( in_array($gestion, array(2020,2021,2022)) ){
+                        if( in_array($gestion, array(2020,2021,2022,2023)) ){
                             $inicio = 6;
                             $fin = 8;
                         }                        
@@ -1993,7 +1993,7 @@ class Notas{
             //if($nivel == 11 or $nivel == 1 or $nivel == 403){
             if(($nivel == 11 or $nivel == 1 or $nivel == 403) ){
                 
-                if ($gestion == 2022) {
+                if ($gestion >= 2022) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
                         $swCloseOperative = false;
                         if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 2))){
@@ -2040,7 +2040,7 @@ class Notas{
                 }
 
                 // VERIFICAMOS SI EL OPERATIVO ES MAYOR O IGUAL A 4 PARA CARGAR LA NOTA CUALITATIVA ANUAL
-                if (($operativo >= 3 and $gestion<2020 ) or ($gestion == 2022)) {
+                if (($operativo >= 3 and $gestion<2020 ) or ($gestion >= 2022)) {
                     // Para inicial
                     $existe = false;
                     //dump($cualitativas);die;
@@ -4979,7 +4979,7 @@ die;/*
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
         
-        if($operativo==3 && ($igestion == 2021 || $igestion == 2022 )){
+        if($operativo==3 && ($igestion == 2021 || $igestion == 2022 || $igestion == 2023)){
             switch ($inivel_tipo_id) {
                 case '13':
                     $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
@@ -5011,7 +5011,7 @@ die;/*
                     break;
             }
         }else{
-            if( $igestion != 2021 and $igestion != 2022){
+            if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023){
                 $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
                 $query->execute();        
                 $resultado = $query->fetchAll();              
@@ -5051,7 +5051,7 @@ die;/*
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
         
-        if($operativo==3 && (in_array($igestion, array(2022) ) ) ){
+        if($operativo==3 && (in_array($igestion, array(2022,2023) ) ) ){
             switch ($inivel_tipo_id) {
                 case '12':
                 case '13':
@@ -5073,7 +5073,7 @@ die;/*
                     break;
             }
         }else{
-            if( $igestion != 2021 and $igestion != 2022){
+            if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023){
                 $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
                 $query->execute();        
                 $resultado = $query->fetchAll();              
@@ -5836,7 +5836,7 @@ die;/*
 
             // if($tipoNota == 'Bimestre'){
             if( in_array($tipoNota,array('newTemplateDB','Bimestre', 'Etapa') )  ){
-//dump($operativo);
+                //dump($operativo);
                 $inicio = 6;
                 $fin = $inicio + ($operativo-1);
                 // switch ($operativo) {
@@ -5888,6 +5888,7 @@ die;/*
                         * 401 Independencia personal
                         * 408 Independencia personal
                         * 402 Independencia solcial
+                        * 412 Independencia solcial
                         * 403 Educacion inicial
                         * 404 Educacion primaria
                         * 405 Formacion tecnica
@@ -5896,14 +5897,14 @@ die;/*
                         * 410 Servicios
                         * 411 Programas
                         */
-                        if($nivel != 400 and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411){
+                        if($nivel != 400 and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $nivel != 412){
                             $valorNota = $an['notaCuantitativa'];
                         }else{
                             $valorNota = $an['notaCualitativa'];
                         }
                         
                         if($i == $an['idNotaTipo']){
-                            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
+                            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 12)){
                                 $notasArray[$cont]['notas'][] =   array(
                                     'id'=>$cont."-".$i,
                                     'idEstudianteNota'=>$an['idNota'],
@@ -5941,7 +5942,7 @@ die;/*
                                                 );
                     }
                 }
-                if($nivel != 400  and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $operativo >= 3){
+                if($nivel != 400  and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $nivel != 412 and $operativo >= 3){
                     
                     // Para el promedio
                     foreach ($asignaturasNotas as $an) {
@@ -5979,13 +5980,13 @@ die;/*
 
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
             //  dump($cualitativas);die;
-            if($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel != 411){
+            if($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel == 412 or $nivel != 411){
                 // Para inicial
                 $existe = false;
                 foreach ($cualitativas as $c) {
                     if($c->getNotaTipo()->getId() == 18){
                        
-                        if (($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403) and $gestion > 2019){
+                        if (($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel == 412) and $gestion > 2019){
                        //json validar
                             $nota['notaCualitativa'] = json_decode($c->getNotaCualitativa(),true)['notaCualitativa'];
                             $nota['promovido'] = json_decode($c->getNotaCualitativa(),true)['promovido'];
@@ -6054,7 +6055,7 @@ die;/*
             }
             
             // Tipos de notas
-            if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 7) and $gestion > 2019){
+            if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 12 or $discapacidad == 7) and $gestion > 2019){
                 $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,4));
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(5,28));
             }else{
@@ -6394,7 +6395,7 @@ die;/*
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
             $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
-            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){ //intelectual y multiple
+            if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5  or $discapacidad == 12)){ //intelectual y multiple
                 
                 //$estadoPromovido = $request->get('contenidos');
                 $promovido = $request->get('promovido');
@@ -6421,7 +6422,7 @@ die;/*
             $idNotaTipoCualitativa = $request->get('idNotaTipoCualitativa');
             $notaCualitativa = $request->get('notaCualitativa');
             
-            if($request->get('nuevoEstadomatricula') == 5 and $gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
+            if($request->get('nuevoEstadomatricula') == 5 and $gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 12)){
                 $notaCualitativa[0] = array('notaCualitativa'=>mb_strtoupper($notaCualitativa[0],'utf-8'),'promovido'=>mb_strtoupper($promovido,'utf-8'));
                 
             }
@@ -6436,7 +6437,7 @@ die;/*
             $tipo = $request->get('tipoNota');
             $nivel = $request->get('nivel');
             $idInscripcion = $request->get('idInscripcion');
-            $nivelesCualitativos = array(1,11,400,401,408,402,403,411);
+            $nivelesCualitativos = array(1,11,400,401,408,402,403,411, 412);
             
             if( in_array($tipo, array('newTemplateDB','Bimestre' )) ){
                
@@ -6451,10 +6452,10 @@ die;/*
                             $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
                             
-                            if($nivel == 400 or $nivel == 401 or $nivel == 402 or $nivel == 408 or $nivel == 403 or $nivel == 411){
+                            if($nivel == 400 or $nivel == 401 or $nivel == 402 or $nivel == 408 or $nivel == 403 or $nivel == 411 or $nivel == 412){
                                 
                                 $newNota->setNotaCuantitativa(0);
-                                if($gestion > 2019 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
+                                if($gestion > 2019 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5 or $discapacidad == 12)){
                                     $newNota->setNotaCualitativa(json_encode($notas[$i]));
                                 }else{
                                     $newNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -6505,8 +6506,8 @@ die;/*
                             $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
                             $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
-                            if($nivel == 400 or $nivel == 401 or $nivel == 402 or $nivel == 408  or $nivel == 403 or $nivel == 411){
-                                if($gestion > 2019 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
+                            if($nivel == 400 or $nivel == 401 or $nivel == 402 or $nivel == 408  or $nivel == 403 or $nivel == 411 or $nivel == 412){
+                                if($gestion > 2019 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5 or $discapacidad == 12)){
                                     $updateNota->setNotaCualitativa(json_encode($notas[$i]));
                                 }else{
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -6735,7 +6736,7 @@ die;/*
                                 $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
                                 $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
-                                if($nivel == 11 or $nivel == 1 or $nivel == 400 or $nivel == 401 or $nivel == 402 or $nivel == 408 or $nivel == 403 or $nivel == 411){
+                                if($nivel == 11 or $nivel == 1 or $nivel == 400 or $nivel == 401 or $nivel == 402 or $nivel == 408 or $nivel == 403 or $nivel == 411 or $nivel == 412){
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                                 }else{
                                     $updateNota->setNotaCuantitativa($notas[$i]);

@@ -126,29 +126,59 @@ class BusquedasController extends Controller
 
                 $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
                 
-                $us = array(7,8,1,2,3,5,6);
-                if((in_array($this->session->get('roluser'), $us)) and (count($personaEncontrada)>0)){
-                    $idperson = $personaEncontrada->getId();
-                    // dump($personaEncontrada);
-                    // dump($idperson);die;
+                $us = array(7,8,31); //solo los que pueden crear usuarios
+                
+                // if((in_array($this->session->get('roluser'), $us)) and (count($personaEncontrada)>0)){
+                //     $idperson = $personaEncontrada->getId();
+                //     // dump($personaEncontrada);
+                //     // dump($idperson);die;
                     
+                //     $em = $this->getDoctrine()->getManager();
+                //     $db = $em->getConnection();
+                //     $query = '  select distinct u.id, u.persona_id, u.username 
+                //                 from usuario u 
+                //                 inner join usuario_rol ur on u.id = ur.usuario_id 
+                //                 where u.persona_id = ?
+                //                 and ur.rol_tipo_id in (7,8,16,17,20,23,28,31,32,34,35,38,39,41,42,43,47) and ur.esactivo = true ';
+                //         $stmt = $db->prepare($query);
+                //         $params = array($idperson);
+                //         $stmt->execute($params);
+                //         $po=$stmt->fetchAll();
+
+                //     if (count($po) >= 1){
+                //         $this->session->getFlashBag()->add('error', 'Proceso detenido. No tiene tuicion sobre estos datos.');
+                //         return $this->redirectToRoute('sie_usuarios_homepage');
+                //     }
+                // }
+
+                if((in_array($this->session->get('roluser'), $us)) and (count($personaEncontrada)>0)){
+                    $idperson = $personaEncontrada->getId();                   
                     $em = $this->getDoctrine()->getManager();
                     $db = $em->getConnection();
-                    $query = '  select distinct u.id, u.persona_id, u.username 
+                    $query = '  select ur.*
                                 from usuario u 
                                 inner join usuario_rol ur on u.id = ur.usuario_id 
-                                where u.persona_id = ?
-                                and ur.rol_tipo_id in (7,8,16,17,20,23,28,31,32,34,35,38,39,40,41,42,43,46,47) and ur.esactivo = true ';
+                                where u.persona_id = :personaId
+                                and ur.rol_tipo_id not in (
+                                select rol_tuicion_id
+                                from rol_tuicion rt
+                                where rt.rol_tipo_id = :rolTipoId)
+                                and ur.esactivo = true ';
                         $stmt = $db->prepare($query);
-                        $params = array($idperson);
-                        $stmt->execute($params);
+                        $stmt->bindValue(':personaId', $idperson);
+                        $stmt->bindValue(':rolTipoId', $this->session->get('roluser'));
+                        //$params = array($idperson);
+                        $stmt->execute();
                         $po=$stmt->fetchAll();
-
                     if (count($po) >= 1){
-                        $this->session->getFlashBag()->add('error', 'Proceso detenido. No tiene tuicion sobre estos datos.');
+                        $this->session->getFlashBag()->add('error', 'Proceso detenido. No tiene tuicion sobre estos datos de esa persona.');
                         return $this->redirectToRoute('sie_usuarios_homepage');
                     }
+                } else {
+                    $this->session->getFlashBag()->add('error', 'Proceso detenido. No tiene tuicion sobre estos datos.');
+                    return $this->redirectToRoute('sie_usuarios_homepage');
                 }
+                
                 if($personaEncontrada != null) //ALTERNATIVA A resultService->type_msg === 'success'
                 {
                     $idperson = $personaEncontrada->getId();

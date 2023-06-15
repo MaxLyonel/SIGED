@@ -36,14 +36,11 @@
           </div>#}
           <div class="col-md-12 text-center">
             {% set cupos = funciones.getCantidadEstudiantes(infoUe,objStudents) %}
-
             {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
               <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}','{{cupos.cupo}}','{{cupos.msg}}');" >
                   <i class="fa fa-user"></i> Inscripción
               </button>
             {% endif %}
-            
-                
             
           </div>
           <!--div class="col-md-3" >
@@ -111,7 +108,7 @@
                                 <td>
                                 
                                     {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones #}
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo >0 %}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo > 0  %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}},'{{infoUe}}');" >
                                            <i class="fa fa-list"></i>
@@ -139,11 +136,11 @@
                                         {% endif %}    
                                         
                                     {% endif %}
-                                          <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
+                                          <!-- div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
-                                        </div> 
+                                        </div --> 
                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Ver Formulario Rude ">
                                             <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('downloadRudeEspecial', {'rude': data.codigoRude, 'codue':sie, 'gestion': gestion, 'eins':data.eInsId} )}}">
                                                 <i class="fa fa-file" style="color:#FFFFFF"></i>

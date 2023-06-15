@@ -277,13 +277,13 @@
                                     #}
                                     {# HABILITA FORMULARIO RUDE #}
 
-                                    {# {% if  gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %}
+                                    {% if  gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
                                         </div>
-                                    {% endif %} #}
+                                    {% endif %}
                                     {#
                                     {% if swRegisterCalifications %}
                                         {% if gestion >= 2021 and data.estadomatriculaId in [4] %}
@@ -306,13 +306,13 @@
 
                                     {#Sea añadio el boton de reporte formulario RUDE#}
                                     {# if true #}
-                                    {# {% if app.session.get('roluser') in [9] and app.session.get('optionReporteRude') %}
+                                    {% if app.session.get('roluser') in [9] and app.session.get('optionReporteRude') %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Rude ">
                                            <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('download_formulario_rude', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                            </a>
                                         </div>
-                                   {% endif %}                                     #}
+                                    {% endif %}
 
                                     {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
@@ -397,9 +397,10 @@
                                                     {{dump(nivelGradoSexto.closeopesextosecc)}}
                                                     {{dump(nivelGradoSexto.gestion)}}
                                                     {{dump(nivelGradoSexto.operativo) #}
-                                                
-                                                    {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %}
-                                                   
+                                                    
+                                                    
+                                                    {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %} {# OJO CON ESTE CASO se elimina #}
+                                                    
                                                         {% if nivelGradoSexto.closeopesextosecc == true and data.estadomatriculaId in [5,11,55] and nivel == 13 and  grado == 6  and  gestion == 2022 %}
                                                               <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
@@ -423,30 +424,37 @@
                                                         #}
                                                         {% endif %}
                                                     {% else %}
-                                                    
                                                         {% if app.session.get('donwloadLibreta') == true %}
-                                                            
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
-                                                                  <i class="fa fa-print" style="color:#FFFFFF"></i>2
+                                                                  <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                                 </a>
                                                             </div>
                                                             
                                                         {% else %}
-
-                                                            {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %} 
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
-                                                                    <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                                        <i class="fa fa-list"></i>
-                                                                    </button>
-                                                                </div> #}
+                                                        
+                                                            {% if gestion >= 2021 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') %} 
+                                                                {% if gestion <= 2022 and nivel == 13 and grado == 4 %} 
+                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                            <i class="fa fa-list"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                {% else %}          
+                                                              
+                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
+                                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                            <i class="fa fa-list"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                {% endif %}
                                                             {% else %}                                          
                                                              
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
-                                                                    <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div> #}
+                                                                </div>
                                                             {% endif %}
                                                             
                                                         {% endif %}

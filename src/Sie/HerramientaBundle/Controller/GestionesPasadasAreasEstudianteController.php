@@ -238,6 +238,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
     }
 
     public function eliminarAreaEstudianteAction(Request $request) {
+        
         $em = $this->getDoctrine()->getManager();
         $esGestionVigente = trim(strtoupper($request->get('esGestionVigente')));
         $areaid = trim(strtoupper($request->get('areaid')));
@@ -248,45 +249,51 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
         $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneById($areaid);
         $em->getConnection()->beginTransaction();
-
+        $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        
         $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
-        if(!$estudianteNota) {
-             
+        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        $asignaturaId = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
+        
+        
+        if($operativo == 1 and $asignaturaId ==1039) {
+            
             try {
                 if($estudianteAsignatura) {
-                    if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
-                        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+                    
+                    //ELIMINAMOS ESPECIALIDAD
+                    $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
             
-                        if($especialidadEstudiante) {
-                            $em->remove($especialidadEstudiante);
+                    if($especialidadEstudiante) {
+                        $em->remove($especialidadEstudiante);
+                        $em->flush();
+                    }
+                    
+
+                    $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
+                    if($estudianteNota) {
+                        foreach ($estudianteNota as $key => $nota) {
+                            $notaAntLog = [];
+                            $notaAntLog['id'] = $nota->getId();
+                            $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
+                            $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
+                            $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
+                            $notaAntLog['usuario'] = $nota->getUsuarioId();
+
+                            $this->get('funciones')->setLogTransaccion(
+                                $nota->getId(),
+                                'estudiante_nota',
+                                'D',
+                                '',
+                                '',
+                                $notaAntLog,
+                                'Academico',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                                
+                            $em->remove($nota);
                             $em->flush();
                         }
                     }
-
-                    // $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
-                    // if($estudianteNota) {
-                    //     foreach ($estudianteNota as $key => $nota) {
-                    //         $notaAntLog = [];
-                    //         $notaAntLog['id'] = $nota->getId();
-                    //         $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
-                    //         $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
-                    //         $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
-                    //         $notaAntLog['usuario'] = $nota->getUsuarioId();
-
-                    //         $this->get('funciones')->setLogTransaccion(
-                    //             $nota->getId(),
-                    //             'estudiante_nota',
-                    //             'D',
-                    //             '',
-                    //             '',
-                    //             $notaAntLog,
-                    //             'Academico',
-                    //             json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
-                                
-                    //         $em->remove($nota);
-                    //         $em->flush();
-                    //     }
-                    // }
 
                     $eaAntLog = [];
                     $eaAntLog['id'] = $estudianteAsignatura->getId();
@@ -342,7 +349,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             $exception = FlattenException::create(new \Exception(), 404);
             $response = $controller->showAction($request, $exception, null);
         }
-
+        
         $areasEstudiante = $this->getAreasEstudiante($inscripcionid);
         $areasCurso = $this->getAreasCurso($inscripcionid);
         $areasAsignar = $this->getAreasAsignar($inscripcionid, $areasEstudiante);
@@ -636,6 +643,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         } else if($igestion == 2021) {            
             $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
         } else if($igestion == 2022) {            
+            $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
+        } else if($igestion == 2023) {            
             $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
         }
 

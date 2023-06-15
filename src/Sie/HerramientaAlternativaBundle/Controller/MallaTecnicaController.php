@@ -202,8 +202,9 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
      //  dump($po);die();
 
         $db = $em->getConnection();
-        $query = " select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
-						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
+        $query = " select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad 
+                    from (
+						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion, case when sest.es_oficial = true then 1 else 0 end sw_esoficial
 						, sia.id as idsia, sip.id as idsip
 from superior_acreditacion_especialidad sae
 		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -241,15 +242,17 @@ select idsae,idacr
 					and f.periodo_tipo_id='".$this->session->get('ie_per_cod')."'
 					and f.sucursal_tipo_id ='".$this->session->get('ie_subcea')."'
 					and smt.esvigente =true
+                    and sest.es_vigente = true
+    order by smt.codigo
 	) dat
 	group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
 ) as v on v.idacr = nivel.idacreditacion
-        
     ";
         $final = $db->prepare($query);
         $params = array();
         $final->execute($params);
         $mallafinal = $final->fetchAll();
+        // dump($mallafinal);die;
 
 //        dump($aInfoUeducativa['ueducativaInfoId']['especialidad_id']);
 //        dump($this->session->get('ie_gestion'));
@@ -1013,9 +1016,11 @@ select idsae,idacr
         }        
     }
 
+    /******habilita nueva malla*********/
     public function mallanuevaacreditacionAction(Request $request) {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        return $this->redirectToRoute('herramienta_alter_malla_tecnica_index');///temporal
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1031,7 +1036,7 @@ select idsae,idacr
                 $areaArray[$value->getId()] = $value->getFacultadArea();
             }
         }
-       //     dump($areaArray);die;
+        //     dump($areaArray);die;
 //        $query = $em->getConnection()->prepare('
 //               	select seti.id, seti.especialidad
 //            from superior_especialidad_tipo seti
@@ -1178,16 +1183,26 @@ select idsae,idacr
 
     public function listarEspecialidadesAction($idarea) {
 
-        //  dump($idesp);die;
+        dump($idarea);
+        // die;
 
         try {
             $em = $this->getDoctrine()->getManager();
 
-            $query = $em->getConnection()->prepare('
-               	select seti.id, seti.especialidad
+        //     $query = $em->getConnection()->prepare('
+        //        	select seti.id, seti.especialidad
+        //     from superior_especialidad_tipo seti
+		// 	inner join superior_facultad_area_tipo sfat on sfat.id = seti.superior_facultad_area_tipo_id
+		// 		where sfat.id =:idarea
+
+        // ');
+        $query = $em->getConnection()->prepare('
+               	select seti.id, 
+                case when seti.es_oficial = true then \'* \'||seti.especialidad else seti.especialidad end as especialidad
             from superior_especialidad_tipo seti
 			inner join superior_facultad_area_tipo sfat on sfat.id = seti.superior_facultad_area_tipo_id
 				where sfat.id =:idarea
+                and seti.es_vigente = true
 
         ');
             $query->bindValue(':idarea', $idarea);
@@ -1209,8 +1224,6 @@ select idsae,idacr
 
     public function listarNivelesAltAction($idesp) {
 
-        // dump($idesp);die;
-
         try {
             $em = $this->getDoctrine()->getManager();
 
@@ -1229,7 +1242,7 @@ select idsae,idacr
                 $nivelobjArray[$value['id']] =$value['acreditacion'];
             }
 
-         //    dump($nivelobjArray);die;
+            // dump($nivelobjArray);die;
             $response = new JsonResponse();
             return $response->setData(array('listarniveles' => $nivelobjArray));
         } catch (Exception $ex) {
@@ -1239,11 +1252,12 @@ select idsae,idacr
 
     public function showModuloNuevoAction(Request $request)
     {
-        // dump($request);die;
+        //dump($request);die;
         $idsip = $request->get('idsip');
         $idesp = $request->get('idesp');
         $totalhoras = $request->get('totalhoras');
-        $horas= [80,100,120];
+        //$horas= [80,100,120];
+        $horas= [100];
        // $horasmodulo = $request->get('horas');
         $idacreditacion =$request->get('idacred');
         //  dump($request);die;
@@ -1613,7 +1627,8 @@ select idsae,idacr
     public function createModuloNuevoAction(Request $request)
     {
         $form = $request->get('form');
-        $horas= [80,100,120];
+        // $horas= [80,100,120];
+        $horas= [100];
         //dump($form);die;
         //  $form = $request->get('form');
         // dump($form);die;

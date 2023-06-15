@@ -159,7 +159,7 @@ class InfoEspecialController extends Controller{
                 'data'=>$dataInfo,
                 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
                // 'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
-              //  'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
+                'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
                 'operativo'=>$periodo,
@@ -506,7 +506,8 @@ class InfoEspecialController extends Controller{
       $estado = '';
       if(!$registroConsol){
         $estado = 'SIN_INSC';
-      }else{
+      }
+      /*else{ cuando haya RUDE se habilitara
         if($registroConsol->getRude()!=1){
           $estado = 'SIN_RUDE';
         }
@@ -519,7 +520,7 @@ class InfoEspecialController extends Controller{
         if($registroConsol->getBim3()==2){
           $estado = 'CON_BIM3';
         }*/
-      }
+      //}
       $inconsistencia = null;
       //dump($estado);die;
       if($estado==''){
@@ -568,6 +569,9 @@ class InfoEspecialController extends Controller{
                 $operativo = 0; // Operativo RUDE
             }
             if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['rude'] == 1){
+                $operativo = 1; // Primer Trimestre
+            }
+            if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0){
                 $operativo = 1; // Primer Trimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 ){

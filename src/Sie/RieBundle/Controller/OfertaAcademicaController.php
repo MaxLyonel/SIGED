@@ -145,17 +145,22 @@ class OfertaAcademicaController extends Controller {
             $form = $request->get('form');
             
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
-            //Validando los datos
+            //Validando los datos AND rc.ttecRegimenEstudioTipo = :regimenEstudio
             $query = $em->createQuery('SELECT rc
                                          FROM SieAppWebBundle:TtecResolucionCarrera rc
                                          INNER JOIN rc.ttecInstitucioneducativaCarreraAutorizada ie
                                         WHERE ie.institucioneducativa = :idInstitucion
                                           AND ie.ttecCarreraTipo = :ieCarrera 
                                           AND ie.esVigente = :ieEsVigente
-                                          AND rc.nivelTipo = :rcNivel')
+                                          AND rc.nivelTipo = :rcNivel
+                                          AND rc.tiempoEstudio = :tiempoEstudio
+                                          AND rc.ttecRegimenEstudioTipo = :regimenEstudio
+                                          ')
                                         ->setParameter('idInstitucion', $form['idRie'])
                                         ->setParameter('ieCarrera', $form['ttecCarreraTipo'])
                                         ->setParameter('ieEsVigente', TRUE)
+                                        ->setParameter('tiempoEstudio', $form['tiempoEstudio'])
+                                        ->setParameter('regimenEstudio', $form['regimenEstudio'])
                                         ->setParameter('rcNivel', $form['nivelTipo']);
             $datoCarrera = $query->getResult();
 

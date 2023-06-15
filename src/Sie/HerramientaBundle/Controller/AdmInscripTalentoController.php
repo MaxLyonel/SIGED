@@ -19,9 +19,14 @@ use Sie\AppWebBundle\Entity\ParaleloTipo;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\Estudiante;
 
-class AdmCheesEventController extends Controller{
-
-
+class AdmInscripTalentoController extends Controller
+{
+    public function indexA11ction()
+    {
+        return $this->render('SieHerramientaBundle:AdmInscripTalento:index.html.twig', array(
+                // ...
+            ));    
+    }
 
     public $session;
     public $month;
@@ -35,8 +40,7 @@ class AdmCheesEventController extends Controller{
             return $this->redirect($this->generateUrl('login'));
         }
         $this->month = array('nothing','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');       
-    }
-
+    }    
 
 /**
  * index methos to get access by rol
@@ -51,7 +55,7 @@ class AdmCheesEventController extends Controller{
         $userId = $this->session->get('userId');
         $userRol = $this->session->get('roluser');
 
-        return $this->render($this->session->get('pathSystem').':AdmCheesEvent:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':AdmInscripTalento:index.html.twig', array(
             'rol' => $userRol,
             'currentyear'=> $this->session->get('currentyear')
             ));    
@@ -505,7 +509,7 @@ class AdmCheesEventController extends Controller{
             foreach ($tmp as $value) {
                 $eventCheesOpe = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(
                     'institucioneducativa'=>$value['id'],
-                    'institucioneducativaOperativoLogTipo'=>11,
+                    'institucioneducativaOperativoLogTipo'=>13,
                     'gestionTipoId'=>$this->session->get('currentyear')
                 ), array('fechaRegistro'=>'DESC'));
                 $arrformbio = array();
@@ -569,7 +573,7 @@ class AdmCheesEventController extends Controller{
 
           $objDownloadFilenewOpe = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
             'institucioneducativa'=>$sie,
-            'institucioneducativaOperativoLogTipo'=>11,
+            'institucioneducativaOperativoLogTipo'=>13,
             'gestionTipoId'=>$this->session->get('currentyear')
           ));
           if(is_object($objDownloadFilenewOpe)){

@@ -170,18 +170,33 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
            //get Current Inscriptions By Gestoin
 
             $inscriptions = $this->getCurrentInscriptionsStudent($student->getCodigoRude());
-            //dump($inscriptions);
+            // dump($inscriptions);die;
             reset($inscriptions);
             $sw = true;
             $infoInscription=array();
+            $arrStatus = array(5,56,57,58);
+            $levelgradeComp = 0;
             //look for the next level inscrption if it has
             while($sw &&  ($inscription = current($inscriptions))){
-                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
+              if( in_array($inscription['estadoMatriculaId'], $arrStatus)  ){
+                if($levelgradeComp>$inscription['nivelId'].$inscription['gradoId']){
+
+                }else{
+                  $levelgradeComp = $inscription['nivelId'].$inscription['gradoId'];
                   $infoInscription = $inscription;
-                  $sw=false;
+                   
                 }
+              }
               next($inscriptions);
             }
+
+            // while($sw &&  ($inscription = current($inscriptions))){
+            //     if( in_array($inscription['estadoMatriculaId'], $arrStatus)  ){
+            //       $infoInscription = $inscription;
+            //       $sw=false;
+            //     }
+            //   next($inscriptions);
+            // }
             //get the last inscription
             if(!sizeof($infoInscription)>0){
               $cc=0;
@@ -273,6 +288,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
                 ->setParameter('mat', array( 3,4,5,6,10 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
+
 
             $objInfoInscription = $query->getResult();
             if(sizeof($objInfoInscription)>=1)
@@ -1181,7 +1197,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('insteducativaTipo', 1)
-                ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
+                ->setParameter('mat', array( 4,5,26,37,55,56,58 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
         try {

@@ -1803,7 +1803,7 @@ class InboxController extends Controller {
         case 2:
         
           $opeTrim = $operativo + 5;
-          $dbFunction = 'sp_validacion_regular_web2022_mg';
+          $dbFunction = 'sp_validacion_regular_web2023_mg';
           break;
         case 3: 
           $opeTrim = $operativo + 5;
@@ -1819,6 +1819,8 @@ class InboxController extends Controller {
           $dbFunction = 'sp_validacion_regular_inscripcion_ig_web';
           break;
       }
+
+      // dump($dbFunction);die;
       
       // $operativo = ($operativo < 1)?1:$operativo;
       $query = $em->getConnection()->prepare('select * from '.$dbFunction.'(:gestion, :sie, :valor)');
@@ -1827,11 +1829,13 @@ class InboxController extends Controller {
       $query->bindValue(':valor',$opeTrim);      
       $query->execute();
       $inconsistencia = $query->fetchAll();
-      //dump($this->session->get('pathSystem'));die;
+     
       if($inconsistencia){
         $observation = true;
       }
-      if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
+     
+      // if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
+           
       if($observation){ 
         $this->session->set('donwloadLibreta', false);              
         return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
@@ -1869,9 +1873,20 @@ class InboxController extends Controller {
           }else{
             if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
-              $registroConsol->$fieldOpe(2);              
+              $registroConsol->$fieldOpe(2);
+
+              $data = array(
+                  'operativoTipo' => 3,
+                  'gestion' => $form['gestion'],
+                  'id' => $form['sie'],
+                  'operativo' => $operativo,
+              );   
+              $this->saveLog($data);
+
+              
             }
           }
+
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
@@ -1892,6 +1907,30 @@ class InboxController extends Controller {
 
     }
 
+    private function saveLog($data){
+      $em = $this->getDoctrine()->getManager();
+
+        $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+        
+        //save the log data
+        $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($data['operativoTipo']));
+        $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
+        $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+        $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['id']));
+        $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+        $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['operativo']+5));
+        $objDownloadFilenewOpe->setDescripcion('...');
+        $objDownloadFilenewOpe->setEsexitoso('t');
+        $objDownloadFilenewOpe->setEsonline('t');
+        $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+        $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+        $dataClient = json_encode(array('userAgent'=>$_SERVER['HTTP_USER_AGENT'], 'ip'=>$_SERVER['HTTP_HOST']));
+        $objDownloadFilenewOpe->setClienteDescripcion($dataClient);
+        $em->persist($objDownloadFilenewOpe);
+        $em->flush();      
+
+      return 1;
+    }
      
 
 }

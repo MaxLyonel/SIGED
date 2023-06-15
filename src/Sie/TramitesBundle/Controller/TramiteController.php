@@ -1084,7 +1084,6 @@ class TramiteController extends Controller {
         }
     }
 
-
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
     // Funcion que genera un formulario para el registro del estudiante diplomatico 
@@ -2315,8 +2314,10 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
                 select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
-                    select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
-                    , smp.horas_modulo, smt.modulo
+                    select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sat.codigo as nivel_id, sat.acreditacion
+                    , case coalesce(sesth.id,0) when 0 then sest.id else sesth.id end as especialidad_id
+        			, case coalesce(sesth.especialidad,'') when '' then sest.especialidad else sesth.especialidad end as especialidad
+                    , smp.horas_modulo, smt.modulo, sest.id as anterior_especialidad_id, sest.especialidad as anterior_especialidad
                     from superior_facultad_area_tipo as sfat
                     inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
                     inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
@@ -2332,7 +2333,8 @@ class TramiteController extends Controller {
                     inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
                     inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
                     inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-                    where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+        			left join superior_especialidad_tipo as sesth on sesth.id = sest.homologado_id
+                    where (sest.id = ".$especialidadId." or sest.homologado_id = ".$especialidadId.") and sat.codigo = ".$nivelId."
                     and en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END
                 -- group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
                 -- , smp.horas_modulo, smt.modulo -- having count(*) < 2
@@ -2393,8 +2395,10 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
                 select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
-                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
-                        , smp.horas_modulo, smt.modulo
+                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sat.codigo as nivel_id, sat.acreditacion
+                        , case coalesce(sesth.id,0) when 0 then sest.id else sesth.id end as especialidad_id
+                        , case coalesce(sesth.especialidad,'') when '' then sest.especialidad else sesth.especialidad end as especialidad
+                        , smp.horas_modulo, smt.modulo, sest.id as anterior_especialidad_id, sest.especialidad as anterior_especialidad
                         from superior_facultad_area_tipo as sfat
                         inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
                         inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
@@ -2411,7 +2415,8 @@ class TramiteController extends Controller {
                         inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
                         inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
                         left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        left join superior_especialidad_tipo as sesth on sesth.id = sest.homologado_id
+                        where (sest.id = ".$especialidadId." or sest.homologado_id = ".$especialidadId.") and sat.codigo = ".$nivelId."
                         and case when ies.gestion_tipo_id = date_part('year',current_date) and pet.id = ".$periodoId." then true else en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END end
                     -- group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
                    --  , smp.horas_modulo, smt.modulo having count(*) < 2
@@ -2474,8 +2479,11 @@ class TramiteController extends Controller {
     public function getCertTecCargaHorariaInscripcion($participanteId, $especialidadId, $nivelId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+            select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sat.codigo as nivel_id, sat.acreditacion
+            , case coalesce(sesth.id,0) when 0 then sest.id else sesth.id end as especialidad_id
+            , case coalesce(sesth.especialidad,'') when '' then sest.especialidad else sesth.especialidad end as especialidad
             , smp.horas_modulo, smt.modulo, COALESCE(en.nota_cuantitativa,0) as nota_cuantitativa, ies.gestion_tipo_id as gestion, pt.periodo as periodo, ie.id as institucioneducativa_id, ie.institucioneducativa
+            , sest.id as anterior_especialidad_id, sest.especialidad as anterior_especialidad
             from superior_facultad_area_tipo as sfat
             inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
             inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
@@ -2493,7 +2501,8 @@ class TramiteController extends Controller {
             inner join periodo_tipo as pt on pt.id = ies.periodo_tipo_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
             left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id and en.nota_tipo_id::integer = 22
-            where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." 
+        	left join superior_especialidad_tipo as sesth on sesth.id = sest.homologado_id
+            where (sest.id = ".$especialidadId." or sest.homologado_id = ".$especialidadId.") and sat.codigo = ".$nivelId." 
             order by smt.id
         ");
         $queryEntidad->execute();
