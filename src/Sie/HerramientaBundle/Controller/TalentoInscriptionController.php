@@ -119,7 +119,7 @@ class TalentoInscriptionController extends Controller
                     'arrFases'         => $arrFases,                
                     'arrAreas'         => $arrAreas,                
                     'swcloseevent'         => $swcloseevent,
-                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
                 );               
             }else{
                 $arrResponse = array(
@@ -129,7 +129,7 @@ class TalentoInscriptionController extends Controller
                     'arrFases'         => $arrFases,
                     'arrAreas'         => $arrAreas,
                     'swcloseevent'            => $swcloseevent,
-                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
                 );   
             }            
         }else{
@@ -140,7 +140,7 @@ class TalentoInscriptionController extends Controller
                     'arrFases'         => $arrFases,
                     'arrAreas'         => $arrAreas,
                     'swcloseevent'         => $swcloseevent,
-                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
                 ); 
         }
 
@@ -209,7 +209,7 @@ class TalentoInscriptionController extends Controller
                     'arrModalidades'  => $arrModalidades,                
                     'arrLevel'         => $arrniveles,                
                     // 'swcloseevent'         => $swcloseevent,
-                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
+                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
                 );               
             }else{
                 $arrResponse = array(
@@ -219,7 +219,7 @@ class TalentoInscriptionController extends Controller
                     'arrModalidades'      => $arrModalidades,
                     'arrLevel'            => $arrniveles,                    
                     // 'swcloseevent'            => $swcloseevent,
-                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
+                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
                 );   
             }            
         }else{
@@ -230,7 +230,7 @@ class TalentoInscriptionController extends Controller
                     'arrModalidades'         => $arrModalidades,
                     'arrLevel'         => $arrniveles,
                     // 'swcloseevent'         => $swcloseevent,
-                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
+                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
                 ); 
         }
 
