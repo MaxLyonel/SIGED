@@ -54,7 +54,6 @@ class CensoInscriptionController extends Controller
                 }
             }
 
-
             return $this->render('SieHerramientaBundle:CensoInscription:index.html.twig',array(
                 'codsie'=>$sie,
                 'disableElement'=>$disableElement,
@@ -422,48 +421,52 @@ class CensoInscriptionController extends Controller
                 inner join estudiante_inscripcion ei on (ai.estudiante_inscripcion_id = ei.id)
                 inner join estudiante e on (ei.estudiante_id = e.id)
                 inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
-                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id = 2020
+                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id = 2022
         ";
 
         $statement = $em->getConnection()->prepare($query);
         $statement->execute();
-        $arrDataStudents = $statement->fetchAll();
-        
+        $arrDataStudentsFull = $statement->fetchAll();
+    
         $apoderadoOutput = array();
-        if(sizeof($arrDataStudents)>0){
-            $apoderadoOutput = array(
-              "paterno" => $arrDataStudents[0]['paterno'],
-              "materno" => $arrDataStudents[0]['materno'],
-              "nombre" => $arrDataStudents[0]['nombre'],
-              "carnet" => $arrDataStudents[0]['carnet'],
-              "complemento" => $arrDataStudents[0]['complemento'],
-              "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents[0]['fecha_nacimiento']) ) ,
-              
-              
-            );
-            $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
-
-        }
+        $swparent = 1;
         $apoderadoInput = array_map("strtoupper", $apoderadoInput);
+        
+        if(sizeof($arrDataStudentsFull)>0){
+            // foreach ($arrDataStudentsFull as $arrDataStudents) {
+            while (($arrDataStudents = current($arrDataStudentsFull)) !== FALSE && $swparent) {                
 
-        // check if the values of parent/tutor are the same
-        $swparent = 0;
-        if(($apoderadoInput == $apoderadoOutput)){
-            $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
-            $swparent = 1;
+                    $apoderadoOutput = array(
+                      "paterno" => $arrDataStudents['paterno'],
+                      "materno" => $arrDataStudents['materno'],
+                      "nombre" => $arrDataStudents['nombre'],
+                      "carnet" => $arrDataStudents['carnet'],
+                      "complemento" => $arrDataStudents['complemento'],
+                      "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ) ,              
+                    );
+                    $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
+                    // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
+                // check if the values of parent/tutor are the same
+                    
+                if(($apoderadoInput == $apoderadoOutput)){
+                    $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents['apoderadoinscripid'];
+                    $swparent = 0;
+                }
+
+                    //$apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
+                next($arrDataStudentsFull);
+            }
         }
-            $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
 
         $arrResponse = array(
             'apoderadoOutput' => $apoderadoOutput,
-            'swparent' => $swparent,
+            'swparent' => !$swparent,
         ); 
         // dump($arrResponse);die;
         // dump($apoderadoOutput);
         // dump($apoderadoInput);
         // dump($swparent);
         // die;
-                
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData($arrResponse);
