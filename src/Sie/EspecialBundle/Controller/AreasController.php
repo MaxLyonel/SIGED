@@ -920,7 +920,7 @@ class AreasController extends Controller {
                             break;
             }
            ;
-
+           //dump($asignaturas);
 //dump($programaServicio);die;
             $areasNivel = $asignaturas;
             
@@ -931,7 +931,7 @@ class AreasController extends Controller {
             for ($i = 0; $i < count($areasNivel); $i++) {
                 $check = '';
                 $bloqueado = '';
-                if ($areasCurso) {
+                if ($areasCurso) { 
                     for ($j = 0; $j < count($areasCurso); $j++) {
                         if ($areasNivel[$i]->getId() == $areasCurso[$j]->getAsignaturaTipo()->getId()) {
                             $check = 'checked';
@@ -941,8 +941,15 @@ class AreasController extends Controller {
                 }
 
                 // Armamos el array solo con las areas que se pueden adicionar
-                if ($check != 'checked') {
-                    $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'campo' => ($areasNivel[$i]->getAreaTipo()) ? $areasNivel[$i]->getAreaTipo()->getArea() : "", 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura(),'programaServicio'=>$programaServicio);
+                if ($check != 'checked') { 
+                    //dump($idmomento);die;
+                    
+                    if($idmomento==1){
+                        $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'campo' => ($areasNivel[$i]->getAreaTipo()) ? $areasNivel[$i]->getAreaTipo()->getArea() : "", 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura(),'programaServicio'=>'');
+                    }else{
+                        $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'campo' => ($areasNivel[$i]->getAreaTipo()) ? $areasNivel[$i]->getAreaTipo()->getArea() : "", 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura(),'programaServicio'=>$programaServicio);
+                    }
+                   // if()
                 }
             }
             if ($mTipo == 15) {
@@ -973,7 +980,7 @@ class AreasController extends Controller {
                            ->getQuery()
                            ->getResult();
             $em->getConnection()->commit();
-           //dump($areasArray);die;
+          // dump($areasArray);die;
             return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual,'progSer'=>$progSer, 'todasLasAsignaturas'=>$todasLasAsignaturas));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
