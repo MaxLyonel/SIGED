@@ -30,7 +30,7 @@ class CensoInscriptionController extends Controller
     }       
 
     public function indexAction(){
-        
+        return $this->redirect($this->generateUrl('login'));
         $ie_id=$this->session->get('ie_id');
         
         if(in_array($ie_id, $this->arrUesCapinota)){
