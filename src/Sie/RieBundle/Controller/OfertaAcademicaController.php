@@ -576,9 +576,11 @@ class OfertaAcademicaController extends Controller {
                                      JOIN nivaut.institucioneducativa instituto  
                                      JOIN nivaut.nivelTipo nivel  
                                     WHERE instituto.id = :idInstitucion
-                                      AND nivel.id IN (:ieNivelTipo)')
+                                      AND nivel.id NOT IN (:ieNivelTipo)')
                                        ->setParameter('idInstitucion', $id)
-                                       ->setParameter('ieNivelTipo', array(500,501));
+                                       ->setParameter('ieNivelTipo', array(502));
+                                     
+                                     
         $datos = $query->getResult();
 
         $nuevoArray = array();
