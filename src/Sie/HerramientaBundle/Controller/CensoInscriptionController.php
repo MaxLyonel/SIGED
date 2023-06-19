@@ -15,32 +15,30 @@ use Sie\AppWebBundle\Entity\Estudiante;
 use Sie\AppWebBundle\Entity\Institucioneducativa; 
 use Sie\AppWebBundle\Entity\EveEstudianteInscripcionEvento; 
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog; 
+use Sie\AppWebBundle\Entity\CenEstudianteInscripcionCenso; 
 
-use Sie\AppWebBundle\Entity\HabextrFaseTipo;
-use Sie\AppWebBundle\Entity\HabextrAreasCamposTipo;
-use Sie\AppWebBundle\Entity\HabextrEstudianteInscripcion;
 
-class TalentoInscriptionController extends Controller
+class CensoInscriptionController extends Controller
 {
- /*   public function index1Action(){
-        
-        return $this->render('SieHerramientaBundle:TalentoInscription:index.html.twig', array(
-                // ...
-            ));    
-    }
-*/
-
     public $session;
     public $limitDay;
+    public $arrUesCapinota;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '20-06-2023';
+        $this->limitDay = '30-06-2023';
+        $this->arrUesCapinota = $this->setUEs();
     }       
 
     public function indexAction(){
         
         $ie_id=$this->session->get('ie_id');
         
+        if(in_array($ie_id, $this->arrUesCapinota)){
+
+        }else{
+            return $this->redirect($this->generateUrl('login'));            
+        }
+
             $swregistry = false;
             $id_usuario = $this->session->get('userId');
             if (!isset($id_usuario)) {
@@ -57,7 +55,7 @@ class TalentoInscriptionController extends Controller
             }
 
 
-            return $this->render('SieHerramientaBundle:TalentoInscription:index.html.twig',array(
+            return $this->render('SieHerramientaBundle:CensoInscription:index.html.twig',array(
                 'codsie'=>$sie,
                 'disableElement'=>$disableElement,
                 
@@ -89,73 +87,7 @@ class TalentoInscriptionController extends Controller
         $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);          
         // end this secction validate the last day to report the inscription INFO                     
 
-        // get fase and Area
-        $query="select * from habextr_fase_tipo where id = 1";
-        $statement = $em->getConnection()->prepare($query);
-        $statement->execute();
-        $arrFases = $statement->fetchAll();
-
-        $query="select * from habextr_areas_campos_tipo";
-        $statement = $em->getConnection()->prepare($query);
-        $statement->execute();
-        $arrAreas = $statement->fetchAll();
-
-        // if ($aTuicion[0]['get_ue_tuicion'] == true){
-        if (1){
-            $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
-            
-            if(sizeof($objUE)>0){
-                $existUE = 1;
-                $objModalidades = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->findAll();
-                if(sizeof($objModalidades) > 0 ){
-                    foreach ($objModalidades as $value) {
-                        $arrModalidades[]=array('id'=>$value->getId(), 'modalidad'=>$value->getDescripcion() );
-                    }
-                }
-                $arrResponse = array(
-                    'sie'                 => $objUE->getId(),
-                    'institucioneducativa'=> $objUE->getInstitucioneducativa(),
-                    'existUE'         => $existUE,                                    
-                    'arrFases'         => $arrFases,                
-                    'arrAreas'         => $arrAreas,                
-                    'swcloseevent'         => $swcloseevent,
-                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
-                );               
-            }else{
-                $arrResponse = array(
-                    'sie'                 => '',
-                    'institucioneducativa'=> 'No tiene tuición sobre la institución educatia o no existe codigo SIE ',
-                    'existUE'             => $existUE,
-                    'arrFases'         => $arrFases,
-                    'arrAreas'         => $arrAreas,
-                    'swcloseevent'            => $swcloseevent,
-                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
-                );   
-            }            
-        }else{
-                $arrResponse = array(
-                    'sie'                 => '',
-                    'institucioneducativa'=> 'N',
-                    'existUE'         => $existUE,
-                    'arrFases'         => $arrFases,
-                    'arrAreas'         => $arrAreas,
-                    'swcloseevent'         => $swcloseevent,
-                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
-                ); 
-        }
-
-        $response = new JsonResponse();
-        $response->setStatusCode(200);
-        $response->setData($arrResponse);
-        return $response;        
-    }
-
-    public function getAllInfoUEAction(Request $request){
-    	// get the vars send        
-        $sie = $request->get('sie');
-        // create db conexion
-        $em = $this->getDoctrine()->getManager();
-
+        // start look for the level, grado, parallel & turno
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
         if($institucion){
         	
@@ -167,11 +99,11 @@ class TalentoInscriptionController extends Controller
 	                ->select('(iec.nivelTipo)')
 	                ->where('iec.institucioneducativa = :sie')
 	                ->andwhere('iec.gestionTipo = :gestion')
-	                ->andwhere('iec.nivelTipo IN (:nivel)')
+	                ->andwhere('iec.nivelTipo = :nivel')
 	                ->setParameter('sie', $sie)
 	                // ->setParameter('gestion', $this->session->get('currentyear') )
-	                ->setParameter('gestion', $this->session->get('currentyear') )
-	                ->setParameter('nivel', array(12,13))
+	                ->setParameter('gestion', 2020 )
+	                ->setParameter('nivel', '13')
 	                ->orderBy('iec.nivelTipo', 'ASC')
 	                ->distinct()
 	                ->getQuery();
@@ -208,8 +140,8 @@ class TalentoInscriptionController extends Controller
                     'existUE'         => $existUE,                
                     'arrModalidades'  => $arrModalidades,                
                     'arrLevel'         => $arrniveles,                
-                    // 'swcloseevent'         => $swcloseevent,
-                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
+                    'swcloseevent'         => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 );               
             }else{
                 $arrResponse = array(
@@ -217,9 +149,9 @@ class TalentoInscriptionController extends Controller
                     'institucioneducativa'=> 'No tiene tuición sobre la institución educatia o no existe codigo SIE ',
                     'existUE'             => $existUE,
                     'arrModalidades'      => $arrModalidades,
-                    'arrLevel'            => $arrniveles,                    
-                    // 'swcloseevent'            => $swcloseevent,
-                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
+                    'arrLevel'            => $arrniveles,
+                    'swcloseevent'            => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 );   
             }            
         }else{
@@ -229,15 +161,16 @@ class TalentoInscriptionController extends Controller
                     'existUE'         => $existUE,
                     'arrModalidades'         => $arrModalidades,
                     'arrLevel'         => $arrniveles,
-                    // 'swcloseevent'         => $swcloseevent,
-                    // 'urlreporte'=> ($swcloseevent)?$this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie)):''
+                    'swcloseevent'         => $swcloseevent,
+                    'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 ); 
         }
-
+// dump($arrResponse);die;
+        
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData($arrResponse);
-        return $response;        	
+        return $response;        
     }
 
     /**
@@ -267,11 +200,11 @@ class TalentoInscriptionController extends Controller
 	                ->where('iec.institucioneducativa = :sie')
 	                ->andWhere('iec.nivelTipo = :idnivel')
 	                ->andwhere('iec.gestionTipo = :gestion')
-	                // ->andwhere('iec.gradoTipo IN (:agrados)')
+	                ->andwhere('iec.gradoTipo IN (:agrados)')
 	                ->setParameter('sie', $sie)
 	                ->setParameter('idnivel', $idnivel)
 	                ->setParameter('gestion', $gestionselected)
-	                // ->setParameter('agrados', array(5,6))
+	                ->setParameter('agrados', array(5,6))
 	                ->distinct()
 	                ->orderBy('iec.gradoTipo', 'ASC')
 	                ->getQuery();
@@ -400,7 +333,7 @@ class TalentoInscriptionController extends Controller
 
 
     public function dataSelectedAction(Request $request){
-        // dump($request);die;
+        
         // get the vars send        
         $sie = $request->get('sie');
         $institucioneducativa = $request->get('institucioneducativa');
@@ -409,10 +342,6 @@ class TalentoInscriptionController extends Controller
         $parallelId = $request->get('parallelId');
         $turnoId = $request->get('turnoId');
         $year = $this->session->get('currentyear');
-
-		$habextrFaseId = $request->get('habextrFaseId');
-		$habextrAreaId = $request->get('habextrAreaId');
-        
         
         // create db conexion
         $em = $this->getDoctrine()->getManager();
@@ -422,18 +351,9 @@ class TalentoInscriptionController extends Controller
         $parallelLabel = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($parallelId);
         $turnoLabel = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($turnoId);
         
-        $areaLabel = $em->getRepository('SieAppWebBundle:HabextrAreasCamposTipo')->find($habextrAreaId);
-        $faseLabel = $em->getRepository('SieAppWebBundle:HabextrFaseTipo')->find($habextrFaseId);
-
-        // get rules of inscription
-        $query = "select * from habextr_areas_campos_tipo where id = ".$habextrAreaId;
-        $statement = $em->getConnection()->prepare($query);
-        $statement->execute();
-        $arrAreaRule = $statement->fetchAll();
-        
         //start get the students
         $query="
-                select e.carnet_identidad, e.complemento ,e.codigo_rude ,e.paterno ,e.materno ,e.nombre ,e.genero_tipo_id , ei.id as inscriptionId, gt.genero, e.fecha_nacimiento
+                select e.carnet_identidad, e.complemento ,e.codigo_rude ,e.paterno ,e.materno ,e.nombre ,e.genero_tipo_id , ei.id as inscriptionId, gt.genero
                 from estudiante e 
                 inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
                 inner join institucioneducativa_curso ic on (ei.institucioneducativa_curso_id=ic.id)
@@ -450,26 +370,16 @@ class TalentoInscriptionController extends Controller
         $arrStudentsList = array();
 
         foreach ($arrStudents as $value) {
+                    $query=" select * from cen_estudiante_inscripcion_censo
+                    where institucioneducativa_id =".$sie." and estudiante_inscripcion_id = ".$value['inscriptionid']."  ";
 
-        	// get the student yearOld
-	        $sql = "select public.sp_obtener_edad(to_date('".date('Y-m-d', strtotime($value['fecha_nacimiento']))."','YYYY-MM-DD'),to_date('2023-06-15','YYYY-MM-DD'))";
-	        $query = $em->getConnection()->prepare($sql);
-	        $query->execute();
-	        $dataStudent = $query->fetch();        	
-	        
-	        if($dataStudent['sp_obtener_edad']<=$arrAreaRule[0]['edad']){
-	        	
-	            $query=" select * from habextr_estudiante_inscripcion
-	            where habextr_fase_tipo_id =".$habextrFaseId." and habextr_areas_campos_tipo_id =".$habextrAreaId." and estudiante_inscripcion_id = ".$value['inscriptionid']."  ";
-
-	            $statement = $em->getConnection()->prepare($query);
-	            $statement->execute();
-	            $arrStudentsRegistered = $statement->fetchAll();
-	            if(sizeof($arrStudentsRegistered)>0){
-	            }else{
-	                $arrStudentsList[] = $value;
-	            }
-	        }
+            $statement = $em->getConnection()->prepare($query);
+            $statement->execute();
+            $arrStudentsRegistered = $statement->fetchAll();
+            if(sizeof($arrStudentsRegistered)>0){
+            }else{
+                $arrStudentsList[] = $value;
+            }
         }
 
         //end   get the students
@@ -479,20 +389,15 @@ class TalentoInscriptionController extends Controller
         $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);  
         // end this secction validate the last day to report the inscription INFO        
         // get students data
-        $arrEveStudentsTalento = $this->getAllRegisteredInscription($sie,$habextrFaseId,$habextrAreaId);
-
+        $arrEveStudentsCenso = $this->getAllRegisteredInscription($sie);
+        
         $arrResponse = array(
         	'levelLabel'=>$levelLabel->getNivel(),
         	'gradoLabel'=>$gradoLabel->getGrado(),
         	'parallelLabel'=>$parallelLabel->getParalelo(),
         	'turnoLabel'=>$turnoLabel->getTurno(),
-
-        	'faseLabel'=>$faseLabel->getFase(),
-        	'areaLabel'=>$areaLabel->getAreasCampos(),
-        	'ruleYearOld'=>$arrAreaRule[0]['edad'],
-
         	'arrStudents' => $arrStudentsList,
-            'arrEveStudentsTalento' => $arrEveStudentsTalento,
+            'arrEveStudentsCenso' => $arrEveStudentsCenso,
             'existSelectData' => 1,    
             'swcloseevent'    => $swcloseevent,   
             'existStudent'         => 1,    
@@ -539,10 +444,8 @@ class TalentoInscriptionController extends Controller
             $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
 
         }
-        $apoderadoInput['fecNacimiento'] = str_replace('/', '-', $apoderadoInput['fecNacimiento']);
-        
         $apoderadoInput = array_map("strtoupper", $apoderadoInput);
-        
+
         // check if the values of parent/tutor are the same
         $swparent = 0;
         if(($apoderadoInput == $apoderadoOutput)){
@@ -555,7 +458,12 @@ class TalentoInscriptionController extends Controller
             'apoderadoOutput' => $apoderadoOutput,
             'swparent' => $swparent,
         ); 
-                        
+        // dump($arrResponse);die;
+        // dump($apoderadoOutput);
+        // dump($apoderadoInput);
+        // dump($swparent);
+        // die;
+                
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData($arrResponse);
@@ -564,15 +472,15 @@ class TalentoInscriptionController extends Controller
 
     }
 
-     function strtoupper($ele){        
+     function strtoupper($ele){
         return strtoupper($ele);
     }
 
     public function saveStudentAction(Request  $request){
-
         $dataInfoUE = json_decode($request->get('infoUE'),true);
         $em = $this->getDoctrine()->getManager();
-        
+        // dump($dataInfoUE);
+        // die;
         if(isset($_FILES['informe'])){
             $file = $_FILES['informe'];
 
@@ -586,7 +494,7 @@ class TalentoInscriptionController extends Controller
                 $new_name = $dataInfoUE['dataStudent']['inscriptionid'].'-'.date('YmdHis').'.'.$extension;
 
                 // GUARDAMOS EL ARCHIVO
-                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/habiltalen/' . $dataInfoUE['sie'];
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/opecenso/' . $dataInfoUE['sie'];
                 if (!file_exists($directorio)) {
                     mkdir($directorio, 0777, true);
                 }
@@ -613,28 +521,24 @@ class TalentoInscriptionController extends Controller
             $informe = null;
         }
 
-        $CenEstudianteInscripcionObj = new HabextrEstudianteInscripcion();
-        
-        $CenEstudianteInscripcionObj->setEstudianteInscripcionId(($dataInfoUE['dataStudent']['inscriptionid']));
-        $CenEstudianteInscripcionObj->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($dataInfoUE['sie']));
-        $CenEstudianteInscripcionObj->setDocadjunto($dataInfoUE['sie']."/".$new_name);
-        $CenEstudianteInscripcionObj->setTitulo(mb_strtoupper($dataInfoUE['inscriptionData']['titulo'], 'utf-8'));
-        $CenEstudianteInscripcionObj->setUrldocumento($dataInfoUE['inscriptionData']['url']);
-        $CenEstudianteInscripcionObj->setDescripcion(mb_strtoupper($dataInfoUE['inscriptionData']['descripcion'], 'utf-8'));
+        $CenEstudianteInscripcionCensoObj = new CenEstudianteInscripcionCenso();
+        $CenEstudianteInscripcionCensoObj->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($dataInfoUE['dataStudent']['inscriptionid']));
+        $CenEstudianteInscripcionCensoObj->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($dataInfoUE['apoderadoinscripid']));
+        $CenEstudianteInscripcionCensoObj->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($dataInfoUE['sie']));
+        $CenEstudianteInscripcionCensoObj->setDocumentoPath($archivador);
+        $CenEstudianteInscripcionCensoObj->setEmail($dataInfoUE['email']);
+        $CenEstudianteInscripcionCensoObj->setCelnumero($dataInfoUE['celular']);
+        $CenEstudianteInscripcionCensoObj->setEsVigente(1);
+        $CenEstudianteInscripcionCensoObj->setFechaRegistro(new \DateTime('now'));
 
-        $CenEstudianteInscripcionObj->setHabextrFaseTipo($em->getRepository('SieAppWebBundle:HabextrFaseTipo')->find($dataInfoUE['habextrFaseId']));
-        $CenEstudianteInscripcionObj->setHabextrAreasCamposTipo($em->getRepository('SieAppWebBundle:HabextrAreasCamposTipo')->find($dataInfoUE['habextrAreaId']));
-        
-        $CenEstudianteInscripcionObj->setFechaRegistro(new \DateTime('now'));
-
-        $em->persist($CenEstudianteInscripcionObj);
+        $em->persist($CenEstudianteInscripcionCensoObj);
         $em->flush();
 
-        $arrEveStudents = $this->getAllRegisteredInscription($dataInfoUE['sie'],$dataInfoUE['habextrFaseId'],$dataInfoUE['habextrAreaId']);
+        $arrEveStudentsCenso = $this->getAllRegisteredInscription($dataInfoUE['sie']);
         
         $arrResponse = array(
             
-            'arrEveStudentsTalento' => $arrEveStudents,
+            'arrEveStudentsCenso' => $arrEveStudentsCenso,
             
         ); 
 
@@ -644,6 +548,10 @@ class TalentoInscriptionController extends Controller
         return $response;  
         die;
     }   
+
+
+
+
 
     private function getLastDayRegistryOpeCheesEventStatus($limitDay){
         $today = date('d-m-Y');
@@ -656,7 +564,7 @@ class TalentoInscriptionController extends Controller
 
           $objDownloadFilenewOpe = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
             'institucioneducativa'=>$sie,
-            'institucioneducativaOperativoLogTipo'=>13,
+            'institucioneducativaOperativoLogTipo'=>12,
             'gestionTipoId'=>$this->session->get('currentyear')
           ));
 
@@ -664,29 +572,31 @@ class TalentoInscriptionController extends Controller
     }   
 
 
-    private function getAllRegisteredInscription($sie, $faseId, $areaId){
+    private function getAllRegisteredInscription($sie){
         $em = $this->getDoctrine()->getManager();
-        $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid,  concat('../../uploads/archivos/habiltalen/', docadjunto) as pathdoc, eeie.urldocumento
-                FROM habextr_estudiante_inscripcion eeie
+        $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid 
+                FROM cen_estudiante_inscripcion_censo eeie
                 inner join estudiante_inscripcion ei on (eeie.estudiante_inscripcion_id = ei.id)
                 inner join estudiante e on (ei.estudiante_id = e.id)
                 inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
                 inner join nivel_tipo nt on (iec.nivel_tipo_id=nt.id)
                 inner join grado_tipo gt on (iec.grado_tipo_id=gt.id)
                 inner join paralelo_tipo pt on (iec.paralelo_tipo_id=pt.id)
-                where eeie.habextr_fase_tipo_id = ". $faseId." and eeie.habextr_areas_campos_tipo_id= ". $areaId ." and iec.institucioneducativa_id = " . $sie ;
+                where 
+                iec.institucioneducativa_id = " . $sie ;
 
         $statement = $em->getConnection()->prepare($query);
         $statement->execute();
         $arrEveStudents = $statement->fetchAll();
-         
+        // dump($arrEveStudents);
+        // die;
         return $arrEveStudents;        
 
     }    
 
 
-    public function closeEventGralAction(Request $request) {
-        
+    public function closeEventCheesAction(Request $request) {
+        // DUMP($request);die;
         // get the send values
         $sie = $request->get('sie');        
         //conexion to DB
@@ -695,19 +605,19 @@ class TalentoInscriptionController extends Controller
         try {
           //save the log data
           
-          
+          // dump(is_object($objDownloadFilenewOpe));die;
           $objDownloadFilenewOpe = $this->checkOperativeChees($sie);
           if(!is_object($objDownloadFilenewOpe)){
             $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
           }
           
-          $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(13));
+          $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(12));
           $objDownloadFilenewOpe->setGestionTipoId($this->session->get('currentyear'));
           $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
           $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
           $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
           $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
-          $objDownloadFilenewOpe->setDescripcion('habextr');
+          $objDownloadFilenewOpe->setDescripcion('CENSO INE');
           $objDownloadFilenewOpe->setEsexitoso('t');
           $objDownloadFilenewOpe->setEsonline('t');
           $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
@@ -729,7 +639,7 @@ class TalentoInscriptionController extends Controller
             'sie'          => $sie,
             'swcloseevent' => $swcloseevent,
             'swcloseevent' => $swcloseevent,
-            'urlreporte'=> $this->generateUrl('talentoinscription_reportInscription', array('sie'=>$sie))
+            'urlreporte'=> $this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie))
         ); 
 
 
@@ -739,30 +649,10 @@ class TalentoInscriptionController extends Controller
         return $response;                
     }
 
-    public function reportInscriptionAction(Request $request, $sie){
-
-        $response = new Response();
-        $gestion = $this->session->get('currentyear');
-        $codigoQR = 'EVEAJE'.$sie.'|'.$gestion;
-
-        $data = $this->session->get('userId').'|'.$gestion.'|'.$sie;
-        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
-        $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'instalento'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_avance_habilidades_extraordinarias_2023_v1_EEA.rptdesign&cod_ue='.$sie.'&&__format=pdf&'));
-        $response->setStatusCode(200);
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-        return $response;
-    }      
-
     public function removeInscriptionCensoAction(Request $request){
-    	
+
         // get the send values
         $sie = $request->get('sie');
-        $habextrFaseId = $request->get('habextrFaseId');
-        $habextrAreaId = $request->get('habextrAreaId');
         $institucioneducativa = $request->get('institucioneducativa');
         $remoinscriptionid = $request->get('remoinscriptionid');
         // $genderRequest = $request->get('genderRequest');
@@ -770,10 +660,12 @@ class TalentoInscriptionController extends Controller
 
         // create db conexion
         $em=$this->getDoctrine()->getManager();
-    
-        $existRemoveStudent=0;
-        $objEveStudentInscription = $em->getRepository('SieAppWebBundle:HabextrEstudianteInscripcion')->find($remoinscriptionid);
         
+        $existRemoveStudent=0;
+        $objEveStudentInscription = $em->getRepository('SieAppWebBundle:CenEstudianteInscripcionCenso')->find($remoinscriptionid);
+        // dump($remoinscriptionid);
+        // dump($objEveStudentInscription);
+        // die;
         if(is_object($objEveStudentInscription) ){
             $em->remove($objEveStudentInscription);
             // $em->persist($objEveStudentInscription);
@@ -781,7 +673,7 @@ class TalentoInscriptionController extends Controller
             $existRemoveStudent=1;
         }
         
-        $arrEveStudents = $this->getAllRegisteredInscription($sie, $habextrFaseId,$habextrAreaId);
+        $arrEveStudents = $this->getAllRegisteredInscription($sie);
 
         $arrResponse = array(
             'sie'            => $sie,
@@ -795,9 +687,138 @@ class TalentoInscriptionController extends Controller
         return $response;  
     }
 
-    public function classifiedRecordAction(Request $request){
+    public function setUEs(){
+        return array(
+                        80920043,
+                        80920053,
+                        80920026,
+                        80920022,
+                        80920052,
+                        80920020,
+                        80920051,
+                        80920054,
+                        60920002,
+                        60920003,
+                        80920001,
+                        60920001,
+                        80920005,
+                        80920008,
+                        80920009,
+                        80920012,
+                        80920011,
+                        80920013,
+                        80920014,
+                        80920015,
+                        80920016,
+                        80920017,
+                        80920006,
+                        80920024,
+                        80920049,
+                        80920033,
+                        80920036,
+                        80920047,
+                        80920055,
+                        80920039,
+                        80920023,
+                        80920027,
+                        80920028,
+                        80920029,
+                        80920030,
+                        80920031,
+                        80920032,
+                        80920034,
+                        80920035,
+                        80920037,
+                        80920041,
+                        80920046,
+                        80920004,
+                        80920019,
+                        80920010
+        );
+    }
+//////////////////////////////////////////////////////////////////////////////////////
+/*
 
 
+
+
+
+    public function getInfoEventAction(Request $request){
+        // get the vars send        
+        $modalidadId = $request->get('modalidadId');
+        $levelId = $request->get('levelId');
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        // get fases data
+        $query = "SELECT * FROM eve_fase_tipo where es_vigente = true and   eve_modalidades_tipo_id = " .$modalidadId  ;              
+        $statement = $em->getConnection()->prepare($query);
+        $statement->execute();
+        $arrFases = $statement->fetchAll();
+        // get categories data
+        $query = "SELECT * FROM eve_categorias_tipo where eve_modalidades_tipo_id = " .$modalidadId ." and nivel_tipo_id =".$levelId ;              
+        $statement = $em->getConnection()->prepare($query);
+        $statement->execute();
+        $arrCategories = $statement->fetchAll();        
+        
+        $arrResponse = array(
+            'arrFases'         => $arrFases,
+            'arrCategories'    => $arrCategories,
+            'existUE'         => 1,
+        ); 
+                
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;  
+    }
+
+
+
+    public function getParalelosAction(Request  $request){
+        // get the send values
+        $sie = $request->get('sie');
+        $institucioneducativa = $request->get('institucioneducativa');
+        $modalidadId = $request->get('modalidadId');
+        $faseId = $request->get('faseId');
+        $categorieId = $request->get('categorieId');
+        $levelId = $request->get('levelId');
+        $gradeId = $request->get('gradeId');
+        $genderRequest = $request->get('genderRequest');
+        $year = $this->session->get('currentyear');
+
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+        $query="
+            select ic.turno_tipo_id ,  ic.paralelo_tipo_id, pt.paralelo 
+            from institucioneducativa_curso ic
+            inner join paralelo_tipo pt on (ic.paralelo_tipo_id = pt.id)
+            where ic.institucioneducativa_id = $sie and ic.nivel_tipo_id =$levelId and grado_tipo_id = $gradeId and gestion_tipo_id = $year 
+            order by ic.paralelo_tipo_id 
+        ";
+
+        $statement = $em->getConnection()->prepare($query);
+        $statement->execute();
+        $arrParallels = $statement->fetchAll();        
+
+        // dump($arrParallels);die;
+
+        $arrResponse = array(
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrParallels' => $arrParallels,
+            'existParall'         => 1,    ); 
+
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;          
+    }
+
+    public function showStudentsAction(Request $request){
+        
         // get the send values
         $sie = $request->get('sie');
         $institucioneducativa = $request->get('institucioneducativa');
@@ -807,35 +828,96 @@ class TalentoInscriptionController extends Controller
         $levelId = $request->get('levelId');
         $gradeId = $request->get('gradeId');
         $parallelId = $request->get('parallelId');
-        $inscriptionid = $request->get('inscriptionidCla');
         $genderRequest = $request->get('genderRequest');
         $year = $this->session->get('currentyear');
 
-        $habextrAreaId = $request->get('habextrAreaId');
-
         // create db conexion
         $em=$this->getDoctrine()->getManager();
+        $query="
+                select e.carnet_identidad, e.complemento ,e.codigo_rude ,e.paterno ,e.materno ,e.nombre ,e.genero_tipo_id , ei.id as inscriptionId, gt.genero
+                from estudiante e 
+                inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
+                inner join institucioneducativa_curso ic on (ei.institucioneducativa_curso_id=ic.id)
+                inner join genero_tipo gt on (e.genero_tipo_id=gt.id)
+                where ic.nivel_tipo_id =$levelId and ic.grado_tipo_id =$gradeId and ic.gestion_tipo_id =$year and e.genero_tipo_id = $genderRequest and ic.paralelo_tipo_id = '".$parallelId."' and ic.institucioneducativa_id =$sie and  ei.estadomatricula_tipo_id = 4
+        ";
 
-            $query = "select * from habextr_fase_tipo where id = 2";
-            $statement = $em->getConnection()->prepare($query);
-            $statement->execute();
-            $objFase = $statement->fetchAll();   
 
-        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+        $statement = $em->getConnection()->prepare($query);
+        $statement->execute();
+        $arrStudents = $statement->fetchAll();
+        $arrStudents2 = array();
+        foreach ($arrStudents  as $value) {
+            $query = "SELECT * 
+                    FROM eve_estudiante_inscripcion_evento eeie
+                    where 
+                    eeie.eve_categorias_tipo_id = $categorieId and  
+                    eeie.eve_fase_tipo_id = $faseId and  
+                    eeie.eve_modalidades_tipo_id = $modalidadId and  
+                    eeie.estudiante_inscripcion_id = " . $value['inscriptionid'] ;
 
-        $arrEveStudentsClassified = $this->getAllRegisteredInscription($sie,$faseIdddis,$habextrAreaId);
-	
+
+                $statement = $em->getConnection()->prepare($query);
+                $statement->execute();
+                $arrRegStudent = $statement->fetchAll();  
+                if(sizeof(($arrRegStudent))>0){
+                }else{
+                    $arrStudents2[]=$value;
+                }
+             }     
+
         $arrResponse = array(
             'sie'            => $sie,
             'modalidadId'    => $modalidadId,
             'faseId'         => $faseId,
-            'nextfaseId'     => $faseIdddis,
             'categorieId'    => $categorieId,
-            'arrEveStudentsClassified' => $arrEveStudentsClassified,
-            'existStudentClassi'         => 1,    
-            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==1)?0:1
+            'arrStudents' => $arrStudents2,
+            'existStudent'         => 1,    ); 
 
-        ); 
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response;          
+    }
+
+    public function doInscriptionAction(Request $request){
+        // get the send values
+        $sie = $request->get('sie');
+        $institucioneducativa = $request->get('institucioneducativa');
+        $modalidadId = $request->get('modalidadId');
+        $faseId = $request->get('faseId');
+        $categorieId = $request->get('categorieId');
+        $levelId = $request->get('levelId');
+        $gradeId = $request->get('gradeId');
+        $parallelId = $request->get('parallelId');
+        $inscriptionid = $request->get('inscriptionid');
+        $genderRequest = $request->get('genderRequest');
+        $year = $this->session->get('currentyear');
+
+        // create db conexion
+        $em=$this->getDoctrine()->getManager();
+        
+        $objEveStudentInscription = new EveEstudianteInscripcionEvento();
+        $objEveStudentInscription->setFechaRegistro(new \DateTime('now'));
+        $objEveStudentInscription->setEsVigente(1);
+        $objEveStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionid));
+        $objEveStudentInscription->setEveCategoriasTipo($em->getRepository('SieAppWebBundle:EveCategoriasTipo')->find($categorieId));
+        $objEveStudentInscription->setEveFaseTipo($em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseId));
+        $objEveStudentInscription->setEveModalidadesTipo($em->getRepository('SieAppWebBundle:EveModalidadesTipo')->find($modalidadId));
+
+        $em->persist($objEveStudentInscription);
+        $em->flush();
+
+        $arrEveStudents = $this->getAllRegisteredInscription( $categorieId,$faseId,$modalidadId,$sie);
+
+        $arrResponse = array(
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrEveStudents' => $arrEveStudents,
+            'existStudent'         => 1,    ); 
 
 
         $response = new JsonResponse();
@@ -844,6 +926,29 @@ class TalentoInscriptionController extends Controller
         return $response;  
     }
 
+
+
+
+
+
+    public function reportChessInscriptionAction(Request $request, $sie){
+
+        $response = new Response();
+        $gestion = $this->session->get('currentyear');
+        $codigoQR = 'EVEAJE'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$sie;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'eventChees'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_v1_EEA_ue.rptdesign&institucioneducativa_id='.$sie.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }     
+
     public function findStudentAction(Request $request){
         
         // get the vars send        
@@ -851,11 +956,6 @@ class TalentoInscriptionController extends Controller
         $institucioneducativa = $request->get('institucioneducativa');
         $modalidadId = $request->get('modalidadId');
         $faseId = $request->get('faseId');
-        
-        $nextfaseId = $request->get('nextfaseId');
-        $habextrAreaId = $request->get('habextrAreaId');
-        $habextrFaseId = $request->get('habextrFaseId');
-
         $categorieId = $request->get('categorieId');
         // create db conexion
         $em = $this->getDoctrine()->getManager();
@@ -866,7 +966,7 @@ class TalentoInscriptionController extends Controller
         $query = "
                 select
                 e.codigo_rude, e.carnet_identidad ,
-                e.nombre, e.paterno, e.materno, ei.id as studentId, nt.nivel, gt.grado, pt.paralelo, ei.id as estInscId
+                e.nombre, e.paterno, e.materno, ei.id as studentId, nt.nivel, gt.grado, pt.paralelo  
                 from estudiante e 
                 inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
                 inner join institucioneducativa_curso ic on (ei.institucioneducativa_curso_id=ic.id)
@@ -880,28 +980,9 @@ class TalentoInscriptionController extends Controller
         $statement->execute();
         $arrStudents = $statement->fetchAll();
 
-        $existStudent=0;
         if(sizeof($arrStudents)>0 ){
+            $existStudent=1;
             $arrStudents=$arrStudents[0];
-
-            $query = "
-                    select * 
-                    from habextr_estudiante_inscripcion hei 
-                    where hei.estudiante_inscripcion_id = '".$arrStudents['estinscid']."' and hei.habextr_areas_campos_tipo_id = '".$habextrAreaId."' and hei.habextr_fase_tipo_id  = '".$habextrFaseId."'        
-            ";
-
-            $statement = $em->getConnection()->prepare($query);
-            $statement->execute();
-            $arrInscription = $statement->fetchAll();
-            
-
-            if(sizeof($arrInscription)>0){
-                $existStudent=1;
-            }else{
-                $existStudent=0;
-                $arrStudents=array();                
-            }
-          
         }else{
             $existStudent=0;
             $arrStudents=array();
@@ -910,15 +991,12 @@ class TalentoInscriptionController extends Controller
        
 
         $arrResponse = array(
-            'sie'              => $sie,
-            'modalidadId'      => $modalidadId,
-            'faseId'           => $faseId,
-            'categorieId'      => $categorieId,
-            'arrStudents'      => $arrStudents,
-            'existStudentpre'  => $existStudent,   
-            'existStudent'     => $existStudent,   
-            'arrInfoInscriptionTaletno' => $arrInscription[0],   
-             ); 
+            'sie'            => $sie,
+            'modalidadId'    => $modalidadId,
+            'faseId'         => $faseId,
+            'categorieId'    => $categorieId,
+            'arrStudents' => $arrStudents,
+            'existStudent'         => 1,    ); 
 
 
         $response = new JsonResponse();
@@ -927,152 +1005,6 @@ class TalentoInscriptionController extends Controller
         return $response;          
     }
 
-    public function registerClassifiedsaveAction(Request $request){
-
-    	// dump($request);die;
-
-        // get the send values
-        $sie = $request->get('sie');
-        $institucioneducativa = $request->get('institucioneducativa');
-        $modalidadId = $request->get('modalidadId');
-        $levelId = $request->get('levelId');
-        $gradoId = $request->get('gradoId');
-        $year = $this->session->get('currentyear');
-
-		$habextrFaseId = $request->get('habextrFaseId');
-		$habextrAreaId = $request->get('habextrAreaId');
-		$parallelId = $request->get('parallelId');
-		$turnoId = $request->get('turnoId');
-		$levelLabel = $request->get('levelLabel');
-		$gradoLabel = $request->get('gradoLabel');
-		$parallelLabel = $request->get('parallelLabel');
-		$turnoLabel = $request->get('turnoLabel');
-		$areaLabel = $request->get('areaLabel');
-		$ruleYearOld = $request->get('ruleYearOld');
-		$codigoRude = $request->get('codigoRude');
-		$nextfaseId = $request->get('nextfaseId');
-		$updateurllink = $request->get('updateurllink');
-		$habextrId = $request->get('habextrId');
-		$habextrinscId = $request->get('habextrinscId');
-
-        // create db conexion
-        $em=$this->getDoctrine()->getManager();
-
-        $faseIdddis = $nextfaseId;
-
-
-        $objexistInscription = $em->getRepository('SieAppWebBundle:HabextrEstudianteInscripcion')->findOneBy(array(
-            'estudianteInscripcionId' =>$habextrinscId,
-            'habextrFaseTipo' => $nextfaseId,
-            'habextrAreasCamposTipo' =>$habextrAreaId,
-            
-        ));
-
-        $existStudentpre = 1;
-        if(sizeof($objexistInscription)>0){
-            $existStudentpre = 0;
-        }else{
-
-        	$dataExistInscriptionPrev = $em->getRepository('SieAppWebBundle:HabextrEstudianteInscripcion')->find($habextrId);
-        	
-
-	        $CenEstudianteInscripcionObj = new HabextrEstudianteInscripcion();
-	        
-	        $CenEstudianteInscripcionObj->setEstudianteInscripcionId(($habextrinscId));
-	        $CenEstudianteInscripcionObj->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
-	        $CenEstudianteInscripcionObj->setUrldocumento($updateurllink);
-	        $CenEstudianteInscripcionObj->setHabextrFaseTipo($em->getRepository('SieAppWebBundle:HabextrFaseTipo')->find($nextfaseId));
-	        $CenEstudianteInscripcionObj->setHabextrAreasCamposTipo($em->getRepository('SieAppWebBundle:HabextrAreasCamposTipo')->find($habextrAreaId));
-
-	        $CenEstudianteInscripcionObj->setDocadjunto($dataExistInscriptionPrev->getDocadjunto());
-	        $CenEstudianteInscripcionObj->setTitulo(mb_strtoupper($dataExistInscriptionPrev->getTitulo(), 'utf-8'));
-	        $CenEstudianteInscripcionObj->setDescripcion(mb_strtoupper($dataExistInscriptionPrev->getDescripcion() , 'utf-8'));
-
-	        
-	        $CenEstudianteInscripcionObj->setFechaRegistro(new \DateTime('now'));
-
-	        $em->persist($CenEstudianteInscripcionObj);
-	        $em->flush();
-        }
-
-
-        // $arrEveStudentsClassified = $this->getAllRegisteredInscription( $categorieId,$faseIdddis,$modalidadId,$sie);
-        $arrEveStudentsClassified = $this->getAllRegisteredInscription($sie,$nextfaseId,$habextrAreaId);
-// dump($arrEveStudentsClassified);die;
-        $arrResponse = array(
-            'sie'            => $sie,
-            // 'modalidadId'    => $modalidadId,
-            'habextrFaseId'         => $habextrFaseId,
-            'nextfaseId'         => $nextfaseId,
-            // 'categorieId'    => $categorieId,
-            'arrEveStudentsClassified' => $arrEveStudentsClassified,
-            'existStudentpre'         => $existStudentpre,    
-            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==2)?0:1
-        ); 
-
-
-        $response = new JsonResponse();
-        $response->setStatusCode(200);
-        $response->setData($arrResponse);
-        return $response;  
-    }    
-
-
-    public function removeInscriptionCheesNextLevelAction(Request $request){
-
-        // get the send values
-        $sie = $request->get('sie');
-        $institucioneducativa = $request->get('institucioneducativa');
-        $modalidadId = $request->get('modalidadId');
-        $levelId = $request->get('levelId');
-        $gradoId = $request->get('gradoId');
-        $year = $this->session->get('currentyear');
-
-		$habextrFaseId = $request->get('habextrFaseId');
-		$habextrAreaId = $request->get('habextrAreaId');
-		$parallelId = $request->get('parallelId');
-		$turnoId = $request->get('turnoId');
-		$levelLabel = $request->get('levelLabel');
-		$gradoLabel = $request->get('gradoLabel');
-		$parallelLabel = $request->get('parallelLabel');
-		$turnoLabel = $request->get('turnoLabel');
-		$areaLabel = $request->get('areaLabel');
-		$ruleYearOld = $request->get('ruleYearOld');
-		$codigoRude = $request->get('codigoRude');
-		$nextfaseId = $request->get('nextfaseId');		
-		$remoinscriptionid = $request->get('remoinscriptionid');
-        $year = $this->session->get('currentyear');
-
-        // create db conexion
-        $em=$this->getDoctrine()->getManager();
-        
-        $existRemoveStudent=0;
-        $objEveStudentInscription = $em->getRepository('SieAppWebBundle:HabextrEstudianteInscripcion')->find($remoinscriptionid);
-        
-        if(is_object($objEveStudentInscription) ){
-            $em->remove($objEveStudentInscription);
-            // $em->persist($objEveStudentInscription);
-            $em->flush();
-            $existRemoveStudent=1;
-        }
-
-		$arrEveStudentsClassified = $this->getAllRegisteredInscription($sie,$nextfaseId,$habextrAreaId);
-        
-        $arrResponse = array(
-            'sie'            => $sie,
-            'habextrFaseId'         => $habextrFaseId,
-            'nextfaseId'         => $nextfaseId,
-            'arrEveStudentsClassified' => $arrEveStudentsClassified,
-            'existRemoveStudent'       => $existRemoveStudent,    
-            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==1)?0:1            
-
-        ); 
-
-
-        $response = new JsonResponse();
-        $response->setStatusCode(200);
-        $response->setData($arrResponse);
-        return $response;  
-    }    
+*/
 
 }
