@@ -366,11 +366,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
             }
             if(isset($form['folio'])){                
                 $estudiante->setFolio($form['folio']);
+               $cedulaTipo = (isset($form['oficialia']) && ($form['oficialia']!='') )?1:2;
+               $estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
             }
 
-           $cedulaTipo = (isset($form['oficialia']) && ($form['oficialia']!='') )?1:2;
-
-           $estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
 
         // $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneBy(array('id' => $form['sexo'])));
            $em->persist($estudiante);
