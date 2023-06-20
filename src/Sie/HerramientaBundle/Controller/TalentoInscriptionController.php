@@ -1008,7 +1008,7 @@ class TalentoInscriptionController extends Controller
             // 'categorieId'    => $categorieId,
             'arrEveStudentsClassified' => $arrEveStudentsClassified,
             'existStudentpre'         => $existStudentpre,    
-            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==2)?0:1
+            'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==1)?0:1
         ); 
 
 
