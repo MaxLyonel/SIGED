@@ -178,7 +178,7 @@ class AdmInscripTalentoController extends Controller
         $stmt->execute($params);
         $distritoInfo=$stmt->fetchAll();   
         
-        $urlreportedepto = $this->generateUrl('cheesevent_reportDepto', array('departamento_id'=>$departamento));
+        $urlreportedepto = $this->generateUrl('adminscriptalento_reportDepto', array('departamento_id'=>$departamento));
         $urlreportedistrito = $this->generateUrl('cheesevent_reportDistrito', array('lugar_tipo_id'=>$distritoInfo[0]['id']));
         $urlreportedistritostudent = $this->generateUrl('cheesevent_reportDistritoStudent', array('distrito_id'=>$distrito));
         // end get data to report
@@ -219,7 +219,7 @@ class AdmInscripTalentoController extends Controller
 
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reportDeptoeventChees'.$departamento_id.'_'.$this->session->get('currentyear'). '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_registro_ajedrez_depto_v1_EEA_ue.rptdesign&departamento_id='.$departamento_id.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_avance_habilidades_extraordinarias_2023_v1_EEA_depto.rptdesign&cod_dep='.$departamento_id.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
