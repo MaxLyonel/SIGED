@@ -34,7 +34,7 @@ class TalentoInscriptionController extends Controller
     public $limitDay;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '20-06-2023';
+        $this->limitDay = '19-06-2023';
     }       
 
     public function indexAction(){
@@ -749,6 +749,7 @@ class TalentoInscriptionController extends Controller
         //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'instalento'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_avance_habilidades_extraordinarias_2023_v1_EEA.rptdesign&cod_ue='.$sie.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
