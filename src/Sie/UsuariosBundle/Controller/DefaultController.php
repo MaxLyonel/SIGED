@@ -611,7 +611,18 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $data = $request->get('sie_usuarios_form');
-
+        $rolasignar = $data['rolTipo'][0];
+        $idrolasig = $em->getRepository('SieAppWebBundle:RolRolesAsignacion')->getFindRolesByUsername($this->session->get('roluser'),$rolasignar);
+        // dump(count($idsrol));
+        // dump($this->session->get('roluser'));
+        // dump($this->session->get('rol_ids'));
+        // dump($rolasignar);
+        // dump($data);
+        // die;
+        if (count($idrolasig) == 0){
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'No puede asignar ese rol'));
+        }
         $response = new JsonResponse();
         //        print_r($data['maestroinsid']);
         //        die('g');
@@ -777,7 +788,7 @@ class DefaultController extends Controller
     }
     
     public function userroleditAction($usuarioid) {
-        $arrRolAllow = array(8,31);
+        $arrRolAllow = array(8,31,7);
         
         if(!in_array($this->session->get('roluser'), $arrRolAllow)){
             die('Lo sentimos... temporalmente fuera de servicio...');
