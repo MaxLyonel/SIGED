@@ -460,15 +460,15 @@ class CensoInscriptionController extends Controller
             }
         }
 
-        if($swparent){
-              $data = array(
-                  'operativoTipo' => 12,
-                  'gestion' => $this->session->get('currentyear'),
-                  'id' => $sie,                  
-                  'consolidacionValor' => json_encode($apoderadoInput)
-              );   
-              $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
-        }
+        // if($swparent){
+        //       $data = array(
+        //           'operativoTipo' => 12,
+        //           'gestion' => $this->session->get('currentyear'),
+        //           'id' => $sie,                  
+        //           'consolidacionValor' => json_encode($apoderadoInput)
+        //       );   
+        //       $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
+        // }
 
         $arrResponse = array(
             'apoderadoOutput' => $apoderadoOutput,
