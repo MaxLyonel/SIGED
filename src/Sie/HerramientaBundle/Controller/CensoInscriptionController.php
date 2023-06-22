@@ -412,6 +412,8 @@ class CensoInscriptionController extends Controller
 
         $dataStudent = $request->get('dataStudent');
         $apoderadoInput = $request->get('apoderado');
+        $sie = $request->get('sie');
+
         $em = $this->getDoctrine()->getManager();
 
         $query="
@@ -456,6 +458,16 @@ class CensoInscriptionController extends Controller
                     //$apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
                 next($arrDataStudentsFull);
             }
+        }
+
+        if($swparent){
+              $data = array(
+                  'operativoTipo' => 12,
+                  'gestion' => $this->session->get('currentyear'),
+                  'id' => $sie,                  
+                  'consolidacionValor' => json_encode($apoderadoInput)
+              );   
+              $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
         }
 
         $arrResponse = array(
