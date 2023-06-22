@@ -1701,6 +1701,10 @@ class Funciones {
         $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
         $dataClient = json_encode(array('userAgent'=>$_SERVER['HTTP_USER_AGENT'], 'ip'=>$_SERVER['HTTP_HOST']));
         $objDownloadFilenewOpe->setClienteDescripcion($dataClient);
+        if(isset($data['consolidacionValor'])){
+            $objDownloadFilenewOpe->setDescripcion($data['consolidacionValor']);
+        }
+
         $this->em->persist($objDownloadFilenewOpe);
         $this->em->flush();
 
