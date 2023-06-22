@@ -460,15 +460,15 @@ class CensoInscriptionController extends Controller
             }
         }
 
-        // if($swparent){
-        //       $data = array(
-        //           'operativoTipo' => 12,
-        //           'gestion' => $this->session->get('currentyear'),
-        //           'id' => $sie,                  
-        //           'consolidacionValor' => json_encode($apoderadoInput)
-        //       );   
-        //       $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
-        // }
+        if($swparent){
+              $data = array(
+                  'operativoTipo' => 12,
+                  'gestion' => $this->session->get('currentyear'),
+                  'id' => $sie,                  
+                  'consolidacionValor' => json_encode($apoderadoInput)
+              );   
+              $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
+        }
 
         $arrResponse = array(
             'apoderadoOutput' => $apoderadoOutput,
@@ -580,6 +580,7 @@ class CensoInscriptionController extends Controller
           $objDownloadFilenewOpe = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
             'institucioneducativa'=>$sie,
             'institucioneducativaOperativoLogTipo'=>12,
+            'consolidacionValor'=>1,
             'gestionTipoId'=>$this->session->get('currentyear')
           ));
 
@@ -635,6 +636,7 @@ class CensoInscriptionController extends Controller
           $objDownloadFilenewOpe->setDescripcion('CENSO INE');
           $objDownloadFilenewOpe->setEsexitoso('t');
           $objDownloadFilenewOpe->setEsonline('t');
+          $objDownloadFilenewOpe->setConsolidacionValor(1);
           $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
           $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
           $objDownloadFilenewOpe->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
