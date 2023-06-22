@@ -346,7 +346,7 @@
                         </li>
                     {% endif %}
 
-                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
+                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 %}
 
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -374,7 +374,7 @@
                             {% endif %}
                         </ul>
                     </li>#}
-                    {% else %}
+                    {# {% else %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
@@ -382,13 +382,13 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            <li><a href="{{ path('info_especial_index') }}">Info. Centro Especial</a></li>
+                            <li><a href="{{ path('info_especial_index') }}">Info. Centro Especial</a></li> #}
                             {# Seguimiento de operativo de salud #}
-                            {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                            {# {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
                                 <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li>
                             {% endif %}
                         </ul>
-                    </li>
+                    </li> #}
 
                     {% endif %}
 
@@ -429,8 +429,6 @@
                             </ul>
                     </li>
                             
-                    {% endif %}
-
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
@@ -444,6 +442,7 @@
                             <li><a href="{{ path('especial_chagestatusstudent_index')}}">Cambio de Estado</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                     {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -454,7 +453,7 @@
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
                     </li> #}
-                    {% if app.session.get('roluser') != 20 %}
+                    {# {% if app.session.get('roluser') != 20 %} #}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -465,12 +464,12 @@
                                 {# {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
                                     <li><a href="{{ path('herramienta_especial_habilitar_gestion_search')}}">Habilitar gestión</a></li>
                                 {% endif %} #}
-                                {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 %}
+                                {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                                     <li><a href="{{ path('herramienta_especial_infoconsolidation_gestion_index')}}">Seguimiento operativos</a></li>
                                 {% endif %}
                             </ul>
                         </li>
-                    {% endif %}
+                    {# {% endif %} #}
                     <li class="">
                         <a href="{{path('wf_tramite_index')}}">
                             <span class="icon"><i class="fa fa-list-alt"></i></span>
