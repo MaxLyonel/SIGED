@@ -393,6 +393,10 @@ class InfoCentroController extends Controller {
         $consol = $this->get('sie_app_web.funciones')->reporteConsol($gestionactual, $roluser, $roluserlugarid, $instipoid);
     
         switch ($roluser) {
+            case 20:
+                $ues = $this->get('sie_app_web.funciones')->estadisticaConsolNal($gestionactual, $instipoid);
+                break;
+
             case 8:
                 $ues = $this->get('sie_app_web.funciones')->estadisticaConsolNal($gestionactual, $instipoid);
                 break;

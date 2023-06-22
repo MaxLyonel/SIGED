@@ -325,6 +325,10 @@ class Funciones {
                 $where = "dt.id = '".$lugar->getCodigo()."'";
                 break;
 
+            case '20':
+                $where = '1 = 1';
+                break;
+                
             default:
                 $where = '1 = 0';
                 break;
