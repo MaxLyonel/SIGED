@@ -148,7 +148,7 @@ class BusquedasController extends Controller
                         $stmt->execute();
                         $po=$stmt->fetchAll();
                     if (count($po) >= 1){
-                        $this->session->getFlashBag()->add('error', 'Proceso detenido. No tiene tuicion sobre estos datos de esa persona.');
+                        $this->session->getFlashBag()->add('error', 'Proceso detenido. No tiene tuicion sobre estos datos de esa persona. ');
                         return $this->redirectToRoute('sie_usuarios_homepage');
                     }
                  } 
