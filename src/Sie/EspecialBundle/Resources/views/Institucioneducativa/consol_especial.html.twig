@@ -125,7 +125,7 @@
 				            <thead>
 				                <tr>
 				                	<th>#</th>
-				                	{% if app.session.get('roluser') == 8 %}
+				                	{% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
 				                    	<th>Departamento</th>
 				                    {% elseif app.session.get('roluser') == 7 %}
 				                    	<th>Distrito</th>
@@ -136,7 +136,7 @@
 				            <tfoot>
 				                <tr>
 				                	<th>#</th>
-				                    {% if app.session.get('roluser') == 8 %}
+				                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
 				                    	<th>Departamento</th>
 				                    {% elseif app.session.get('roluser') == 7 %}
 				                    	<th>Distrito</th>
@@ -150,7 +150,7 @@
 				                	{% set cant = cant + registro.total %}
 				                	<tr>
 				                		<td>{{loop.index}}</td>
-				                		{% if app.session.get('roluser') == 8 %}
+				                		{% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
 				                			<td>{{registro.departamento}}</td>
 				                		{% elseif app.session.get('roluser') == 7 %}
 				                			<td>{{registro.distrito}}</td>
