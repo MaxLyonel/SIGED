@@ -432,6 +432,8 @@ class CensoInscriptionController extends Controller
     
         $apoderadoOutput = array();
         $swparent = 1;
+
+        $apoderadoInput['fecNacimiento'] = str_replace('/', '-', $apoderadoInput['fecNacimiento']);
         $apoderadoInput = array_map("strtoupper", $apoderadoInput);
         
         if(sizeof($arrDataStudentsFull)>0){
