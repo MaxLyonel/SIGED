@@ -164,6 +164,13 @@ caption {
 									</select>
 								</div>
 
+                                <div class="form-group col-md-3 col-sm-6 ">
+                                    <select class="form-control" name="fase" id="fase" v-model="DBRegisterData.faseSelected">
+                                        <option v-for="(fase, index) in arrFase"  :key="fase.id" :value="fase.id" v-text="fase.fase"></option>
+
+                                    </select>
+                                </div>
+
 								<div class="form-group col-md-3 col-sm-6 ">
 									<select  class="form-control" v-model="DBRegisterData.deptoSelected" name="departamento" id="departamento"  required="" autocomplete="off" @change="getDistritos(DBRegisterData.deptoSelected)">
 										<option v-for="(depto, index) in DBdepartamentos"  :key="depto.codigo" :value="depto.codigo" v-text="depto.depto"></option>
@@ -225,8 +232,8 @@ caption {
 						 	<tr>
 						 	 	
 								<td>
-								{% if app.session.get('roluser') in [7,8] %}
-									<a v-bind:href="urlreportedepto" ><b> <i class="fa fa-file-pdf-o fa-2x"></i> Reporte Nivel Departamento</b></a>
+								{% if app.session.get('roluser') in [7,8,10] %}
+									<a v-bind:href="urlreportedepto" ><b> <i class="fa fa-file-pdf-o fa-2x"></i> Reporte Inscritos</b></a>
 								{% endif %}		
 								</td>
                                 {# 
@@ -341,6 +348,12 @@ caption {
 				urlreportedistrito:'',
                 urlreportedistritostudent:'',
 
+                arrFase:[
+                    {'id':1,'fase':'Unidad Educativas'},
+                    {'id':2,'fase':'Distrital'},
+                    {'id':3,'fase':'Departamental'},
+                ],
+
 			    /*options: [
 			      { text: 'One', value: 'A' },
 			      { text: 'Two', value: 'B' },
@@ -425,7 +438,7 @@ caption {
               	this.buscando = true;
               	this.answerResponse = false;
               	
-                    axios.post(Routing.generate('adminscriptalento_getAllUE', {sendDepto:this.DBRegisterData.deptoSelected, sendDistrito:this.DBRegisterData.distritoSelected, gestion:this.gestion}))
+                    axios.post(Routing.generate('adminscriptalento_getAllUE', {sendDepto:this.DBRegisterData.deptoSelected, sendDistrito:this.DBRegisterData.distritoSelected, sendFase:this.DBRegisterData.faseSelected, gestion:this.gestion}))
                         .then(response => {
                             this.DBUEs = response.data.arrUEs;
                             this.answerResponse = response.data.answerResponse;
