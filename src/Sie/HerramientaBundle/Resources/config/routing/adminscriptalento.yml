@@ -45,7 +45,7 @@ adminscriptalento_restartEvent:
          expose: true
 
 adminscriptalento_reportDepto:
-    path:     /reportDepto/{departamento_id}
+    path:     /reportDepto/{departamento_id}/{fase_id}
     defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:reportDepto }
     options:
          expose: true

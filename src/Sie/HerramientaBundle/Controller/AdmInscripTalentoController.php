@@ -146,11 +146,12 @@ class AdmInscripTalentoController extends Controller
 
     public function getAllUEAction(Request $request){
         $response = new JsonResponse();
-        
+
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
         $departamento = $request->get('sendDepto');
+        $faseId = $request->get('sendFase');
         $distrito = $request->get('sendDistrito');
         //$ue = $form['ue'];
         $gestion = $request->get('gestion');
@@ -178,7 +179,7 @@ class AdmInscripTalentoController extends Controller
         $stmt->execute($params);
         $distritoInfo=$stmt->fetchAll();   
         
-        $urlreportedepto = $this->generateUrl('adminscriptalento_reportDepto', array('departamento_id'=>$departamento));
+        $urlreportedepto = $this->generateUrl('adminscriptalento_reportDepto', array('departamento_id'=>$departamento, 'fase_id'=>$faseId));
         $urlreportedistrito = $this->generateUrl('cheesevent_reportDistrito', array('lugar_tipo_id'=>$distritoInfo[0]['id']));
         $urlreportedistritostudent = $this->generateUrl('cheesevent_reportDistritoStudent', array('distrito_id'=>$distrito));
         // end get data to report
@@ -209,17 +210,17 @@ class AdmInscripTalentoController extends Controller
 
     }
 
-    public function reportDeptoAction(Request $request, $departamento_id){
+    public function reportDeptoAction(Request $request, $departamento_id, $fase_id){
 
         $response = new Response();
         $gestion = $this->session->get('currentyear');
         
-
         $data = $this->session->get('userId').'|'.$gestion.'|'.$departamento_id;
 
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reportDeptoeventChees'.$departamento_id.'_'.$this->session->get('currentyear'). '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_avance_habilidades_extraordinarias_2023_v1_EEA_depto.rptdesign&cod_dep='.$departamento_id.'&&__format=pdf&'));
+
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_lst_avance_habilidades_extraordinarias_2023_v1_EEA_depto.rptdesign&cod_dep='.$departamento_id.'&fase_tipo_id='.$fase_id.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

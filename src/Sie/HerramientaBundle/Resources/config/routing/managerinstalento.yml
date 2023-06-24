@@ -1,0 +1,113 @@
+managerinstalento_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:index }
+
+managerinstalento_findUEData:
+    path:     /findUEData
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:findUEData }
+    options:
+         expose: true
+
+managerinstalento_getAllInfoUE:
+    path:     /getAllInfoUE
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:getAllInfoUE }
+    options:
+         expose: true
+
+managerinstalento_getGrado:
+    path:     /getGrado
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:getGrado }
+    options:
+         expose: true
+
+managerinstalento_getParallel:
+    path:     /getParallel
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:getParallel }
+    options:
+         expose: true
+
+managerinstalento_getTurno:
+    path:     /getTurno
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:getTurno }
+    options:
+         expose: true
+
+managerinstalento_dataSelected:
+    path:     /dataSelected
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:dataSelected }
+    options:
+         expose: true
+
+managerinstalento_validateTutor:
+    path:     /validateTutor
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:validateTutor }
+    options:
+         expose: true
+
+managerinstalento_saveStudent:
+    path:     /saveStudent
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:saveStudent }
+    options:
+         expose: true
+
+         
+managerinstalento_closeEventGral:
+    path:     /closeEventGral
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:closeEventGral }
+    options:
+         expose: true
+
+         
+managerinstalento_classifiedRecord:
+    path:     /classifiedRecord
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:classifiedRecord }
+    options:
+         expose: true
+         
+managerinstalento_registerClassifiedsave:
+    path:     /registerClassifiedsave
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:registerClassifiedsave }
+    options:
+         expose: true
+
+managerinstalento_removeInscriptionCheesNextLevel:
+    path:     /removeInscriptionCheesNextLevel
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:removeInscriptionCheesNextLevel }
+    options:
+         expose: true
+
+
+         
+managerinstalento_findStudent:
+    path:     /findStudent
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:findStudent }
+    options:
+         expose: true
+         
+managerinstalento_showStudents:
+    path:     /showStudents
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:showStudents }
+    options:
+         expose: true
+         
+managerinstalento_getParalelos:
+    path:     /getParalelos
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:getParalelos }
+    options:
+         expose: true
+         
+managerinstalento_doInscription:
+    path:     /doInscription
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:doInscription }
+    options:
+         expose: true
+         
+managerinstalento_removeInscriptionCenso:
+    path:     /removeInscriptionCenso
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:removeInscriptionCenso }
+    options:
+         expose: true
+
+managerinstalento_reportInscription:
+    path:     /reportInscription/{sie}
+    defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:reportInscription }
