@@ -456,7 +456,7 @@
 									<table class="table table-bordered">
 									  <thead>
 									  	<tr>
-									  		<th colspan="3">${infoUE.faseLabel} - ${infoUE.areaLabel} - Edad: ${infoUE.ruleYearOld} </th>
+									  		<th colspan="3">${infoUE.faseLabelNext} - ${infoUE.areaLabel} - Edad: ${infoUE.ruleYearOld} </th>
 									  		<th >
 												{# <a href="#" v-on:click="" type="button" class="btn btn-success" v-on:click="classifiedRecord(infoUE)" >Registro de clasificado</a> #}
 												{# <a href="#" @click="registerClassified(infoUE)" class="btn btn-success">Registro de clasificado</a> #}
@@ -866,6 +866,7 @@
 								this.infoUE.turnoLabel = response.data.turnoLabel;
 								
 								this.infoUE.faseLabel = response.data.faseLabel;
+								this.infoUE.faseLabelNext = response.data.faseLabelNext;
 								this.infoUE.areaLabel = response.data.areaLabel;
 								this.infoUE.ruleYearOld = response.data.ruleYearOld;
 
