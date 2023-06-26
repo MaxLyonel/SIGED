@@ -429,7 +429,8 @@
                                 <li><a href="{{ path('newinscriptionEspecial_index')}}">Estudiantes de Especial </a></li>
                             </ul>
                     </li>
-                            
+                    {% endif %}
+                    {% if app.session.get('roluser') in [7,8,9,10]  %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
@@ -440,7 +441,9 @@
                             <li><a href="{{ path('estudiante_index') }}"> Buscar Estudiante</a></li>
                             <li><a href="{{ path('history_new_inscription_index') }}"> Historial de Inscripción</a></li>
                             <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
+                            {% if app.session.get('roluser') in [7,8,10]  %}
                             <li><a href="{{ path('especial_chagestatusstudent_index')}}">Cambio de Estado</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                     {% endif %}

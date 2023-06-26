@@ -192,4 +192,32 @@ class CamaraUbicacion
     {
         return $this->camaraUbicacionTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\CamaraDotacionTipo
+     */
+    private $dotacionTipo;
+
+
+    /**
+     * Set dotacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\CamaraDotacionTipo $dotacionTipo
+     * @return CamaraUbicacion
+     */
+    public function setDotacionTipo(\Sie\AppWebBundle\Entity\CamaraDotacionTipo $dotacionTipo = null)
+    {
+        $this->dotacionTipo = $dotacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get dotacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\CamaraDotacionTipo 
+     */
+    public function getDotacionTipo()
+    {
+        return $this->dotacionTipo;
+    }
 }
