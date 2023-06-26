@@ -1,0 +1,71 @@
+Sie\AppWebBundle\Entity\CamaraUbicacion:
+    type: entity
+    table: camara_ubicacion
+    indexes:
+        IDX_C49D03C2F70DC692:
+            columns:
+                - camara_institucioneducativa_id
+        IDX_C49D03C2E0134DDF:
+            columns:
+                - camara_estado_tipo_id
+        IDX_C49D03C269699E40:
+            columns:
+                - camara_ubicacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ubicacionOtro:
+            type: string
+            nullable: true
+            length: 170
+            fixed: false
+            comment: ''
+            column: ubicacion_otro
+        marca:
+            type: string
+            nullable: true
+            length: 170
+            fixed: false
+            comment: ''
+        modelo:
+            type: string
+            nullable: true
+            length: 170
+            fixed: false
+            comment: ''
+    manyToOne:
+        camaraInstitucioneducativa:
+            targetEntity: CamaraInstitucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                camara_institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        camaraEstadoTipo:
+            targetEntity: CamaraEstadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                camara_estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        camaraUbicacionTipo:
+            targetEntity: CamaraUbicacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                camara_ubicacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

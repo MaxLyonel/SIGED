@@ -636,7 +636,8 @@ class ManagerInsTalentoController extends Controller{
             'gestionTipoId'=>$this->session->get('currentyear')
           ));
 
-        return $objDownloadFilenewOpe;        
+        // return $objDownloadFilenewOpe;  
+        return 0;      
     }   
 
 
