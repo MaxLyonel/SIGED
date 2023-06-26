@@ -11,6 +11,9 @@ Sie\AppWebBundle\Entity\CamaraUbicacion:
         IDX_C49D03C269699E40:
             columns:
                 - camara_ubicacion_tipo_id
+        IDX_C49D03C24F8E7058:
+            columns:
+                - dotacion_tipo_id
     id:
         id:
             type: integer
@@ -66,6 +69,15 @@ Sie\AppWebBundle\Entity\CamaraUbicacion:
             inversedBy: null
             joinColumns:
                 camara_ubicacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        dotacionTipo:
+            targetEntity: CamaraDotacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                dotacion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
