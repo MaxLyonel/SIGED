@@ -276,4 +276,32 @@ class CamaraInstitucioneducativa
     {
         return $this->grabacionTipo;
     }
+    /**
+     * @var string
+     */
+    private $administrado;
+
+
+    /**
+     * Set administrado
+     *
+     * @param string $administrado
+     * @return CamaraInstitucioneducativa
+     */
+    public function setAdministrado($administrado)
+    {
+        $this->administrado = $administrado;
+    
+        return $this;
+    }
+
+    /**
+     * Get administrado
+     *
+     * @return string 
+     */
+    public function getAdministrado()
+    {
+        return $this->administrado;
+    }
 }
