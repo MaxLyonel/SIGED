@@ -111,12 +111,12 @@
                             <div class="form-group" id="divFinalizar" style="display:none">
                                 <label>¿Qué desea hacer con el trámite?</label>
                                 <div class="radio">
-                                    {# <label class="radio-inline">
-                                        <input type="radio" checked="checked" name="finalizar" value="NO" required id="devolver">
-                                        Devolver trámite a la Unidad Educativa
-                                    </label> #}
                                     <label class="radio-inline">
-                                        <input type="radio" name="finalizar" value="SI" required id="finalizar">
+                                        <input type="radio" name="finalizar" value="NO" required id="devolver" style="display:none">
+                                        {# Devolver trámite a la Unidad Educativa #}
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" checked="checked" name="finalizar" value="SI" required id="finalizar">
                                         Finalizar y cerrar trámite
                                     </label>
                                 </div>
