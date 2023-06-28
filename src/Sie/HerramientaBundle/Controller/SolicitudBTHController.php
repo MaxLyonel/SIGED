@@ -188,7 +188,7 @@ class SolicitudBTHController extends Controller {
         $datosForm = $this->datosFormulario($institucion_id, $gestion_sucursal);
         
         /**********teporal para regulariza ues 2022 ***/
-        $ue = array(80720196);
+        $ue = array(60640044,60900078,70630066,72210148,80610055,80620082,80650051,80660088,80660108,81981652);
         if (in_array($institucion_id, $ue)){
             $verificarinicioTramite = 0; 
         }else{
