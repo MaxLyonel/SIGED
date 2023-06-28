@@ -398,17 +398,17 @@ class CursoAlternativaController extends Controller {
         //get the send values
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-//          dump($aInfoUeducativa['ueducativaInfoId']['nivelId']);die;
+
         $iecid = $aInfoUeducativa['ueducativaInfoId']['iecId'];
-        //dump($iecid);die;        
+        
         $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecid);
         $response = new JsonResponse();
-        //dump(count($iec)); die;        
-        
-        //dump(count($iecpercount));die;
+
         $em->getConnection()->beginTransaction();
         try {
+
             $iecpercount = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBySuperiorInstitucioneducativaPeriodo($iec->getSuperiorInstitucioneducativaPeriodo()->getId());    
+            
             $dupcursover = $this->verificarcursoduplicado($aInfoUeducativa, $aInfoUeducativa['ueducativaInfoId']['iecId']);
             if ($dupcursover != '-1'){
                 $iecdup = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($dupcursover);
@@ -444,12 +444,12 @@ class CursoAlternativaController extends Controller {
                         else{
                             if (count($smp) > 0){   
                                 $em->getConnection()->rollback();
-                                return $response->setData(array('mensaje'=>'No se puede eliminar el curso, la especialidad aun tiene registro de módulos.'));
+                                // return $response->setData(array('mensaje'=>'No se puede eliminar el curso, la especialidad aun tiene registro de módulos.'));
                             }
                         }                
         //                dump($smp); die;                
-                        $siep = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($iec->getSuperiorInstitucioneducativaPeriodo());
-                        $sieca = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($siep->getSuperiorInstitucioneducativaAcreditacion());    
+                        // $siep = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($iec->getSuperiorInstitucioneducativaPeriodo());
+                        // $sieca = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($siep->getSuperiorInstitucioneducativaAcreditacion());    
                         
                         //BUSCANDO E ELIMINANDO CURSO OFERTA
                         $iecofercurdup = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByInsitucioneducativaCurso($iecid);
@@ -470,9 +470,11 @@ class CursoAlternativaController extends Controller {
                         
                         //BORRA EL CURSO                        
                         $em->remove($iec);
-                        $em->remove($siep);
-                        $em->remove($sieca);
+                        // $em->remove($siep);
+                        // $em->remove($sieca);
+
                         $em->flush();
+
                     }
 
                     if (count($iecpercount) > 1 ){//SOLO BORRA EL CURSO                        
@@ -496,7 +498,7 @@ class CursoAlternativaController extends Controller {
                         $em->remove($iec);
                         $em->flush();
                     }
-            }            
+            }
             $em->getConnection()->commit();
             return $response->setData(array('mensaje'=>'¡Proceso realizado exitosamente!'));
         } catch (Exception $ex) {                       
