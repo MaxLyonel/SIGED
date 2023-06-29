@@ -397,23 +397,25 @@ class CursoAlternativaController extends Controller {
         $db = $em->getConnection();
         //get the send values
         $infoUe = $request->get('infoUe');
+        
         $aInfoUeducativa = unserialize($infoUe);
-
+        
         $iecid = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         
         $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecid);
         $response = new JsonResponse();
-
+        
         $em->getConnection()->beginTransaction();
         try {
 
             $iecpercount = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBySuperiorInstitucioneducativaPeriodo($iec->getSuperiorInstitucioneducativaPeriodo()->getId());    
-            
             $dupcursover = $this->verificarcursoduplicado($aInfoUeducativa, $aInfoUeducativa['ueducativaInfoId']['iecId']);
+            
             if ($dupcursover != '-1'){
                 $iecdup = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($dupcursover);
                 //BUSCANDO E ELIMINANDO CURSO OFERTA
                 $iecofercurdup = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByInsitucioneducativaCurso($dupcursover);
+                
                 if (count($iecofercurdup) > 0){ 
                     foreach ($iecofercurdup as $iecofercurduprow) {
                         //BUSCANDO E ELIMINANDO CURSO OFERTA MAESTRO
@@ -512,9 +514,9 @@ class CursoAlternativaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();            
-        $query = " select h.id as idcurso, f.gestion_tipo_id,f.periodo_tipo_id,e.institucioneducativa_id, stt.turno_superior, a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion
+        $query = " select h.id as idcurso, f.gestion_tipo_id,f.periodo_tipo_id,e.institucioneducativa_id, q.turno, a.codigo as nivel_id, 
+                    a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion
                     ,pt.id as paralelo_id, pt.paralelo
-                    --,j.codigo_rude, j.fecha_nacimiento,date_part('year',age(j.fecha_nacimiento)) as edad ,j.genero_tipo_id
                     from superior_facultad_area_tipo a  
                         inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
                             inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
@@ -525,28 +527,23 @@ class CursoAlternativaController extends Controller {
                                             inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
                                                 inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
                                     inner join paralelo_tipo pt on pt.id = h.paralelo_tipo_id
-                                        --inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
-                                            --inner join estudiante j on i.estudiante_id=j.id
                                                                         inner join superior_turno_tipo z on h.turno_tipo_id=z.id 
                                                 inner join paralelo_tipo p on h.paralelo_tipo_id=p.id
                                                     inner join turno_tipo q on h.turno_tipo_id=q.id
-                    ------
                     where f.gestion_tipo_id in (".$this->session->get('ie_gestion').") and f.periodo_tipo_id in ('".$this->session->get('ie_per_cod')."')
                     and h.institucioneducativa_id = '".$this->session->get('ie_id')."'
                     and a.codigo  = ".$aInfoUeducativa['ueducativaInfoId']['nivelId']."
                     and b.codigo  = ".$aInfoUeducativa['ueducativaInfoId']['cicloId']."
                     and d.codigo  = ".$aInfoUeducativa['ueducativaInfoId']['gradoId']."
-                    and stt.turno_superior = '".$aInfoUeducativa['ueducativaInfo']['turno']."'
+                    and q.turno = '".$aInfoUeducativa['ueducativaInfo']['turno']."'
                     and pt.id = '".$aInfoUeducativa['ueducativaInfoId']['paraleloId']."'
                     and f.sucursal_tipo_id = ".$this->session->get('ie_subcea')."
-                    ------
-                    group by h.id, f.gestion_tipo_id,f.periodo_tipo_id,e.institucioneducativa_id,stt.turno_superior,a.codigo, a.facultad_area,b.codigo,b.especialidad,d.codigo,d.acreditacion,pt.id,pt.paralelo";
-//        print_r($query); die;
+                    group by h.id, f.gestion_tipo_id,f.periodo_tipo_id,e.institucioneducativa_id,q.turno,a.codigo, a.facultad_area,b.codigo,b.especialidad,d.codigo,d.acreditacion,pt.id,pt.paralelo";
+// print_r($query); die;
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        //dump($po); die;     
         if (count($po) == 0){
             return '-1';
         }
