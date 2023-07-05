@@ -85,9 +85,9 @@ class ManagerInsTalentoController extends Controller{
         // start this secction validate the last day to report the inscription INFO
         $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);          
         // end this secction validate the last day to report the inscription INFO                     
-
+        $userFaseId = ($this->session->get('roluser')==7)?2:3;
         // get fase and Area
-        $query="select * from habextr_fase_tipo where id = 3";
+        $query="select * from habextr_fase_tipo where id = ".$userFaseId;
         $statement = $em->getConnection()->prepare($query);
         $statement->execute();
         $arrFases = $statement->fetchAll();
@@ -791,15 +791,16 @@ class ManagerInsTalentoController extends Controller{
 
         $habextrAreaId = $request->get('habextrAreaId');
 
+        $userFaseId = ($this->session->get('roluser')==7)?2:3;
         // create db conexion
         $em=$this->getDoctrine()->getManager();
 
-            $query = "select * from habextr_fase_tipo where id = 3";
+            $query = "select * from habextr_fase_tipo where id = ".$userFaseId;
             $statement = $em->getConnection()->prepare($query);
             $statement->execute();
             $objFase = $statement->fetchAll();   
 
-        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:4;
+        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:$userFaseId;
 
         $arrEveStudentsClassified = $this->getAllRegisteredInscription($sie,$faseIdddis,$habextrAreaId);
 	
