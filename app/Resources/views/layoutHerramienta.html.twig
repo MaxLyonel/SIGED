@@ -710,7 +710,7 @@
                                 {% if app.session.get('roluser') in [7,8,10,20] %}
                                     <li><a href="{{ path('adminscriptalento_index')}}">Seguimiento 2do Encuentro</a></li>
                                 {% endif %}     
-                                {% if app.session.get('roluser') in [7,8] %}
+                                {% if app.session.get('personaId') in [95011904,23520150] %}
                                     <li><a href="{{ path('managerinstalento_index')}}">Registro Departamento</a></li>
                                 {% endif %}                                
                             </ul>

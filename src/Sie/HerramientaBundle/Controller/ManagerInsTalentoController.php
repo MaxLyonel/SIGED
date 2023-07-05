@@ -87,7 +87,7 @@ class ManagerInsTalentoController extends Controller{
         // end this secction validate the last day to report the inscription INFO                     
 
         // get fase and Area
-        $query="select * from habextr_fase_tipo where id = 2";
+        $query="select * from habextr_fase_tipo where id = 3";
         $statement = $em->getConnection()->prepare($query);
         $statement->execute();
         $arrFases = $statement->fetchAll();
@@ -794,12 +794,12 @@ class ManagerInsTalentoController extends Controller{
         // create db conexion
         $em=$this->getDoctrine()->getManager();
 
-            $query = "select * from habextr_fase_tipo where id = 2";
+            $query = "select * from habextr_fase_tipo where id = 3";
             $statement = $em->getConnection()->prepare($query);
             $statement->execute();
             $objFase = $statement->fetchAll();   
 
-        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:4;
 
         $arrEveStudentsClassified = $this->getAllRegisteredInscription($sie,$faseIdddis,$habextrAreaId);
 	
