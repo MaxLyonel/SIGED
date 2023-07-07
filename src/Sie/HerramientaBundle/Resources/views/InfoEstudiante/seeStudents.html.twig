@@ -190,7 +190,7 @@
                                 <td>{{data.nombre}}</td>
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
-                                    {% if gestion == app.session.get('currentyear') %}
+                                    {% if (gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [4] and sie == '81981543' and gestion == 2022) %} {#es temporal#}
                                         {# {% if data.cambioEstadoMatricula == true and 1 == 0 %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 {{data.estadomatricula}}
@@ -207,6 +207,13 @@
                                             
                                         {# {% endif %} #}
                                     {% else %}
+                                        {# {% if data.estadomatriculaId in [4,6,101,5] and sie == '81981543' and gestion == 2022 %}
+                                            <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                <div id="{{data.eInsId}}">{{data.estadomatricula}}</div>
+                                            </button>
+                                        {% else %}
+                                        <a href="javascript:void(0)" title="" onclick="visualizar_contenido('{{infoUe}}','{{jsnInfoStudent}}')"><strong style="color:#ff0000;border:2px;"> {{data.estadomatricula}} &nbsp;</strong> &nbsp;&nbsp;<button><span class="fa fa-eye"></span></button> </a>
+                                        {% endif %} #}
                                         {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
                                             {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
                                                 {{data.estadomatricula}}
@@ -329,18 +336,18 @@
 
                                     {% if grado == 6 and  gestion == 2021 and data.estadomatriculaId in [4,5] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado and nivelGradoSexto.closeopesextosecc == false %}
                                     {% else %}
-
+                                        
                                         {% if app.session.get('unablePrimerTrim') and operativo <=2%}
                                                             
-                                          {% if gestion >= 2021 and nivel == 13 and grado == 5 and app.session.get('acceso_total') %}
+                                          {% if gestion == 2021 and nivel == 13 and grado == 5 and app.session.get('acceso_total') %}
                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.">
                                                     <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                         <i class="fa fa-list"></i>
                                                     </button>
                                                 </div>
                                             {% else %}
-                                                {% if gestion >= 2021 %}  
-
+                                                {% if gestion == 2021 %}  
+                                                    {# habilita calificaciones #}
                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones..">
                                                         <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                             <i class="fa fa-list"></i>
@@ -355,10 +362,12 @@
 
                                     {% if app.session.get('showOptInscription') %}
                                         {% if swRegisterCalifications %}
-                                            {% if   imprimirLibreta == false %}{##}                                         
+                                        
+                                            {% if   imprimirLibreta == false %}{##}  
+                                                                          
                                                 {% if gestion >= 2021 and data.estadomatriculaId in [4,5,11,55,58] %} 
                                                     
-                                                    
+                                                       
                                                     {% if gestion == 2022 and nivel == 13 and grado == 6 and app.session.get('acceso_total')  and mostrarUeSinReporte2022 == false and  cerrarOperativoSexto == false  %} {#and mostrarSextoCerrado == false#}
                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones...">
                                                             <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
@@ -400,7 +409,7 @@
                                                     
                                                     
                                                     {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %} {# OJO CON ESTE CASO se elimina #}
-                                                    
+                                                                                                      
                                                         {% if nivelGradoSexto.closeopesextosecc == true and data.estadomatriculaId in [5,11,55] and nivel == 13 and  grado == 6  and  gestion == 2022 %}
                                                               <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
@@ -424,6 +433,7 @@
                                                         #}
                                                         {% endif %}
                                                     {% else %}
+                                                    
                                                         {% if app.session.get('donwloadLibreta') == true %}
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
@@ -449,7 +459,7 @@
                                                                     </div>
                                                                 {% endif %}
                                                             {% else %}                                          
-                                                             
+                                                                    {# ojo aqui 81981543#}
                                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
@@ -461,6 +471,14 @@
                                                     {% endif %}
                                                 
 
+                                                {% endif %}
+                                            {% else %}
+                                                {% if gestion == 2022 and nivel == 12 and operativo<=4 and sie == '81981543' %} 
+                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones..">
+                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                            <i class="fa fa-list"></i>
+                                                        </button>
+                                                    </div>
                                                 {% endif %}
                                             {% endif %}
                                         {% endif %}
