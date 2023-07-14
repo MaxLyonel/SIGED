@@ -59,7 +59,7 @@
                     <a class="btn btn-menu tooltips" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes del Curso">
                         <i class="fa fa-download" style="color:#FFFFFF"></i>
                     </a>
-                    {% if app.session.get('acceso_total') and gestion >= 2015 and nivel == 13 %}
+                    {# {% if app.session.get('acceso_total') and gestion >= 2015 and nivel == 13 %} #}
 
                         {# {% if grado == 1 or grado == 2 or grado == 3 or grado == 4  %}
                             <a class="btn btn-menu tooltips" href="{{path('donwload_boletinNivelacionTTGBth', {'iecId': iecId, 'codue': sie } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Estudiantes con Nivelación TTG">
@@ -71,7 +71,7 @@
                                 <i class="fa fa-download" style="color:#FFFFFF"></i>
                             </a>
                         {% endif %} #}
-                    {% endif %}
+                    {# {% endif %} #}
                     {#
                     {% if operativo >= 5 %}
                       <div class="col-md-4">
@@ -100,23 +100,23 @@
                         </div>
                     {% endif %}
 
-                    {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_humanistica_web') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
-                        {% if app.session.get('lastOperativo') == 5 %}
-                        {% else %}
+                    {# {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_humanistica_web') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %} #}
+                        {# {% if app.session.get('lastOperativo') == 5 %} #}
+                        {# {% else %} #}
 
-                          {% if gestion < app.session.get('currentyear') %}
+                          {# {% if gestion < app.session.get('currentyear') %} #}
                             {#
                                 <button type="button" class="btn btn-menu" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción con RUDE" onclick="doInscriptionsRude('{{infoUe}}');" >
                                     <i class="fa fa-user"></i>
                                 </button>
                             #}
-                          {% endif %}
+                          {# {% endif %} #}
                           {# 
                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick=" getCargaHorariaPlenaFinalizarRegistro('{{infoUe}}');" >
                               <i class="fa fa-check"></i> Finalizar Registro de Horas
                           </button> #}
-                        {% endif %}
-                    {% endif %}
+                        {# {% endif %} #}
+                    {# {% endif %} #}
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -473,7 +473,7 @@
 
                                                 {% endif %}
                                             {% else %}
-                                                {% if gestion == 2022 and nivel == 12 and operativo<=4 and sie == '81981543' %} 
+                                                {% if gestion == 2022 and nivel in [11,12] and operativo<=4 and data.estadomatriculaId in [4,5,55,28,11] and sie == '81981543' %} 
                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones..">
                                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                             <i class="fa fa-list"></i>
