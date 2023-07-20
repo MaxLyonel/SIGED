@@ -31,7 +31,7 @@ class ManagerInsTalentoController extends Controller{
     public $limitDay;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '19-07-2023';
+        $this->limitDay = '25-07-2023';
     }       
 
     public function indexAction(){
