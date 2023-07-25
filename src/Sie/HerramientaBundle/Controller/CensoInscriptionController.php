@@ -25,7 +25,7 @@ class CensoInscriptionController extends Controller
     public $arrUesCapinota;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '30-06-2023';
+        $this->limitDay = '30-08-2023';
         $this->arrUesCapinota = $this->setUEs();
     }       
 
@@ -53,7 +53,6 @@ class CensoInscriptionController extends Controller
                     $sie='';
                 }
             }
-
 
             return $this->render('SieHerramientaBundle:CensoInscription:index.html.twig',array(
                 'codsie'=>$sie,
@@ -101,8 +100,8 @@ class CensoInscriptionController extends Controller
 	                ->andwhere('iec.gestionTipo = :gestion')
 	                ->andwhere('iec.nivelTipo = :nivel')
 	                ->setParameter('sie', $sie)
-	                // ->setParameter('gestion', $this->session->get('currentyear') )
-	                ->setParameter('gestion', 2020 )
+	                ->setParameter('gestion', $this->session->get('currentyear') )
+	                // ->setParameter('gestion', 2020 )
 	                ->setParameter('nivel', '13')
 	                ->orderBy('iec.nivelTipo', 'ASC')
 	                ->distinct()
@@ -413,6 +412,8 @@ class CensoInscriptionController extends Controller
 
         $dataStudent = $request->get('dataStudent');
         $apoderadoInput = $request->get('apoderado');
+        $sie = $request->get('sie');
+
         $em = $this->getDoctrine()->getManager();
 
         $query="
@@ -422,48 +423,64 @@ class CensoInscriptionController extends Controller
                 inner join estudiante_inscripcion ei on (ai.estudiante_inscripcion_id = ei.id)
                 inner join estudiante e on (ei.estudiante_id = e.id)
                 inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
-                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id = 2020
+                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id = 2022
         ";
 
         $statement = $em->getConnection()->prepare($query);
         $statement->execute();
-        $arrDataStudents = $statement->fetchAll();
-        
+        $arrDataStudentsFull = $statement->fetchAll();
+    
         $apoderadoOutput = array();
-        if(sizeof($arrDataStudents)>0){
-            $apoderadoOutput = array(
-              "paterno" => $arrDataStudents[0]['paterno'],
-              "materno" => $arrDataStudents[0]['materno'],
-              "nombre" => $arrDataStudents[0]['nombre'],
-              "carnet" => $arrDataStudents[0]['carnet'],
-              "complemento" => $arrDataStudents[0]['complemento'],
-              "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents[0]['fecha_nacimiento']) ) ,
-              
-              
-            );
-            $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
+        $swparent = 1;
 
-        }
+        $apoderadoInput['fecNacimiento'] = str_replace('/', '-', $apoderadoInput['fecNacimiento']);
         $apoderadoInput = array_map("strtoupper", $apoderadoInput);
+        
+        if(sizeof($arrDataStudentsFull)>0){
+            // foreach ($arrDataStudentsFull as $arrDataStudents) {
+            while (($arrDataStudents = current($arrDataStudentsFull)) !== FALSE && $swparent) {                
 
-        // check if the values of parent/tutor are the same
-        $swparent = 0;
-        if(($apoderadoInput == $apoderadoOutput)){
-            $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
-            $swparent = 1;
+                    $apoderadoOutput = array(
+                      "paterno" => $arrDataStudents['paterno'],
+                      "materno" => $arrDataStudents['materno'],
+                      "nombre" => $arrDataStudents['nombre'],
+                      "carnet" => $arrDataStudents['carnet'],
+                      "complemento" => $arrDataStudents['complemento'],
+                      "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ) ,              
+                    );
+                    $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
+                    // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
+                // check if the values of parent/tutor are the same
+                    
+                if(($apoderadoInput == $apoderadoOutput)){
+                    $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents['apoderadoinscripid'];
+                    $swparent = 0;
+                }
+
+                    //$apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
+                next($arrDataStudentsFull);
+            }
         }
-            $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
+
+        if($swparent){
+              $data = array(
+                  'operativoTipo' => 12,
+                  'gestion' => $this->session->get('currentyear'),
+                  'id' => $sie,                  
+                  'consolidacionValor' => json_encode($apoderadoInput)
+              );   
+              $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
+        }
 
         $arrResponse = array(
             'apoderadoOutput' => $apoderadoOutput,
-            'swparent' => $swparent,
+            'swparent' => !$swparent,
         ); 
         // dump($arrResponse);die;
         // dump($apoderadoOutput);
         // dump($apoderadoInput);
         // dump($swparent);
         // die;
-                
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData($arrResponse);
@@ -565,6 +582,7 @@ class CensoInscriptionController extends Controller
           $objDownloadFilenewOpe = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
             'institucioneducativa'=>$sie,
             'institucioneducativaOperativoLogTipo'=>12,
+            'consolidacionValor'=>1,
             'gestionTipoId'=>$this->session->get('currentyear')
           ));
 
@@ -620,6 +638,7 @@ class CensoInscriptionController extends Controller
           $objDownloadFilenewOpe->setDescripcion('CENSO INE');
           $objDownloadFilenewOpe->setEsexitoso('t');
           $objDownloadFilenewOpe->setEsonline('t');
+          $objDownloadFilenewOpe->setConsolidacionValor(1);
           $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
           $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
           $objDownloadFilenewOpe->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);

@@ -1,0 +1,88 @@
+Sie\AppWebBundle\Entity\CamaraInstitucioneducativa:
+    type: entity
+    table: camara_institucioneducativa
+    indexes:
+        IDX_5034D3153AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_5034D315179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_5034D315FF18D920:
+            columns:
+                - grabacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tiene:
+            type: boolean
+            nullable: false
+            comment: ''
+        cantidad:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        grabacion:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        administrado:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        grabacionTipo:
+            targetEntity: CamaraGrabacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grabacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

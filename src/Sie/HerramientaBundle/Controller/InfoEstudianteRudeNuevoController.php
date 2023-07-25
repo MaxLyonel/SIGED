@@ -355,10 +355,22 @@ class InfoEstudianteRudeNuevoController extends Controller {
         // $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['departamento'] ? $form['departamento'] : null)));
         // $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['provincia'] ? $form['provincia'] : null)));
         // $estudiante->setLocalidadNac(mb_strtoupper($form['localidad'],'utf-8'));
-           $estudiante->setOficialia($form['oficialia']);
-           $estudiante->setLibro($form['libro']);
-           $estudiante->setPartida($form['partida']);
-           $estudiante->setFolio($form['folio']);
+            
+            if(isset($form['oficialia'])){
+                $estudiante->setOficialia($form['oficialia']);
+            }
+            if(isset($form['libro'])){
+                $estudiante->setLibro($form['libro']);
+            }
+            if(isset($form['partida'])){
+                $estudiante->setPartida($form['partida']);
+            }
+            if(isset($form['folio'])){                
+                $estudiante->setFolio($form['folio']);               
+            }
+            $cedulaTipo = ($estudiante->getPaisTipo()->getId()==1)?1:2;
+            $estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
+
         // $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneBy(array('id' => $form['sexo'])));
            $em->persist($estudiante);
            $em->flush();

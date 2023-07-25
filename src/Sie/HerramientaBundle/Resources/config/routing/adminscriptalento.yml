@@ -44,8 +44,8 @@ adminscriptalento_restartEvent:
     options:
          expose: true
 
-cheesevent_reportDepto:
-    path:     /reportDepto/{departamento_id}
+adminscriptalento_reportDepto:
+    path:     /reportDepto/{departamento_id}/{fase_id}
     defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:reportDepto }
     options:
          expose: true

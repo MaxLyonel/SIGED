@@ -352,6 +352,10 @@ sie_adm_inscriptalento_event:
      resource: "@SieHerramientaBundle/Resources/config/routing/adminscriptalento.yml"
      prefix:   /sie/adminscriptalento
 
+sie_managerinstalento:
+     resource: "@SieHerramientaBundle/Resources/config/routing/managerinstalento.yml"
+     prefix:   /sie/managertalento     
+
 # sie_censoinscription:
 #      resource: "@SieHerramientaBundle/Resources/config/routing/censoinscription.yml"
 #      prefix:   /sie/censo
@@ -367,3 +371,7 @@ sie_adm_inscriptalento_event:
 # index:
 #     path:     /index
 #     defaults: { _controller: SieHerramientaBundle:AdmInscripTalento:index }
+
+# index:
+#     path:     /index
+#     defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:index }
