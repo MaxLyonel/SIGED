@@ -152,6 +152,7 @@ class OfertaAcademicaController extends Controller {
                                          WHERE ie.institucioneducativa = :idInstitucion
                                           AND ie.ttecCarreraTipo = :ieCarrera 
                                           AND ie.esVigente = :ieEsVigente
+                                          AND rc.operacion <> :operacion
                                           AND rc.nivelTipo = :rcNivel
                                           AND rc.tiempoEstudio = :tiempoEstudio
                                           AND rc.ttecRegimenEstudioTipo = :regimenEstudio
@@ -159,11 +160,12 @@ class OfertaAcademicaController extends Controller {
                                         ->setParameter('idInstitucion', $form['idRie'])
                                         ->setParameter('ieCarrera', $form['ttecCarreraTipo'])
                                         ->setParameter('ieEsVigente', TRUE)
+                                        ->setParameter('operacion', 'CIERRE')
                                         ->setParameter('tiempoEstudio', $form['tiempoEstudio'])
                                         ->setParameter('regimenEstudio', $form['regimenEstudio'])
                                         ->setParameter('rcNivel', $form['nivelTipo']);
             $datoCarrera = $query->getResult();
-
+            
             if($datoCarrera){
                 $this->get('session')->getFlashBag()->add('mensaje', 'La Carrera ya se encuentra registrada...');
             } else {
