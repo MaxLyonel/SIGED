@@ -388,4 +388,32 @@ class NuevoMaestroInscripcion
     {
         return $this->cargoTipo;
     }
+    /**
+     * @var integer
+     */
+    private $institucioneducativaId;
+
+
+    /**
+     * Set institucioneducativaId
+     *
+     * @param integer $institucioneducativaId
+     * @return NuevoMaestroInscripcion
+     */
+    public function setInstitucioneducativaId($institucioneducativaId)
+    {
+        $this->institucioneducativaId = $institucioneducativaId;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaId
+     *
+     * @return integer 
+     */
+    public function getInstitucioneducativaId()
+    {
+        return $this->institucioneducativaId;
+    }
 }

@@ -342,6 +342,11 @@ class PlanillaPagoComparativo
     /**
      * @var integer
      */
+    private $estadoComparacionPlanillaTipoId;
+
+    /**
+     * @var integer
+     */
     private $codUePlanilla;
 
     /**
@@ -353,11 +358,6 @@ class PlanillaPagoComparativo
      * @var integer
      */
     private $codFunc;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstadoComparacionPlanillaTipo
-     */
-    private $estadoComparacionPlanillaTipo;
 
 
     /**
@@ -1866,6 +1866,29 @@ class PlanillaPagoComparativo
     }
 
     /**
+     * Set estadoComparacionPlanillaTipoId
+     *
+     * @param integer $estadoComparacionPlanillaTipoId
+     * @return PlanillaPagoComparativo
+     */
+    public function setEstadoComparacionPlanillaTipoId($estadoComparacionPlanillaTipoId)
+    {
+        $this->estadoComparacionPlanillaTipoId = $estadoComparacionPlanillaTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadoComparacionPlanillaTipoId
+     *
+     * @return integer 
+     */
+    public function getEstadoComparacionPlanillaTipoId()
+    {
+        return $this->estadoComparacionPlanillaTipoId;
+    }
+
+    /**
      * Set codUePlanilla
      *
      * @param integer $codUePlanilla
@@ -1932,28 +1955,5 @@ class PlanillaPagoComparativo
     public function getCodFunc()
     {
         return $this->codFunc;
-    }
-
-    /**
-     * Set estadoComparacionPlanillaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EstadoComparacionPlanillaTipo $estadoComparacionPlanillaTipo
-     * @return PlanillaPagoComparativo
-     */
-    public function setEstadoComparacionPlanillaTipo(\Sie\AppWebBundle\Entity\EstadoComparacionPlanillaTipo $estadoComparacionPlanillaTipo = null)
-    {
-        $this->estadoComparacionPlanillaTipo = $estadoComparacionPlanillaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get estadoComparacionPlanillaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EstadoComparacionPlanillaTipo 
-     */
-    public function getEstadoComparacionPlanillaTipo()
-    {
-        return $this->estadoComparacionPlanillaTipo;
     }
 }

@@ -75,6 +75,12 @@ Sie\AppWebBundle\Entity\NuevoMaestroInscripcion:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
     manyToOne:
         gestionTipo:
             targetEntity: GestionTipo
