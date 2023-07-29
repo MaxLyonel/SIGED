@@ -356,6 +356,9 @@ sie_managerinstalento:
      resource: "@SieHerramientaBundle/Resources/config/routing/managerinstalento.yml"
      prefix:   /sie/managertalento     
 
+sie_adm_pla:
+     resource: "@SieHerramientaBundle/Resources/config/routing/admpla.yml"
+     prefix:   /sie/admplan
 # sie_censoinscription:
 #      resource: "@SieHerramientaBundle/Resources/config/routing/censoinscription.yml"
 #      prefix:   /sie/censo
@@ -375,3 +378,7 @@ sie_managerinstalento:
 # index:
 #     path:     /index
 #     defaults: { _controller: SieHerramientaBundle:ManagerInsTalento:index }
+
+# index:
+#     path:     /index
+#     defaults: { _controller: SieHerramientaBundle:AdmPla:index }

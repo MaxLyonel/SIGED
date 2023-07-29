@@ -1,0 +1,1066 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+        .readData{
+            background-color: lightblue;
+            color:  #000;
+            opacity: 0.8;
+         
+
+        }
+		.jupper{
+			text-transform: uppercase;
+		}
+
+        .seleccionado{
+			  color: currentColor;
+			  display: inline-block;  /* For IE11/ MS Edge bug */
+			  pointer-events: none;
+			  text-decoration: none;        	
+            background: #111406 !important;
+            pointer-events: none;
+        }		     
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+<!-- Start page header -->
+<div class="header-content">
+	<h2><i class="fa fa-table"></i> Personal Administrativo Planillas <span></span></h2>
+	<div class="breadcrumb-wrapper hidden-xs">
+		<span class="label">Usted esta aquí:</span>
+		<ol class="breadcrumb">
+			<li>
+				<i class="fa fa-home"></i>
+				<a href="#">Personal Administrativo Planillas</a>
+				<i class="fa fa-angle-right"></i>
+			</li>
+			<li class="active"></li>
+		</ol>
+	</div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- /.row -->
+<div id="app" v-cloak>
+
+    <div class="modal fade" id="modalNewInscription" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+
+				    <div class="panel panel-info">
+					    	<div class="panel-heading">
+					    	    <h4>${personSelected.apellidos_nombre} </br> </h4>
+					    	</div>
+					    <div class="panel-body">
+						  <div class="form-group">
+						    <label for="exampleFormControlTextarea1">Observacion de la eliminacion</label>
+						    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="infoUE.observation"></textarea>
+						    <br>
+						      <button type="button" class="btn btn-primary" @click="deleteAdm(infoUE)" >Guardar</button>
+						  </div>					    
+					    </div>  
+				   </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+
+	{#<div v-if="cortina" class="cortina">
+		<i class="fa fa-refresh fa-spin"></i> Procesando... 
+	</div>#}
+	<div class="body-content animated fadeIn">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<h3 class="titulo">Personal Administrativo Planillas</h3>
+						<div class="col-md-5">
+							<div role="tabpanel">
+								<!-- Nav tabs -->
+								{# <ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+										<a role="tab" data-toggle="tab">Buscar por SIE</a>
+									</li>
+								</ul> #}
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+
+		                            <form method="POST" id="form-mostrar-resultados-reporte-salud" >
+		                              <div class="form-row">
+
+		                                <div class="form-group col-md-5 col-sm-6 ">
+		                                	<input type="text" v-model="infoUE.sie"  class="form-control" id="exampleInputPassword1" placeholder="SIE" :readonly="disableElement>0">
+		                                    {# <input type="text" class="form-control" placeholder="SIE" > #}
+		                                </div>
+
+		                                <div class="form-group col-md-3 col-sm-6 ">
+		                                    <select class="form-control" name="fase" id="fase" v-model="infoUE.gestion">
+		                                        <option v-for="(data, index) in arrYears"  :key="data.id" :value="data.id" v-text="data.gestion"></option>
+		                                    </select>
+		                                </div>
+
+		                                
+		                                <div class="form-group col-md-4 col-sm-6 ">
+		                                    <button v-on:click.prevent="findUEData()" type="button" class="btn btn-primary"><i class="fa fa-book"></i>Buscardd</button>   
+
+		                                    <div class="col-xs-12 col-lg-12" v-if="buscando">
+		                                        <div  class="text-center">
+		                                            <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+		                                        </div>              
+		                                    </div>                                                                  
+		                                </div>
+		                              </div>
+		                            </form>										
+                        
+									</div>
+								</div>
+							</div>							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="row" v-if="infoUE.existUE">
+            <div class="col-xs-12 col-lg-12" >
+                <div class="panel-body">
+                    <div class="row compose-mail-wrapper">
+                        <div class="col-sm-2">
+                            <div class="panel">
+                                <ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
+                                	<li class="activeprocess">
+                                        <a href="#" ><i class="fa fa-inbox"></i> ${infoUE.gestion}</a>
+                                    </li>
+                                    <li class="activeprocess" v-for="(ele, index) in arrMonths">
+                                        <a href="#" @click="getAllAdmi(infoUE, ele.id, ele.month)"><i class="fa fa-inbox"></i> ${ele.month}</a>
+                                    </li>
+                                 </ul>
+                            </div>    
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="panel rounded shadow panel-primary">
+                                <div class="panel-heading ">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title" id="titulo">UE: ${infoUE.institucioneducativa} - ${monthSelected}</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="contenido">    
+                                        <div class="row">
+                                            <div class="col-md-12">
+												<div class="table-responsive">
+												    <table class="table table-bordered table-middle  ">
+												        <thead>
+												            <tr>
+												                <th class="text-center" style="max-width: 5px">#</th>
+												                <th>CI-Compl.</th>
+												                <th>Datos Personales</th>
+												                <th>Financiamiento</th>
+												                <th>Cargo</th>
+												                <th>Servicio</th>
+												                <th>Item</th>
+												                <th>Func.</th>
+												                <th>Sol</th>
+												                
+												                <th class="text-center" style="max-width: 40px">Opc.</th>
+												            </tr>
+												        </thead>
+												        <tbody>
+														 	<tr v-for="(person, index) in arrAllAdm">
+																<th scope="row" >${index+1}</th>
+																<td>${person.ci} </td>
+																<td>${person.apellidos_nombre}</td>
+																<td>${person.financiamiento_sie}</td>
+																<td>${person.cargo_sie}</td>
+																<td>${person.servicio}</td>
+																<td>${person.item}</td>
+																<td>${person.func_doc}</td>
+																<td>${person.solucion_comparacion_planilla_tipo_id}</td>
+																<td  > 
+																<table>
+																	<tr style="padding: 15px;">
+																		<td class="mp-3">
+																		<a href="#" @click="ratify(person.id)">
+																			<i class="fa fa-check" aria-hidden="true" style="color:green; font-size: 25px;"></i>
+																		</a>
+																		</td>
+																		<td>
+																		<a href="#" @click="showdeleteAdm(person,person.id)">		
+																			<i class="fa fa-trash" aria-hidden="true" style="color:red; font-size: 25px;"></i>
+																		</a>
+																		</td>
+																	</tr>
+																</table>
+																</td>
+														    </tr>												        
+												        </tbody>
+												    </table>
+												</div>                                                
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                        </div>
+                    </div>
+                </div>             
+            </div>
+        </div>
+		
+	</div>
+</div>	
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+    // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+  </script>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-the-mask/0.11.1/vue-the-mask.min.js" integrity="sha512-qXurwUG9teY1KFtbBifUHInCiNK/POQqJeFRSoaHg1pHEB1tBUlFKRsfPzm1D6b6ueeQOCKldvXYCtOsPURrcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+<script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+
+
+
+<script type="text/javascript">
+
+	var app = new Vue({
+		delimiters: ['${', '}'],
+		el: '#app',
+		data: {
+			opcion: 1,
+			swcloseevent: 0,
+			disableElement: '{{disableElement}}',
+			infoUE:{
+				sie: '',
+				institucioneducativa:'',
+				gestion:'',
+				idMounth:'',
+				idModify:'',
+				existUE:0,
+				swcloseope:0,
+				urlreport:'',
+			},
+			infoUE2:{
+				sie:80730460,
+				institucioneducativa:'',
+				modalidadLabel:'',
+				faseLabel:'',
+				categorieLabel:'',
+				existUE:0
+			},
+			// DBModalidades: {},
+			// DBLevel:  {},
+			// DBFases: {},
+			// DBCategories: {},
+			// DBselectedData: {},
+			// DBstudent: {},
+			// DBstudentPreCla: {},
+			// DBstudentClasificado: {},
+			// DBParallels: {},
+			// DBInscriptionLevel: {},
+			// DBEveStudents: {},
+			// existSelectData:false,
+			// existStudent:false,
+			// existStudentpre:false,
+			// swRegistryClassi:false,
+			// existParall:false,
+			// linkDisabled:false,
+			/////////////////////////////
+			// categorias: [
+			// 	{'id': 'A', 'description': 'Cat.A'},
+			// 	{'id': 'B', 'description': 'Cat.B'},
+			// 	{'id': 'C', 'description': 'Cat.C'},
+				
+			// ],
+
+			buscando: false,			
+			
+			userRol:1,
+			monthSelected:'',
+	        arrYears:[],
+	        arrMonths:[],			
+	        arrAllAdm:{},			
+	        personSelected:{},			
+			
+			
+		},
+		filters: {
+			uppercase: function(v) {
+				return v.toUpperCase();
+			}
+		},	
+
+		components: {
+			//vuejsDatepicker
+		},
+
+		mounted(){	
+			this.getMainInfo(this.userRol);            
+		},
+
+		methods: {
+            getMainInfo: function(userRol){
+                    
+                    axios.get(Routing.generate('adm_pla_getMainInfo',{ userRol: userRol}))
+                        .then(response => {
+                            this.userRol = response.data.rol;
+                            this.gestion = response.data.currentyear;
+                            this.infoUE.sie = response.data.sie;
+                            this.arrYears = response.data.arrYears;
+                            this.arrMonths = response.data.arrMonths;                            
+                            console.log(this.infoUE)
+                            
+                        })
+                        .catch(e = {
+
+                        });                    
+                },			
+			findUEData:function(){
+				this.existSelectData=false;
+				// this.DBModalidades={};
+				// this.DBFases={};
+				// this.DBCategories={};
+				this.infoUE.existUE = 0;
+				this.buscando=true;
+				if (typeof this.infoUE.sie === "undefined") {
+					Swal.fire(
+						'Atencion !',
+						'Debe ingresar el  CÓDIGO SIE',
+						'warning'
+						);
+					this.buscando = false;
+					return;
+				}				
+
+				axios.post(Routing.generate('adm_pla_findUEData', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.infoUE.institucioneducativa = response.data.institucioneducativa;
+								this.infoUE.existUE = response.data.existUE;
+								// this.DBModalidades = response.data.arrModalidades;
+								// this.DBLevel = response.data.arrLevel;
+								// this.swcloseevent = response.data.swcloseevent;
+								// this.infoUE.swcloseevent = this.swcloseevent;
+								// this.infoUE.urlreporte = response.data.urlreporte;
+								console.log(this.DBModalidades);
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO SIE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});				
+
+			},
+
+			getAllAdmi:function(data, idMounth, month){
+				this.infoUE.idMounth = idMounth;
+				this.monthSelected = month;
+				axios.post(Routing.generate('adm_pla_getAllAdmi', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.arrAllAdm = response.data.arrAllAdm;
+								this.infoUE.existUE = response.data.existUE;
+								
+								console.log(this.arrAllAdm);
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO SIE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});						
+			},
+
+
+			ratify:function(idModify){
+				this.infoUE.idModify = idModify;
+
+                    Swal.fire({
+                        title: '¿Ratificar el registro?',
+                        text: "Si acepta, el registro sera ratificado... " ,
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, aceptar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+				
+							axios.post(Routing.generate('adm_pla_ratify', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+										// console.log(response.data);
+
+										if(response.data.existUE == true){
+
+											this.infoUE.sie = response.data.sie;
+											this.arrAllAdm = response.data.arrAllAdm;
+											this.infoUE.existUE = response.data.existUE;
+											
+											console.log(this.arrAllAdm);
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'CÓDIGO SIE NO EXISTE',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});	
+					}	
+				});						
+			},
+			showdeleteAdm:function(person,idModify){
+				this.personSelected = person;
+				this.infoUE.idModify = idModify;
+				$('#modalNewInscription').modal('show');
+			},
+			deleteAdm:function(infoUE){
+				// this.infoUE.idModify = idModify;
+				axios.post(Routing.generate('adm_pla_deleteAdm', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.arrAllAdm = response.data.arrAllAdm;
+								this.infoUE.existUE = response.data.existUE;
+								
+								console.log(this.arrAllAdm);
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO SIE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+
+
+				$('#modalNewInscription').modal('hide');
+			},
+
+			resetAllvalues: function(modalidadId, levelId, selectModalidad){
+				this.existSelectData=false;
+				DBLevel = {};
+				this.DBFases = {};
+				this.DBCategories = {};
+			},
+			getInfoEvent: function(modalidadId, levelId, selectModalidad){
+				// console.log(event.target.value);
+				this.existSelectData=false;
+				axios.post(Routing.generate('adm_pla_getInfoEvent', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+								this.DBFases = response.data.arrFases;
+								this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+
+			},
+			dataSelected: function(selectedData){
+				this.existSelectData=false;
+				this.existParall = false;
+				this.DBParallels={};
+				this.existStudent=false;
+				this.DBstudent={};				
+				this.DBEveStudents={};
+
+				axios.post(Routing.generate('adm_pla_dataSelected', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existSelectData == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadLabel = response.data.modalidadLabel;
+								this.infoUE.faseLabel = response.data.faseLabel;
+								this.infoUE.categorieLabel = response.data.categorieLabel;
+								this.infoUE.genderRequest = response.data.genderRequest;
+								this.DBInscriptionLevel = response.data.arrAllowGrade;
+								this.DBEveStudents = response.data.arrEveStudents;
+								this.existSelectData = response.data.existSelectData;
+
+								this.swcloseevent = response.data.swcloseevent;
+								this.infoUE.swcloseevent = this.swcloseevent;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+			},
+			startInscription:function(infoUEsend){
+				// console.log(infoUEsend);
+				this.DBstudentPreCla = {};
+				this.DBstudentClasificado = {};
+				this.infoUE.codigoRude = '';
+				this.existStudentpre = false;
+				this.swRegistryClassi = false;
+
+				axios.post(Routing.generate('adm_pla_startInscription', infoUEsend ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudentClassi == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								// this.infoUE.inscriptionidCla = response.data.arrStudents.estinscid;
+								this.DBstudentClasificado = response.data.arrEveStudentsClassified;
+
+								this.existStudentpre = response.data.existStudentpre;
+								this.swRegistryClassi = response.data.swRegistryClassi;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no existe Resultado...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+
+
+
+				$('#modalNewInscription').modal('show');
+			},
+			findStudent:function(infoUEsel){
+				this.DBstudentPreCla = {};
+				this.existStudentpre = false;
+				axios.post(Routing.generate('adm_pla_findStudent', infoUEsel ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudentpre == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								this.infoUE.inscriptionidCla = response.data.arrStudents.estinscid;
+								this.DBstudentPreCla = response.data.arrStudents;
+
+								this.existStudentpre = response.data.existStudentpre;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no existe Resultado...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+			},
+			registerClassified:function(infoUEsel){
+				
+				// this.loadingpre = false;
+				this.swRegistryClassi = false;
+				axios.post(Routing.generate('adm_pla_registerClassified', infoUEsel ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudentpre == true){
+							// console.log(response.data.arrEveStudentsClassified);return;
+								// this.DBstudentClasificado = {};
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								this.DBstudentClasificado = response.data.arrEveStudentsClassified;
+								this.existStudentpre = response.data.existStudentpre;
+								this.swRegistryClassi = response.data.swRegistryClassi;
+								// this.infoUE.inscriptionidCla = response.data.arrStudents.estinscid;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no existe Resultado o registro duplicado...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+			},
+			getParalelos:function(infoUEAll){
+				this.existParall = false;
+				this.DBParallels={};
+				this.existStudent=false;
+				this.DBstudent={};
+				axios.post(Routing.generate('adm_pla_getParalelos', infoUEAll ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existParall == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								// this.infoUE.modalidadId = response.data.modalidadId;
+								// this.infoUE.faseId = response.data.faseId;
+								// this.infoUE.categorieId = response.data.categorieId;
+								// this.infoUE.sie = response.data.sie;
+								this.DBParallels = response.data.arrParallels;
+
+								this.existParall = response.data.existParall;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+			},
+			showStudents:function(infoUEAll){
+				this.existStudent=false;
+				this.DBstudent={};
+				axios.post(Routing.generate('adm_pla_showStudents', infoUEAll ))
+				.then(response => {
+					if (response.status == 200) {
+						this.DBselectedData = response.data.selectedData;
+							// console.log(response.data);
+
+							if(response.data.existStudent == true){
+								
+								// this.DBselectedData = response.data.selectedData;
+								this.infoUE.modalidadId = response.data.modalidadId;
+								this.infoUE.faseId = response.data.faseId;
+								this.infoUE.categorieId = response.data.categorieId;
+								this.infoUE.sie = response.data.sie;
+								this.DBstudent = response.data.arrStudents;
+
+								this.existStudent = response.data.existStudent;
+
+								// this.infoUE2.krlos = 'krlos';
+								// this.DBCategories = response.data.arrCategories;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'no answer...',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});					
+
+			},
+			doInscription:function(infoUE, inscriptionid){
+
+                    Swal.fire({
+                        title: '¿Realizar el registro??',
+                        text: "Se registrará al estudiante seleccionado...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							this.DBEveStudents ={};
+							this.infoUE.inscriptionid=inscriptionid;
+							$('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('adm_pla_doInscription', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.existStudent == true){
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBEveStudents = response.data.arrEveStudents;
+
+											// this.existStudent = response.data.existStudent;
+
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		
+
+	                    
+	                    }                    
+                    });
+
+
+			},
+			removeInscriptionCheesNextLevel:function(inscriptionid){
+
+                    Swal.fire({
+                        title: '¿Realizar la eliminación??',
+                        text: "Se eliminará al estudiante seleccionado...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							this.infoUE.remoinscriptionid=inscriptionid;
+							// $('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('adm_pla_removeInscriptionCheesNextLevel', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.existRemoveStudent == true){
+											// this.DBEveStudents ={};
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBstudentClasificado = response.data.arrEveStudentsClassified;
+											this.swRegistryClassi = response.data.swRegistryClassi;
+											// this.DBEveStudents = response.data.arrEveStudents;
+
+											// this.existStudent = response.data.existStudent;
+
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		                    	
+
+						}		
+					 });
+
+
+
+			},			
+			removeInscriptionChees:function(inscriptionid){
+
+                    Swal.fire({
+                        title: '¿Realizar la eliminación??',
+                        text: "Se eliminará al estudiante seleccionado...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							this.infoUE.remoinscriptionid=inscriptionid;
+							// $('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('adm_pla_removeInscriptionChees', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.existRemoveStudent == true){
+											this.DBEveStudents ={};
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBEveStudents = response.data.arrEveStudents;
+
+											// this.existStudent = response.data.existStudent;
+
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		                    	
+
+						}		
+					 });
+
+
+
+			},
+			closeEventChees: function(infoUE){
+                    Swal.fire({
+                        title: '¿Realizar el cierre del Registro?',
+                        text: "Si acepta, se deshabilitan las opciones de registro al evento...",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, aceptar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+
+							// this.infoUE.remoinscriptionid=inscriptionid;
+							// $('#'+inscriptionid).addClass('seleccionado');
+							axios.post(Routing.generate('adm_pla_closeEventChees', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+									// this.DBselectedData = response.data.selectedData;
+										// console.log(response.data);
+
+										if(response.data.swcloseevent == true){
+											this.DBEveStudents ={};
+											this.swcloseevent = response.data.swcloseevent;
+											this.infoUE.swcloseevent = this.swcloseevent;
+											this.infoUE.urlreporte = response.data.urlreporte;
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'no answer...',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});		                    	
+
+						}		
+					 });				
+
+			},
+			/////////////////////////////////////////////////////////////////////
+
+			
+		},
+		
+	});
+
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+		$("td").focus();
+		$("#fecha_vencimiento").inputmask({ "alias": "dd-mm-yyyy" });
+		//$("#idarrPais_p").select2();
+	});      
+
+	$(".js-example-basic-multiple").select2({
+            tags: "true",
+            placeholder: "Seleccione una opción",
+            allowClear: true
+        });  
+
+
+
+</script>
+{%endblock%}
