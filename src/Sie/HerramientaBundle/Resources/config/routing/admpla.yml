@@ -32,6 +32,12 @@ adm_pla_deleteAdm:
     options:
          expose: true
 
+adm_pla_saveNewAdm:
+    path:     /saveNewAdm
+    defaults: { _controller: SieHerramientaBundle:AdmPla:saveNewAdm }
+    options:
+         expose: true
+
 
 
 

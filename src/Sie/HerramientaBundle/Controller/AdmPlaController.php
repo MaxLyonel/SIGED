@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EmparejaSiePlanilla;
 use Sie\AppWebBundle\Entity\SolucionComparacionPlanillaTipo;
+use Sie\AppWebBundle\Entity\NuevoMaestroInscripcion;
 
 class AdmPlaController extends Controller{
     public function index111Action(){
@@ -123,9 +124,16 @@ class AdmPlaController extends Controller{
             $institucioneducativa = $objUE->getInstitucioneducativa();
         }
 
+        // get cargo and financiamiento
+        $arrCargo = $this->get('herrafunctions')->getCargo();
+        $arrFinanciamiento = $this->get('herrafunctions')->getFinanciamiento();
+
+
         $arrResponse = array(
         	'sie' 				   => $sie,
             'existUE'              => $existUE,
+            'arrCargo'             => $arrCargo,
+            'arrFinanciamiento'    => $arrFinanciamiento,
             'institucioneducativa' => $institucioneducativa,
         ); 
         
@@ -211,6 +219,90 @@ class AdmPlaController extends Controller{
         	'sie' 		=> $request->get('sie'),
             'existUE'   => 1,
             'arrAllAdm' => $arrAllAdm,
+        ); 
+        
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+        return $response; 
+    }
+
+    public function saveNewAdmAction(Request $request){
+
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();    	
+        // validate data with segip
+        $arrParametros = array(
+            'complemento'=>mb_strtoupper($request->get('complnew'), 'utf-8'),
+            'primer_apellido'=>mb_strtoupper($request->get('patnew'), 'utf-8'),
+            'segundo_apellido'=>mb_strtoupper($request->get('matnew'), 'utf-8'),
+            'nombre'=>mb_strtoupper($request->get('nomnew'), 'utf-8'),
+            'fecha_nacimiento'=>$request->get('fecnacnew')
+        );
+        if($request->get('extranjero') == 1){
+            $arrParametros['extranjero'] = 'e';
+        }      
+        
+        // get info segip
+        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $request->get('cinew'),$arrParametros,'prod', 'academico');
+
+        $swsegip = 0;
+        if($answerSegip){
+			$swsegip=1;
+			$objNewMaster = new NuevoMaestroInscripcion();
+			$objNewMaster->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($request->get('gestion')));
+			$objNewMaster->setMesTipo($em->getRepository('SieAppWebBundle:MesTipo')->find($request->get('idMounth')));			
+			$objNewMaster->setCi($request->get('cinew'));
+			$objNewMaster->setCi($request->get('complnew'));
+			$objNewMaster->setCi(mb_strtoupper( $request->get('patnew'), "utf-8") );
+			$objNewMaster->setCi(mb_strtoupper( $request->get('matnew'), "utf-8") );
+			$objNewMaster->setCi(mb_strtoupper( $request->get('nomnew'), "utf-8") );
+			$objNewMaster->setFechaNacimiento(new \DateTime($request->get('fecnacnew')));            
+			
+			$objNewMaster->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($request->get('financiamientoId')));
+			$objNewMaster->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->find($request->get('cargoId')));
+			$objNewMaster->setFechaCreacion(new \DateTime('now'));
+
+			$em->persist($objNewMaster);
+
+			$objEmparejaSiePlanilla = new EmparejaSiePlanilla();
+			$objEmparejaSiePlanilla->setGestionTipoId($request->get('gestion'));
+			$objEmparejaSiePlanilla->setMesTipoId($request->get('idMounth'));
+			$objEmparejaSiePlanilla->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->get('sie')));
+			$objEmparejaSiePlanilla->setNuevoMaestroInscripcion($em->getRepository('SieAppWebBundle:NuevoMaestroInscripcion')->find($objNewMaster->getId()));
+			$objEmparejaSiePlanilla->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($request->get('financiamientoId')));
+			$objEmparejaSiePlanilla->setCargoTipoId(($request->get('cargoId')));
+			$objEmparejaSiePlanilla->setSolucionComparacionPlanillaTipo($em->getRepository('SieAppWebBundle:SolucionComparacionPlanillaTipo')->find(3));
+
+			$em->persist($objEmparejaSiePlanilla);
+
+			$em->flush();
+
+        }else{
+        	$swsegip=0;
+            $message = 'validacion segip: Los datos registrados no coinciden';
+        }        
+
+        
+        
+        // update info to show
+    	// $objEmpSiePlan = $em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->find($idModify);
+    	// $objEmpSiePlan->setSolucionComparacionPlanillaTipo($em->getRepository('SieAppWebBundle:SolucionComparacionPlanillaTipo')->find(3));
+    	// $objEmpSiePlan->setObservacion($request->get('observation'));
+    	// $em->persist($objEmpSiePlan);
+     //    $em->flush(); 
+    	$arrData = [
+    		'sie'=>$request->get('sie'),
+    		'gestion'=>$request->get('gestion'),
+    		'idMounth'=>$request->get('idMounth'),
+    	];
+        $arrAllAdm = $this->get('herrafunctions')->getAllAdm($arrData);
+        // dump($arrAllAdm);die;
+        $arrResponse = array(
+        	'sie' 		=> $request->get('sie'),
+            'existUE'   => 1,
+            'arrAllAdm' => $arrAllAdm,
+            'swsegip' => $swsegip,
         ); 
         
         $response = new JsonResponse();

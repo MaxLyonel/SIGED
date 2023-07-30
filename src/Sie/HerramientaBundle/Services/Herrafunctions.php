@@ -121,21 +121,39 @@ order by cargo_sie,apellidos_nombre;
     // return 'krlos';
   }
 
-  public function getAllOperative($arrData){
+  public function getCargo(){
 
     $query =       "
-        select * from univ_registro_consolidacion where univ_sede_id = ".$arrData['sedeId'] ."  order by 1";
-
+        select * from Cargo_Tipo where id in (1,2,3,4,5,12) order by 1
+        ";
     $query = $this->em->getConnection()->prepare($query);
     
     $query->execute();
-    $arrOpe = $query->fetchAll();
-    if(sizeof($arrOpe)>0){
+    $arrData = $query->fetchAll();
+    if(sizeof($arrData)>0){
     }else{ 
       $arrOpe=array();
     }
    
-     return $arrOpe;
+     return $arrData;
+    // return 'krlos';
+  }
+
+  public function getFinanciamiento(){
+
+    $query =       "
+        select * from financiamiento_tipo ft order by 1
+        ";
+    $query = $this->em->getConnection()->prepare($query);
+    
+    $query->execute();
+    $arrData = $query->fetchAll();
+    if(sizeof($arrData)>0){
+    }else{ 
+      $arrOpe=array();
+    }
+   
+     return $arrData;
     // return 'krlos';
   }
 

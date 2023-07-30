@@ -73,14 +73,109 @@
 						  </div>					    
 					    </div>  
 				   </div>
-
-
-
                 </div>
             </div>
         </div>
     </div> 
 
+    <div class="modal fade" id="modalNewPerson" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+
+				    <div class="panel panel-primary">
+					    	<div class="panel-heading">
+					    	    <h4>Registro Nuevo Administrativo </br> </h4>
+					    	</div>
+					    <div class="panel-body">
+
+                                <div class="form-body">
+                                    <div class="row">
+                                      <div class="col-sm-4">
+                                      {# <label for="ci">Carnet Identidad.</label> #}
+                                      <input type="text" v-model="infoUE.cinew" id="form_ci" name="form[ci]" required="required" class="form-control" placeholder="Carnet Identidad" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="9" autocomplete="off" style="text-transform:uppercase">
+                                      </div>
+                                      <div class="col-sm-4">
+                                      {# <label for="complemento(s)">Complemento</label> #}
+                                        <input type="text" v-model="infoUE.complnew" id="form_complemento" name="form[complemento]" required="required" class="form-control" placeholder="Complemento" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="2" autocomplete="off" style="text-transform:uppercase">
+                                      </div>                                            
+                                        <div class="col-sm-4">
+                                            {# <label for="fechanac">F. Nacimiento</label> #}
+                                            <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="F. N. (dd-mm-aaaa)" v-model="infoUE.fecnacnew">
+                                        </div>                                      
+                                    </div>   
+                                    <br>                                 
+                                    <div class="row">
+                                      <div class="col-sm-4">
+                                            {# <label for="paterno">Paterno</label> #}
+                                            <input type="text" class="form-control" placeholder="Paterno" v-model="infoUE.patnew" maxlength="60" autocomplete="off" style="text-transform:uppercase">
+                                      </div>
+                                      <div class="col-sm-4">
+                                            {# <label for="materno">Materno</label> #}
+                                            <input type="text" class="form-control" placeholder="Materno" v-model="infoUE.matnew" maxlength="60" autocomplete="off" style="text-transform:uppercase">
+                                      </div>                                            
+                                        <div class="col-sm-4">
+                                            {# <label for="Nombre(s)">Nombre(s)</label> #}
+                                            <input type="text" class="form-control" placeholder="Nombre(s)" v-model="infoUE.nomnew" maxlength="60" autocomplete="off" style="text-transform:uppercase">
+                                        </div>
+                                    </div>
+                                    </br>  
+
+	                                  <div class="col-sm-6">
+	                                  <label for="Cargo">Cargo </label>
+	                                    <select name="arrCargo" id="idarrCargo" v-model="infoUE.cargoId" class="form-control">  
+	                                      <option v-for=" cargo in arrCargo " :value="cargo.id">${cargo.cargo}</option>
+	                                      
+	                                    </select>
+	                                  </div> 
+
+	                                  <div class="col-sm-6">
+	                                  <label for="Cargo">Financiamiento </label>
+	                                    <select name="arrCargo" id="idarrCargo" v-model="infoUE.financiamientoId" class="form-control">  
+	                                      <option v-for=" finan in arrFinanciamiento " :value="finan.id">${finan.financiamiento}</option>
+	                                      
+	                                    </select>
+	                                  </div>
+	                                  <br>
+                                </div>
+							<br>
+						  <div class="form-group">
+						   <br>
+						      <button type="button" class="btn btn-primary" @click="saveNewAdm(infoUE)" >Guardar</button>
+						  </div>					    
+					    </div>  
+				   </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+    <div class="modal fade" id="modalCloseOpe" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+
+				    <div class="panel panel-success">
+					    	<div class="panel-heading">
+					    	    <h4>No existen observaciones</br> </h4>
+					    	</div>
+					    <div class="panel-body">
+
+					    </div>  
+				   </div>
+                </div>
+            </div>
+        </div>
+    </div> 
 
 
 	{#<div v-if="cortina" class="cortina">
@@ -121,7 +216,7 @@
 
 		                                
 		                                <div class="form-group col-md-4 col-sm-6 ">
-		                                    <button v-on:click.prevent="findUEData()" type="button" class="btn btn-primary"><i class="fa fa-book"></i>Buscardd</button>   
+		                                    <button v-on:click.prevent="findUEData()" type="button" class="btn btn-primary"><i class="fa fa-book"></i>Buscar</button>   
 
 		                                    <div class="col-xs-12 col-lg-12" v-if="buscando">
 		                                        <div  class="text-center">
@@ -163,7 +258,13 @@
                                     <div class="pull-left">
                                         <h3 class="panel-title" id="titulo">UE: ${infoUE.institucioneducativa} - ${monthSelected}</h3>
                                     </div>
-                                    <div class="clearfix"></div>
+                                    <div class="clearfix text-right" >
+                                    	<div v-if="monthSelected">
+	                                    	<button v-on:click.prevent="closeOpe()" type="button" class="btn btn-warning"><i class="fa fa-book"></i>Cerrar Operativo</button>
+
+	                                    	<button v-on:click.prevent="showNewAdmi()" type="button" class="btn btn-info"><i class="fa fa-book"></i>Nuevo</button>  
+                                    	</div>
+                                    </div>
                                 </div><!-- /.panel-heading -->
                                 <div class="panel-body">
                                     <div id="contenido">    
@@ -270,6 +371,14 @@
 				existUE:0,
 				swcloseope:0,
 				urlreport:'',
+				cinew:'',
+				complnew:'',
+				fecnacnew:'',
+				patnew:'',
+				matnew:'',
+				nomnew:'',
+				cargoId:'',
+				financiamientoId:'',
 			},
 			infoUE2:{
 				sie:80730460,
@@ -279,32 +388,9 @@
 				categorieLabel:'',
 				existUE:0
 			},
-			// DBModalidades: {},
-			// DBLevel:  {},
-			// DBFases: {},
-			// DBCategories: {},
-			// DBselectedData: {},
-			// DBstudent: {},
-			// DBstudentPreCla: {},
-			// DBstudentClasificado: {},
-			// DBParallels: {},
-			// DBInscriptionLevel: {},
-			// DBEveStudents: {},
-			// existSelectData:false,
-			// existStudent:false,
-			// existStudentpre:false,
-			// swRegistryClassi:false,
-			// existParall:false,
-			// linkDisabled:false,
-			/////////////////////////////
-			// categorias: [
-			// 	{'id': 'A', 'description': 'Cat.A'},
-			// 	{'id': 'B', 'description': 'Cat.B'},
-			// 	{'id': 'C', 'description': 'Cat.C'},
-				
-			// ],
-
+		
 			buscando: false,			
+			swsegip: false,			
 			
 			userRol:1,
 			monthSelected:'',
@@ -312,6 +398,8 @@
 	        arrMonths:[],			
 	        arrAllAdm:{},			
 	        personSelected:{},			
+	        arrCargo:[],			
+	        arrFinanciamiento:[],			
 			
 			
 		},
@@ -347,6 +435,8 @@
                         });                    
                 },			
 			findUEData:function(){
+				this.monthSelected = '';
+				this.arrAllAdm = {};
 				this.existSelectData=false;
 				// this.DBModalidades={};
 				// this.DBFases={};
@@ -373,6 +463,8 @@
 								this.infoUE.sie = response.data.sie;
 								this.infoUE.institucioneducativa = response.data.institucioneducativa;
 								this.infoUE.existUE = response.data.existUE;
+								this.arrCargo = response.data.arrCargo;
+								this.arrFinanciamiento = response.data.arrFinanciamiento;
 								// this.DBModalidades = response.data.arrModalidades;
 								// this.DBLevel = response.data.arrLevel;
 								// this.swcloseevent = response.data.swcloseevent;
@@ -474,6 +566,48 @@
 							});	
 					}	
 				});						
+			},
+			closeOpe:function(person,idModify){
+				$('#modalCloseOpe').modal('show');
+			},
+			showNewAdmi:function(person,idModify){
+				this.swsegip = false;
+				// this.personSelected = person;
+				// this.infoUE.idModify = idModify;
+				$('#modalNewPerson').modal('show');
+			},
+			saveNewAdm:function(data){
+				axios.post(Routing.generate('adm_pla_saveNewAdm', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.swsegip == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.arrAllAdm = response.data.arrAllAdm;
+								this.infoUE.existUE = response.data.existUE;
+								this.swsegip = response.data.swsegip;
+								
+								$('#modalNewPerson').modal('hide');	
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'ERROR CON LA VALIDACIÓN SEGIP',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+
+
+
 			},
 			showdeleteAdm:function(person,idModify){
 				this.personSelected = person;
