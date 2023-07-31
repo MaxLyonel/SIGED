@@ -81,7 +81,7 @@ class AdmPlaController extends Controller{
         $userId = $this->session->get('userId');
         // $userRol = $this->session->get('roluser');
         $userRol = $request->get('userRol');
-        $sie = ($this->session->get('ie_id')>0)?$this->session->get('ie_id'):'80730306';
+        $sie = ($this->session->get('ie_id')>0)?$this->session->get('ie_id'):'';
 
         // $datosUser=$this->getDatosUsuario($userId,$userRol);
 
