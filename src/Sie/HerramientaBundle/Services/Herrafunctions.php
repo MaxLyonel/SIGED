@@ -150,7 +150,7 @@ order by cargo_sie,apellidos_nombre;
     $arrData = $query->fetchAll();
     if(sizeof($arrData)>0){
     }else{ 
-      $arrOpe=array();
+      $arrData=array();
     }
    
      return $arrData;
@@ -163,24 +163,23 @@ order by cargo_sie,apellidos_nombre;
    * @param  [type] $codDistrito [description]
    * @return [type]              [description]
    */
-  public function getPersonalStaff($arrData){
+  public function closeOperative($inpData){
     
     $query =       "
-        select * from univ_autoridad_universidad where gestion_tipo_id = ".$arrData['yearchoose'] ." and univ_sede_id = ".$arrData['sedeId'] ." and persona_id = ".$arrData['personId'];
+        select * from public.sp_validacion_cierre_operativo_comparacion_sie_planilla('".$inpData['gestion']."','".$inpData['idMounth']."','".$inpData['sie']."');
+        ";
 
     $query = $this->em->getConnection()->prepare($query);
     
     $query->execute();
     $arrOpe = $query->fetchAll();
     if(sizeof($arrOpe)>0){
-      $existsStaff = true;
     }else{ 
-      $existsStaff = false;
+      $arrOpe = array();
     }
    
-     return $existsStaff;
-    // return 'krlos';    
-
+     return $arrOpe;
+    // return 'krlos';
   }
 
  

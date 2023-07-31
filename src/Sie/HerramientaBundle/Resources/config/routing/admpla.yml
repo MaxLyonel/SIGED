@@ -38,6 +38,12 @@ adm_pla_saveNewAdm:
     options:
          expose: true
 
+adm_pla_closeOpe:
+    path:     /closeOpe
+    defaults: { _controller: SieHerramientaBundle:AdmPla:closeOpe }
+    options:
+         expose: true
+
 
 
 
