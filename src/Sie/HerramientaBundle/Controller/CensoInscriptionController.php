@@ -25,7 +25,7 @@ class CensoInscriptionController extends Controller
     public $arrUesCapinota;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '30-06-2023';
+        $this->limitDay = '30-10-2023';
         $this->arrUesCapinota = $this->setUEs();
     }       
 
