@@ -324,6 +324,7 @@
 																<td>${person.item}</td>
 																<td>${person.func_doc}</td>
 																<td>${person.solucion_comparacion_planilla_tipo_id}</td>
+																
 																<td  > 
 																<table>
 																	<tr style="padding: 15px;">
@@ -596,40 +597,72 @@
 			},
 			closeOpe:function(person,idModify){
 				this.arrDataObs = []
-				axios.post(Routing.generate('adm_pla_closeOpe', this.infoUE ))
-				.then(response => {
-					if (response.status == 200) {
-							if(response.data.swrequest == true){
 
-								this.infoUE.sie = response.data.sie;
-								this.arrDataObs = response.data.arrDataObs;
-								
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'ERROR REQUEST',
-								'warning'
-								);
+                Swal.fire({
+                    title: '¿Cerrar Operativo de registro del mes de '+this.monthSelected.toUpperCase()+'?',
+                    text: "Si acepta, se procesa/verifica el registro de información... " ,
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, aceptar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                	if (result.value) {
+
+						axios.post(Routing.generate('adm_pla_closeOpe', this.infoUE ))
+						.then(response => {
+							if (response.status == 200) {
+									if(response.data.swrequest == true){
+
+										this.infoUE.sie = response.data.sie;
+										this.arrDataObs = response.data.arrDataObs;
+										
+									}else{
+										Swal.fire(
+										'Atencion !',
+										'ERROR REQUEST',
+										'warning'
+										);
+									}
+									
 							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});	
+							this.buscando = false;
+						})
+						.catch(e => {
+							console.log(e);
+							this.buscando = false;
+						});	
 
+						$('#modalCloseOpe').modal('show');
 
-				$('#modalCloseOpe').modal('show');
+					}   
+                    
+                }); 
 			},
 			showNewAdmi:function(person,idModify){
 				this.swsegip = false;
+				this.infoUE.cinew=''
+				this.infoUE.patnew=''
+				this.infoUE.matnew=''
+				this.infoUE.nomnew=''
+				this.infoUE.fecnacnew=''
+				
 				// this.personSelected = person;
 				// this.infoUE.idModify = idModify;
 				$('#modalNewPerson').modal('show');
 			},
 			saveNewAdm:function(data){
+
+				if ( this.infoUE.nomnew == '' || this.infoUE.cinew == '' || this.infoUE.fecnacnew == '' || this.infoUE.financiamientoId == '' || this.infoUE.cargoId == '' ) {
+					Swal.fire(
+						'Atencion !',
+						'Los datos personales son requeridos...',
+						'warning'
+						);
+					this.buscando = false;
+					return;
+				}					
 				axios.post(Routing.generate('adm_pla_saveNewAdm', this.infoUE ))
 				.then(response => {
 					if (response.status == 200) {
