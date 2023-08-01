@@ -1,0 +1,771 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+        .readData{
+            background-color: lightblue;
+            color:  #000;
+            opacity: 0.8;
+         
+
+        }
+		.jupper{
+			text-transform: uppercase;
+		}
+
+        .seleccionado{
+			  color: currentColor;
+			  display: inline-block;  /* For IE11/ MS Edge bug */
+			  pointer-events: none;
+			  text-decoration: none;        	
+            background: #111406 !important;
+            pointer-events: none;
+        }		     
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+<!-- Start page header -->
+<div class="header-content">
+	<h2><i class="fa fa-table"></i> Personal Administrativo Planillas <span></span></h2>
+	<div class="breadcrumb-wrapper hidden-xs">
+		<span class="label">Usted esta aquí:</span>
+		<ol class="breadcrumb">
+			<li>
+				<i class="fa fa-home"></i>
+				<a href="#">Personal Administrativo Planillas</a>
+				<i class="fa fa-angle-right"></i>
+			</li>
+			<li class="active"></li>
+		</ol>
+	</div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- /.row -->
+<div id="app" v-cloak>
+
+    <div class="modal fade" id="modalNewInscription" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+
+				    <div class="panel panel-info">
+					    	<div class="panel-heading">
+					    	    <h4>${personSelected.apellidos_nombre} </br> </h4>
+					    	</div>
+					    <div class="panel-body">
+						  <div class="form-group">
+						    <label for="exampleFormControlTextarea1">Observación de la eliminación</label>
+						    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="infoUE.observation"></textarea>
+						    <br>
+						      <button type="button" class="btn btn-primary" @click="deleteAdm(infoUE)" >Guardar</button>
+						  </div>					    
+					    </div>  
+				   </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div class="modal fade" id="modalNewPerson" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+
+				    <div class="panel panel-primary">
+					    	<div class="panel-heading">
+					    	    <h4>Registro Nuevo Administrativo </br> </h4>
+					    	</div>
+					    <div class="panel-body">
+
+                                <div class="form-body">
+                                    <div class="row">
+                                      <div class="col-sm-4">
+                                      {# <label for="ci">Carnet Identidad.</label> #}
+                                      <input type="text" v-model="infoUE.cinew" id="form_ci" name="form[ci]" required="required" class="form-control" placeholder="Carnet Identidad" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="9" autocomplete="off" style="text-transform:uppercase">
+                                      </div>
+                                      <div class="col-sm-4">
+                                      {# <label for="complemento(s)">Complemento</label> #}
+                                        <input type="text" v-model="infoUE.complnew" id="form_complemento" name="form[complemento]" required="required" class="form-control" placeholder="Complemento" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="2" autocomplete="off" style="text-transform:uppercase">
+                                      </div>                                            
+                                        <div class="col-sm-4">
+                                            {# <label for="fechanac">F. Nacimiento</label> #}
+                                            <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="F. N. (dd-mm-aaaa)" v-model="infoUE.fecnacnew">
+                                        </div>                                      
+                                    </div>   
+                                    <br>                                 
+                                    <div class="row">
+                                      <div class="col-sm-4">
+                                            {# <label for="paterno">Paterno</label> #}
+                                            <input type="text" class="form-control" placeholder="Paterno" v-model="infoUE.patnew" maxlength="60" autocomplete="off" style="text-transform:uppercase">
+                                      </div>
+                                      <div class="col-sm-4">
+                                            {# <label for="materno">Materno</label> #}
+                                            <input type="text" class="form-control" placeholder="Materno" v-model="infoUE.matnew" maxlength="60" autocomplete="off" style="text-transform:uppercase">
+                                      </div>                                            
+                                        <div class="col-sm-4">
+                                            {# <label for="Nombre(s)">Nombre(s)</label> #}
+                                            <input type="text" class="form-control" placeholder="Nombre(s)" v-model="infoUE.nomnew" maxlength="60" autocomplete="off" style="text-transform:uppercase">
+                                        </div>
+                                    </div>
+                                    </br>  
+
+	                                  <div class="col-sm-6">
+	                                  <label for="Cargo">Cargo </label>
+	                                    <select name="arrCargo" id="idarrCargo" v-model="infoUE.cargoId" class="form-control">  
+	                                      <option v-for=" cargo in arrCargo " :value="cargo.id">${cargo.cargo}</option>
+	                                      
+	                                    </select>
+	                                  </div> 
+
+	                                  <div class="col-sm-6">
+	                                  <label for="Cargo">Financiamiento </label>
+	                                    <select name="arrCargo" id="idarrCargo" v-model="infoUE.financiamientoId" class="form-control">  
+	                                      <option v-for=" finan in arrFinanciamiento " :value="finan.id">${finan.financiamiento}</option>
+	                                      
+	                                    </select>
+	                                  </div>
+	                                  <br>
+                                </div>
+							<br>
+						  <div class="form-group">
+						   <br>
+						      <button type="button" class="btn btn-primary" @click="saveNewAdm(infoUE)" >Guardar</button>
+						  </div>					    
+					    </div>  
+				   </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+    <div class="modal fade" id="modalCloseOpe" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+
+				    <div class="panel panel-primary">
+					    	<div class="panel-heading">
+					    	    <h4>UE: ${infoUE.sie} ${infoUE.institucioneducativa} - ${monthSelected  | uppercase}</br> </h4>
+					    	</div>
+					    <div class="panel-body">
+
+							<div class="table-responsive" v-if="arrDataObs.length>0">
+								<table class="table table-striped table-condensed table-hover">
+								  <thead class="thead-dark">
+								    <tr>
+								      <th scope="col">Obs.</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+								 	<tr v-for="(obs, index) in arrDataObs">
+										<td>${obs.observacion}</td>
+								    </tr>
+								  </tbody>
+								</table>
+							</div>
+							<div v-else>No existen observaciones... </div>
+
+					    </div>  
+				   </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+	{#<div v-if="cortina" class="cortina">
+		<i class="fa fa-refresh fa-spin"></i> Procesando... 
+	</div>#}
+	<div class="body-content animated fadeIn">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<h3 class="titulo">Personal Administrativo Planillas</h3>
+						<div class="col-md-5">
+							<div role="tabpanel">
+								<!-- Nav tabs -->
+								{# <ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+										<a role="tab" data-toggle="tab">Buscar por SIE</a>
+									</li>
+								</ul> #}
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+
+		                            <form method="POST" id="form-mostrar-resultados-reporte-salud" >
+		                              <div class="form-row">
+
+		                                <div class="form-group col-md-5 col-sm-6 ">
+		                                	<input type="text" v-model="infoUE.sie"  class="form-control" id="exampleInputPassword1" placeholder="SIE" :readonly="disableElement>0">
+		                                    {# <input type="text" class="form-control" placeholder="SIE" > #}
+		                                </div>
+
+		                                <div class="form-group col-md-3 col-sm-6 ">
+		                                    <select class="form-control" name="fase" id="fase" v-model="infoUE.gestion">
+		                                        <option v-for="(data, index) in arrYears"  :key="data.id" :value="data.id" v-text="data.gestion"></option>
+		                                    </select>
+		                                </div>
+
+		                                
+		                                <div class="form-group col-md-4 col-sm-6 ">
+		                                    <button v-on:click.prevent="findUEData()" type="button" class="btn btn-primary"><i class="fa fa-book"></i>Buscar</button>   
+
+		                                    <div class="col-xs-12 col-lg-12" v-if="buscando">
+		                                        <div  class="text-center">
+		                                            <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+		                                        </div>              
+		                                    </div>                                                                  
+		                                </div>
+		                              </div>
+		                            </form>										
+                        
+									</div>
+								</div>
+							</div>							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="row" v-if="infoUE.existUE">
+            <div class="col-xs-12 col-lg-12" >
+                <div class="panel-body">
+                    <div class="row compose-mail-wrapper">
+                        <div class="col-sm-2">
+                            <div class="panel">
+                                <ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
+                                	<li class="activeprocess">
+                                        <a href="#" ><i class="fa fa-inbox"></i> ${infoUE.gestion}</a>
+                                    </li>
+                                    <li class="activeprocess" v-for="(ele, index) in arrMonths">
+                                        <a href="#" @click="getAllAdmi(infoUE, ele.id, ele.month)"><i class="fa fa-inbox"></i> ${ele.month  | uppercase}</a>
+                                    </li>
+                                 </ul>
+                            </div>    
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="panel rounded shadow panel-primary">
+                                <div class="panel-heading ">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title" id="titulo">UE: ${infoUE.institucioneducativa} - ${monthSelected  | uppercase}</h3>
+                                    </div>
+                                    <div class="clearfix text-right" >
+                                    	<div v-if="monthSelected">
+	                                    	<button v-on:click.prevent="closeOpe()" type="button" class="btn btn-warning"><i class="fa fa-book"></i>Cerrar Operativo</button>
+
+	                                    	<button v-on:click.prevent="showNewAdmi()" type="button" class="btn btn-info"><i class="fa fa-book"></i>Nuevo</button>  
+                                    	</div>
+                                    </div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="contenido">    
+                                        <div class="row">
+                                            <div class="col-md-12">
+												<div class="table-responsive">
+												    <table class="table table-bordered table-middle  ">
+												        <thead>
+												            <tr>
+												                <th class="text-center" style="max-width: 5px">#</th>
+												                <th>CI-Compl.</th>
+												                <th>Datos Personales</th>
+												                <th>Financiamiento</th>
+												                <th>Cargo</th>
+												                <th>Servicio</th>
+												                <th>Item</th>
+												                <th>Func.</th>
+												                <th>Solución</th>
+												                
+												                <th class="text-center" style="max-width: 40px">Opc.</th>
+												            </tr>
+												        </thead>
+												        <tbody>
+														 	<tr v-for="(person, index) in arrAllAdm">
+																<th scope="row" >${index+1}</th>
+																<td>${person.ci} </td>
+																<td>${person.apellidos_nombre}</td>
+																<td>
+																	<div v-if="person.financiamiento_sie == 'MINISTERIO DE EDUCACION'" style="color:blue;">
+																		${person.financiamiento_sie}
+																	</div>
+																	<div v-else-if="person.financiamiento_sie == 'GOBIERNO MUNICIPAL'" style="color: #FFC300 ;">
+																		${person.financiamiento_sie}
+																	</div>
+																	<div v-else style="color:  #048968 ;">
+																		${person.financiamiento_sie}
+																	</div>
+																</td>
+																<td>${person.cargo_sie}</td>
+																<td>${person.servicio}</td>
+																<td>${person.item}</td>
+																<td>${person.func_doc}</td>
+																<td>${person.solucion_comparacion_planilla_tipo_id}</td>
+																
+																<td  > 
+																<table>
+																	<tr style="padding: 15px;">
+																		<td class="mp-3">
+																		<a href="#" @click="ratify(person.id)" class="btn btn-sm btn-success">
+																			<i class="fa fa-check"></i>
+																		</a>
+																		</td>
+																		<td>
+																		<a href="#" @click="showdeleteAdm(person,person.id)" class="btn btn-sm btn-danger">		
+																			<i class="fa fa-trash"></i>
+																		</a>
+																		</td>
+																	</tr>
+																</table>
+																</td>
+														    </tr>												        
+												        </tbody>
+												    </table>
+												</div>                                                
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                        </div>
+                    </div>
+                </div>             
+            </div>
+        </div>
+		
+	</div>
+</div>	
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+    // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+  </script>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-the-mask/0.11.1/vue-the-mask.min.js" integrity="sha512-qXurwUG9teY1KFtbBifUHInCiNK/POQqJeFRSoaHg1pHEB1tBUlFKRsfPzm1D6b6ueeQOCKldvXYCtOsPURrcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+<script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+
+
+
+<script type="text/javascript">
+
+	var app = new Vue({
+		delimiters: ['${', '}'],
+		el: '#app',
+		data: {
+			opcion: 1,
+			swcloseevent: 0,
+			disableElement: '{{disableElement}}',
+			infoUE:{
+				sie: '',
+				institucioneducativa:'',
+				gestion:'',
+				idMounth:'',
+				idModify:'',
+				existUE:0,
+				swcloseope:0,
+				urlreport:'',
+				cinew:'',
+				complnew:'',
+				fecnacnew:'',
+				patnew:'',
+				matnew:'',
+				nomnew:'',
+				cargoId:'',
+				financiamientoId:'',
+			},
+			infoUE2:{
+				sie:80730460,
+				institucioneducativa:'',
+				modalidadLabel:'',
+				faseLabel:'',
+				categorieLabel:'',
+				existUE:0
+			},
+		
+			buscando: false,			
+			swsegip: false,			
+			
+			userRol:1,
+			monthSelected:'',
+	        arrYears:[],
+	        arrMonths:[],			
+	        arrAllAdm:{},			
+	        personSelected:{},			
+	        arrCargo:[],			
+	        arrFinanciamiento:[],			
+	        arrDataObs:[],			
+			
+			
+		},
+		filters: {
+			uppercase: function(v) {
+				return v.toUpperCase();
+			}
+		},	
+
+		components: {
+			//vuejsDatepicker
+		},
+
+		mounted(){	
+			this.getMainInfo(this.userRol);            
+		},
+
+		methods: {
+            getMainInfo: function(userRol){
+                    
+                    axios.get(Routing.generate('adm_pla_getMainInfo',{ userRol: userRol}))
+                        .then(response => {
+                            this.userRol = response.data.rol;
+                            this.gestion = response.data.currentyear;
+                            this.infoUE.sie = response.data.sie;
+                            this.arrYears = response.data.arrYears;
+                            this.arrMonths = response.data.arrMonths;                            
+                            
+                            
+                        })
+                        .catch(e = {
+
+                        });                    
+                },			
+			findUEData:function(){
+				this.monthSelected = '';
+				this.arrAllAdm = {};
+				this.existSelectData=false;
+				// this.DBModalidades={};
+				// this.DBFases={};
+				// this.DBCategories={};
+				this.infoUE.existUE = 0;
+				this.buscando=true;
+				if (typeof this.infoUE.sie === "undefined") {
+					Swal.fire(
+						'Atencion !',
+						'Debe ingresar el  CÓDIGO SIE',
+						'warning'
+						);
+					this.buscando = false;
+					return;
+				}				
+
+				axios.post(Routing.generate('adm_pla_findUEData', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.infoUE.institucioneducativa = response.data.institucioneducativa;
+								this.infoUE.existUE = response.data.existUE;
+								this.arrCargo = response.data.arrCargo;
+								this.arrFinanciamiento = response.data.arrFinanciamiento;
+								// this.DBModalidades = response.data.arrModalidades;
+								// this.DBLevel = response.data.arrLevel;
+								// this.swcloseevent = response.data.swcloseevent;
+								// this.infoUE.swcloseevent = this.swcloseevent;
+								// this.infoUE.urlreporte = response.data.urlreporte;
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO SIE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});				
+
+			},
+
+			getAllAdmi:function(data, idMounth, month){
+				this.infoUE.idMounth = idMounth;
+				this.monthSelected = month;
+				axios.post(Routing.generate('adm_pla_getAllAdmi', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.arrAllAdm = response.data.arrAllAdm;
+								this.infoUE.existUE = response.data.existUE;
+								
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO SIE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});						
+			},
+
+
+			ratify:function(idModify){
+				this.infoUE.idModify = idModify;
+
+                    Swal.fire({
+                        title: '¿Ratificar el registro?',
+                        text: "Si acepta, el registro sera ratificado... " ,
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, aceptar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+	                    if (result.value) {
+				
+							axios.post(Routing.generate('adm_pla_ratify', this.infoUE ))
+							.then(response => {
+								if (response.status == 200) {
+										// console.log(response.data);
+
+										if(response.data.existUE == true){
+
+											this.infoUE.sie = response.data.sie;
+											this.arrAllAdm = response.data.arrAllAdm;
+											this.infoUE.existUE = response.data.existUE;
+											
+											
+										}else{
+											Swal.fire(
+											'Atencion !',
+											'CÓDIGO SIE NO EXISTE',
+											'warning'
+											);
+										}
+										
+								}
+								this.buscando = false;
+							})
+							.catch(e => {
+								console.log(e);
+								this.buscando = false;
+							});	
+					}	
+				});						
+			},
+			closeOpe:function(person,idModify){
+				this.arrDataObs = []
+
+                Swal.fire({
+                    title: '¿Cerrar Operativo de registro del mes de '+this.monthSelected.toUpperCase()+'?',
+                    text: "Si acepta, se procesa/verifica el registro de información... " ,
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, aceptar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                	if (result.value) {
+
+						axios.post(Routing.generate('adm_pla_closeOpe', this.infoUE ))
+						.then(response => {
+							if (response.status == 200) {
+									if(response.data.swrequest == true){
+
+										this.infoUE.sie = response.data.sie;
+										this.arrDataObs = response.data.arrDataObs;
+										
+									}else{
+										Swal.fire(
+										'Atencion !',
+										'ERROR REQUEST',
+										'warning'
+										);
+									}
+									
+							}
+							this.buscando = false;
+						})
+						.catch(e => {
+							console.log(e);
+							this.buscando = false;
+						});	
+
+						$('#modalCloseOpe').modal('show');
+
+					}   
+                    
+                }); 
+			},
+			showNewAdmi:function(person,idModify){
+				this.swsegip = false;
+				this.infoUE.cinew=''
+				this.infoUE.patnew=''
+				this.infoUE.matnew=''
+				this.infoUE.nomnew=''
+				this.infoUE.fecnacnew=''
+				
+				// this.personSelected = person;
+				// this.infoUE.idModify = idModify;
+				$('#modalNewPerson').modal('show');
+			},
+			saveNewAdm:function(data){
+
+				if ( this.infoUE.nomnew == '' || this.infoUE.cinew == '' || this.infoUE.fecnacnew == '' || this.infoUE.financiamientoId == '' || this.infoUE.cargoId == '' ) {
+					Swal.fire(
+						'Atencion !',
+						'Los datos personales son requeridos...',
+						'warning'
+						);
+					this.buscando = false;
+					return;
+				}					
+				axios.post(Routing.generate('adm_pla_saveNewAdm', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.swsegip == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.arrAllAdm = response.data.arrAllAdm;
+								this.infoUE.existUE = response.data.existUE;
+								this.swsegip = response.data.swsegip;
+								
+								$('#modalNewPerson').modal('hide');	
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'ERROR CON LA VALIDACIÓN SEGIP',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+
+
+
+			},
+			showdeleteAdm:function(person,idModify){
+				this.personSelected = person;
+				this.infoUE.idModify = idModify;
+				$('#modalNewInscription').modal('show');
+			},
+			deleteAdm:function(infoUE){
+				
+				if (typeof this.infoUE.observation === "undefined" || this.infoUE.observation == '') {
+					Swal.fire(
+						'Atencion !',
+						'Debe ingresar la Observación',
+						'warning'
+						);
+					this.buscando = false;
+					return;
+				}					
+				// this.infoUE.idModify = idModify;
+				axios.post(Routing.generate('adm_pla_deleteAdm', this.infoUE ))
+				.then(response => {
+					if (response.status == 200) {
+							// console.log(response.data);
+
+							if(response.data.existUE == true){
+
+								this.infoUE.sie = response.data.sie;
+								this.arrAllAdm = response.data.arrAllAdm;
+								this.infoUE.existUE = response.data.existUE;
+								
+								
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO SIE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});	
+
+
+				$('#modalNewInscription').modal('hide');
+			},
+
+
+			/////////////////////////////////////////////////////////////////////
+
+			
+		},
+		
+	});
+
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+		$("td").focus();
+		$("#fecha_vencimiento").inputmask({ "alias": "dd-mm-yyyy" });
+		//$("#idarrPais_p").select2();
+	});      
+
+	$(".js-example-basic-multiple").select2({
+            tags: "true",
+            placeholder: "Seleccione una opción",
+            allowClear: true
+        });  
+
+
+
+</script>
+{%endblock%}
