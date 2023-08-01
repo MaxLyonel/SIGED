@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\RegistroConsolidacionOperativoPlanilla:
+    type: entity
+    table: registro_consolidacion_operativo_planilla
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestion:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        mes:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        institucioneducativaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        usuario:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        observacion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    lifecycleCallbacks: {  }
