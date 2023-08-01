@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\SolucionComparacionPlanillaTipo:
+    type: entity
+    table: solucion_comparacion_planilla_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        solucionTipo:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: solucion_tipo
+    lifecycleCallbacks: {  }

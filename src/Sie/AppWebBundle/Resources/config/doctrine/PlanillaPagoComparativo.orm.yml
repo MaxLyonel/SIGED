@@ -1,0 +1,432 @@
+Sie\AppWebBundle\Entity\PlanillaPagoComparativo:
+    type: entity
+    table: planilla_pago_comparativo
+    uniqueConstraints:
+        uniq_planilla_pago_comparativo:
+            columns:
+                - gestion
+                - mes
+                - servicio
+                - cod_ue
+                - item
+                - cargo
+                - ci_pla
+                - comp_pla
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        mes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        servicio:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+        programa:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+        item:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+        c31:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        carnet:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        nombre1:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        nombre2:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        cargo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        porcate:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        horapr:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        horapa:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        horas:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        diastrab:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        afp:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        tipoProceso:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tipo_proceso
+        pagado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        subsidio:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+        acreedor:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        reintegro:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        saldoIva:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+            column: saldo_iva
+        basico:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        catego:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        acumulo:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        reintegros:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        bonojer:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        bonozona:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        bonofron:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        ingres3:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        ingres5:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        reinSub:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+            column: rein_sub
+        subsidios:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        sumahab:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        fonviInv:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+            column: fonvi_inv
+        renta:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        adap:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        multasFal:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+            column: multas_fal
+        descue10:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        cob:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        desSubsi:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+            column: des_subsi
+        otrosdesc:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        afp10:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        afp02:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        afp005:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        p13110:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        p13120:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        p13200:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        sumades:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        totcheque:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+        mmaachq:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        nrochq:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        digchq:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        codDep:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_dep
+        codObs:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_obs
+        codUe:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: cod_ue
+        codRda:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_rda
+        codDis:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_dis
+        niv:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        carnet2:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        carnetInteger:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: carnet_integer
+        ciPla:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+            column: ci_pla
+        compPla:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: comp_pla
+        estadoComparacionPlanillaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estado_comparacion_planilla_tipo_id
+        codUePlanilla:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_ue_planilla
+        observacion:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        codFunc:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_func
+    lifecycleCallbacks: {  }
