@@ -1,0 +1,107 @@
+Sie\AppWebBundle\Entity\EmparejaPlanillaAsignaturaTipo:
+    type: entity
+    table: empareja_planilla_asignatura_tipo
+    indexes:
+        IDX_FF1B01E7FB6911A2:
+            columns:
+                - empareja_sie_planilla_id
+        IDX_FF1B01E79B276788:
+            columns:
+                - turno_tipo_id
+        IDX_FF1B01E7ECEBF374:
+            columns:
+                - paralelo_tipo_id
+        IDX_FF1B01E76DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_FF1B01E7C6447610:
+            columns:
+                - grado_tipo_id
+        IDX_FF1B01E7585AE0D9:
+            columns:
+                - asignatura_tipo_id
+    uniqueConstraints:
+        uniq_empareja_planilla_asignatura_tipo:
+            columns:
+                - empareja_sie_planilla_id
+                - turno_tipo_id
+                - paralelo_tipo_id
+                - grado_tipo_id
+                - nivel_tipo_id
+                - asignatura_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        emparejaSiePlanilla:
+            targetEntity: EmparejaSiePlanilla
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                empareja_sie_planilla_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        turnoTipo:
+            targetEntity: TurnoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                turno_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        paraleloTipo:
+            targetEntity: ParaleloTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                paralelo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        asignaturaTipo:
+            targetEntity: AsignaturaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                asignatura_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
