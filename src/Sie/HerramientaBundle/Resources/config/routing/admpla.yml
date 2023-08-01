@@ -1,0 +1,52 @@
+adm_pla_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:AdmPla:index }
+
+adm_pla_findUEData:
+    path:     /findUEData
+    defaults: { _controller: SieHerramientaBundle:AdmPla:findUEData }
+    options:
+         expose: true
+
+adm_pla_getMainInfo:
+    path:     /getMainInfo
+    defaults: { _controller: SieHerramientaBundle:AdmPla:getMainInfo }
+    options:
+         expose: true
+
+adm_pla_getAllAdmi:
+    path:     /getAllAdmi
+    defaults: { _controller: SieHerramientaBundle:AdmPla:getAllAdmi }
+    options:
+         expose: true
+
+adm_pla_ratify:
+    path:     /ratify
+    defaults: { _controller: SieHerramientaBundle:AdmPla:ratify }
+    options:
+         expose: true
+
+adm_pla_deleteAdm:
+    path:     /deleteAdm
+    defaults: { _controller: SieHerramientaBundle:AdmPla:deleteAdm }
+    options:
+         expose: true
+
+adm_pla_saveNewAdm:
+    path:     /saveNewAdm
+    defaults: { _controller: SieHerramientaBundle:AdmPla:saveNewAdm }
+    options:
+         expose: true
+
+adm_pla_closeOpe:
+    path:     /closeOpe
+    defaults: { _controller: SieHerramientaBundle:AdmPla:closeOpe }
+    options:
+         expose: true
+
+
+
+
+
+
+
