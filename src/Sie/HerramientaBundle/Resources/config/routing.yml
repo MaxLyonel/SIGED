@@ -54,6 +54,10 @@ sie_herramienta_info_maestro:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoMaestro.yml"
     prefix:   /acceso/infoMaestro
 
+sie_herramienta_info_maestro_planilla:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoMaestroPlanilla.yml"
+    prefix:   /acceso/infoMaestroPlanilla
+
 sie_herramienta_info_estudiante:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudiante.yml"
     prefix:   /sie/infoEstudiante
