@@ -182,6 +182,43 @@ order by cargo_sie,apellidos_nombre;
     // return 'krlos';
   }
 
+
+  /**
+   * [getUesByCodDistrito description]
+   * @param  [type] $codDistrito [description]
+   * @return [type]              [description]
+   */
+  public function getAllowMonth($year, $months){
+    
+    $query = "
+        select * 
+        from registro_consolidacion_operativo_planilla
+        where gestion='".$year."' and institucioneducativa_id=99999999 order by mes
+        ";
+
+    $query = $this->em->getConnection()->prepare($query);
+    
+    $query->execute();
+    $arrData = $query->fetchAll();
+    if(sizeof($arrData)>0){
+      
+      $arrAllowMonths = array();
+      foreach ($arrData as $value) {
+        $ind = $value['mes']-1;
+        
+        if($value['mes'] == $months[$ind]['id']){
+          $arrAllowMonths[] = $months[$ind];
+        }
+       
+      }
+    }else{ 
+      $arrAllowMonths = array();
+    }
+   
+     return $arrAllowMonths;
+    // return 'krlos';
+  }
+
  
  
 
