@@ -89,7 +89,8 @@ class AdmPlaController extends Controller{
             'rol' => $userRol,
             'sie' => $sie,
             'arrYears'=>[array('id'=>2023, 'gestion'=>2023)],
-            'arrMonths'=>$this->month,
+            // 'arrMonths'=>$this->month,
+            'arrMonths'=>$this->get('herrafunctions')->getAllowMonth($this->session->get('currentyear'), $this->month),
             'currentyear'=> $this->session->get('currentyear')            
           );
           
