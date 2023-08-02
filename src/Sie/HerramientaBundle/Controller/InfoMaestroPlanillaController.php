@@ -143,6 +143,7 @@ class InfoMaestroPlanillaController extends Controller {
         $finciamiento = $request->request->get('financiamiento');
         
         // Obtener la entidad EmparejaSiePlanilla por su id
+        
         $emparejaSiePlanilla = $em->getRepository(EmparejaSiePlanilla::class)->find($id);
         
         $institucion = $emparejaSiePlanilla->getInstitucioneducativa()->getId();
@@ -164,10 +165,14 @@ class InfoMaestroPlanillaController extends Controller {
         $emparejaSiePlanilla->setObservacion($justificacion);
         // Persistir los cambios en la base de datos
         $em->flush();
+        
+        $financiamientoTipo = $em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($finciamiento);
+        $financiamientotxt = $financiamientoTipo->getFinanciamiento();
 
         $maestro = [
             'id' => $emparejaSiePlanilla->getId(),
             'solucion_comparacion_planilla_tipo_id' => $emparejaSiePlanilla->getSolucionComparacionPlanillaTipo()->getId(),
+            'financimientonew' => $financiamientotxt,
             'observacion' => $emparejaSiePlanilla->getObservacion(),
         ];
         return new JsonResponse($maestro);
