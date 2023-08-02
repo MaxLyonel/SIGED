@@ -148,7 +148,7 @@ class InfoMaestroPlanillaController extends Controller {
         
         $institucion = $emparejaSiePlanilla->getInstitucioneducativa()->getId();
         $gestion = $emparejaSiePlanilla->getGestionTipoId();
-        $mes = $request->getSession()->get('idPlanillaMes');;
+        $mes = $request->getSession()->get('idPlanillaMes');
         // dump($institucion);
         // dump($gestion);
         // dump($emparejaSiePlanilla);die;
@@ -156,13 +156,22 @@ class InfoMaestroPlanillaController extends Controller {
         if (!$emparejaSiePlanilla) {
             return new JsonResponse(['error' => 'La entidad no existe'], 404);
         }
-
-        // Obtener el nuevo valor para el campo solucionComparacionPlanillaTipo desde la solicitud AJAX
         $justificacion = '';
         $nuevoValorSolucion =$em->getRepository(SolucionComparacionPlanillaTipo::class)->findOneById(1);
+        // Obtener el nuevo valor para el campo solucionComparacionPlanillaTipo desde la solicitud AJAX
+        if ($emparejaSiePlanilla->getplanillaPagoComparativoSie()===null){
+            $justificacion = $emparejaSiePlanilla->getobservacion();
+            $nuevoValorSolucion =$emparejaSiePlanilla->getsolucionComparacionPlanillaTipo();
+        } 
+        if ($emparejaSiePlanilla->getnuevoMaestroInscripcion()!==null){
+            $justificacion = $emparejaSiePlanilla->getnuevoMaestroInscripcion()->getobservacion();
+            $nuevoValorSolucion =$em->getRepository(SolucionComparacionPlanillaTipo::class)->findOneById(3);
+        } 
         $emparejaSiePlanilla->setSolucionComparacionPlanillaTipo($nuevoValorSolucion);
         $emparejaSiePlanilla->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($finciamiento));
         $emparejaSiePlanilla->setObservacion($justificacion);
+        $fechaActual = new \DateTime();
+        $emparejaSiePlanilla->setFechaModificacion($fechaActual);
         // Persistir los cambios en la base de datos
         $em->flush();
         
@@ -198,9 +207,8 @@ class InfoMaestroPlanillaController extends Controller {
         // Actualizar el campo solucionComparacionPlanillaTipo en la entidad
         $emparejaSiePlanilla->setSolucionComparacionPlanillaTipo($nuevoValorSolucion);
         $emparejaSiePlanilla->setObservacion($justificacion);
-
-
-        // Persistir los cambios en la base de datos
+        $fechaActual = new \DateTime();
+        $emparejaSiePlanilla->setFechaModificacion($fechaActual);
         $em->flush();
 
         $maestro = [
@@ -325,13 +333,9 @@ class InfoMaestroPlanillaController extends Controller {
 
 
     public function guardaMaestroAction(Request $request){
-        // dump('ok guarda');
-        // dump($request);
         $institucion = $this->session->get('ie_id');
         $gestion = $request->getSession()->get('currentyear');
         $planillaMes = $request->getSession()->get('idPlanillaMes');
-        // dump($institucion);
-        // dump($gestion);
         
         $ci = $request->request->get('ci');
         $complemento = $request->request->get('complemento');
@@ -342,12 +346,8 @@ class InfoMaestroPlanillaController extends Controller {
         $fechaNacimiento = new \DateTime($request->request->get('fechaNacimiento'));
         $financiamientoTipoId = (int) $request->request->get('financiamiento');
         $observacion = $request->request->get('observacion');
-        // dump($complemento);
-        // die;
 
         $em = $this->getDoctrine()->getManager();
-        // Crear una nueva instancia de la entidad NuevoMaestroInscripcion
-        // dump($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion));die;
         $nuevoMaestro = new NuevoMaestroInscripcion();
         $nuevoMaestro->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion));
         $nuevoMaestro->setMesTipo($em->getRepository('SieAppWebBundle:MesTipo')->findOneById($planillaMes));
@@ -363,11 +363,8 @@ class InfoMaestroPlanillaController extends Controller {
         $nuevoMaestro->setInstitucioneducativaId($institucion);
         $fechaActual = new \DateTime();
         $nuevoMaestro->setFechaCreacion($fechaActual);
-        // Obtener el Entity Manager para persistir y guardar la entidad
         $em->persist($nuevoMaestro);
         $em->flush();
-
-         // Crear una nueva instancia de la entidad EmparejaSiePlanilla
         $emparejaSiePlanilla = new EmparejaSiePlanilla();
         $emparejaSiePlanilla->setGestionTipoId($gestion);
         $emparejaSiePlanilla->setMesTipoId($planillaMes);
@@ -375,8 +372,8 @@ class InfoMaestroPlanillaController extends Controller {
         $emparejaSiePlanilla->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($financiamientoTipoId));
         $emparejaSiePlanilla->setCargoTipoId(0);
         $emparejaSiePlanilla->setNuevoMaestroInscripcion($nuevoMaestro);
+        $emparejaSiePlanilla->setObservacion($observacion);
         $emparejaSiePlanilla->setSolucionComparacionPlanillaTipo($em->getRepository('SieAppWebBundle:SolucionComparacionPlanillaTipo')->findOneById(3));
-        // Establecer otros campos necesarios en EmparejaSiePlanilla si es necesario
 
         // Establecer la fecha de creación con la fecha y hora actual
         $fechaActual = new \DateTime();
