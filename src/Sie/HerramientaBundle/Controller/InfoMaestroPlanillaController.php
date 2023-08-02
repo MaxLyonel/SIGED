@@ -48,13 +48,11 @@ class InfoMaestroPlanillaController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
-        ////////////////////////////////////////////////////
         $em = $this->getDoctrine()->getManager();
         
         $institucion = $this->session->get('ie_id');
         $gestion = $request->getSession()->get('currentyear');
-        $mes = 6;
+        $mes = 3;
         /*
         * verificamos si tiene tuicion
         */
@@ -141,8 +139,8 @@ class InfoMaestroPlanillaController extends Controller {
 
 
     public function confirmaAction (Request $request, $id){
-        // dump('ok');die;
         $em = $this->getDoctrine()->getManager();
+        $finciamiento = $request->request->get('financiamiento');
         
         // Obtener la entidad EmparejaSiePlanilla por su id
         $emparejaSiePlanilla = $em->getRepository(EmparejaSiePlanilla::class)->find($id);
@@ -162,6 +160,7 @@ class InfoMaestroPlanillaController extends Controller {
         $justificacion = '';
         $nuevoValorSolucion =$em->getRepository(SolucionComparacionPlanillaTipo::class)->findOneById(1);
         $emparejaSiePlanilla->setSolucionComparacionPlanillaTipo($nuevoValorSolucion);
+        $emparejaSiePlanilla->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($finciamiento));
         $emparejaSiePlanilla->setObservacion($justificacion);
         // Persistir los cambios en la base de datos
         $em->flush();
@@ -402,9 +401,50 @@ class InfoMaestroPlanillaController extends Controller {
                     $maestronew = $query->fetchAll();
 
         return new JsonResponse($maestronew);
-                
-        
     }
    
+    public function validaConsolidacionAction(Request $request){
+        $sie = $request->request->get('sie');
+        $gestion = $request->request->get('gestion');
+        $mesplanilla = $request->request->get('mesid');
+        $em = $this->getDoctrine()->getManager();
+        $query = $query = $em->getConnection()->prepare("select * from public.sp_validacion_cierre_operativo_comparacion_sie_planilla('".$gestion."','".$mesplanilla."','".$sie."');");
+        $query->execute();
+        $arrayObs = $query->fetchAll();
+        $mensaje = 1;
+        if(sizeof($arrayObs)>0){
+            $mensaje = 0;
+        }else{ 
+          $arrayObs = array();
+        }
+        return new JsonResponse(array(
+            'observacion' => $arrayObs,
+            'estado' => $mensaje,
+        ));
+    }
 
+    public function financiamientoAction($id){
+        $em = $this->getDoctrine()->getManager();
+        $financiamiento = $em->createQuery(
+            'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
+                WHERE ft.id NOT IN  (:id)')
+                ->setParameter('id', array(0, 5, 12))
+                ->getResult();
+                $financiamientoArray = array();
+        foreach ($financiamiento as $f) {
+            $financiamientoArray[$f->getId()] = $f->getFinanciamiento();
+        }
+        $financiamientomae = $em->getRepository(EmparejaSiePlanilla::class)->findOneById($id)->getFinanciamientoTipo();
+        $financiamientoant = array(
+            'id' => $financiamientomae->getId(),
+            'financiamiento' => $financiamientomae->getFinanciamiento(),
+        );
+        // dump($financiamientomae);
+        // dump($financiamientoant);
+        // die;
+        return new JsonResponse(array(
+            'financiamiento' => $financiamientoArray,
+            'financiamientoant' => $financiamientoant,
+        ));
+    }
 }
