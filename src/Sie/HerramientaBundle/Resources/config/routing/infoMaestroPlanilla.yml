@@ -1,0 +1,50 @@
+herramienta_info_maestro_planilla_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:index}
+
+herramienta_info_maestro_planilla_confirma:
+    path:    /confirma/{id}/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:confirma }
+    methods: [POST]
+    options:
+        expose: true   
+         
+herramienta_info_maestro_planilla_elimina:
+    path:    /elimina/{id}/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:elimina }
+    methods: [POST]
+    options:
+        expose: true
+
+herramienta_info_maestro_planilla_areas:
+    path:    /areas/{id}/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:areasMaestro }
+    options:
+        expose: true   
+
+herramienta_info_maestro_planilla_valida:
+    path:     /valida/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:valida }
+    methods:  [POST]
+    options:
+         expose: true
+
+herramienta_info_maestro_planilla_guarda_nuevo_maestro:
+    path:     /guardamaestro/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:guardaMaestro }
+    methods:  [POST]
+    options:
+         expose: true
+
+herramienta_info_maestro_planilla_valida_consolidacion:
+    path:     /consolidacion/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:validaConsolidacion }
+    methods:  [POST]
+    options:
+         expose: true
+
+herramienta_info_maestro_planilla_financiamiento:
+    path:     /financiamiento/{id}/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:financiamiento }
+    options:
+         expose: true

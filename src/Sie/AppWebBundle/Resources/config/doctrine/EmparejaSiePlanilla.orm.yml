@@ -1,0 +1,122 @@
+Sie\AppWebBundle\Entity\EmparejaSiePlanilla:
+    type: entity
+    table: empareja_sie_planilla
+    indexes:
+        IDX_BC1F5E2BF1C67E39:
+            columns:
+                - maestro_inscripcion_id_sie
+        IDX_BC1F5E2B4DABC6AB:
+            columns:
+                - planilla_pago_comparativo_id_sie
+        IDX_BC1F5E2BCEDB60B7:
+            columns:
+                - financiamiento_tipo_id
+        IDX_BC1F5E2BC9DCBF97:
+            columns:
+                - nuevo_maestro_inscripcion_id
+        IDX_BC1F5E2B3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_BC1F5E2BB904B03B:
+            columns:
+                - solucion_comparacion_planilla_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        mesTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: mes_tipo_id
+        cargoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cargo_tipo_id
+        observacion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        maestroInscripcionSie:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id_sie:
+                    referencedColumnName: id
+            orphanRemoval: false
+        planillaPagoComparativoSie:
+            targetEntity: PlanillaPagoComparativo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                planilla_pago_comparativo_id_sie:
+                    referencedColumnName: id
+            orphanRemoval: false
+        financiamientoTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                financiamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nuevoMaestroInscripcion:
+            targetEntity: NuevoMaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nuevo_maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        solucionComparacionPlanillaTipo:
+            targetEntity: SolucionComparacionPlanillaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                solucion_comparacion_planilla_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

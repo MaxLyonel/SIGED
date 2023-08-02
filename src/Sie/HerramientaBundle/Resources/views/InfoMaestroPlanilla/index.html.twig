@@ -1,0 +1,806 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Gestión Maestro - Planilla </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        
+        {# {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Gestión Docente - Planilla', 'gestion': gestion_aux,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %} #}
+
+        <header class="navbar navbar-default" style="background-color: #297e96; padding: 20px; border-radius: 8px 8px 0 0; text: #969696">
+            <div class="container" >
+                <div class="navbar-header">
+                <h1 style="color: white; margin-top: 0;"><strong>Gestión Maestro - Planilla</strong></h1>
+                <p style="color: white; margin-top: 0;"><strong>Gestión: {{ gestion }}</strong></p>
+                <p style="color: white; margin-top: 0;"><strong>SIE: {{ institucion.id }}</strong></p>
+                <p style="color: white; margin-top: 0;"><strong>Institución Educativa: {{institucion.institucioneducativa }}</strong></p>
+                </div>
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-md-12">
+                {# {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %} #}
+            </div>
+        </div>
+        <div class="row">
+        <div class="col-lg-2">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-success active">MESES</a>
+                {# <a href="#" class="list-group-item" data-month="enero">ENERO</a>
+                <a href="#" class="list-group-item" data-month="febrero">FEBRERO</a>
+                <a href="#" class="list-group-item" data-month="marzo">MARZO</a>
+                <a href="#" class="list-group-item" data-month="abril">ABRIL</a>
+                <a href="#" class="list-group-item" data-month="mayo">MAYO</a> #}
+                <a href="#" class="list-group-item" style="background-color: #F6BB42; color: white" data-month="{{ mesid}}">{{ mes|upper }}</a> 
+            </div>
+        </div>
+        
+       
+            <div class="col-lg-10">
+                <div class="panel rounded shadow panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Maestros ratificados con la planilla mes {{ mes|upper }} (gestión {{ gestion }})</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body" >
+                        <div class="pull-right">
+                            {# <form method ="POST" action="{{path('herramienta_info_maestro_ratificar_currentyear')}}" name="form" id="form"> #}
+                                <input type="hidden" id="ratificarMaestroG_sie" name="ratificarMaestroG[sie]" value="{{institucion.id}}">
+                                <input type="hidden" id="ratificarMaestroG_gestion" name="ratificarMaestroG[gestion]" value="{{gestion}}">
+                                <button type="button" class="btn btn-sm btn-warning" id="btnCerrarOperativo" onclick="cerrarOperativo({{institucion.id}},{{gestion}},'{{mes}}',{{mesid}})">
+                                    <span class="glyphicon glyphicon-book"></span> Cerrar Operativo
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success" id="btnNuevoMaestro" onclick="nuevoMaestro()">
+                                    <span class="glyphicon glyphicon-plus"></span> Adiconar Maestro
+                                </button>
+                            {# </form> #}
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {% if maestro is not empty %}
+                                <div id="no-more-tables">
+                                    <form method ="POST" action="{{path('herramienta_info_maestro_ratificar')}}" name="form" id="form">
+                                      <input type="hidden" id="ratificarMaestro_sie" name="ratificarMaestro[sie]" value="{{institucion.id}}">
+                                      <input type="hidden" id="ratificarMaestro_gestion" name="ratificarMaestro[gestion]" value="{{gestion}}">
+                                    <table class="table table-primary table-striped custom-pagination" id="tabla-maestros">
+                                        <thead>
+                                            <tr>
+                                                <th style="min-width: 5px;">N°</th>
+                                                <th>C.Identidad</th>
+                                                <th>Nombre</th>
+                                                <th>Financiamiento</th>
+                                                <th>Servicio</th>
+                                                <th>Item</th>
+                                                <th>Estado</th>
+                                                <th>Observacion</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for maestro in maestro %}
+                                                <tr data-maestro-id="{{maestro.id}}">
+                                                    <td data-title="N°">{{ loop.index }}</td>
+                                                    <td data-title="Carnet">{{ maestro.ci }}</td>
+                                                    <td data-title="Nombre">{{ maestro.apellidos_nombre }}</td>
+                                                    <td data-title="Financiamiento">{{ maestro.financiamiento_sie }}</td>
+                                                    <td data-title="Servicio">{{ maestro.servicio }}</td>
+                                                    <td data-title="Item">{{ maestro.item }}</td>
+                                                    <td data-title="Solucion">
+                                                        {% if maestro.solucion_comparacion_planilla_tipo_id == 1 %}
+                                                            <span class="badge badge-success"><i class="fa fa-fw fa-check"></i> Ratificado</span>
+                                                        {% elseif maestro.solucion_comparacion_planilla_tipo_id == 2 %}
+                                                        <span class="badge badge-danger"><i class="fa fa-fw fa-close"></i> Eliminado</span>
+                                                        {% elseif maestro.solucion_comparacion_planilla_tipo_id == 3 %}
+                                                           <span class="badge badge-info"><i class="fa fa-fw fa-user-plus"></i> Nuevo</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td data-title="Observacion">{{ maestro.observacion }}</td>
+                                                    <td data-title="Acciones">
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-sm btn-success" onclick="confirmarMaestro({{maestro.id}})">
+                                                                <i class="fa fa-check"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-sm btn-danger" onclick="eliminarMaestro({{maestro.id}})">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-sm btn-warning" onclick="areasMaestro({{maestro.id}}, '{{ maestro.apellidos_nombre }}')">
+                                                                <i class="fa fa-user"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            {# <tr><td colspan="10"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-primary" value="Enviar Datos"></div></td></tr> #}
+                                        </tbody>
+                                    </table>
+                                </form>
+                                </div>
+                            {% else %}
+                                No hay Maestros a ratificar
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <!-- Modal para la edición -->
+    <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="editarModalLabel">Editar Maestro</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí puedes agregar los campos de edición para el maestro -->
+                    <!-- Por ejemplo, puedes usar un formulario con campos de entrada -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para la nuevo MAESTRO-->
+    <div class="modal fade" id="nuevoModal" tabindex="-1" role="dialog" aria-labelledby="nuevoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h5 class="modal-title custom-modal-title" id="modalFormularioLabel">AGREGAR NUEVO MAESTRO</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert" id="modalalert" style="display: none;">
+                        {# <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> #}
+                    </div>
+                    <!-- Agregar el formulario de solicitud de CI y complemento aquí -->
+                    <div id="BusquedaMaestro">
+                        <form id="formularioBuscarMaestro" class="enmarcado-formulario">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="ci">CI:</label>
+                                    <input type="text" class="form-control" id="ci" name="ci" placeholder="Ingrese CI" required>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="complemento">Complemento:</label>
+                                    <input type="text" class="form-control" id="complemento" name="complemento">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="apellidoPaterno">Apellido Paterno:</label>
+                                    <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="apellidoMaterno">Apellido Materno:</label>
+                                    <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="nombres">Nombres:</label>
+                                    <input type="text" class="form-control" id="nombres" name="nombres" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                                    <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <label>Tipo de Carnet:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoCarnet" id="ciNacional" value="1" checked>
+                                        <label class="form-check-label" for="ciNacional">Carnet de Identidad Nacional</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoCarnet" id="ciExtranjero" value="2">
+                                        <label class="form-check-label" for="ciExtranjero">Carnet de Identidad Extranjero (Comienza con 'E')</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="finobs" style="display: none;">
+                                <div id="financiamiento">
+                                    <label for="financiamientonew">Financiamiento:</label>
+                                    <select class="form-control" id="financiamientonew" name="financiamiento" required>
+                                        <!-- Opciones del combo financiamiento -->
+                                        <!-- Agrega las opciones aquí desde JavaScript -->
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="observacionnew">Observación:</label>
+                                    <input type="text" class="form-control" id="observacionnew" name="observacion" >
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="guardarBtn" onclick="guardarMaestro()" style="display: none;"><i class="fa fa-save"></i> Guardar </button>
+                    <button type="button" class="btn btn-primary" id="buscarBtn" onclick="buscarMaestro()" ><i class="fa fa-search"></i> Buscar </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para la ratificar -->
+    <div class="modal fade" id="ratificarModal" tabindex="-1" role="dialog" aria-labelledby="ratificarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header-success">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="ratificarModalLabel">Ratificar Maestro</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de justificación de eliminación -->
+                    <form id="ratificaForm">
+                        <div id="financiamiento">
+                            <label for="financiamiento">Financiamiento:</label>
+                            <select class="form-control" id="financiamientorat" name="financiamientorat">
+                                <!-- Opciones del combo financiamiento -->
+                                <!-- Agrega las opciones aquí desde JavaScript -->
+                            </select>
+                        </div>
+                        <div id="funcion">
+                            <label for="financiamiento">Cargo:</label>
+                            <select class="form-control" id="cargo" name="cargo">
+                                <option>MAESTRA/O</option>
+                                <!-- Opciones del combo financiamiento -->
+                                <!-- Agrega las opciones aquí desde JavaScript -->
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="ratificaMaestro()">Ratificar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para la eliminación -->
+    <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header-delete">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="eliminarModalLabel">Eliminar Maestro</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de justificación de eliminación -->
+                    <form id="justificacionForm">
+                        <div class="form-group">
+                            <label for="justificacion">Justificación:</label>
+                            <textarea class="form-control" id="justificacion" name="justificacion" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmaEliminarMaestro()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal para agregar areas -->
+    <div class="modal fade" id="modalAreasMaestro" tabindex="-1" role="dialog" aria-labelledby="modalAreasMaestroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title custom-modal-title" id="modalAreasMaestroLabel">ASIGNAR ÁREAS A </h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenido del formulario -->
+                    <div id="resultado"></div>
+                </div>   
+            </div>            
+        </div>
+    </div>
+
+    <!-- Modal Casos Observados -->
+    <div class="modal fade" id="modalCerrarOperativo" tabindex="-1" role="dialog" aria-labelledby="modalCerrarOperativoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalCerrarOperativoLabel">U.E. {{institucion.id}} {{institucion.institucioneducativa }} - {{mes|upper}} </h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenido del formulario -->
+                    <div id="resultadoobs"></div>
+                </div>   
+            </div>            
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script>
+        
+        var maestroId;
+
+        $(document).ready(function() {
+            $('#tabla-maestros').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json" // Opcional: Para traducir las etiquetas de DataTables al español
+                },
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 }
+                ]
+            });
+
+        });
+
+        function confirmarMaestro(id) {
+            maestroId = id;
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_maestro_planilla_financiamiento', { 'id': id }),
+                success: function (data) {
+                    var defaultOption = '<option value="'+data.financiamientoant.id+'">'+data.financiamientoant.financiamiento+'</option>';
+                    var financiamientoCombo = $('#financiamientorat');
+                    financiamientoCombo.empty();
+                    financiamientoCombo.append(defaultOption);
+
+                    $.each(data.financiamiento, function (id, financiamiento) {
+                        var option = $('<option>', {
+                            value: id,
+                            text: financiamiento
+                        });
+                        financiamientoCombo.append(option);
+                    });
+
+                    $('#ratificarModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+        }
+
+
+        function ratificaMaestro() {
+            var finid = $('#financiamientorat').val();
+            console.log(finid);
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('herramienta_info_maestro_planilla_confirma', {'id': maestroId}),
+                data: { financiamiento: finid },
+                success: function (data) {
+                    console.log(data);
+                    
+                    actualizarFilaEnTabla(data);
+                    $('#ratificarModal').modal('hide');
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                    
+                }
+            });
+        }
+
+        function confirmaEliminarMaestro() {
+            var justificacion = $('#justificacion').val();
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('herramienta_info_maestro_planilla_elimina', { id: maestroId }),
+                data: { justificacion: justificacion },
+                success: function (data) {
+                    actualizarFilaEnTabla(data);
+                    $('#eliminarModal').modal('hide');
+                    $('#justificacion').val('');
+                },
+                error: function (xhr, status, error) {
+                    // Manejar errores si es necesario
+                }
+            });
+        }
+
+
+        function eliminarMaestro(id) {
+            maestroId = id;
+            $('#eliminarModal').modal('show');
+        }
+
+        function nuevoMaestro(){
+            $('#nuevoModal').modal('show');
+        }
+
+        function actualizarFilaEnTabla(data) {
+            // Obtener el id del maestro actualizado
+            maestroId = data.id;
+
+            // Buscar la fila correspondiente en la tabla por el id del maestro
+            var fila = $('#tabla-maestros').find('tr[data-maestro-id="' + maestroId + '"]');
+
+            // Actualizar los datos de la fila con los nuevos datos del maestro
+            switch (data.solucion_comparacion_planilla_tipo_id) {
+                case 1:
+                    fila.find('td[data-title="Solucion"]').html('<span class="badge badge-success"><i class="fa fa-fw fa-check"></i> Ratificado</span>');
+                    break;
+                case 2:
+                    fila.find('td[data-title="Solucion"]').html('<span class="badge badge-danger"><i class="fa fa-fw fa-close"></i> Eliminado</span>');
+                    break;
+                default:
+                    fila.find('td[data-title="Solucion"]').html('<span class="badge badge-info"><i class="fa fa-fw fa-user-plus"></i> Nuevo</span>');
+                    break;
+            }
+                                                           
+            fila.find('td[data-title="Observacion"]').text(data.observacion);
+            fila.find('td[data-title="Financiamiento"]').text(data.financimientonew);
+
+            // Opcionalmente, agregar clases CSS para resaltar la fila actualizada
+        }
+
+        function areasMaestro(id, maestro) {
+            maestroId = id;
+            // Mostrar el modal para asignar area
+            $('#modalAreasMaestro').modal('show');
+
+            // Llamar a la función para cargar los turnoss
+            
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_maestro_planilla_areas', {'id': maestroId }),
+                success: function (data) {
+                    console.log(data);
+                    $('#modalAreasMaestroLabel').text('ASIGNAR ÁREAS A ' + maestro);   
+                    $("#resultado").append(data);     
+                    // actualizarFilaEnTabla(data);
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+            
+        }
+
+        $('#modalAreasMaestro').on('hidden.bs.modal', function (e) {
+            $("#resultado").empty();
+        });
+
+        function cargarTurnos() {
+            
+        }
+
+        function cargarNiveles() {
+            // Aquí debes obtener el valor seleccionado del combo de turnos
+            var turnoSeleccionado = $('#turno').val();
+
+        }
+
+        function cargarGrados() {
+            // Aquí debes obtener el valor seleccionado del combo de niveles
+            var nivelSeleccionado = $('#nivel').val();
+        }
+
+        function resetFormFields() {
+            $('#formularioBuscarMaestro')[0].reset();
+            $("#resultadonuevo").empty();
+            $('#modalalert').hide();
+            $('#guardarBtn').hide();
+            $('#finobs').hide();
+            $('#buscarBtn').show()
+        }
+
+        // Add event listener to the modal
+        $('#nuevoModal').on('hidden.bs.modal', function () {
+            resetFormFields();
+        });
+
+        function buscarMaestro(){
+            var formData = $('#formularioBuscarMaestro').serialize();
+            // console.log(formData);
+            $('#modalalert').hide();
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('herramienta_info_maestro_planilla_valida'),
+                data: formData,
+                success: function (data) {
+                    console.log(data.financiamiento);
+                    if (data.mensaje !== "") {
+                        // Si hay un mensaje, mostrarlo como alerta y no mostrar financiamiento ni observación
+                        $('#modalalert').html('<i class="fa fa-warning"></i>'+data.mensaje);
+                        $('#modalalert').show();
+                        $('#finobs').hide();
+                        $('#guardarBtn').hide();
+                    } else {
+                        // Si no hay mensaje, mostrar el financiamiento y habilitar la observación y cambiar el botón
+                        $('#finobs').show();
+                        $('#guardarBtn').show();
+                        $('#buscarBtn').hide();
+
+                        // Deshabilitar los campos del formulario
+                        $('#ci').prop('disabled', true);
+                        $('#complemento').prop('disabled', true);
+                        $('#apellidoPaterno').prop('disabled', true);
+                        $('#apellidoMaterno').prop('disabled', true);
+                        $('#nombres').prop('disabled', true);
+                        $('#fechaNacimiento').prop('disabled', true);
+                        $('input[name="tipoCarnet"]').prop('disabled', true);
+                        // Limpiar el combo financiamiento antes de agregar nuevas opciones
+                        $('#financiamientonew').empty();
+
+                        // Agregar el primer valor "Seleccionar financiamiento"
+                        var defaultOption = $('<option>', {
+                            value: '',
+                            text: 'Seleccionar financiamiento'
+                        });
+                        $('#financiamientonew').append(defaultOption);
+                        // Agregar las opciones del combo financiamiento desde el array recibido en data.financiamiento
+                        for (var id in data.financiamiento) {
+                            var option = $('<option>', {
+                                value: id,
+                                text: data.financiamiento[id] // Asegúrate de que data.financiamiento[id] sea el nombre del financiamiento
+                            });
+                        $('#financiamientonew').append(option);
+                        }
+                        
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+        }
+
+        function guardarMaestro(){
+            var ci = $('#ci').val();
+            var nombres = $('#nombres').val();
+            var apellidoPaterno = $('#apellidoPaterno').val();
+            var apellidoMaterno = $('#apellidoMaterno').val();
+            var fechaNacimiento = $('#fechaNacimiento').val();
+            var financiamiento = $('#financiamientonew').val();
+            var observacion = $('#observacionnew').val();
+            // var formData = $('#formularioBuscarMaestro').serialize();
+            console.log(apellidoMaterno);
+            $('#modalalert').hide();
+            var financiamiento = $('#financiamientonew').val();
+
+            if (financiamiento.trim() === '') {
+                $('#modalalert').html('<i class="fa fa-warning"></i>Seleccione financiamiento');
+                $('#modalalert').show();
+            }
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('herramienta_info_maestro_planilla_guarda_nuevo_maestro'),
+                data: {
+                        ci: ci,
+                        nombres: nombres,
+                        apellidoPaterno: apellidoPaterno,
+                        apellidoMaterno: apellidoMaterno,
+                        fechaNacimiento: fechaNacimiento,
+                        financiamiento: financiamiento,
+                        observacion: observacion
+                        },
+                success: function (data) {
+                    $('#nuevoModal').modal('hide');
+                      // Agregar los datos devueltos al final de la tabla
+                    var tabla = $("#tabla-maestros").find("tbody");
+
+                    // Recorrer los datos y crear una cadena HTML con las filas y celdas a agregar
+                    var filasHTML = '';
+                    for (var i = 0; i < data.length; i++) {
+                        var maestro = data[i];
+                        filasHTML += "<tr data-maestro-id='" + maestro.id + "'>";
+                        filasHTML += "<td data-title='N°'>" + (i + 1) + "</td>";
+                        filasHTML += "<td data-title='Carnet'>" + maestro.ci + "</td>";
+                        filasHTML += "<td data-title='Nombre'>" + maestro.apellidos_nombre + "</td>";
+                        filasHTML += "<td data-title='Financiamiento'>" + maestro.financiamiento_sie + "</td>";
+                        filasHTML += "<td data-title='Servicio'>" + maestro.servicio + "</td>";
+                        filasHTML += "<td data-title='Item'>" + maestro.item + "</td>";
+                        filasHTML += "<td data-title='Solucion'>" + maestro.solucion + "</td>";
+                        filasHTML += "<td data-title='Observacion'>" + maestro.observacion + "</td>";
+                        filasHTML += "<td data-title='Acciones'>";
+                        filasHTML += "<div class='btn-group'>";
+                        filasHTML += "<button type='button' class='btn btn-sm btn-success' onclick='confirmarMaestro(" + maestro.id + ")'>";
+                        filasHTML += "<i class='fa fa-check'></i>";
+                        filasHTML += "</button>";
+                        filasHTML += "<button type='button' class='btn btn-sm btn-danger' onclick='eliminarMaestro(" + maestro.id + ")'>";
+                        filasHTML += "<i class='fa fa-trash'></i>";
+                        filasHTML += "</button>";
+                        filasHTML += "<button type='button' class='btn btn-sm btn-warning' onclick='areasMaestro(" + maestro.id + ", \"" + maestro.apellidos_nombre + "\")'>";
+                        filasHTML += "<i class='fa fa-user'></i>";
+                        filasHTML += "</button>";
+                        filasHTML += "</div>";
+                        filasHTML += "</td>";
+                        filasHTML += "</tr>";
+                    }
+
+                    // Agregar las filas al final de la tabla
+                    tabla.append(filasHTML);
+                    
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+        }
+
+        function cerrarOperativo(sie, gestion, mes, mesid){
+
+            Swal.fire({
+                        title: '¿Cerrar el Operativo de registro del mes de '+mes+'?',
+                        text: "Esta seguro de cerrar el operativo para la modificación de Especialidades",
+                        type: 'question',
+                        html:
+                            'Si acepta, se procesa/verfica el registro de ' +
+                            '<BR>información..,  ',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            var formData = {sie:sie, gestion:gestion, mesid:mesid};
+                            var imagen = '{{ asset("img/loading96.gif") }}';
+                            $.ajax({
+                                type: 'post',
+                                url: "{{ path('herramienta_info_maestro_planilla_valida_consolidacion') }}",
+                                data:formData,
+                                beforeSend: function () {
+                                },
+                                success: function (data) {
+                                    // console.log(data)
+                                    if(data.estado === 1){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Se cerró el operativo correctamente',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                    })
+                                    document.getElementById("btnCerrarOperativo").disabled = true;
+                                    
+                                    setInterval('window.location.reload()', 3000);
+
+                                    }else{
+                                        // Construimos la tabla con los datos recibidos en data.arrayobs
+                                        var tableHtml = '<table class="table table-bordered"><thead><tr><th>Observaciones</th></tr></thead><tbody>';
+                                        for (var i = 0; i < data.observacion.length; i++) {
+                                            tableHtml += '<tr><td>' + data.observacion[i].observacion + '</td></tr>';
+                                        }
+                                        tableHtml += '</tbody></table>';
+
+                                        // Mostramos la tabla en el div con id="resultado"
+                                        $('#resultadoobs').html(tableHtml);
+                                        $('#modalCerrarOperativo').modal('show');
+                                    }
+                                },
+                                complete: function () {
+                                    console.log("error");  
+                                }
+                            }); 
+                        }
+                    })
+
+        }
+  
+
+    </script>
+</style>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Estilos personalizados para el modal */
+        .custom-modal-content {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .custom-modal-header {
+            background-color: #297e96;
+            color: white;
+        }
+
+        .custom-modal-header-success {
+            background-color: #3f9629;
+            color: white;
+        }
+
+        .custom-modal-header-delete {
+            background-color: #9f0000;
+            color: white;
+        }
+
+        .custom-modal-title {
+            font-size: 18px;
+        }
+        .enmarcado-formulario {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}
+

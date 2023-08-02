@@ -1,0 +1,121 @@
+Sie\AppWebBundle\Entity\NuevoMaestroInscripcion:
+    type: entity
+    table: nuevo_maestro_inscripcion
+    indexes:
+        IDX_545B25F8179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_545B25F8B66A0A8F:
+            columns:
+                - mes_tipo_id
+        IDX_545B25F8CEDB60B7:
+            columns:
+                - financiamiento_tipo_id
+        IDX_545B25F8A1583A43:
+            columns:
+                - cargo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ci:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_nacimiento
+        observacion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        mesTipo:
+            targetEntity: MesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                mes_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        financiamientoTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                financiamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cargoTipo:
+            targetEntity: CargoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cargo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
