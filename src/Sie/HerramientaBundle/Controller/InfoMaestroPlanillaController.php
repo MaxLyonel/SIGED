@@ -52,7 +52,7 @@ class InfoMaestroPlanillaController extends Controller {
         
         $institucion = $this->session->get('ie_id');
         $gestion = $request->getSession()->get('currentyear');
-        $mes = 3;
+        $mes = 6;
         /*
         * verificamos si tiene tuicion
         */
