@@ -112,11 +112,10 @@
                             {# <form method ="POST" action="{{path('herramienta_info_maestro_ratificar_currentyear')}}" name="form" id="form"> #}
                                 <input type="hidden" id="ratificarMaestroG_sie" name="ratificarMaestroG[sie]" value="{{institucion.id}}">
                                 <input type="hidden" id="ratificarMaestroG_gestion" name="ratificarMaestroG[gestion]" value="{{gestion}}">
-                                <button type="button" class="btn btn-sm btn-warning" onclick="cerrarOperativo({{institucion.id}},{{gestion}},'{{mes}}',{{mesid}})">
+                                <button type="button" class="btn btn-sm btn-warning" id="btnCerrarOperativo" onclick="cerrarOperativo({{institucion.id}},{{gestion}},'{{mes}}',{{mesid}})">
                                     <span class="glyphicon glyphicon-book"></span> Cerrar Operativo
                                 </button>
-                                {# <input type="submit" class="btn btn-md btn-success" onclick="adicionarMaestro()" value="Adicionar"> #}
-                                <button type="button" class="btn btn-sm btn-success" onclick="nuevoMaestro()">
+                                <button type="button" class="btn btn-sm btn-success" id="btnNuevoMaestro" onclick="nuevoMaestro()">
                                     <span class="glyphicon glyphicon-plus"></span> Adiconar Maestro
                                 </button>
                             {# </form> #}
@@ -306,11 +305,10 @@
                 </div>
                 <div class="modal-body">
                     <!-- Formulario de justificación de eliminación -->
-                    <form id="justificacionForm">
+                    <form id="ratificaForm">
                         <div id="financiamiento">
                             <label for="financiamiento">Financiamiento:</label>
-                            <select class="form-control" id="financiamiento" name="financiamiento">
-                                <option>MINISTERIO DE EDUCACION</option>
+                            <select class="form-control" id="financiamientorat" name="financiamientorat">
                                 <!-- Opciones del combo financiamiento -->
                                 <!-- Agrega las opciones aquí desde JavaScript -->
                             </select>
@@ -375,6 +373,22 @@
         </div>
     </div>
 
+    <!-- Modal Casos Observados -->
+    <div class="modal fade" id="modalCerrarOperativo" tabindex="-1" role="dialog" aria-labelledby="modalCerrarOperativoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalCerrarOperativoLabel">U.E. {{institucion.id}} {{institucion.institucioneducativa }} - {{mes|upper}} </h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenido del formulario -->
+                    <div id="resultadoobs"></div>
+                </div>   
+            </div>            
+        </div>
+    </div>
+
 
 {% endblock %}
 
@@ -399,24 +413,52 @@
 
         });
 
-        function confirmarMaestro (id) {
+        function confirmarMaestro(id) {
             maestroId = id;
-            $('#ratificarModal').modal('show');
-        }
-
-        function ratificaMaestro(id) {
-            // $('#editarModal').modal('show');
             $.ajax({
                 type: 'get',
-                url: Routing.generate('herramienta_info_maestro_planilla_confirma', {'id': id}),
+                url: Routing.generate('herramienta_info_maestro_planilla_financiamiento', { 'id': id }),
                 success: function (data) {
-                    console.log(data);
-                    
-                    actualizarFilaEnTabla(data);
+                    var defaultOption = '<option value="'+data.financiamientoant.id+'">'+data.financiamientoant.financiamiento+'</option>';
+                    var financiamientoCombo = $('#financiamientorat');
+                    financiamientoCombo.empty();
+                    financiamientoCombo.append(defaultOption);
+
+                    $.each(data.financiamiento, function (id, financiamiento) {
+                        var option = $('<option>', {
+                            value: id,
+                            text: financiamiento
+                        });
+                        financiamientoCombo.append(option);
+                    });
+
+                    $('#ratificarModal').modal('show');
                 },
                 error: function (xhr, status, error) {
                     // Manejar el error si es necesario
                     console.log('Error en la petición AJAX:', error);
+                }
+            });
+        }
+
+
+        function ratificaMaestro() {
+            var finid = $('#financiamientorat').val();
+            console.log(finid);
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('herramienta_info_maestro_planilla_confirma', {'id': maestroId}),
+                data: { financiamiento: finid },
+                success: function (data) {
+                    console.log(data);
+                    
+                    actualizarFilaEnTabla(data);
+                    $('#ratificarModal').modal('hide');
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                    
                 }
             });
         }
@@ -469,6 +511,7 @@
             }
                                                            
             fila.find('td[data-title="Observacion"]').text(data.observacion);
+            fila.find('td[data-title="Financiamiento"]').text(data.financimientonew);
 
             // Opcionalmente, agregar clases CSS para resaltar la fila actualizada
         }
@@ -681,23 +724,34 @@
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             $.ajax({
                                 type: 'post',
-                                url: "{{ path('herramienta_info_estudiante_operativoEspecialidadesBth') }}",
+                                url: "{{ path('herramienta_info_maestro_planilla_valida_consolidacion') }}",
                                 data:formData,
                                 beforeSend: function () {
                                 },
                                 success: function (data) {
-                                    if(data.estado = 1){
+                                    // console.log(data)
+                                    if(data.estado === 1){
                                     Swal.fire({
                                     icon: 'success',
                                     title: 'Se cerró el operativo correctamente',
                                     showConfirmButton: false,
                                     timer: 1500
                                     })
-                                    document.getElementById("btnCerraoperativo").disabled = true;
+                                    document.getElementById("btnCerrarOperativo").disabled = true;
+                                    
                                     setInterval('window.location.reload()', 3000);
 
                                     }else{
+                                        // Construimos la tabla con los datos recibidos en data.arrayobs
+                                        var tableHtml = '<table class="table table-bordered"><thead><tr><th>Observaciones</th></tr></thead><tbody>';
+                                        for (var i = 0; i < data.observacion.length; i++) {
+                                            tableHtml += '<tr><td>' + data.observacion[i].observacion + '</td></tr>';
+                                        }
+                                        tableHtml += '</tbody></table>';
 
+                                        // Mostramos la tabla en el div con id="resultado"
+                                        $('#resultadoobs').html(tableHtml);
+                                        $('#modalCerrarOperativo').modal('show');
                                     }
                                 },
                                 complete: function () {
@@ -707,11 +761,7 @@
                         }
                     })
 
-
-
-            //var imagen = '{{ asset("img/loading96.gif") }}';
-
-            }
+        }
   
 
     </script>
