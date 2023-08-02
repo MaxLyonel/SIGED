@@ -400,9 +400,11 @@
     <script>
         
         var maestroId;
+        var tablaMaestros;
+        
 
         $(document).ready(function() {
-            $('#tabla-maestros').DataTable({
+            tablaMaestros = $('#tabla-maestros').DataTable({
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json" // Opcional: Para traducir las etiquetas de DataTables al español
                 },
@@ -660,41 +662,49 @@
                         observacion: observacion
                         },
                 success: function (data) {
+                    console.log(data);
                     $('#nuevoModal').modal('hide');
-                      // Agregar los datos devueltos al final de la tabla
-                    var tabla = $("#tabla-maestros").find("tbody");
+                    var maestro = data[0];
+                    var nuevoMaestro = {
+                        id: maestro.id,
+                        ci: maestro.ci,
+                        nombre: maestro.apellidos_nombre,
+                        financiamiento: maestro.financiamiento_sie,
+                        servicio: maestro.servicio,
+                        item: maestro.item,
+                        estado: maestro.solucion,
+                        observacion: maestro.observacion,
+                        
+                    };
+                    var accionesHTML = `
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-success" onclick="confirmarMaestro(${maestro.id})">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="eliminarMaestro(${maestro.id})">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning" onclick="areasMaestro(${maestro.id}, '${maestro.apellidos_nombre}')">
+                                <i class="fa fa-user"></i>
+                            </button>
+                        </div>
+                    `;
 
-                    // Recorrer los datos y crear una cadena HTML con las filas y celdas a agregar
-                    var filasHTML = '';
-                    for (var i = 0; i < data.length; i++) {
-                        var maestro = data[i];
-                        filasHTML += "<tr data-maestro-id='" + maestro.id + "'>";
-                        filasHTML += "<td data-title='N°'>" + (i + 1) + "</td>";
-                        filasHTML += "<td data-title='Carnet'>" + maestro.ci + "</td>";
-                        filasHTML += "<td data-title='Nombre'>" + maestro.apellidos_nombre + "</td>";
-                        filasHTML += "<td data-title='Financiamiento'>" + maestro.financiamiento_sie + "</td>";
-                        filasHTML += "<td data-title='Servicio'>" + maestro.servicio + "</td>";
-                        filasHTML += "<td data-title='Item'>" + maestro.item + "</td>";
-                        filasHTML += "<td data-title='Solucion'>" + maestro.solucion + "</td>";
-                        filasHTML += "<td data-title='Observacion'>" + maestro.observacion + "</td>";
-                        filasHTML += "<td data-title='Acciones'>";
-                        filasHTML += "<div class='btn-group'>";
-                        filasHTML += "<button type='button' class='btn btn-sm btn-success' onclick='confirmarMaestro(" + maestro.id + ")'>";
-                        filasHTML += "<i class='fa fa-check'></i>";
-                        filasHTML += "</button>";
-                        filasHTML += "<button type='button' class='btn btn-sm btn-danger' onclick='eliminarMaestro(" + maestro.id + ")'>";
-                        filasHTML += "<i class='fa fa-trash'></i>";
-                        filasHTML += "</button>";
-                        filasHTML += "<button type='button' class='btn btn-sm btn-warning' onclick='areasMaestro(" + maestro.id + ", \"" + maestro.apellidos_nombre + "\")'>";
-                        filasHTML += "<i class='fa fa-user'></i>";
-                        filasHTML += "</button>";
-                        filasHTML += "</div>";
-                        filasHTML += "</td>";
-                        filasHTML += "</tr>";
-                    }
+                    // Agregamos el nuevo registro a la tabla
+                    
+                    tablaMaestros.row.add([
+                        tablaMaestros.data().count() + 1, // Número de registros en la tabla + 1 (nuevo registro)
+                        nuevoMaestro.ci,
+                        nuevoMaestro.nombre,
+                        nuevoMaestro.financiamiento,
+                        nuevoMaestro.servicio,
+                        nuevoMaestro.item,
+                        `<span class="badge badge-info"><i class="fa fa-fw fa-user-plus"></i> Nuevo</span>`,
+                        nuevoMaestro.observacion,
+                        accionesHTML,
+                    ]).draw(false);
 
-                    // Agregar las filas al final de la tabla
-                    tabla.append(filasHTML);
+                    $(newRow).attr('data-maestro-id', maestro.id);
                     
                 },
                 error: function (xhr, status, error) {
