@@ -245,7 +245,7 @@
 									  <tbody>
 									    <tr>
 									      <td>${infoUE.modalidadLabel}</td>
-									      <td>${infoUE.faseLabel}</td>
+									      <td>${infoUE.faseLabelPrev}</td>
 									      <td>
 									      	${infoUE.categorieLabel}
 
@@ -416,6 +416,7 @@
 				institucioneducativa:'',
 				modalidadLabel:'',
 				faseLabel:'',
+				faseLabelPrev:'',
 				categorieLabel:'',
 				existUE:0
 			},
@@ -568,6 +569,7 @@
 								// this.DBselectedData = response.data.selectedData;
 								this.infoUE.modalidadLabel = response.data.modalidadLabel;
 								this.infoUE.faseLabel = response.data.faseLabel;
+								this.infoUE.faseLabelPrev = response.data.faseLabelPrev;
 								this.infoUE.categorieLabel = response.data.categorieLabel;
 								this.infoUE.genderRequest = response.data.genderRequest;
 								this.DBInscriptionLevel = response.data.arrAllowGrade;
