@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\EmparejaSiePlanilla;
+use Sie\AppWebBundle\Entity\EmparejaPlanillaAsignaturaTipo;
 use Sie\AppWebBundle\Entity\SolucionComparacionPlanillaTipo;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoValidacionpersonal;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
@@ -192,19 +193,15 @@ class InfoMaestroPlanillaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $justificacion = $request->request->get('justificacion');
         
-        // Obtener la entidad EmparejaSiePlanilla por su id
         $emparejaSiePlanilla = $em->getRepository(EmparejaSiePlanilla::class)->find($id);
         
         $institucion = $emparejaSiePlanilla->getInstitucioneducativa()->getId();
         $gestion = $emparejaSiePlanilla->getGestionTipoId();
         $mes = $request->getSession()->get('idPlanillaMes');;
-        // Verificar si se encontró la entidad
         if (!$emparejaSiePlanilla) {
             return new JsonResponse(['error' => 'La entidad no existe'], 404);
         }
-        // Obtener el nuevo valor para el campo solucionComparacionPlanillaTipo desde la solicitud AJAX
         $nuevoValorSolucion =$em->getRepository(SolucionComparacionPlanillaTipo::class)->findOneById(2);
-        // Actualizar el campo solucionComparacionPlanillaTipo en la entidad
         $emparejaSiePlanilla->setSolucionComparacionPlanillaTipo($nuevoValorSolucion);
         $emparejaSiePlanilla->setObservacion($justificacion);
         $fechaActual = new \DateTime();
@@ -241,10 +238,10 @@ class InfoMaestroPlanillaController extends Controller {
         }
         $asignaturamaestro = $this->getAsiganturaMaestro($id);
         $form = $this->createFormBuilder()
-        ->add('turno', 'choice', array('label' => 'Turno', 'empty_value' => 'Turno', 'choices' => $turnoTipoArray, 'data' => $turnoId, 'attr' => array('class' => 'form-control', 'onchange' => 'listar_nivel()', 'required' => true)))
-        ->add('nivel', 'choice', array('label' => 'Nivel', 'empty_value' => 'Nivel', 'choices' => $nivelTipoEntidad, 'data' => $nivelId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listar_grado_asignatura()')))
-        ->add('grado', 'choice', array('label' => 'Grado', 'empty_value' => 'Grado', 'choices' => $gradoTipoEntidad, 'data' => $gradoId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listar_paralelo()')))
-        ->add('asignatura', 'choice', array('label' => 'Area', 'empty_value' => 'Áreas', 'choices' => $asignaturaTipoEntidad, 'data' => $asignaturaId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listar_asignatura()')))
+        ->add('turno', 'choice', array('label' => 'Turno', 'empty_value' => 'Sel. Turno', 'choices' => $turnoTipoArray, 'data' => $turnoId, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarNiveles()', 'required' => true)))
+        ->add('nivel', 'choice', array('label' => 'Nivel', 'empty_value' => 'Sel. Nivel', 'choices' => $nivelTipoEntidad, 'data' => $nivelId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'cargarGrados()')))
+        ->add('grado', 'choice', array('label' => 'Grado', 'empty_value' => 'Sel. Grado', 'choices' => $gradoTipoEntidad, 'data' => $gradoId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'cargarAsignaturas()')))
+        ->add('asignatura', 'choice', array('label' => 'Area', 'empty_value' => 'Sel. Áreas', 'choices' => $asignaturaTipoEntidad, 'data' => $asignaturaId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'cargarParalelos()')))
         ->getForm()->createView();
         return $this->render($this->session->get('pathSystem').':InfoMaestroPlanilla:formulario_areas.html.twig',array(
             'form' => $form,
@@ -269,6 +266,87 @@ class InfoMaestroPlanillaController extends Controller {
         return $entity;
     }
 
+    public function getNivelInstitucionEducativaCurso($institucionEducativaId, $gestionId, $turnoId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select("distinct nt.id, nt.nivel")
+                ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'nt.id = iec.nivelTipo')
+                ->where('iec.gestionTipo = :gestionTipoId')
+                ->andWhere('iec.institucioneducativa = :institucioneducativaId')
+                ->andWhere('iec.turnoTipo = :turnoId')
+                ->andWhere('nt.id in (11,12,13)')
+                ->setParameter('gestionTipoId', $gestionId)
+                ->setParameter('institucioneducativaId', $institucionEducativaId)
+                ->setParameter('turnoId', $turnoId)
+                ->orderBy('nt.id', 'ASC');
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    public function getGradoInstitucionEducativaCurso($institucionEducativaId, $gestionId, $turnoId, $nivelId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select("distinct gt.id, gt.grado")
+                ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'gt.id = iec.gradoTipo')
+                ->where('iec.gestionTipo = :gestionTipoId')
+                ->andWhere('iec.institucioneducativa = :institucioneducativaId')
+                ->andWhere('iec.turnoTipo = :turnoId')
+                ->andWhere('iec.nivelTipo = :nivelId')
+                ->setParameter('gestionTipoId', $gestionId)
+                ->setParameter('institucioneducativaId', $institucionEducativaId)
+                ->setParameter('turnoId', $turnoId)
+                ->setParameter('nivelId', $nivelId)
+                ->orderBy('gt.id', 'ASC');
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    public function getAsignaturaInstitucionEducativaCurso($institucionEducativaId, $gestionId, $turnoId, $nivelId, $gradoId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select("distinct at.id, at.asignatura")
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco', 'WITH', 'ieco.insitucioneducativaCurso = iec.id')
+                ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at', 'WITH', 'at.id = ieco.asignaturaTipo')
+                ->where('iec.gestionTipo = :gestionTipoId')
+                ->andWhere('iec.institucioneducativa = :institucioneducativaId')
+                ->andWhere('iec.turnoTipo = :turnoId')
+                ->andWhere('iec.nivelTipo = :nivelId')
+                ->andWhere('iec.gradoTipo = :gradoId')
+                ->setParameter('gestionTipoId', $gestionId)
+                ->setParameter('institucioneducativaId', $institucionEducativaId)
+                ->setParameter('turnoId', $turnoId)
+                ->setParameter('nivelId', $nivelId)
+                ->setParameter('gradoId', $gradoId)
+                ->orderBy('at.id', 'ASC');
+        
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    public function getParaleloInstitucionEducativaCurso($institucionEducativaId, $gestionId, $turnoId, $nivelId, $gradoId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select("distinct pt.id, pt.paralelo")
+                ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'pt.id = iec.paraleloTipo')
+                ->where('iec.gestionTipo = :gestionTipoId')
+                ->andWhere('iec.institucioneducativa = :institucioneducativaId')
+                ->andWhere('iec.turnoTipo = :turnoId')
+                ->andWhere('iec.nivelTipo = :nivelId')
+                ->andWhere('iec.gradoTipo = :gradoId')
+                ->setParameter('gestionTipoId', $gestionId)
+                ->setParameter('institucioneducativaId', $institucionEducativaId)
+                ->setParameter('turnoId', $turnoId)
+                ->setParameter('nivelId', $nivelId)
+                ->setParameter('gradoId', $gradoId)
+                ->orderBy('pt.id', 'ASC');
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
     public function getAsiganturaMaestro($emparejaSiePlanillaId){
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:EmparejaPlanillaAsignaturaTipo');
@@ -280,7 +358,7 @@ class InfoMaestroPlanillaController extends Controller {
             ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'ati', 'WITH', 'ati.id = epat.asignaturaTipo')
             ->where('epat.emparejaSiePlanilla = :emparejaSiePlanillaId')
             ->setParameter('emparejaSiePlanillaId', $emparejaSiePlanillaId)
-            ->orderBy('epat.id,tt.turno,epat.nivelTipo,gt.id,pt.paralelo,ati.asignatura', 'ASC'); 
+            ->orderBy('tt.turno,epat.nivelTipo,gt.id,ati.asignatura,pt.paralelo', 'ASC'); 
         $entity = $query->getQuery()->getResult();
         return $entity;
     }
@@ -337,15 +415,15 @@ class InfoMaestroPlanillaController extends Controller {
         $gestion = $request->getSession()->get('currentyear');
         $planillaMes = $request->getSession()->get('idPlanillaMes');
         
-        $ci = $request->request->get('ci');
-        $complemento = $request->request->get('complemento');
-        $complemento = $complemento !== null ? $complemento : '';
-        $paterno = $request->request->get('apellidoPaterno');
-        $materno = $request->request->get('apellidoMaterno');
-        $nombre = $request->request->get('nombres');
+        $ci = ltrim(rtrim($request->request->get('ci')));
+        $complemento = strtoupper(ltrim(rtrim($request->request->get('complemento'))));
+        $complemento = strtoupper(ltrim(rtrim($complemento !== null ? $complemento : '')));
+        $paterno = strtoupper(ltrim(rtrim($request->request->get('apellidoPaterno'))));
+        $materno = strtoupper(ltrim(rtrim($request->request->get('apellidoMaterno'))));
+        $nombre = strtoupper(ltrim(rtrim($request->request->get('nombres'))));
         $fechaNacimiento = new \DateTime($request->request->get('fechaNacimiento'));
         $financiamientoTipoId = (int) $request->request->get('financiamiento');
-        $observacion = $request->request->get('observacion');
+        $observacion = ltrim(rtrim($request->request->get('observacion')));
 
         $em = $this->getDoctrine()->getManager();
         $nuevoMaestro = new NuevoMaestroInscripcion();
@@ -448,5 +526,121 @@ class InfoMaestroPlanillaController extends Controller {
             'financiamiento' => $financiamientoArray,
             'financiamientoant' => $financiamientoant,
         ));
+    }
+
+    public function listaNivelAction(Request $request) {
+        $turnoId = $request->get('turno'); 
+        $institucion = $this->session->get('ie_id');
+        $gestion = $request->getSession()->get('currentyear');   
+                        
+        $response = new JsonResponse();
+        return $response->setData(array(
+            'niveles' => $this->getNivelInstitucionEducativaCurso($institucion, $gestion, $turnoId),
+        ));
+    }
+
+    public function listaGradosAction(Request $request) {
+        $turnoId = $request->get('turno');       
+        $nivelId = $request->get('nivel');        
+        $institucion = $this->session->get('ie_id');
+        $gestion = $request->getSession()->get('currentyear');  
+                
+        $response = new JsonResponse();
+        return $response->setData(array(
+                'grados' => $this->getGradoInstitucionEducativaCurso($institucion, $gestion, $turnoId, $nivelId),
+            ));
+    }
+
+    public function listaAsignaturasAction(Request $request) {
+        $turnoId = $request->get('turno');       
+        $nivelId = $request->get('nivel'); 
+        $gradoId = $request->get('grado'); 
+        $institucion = $this->session->get('ie_id');
+        $gestion = $request->getSession()->get('currentyear'); 
+                
+        $response = new JsonResponse();
+        return $response->setData(array(
+                'asignatura' => $this->getAsignaturaInstitucionEducativaCurso($institucion, $gestion, $turnoId, $nivelId, $gradoId),
+            ));
+    }
+
+    public function listaParalelosAction(Request $request) {
+        $turnoId = $request->get('turno');       
+        $nivelId = $request->get('nivel'); 
+        $gradoId = $request->get('grado'); 
+        $institucion = $this->session->get('ie_id');
+        $gestion = $request->getSession()->get('currentyear'); 
+                
+        $response = new JsonResponse();
+        return $response->setData(array(
+                'paralelos' => $this->getParaleloInstitucionEducativaCurso($institucion, $gestion, $turnoId, $nivelId, $gradoId),
+            ));
+    }
+
+    public function guardaParaleloAction(Request $request){
+        $espId = $request->get('esp');       
+        $turnoId = $request->get('turno');
+        $nivelId = $request->get('nivel'); 
+        $gradoId = $request->get('grado');
+        $asignaturaId = $request->get('asignatura');
+        $paralelos = $request->get('paralelos');
+        $institucion = $this->session->get('ie_id');
+        $gestion = $request->getSession()->get('currentyear'); 
+        $em = $this->getDoctrine()->getManager();
+        
+        foreach ($paralelos as $paralelo) {
+            $paraleloId = $paralelo['id'];
+            $existeDato = $em->getRepository('SieAppWebBundle:EmparejaPlanillaAsignaturaTipo')->findOneBy(array(
+                'emparejaSiePlanilla' => $espId,
+                'turnoTipo' => $turnoId,
+                'paraleloTipo' => $paraleloId,
+                'nivelTipo' => $nivelId,
+                'gradoTipo' => $gradoId,
+                'asignaturaTipo' => $asignaturaId,
+            ));
+            if (!$existeDato) {
+            $nuevoAsignatura = new EmparejaPlanillaAsignaturaTipo();
+            $nuevoAsignatura->setEmparejaSiePlanilla($em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->findOneById($espId));
+            $nuevoAsignatura->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($turnoId));
+            $nuevoAsignatura->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->findOneById($paraleloId));
+            $nuevoAsignatura->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->findOneById($gradoId));
+            $nuevoAsignatura->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($nivelId));
+            $nuevoAsignatura->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->findOneById($asignaturaId));
+            $fechaActual = new \DateTime();
+            $nuevoAsignatura->setFechaCreacion($fechaActual); 
+            $em->persist($nuevoAsignatura);
+            $em->flush();
+            }  
+        }
+        
+        // $em->persist($nuevoAsignatura);
+        // $em->flush();
+        $asignaturamaestro = $this->getAsiganturaMaestro($espId);
+        $response = new JsonResponse();
+        return $response->setData(array(
+            'asignaturamaestro' => $asignaturamaestro
+        ));
+    }
+
+    public function eliminaParaleloAction(Request $request){
+        $areaid = $request->get('areaid');
+        $espId = $request->get('esp');       
+        
+        $em = $this->getDoctrine()->getManager();
+        $area = $em->getRepository('SieAppWebBundle:EmparejaPlanillaAsignaturaTipo')->findOneBy(array('id' => $areaid, 'emparejaSiePlanilla' => $espId,));
+        // Verificar si el registro existe
+        if (!$area) {
+            return new JsonResponse(['success' => false, 'message' => 'El registro no existe.']);
+        }
+
+        try {
+            // Eliminar el registro
+            $em->remove($area);
+            $em->flush();
+            return new JsonResponse(['success' => true, 'message' => 'El registro se ha eliminado correctamente.']);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => 'Ha ocurrido un error al eliminar el registro.']);
+        }   
+        
     }
 }

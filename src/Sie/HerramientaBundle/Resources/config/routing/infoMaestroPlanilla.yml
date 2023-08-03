@@ -48,3 +48,39 @@ herramienta_info_maestro_planilla_financiamiento:
     defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:financiamiento }
     options:
          expose: true
+
+herramienta_info_maestro_planilla_nivel:
+    path:     /nivel/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:listaNivel }
+    options:
+        expose: true
+
+herramienta_info_maestro_planilla_grado:
+    path:     /grado/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:listaGrados }
+    options:
+        expose: true
+
+herramienta_info_maestro_planilla_asignatura:
+    path:     /asignatura/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:listaAsignaturas}
+    options:
+        expose: true
+
+herramienta_info_maestro_planilla_paralelos:
+    path:     /paralelos/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:listaParalelos}
+    options:
+        expose: true   
+
+herramienta_info_maestro_planilla_guarda_paralelo: 
+    path:     /paralelos/guarda/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:guardaParalelo }
+    options:
+         expose: true   
+
+herramienta_info_maestro_planilla_area_elimina: 
+    path:     /paralelos/elimina/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:eliminaParalelo }
+    options:
+         expose: true
