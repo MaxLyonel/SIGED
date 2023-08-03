@@ -1,49 +1,26 @@
-<form id="formularioAreasMaestro">
+<form id="formularioAreasMaestro" class="enmarcado-formulario">
         {{form_start(form, { 'attr': {'role': "form", 'class': 'form-row form-inline center'} } )}}
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             {{ form_widget(form.turno, { 'attr': {'class': 'form-control'} }) }}
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             {{ form_widget(form.nivel) }}
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             {{ form_widget(form.grado) }}
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-12">
             {{ form_widget(form.asignatura) }}
+        </div>
+        <div class="form-group col-md-12" id="paralelos-container"></div>
+        <div class="footer-form">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" onclick="guardarParaleloMaestro()">Guardar</button>
         </div>
 </form>           
 <!-- Tabla de áreas y paralelos -->
-<table class="table" id="table_add_area"> 
-    <thead id="thead-table-modal">
-        <tr>
-            <th class="custom-table-header">Áreas</th>
-            <th colspan="3" class="custom-table-header">Paralelos</th>
-        </tr>
-        
-    </thead>
-    <tbody>
-        <tr>
-            <td>Matemáticas</td>
-            <td class="custom-checkbox">
-                <input type="checkbox" id="paraleloA">
-                <label for="paraleloA" class="custom-checkbox-label">A</label>
-            </td>
-            <td class="custom-checkbox">
-                <input type="checkbox" id="paraleloB">
-                <label for="paraleloB" class="custom-checkbox-label">B</label>
-            </td>
-            <td class="custom-checkbox">
-                <input type="checkbox" id="paraleloC">
-                <label for="paraleloC" class="custom-checkbox-label">C</label>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<div class="footer-form">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-    <button type="button" class="btn btn-success" onclick="guardarAreasMaestro()">Guardar</button>
-</div>
+
+
 
 <!-- Tabla de áreas y paralelos -->
 <table class="table" id="tabla_area_asignada">
