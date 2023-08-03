@@ -223,9 +223,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger" role="alert" id="modalalert" style="display: none;">
-                        {# <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> #}
                     </div>
-                    <!-- Agregar el formulario de solicitud de CI y complemento aquí -->
                     <div id="BusquedaMaestro">
                         <form id="formularioBuscarMaestro" class="enmarcado-formulario">
                             <div class="row">
@@ -273,8 +271,6 @@
                                 <div id="financiamiento">
                                     <label for="financiamientonew">Financiamiento:</label>
                                     <select class="form-control" id="financiamientonew" name="financiamiento" required>
-                                        <!-- Opciones del combo financiamiento -->
-                                        <!-- Agrega las opciones aquí desde JavaScript -->
                                     </select>
                                 </div>
                                 <div>
@@ -304,21 +300,16 @@
                     <h4 class="modal-title" id="ratificarModalLabel">Ratificar Maestro</h4>
                 </div>
                 <div class="modal-body">
-                    <!-- Formulario de justificación de eliminación -->
                     <form id="ratificaForm">
                         <div id="financiamiento">
                             <label for="financiamiento">Financiamiento:</label>
                             <select class="form-control" id="financiamientorat" name="financiamientorat">
-                                <!-- Opciones del combo financiamiento -->
-                                <!-- Agrega las opciones aquí desde JavaScript -->
                             </select>
                         </div>
                         <div id="funcion">
                             <label for="financiamiento">Cargo:</label>
                             <select class="form-control" id="cargo" name="cargo">
                                 <option>MAESTRA/O</option>
-                                <!-- Opciones del combo financiamiento -->
-                                <!-- Agrega las opciones aquí desde JavaScript -->
                             </select>
                         </div>
                     </form>
@@ -529,7 +520,7 @@
                 type: 'get',
                 url: Routing.generate('herramienta_info_maestro_planilla_areas', {'id': maestroId }),
                 success: function (data) {
-                    console.log(data);
+                    // console.log(data);
                     $('#modalAreasMaestroLabel').text('ASIGNAR ÁREAS A ' + maestro);   
                     $("#resultado").append(data);     
                     // actualizarFilaEnTabla(data);
@@ -546,20 +537,135 @@
             $("#resultado").empty();
         });
 
-        function cargarTurnos() {
-            
-        }
-
+        
         function cargarNiveles() {
-            // Aquí debes obtener el valor seleccionado del combo de turnos
-            var turnoSeleccionado = $('#turno').val();
+            var turno = document.getElementById('form_turno').value;
+            $("#paralelos-container").empty();
+            $("#form_grado").empty();
+            $("#form_asignatura").empty();
+            $("#form_nivel").empty();
+            if(turno == null || turno == "" || turno == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_maestro_planilla_nivel', {'turno': turno}),
+                success: function (data) {            
+                    $("#form_nivel").empty();
+                    $("#form_nivel").append('<option value="">Sel. Nivel</option>');
+                    $("#form_grado").append('<option value="">Sel. Grado</option>');
+                    $("#form_asignatura").append('<option value="">Sel. Áreas</option>');
+                    for (var i in data.niveles) {
+                        $("#form_nivel").append('<option value="' + data.niveles[i].id + '">' + data.niveles[i].nivel.toUpperCase() + '</option>');
+                    }
+                },
+                error: function(error){            
+                    alert("Error, no existe informacion para el turno seleccionado");        
+                    $("#form_nivel").empty();
+                },
+            });   
 
         }
 
         function cargarGrados() {
-            // Aquí debes obtener el valor seleccionado del combo de niveles
-            var nivelSeleccionado = $('#nivel').val();
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            $("#paralelos-container").empty();
+            $("#form_asignatura").empty();
+            $("#form_grado").empty();
+            if(nivel == null || nivel == "" || nivel == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_maestro_planilla_grado', {'turno': turno, 'nivel': nivel}),
+                success: function (data) {            
+                    
+                        $("#form_grado").empty();
+                        $("#form_grado").append('<option value="">Sel. Grado</option>');
+                        $("#form_asignatura").append('<option value="">Sel. Áreas</option>');
+                        for (var i in data.grados) {
+                            $("#form_grado").append('<option value="' + data.grados[i].id + '">' + data.grados[i].grado.toUpperCase() + '</option>');
+                        }
+                                        
+                },
+                error: function(error){      
+                    alert("Error, no existe informacion para el nivel seleccionado"); 
+                        $("#form_grado").empty();
+                        $("#form_asignatura").empty();
+                },      
+                    
+            });
         }
+
+        function cargarAsignaturas(){
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            var grado = document.getElementById('form_grado').value;
+            $("#paralelos-container").empty();
+            $("#form_asignatura").empty();
+            if(grado == null || grado == "" || grado == 0){
+                return false;
+            }
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_maestro_planilla_asignatura', {'turno': turno, 'nivel': nivel, 'grado': grado}),
+                success: function (data) {            
+                    
+                        $("#form_asignatura").empty();
+                        $("#form_asignatura").append('<option value="">Sel. Áreas</option>');
+                        for (var i in data.asignatura) {
+                            $("#form_asignatura").append('<option value="' + data.asignatura[i].id + '">' + data.asignatura[i].asignatura.toUpperCase() + '</option>');
+                        }
+                                        
+                },
+                error: function(error){      
+                    alert("Error, no existe informacion para el nivel seleccionado"); 
+                        $("#form_asignatura").empty();
+                },      
+                    
+            });
+        }
+
+        // JavaScript: Función para cargar los paralelos
+        function cargarParalelos() {
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            var grado = document.getElementById('form_grado').value;
+            var asignatura = document.getElementById('form_asignatura').value;
+            if (asignatura == null || asignatura == "" || asignatura == 0) {
+                return false;
+            }
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_maestro_planilla_paralelos', { 'turno': turno, 'nivel': nivel, 'grado': grado, 'asignatura': asignatura }),
+                success: function (data) {
+                    console.log(data);
+                    var paralelosContainer = $("#paralelos-container");
+                    paralelosContainer.empty(); // Vaciar el contenedor antes de agregar los paralelos
+                    var paralelosLine = $('<div class="paralelos-line"></div>');
+
+                    for (var i = 0; i < data.paralelos.length; i++) {
+                        var paralelo = data.paralelos[i];
+                        var paraleloElement = `
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" id="paralelo${paralelo.id}" value="${paralelo.id}">
+                                <label class="form-check-label" for="paralelo${paralelo.id}">Paralelo ${paralelo.paralelo}</label>
+                            </div>`;
+                        paralelosLine.append(paraleloElement);
+                    }
+
+                    paralelosContainer.append(paralelosLine); 
+                    },
+                error: function (error) {
+                    alert("Error, no existe información para el nivel seleccionado");
+                    $("#form_asignatura").empty();
+                },
+
+            });
+        }
+
 
         function resetFormFields() {
             $('#formularioBuscarMaestro')[0].reset();
@@ -567,12 +673,22 @@
             $('#modalalert').hide();
             $('#guardarBtn').hide();
             $('#finobs').hide();
-            $('#buscarBtn').show()
+            $('#buscarBtn').show();
+            $("#paralelos-container").empty();
         }
 
         // Add event listener to the modal
         $('#nuevoModal').on('hidden.bs.modal', function () {
             resetFormFields();
+            $('#ci').prop('disabled', false);
+            $('#complemento').prop('disabled', false);
+            $('#apellidoPaterno').prop('disabled', false);
+            $('#apellidoMaterno').prop('disabled', false);
+            $('#nombres').prop('disabled', false);
+            $('#fechaNacimiento').prop('disabled', false);
+            $('input[name="tipoCarnet"]').prop('disabled', false);
+            $('#financiamientonew').empty();
+            $("#paralelos-container").empty();
         });
 
         function buscarMaestro(){
@@ -662,7 +778,15 @@
                         observacion: observacion
                         },
                 success: function (data) {
-                    console.log(data);
+                    $('#ci').prop('disabled', false);
+                    $('#complemento').prop('disabled', false);
+                    $('#apellidoPaterno').prop('disabled', false);
+                    $('#apellidoMaterno').prop('disabled', false);
+                    $('#nombres').prop('disabled', false);
+                    $('#fechaNacimiento').prop('disabled', false);
+                    $('input[name="tipoCarnet"]').prop('disabled', false);
+                    $('#financiamientonew').empty();
+
                     $('#nuevoModal').modal('hide');
                     var maestro = data[0];
                     var nuevoMaestro = {
@@ -693,7 +817,7 @@
                     // Agregamos el nuevo registro a la tabla
                     
                     tablaMaestros.row.add([
-                        tablaMaestros.data().count() + 1, // Número de registros en la tabla + 1 (nuevo registro)
+                        tablaMaestros.rows().count() + 1, // Número de registros en la tabla + 1 (nuevo registro)
                         nuevoMaestro.ci,
                         nuevoMaestro.nombre,
                         nuevoMaestro.financiamiento,
@@ -713,6 +837,94 @@
                 }
             });
         }
+
+        function guardarParaleloMaestro(){
+            console.log(maestroId);
+            var turno = document.getElementById('form_turno').value;
+            var nivel = document.getElementById('form_nivel').value;
+            var grado = document.getElementById('form_grado').value;
+            var asignatura = document.getElementById('form_asignatura').value;
+
+            var checkboxesSeleccionados = $("input[type='checkbox']:checked");
+            var paralelosSeleccionados = [];
+            checkboxesSeleccionados.each(function() {
+                var paraleloId = $(this).val();
+                var paraleloNombre = $(this).next("label").text();
+                paralelosSeleccionados.push({ id: paraleloId, nombre: paraleloNombre });
+            });
+            console.log(paralelosSeleccionados);
+
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('herramienta_info_maestro_planilla_guarda_paralelo'),
+                data: {
+                        esp: maestroId,
+                        turno: turno,
+                        nivel: nivel,
+                        grado: grado,
+                        asignatura: asignatura,
+                        paralelos: paralelosSeleccionados
+                        },
+                success: function (data) {
+                    console.log(data);
+                    var tablaAreaAsignada = $('#tabla_area_asignada tbody');
+                    tablaAreaAsignada.empty();
+
+                    // Recorrer los datos recibidos y agregar las filas a la tabla
+                    for (var i = 0; i < data.asignaturamaestro.length; i++) {
+                        var area = data.asignaturamaestro[i];
+                        var fila = `
+                            <tr data-area-id="${area.id}">
+                                <td data-title="AN°">${i + 1}</td>
+                                <td data-title="ATurno">${area.turno}</td>
+                                <td data-title="ANivel">${area.nivel}</td>
+                                <td data-title="AGrado">${area.grado}</td>
+                                <td data-title="AParalelo">${area.paralelo}</td>
+                                <td data-title="AArea">${area.asignatura}</td>
+                                <td data-title="AAccion">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm" onclick="eliminarAreaMaestro(${area.id})">
+                                            <i class="glyphicon glyphicon-trash" style="color:red;"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                        tablaAreaAsignada.append(fila);
+                    }
+                    
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+            
+        }
+
+        function eliminarAreaMaestro(areaid) {
+            // Crea un objeto que contenga el id del área a eliminar
+            var data = { areaid: areaid, esp: maestroId };
+
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('herramienta_info_maestro_planilla_area_elimina'),
+                data: data,
+                success: function (data) {
+                    if (data.success) {
+                        // Eliminar la fila correspondiente de la tabla visualmente
+                        $(`tr[data-area-id="${areaid}"]`).remove();
+                        console.log('Eliminación exitosa');
+                    } else {
+                        console.log('Error en la eliminación');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+        }
+
 
         function cerrarOperativo(sie, gestion, mes, mesid){
 
