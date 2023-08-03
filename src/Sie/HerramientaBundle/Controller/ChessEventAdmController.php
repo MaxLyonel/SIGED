@@ -167,6 +167,7 @@ class ChessEventAdmController extends Controller{
         $em = $this->getDoctrine()->getManager();
         $modalidadLabel = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->find($modalidadId);
         $faseLabel = $em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseId);
+        $faseLabelPrev = $em->getRepository('SieAppWebBundle:EveFaseTipo')->find($faseId-1);
         $categorieLabel = $em->getRepository('SieAppWebBundle:EveCategoriasTipo')->find($categorieId);
       
 
@@ -203,6 +204,7 @@ class ChessEventAdmController extends Controller{
             'categorieId'    => $categorieId,
             'modalidadLabel' => $modalidadLabel->getDescripcion(),
             'faseLabel'      => $faseLabel->getDescripcion(),
+            'faseLabelPrev'  => $faseLabelPrev->getDescripcion(),
             'categorieLabel' => $categorieLabel->getCategoria(),
             'arrEveStudents' => $arrStudents2,
             'arrNextEveStudents' => $arrNextEveStudents,
