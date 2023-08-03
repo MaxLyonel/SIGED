@@ -176,6 +176,8 @@ class AdmPlaController extends Controller{
         
     	$objEmpSiePlan = $em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->find($idModify);
     	$objEmpSiePlan->setSolucionComparacionPlanillaTipo($em->getRepository('SieAppWebBundle:SolucionComparacionPlanillaTipo')->find(1));
+        $objEmpSiePlan->setFechaModificacion(new \DateTime('now'));
+
     	$em->persist($objEmpSiePlan);
         $em->flush(); 
     	$arrData = [
@@ -207,6 +209,7 @@ class AdmPlaController extends Controller{
     	$objEmpSiePlan = $em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->find($idModify);
     	$objEmpSiePlan->setSolucionComparacionPlanillaTipo($em->getRepository('SieAppWebBundle:SolucionComparacionPlanillaTipo')->find(2));
     	$objEmpSiePlan->setObservacion($request->get('observation'));
+        $objEmpSiePlan->setFechaModificacion(new \DateTime('now'));
     	$em->persist($objEmpSiePlan);
         $em->flush(); 
     	$arrData = [
@@ -263,6 +266,7 @@ class AdmPlaController extends Controller{
 			$objNewMaster->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($request->get('financiamientoId')));
 			$objNewMaster->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->find($request->get('cargoId')));
 			$objNewMaster->setFechaCreacion(new \DateTime('now'));
+            $objNewMaster->setInstitucioneducativaId($request->get('sie'));
 
 			$em->persist($objNewMaster);
 
@@ -275,6 +279,8 @@ class AdmPlaController extends Controller{
 			$objEmparejaSiePlanilla->setCargoTipoId(($request->get('cargoId')));
 			$objEmparejaSiePlanilla->setSolucionComparacionPlanillaTipo($em->getRepository('SieAppWebBundle:SolucionComparacionPlanillaTipo')->find(3));
 
+            $objEmparejaSiePlanilla->setFechaCreacion(new \DateTime('now'));
+            
 			$em->persist($objEmparejaSiePlanilla);
 
 			$em->flush();
