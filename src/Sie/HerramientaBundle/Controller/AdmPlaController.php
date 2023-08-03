@@ -266,6 +266,7 @@ class AdmPlaController extends Controller{
 			$objNewMaster->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($request->get('financiamientoId')));
 			$objNewMaster->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->find($request->get('cargoId')));
 			$objNewMaster->setFechaCreacion(new \DateTime('now'));
+            $objNewMaster->setInstitucioneducativaId($request->get('sie'));
 
 			$em->persist($objNewMaster);
 
