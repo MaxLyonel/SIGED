@@ -338,7 +338,7 @@
 																<td>${person.solucion_comparacion_planilla_tipo_id}</td>
 																
 																<td  > 
-																<table>
+																<table v-if="person.solucion_comparacion_planilla_tipo_id != 'Nuevo maestro/Administrativo incluido para ese mes' ">
 																	<tr style="padding: 15px;">
 																		<td class="mp-3">
 																		<a href="#" @click="ratify(person.id)" class="btn btn-sm btn-success">
