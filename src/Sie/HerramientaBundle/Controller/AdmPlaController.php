@@ -267,6 +267,7 @@ class AdmPlaController extends Controller{
 			$objNewMaster->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->find($request->get('cargoId')));
 			$objNewMaster->setFechaCreacion(new \DateTime('now'));
             $objNewMaster->setInstitucioneducativaId($request->get('sie'));
+            $objNewMaster->setObservacion(mb_strtoupper( $request->get('obsnew'), "utf-8") );
 
 			$em->persist($objNewMaster);
 
