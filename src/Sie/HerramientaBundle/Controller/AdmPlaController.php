@@ -120,7 +120,7 @@ class AdmPlaController extends Controller{
         $institucioneducativa=0;
         $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
         
-        if ($objUE && $objUE->getDependenciaTipo()->getId() != 3){
+        if ($objUE){
             $existUE=1;
             $institucioneducativa = $objUE->getInstitucioneducativa();
         }
