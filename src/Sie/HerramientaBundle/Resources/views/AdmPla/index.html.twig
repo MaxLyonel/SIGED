@@ -150,6 +150,10 @@
 	                                      <option value="1">Si</option>	                                      
 	                                    </select>
                                       </div>
+                                      <div class="col-sm-6">
+                                      <label for="Cargo">Observación </label>
+ 										<textarea class="form-control" v-model="infoUE.obsnew"  id="obsId" rows="3" style="text-transform:uppercase"></textarea>
+                                      </div>
                                     <br>
 	                                  <br>
 	                                  <br>
@@ -352,6 +356,15 @@
 																		</td>
 																	</tr>
 																</table>
+																<table v-else>
+																	<tr style="padding: 15px;">
+																		<td>
+																		<a href="#" @click="showdeleteAdm(person,person.id)" class="btn btn-sm btn-danger">		
+																			<i class="fa fa-trash"></i>
+																		</a>
+																		</td>
+																	</tr>
+																</table>
 																</td>
 														    </tr>												        
 												        </tbody>
@@ -418,6 +431,7 @@
 				nomnew:'',
 				cargoId:'',
 				financiamientoId:'',
+				obsnew:'',
 			},
 			infoUE2:{
 				sie:80730460,
