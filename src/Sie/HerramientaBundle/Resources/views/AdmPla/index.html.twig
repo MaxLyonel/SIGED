@@ -150,6 +150,10 @@
 	                                      <option value="1">Si</option>	                                      
 	                                    </select>
                                       </div>
+                                      <div class="col-sm-6">
+                                      <label for="Cargo">Observación </label>
+ 										<textarea class="form-control" v-model="infoUE.obsnew"  id="obsId" rows="3" style="text-transform:uppercase"></textarea>
+                                      </div>
                                     <br>
 	                                  <br>
 	                                  <br>
@@ -338,13 +342,22 @@
 																<td>${person.solucion_comparacion_planilla_tipo_id}</td>
 																
 																<td  > 
-																<table>
+																<table v-if="person.solucion_comparacion_planilla_tipo_id != 'Nuevo maestro/Administrativo incluido para ese mes' ">
 																	<tr style="padding: 15px;">
 																		<td class="mp-3">
 																		<a href="#" @click="ratify(person.id)" class="btn btn-sm btn-success">
 																			<i class="fa fa-check"></i>
 																		</a>
 																		</td>
+																		<td>
+																		<a href="#" @click="showdeleteAdm(person,person.id)" class="btn btn-sm btn-danger">		
+																			<i class="fa fa-trash"></i>
+																		</a>
+																		</td>
+																	</tr>
+																</table>
+																<table v-else>
+																	<tr style="padding: 15px;">
 																		<td>
 																		<a href="#" @click="showdeleteAdm(person,person.id)" class="btn btn-sm btn-danger">		
 																			<i class="fa fa-trash"></i>
@@ -418,6 +431,7 @@
 				nomnew:'',
 				cargoId:'',
 				financiamientoId:'',
+				obsnew:'',
 			},
 			infoUE2:{
 				sie:80730460,
@@ -514,7 +528,7 @@
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'CÓDIGO SIE NO EXISTE',
+								'La Unidad Educativa es privada ...',
 								'warning'
 								);
 							}
