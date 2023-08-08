@@ -339,7 +339,18 @@
 																<td>${person.servicio}</td>
 																<td>${person.item}</td>
 																<td>${person.func_doc}</td>
-																<td>${person.solucion_comparacion_planilla_tipo_id}</td>
+																<td>
+																	<div v-if="person.solucion_comparacion_planilla_tipo_id == 'Maestro/Administrativo eliminado'" style="color:  red ;" >
+																	${person.solucion_comparacion_planilla_tipo_id}
+																	</div>
+
+																	<div v-else-if="person.solucion_comparacion_planilla_tipo_id == 'Maestro/Administrativo ratificado'" style="color:  green ;" >
+																	${person.solucion_comparacion_planilla_tipo_id}
+																	</div>
+																	<div v-else style="color:  blue ;" >
+																	${person.solucion_comparacion_planilla_tipo_id}
+																	</div>
+																</td>
 																
 																<td  > 
 																<table v-if="person.solucion_comparacion_planilla_tipo_id != 'Nuevo maestro/Administrativo incluido para ese mes' ">
