@@ -750,14 +750,14 @@
 
         function guardarMaestro(){
             var ci = $('#ci').val();
+            var complemento = $('#complemento').val();
             var nombres = $('#nombres').val();
             var apellidoPaterno = $('#apellidoPaterno').val();
             var apellidoMaterno = $('#apellidoMaterno').val();
             var fechaNacimiento = $('#fechaNacimiento').val();
             var financiamiento = $('#financiamientonew').val();
             var observacion = $('#observacionnew').val();
-            // var formData = $('#formularioBuscarMaestro').serialize();
-            console.log(apellidoMaterno);
+            // console.log(complemento);
             $('#modalalert').hide();
             var financiamiento = $('#financiamientonew').val();
 
@@ -770,6 +770,7 @@
                 url: Routing.generate('herramienta_info_maestro_planilla_guarda_nuevo_maestro'),
                 data: {
                         ci: ci,
+                        complemento: complemento,
                         nombres: nombres,
                         apellidoPaterno: apellidoPaterno,
                         apellidoMaterno: apellidoMaterno,
