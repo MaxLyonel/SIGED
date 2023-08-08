@@ -257,7 +257,7 @@ class AdmPlaController extends Controller{
 			$objNewMaster->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($request->get('gestion')));
 			$objNewMaster->setMesTipo($em->getRepository('SieAppWebBundle:MesTipo')->find($request->get('idMounth')));			
 			$objNewMaster->setCi($request->get('cinew'));
-			$objNewMaster->setComplemento($request->get('complnew'));
+			$objNewMaster->setComplemento(mb_strtoupper( $request->get('complnew'), "utf-8") );
 			$objNewMaster->setPaterno(mb_strtoupper( $request->get('patnew'), "utf-8") );
 			$objNewMaster->setMaterno(mb_strtoupper( $request->get('matnew'), "utf-8") );
 			$objNewMaster->setNombre(mb_strtoupper( $request->get('nomnew'), "utf-8") );
