@@ -81,7 +81,7 @@ class InfoMaestroPlanillaController extends Controller {
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
         $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
         
-        $query = $em->getConnection()->prepare("            
+        $query = $em->getConnection()->prepare("  
                     select * 
                     from (
                     select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
@@ -90,9 +90,9 @@ class InfoMaestroPlanillaController extends Controller {
                     ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
                     from public.empareja_sie_planilla a 
                         inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-                    where institucioneducativa_id=".$institucion." 
+                    where institucioneducativa_id=".$institucion."
                     and gestion_tipo_id=".$gestion." 
-                    and mes_tipo_id= ".$mes." 
+                    and mes_tipo_id= ".$mes."
                     and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
                     and a.cargo_tipo_id=0
                     union 
@@ -114,9 +114,27 @@ class InfoMaestroPlanillaController extends Controller {
                     ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
                     from empareja_sie_planilla  a
                         inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
-                    where a.institucioneducativa_id=".$institucion." and a.gestion_tipo_id=".$gestion." and a.mes_tipo_id=".$mes." 
+                    where a.institucioneducativa_id=".$institucion." 
+                    and a.gestion_tipo_id=".$gestion." 
+                    and a.mes_tipo_id= ".$mes." 
                     and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
                     and a.cargo_tipo_id=0
+            union
+            select a.id,d.carnet||case when trim(coalesce(d.complemento,''))='' then '' else '-'||d.complemento end as ci
+            ,trim(trim(coalesce(d.paterno,''))||' '||trim(coalesce(d.materno,'')))||' '||trim(coalesce(d.nombre,'')) as apellidos_nombre,
+            (select financiamiento from financiamiento_tipo where id=b.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=b.cargo_tipo_id) as cargo_sie
+            ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,
+            a.solucion_comparacion_planilla_tipo_id as solucion_comparacion_planilla_tipo_id
+            ,a.observacion
+            from empareja_sie_planilla  a 
+            inner join maestro_inscripcion b on a.maestro_inscripcion_id_sie=b.id
+            inner join institucioneducativa c on b.institucioneducativa_id=c.id
+            inner join persona d on b.persona_id=d.id
+            where a.institucioneducativa_id=".$institucion."
+            and a.gestion_tipo_id=".$gestion." 
+            and a.mes_tipo_id= ".$mes."
+            and c.estadoinstitucion_tipo_id=10 and c.dependencia_tipo_id=3 and c.orgcurricular_tipo_id=1 
+            and a.cargo_tipo_id=0
                     ) a
                     order by cargo_sie,apellidos_nombre;");
             
@@ -140,6 +158,11 @@ class InfoMaestroPlanillaController extends Controller {
 
 
     public function confirmaAction (Request $request, $id){
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $finciamiento = $request->request->get('financiamiento');
         
@@ -189,7 +212,11 @@ class InfoMaestroPlanillaController extends Controller {
     }
 
     public function eliminaAction (Request $request, $id){
-        // dump('ok');die;
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $justificacion = $request->request->get('justificacion');
         
@@ -366,33 +393,55 @@ class InfoMaestroPlanillaController extends Controller {
     public function validaAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('complemento');
-        // $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['personaId']);
+        
+        $cedula = ltrim(rtrim($request->request->get('ci')));
+        $complemento = strtoupper(ltrim(rtrim($request->get('complemento'))));
+        $complemento = strtoupper(ltrim(rtrim($complemento !== null ? $complemento : '')));
+        $paterno = strtoupper(ltrim(rtrim($request->get('apellidoPaterno'))));
+        $materno = strtoupper(ltrim(rtrim($request->get('apellidoMaterno'))));
+        $nombre = strtoupper(ltrim(rtrim($request->get('nombres'))));
         $fechaNacimiento = new \DateTime($request->get('fechaNacimiento'));
-        // if($persona){
+
             $datos = array(
-                'complemento'=>$request->get('complemento'),
-                'primer_apellido'=>$request->get('apellidoPaterno'),
-                'segundo_apellido'=>$request->get('apellidoMaterno'),
-                'nombre'=>$request->get('nombres'),
+                'complemento'=>$complemento,
+                'primer_apellido'=>$paterno,
+                'segundo_apellido'=>$materno,
+                'nombre'=>$nombre,
                 'fecha_nacimiento' => $fechaNacimiento->format('d-m-Y')
             );
             
             $cedulaTipoId = $request->get('tipoCarnet');
-            $cedula = $request->get('ci');
-            if($cedulaTipoId == 2){
-                $datos["extranjero"] = 'E';
-            }
-            if($cedula){
-                $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($cedula,$datos,'prod','academico');
-                $mensaje = '';
-                if(!$resultadoPersona){
-                    $mensaje = "No se realizó la validación con SEGIP.";
-                    // $this->addFlash('updateError', $mensaje);
-                }                
+            
+            
+            $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                'carnet'=>$cedula,
+                'complemento'=>$complemento,
+                'paterno'=>$paterno,
+                'materno'=>$materno,
+                'nombre'=>$nombre,
+                'fechaNacimiento'=>$fechaNacimiento,
+                'segipId'=> 1,
+            ));
+            if (!is_object($persona)) {
+            
+                if($cedulaTipoId == 2){
+                    $datos["extranjero"] = 'E';
+                }
+
+                if($cedula){
+                    $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($cedula,$datos,'prod','academico');
+                    $mensaje = '';
+                    if(!$resultadoPersona){
+                        $mensaje = "No se realizó la validación con SEGIP.";
+                    }                
+                } else {
+                    $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de la persona.";
+                }
             } else {
-                $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de la persona.";
-                // $this->addFlash('updateError', $mensaje);
+                $resultadoPersona = true;
+                $mensaje = '';
             }
+
             $financiamiento = $em->createQuery(
                 'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
                     WHERE ft.id NOT IN  (:id)')
@@ -402,7 +451,6 @@ class InfoMaestroPlanillaController extends Controller {
             foreach ($financiamiento as $f) {
                 $financiamientoArray[$f->getId()] = $f->getFinanciamiento();
             }
-            // dump($financiamientoArray); die;
             return new JsonResponse(array(
                 'financiamiento' => $financiamientoArray,
                 'mensaje' => $mensaje,
@@ -411,6 +459,11 @@ class InfoMaestroPlanillaController extends Controller {
 
 
     public function guardaMaestroAction(Request $request){
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $institucion = $this->session->get('ie_id');
         $gestion = $request->getSession()->get('currentyear');
         $planillaMes = $request->getSession()->get('idPlanillaMes');
@@ -484,6 +537,11 @@ class InfoMaestroPlanillaController extends Controller {
     }
    
     public function validaConsolidacionAction(Request $request){
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $sie = $request->request->get('sie');
         $gestion = $request->request->get('gestion');
         $mesplanilla = $request->request->get('mesid');
@@ -578,6 +636,11 @@ class InfoMaestroPlanillaController extends Controller {
     }
 
     public function guardaParaleloAction(Request $request){
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $espId = $request->get('esp');       
         $turnoId = $request->get('turno');
         $nivelId = $request->get('nivel'); 
@@ -623,6 +686,11 @@ class InfoMaestroPlanillaController extends Controller {
     }
 
     public function eliminaParaleloAction(Request $request){
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $areaid = $request->get('areaid');
         $espId = $request->get('esp');       
         

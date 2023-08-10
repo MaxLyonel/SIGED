@@ -241,15 +241,27 @@ class AdmPlaController extends Controller{
             'primer_apellido'=>mb_strtoupper($request->get('patnew'), 'utf-8'),
             'segundo_apellido'=>mb_strtoupper($request->get('matnew'), 'utf-8'),
             'nombre'=>mb_strtoupper($request->get('nomnew'), 'utf-8'),
-            'fecha_nacimiento'=>$request->get('fecnacnew')
+            'fecha_nacimiento'=>str_replace("/","-",$request->get('fecnacnew'))
         );
         if($request->get('extranjero') == 1){
             $arrParametros['extranjero'] = 'e';
         }      
-        
-        // get info segip
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $request->get('cinew'),$arrParametros,'prod', 'academico');
 
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+            'carnet'=>$request->get('cinew'),
+            'complemento'=>mb_strtoupper($request->get('complnew'), 'utf-8'),
+            'paterno'=>mb_strtoupper($request->get('patnew'), 'utf-8'),
+            'materno'=>mb_strtoupper($request->get('matnew'), 'utf-8'),
+            'nombre'=>mb_strtoupper($request->get('nomnew'), 'utf-8'),
+            'fechaNacimiento'=>new \DateTime(str_replace("/","-",$request->get('fecnacnew'))),
+            'segipId'=> 1,
+        ));
+        if (!is_object($persona)) {
+            // get info segip
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $request->get('cinew'),$arrParametros,'prod', 'academico');
+        } else {
+            $answerSegip = true;
+        }
         $swsegip = 0;
         if($answerSegip){
 			$swsegip=1;
@@ -261,7 +273,7 @@ class AdmPlaController extends Controller{
 			$objNewMaster->setPaterno(mb_strtoupper( $request->get('patnew'), "utf-8") );
 			$objNewMaster->setMaterno(mb_strtoupper( $request->get('matnew'), "utf-8") );
 			$objNewMaster->setNombre(mb_strtoupper( $request->get('nomnew'), "utf-8") );
-			$objNewMaster->setFechaNacimiento(new \DateTime($request->get('fecnacnew')));            
+			$objNewMaster->setFechaNacimiento(new \DateTime(str_replace("/","-",$request->get('fecnacnew'))));            
 			
 			$objNewMaster->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($request->get('financiamientoId')));
 			$objNewMaster->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->find($request->get('cargoId')));
