@@ -169,7 +169,6 @@ class InfoMaestroPlanillaController extends Controller {
         // Obtener la entidad EmparejaSiePlanilla por su id
         
         $emparejaSiePlanilla = $em->getRepository(EmparejaSiePlanilla::class)->find($id);
-        
         $institucion = $emparejaSiePlanilla->getInstitucioneducativa()->getId();
         $gestion = $emparejaSiePlanilla->getGestionTipoId();
         $mes = $request->getSession()->get('idPlanillaMes');
@@ -182,11 +181,11 @@ class InfoMaestroPlanillaController extends Controller {
         }
         $justificacion = '';
         $nuevoValorSolucion =$em->getRepository(SolucionComparacionPlanillaTipo::class)->findOneById(1);
-        // Obtener el nuevo valor para el campo solucionComparacionPlanillaTipo desde la solicitud AJAX
-        if ($emparejaSiePlanilla->getplanillaPagoComparativoSie()===null){
-            $justificacion = $emparejaSiePlanilla->getobservacion();
-            $nuevoValorSolucion =$emparejaSiePlanilla->getsolucionComparacionPlanillaTipo();
-        } 
+        
+        // if ($emparejaSiePlanilla->getplanillaPagoComparativoSie()===null){
+        //     $justificacion = $emparejaSiePlanilla->getobservacion();
+        //     $nuevoValorSolucion =$emparejaSiePlanilla->getsolucionComparacionPlanillaTipo();
+        // } 
         if ($emparejaSiePlanilla->getnuevoMaestroInscripcion()!==null){
             $justificacion = $emparejaSiePlanilla->getnuevoMaestroInscripcion()->getobservacion();
             $nuevoValorSolucion =$em->getRepository(SolucionComparacionPlanillaTipo::class)->findOneById(3);
@@ -197,11 +196,14 @@ class InfoMaestroPlanillaController extends Controller {
         $fechaActual = new \DateTime();
         $emparejaSiePlanilla->setFechaModificacion($fechaActual);
         // Persistir los cambios en la base de datos
+        $em->persist($emparejaSiePlanilla);
         $em->flush();
         
         $financiamientoTipo = $em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($finciamiento);
         $financiamientotxt = $financiamientoTipo->getFinanciamiento();
-
+        // dump($emparejaSiePlanilla->getId());
+        // dump($emparejaSiePlanilla->getSolucionComparacionPlanillaTipo()->getId());
+        // die;
         $maestro = [
             'id' => $emparejaSiePlanilla->getId(),
             'solucion_comparacion_planilla_tipo_id' => $emparejaSiePlanilla->getSolucionComparacionPlanillaTipo()->getId(),
@@ -233,6 +235,7 @@ class InfoMaestroPlanillaController extends Controller {
         $emparejaSiePlanilla->setObservacion($justificacion);
         $fechaActual = new \DateTime();
         $emparejaSiePlanilla->setFechaModificacion($fechaActual);
+        $em->persist($emparejaSiePlanilla);
         $em->flush();
 
         $maestro = [
