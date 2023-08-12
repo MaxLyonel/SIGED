@@ -2,6 +2,13 @@ herramienta_info_maestro_planilla_index:
     path:     /
     defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:index}
 
+herramienta_info_maestro_planilla_mes:
+    path:     /mes/
+    defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:planillaMes }
+    methods:  [POST]
+    options:
+         expose: true
+
 herramienta_info_maestro_planilla_confirma:
     path:    /confirma/{id}/
     defaults: { _controller: SieHerramientaBundle:InfoMaestroPlanilla:confirma }
