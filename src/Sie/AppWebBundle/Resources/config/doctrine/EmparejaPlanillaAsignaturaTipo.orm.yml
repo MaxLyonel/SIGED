@@ -20,6 +20,9 @@ Sie\AppWebBundle\Entity\EmparejaPlanillaAsignaturaTipo:
         IDX_FF1B01E7585AE0D9:
             columns:
                 - asignatura_tipo_id
+        IDX_FF1B01E7CEDB60B7:
+            columns:
+                - financiamiento_tipo_id
     uniqueConstraints:
         uniq_empareja_planilla_asignatura_tipo:
             columns:
@@ -49,6 +52,11 @@ Sie\AppWebBundle\Entity\EmparejaPlanillaAsignaturaTipo:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        horas:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         emparejaSiePlanilla:
             targetEntity: EmparejaSiePlanilla
@@ -102,6 +110,15 @@ Sie\AppWebBundle\Entity\EmparejaPlanillaAsignaturaTipo:
             inversedBy: null
             joinColumns:
                 asignatura_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        financiamientoTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                financiamiento_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
