@@ -277,6 +277,15 @@
                     <h4 class="modal-title" id="eliminarModalLabel">Eliminar Maestro</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tipoEliminacion">Eliminado por:</label>
+                        <select class="form-control" id="tipoEliminacion" name="tipoEliminacion">
+                            <option value="">Seleccionar</option>
+                            {% for eliminaTipo in eliminaTipo %}
+                                <option value="{{ eliminaTipo.id }}">{{ eliminaTipo.razonElimina }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>                    
                     <!-- Formulario de justificación de eliminación -->
                     <form id="justificacionForm">
                         <div class="form-group">
@@ -505,19 +514,28 @@
 
         function confirmaEliminarMaestro() {
             var justificacion = $('#justificacion').val();
+            var tipoEliminacion = $('#tipoEliminacion').val();
+            if(justificacion && tipoEliminacion) {
             $.ajax({
                 type: 'POST',
                 url: Routing.generate('herramienta_info_maestro_planilla_elimina', { id: maestroId }),
-                data: { justificacion: justificacion },
+                data: { 
+                    justificacion: justificacion,
+                    tipoEliminacion: tipoEliminacion 
+                },
                 success: function (data) {
                     actualizarFilaEnTabla(data);
                     $('#eliminarModal').modal('hide');
                     $('#justificacion').val('');
+                    $('#tipoEliminacion').val('');
                 },
                 error: function (xhr, status, error) {
                     // Manejar errores si es necesario
                 }
             });
+            } else {
+                alert('Por favor, complete ambos campos.');
+            }
         }
 
 

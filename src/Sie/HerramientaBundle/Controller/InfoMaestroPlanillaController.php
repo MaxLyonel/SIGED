@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoValidacionpersonal;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\NuevoMaestroInscripcion;
+use Sie\AppWebBundle\Entity\EliminaRegistroPlanillaTipo;
 
 /**
  * EstudianteInscripcion controller.
@@ -151,6 +152,8 @@ class InfoMaestroPlanillaController extends Controller {
          * obtenemos datos de la unidad educativa
          */
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
+        $eliminacionTipo = $em->getRepository('SieAppWebBundle:EliminaRegistroPlanillaTipo')->findAll();
+        // dump($eliminacionTipo);die;
         $mestipo = $em->getRepository('SieAppWebBundle:MesTipo')->findOneById($mes);
         $meses = $em->getRepository('SieAppWebBundle:MesTipo')->findBy(['id' => range(1, $maxMes)]);
         return $this->render($this->session->get('pathSystem') . ':InfoMaestroPlanilla:index.html.twig', array(
@@ -160,6 +163,7 @@ class InfoMaestroPlanillaController extends Controller {
                 'mesid' => $mestipo->getId(),
                 'mes' => $mestipo->getMes(),
                 'meses' => $meses,
+                'eliminaTipo'=>$eliminacionTipo,
         ));
         
     }
@@ -315,7 +319,8 @@ class InfoMaestroPlanillaController extends Controller {
         }
         $em = $this->getDoctrine()->getManager();
         $justificacion = $request->request->get('justificacion');
-        
+        $tipoEliminacion = $request->request->get('tipoEliminacion');
+        // dump($em->getRepository('SieAppWebBundle:EliminaRegistroPlanillaTipo')->findById($tipoEliminacion));die;
         $emparejaSiePlanilla = $em->getRepository(EmparejaSiePlanilla::class)->find($id);
         
         $institucion = $emparejaSiePlanilla->getInstitucioneducativa()->getId();
@@ -326,16 +331,18 @@ class InfoMaestroPlanillaController extends Controller {
         }
         $nuevoValorSolucion =$em->getRepository(SolucionComparacionPlanillaTipo::class)->findOneById(2);
         $emparejaSiePlanilla->setSolucionComparacionPlanillaTipo($nuevoValorSolucion);
+        $emparejaSiePlanilla->setEliminaRegistroPlanillaTipo($em->getRepository(EliminaRegistroPlanillaTipo::class)->findOneById($tipoEliminacion));
         $emparejaSiePlanilla->setObservacion($justificacion);
         $fechaActual = new \DateTime();
         $emparejaSiePlanilla->setFechaModificacion($fechaActual);
+
         $em->persist($emparejaSiePlanilla);
         $em->flush();
-
+        // dump($emparejaSiePlanilla);die;
         $maestro = [
             'id' => $emparejaSiePlanilla->getId(),
             'solucion_comparacion_planilla_tipo_id' => $emparejaSiePlanilla->getSolucionComparacionPlanillaTipo()->getId(),
-            'observacion' => $emparejaSiePlanilla->getObservacion(),
+            'observacion' => $emparejaSiePlanilla->getEliminaRegistroPlanillaTipo()->getRazonElimina(), //getObservacion(),
         ];
         return new JsonResponse($maestro);
     }

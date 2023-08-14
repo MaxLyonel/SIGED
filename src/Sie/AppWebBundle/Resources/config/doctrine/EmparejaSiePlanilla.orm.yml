@@ -20,6 +20,9 @@ Sie\AppWebBundle\Entity\EmparejaSiePlanilla:
         IDX_BC1F5E2BB904B03B:
             columns:
                 - solucion_comparacion_planilla_tipo_id
+        IDX_BC1F5E2BE418EA07:
+            columns:
+                - elimina_registro_planilla_tipo_id
     id:
         id:
             type: integer
@@ -117,6 +120,15 @@ Sie\AppWebBundle\Entity\EmparejaSiePlanilla:
             inversedBy: null
             joinColumns:
                 solucion_comparacion_planilla_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        eliminaRegistroPlanillaTipo:
+            targetEntity: EliminaRegistroPlanillaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                elimina_registro_planilla_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
