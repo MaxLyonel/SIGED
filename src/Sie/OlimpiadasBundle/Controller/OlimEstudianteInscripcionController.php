@@ -1340,6 +1340,9 @@ class OlimEstudianteInscripcionController extends Controller{
 
 
     public function getStudentsAction(Request $request){
+         //dump($request); die;
+
+         $es_informatica = false;
          //get the session user
          $id_usuario = $this->session->get('userId');
          //validation if the user is logged
@@ -1354,6 +1357,14 @@ class OlimEstudianteInscripcionController extends Controller{
         $paraleloId = $request->get('paraleloId');
         $gradoId = $request->get('gradoId');
         $materiaId = $request->get('materiaId');
+        
+        //dump($materiaId); die;
+        //INFORMATICA = 44 SOLO MUJERES
+        if($materiaId == 44){
+            $es_informatica = true;
+        }
+
+        
         $categoryId = $request->get('categoryId');
         $nivelId = $request->get('nivelId');
         $sie = $request->get('sie');
@@ -1361,7 +1372,7 @@ class OlimEstudianteInscripcionController extends Controller{
         $olimtutorid = $request->get('olimtutorid');
         $limitInscription = true;
         $jsonData = $request->get('jsonData');
-        // dump($jsonData);die;
+        
         $arrConditionInstEducaCurso = array(
              'nivelTipo' =>$nivelId,
              'gradoTipo' => $gradoId,
@@ -1373,9 +1384,16 @@ class OlimEstudianteInscripcionController extends Controller{
         //look for the id of institucioneducativa_curso
         $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrConditionInstEducaCurso);
         
-        $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
+        if($es_informatica == true){
+            
+            $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId(), 1);    
+        }else{
+
+            $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
+        }
         // $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion);
-        
+        //dump( $objStudentsToOlimpiadas); die;
+
         $objRules = $this->get('olimfunctions')->getDataRule(array('materiaId'=>$materiaId, 'categoryId'=>$categoryId));
         
 
