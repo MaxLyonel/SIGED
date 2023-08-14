@@ -196,7 +196,12 @@ class Olimfunctions {
     * @param  [type] $institucionEducativaCursoId [description]
     * @return [type]                              [description]
     */
-   public function getStudentsToOlimpiadas($institucionEducativaCursoId){
+   public function getStudentsToOlimpiadas($institucionEducativaCursoId, $mujeres=0){
+
+    $condicion = "";
+    if($mujeres == 1){
+      $condicion = " and e.genero_tipo_id = 2 ";
+    }
 
     $sql = "
             
@@ -205,7 +210,7 @@ class Olimfunctions {
             left join institucioneducativa_curso iec on ie.id = iec.institucioneducativa_id
             left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
             left join estudiante e on ei.estudiante_id = e.id
-            where (e.pais_tipo_id = 1 or e.es_doble_nacionalidad = 't') and iec.id = ".$institucionEducativaCursoId."
+            where (e.pais_tipo_id = 1 or e.es_doble_nacionalidad = 't') and iec.id = ".$institucionEducativaCursoId. $condicion ." 
             order by e.paterno, e.materno, e.nombre ASC
         "
             ;
