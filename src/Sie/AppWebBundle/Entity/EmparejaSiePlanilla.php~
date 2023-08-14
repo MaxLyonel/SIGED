@@ -360,32 +360,4 @@ class EmparejaSiePlanilla
     {
         return $this->solucionComparacionPlanillaTipo;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EliminaRegistroPlanillaTipo
-     */
-    private $eliminaRegistroPlanillaTipo;
-
-
-    /**
-     * Set eliminaRegistroPlanillaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EliminaRegistroPlanillaTipo $eliminaRegistroPlanillaTipo
-     * @return EmparejaSiePlanilla
-     */
-    public function setEliminaRegistroPlanillaTipo(\Sie\AppWebBundle\Entity\EliminaRegistroPlanillaTipo $eliminaRegistroPlanillaTipo = null)
-    {
-        $this->eliminaRegistroPlanillaTipo = $eliminaRegistroPlanillaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get eliminaRegistroPlanillaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EliminaRegistroPlanillaTipo 
-     */
-    public function getEliminaRegistroPlanillaTipo()
-    {
-        return $this->eliminaRegistroPlanillaTipo;
-    }
 }
