@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EliminaRegistroPlanillaTipo:
+    type: entity
+    table: elimina_registro_planilla_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        razonElimina:
+            type: string
+            nullable: false
+            length: 250
+            fixed: false
+            comment: ''
+            column: razon_elimina
+    lifecycleCallbacks: {  }
