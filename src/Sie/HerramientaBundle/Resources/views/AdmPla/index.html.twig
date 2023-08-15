@@ -209,6 +209,43 @@
         </div>
     </div> 
 
+	<!-- Modal para la ratificar -->
+	<div class="modal fade" id="ratificarModal" tabindex="-1" role="dialog" aria-labelledby="ratificarModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content custom-modal-content">
+				<div class="modal-header custom-modal-header-success">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="ratificarModalLabel">Ratificar Administrativos</h4>
+				</div>
+				<div class="modal-body">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h4>${personSelected.apellidos_nombre} </br> </h4>
+						</div>
+					</div>
+					<form id="ratificaForm">
+						<div id="financiamiento">
+							<label for="financiamiento">Financiamiento:</label>
+							<select class="form-control" id="idratfinanciamiento" v-model="infoUE.financiamientoId" name="financiamientorat">
+								<option v-for=" finan in arrFinanciamiento " :value="finan.id">${finan.financiamiento}</option>
+							</select>
+						</div>
+						<div id="funcion">
+							<label for="financiamiento">Cargo:</label>
+							<select class="form-control" id="idrratcargo" v-model="infoUE.cargoId" name="cargo">
+								<option v-for=" cargo in arrCargo " :value="cargo.id">${cargo.cargo}</option>
+							</select>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+					<button type="button" class="btn btn-success" @click="ratify(infoUE)">Ratificar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	{#<div v-if="cortina" class="cortina">
 		<i class="fa fa-refresh fa-spin"></i> Procesando... 
@@ -356,7 +393,7 @@
 																<table v-if="person.solucion_comparacion_planilla_tipo_id != 'Nuevo maestro/Administrativo incluido para ese mes' ">
 																	<tr style="padding: 15px;">
 																		<td class="mp-3">
-																		<a href="#" @click="ratify(person.id)" class="btn btn-sm btn-success">
+																		<a href="#" @click="ratifyModal(person,person.id)" class="btn btn-sm btn-success">
 																			<i class="fa fa-check"></i>
 																		</a>
 																		</td>
@@ -521,7 +558,7 @@
 				axios.post(Routing.generate('adm_pla_findUEData', this.infoUE ))
 				.then(response => {
 					if (response.status == 200) {
-							// console.log(response.data);
+							console.log(response.data);
 
 							if(response.data.existUE == true){
 
@@ -586,10 +623,17 @@
 				});						
 			},
 
-
-			ratify:function(idModify){
+			ratifyModal:function(person,idModify){
+				this.personSelected = person;
 				this.infoUE.idModify = idModify;
+				this.infoUE.cargoId=''
+				this.infoUE.financiamientoId=''
 
+				$('#ratificarModal').modal('show');
+			},
+
+			ratify:function(infoUE){
+				
                     Swal.fire({
                         title: '¿Ratificar el registro?',
                         text: "Si acepta, el registro sera ratificado... " ,
@@ -630,7 +674,8 @@
 								this.buscando = false;
 							});	
 					}	
-				});						
+				});		
+				$('#ratificarModal').modal('hide');				
 			},
 			closeOpe:function(person,idModify){
 				this.arrDataObs = []
