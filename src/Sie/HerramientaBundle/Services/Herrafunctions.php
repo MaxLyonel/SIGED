@@ -40,91 +40,91 @@ class Herrafunctions {
    */
   public function getAllAdm($inpData){
 
-$query = "
-        select * 
-        from (
-        select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-        ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
-        ,a.observacion
-        from public.empareja_sie_planilla a 
-          inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-        where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
-        and a.cargo_tipo_id<>0
-        union 
-        select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-        ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
-        ,a.observacion
-        from public.empareja_sie_planilla a 
-          inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-        where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
-        and b.cod_func<>2
-        union 
-        select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
-        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
-        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-        ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
-        ,a.observacion
-        from empareja_sie_planilla  a
-          inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
-        where institucioneducativa_id='".$inpData['sie']."' and a.gestion_tipo_id=".$inpData['gestion']." and a.mes_tipo_id=".$inpData['idMounth']." 
-        and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
-        and a.cargo_tipo_id<>0
-        ) a
-        order by cargo_sie,apellidos_nombre;
-";
-$query = "
-select * 
-from (
-select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-(select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
-,a.observacion
-from public.empareja_sie_planilla a 
-  inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
-and a.cargo_tipo_id<>0
-union 
-select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-(select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
-,a.observacion
-from public.empareja_sie_planilla a 
-  inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
-and b.cod_func<>2
-union 
-select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
-,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
-(select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
-,a.observacion
-from empareja_sie_planilla  a
-  inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
-where a.institucioneducativa_id='".$inpData['sie']."' and a.gestion_tipo_id=".$inpData['gestion']." and a.mes_tipo_id=".$inpData['idMounth']."  
-and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
-and a.cargo_tipo_id<>0
-union
-select a.id,d.carnet||case when trim(coalesce(d.complemento,''))='' then '' else '-'||d.complemento end as ci
-,trim(trim(coalesce(d.paterno,''))||' '||trim(coalesce(d.materno,'')))||' '||trim(coalesce(d.nombre,'')) as apellidos_nombre,
-(select financiamiento from financiamiento_tipo where id=b.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=b.cargo_tipo_id) as cargo_sie
-,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
-,a.observacion
-from empareja_sie_planilla  a 
-  inner join maestro_inscripcion b on a.maestro_inscripcion_id_sie=b.id
-    inner join institucioneducativa c on b.institucioneducativa_id=c.id
-      inner join persona d on b.persona_id=d.id
-where a.institucioneducativa_id='".$inpData['sie']."' and 
-a.gestion_tipo_id=".$inpData['gestion']." and a.mes_tipo_id=".$inpData['idMounth']." and c.estadoinstitucion_tipo_id=10 and c.dependencia_tipo_id=3 and c.orgcurricular_tipo_id=1 
-and a.cargo_tipo_id<>0
-) a
-order by cargo_sie,apellidos_nombre;
-";
+      $query = "
+              select * 
+              from (
+              select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+              ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+              (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+              ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
+              ,a.observacion
+              from public.empareja_sie_planilla a 
+                inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+              where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
+              and a.cargo_tipo_id<>0
+              union 
+              select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+              ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+              (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+              ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
+              ,a.observacion
+              from public.empareja_sie_planilla a 
+                inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+              where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
+              and b.cod_func<>2
+              union 
+              select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
+              ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
+              (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+              ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
+              ,a.observacion
+              from empareja_sie_planilla  a
+                inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
+              where institucioneducativa_id='".$inpData['sie']."' and a.gestion_tipo_id=".$inpData['gestion']." and a.mes_tipo_id=".$inpData['idMounth']." 
+              and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
+              and a.cargo_tipo_id<>0
+              ) a
+              order by cargo_sie,apellidos_nombre;
+      ";
+      $query = "
+      select * 
+      from (
+      select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+      ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+      (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+      ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
+      ,a.observacion
+      from public.empareja_sie_planilla a 
+        inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+      where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
+      and a.cargo_tipo_id<>0
+      union 
+      select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+      ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+      (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+      ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
+      ,a.observacion
+      from public.empareja_sie_planilla a 
+        inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+      where institucioneducativa_id='".$inpData['sie']."' and gestion_tipo_id=".$inpData['gestion']." and mes_tipo_id=".$inpData['idMounth']." and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
+      and b.cod_func<>2
+      union 
+      select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
+      ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
+      (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+      ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
+      ,a.observacion
+      from empareja_sie_planilla  a
+        inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
+      where a.institucioneducativa_id='".$inpData['sie']."' and a.gestion_tipo_id=".$inpData['gestion']." and a.mes_tipo_id=".$inpData['idMounth']."  
+      and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
+      and a.cargo_tipo_id<>0
+      union
+      select a.id,d.carnet||case when trim(coalesce(d.complemento,''))='' then '' else '-'||d.complemento end as ci
+      ,trim(trim(coalesce(d.paterno,''))||' '||trim(coalesce(d.materno,'')))||' '||trim(coalesce(d.nombre,'')) as apellidos_nombre,
+      (select financiamiento from financiamiento_tipo where id=b.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=b.cargo_tipo_id) as cargo_sie
+      ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,(select solucion_tipo from solucion_comparacion_planilla_tipo where id=a.solucion_comparacion_planilla_tipo_id) as solucion_comparacion_planilla_tipo_id
+      ,a.observacion
+      from empareja_sie_planilla  a 
+        inner join maestro_inscripcion b on a.maestro_inscripcion_id_sie=b.id
+          inner join institucioneducativa c on b.institucioneducativa_id=c.id
+            inner join persona d on b.persona_id=d.id
+      where a.institucioneducativa_id='".$inpData['sie']."' and 
+      a.gestion_tipo_id=".$inpData['gestion']." and a.mes_tipo_id=".$inpData['idMounth']." and c.estadoinstitucion_tipo_id=10 and c.dependencia_tipo_id=3 and c.orgcurricular_tipo_id=1 
+      and a.cargo_tipo_id<>0
+      ) a
+      order by cargo_sie,apellidos_nombre;
+      ";
     $query = $this->em->getConnection()->prepare($query);
     
     $query->execute();
@@ -155,7 +155,7 @@ order by cargo_sie,apellidos_nombre;
   public function getFinanciamiento(){
 
     $query =       "
-        select * from financiamiento_tipo ft order by 1
+        select * from financiamiento_tipo ft where ft.id not in (0,5,12,11) order by 1
         ";
     $query = $this->em->getConnection()->prepare($query);
     

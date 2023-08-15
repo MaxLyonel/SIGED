@@ -171,10 +171,14 @@ class AdmPlaController extends Controller{
         // create db conexion
         $em = $this->getDoctrine()->getManager();    	
         $idModify = $request->get('idModify');
+        $cargoId = $request->get('cargoId');
+        $financiamientoId = $request->get('financiamientoId');
         
         // $objEmparejaSiePlanilla = $em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->find($idModify);
         
     	$objEmpSiePlan = $em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->find($idModify);
+        $objEmpSiePlan->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($financiamientoId));
+		$objEmpSiePlan->setCargoTipoId($cargoId);
     	$objEmpSiePlan->setSolucionComparacionPlanillaTipo($em->getRepository('SieAppWebBundle:SolucionComparacionPlanillaTipo')->find(1));
         $objEmpSiePlan->setFechaModificacion(new \DateTime('now'));
 
