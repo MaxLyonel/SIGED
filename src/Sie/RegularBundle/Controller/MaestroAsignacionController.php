@@ -528,7 +528,6 @@ class MaestroAsignacionController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function asignarMaestroMateriaFormularioAction(Request $request) {       
-        
         $info = json_decode(base64_decode($request->get('info')), true);
         $val = json_decode(base64_decode($request->get('val')), true);
         $sistema = $request->get('sistema');
@@ -1021,6 +1020,8 @@ class MaestroAsignacionController extends Controller {
     public function asignarMaestroMateriaEliminarAction(Request $request) {
         // $institucioneducativaCursoOfertaId = base64_decode($request->get('oferta'));
         // $maestroInscripcionId = base64_decode($request->get('maestro'));
+        return $this->redirect($this->generateUrl('login'));
+        die;
         $info = json_decode(base64_decode($request->get('info')), true);
         $validacionProcesoId = $info["vp_id"];  
         $gestionId = $info["gestion"];  
