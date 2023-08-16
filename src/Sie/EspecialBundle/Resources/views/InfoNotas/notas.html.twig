@@ -46,7 +46,10 @@
 						{% else %}					    
 						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
 						{% endif %}
-						
+						<h4 style="color:#3d237e" align="center">{{desc_discapacidad}}</h4>
+						{% if discapacidad == 6 or  discapacidad == 7 %}
+						<h4 style="color:#2d1a5c" align="center"><b> Programa: {{desc_programa}}</b></h4>
+						{% endif %}
 					    {# {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %} #}
 						{% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with { 'notas':notas, 'vista':vista, 'discapacidad':discapacidad } %}
 						{% if discapacidad != 2 or (discapacidad == 2 and notas.gestion  < 2020)%}
@@ -113,7 +116,7 @@
 		        {% endif %}
 				{# notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2019 and seguimiento == true #}
 				{% if (notas.gestion > 2019 and seguimiento == true) %}
-					<button type="submit" class="btn btn-success">Guardar</button>
+					<button type="submit" class="btn btn-success">Guardar..</button>
 				{% endif %}		        
 	        </div>
 	    </div><!-- /.modal-content -->
