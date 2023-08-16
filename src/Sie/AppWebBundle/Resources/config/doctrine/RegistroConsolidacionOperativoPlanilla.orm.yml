@@ -49,4 +49,9 @@ Sie\AppWebBundle\Entity\RegistroConsolidacionOperativoPlanilla:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        fechaCierreOperativo:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_cierre_operativo
     lifecycleCallbacks: {  }
