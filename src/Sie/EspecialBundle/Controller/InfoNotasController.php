@@ -58,6 +58,7 @@ class InfoNotasController extends Controller {
             $vista = 1;
             $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
             $progserv = '';
+            $desc_programa = $cursoEspecial->getEspecialProgramaTipo()->getPrograma();
             $seguimiento = false;
 
             $estadosMatricula = null;
@@ -67,6 +68,8 @@ class InfoNotasController extends Controller {
                 case 1: // Auditiva
                         //if($nivel != 405){
                         $progserv = $cursoEspecial->getEspecialProgramaTipo()->getId();
+                       
+
                        // dump($progserv);dump($nivel);die;
                         if($nivel == 403 or $nivel == 404 or ($nivel == 411 and $progserv == 19)){//Verificar el seguimiento para 19
 
@@ -195,11 +198,20 @@ class InfoNotasController extends Controller {
                                     $seguimiento = true;
                                     $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                                 }
+                            case 409:  //Atencion temprana
+                                if($gestion >2022){
+                                    $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                                    //dump($notas);die;
+                                    $template = 'especialSemestre';
+                                    $actualizarMatricula = false;
+                                    $seguimiento = true;
+                                    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(47,78)));
+                                }
                         }
                         
                         break;
                 case 4: // Fisico -motora
-                case 6: //Dificultades en el aprendizaje
+               // case 6: // Fisico -motora
                     if($gestion >2019){
                         $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                         $template = 'especialSeguimiento';
@@ -209,9 +221,9 @@ class InfoNotasController extends Controller {
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78,79))); //--
                         }
                     }
-                    
                     break;
-                case 7: //  o extraordinario
+                case 7: //  talento extraordinario
+                case 6: //Dificultades en el aprendizaje
                     if($gestion >2019){
                         $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                         $template = 'especialTalento';
@@ -231,8 +243,8 @@ class InfoNotasController extends Controller {
                         break;
             }
            // dump($template); 
-          // dump($notas);die;
-          
+            //dump($notas);
+            //die;
           //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
@@ -244,7 +256,9 @@ class InfoNotasController extends Controller {
                     'operativo'=>$operativo,
                     'estadosMatricula'=>$estadosMatricula,
                     'discapacidad'=>$discapacidad,
+                    'desc_discapacidad'=>$cursoEspecial->getEspecialAreaTipo()->getAreaEspecial(),
                     'progserv'=>$progserv,
+                    'desc_programa'=>$desc_programa,
                     'seguimiento'=>$seguimiento,
                     'infoUe'=>$request->get('infoUe')
                 ));
@@ -492,6 +506,7 @@ class InfoNotasController extends Controller {
                 $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
                 break;
             case 7: //talento
+            case 6: //dificultades
                 //dump($arrInfoStudent['estInsId']);die;
                 $archivo = "esp_est_LibretaEscolar_Talento.rptdesign";
                 $nombre = 'libreta_especial_talento_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
