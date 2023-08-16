@@ -6993,17 +6993,13 @@ die;/*
                                     'SERVICIO NOTAS',
                                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
                                 );
-
                         }
                     }
-
                 }
-                
-                
             }
             //dump($discapacidad); die;
             // Datos del siguimiento
-            if($gestion > 2019 and $discapacidad != 7 and ($discapacidad == 4 or ($discapacidad == 5 and ($nivel == 411 or $nivel==410)) or $discapacidad == 6 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
+            if($gestion > 2019 and $discapacidad != 7 and $discapacidad != 6 and ($discapacidad == 4 or ($discapacidad == 5 and ($nivel == 411 or $nivel==410))  or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
                 $seguimientoNota  = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion' => $request->get('idInscripcion'), 'notaTipo' => $request->get('tipoNota')));
                 if(!$seguimientoNota){
                     $seguimientoNota = new EstudianteNotaCualitativa();
@@ -7166,7 +7162,7 @@ die;/*
             $estadosPermitidos = array(4);
             $tiposNotasArray = array();
             
-            if ( $subarea == 7 and $gestion > 2021){ //Nueva evaluacion de talento
+            if ( ($subarea == 6 or $subarea == 7)  and $gestion > 2021){ //Nueva evaluacion de talento y dificultades en el aprendizaje
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78,79));
                 $valoraciones = $this->em->getRepository('SieAppWebBundle:EspecialNivelTalento')->findAll();
                 $idNotaTipo = 'Semestral';
@@ -7181,6 +7177,24 @@ die;/*
                         $actividad = $arrayCualitativas["actividad"];
                     }
                     $tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNotaTipo(),'actividad'=> $actividad, 'valoracion'=> $valoracion);
+                }
+            }
+            if ( $subarea == 3 and $gestion > 2022 and $nivel==409){ //Intelectual - Atencion temprana
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47,78));
+                $idNotaTipo = 'Semestral';
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findBy(array('obs'=>'Semestral'));
+                foreach ($tiposNotas as $tn) {
+                    $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$tn->getId()));
+                    $estimulacion = '';
+                    $orientacion = '';
+                    $deteccion = '';
+                    if($notaCualitativas){
+                        $arrayCualitativas = json_decode($notaCualitativas->getNotaCualitativa(), true);
+                        $estimulacion = $arrayCualitativas["estimulacion"];
+                        $orientacion = $arrayCualitativas["orientacion"];
+                        $deteccion = $arrayCualitativas["deteccion"];   
+                    }
+                    $tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNotaTipo(),'estimulacion'=> $estimulacion, 'orientacion'=> $orientacion, 'deteccion'=> $deteccion);
                 }
             }
             
