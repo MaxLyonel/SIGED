@@ -2069,7 +2069,6 @@ class OlimEstudianteInscripcionController extends Controller{
         
         $objStudentInscription = $this->get('olimfunctions')->lookForOlimStudentByRudeGestion($arrDataInscription);
 
-
         if($objStudentInscription){
             //get the rules
             $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
@@ -2082,6 +2081,13 @@ class OlimEstudianteInscripcionController extends Controller{
             $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
             $value['yearsOld'] = $studentYearsOld[0];
             $yearOldStudent = $value['yearsOld'];
+
+            //validate institution
+            if( (string)$objStudentInscription['sie'] !== (string)$arrDataInscription['institucioneducativaid']) {
+                $studentExist = false;
+                $message = 'No se puede realizar la inscripción, debido a que el estudiante no es de la misma unidad educativa.';
+                $this->addFlash('noExternal', $message);
+            }
 
             //validate the year old
             if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
