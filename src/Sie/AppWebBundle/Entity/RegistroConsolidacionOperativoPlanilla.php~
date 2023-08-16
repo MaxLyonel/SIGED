@@ -220,32 +220,4 @@ class RegistroConsolidacionOperativoPlanilla
     {
         return $this->fechaModificacion;
     }
-    /**
-     * @var \DateTime
-     */
-    private $fechaCierreOperativo;
-
-
-    /**
-     * Set fechaCierreOperativo
-     *
-     * @param \DateTime $fechaCierreOperativo
-     * @return RegistroConsolidacionOperativoPlanilla
-     */
-    public function setFechaCierreOperativo($fechaCierreOperativo)
-    {
-        $this->fechaCierreOperativo = $fechaCierreOperativo;
-    
-        return $this;
-    }
-
-    /**
-     * Get fechaCierreOperativo
-     *
-     * @return \DateTime 
-     */
-    public function getFechaCierreOperativo()
-    {
-        return $this->fechaCierreOperativo;
-    }
 }
