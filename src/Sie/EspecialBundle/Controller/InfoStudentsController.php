@@ -185,8 +185,8 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(400,401,402,408,403,404,412);
-      $programasLibreta = array(7,8,9,12,14,25,15);
-     
+      $programasLibreta = array(7,8,9,12,14,25,15); //
+     //dump($aInfoUeducativa['ueducativaInfoId']['programaId']);die; //escuelas mentoras = 32, areas transversales = 17
       if($gestion >2019 and $nivel <> 405){
         
         $arrDataLibreta['calificaciones'] = true;
@@ -203,31 +203,37 @@ class InfoStudentsController extends Controller {
           $arrDataLibreta['calificaciones'] = false;
       }
     //para visual y programas
-    //dump($nivel); dump($objArea->getId());
+    //dump($nivel); dump($objArea->getId()); die;
       if(($nivel==410 or $nivel==411) and $gestion>2020 and $objArea->getId()==3){
           $arrDataLibreta['calificaciones'] = false;
       }
-
+//dump($nivel);die;
        //2023 llenado de calificaciones trimestrales
        $nivelesConNotas = array(401,412,403,404);
        $programasConNotas = array(25,8); 
        
       if($gestion == 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+       
         $arrDataLibreta['calificaciones'] = true;
       }
-      else{
+      else{ 
         $arrDataLibreta['calificaciones'] = false;
       }
+      
+      //$arrDataLibreta['calificaciones'] = true; 
 
       if( (in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
         $arrDataLibreta['libreta'] = true;
       }else{
         $arrDataLibreta['libreta'] = false;
       }    
-      //para talento en general  
-      if(($nivel==410 or $nivel==411) and $gestion>2021 and $objArea->getId()==7){
+     
+      //para talento y dificultades en general  
+      if(($nivel==410 or $nivel==411) and $gestion>2021 and ($objArea->getId()==7 or $objArea->getId()==6)){
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
+      
 
       //para bono
       $arrDataLibreta['bono'] = false;
@@ -262,6 +268,8 @@ class InfoStudentsController extends Controller {
         }
       }
      // dump($arrDataLibreta['calificaciones']);die;
+      
+     
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
         'objStudents' => $objStudents,
