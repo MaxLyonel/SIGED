@@ -85,77 +85,80 @@ class InfoMaestroPlanillaController extends Controller {
             $request->getSession()->set('idGestion', $gestion);
             $request->getSession()->set('idPlanillaMes', $mes);
         }
+
+        $swop = $this->vercierreop($gestion,$institucion,$mes);
         
-        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
-        $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
-        
-        $query = $em->getConnection()->prepare("  
-                    select a.id, a.ci, a.apellidos_nombre, a.financiamiento_sie, a.cargo_sie, coalesce(a.servicio,'') servicio, coalesce(a.item,'') item, coalesce (a.func_doc,'') func_doc, a.solucion_comparacion_planilla_tipo_id, coalesce(a.observacion,'') observacion
-                    from (
-                    select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-                    ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-                    (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-                    ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
-                    from public.empareja_sie_planilla a 
-                        inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-                    where institucioneducativa_id=".$institucion."
-                    and gestion_tipo_id=".$gestion." 
-                    and mes_tipo_id= ".$mes."
-                    and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
-                    and a.cargo_tipo_id=0
-                    union 
-                    select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-                    ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-                    (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-                    ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
-                    from public.empareja_sie_planilla a 
-                        inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-                    where institucioneducativa_id=".$institucion." 
-                    and gestion_tipo_id=".$gestion." 
-                    and mes_tipo_id= ".$mes."
-                    and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
-                    and b.cod_func=2
-                    union 
-                    select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
-                    ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
-                    (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-                    ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
-                    from empareja_sie_planilla  a
-                        inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
-                    where a.institucioneducativa_id=".$institucion." 
-                    and a.gestion_tipo_id=".$gestion." 
-                    and a.mes_tipo_id= ".$mes." 
-                    and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
-                    and a.cargo_tipo_id=0
-            union
-            select a.id,d.carnet||case when trim(coalesce(d.complemento,''))='' then '' else '-'||d.complemento end as ci
-            ,trim(trim(coalesce(d.paterno,''))||' '||trim(coalesce(d.materno,'')))||' '||trim(coalesce(d.nombre,'')) as apellidos_nombre,
-            (select financiamiento from financiamiento_tipo where id=b.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=b.cargo_tipo_id) as cargo_sie
-            ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,
-            a.solucion_comparacion_planilla_tipo_id as solucion_comparacion_planilla_tipo_id
-            ,a.observacion
-            from empareja_sie_planilla  a 
-            inner join maestro_inscripcion b on a.maestro_inscripcion_id_sie=b.id
-            inner join institucioneducativa c on b.institucioneducativa_id=c.id
-            inner join persona d on b.persona_id=d.id
-            where a.institucioneducativa_id=".$institucion."
-            and a.gestion_tipo_id=".$gestion." 
-            and a.mes_tipo_id= ".$mes."
-            and c.estadoinstitucion_tipo_id=10 and c.dependencia_tipo_id=3 and c.orgcurricular_tipo_id=1 
-            and a.cargo_tipo_id=0
-                    ) a
-                    order by cargo_sie,apellidos_nombre;");
+        if ($swop === 0){
+            $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
+            $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
             
-        $query->execute();
-        $maestro = $query->fetchAll();	
-        /*
-         * obtenemos datos de la unidad educativa
-         */
+            $query = $em->getConnection()->prepare("  
+                        select a.id, a.ci, a.apellidos_nombre, a.financiamiento_sie, a.cargo_sie, coalesce(a.servicio,'') servicio, coalesce(a.item,'') item, coalesce (a.func_doc,'') func_doc, a.solucion_comparacion_planilla_tipo_id, coalesce(a.observacion,'') observacion
+                        from (
+                        select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+                        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+                        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+                        ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
+                        from public.empareja_sie_planilla a 
+                            inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+                        where institucioneducativa_id=".$institucion."
+                        and gestion_tipo_id=".$gestion." 
+                        and mes_tipo_id= ".$mes."
+                        and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
+                        and a.cargo_tipo_id=0
+                        union 
+                        select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+                        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+                        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+                        ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
+                        from public.empareja_sie_planilla a 
+                            inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+                        where institucioneducativa_id=".$institucion." 
+                        and gestion_tipo_id=".$gestion." 
+                        and mes_tipo_id= ".$mes."
+                        and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
+                        and b.cod_func=2
+                        union 
+                        select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
+                        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
+                        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+                        ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
+                        from empareja_sie_planilla  a
+                            inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
+                        where a.institucioneducativa_id=".$institucion." 
+                        and a.gestion_tipo_id=".$gestion." 
+                        and a.mes_tipo_id= ".$mes." 
+                        and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
+                        and a.cargo_tipo_id=0
+                union
+                select a.id,d.carnet||case when trim(coalesce(d.complemento,''))='' then '' else '-'||d.complemento end as ci
+                ,trim(trim(coalesce(d.paterno,''))||' '||trim(coalesce(d.materno,'')))||' '||trim(coalesce(d.nombre,'')) as apellidos_nombre,
+                (select financiamiento from financiamiento_tipo where id=b.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=b.cargo_tipo_id) as cargo_sie
+                ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,
+                a.solucion_comparacion_planilla_tipo_id as solucion_comparacion_planilla_tipo_id
+                ,a.observacion
+                from empareja_sie_planilla  a 
+                inner join maestro_inscripcion b on a.maestro_inscripcion_id_sie=b.id
+                inner join institucioneducativa c on b.institucioneducativa_id=c.id
+                inner join persona d on b.persona_id=d.id
+                where a.institucioneducativa_id=".$institucion."
+                and a.gestion_tipo_id=".$gestion." 
+                and a.mes_tipo_id= ".$mes."
+                and c.estadoinstitucion_tipo_id=10 and c.dependencia_tipo_id=3 and c.orgcurricular_tipo_id=1 
+                and a.cargo_tipo_id=0
+                        ) a
+                        order by cargo_sie,apellidos_nombre;");
+                
+            $query->execute();
+            $maestro = $query->fetchAll();	            
+        } else {
+            $maestro = '';
+        }   
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
         $eliminacionTipo = $em->getRepository('SieAppWebBundle:EliminaRegistroPlanillaTipo')->findAll();
-        // dump($eliminacionTipo);die;
         $mestipo = $em->getRepository('SieAppWebBundle:MesTipo')->findOneById($mes);
         $meses = $em->getRepository('SieAppWebBundle:MesTipo')->findBy(['id' => range(1, $maxMes)]);
+              
         return $this->render($this->session->get('pathSystem') . ':InfoMaestroPlanilla:index.html.twig', array(
                 'maestro' => $maestro,
                 'institucion' => $institucion,
@@ -164,6 +167,7 @@ class InfoMaestroPlanillaController extends Controller {
                 'mes' => $mestipo->getMes(),
                 'meses' => $meses,
                 'eliminaTipo'=>$eliminacionTipo,
+                'sw'=>$swop,
         ));
         
     }
@@ -182,66 +186,72 @@ class InfoMaestroPlanillaController extends Controller {
         
         $institucion = $this->session->get('ie_id');
         $gestion = $request->getSession()->get('currentyear');
+        
+        $swop = $this->vercierreop($gestion,$institucion,$mes);
+        
+        if ($swop === 0){
+            $query = $em->getConnection()->prepare("  
+                        select a.id, a.ci, a.apellidos_nombre, a.financiamiento_sie, a.cargo_sie, coalesce(a.servicio,'') servicio, coalesce(a.item,'') item, coalesce (a.func_doc,'') func_doc, a.solucion_comparacion_planilla_tipo_id, coalesce(a.observacion,'') observacion
+                        from (
+                        select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+                        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+                        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+                        ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
+                        from public.empareja_sie_planilla a 
+                            inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+                        where institucioneducativa_id=".$institucion."
+                        and gestion_tipo_id=".$gestion." 
+                        and mes_tipo_id= ".$mes."
+                        and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
+                        and a.cargo_tipo_id=0
+                        union 
+                        select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
+                        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
+                        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+                        ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
+                        from public.empareja_sie_planilla a 
+                            inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
+                        where institucioneducativa_id=".$institucion." 
+                        and gestion_tipo_id=".$gestion." 
+                        and mes_tipo_id= ".$mes."
+                        and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
+                        and b.cod_func=2
+                        union 
+                        select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
+                        ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
+                        (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
+                        ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
+                        from empareja_sie_planilla  a
+                            inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
+                        where a.institucioneducativa_id=".$institucion." 
+                        and a.gestion_tipo_id=".$gestion." 
+                        and a.mes_tipo_id= ".$mes." 
+                        and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
+                        and a.cargo_tipo_id=0
+                union
+                select a.id,d.carnet||case when trim(coalesce(d.complemento,''))='' then '' else '-'||d.complemento end as ci
+                ,trim(trim(coalesce(d.paterno,''))||' '||trim(coalesce(d.materno,'')))||' '||trim(coalesce(d.nombre,'')) as apellidos_nombre,
+                (select financiamiento from financiamiento_tipo where id=b.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=b.cargo_tipo_id) as cargo_sie
+                ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,
+                a.solucion_comparacion_planilla_tipo_id as solucion_comparacion_planilla_tipo_id
+                ,a.observacion
+                from empareja_sie_planilla  a 
+                inner join maestro_inscripcion b on a.maestro_inscripcion_id_sie=b.id
+                inner join institucioneducativa c on b.institucioneducativa_id=c.id
+                inner join persona d on b.persona_id=d.id
+                where a.institucioneducativa_id=".$institucion."
+                and a.gestion_tipo_id=".$gestion." 
+                and a.mes_tipo_id= ".$mes."
+                and c.estadoinstitucion_tipo_id=10 and c.dependencia_tipo_id=3 and c.orgcurricular_tipo_id=1 
+                and a.cargo_tipo_id=0
+                        ) a
+                        order by cargo_sie,apellidos_nombre;");
                 
-        $query = $em->getConnection()->prepare("  
-                    select a.id, a.ci, a.apellidos_nombre, a.financiamiento_sie, a.cargo_sie, coalesce(a.servicio,'') servicio, coalesce(a.item,'') item, coalesce (a.func_doc,'') func_doc, a.solucion_comparacion_planilla_tipo_id, coalesce(a.observacion,'') observacion
-                    from (
-                    select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-                    ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-                    (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-                    ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
-                    from public.empareja_sie_planilla a 
-                        inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-                    where institucioneducativa_id=".$institucion."
-                    and gestion_tipo_id=".$gestion." 
-                    and mes_tipo_id= ".$mes."
-                    and a.maestro_inscripcion_id_sie is not null and a.planilla_pago_comparativo_id_sie is not null and nuevo_maestro_inscripcion_id is null
-                    and a.cargo_tipo_id=0
-                    union 
-                    select a.id,b.ci_pla||case when trim(coalesce(b.comp_pla,''))='' then '' else '-'||b.comp_pla end as ci
-                    ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(trim(coalesce(b.nombre1,''))||' '||trim(coalesce(b.nombre2,''))) as apellidos_nombre,
-                    (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-                    ,b.servicio,b.item,(select descripcion from planillas_funcioncargo_tipo where id=b.cod_func) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
-                    from public.empareja_sie_planilla a 
-                        inner join planilla_pago_comparativo b on a.planilla_pago_comparativo_id_sie=b.id
-                    where institucioneducativa_id=".$institucion." 
-                    and gestion_tipo_id=".$gestion." 
-                    and mes_tipo_id= ".$mes."
-                    and nuevo_maestro_inscripcion_id is null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is not null 
-                    and b.cod_func=2
-                    union 
-                    select a.id,b.ci||case when trim(coalesce(b.complemento,''))='' then '' else '-'||b.complemento end as ci
-                    ,trim(trim(coalesce(b.paterno,''))||' '||trim(coalesce(b.materno,'')))||' '||trim(coalesce(b.nombre,'')) as apellidos_nombre,
-                    (select financiamiento from financiamiento_tipo where id=a.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=a.cargo_tipo_id) as cargo_sie
-                    ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,a.solucion_comparacion_planilla_tipo_id,a.observacion
-                    from empareja_sie_planilla  a
-                        inner join nuevo_maestro_inscripcion b on a.nuevo_maestro_inscripcion_id=b.id
-                    where a.institucioneducativa_id=".$institucion." 
-                    and a.gestion_tipo_id=".$gestion." 
-                    and a.mes_tipo_id= ".$mes." 
-                    and nuevo_maestro_inscripcion_id is not null and a.maestro_inscripcion_id_sie is null and a.planilla_pago_comparativo_id_sie is null
-                    and a.cargo_tipo_id=0
-            union
-            select a.id,d.carnet||case when trim(coalesce(d.complemento,''))='' then '' else '-'||d.complemento end as ci
-            ,trim(trim(coalesce(d.paterno,''))||' '||trim(coalesce(d.materno,'')))||' '||trim(coalesce(d.nombre,'')) as apellidos_nombre,
-            (select financiamiento from financiamiento_tipo where id=b.financiamiento_tipo_id) as financiamiento_sie,(select cargo from cargo_tipo where id=b.cargo_tipo_id) as cargo_sie
-            ,null::character varying(10) as servicio,null::character varying(7) as item,null::character varying(50) as func_doc,
-            a.solucion_comparacion_planilla_tipo_id as solucion_comparacion_planilla_tipo_id
-            ,a.observacion
-            from empareja_sie_planilla  a 
-            inner join maestro_inscripcion b on a.maestro_inscripcion_id_sie=b.id
-            inner join institucioneducativa c on b.institucioneducativa_id=c.id
-            inner join persona d on b.persona_id=d.id
-            where a.institucioneducativa_id=".$institucion."
-            and a.gestion_tipo_id=".$gestion." 
-            and a.mes_tipo_id= ".$mes."
-            and c.estadoinstitucion_tipo_id=10 and c.dependencia_tipo_id=3 and c.orgcurricular_tipo_id=1 
-            and a.cargo_tipo_id=0
-                    ) a
-                    order by cargo_sie,apellidos_nombre;");
-            
-        $query->execute();
-        $maestro = $query->fetchAll();	
+            $query->execute();
+            $maestro = $query->fetchAll();	
+        } else {
+            $maestro = '';
+        }  
         /*
          * obtenemos datos de la unidad educativa
          */
@@ -252,7 +262,38 @@ class InfoMaestroPlanillaController extends Controller {
                 'maestro' => $maestro,
                 'mesid' => $mestipo->getId(),
                 'mes' => $mestipo->getMes(),
+                'sw' => $swop,
         ));
+    }
+
+    public function vercierreop ($gestion, $institucioneducativaId, $mes){
+        $em = $this->getDoctrine()->getManager();
+        $mescierre = $em->getRepository('SieAppWebBundle:RegistroConsolidacionOperativoPlanilla')->findBy([
+            'gestion' => $gestion,
+            'institucioneducativaId' => 99999999,
+            'mes' => $mes,
+        ]);
+        
+        $mescierreop = $mescierre[0]->getFechaCierreOperativo(); 
+                
+        $mesop = $em->getRepository('SieAppWebBundle:RegistroConsolidacionOperativoPlanilla')->findBy(['gestion' => $gestion,
+        'institucioneducativaId' => $institucioneducativaId,
+        'mes' => $mes,
+        ]);
+        
+        $swop = 0;
+        if (!empty($mesop)) {
+            $swop = 1; //cerro operativo
+        }
+        if ($mescierreop !== null && $swop === 0) {
+            $mescierreopFormatted = $mescierreop->format('Y-m-d H:i:s'); 
+            $fechaActual = new \DateTime();
+            if ($fechaActual > $mescierreop) {
+                $swop = 2; //finalizo operativo
+            }
+        }
+
+        return $swop;
     }
 
     public function confirmaAction (Request $request, $id){
@@ -299,14 +340,31 @@ class InfoMaestroPlanillaController extends Controller {
         
         $financiamientoTipo = $em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($finciamiento);
         $financiamientotxt = $financiamientoTipo->getFinanciamiento();
-        // dump($emparejaSiePlanilla->getId());
-        // dump($emparejaSiePlanilla->getSolucionComparacionPlanillaTipo()->getId());
-        // die;
+        $mescierre = $em->getRepository('SieAppWebBundle:RegistroConsolidacionOperativoPlanilla')->findBy(['gestion' => $gestion,
+        'institucioneducativaId' => 99999999,
+        'mes' => $mestipo->getId(),
+        ]);
+        $mesop = $em->getRepository('SieAppWebBundle:RegistroConsolidacionOperativoPlanilla')->findBy(['gestion' => $gestion,
+        'institucioneducativaId' => $institucion,
+        'mes' => $mestipo->getId(),
+        ]);
+        // dump($mescierre );die;
+        if (!isset($mesop)){
+            if ($mescierre->getFechaCierreOperativo() != null){
+                $fechaActual = new \DateTime();
+                if ($fechaActual > $mescierre->getFechaCierreOperativo()){ $swop = 2;} else { $swop = 0;}
+            } else{
+                $swop = 0;
+            }
+        } else {
+            $swop = 1;
+        }
         $maestro = [
             'id' => $emparejaSiePlanilla->getId(),
             'solucion_comparacion_planilla_tipo_id' => $emparejaSiePlanilla->getSolucionComparacionPlanillaTipo()->getId(),
             'financimientonew' => $financiamientotxt,
             'observacion' => $emparejaSiePlanilla->getObservacion(),
+            'sw' => $swop,
         ];
         return new JsonResponse($maestro);
     }
@@ -482,11 +540,12 @@ class InfoMaestroPlanillaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:EmparejaPlanillaAsignaturaTipo');
         $query = $entity->createQueryBuilder('epat')
-            ->select("epat.id,tt.turno,CASE WHEN epat.nivelTipo = 11 THEN 'INICIAL' WHEN epat.nivelTipo = 12 THEN 'PRIMARIA'  WHEN epat.nivelTipo = 13 THEN 'SECUNDARIA' ELSE '' END AS nivel, gt.id AS grado, pt.paralelo, ati.asignatura")
+            ->select("epat.id,tt.turno,CASE WHEN epat.nivelTipo = 11 THEN 'INICIAL' WHEN epat.nivelTipo = 12 THEN 'PRIMARIA'  WHEN epat.nivelTipo = 13 THEN 'SECUNDARIA' ELSE '' END AS nivel, gt.id AS grado, pt.paralelo, ati.asignatura,ft.financiamiento,epat.horas")
             ->innerJoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'tt.id = epat.turnoTipo')
             ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'gt.id = epat.gradoTipo')
             ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'pt.id = epat.paraleloTipo')
             ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'ati', 'WITH', 'ati.id = epat.asignaturaTipo')
+            ->innerJoin('SieAppWebBundle:FinanciamientoTipo', 'ft', 'WITH', 'ft.id = epat.financiamientoTipo')
             ->where('epat.emparejaSiePlanilla = :emparejaSiePlanillaId')
             ->setParameter('emparejaSiePlanillaId', $emparejaSiePlanillaId)
             ->orderBy('tt.turno,epat.nivelTipo,gt.id,ati.asignatura,pt.paralelo', 'ASC'); 
@@ -549,7 +608,7 @@ class InfoMaestroPlanillaController extends Controller {
             $financiamiento = $em->createQuery(
                 'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
                     WHERE ft.id NOT IN  (:id)')
-                    ->setParameter('id', array(0, 5, 12))
+                    ->setParameter('id', array(0, 5, 12, 11))
                     ->getResult();
                     $financiamientoArray = array();
             foreach ($financiamiento as $f) {
@@ -731,14 +790,26 @@ class InfoMaestroPlanillaController extends Controller {
         $gradoId = $request->get('grado'); 
         $institucion = $this->session->get('ie_id');
         $gestion = $request->getSession()->get('currentyear'); 
-                
+        $em = $this->getDoctrine()->getManager();
+        $financiamiento = $em->createQuery(
+            'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
+                WHERE ft.id NOT IN  (:id)')
+                ->setParameter('id', array(0, 5, 12, 11))
+                ->getResult();
+                $financiamientoArray = array();
+        foreach ($financiamiento as $f) {
+            $financiamientoArray[$f->getId()] = $f->getFinanciamiento();
+        }
+        
         $response = new JsonResponse();
         return $response->setData(array(
                 'paralelos' => $this->getParaleloInstitucionEducativaCurso($institucion, $gestion, $turnoId, $nivelId, $gradoId),
+                'financiamiento_par' => $financiamientoArray,
             ));
     }
 
     public function guardaParaleloAction(Request $request){
+        
         $id_usuario = $this->session->get('userId');
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -756,6 +827,8 @@ class InfoMaestroPlanillaController extends Controller {
         
         foreach ($paralelos as $paralelo) {
             $paraleloId = $paralelo['id'];
+            $paralelofin = $paralelo['financiamiento'];
+            $paralelohoras = $paralelo['horas'];
             $existeDato = $em->getRepository('SieAppWebBundle:EmparejaPlanillaAsignaturaTipo')->findOneBy(array(
                 'emparejaSiePlanilla' => $espId,
                 'turnoTipo' => $turnoId,
@@ -763,19 +836,22 @@ class InfoMaestroPlanillaController extends Controller {
                 'nivelTipo' => $nivelId,
                 'gradoTipo' => $gradoId,
                 'asignaturaTipo' => $asignaturaId,
+                'financiamientoTipo' => $paralelofin,
             ));
             if (!$existeDato) {
-            $nuevoAsignatura = new EmparejaPlanillaAsignaturaTipo();
-            $nuevoAsignatura->setEmparejaSiePlanilla($em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->findOneById($espId));
-            $nuevoAsignatura->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($turnoId));
-            $nuevoAsignatura->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->findOneById($paraleloId));
-            $nuevoAsignatura->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->findOneById($gradoId));
-            $nuevoAsignatura->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($nivelId));
-            $nuevoAsignatura->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->findOneById($asignaturaId));
-            $fechaActual = new \DateTime();
-            $nuevoAsignatura->setFechaCreacion($fechaActual); 
-            $em->persist($nuevoAsignatura);
-            $em->flush();
+                $nuevoAsignatura = new EmparejaPlanillaAsignaturaTipo();
+                $nuevoAsignatura->setEmparejaSiePlanilla($em->getRepository('SieAppWebBundle:EmparejaSiePlanilla')->findOneById($espId));
+                $nuevoAsignatura->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($turnoId));
+                $nuevoAsignatura->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->findOneById($paraleloId));
+                $nuevoAsignatura->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->findOneById($gradoId));
+                $nuevoAsignatura->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($nivelId));
+                $nuevoAsignatura->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->findOneById($asignaturaId));
+                $nuevoAsignatura->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($paralelofin));
+                $nuevoAsignatura->setHoras($paralelohoras);
+                $fechaActual = new \DateTime();
+                $nuevoAsignatura->setFechaCreacion($fechaActual); 
+                $em->persist($nuevoAsignatura);
+                $em->flush();
             }  
         }
         

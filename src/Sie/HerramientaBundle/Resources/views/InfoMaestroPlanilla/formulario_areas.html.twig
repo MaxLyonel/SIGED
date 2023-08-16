@@ -30,10 +30,12 @@
                 <th>N°</th>
                 <th>Turno</th>
                 <th>Nivel</th>
-                <th>Grado</th>
-                <th>Paralelo</th>
+                <th>Gra</th>
+                <th>Par</th>
                 <th>Área</th>
-                <th>Acciones</th>
+                <th>Financimiento</th>
+                <th>Hrs</th>
+                <th>Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +47,8 @@
                     <td data-title="AGrado">{{ areas.grado }}</td>
                     <td data-title="AParalelo">{{ areas.paralelo }}</td>
                     <td data-title="AArea">{{ areas.asignatura }}</td>
+                    <td data-title="AFinanciamiento">{{ areas.financiamiento }}</td>
+                    <td data-title="AHoras">{{ areas.horas }}</td>
                     <td data-title="AAccion">
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm" onclick="eliminarAreaMaestro({{areas.id}})">
