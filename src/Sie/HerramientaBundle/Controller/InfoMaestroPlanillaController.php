@@ -340,31 +340,11 @@ class InfoMaestroPlanillaController extends Controller {
         
         $financiamientoTipo = $em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($finciamiento);
         $financiamientotxt = $financiamientoTipo->getFinanciamiento();
-        $mescierre = $em->getRepository('SieAppWebBundle:RegistroConsolidacionOperativoPlanilla')->findBy(['gestion' => $gestion,
-        'institucioneducativaId' => 99999999,
-        'mes' => $mestipo->getId(),
-        ]);
-        $mesop = $em->getRepository('SieAppWebBundle:RegistroConsolidacionOperativoPlanilla')->findBy(['gestion' => $gestion,
-        'institucioneducativaId' => $institucion,
-        'mes' => $mestipo->getId(),
-        ]);
-        // dump($mescierre );die;
-        if (!isset($mesop)){
-            if ($mescierre->getFechaCierreOperativo() != null){
-                $fechaActual = new \DateTime();
-                if ($fechaActual > $mescierre->getFechaCierreOperativo()){ $swop = 2;} else { $swop = 0;}
-            } else{
-                $swop = 0;
-            }
-        } else {
-            $swop = 1;
-        }
         $maestro = [
             'id' => $emparejaSiePlanilla->getId(),
             'solucion_comparacion_planilla_tipo_id' => $emparejaSiePlanilla->getSolucionComparacionPlanillaTipo()->getId(),
             'financimientonew' => $financiamientotxt,
             'observacion' => $emparejaSiePlanilla->getObservacion(),
-            'sw' => $swop,
         ];
         return new JsonResponse($maestro);
     }
@@ -593,6 +573,8 @@ class InfoMaestroPlanillaController extends Controller {
 
                 if($cedula){
                     $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($cedula,$datos,'prod','academico');
+                    dump($datos);
+                    dump($resultadoPersona);die;
                     $mensaje = '';
                     if(!$resultadoPersona){
                         $mensaje = "No se realizó la validación con SEGIP.";
