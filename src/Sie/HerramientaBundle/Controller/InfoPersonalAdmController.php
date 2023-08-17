@@ -977,41 +977,24 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $data = [
-            'carnet' => $form['carnet'],
+            // 'carnet' => $form['carnet'],
             'complemento' => $form['complemento'],
             'primer_apellido' => $form['primer_apellido'],
             'segundo_apellido' => $form['segundo_apellido'],
             'nombre' => $form['nombre'],
             'fecha_nacimiento' => $form['fecha_nacimiento'],
-            'tipo_persona' => $tipo_persona,  //tiene que venir del form
+            // 'tipo_persona' => $tipo_persona,  //tiene que venir del form
 
         ];
-        /*$data = [
-            'carnet' => 'xxxxx',            
-            'complemento' => '',
-            'primer_apellido' => 'xxxx',
-            'segundo_apellido' => 'xxxx',
-            'nombre' => 'Dan Diego',
-            'fecha_nacimiento' => '29/12/2003',
-            'tipo_persona' => 1,  //tiene que venir del form
-
-        ];*/
-
-        /*$data = [
-            'carnet' => '11609954',
-            'complemento' => '',
-            'primer_apellido' => 'CROUSE',
-            'segundo_apellido' => '',
-            'nombre' => 'ANDREW DALE',
-            'fecha_nacimiento' => '16/10/1972',
-            'tipo_persona' => 1,  //tiene que venir del form
-
-        ];*/
-        $data['extranjero']=($request->get('nacionalidad')=='EX')?'E':null;
+        if($tipo_persona == 2){
+            $data["extranjero"] = 'E';
+        }
         
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
-        //$resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet('11609954', $data, $form['entorno'], 'academico');
         $persona = array();
+        if($tipo_persona == 1){
+            $data["extranjero"] = null;
+        }
 
         if($resultado) {
             $persona = [
@@ -1055,29 +1038,27 @@ class InfoPersonalAdmController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucion']);
         $gestion = $form['gestion'];
 
-        
-
         $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
         $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
         $arrayDatosPersona = array(
-            //'carnet'=>$form['carnet'],
             'complemento'=>$complemento,
-            'paterno'=>$persona['primer_apellido'],
-            'materno'=>$persona['segundo_apellido'],
+            'primer_apellido'=>$persona['primer_apellido'],
+            'segundo_apellido'=>$persona['segundo_apellido'],
             'nombre'=>$persona['nombre'],
             'fecha_nacimiento' => $fecha,
-            'extranjero'=> $persona['extranjero']
+            // 'extranjero'=> $persona['extranjero']
         );
+        if ($persona['extranjero'] != null) {$arrayDatosPersona["extranjero"] = 'E';}
         
         $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
-
+        // dump($form['persona']);
         if( $personaValida )
         {
             $arrayDatosPersona['carnet']=$persona['carnet'];
             unset($arrayDatosPersona['fecha_nacimiento']);
             $arrayDatosPersona['fechaNacimiento']=$persona['fecha_nacimiento'];
             $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
-
+            
             if($personaEncontrada == null)
             {
                 if($persona['idper']==''){
