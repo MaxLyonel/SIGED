@@ -1364,8 +1364,10 @@ class OlimEstudianteInscripcionController extends Controller{
 
         //dump($materiaId); die;
         //INFORMATICA = 44 y categoria NIVEL0 = 124 --> SOLO MUJERES 
-        if($materiaId == 44 and $categoryId == 124 ){
-            $es_informatica = true;
+        if($materiaId == 44 ){
+            if($categoryId == 111 or $categoryId == 112){
+                $es_informatica = true;
+            }
         }
 
         $nivelId = $request->get('nivelId');
