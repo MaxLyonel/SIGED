@@ -57,11 +57,11 @@
                     </div>
                         <div class="alert alert-success" id="msgop" role="alert" style="display: none;">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <i class="glyphicon glyphicon-ok"></i> CERRO CORRECTAMENTE EL OPERATIVO DEL MES DE <span id="mes-nombre-ope"></span>{{ mes|upper }}</span> (gestión {{ gestion }})
+                            <i class="glyphicon glyphicon-ok"></i> CERRO CORRECTAMENTE EL OPERATIVO DEL MES DE <span id="mes-nombre-ope">{{ mes|upper }}</span> (gestión {{ gestion }})
                         </div>
                         <div class="alert alert-danger" id="msgfop" role="alert" style="display: none;">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <i class="glyphicon glyphicon-alert"></i> FINALIZO EL OPERATIVO DEL MES DE <span id="mes-nombre-f-ope"></span>{{ mes|upper }}</span> (GESTIÓN {{ gestion }}) Y NO CERRO SU OPERATIVO.
+                            <i class="glyphicon glyphicon-alert"></i> FINALIZO EL OPERATIVO DEL MES DE <span id="mes-nombre-f-ope">{{ mes|upper }}</span> (GESTIÓN {{ gestion }}) Y NO CERRO SU OPERATIVO.
                         </div>
                         <div class="panel-body" id="opcionesbtn" style="display: none;">
                             <div class="pull-right">
@@ -413,15 +413,12 @@
                     var sw = data.sw;
                     console.log(sw);
                     if (sw === 1) {
-                        console.log('ok '+sw);
                         $("#msgop").show();
                         $('#mes-nombre-ope').text(mesNombre.toUpperCase());
                     } else if (sw === 2) {
-                        console.log('ok '+sw);
                         $("#msgfop").show();
                         $('#mes-nombre-f-ope').text(mesNombre.toUpperCase());
                     } else if (sw === 0) {
-                        console.log('ok '+sw);
                         // Vaciar la tabla y destruir el DataTable existente
                         $('#tabla-maestros').DataTable().clear().destroy();
 
@@ -484,9 +481,10 @@
                         $('#dataplanillames').show();
                         
                         $('#btnCerrarOperativo').attr('onclick', 'cerrarOperativo({{ institucion.id }}, {{ gestion }}, "' + mesNombre + '", ' + mesId + ')');
-                        $('#mes-nombre').text(mesNombre.toUpperCase());
+                       
                     
                     }
+                    $('#mes-nombre').text(mesNombre.toUpperCase());
                     $("#loadingbuscar").hide();
                 },
                 error: function (xhr, status, error) {
