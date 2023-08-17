@@ -243,8 +243,8 @@ class InfoNotasController extends Controller {
                         break;
             }
            // dump($template); 
-            //dump($notas);
-            //die;
+          // dump($notas);
+          // die;
           //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
@@ -512,7 +512,7 @@ class InfoNotasController extends Controller {
                 $nombre = 'libreta_especial_talento_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
                 $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
-                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&areaid=' . $areaEspecialId .'&lk='. $link . '&&__format=pdf&';
                 break;
         }
 
