@@ -1349,7 +1349,9 @@ class OlimEstudianteInscripcionController extends Controller{
          if (!isset($id_usuario)) {
              return $this->redirect($this->generateUrl('login'));
          }
-        // dump($request);die;
+         
+         //dump($request);die;
+
         //create db conexino
         $em = $this->getDoctrine()->getManager();
          //get the send values
@@ -1357,15 +1359,15 @@ class OlimEstudianteInscripcionController extends Controller{
         $paraleloId = $request->get('paraleloId');
         $gradoId = $request->get('gradoId');
         $materiaId = $request->get('materiaId');
-        
+                
+        $categoryId = $request->get('categoryId');
+
         //dump($materiaId); die;
-        //INFORMATICA = 44 SOLO MUJERES
-        if($materiaId == 44){
+        //INFORMATICA = 44 y categoria NIVEL0 = 124 --> SOLO MUJERES 
+        if($materiaId == 44 and $categoryId == 124 ){
             $es_informatica = true;
         }
 
-        
-        $categoryId = $request->get('categoryId');
         $nivelId = $request->get('nivelId');
         $sie = $request->get('sie');
         $gestion = $request->get('gestion');
