@@ -1,4 +1,45 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Estilos personalizados para el modal */
+        .custom-modal-content {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .custom-modal-header {
+            background-color: #297e96;
+            color: white;
+        }
+
+        .custom-modal-header-success {
+            background-color: #3f9629;
+            color: white;
+        }
+
+        .custom-modal-header-delete {
+            background-color: #9f0000;
+            color: white;
+        }
+
+        .custom-modal-title {
+            font-size: 18px;
+        }
+        .enmarcado-formulario {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .list-group-item-disabled {
+            pointer-events: none; /* Deshabilita los eventos de clic */
+            opacity: 0.6; /* Aplica una opacidad para indicar que están deshabilitados */
+        }
+
+    </style>
+{% endblock %}
 
 {% block contentoption %}
 
@@ -37,11 +78,11 @@
             <div class="col-lg-2">
                 <div class="list-group">
                     <a href="#" class="list-group-item list-group-item-success active">MESES</a>
-                        <input type="hidden" id="planillaMes" name="planillaMes" value="{{mesid}}">
-                        {% for mes in meses %}
-                            <a href="#" onclick="cargaPlanillaMes({{mes.id}})" class="list-group-item" style="{{ mes.id == mesid ? 'background-color: #F6BB42; color: white' : '' }}" data-month="{{mes.id}}">{{mes.mes|upper}}</a>
-                        {% endfor %}
-                </div>
+                    <input type="hidden" id="planillaMes" name="planillaMes" value="{{mesid}}">
+                    {% for mes in meses %}
+                        <a href="#" onclick="cargaPlanillaMes({{mes.id}}, this)" class="list-group-item" style="{{ mes.id == mesid ? 'background-color: #F6BB42; color: white' : '' }} {{ mes.id != mesid ? 'list-group-item-disabled' : '' }}" data-month="{{mes.id}}">{{mes.mes|upper}}</a>
+                    {% endfor %}
+                </div>                
             </div>
             <input type="hidden" id="swop" name="swop" value="{{sw}}">
             <div id="loading-bar" class="progress" style="display: none;">
@@ -356,7 +397,7 @@
         
         var maestroId;
         var tablaMaestros;
-        var planillaMes
+        var planillaMes;
    
         $(document).ready(function() {
             
@@ -383,8 +424,23 @@
         });
 
         
-        function cargaPlanillaMes(mesid) {
-            // console.log(mesid);
+        function cargaPlanillaMes(mesid, element) {
+            var allLinks = document.querySelectorAll('.list-group-item');
+    
+            // Deshabilitar todos los enlaces excepto el enlace del mes seleccionado
+            allLinks.forEach(function(link) {
+                if (link !== element) {
+                    link.classList.add('list-group-item-disabled');
+                }
+            });
+            // Verificar si el atributo data-loading está establecido en true
+            if (element.getAttribute('data-loading') === 'true') {
+                return; // Evitar llamadas múltiples
+            }
+
+            // Establecer data-loading en true
+            element.setAttribute('data-loading', 'true');
+
             var listItems = document.querySelectorAll('.list-group-item');
 
             listItems.forEach(function (item) {
@@ -396,12 +452,6 @@
             selectedListItem.style.backgroundColor = '#F6BB42';
             selectedListItem.style.color = 'white';
 
-            $("#loadingbuscar").show();
-            $('#dataplanillames').hide();
-            $("#msgop").hide();
-            $("#msgfop").hide();
-            $("#opcionesbtn").hide();
-
             $.ajax({
                 type: 'POST',
                 url: Routing.generate('herramienta_info_maestro_planilla_mes'),
@@ -411,7 +461,15 @@
                     var mesId = data.mesid;
                     var mesNombre = data.mes;
                     var sw = data.sw;
-                    console.log(sw);
+                    
+                    // Ocultar elementos antes de realizar cambios
+                    $('#msgop').hide();
+                    $('#msgfop').hide();
+                    $('#opcionesbtn').hide();
+                    $('#dataplanillames').hide();
+                    $('#tabla-maestros').DataTable().clear().destroy();
+                    $('#tabla-maestros tbody').empty();
+                    // console.log(sw);
                     if (sw === 1) {
                         $("#msgop").show();
                         $('#mes-nombre-ope').text(mesNombre.toUpperCase());
@@ -419,11 +477,6 @@
                         $("#msgfop").show();
                         $('#mes-nombre-f-ope').text(mesNombre.toUpperCase());
                     } else if (sw === 0) {
-                        // Vaciar la tabla y destruir el DataTable existente
-                        $('#tabla-maestros').DataTable().clear().destroy();
-
-                        // Limpiar el cuerpo de la tabla
-                        $('#tabla-maestros tbody').empty();
 
                         for (var i = 0; i < maestros.length; i++) {
                             var maestro = maestros[i];
@@ -476,21 +529,30 @@
                             ]
                         });
                     
-                    // Mostrar la tabla y ocultar la barra de carga
+                        // Mostrar la tabla y ocultar la barra de carga
                         $("#opcionesbtn").show();
                         $('#dataplanillames').show();
                         
                         $('#btnCerrarOperativo').attr('onclick', 'cerrarOperativo({{ institucion.id }}, {{ gestion }}, "' + mesNombre + '", ' + mesId + ')');
-                       
                     
                     }
                     $('#mes-nombre').text(mesNombre.toUpperCase());
                     $("#loadingbuscar").hide();
+                    element.setAttribute('data-loading', 'false');
+                            // Volver a habilitar todos los enlaces al finalizar
+                    allLinks.forEach(function(link) {
+                        link.classList.remove('list-group-item-disabled');
+                    });
                 },
                 error: function (xhr, status, error) {
                     // Manejar el error si es necesario
                     $("#loadingbuscar").show();
                     console.log('Error en la petición AJAX:', error);
+                    element.setAttribute('data-loading', 'false');
+                    allLinks.forEach(function(link) {
+                        link.classList.remove('list-group-item-disabled');
+                    });
+
                 }
             });
         }
@@ -1145,7 +1207,7 @@
 </style>
 {% endblock %}
 
-{% block stylesheets %}
+{# {% block stylesheets %}
     {{ parent() }}
     <style>
         /* Estilos personalizados para el modal */
@@ -1178,6 +1240,12 @@
             padding: 15px;
             border-radius: 5px;
         }
+
+        .list-group-item-disabled {
+            pointer-events: none; /* Deshabilita los eventos de clic */
+            opacity: 0.6; /* Aplica una opacidad para indicar que están deshabilitados */
+        }
+
     </style>
-{% endblock %}
+{% endblock %} #}
 
