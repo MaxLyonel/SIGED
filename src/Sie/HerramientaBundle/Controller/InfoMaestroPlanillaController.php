@@ -525,7 +525,7 @@ class InfoMaestroPlanillaController extends Controller {
             ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'gt.id = epat.gradoTipo')
             ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'pt.id = epat.paraleloTipo')
             ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'ati', 'WITH', 'ati.id = epat.asignaturaTipo')
-            ->innerJoin('SieAppWebBundle:FinanciamientoTipo', 'ft', 'WITH', 'ft.id = epat.financiamientoTipo')
+            ->leftJoin('SieAppWebBundle:FinanciamientoTipo', 'ft', 'WITH', 'ft.id = epat.financiamientoTipo')
             ->where('epat.emparejaSiePlanilla = :emparejaSiePlanillaId')
             ->setParameter('emparejaSiePlanillaId', $emparejaSiePlanillaId)
             ->orderBy('tt.turno,epat.nivelTipo,gt.id,ati.asignatura,pt.paralelo', 'ASC'); 
