@@ -573,8 +573,8 @@ class InfoMaestroPlanillaController extends Controller {
 
                 if($cedula){
                     $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($cedula,$datos,'prod','academico');
-                    dump($datos);
-                    dump($resultadoPersona);die;
+                    // dump($datos);
+                    // dump($resultadoPersona);die;
                     $mensaje = '';
                     if(!$resultadoPersona){
                         $mensaje = "No se realizó la validación con SEGIP.";
