@@ -157,9 +157,9 @@ class InfoEspecialController extends Controller{
                 'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Cursos',$data)->createView(),
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
                 'data'=>$dataInfo,
-                'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
+              //  'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
                 'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
-                'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
+              //  'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
                 'operativo'=>$periodo,
@@ -441,20 +441,29 @@ class InfoEspecialController extends Controller{
       $em->getConnection()->beginTransaction();
       //get the values
       $form = $request->get('form');
-      //dump($form);//die;
-      //update the close operativo to registro consolido table
      
+     $cod_sie = (int)$this->session->get('ie_id');
+     $gestion = 2023;
+      //update the close operativo to registro consolido table
+     /*
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
           'unidadEducativa' => $form['sie'], 
           'gestion' => $form['gestion']
+        ));*/
+      $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+          'unidadEducativa' => $cod_sie, 
+          'gestion' => $gestion
         ));
-
-      $periodo = $this->operativo($form['sie'], $form['gestion']);
+      //$periodo = $this->operativo($form['sie'], $form['gestion']);
+      $periodo = $this->operativo($cod_sie, $gestion);
       //dump($registroConsol);
       $estado = '';
-      if(!$registroConsol){
+
+      
+      if(!$registroConsol || $registroConsol==null){ 
         $estado = 'SIN_INSC';
       }else{
+       
         if($registroConsol->getRude()==1){
           $estado = 'CON_RUDE';
         }
@@ -463,11 +472,12 @@ class InfoEspecialController extends Controller{
       //dump($form['gestion']);
       //dump($form['sie']);
      // die;
+     //dump($estado);die;
       if($estado==''){
        
         $query = $em->getConnection()->prepare('select * from sp_validacion_especial_rude(:igestion_id, :icod_ue)');
-        $query->bindValue(':igestion_id', $form['gestion']);
-        $query->bindValue(':icod_ue', $form['sie']);
+        $query->bindValue(':igestion_id', $gestion);
+        $query->bindValue(':icod_ue', $cod_sie);
         $query->execute();
        
         $inconsistencia = $query->fetchAll(); 
