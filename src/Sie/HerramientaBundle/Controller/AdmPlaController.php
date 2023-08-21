@@ -272,11 +272,11 @@ class AdmPlaController extends Controller{
 			$objNewMaster = new NuevoMaestroInscripcion();
 			$objNewMaster->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($request->get('gestion')));
 			$objNewMaster->setMesTipo($em->getRepository('SieAppWebBundle:MesTipo')->find($request->get('idMounth')));			
-			$objNewMaster->setCi($request->get('cinew'));
-			$objNewMaster->setComplemento(mb_strtoupper( $request->get('complnew'), "utf-8") );
-			$objNewMaster->setPaterno(mb_strtoupper( $request->get('patnew'), "utf-8") );
-			$objNewMaster->setMaterno(mb_strtoupper( $request->get('matnew'), "utf-8") );
-			$objNewMaster->setNombre(mb_strtoupper( $request->get('nomnew'), "utf-8") );
+			$objNewMaster->setCi(ltrim(rtrim($request->get('cinew'))));
+			$objNewMaster->setComplemento(mb_strtoupper(ltrim(rtrim($request->get('complnew'))), "utf-8") );
+			$objNewMaster->setPaterno(mb_strtoupper(ltrim(rtrim($request->get('patnew'))), "utf-8") );
+			$objNewMaster->setMaterno(mb_strtoupper(ltrim(rtrim($request->get('matnew'))), "utf-8") );
+			$objNewMaster->setNombre(mb_strtoupper(ltrim(rtrim($request->get('nomnew'))), "utf-8") );
 			$objNewMaster->setFechaNacimiento(new \DateTime(str_replace("/","-",$request->get('fecnacnew'))));            
 			
 			$objNewMaster->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($request->get('financiamientoId')));
