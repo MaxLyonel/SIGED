@@ -137,7 +137,7 @@ class Herrafunctions {
   public function getCargo(){
 
     $query =       "
-        select * from Cargo_Tipo where id in (1,2,3,4,5,12) order by 1
+      select * from Cargo_Tipo where id not in (0,14,70) order by 1
         ";
     $query = $this->em->getConnection()->prepare($query);
     
