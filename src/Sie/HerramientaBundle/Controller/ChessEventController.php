@@ -776,9 +776,11 @@ class ChessEventController extends Controller{
             ";
             $statement = $em->getConnection()->prepare($query);
             $statement->execute();
-            $objFase = $statement->fetchAll();   
+            $objFase = $statement->fetchAll();
 
-        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+        //$faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+
+        $faseIdddis = $objFase[0]['id'] ;
 
         $arrEveStudentsClassified = $this->getAllRegisteredInscription( $categorieId,$faseIdddis,$modalidadId,$sie);
 // dump( sizeof($arrEveStudentsClassified) );die;
