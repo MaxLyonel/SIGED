@@ -366,7 +366,7 @@
 									  	<tr>
 									  		<th colspan="2">Inscritos</th>
 									  		<th colspan="2">
-												<a v-if="infoUE.modalidadId == 1" href="#" v-on:click="startInscription(infoUE)" type="button" class="btn btn-success">Registro de clasificados</a>
+												<a v-if="infoUE.modalidadId == 1" href="#"  id="btn_registra_clasificados" v-on:click="startInscription(infoUE)" type="button" class="btn btn-success">Registro de clasificados</a>
 									  		</th>
 									  	</tr>
 									    <tr>
@@ -653,6 +653,19 @@
 
 								// this.infoUE2.krlos = 'krlos';
 								// this.DBCategories = response.data.arrCategories;
+								/*console.log('jhere');
+								if(response.data.arrEveStudents.length > 0 ){
+									console.log('ya hay clasificados')
+									Swal.fire(
+									'Atencion !',
+									'YA EXISTE UN CLASIFICADO',
+									'warning'
+									);
+
+									//this.existSelectData = false
+									this.infoUE.modalidadId = 0;
+
+								}*/
 								
 							}else{
 								Swal.fire(
@@ -672,6 +685,7 @@
 			},
 			startInscription:function(infoUEsend){
 				// console.log(infoUEsend);
+				console.log('startInscription');
 				this.DBstudentPreCla = {};
 				this.DBstudentClasificado = {};
 				this.infoUE.codigoRude = '';
@@ -699,6 +713,20 @@
 
 								// this.infoUE2.krlos = 'krlos';
 								// this.DBCategories = response.data.arrCategories;
+								/*console.log('here');
+								if(response.data.arrEveStudentsClassified.length() > 0 ){
+									conole.log('ya hay clasificados')
+									Swal.fire(
+									'Atencion !',
+									'YA EXISTE UN CLASIFICADO',
+									'warning'
+									);
+
+									this.existSelectData = false
+
+								}*/
+
+
 								
 							}else{
 								Swal.fire(

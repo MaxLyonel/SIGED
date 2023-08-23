@@ -634,11 +634,20 @@ class ChessEventController extends Controller{
         if(sizeof($arrStudents)>0 ){
             $arrStudents=$arrStudents[0];
 
+            /*$query = "
+                    select * 
+                    from eve_estudiante_inscripcion_evento eeie 
+                    where eeie.estudiante_inscripcion_id = '".$arrStudents['estinscid']."' and eeie.eve_categorias_tipo_id = '".$request->get('categorieId')."' and eeie.eve_fase_tipo_id = '".$request->get('faseId') ."' and eeie.eve_modalidades_tipo_id = '".$request->get('modalidadId') ."'        
+            ";*/
+            $faseanterior = $request->get('faseId') -1;
+
             $query = "
                     select * 
                     from eve_estudiante_inscripcion_evento eeie 
-                    where eeie.estudiante_inscripcion_id = '".$arrStudents['estinscid']."' and eeie.eve_categorias_tipo_id = '".$request->get('categorieId')."' and eeie.eve_fase_tipo_id = '".$request->get('faseId')."' and eeie.eve_modalidades_tipo_id = '".$request->get('modalidadId') ."'        
+                    where eeie.estudiante_inscripcion_id = '" . $arrStudents['estinscid'] . "' and eeie.eve_categorias_tipo_id = '" . $request->get('categorieId') . "' and eeie.eve_fase_tipo_id = '" . $faseanterior . "' and eeie.eve_modalidades_tipo_id = '" . $request->get('modalidadId') . "'        
             ";
+
+            //dump($query); die; 
 
             
             $statement = $em->getConnection()->prepare($query);
@@ -696,13 +705,14 @@ class ChessEventController extends Controller{
             $query = "
                     select * 
                     from eve_fase_tipo  
-                    where eve_modalidades_tipo_id = $modalidadId and descripcion = 'Fase II. Distrital'
+                    where eve_modalidades_tipo_id = $modalidadId and descripcion = 'Fase IV. Nacional'
             ";
             $statement = $em->getConnection()->prepare($query);
             $statement->execute();
             $objFase = $statement->fetchAll();   
 
-        $faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+        //$faseIdddis = (sizeof($objFase)>0)?$objFase[0]['id']:2;
+        $faseIdddis = $objFase[0]['id'];
 
 
         $objexistInscription = $em->getRepository('SieAppWebBundle:EveEstudianteInscripcionEvento')->findOneBy(array(
@@ -732,7 +742,7 @@ class ChessEventController extends Controller{
 
 
         $arrEveStudentsClassified = $this->getAllRegisteredInscription( $categorieId,$faseIdddis,$modalidadId,$sie);
-// dump($arrEveStudentsClassified);die;
+        
         $arrResponse = array(
             'sie'            => $sie,
             'modalidadId'    => $modalidadId,
@@ -741,7 +751,7 @@ class ChessEventController extends Controller{
             'arrEveStudentsClassified' => $arrEveStudentsClassified,
             'existStudentpre'         => $existStudentpre,    
             'swRegistryClassi'         => (sizeof($arrEveStudentsClassified)==2)?0:1
-        ); 
+        );
 
 
         $response = new JsonResponse();
