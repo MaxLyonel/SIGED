@@ -104,8 +104,8 @@ class InfoStudentsController extends Controller {
                 }elseif($uEducativa['nivelId'] == 410){ 
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }elseif($uEducativa['nivelId'] == 405){ //tecnica
-                  
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['especialidad']][$uEducativa['paralelo'].$especialidad]= array('infoUe' => $sinfoUeducativa);
+                  //LUEGO QUITAR .especial
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].'-'.$uEducativa['grado'].') '.$uEducativa['nivel']][$uEducativa['especialidad']][$uEducativa['paralelo'].$especialidad]= array('infoUe' => $sinfoUeducativa);
                 }
                 else{
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
