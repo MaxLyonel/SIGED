@@ -160,7 +160,7 @@ caption {
 
 								<div class="form-group col-md-3 col-sm-6 ">
 									<select class="form-control" name="gestion" id="gestion">
-										<option v-text="gestion" value="gestion"></option>
+										<option value="gestion">2023</option>
 									</select>
 								</div>
 
@@ -424,6 +424,7 @@ caption {
 
                         });                    
                 },
+
               getDistritos: function(deptoSelected){
                     axios.get(Routing.generate('adminscriptalento_getDistrito',{ deptoSelected: this.DBRegisterData.deptoSelected}))
                         .then(response => {

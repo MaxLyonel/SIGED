@@ -54,7 +54,7 @@ class AdmInscripTalentoController extends Controller
         }
         $userId = $this->session->get('userId');
         $userRol =$this->session->get('roluser');
-       /* if($this->session->get('roluser') == 20){
+        /*if($this->session->get('roluser') == 20){
           //CONSULTA NAC
           $userRol = 8;
         }*/
