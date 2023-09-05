@@ -758,6 +758,10 @@ class InfoEstudianteController extends Controller {
             $this->session->set('donwloadLibreta', false);
         }
         
+        //dcastillo para notas
+        //TODO: deberia leer de algun lado
+        $this->session->set('donwloadLibreta', false);
+
         //get turnos
         //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($iecId, '5');
         //get th position of next level
