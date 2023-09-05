@@ -412,7 +412,9 @@ class ListasController extends Controller
     
     public function personasieAction() {
 
-        if(!($this->session->get('roluser') == 8)){
+        // if(!($this->session->get('roluser') == 8)){
+        // se  esta habilitando lista para DEPARTAMENTO Y DISTIRTO POR UE
+        if (!in_array($this->session->get('roluser'), [8, 7, 10])) {
             if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
                 return $this->redirectToRoute('sie_usuarios_homepage');
             }
