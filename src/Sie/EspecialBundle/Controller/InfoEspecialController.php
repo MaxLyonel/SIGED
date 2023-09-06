@@ -499,6 +499,8 @@ class InfoEspecialController extends Controller{
       //get the values
       $form = $request->get('form');
       //dump($form);die;
+      $cod_sie = (int)$this->session->get('ie_id');
+      $gestion = 2023;
 
       //get the current operativo
      // $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
@@ -506,11 +508,12 @@ class InfoEspecialController extends Controller{
       //update the close operativo to registro consolido table
      
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-          'unidadEducativa' => $form['sie'], 
-          'gestion' => $form['gestion']
+          'unidadEducativa' =>$cod_sie, 
+          'gestion' => $gestion
         ));
      //dump($registroConsol);die;
-      $periodo = $this->operativo($form['sie'], $form['gestion']);
+     // $periodo = $this->operativo($form['sie'], $form['gestion']);
+     $periodo = $this->operativo($cod_sie, $gestion);
      // dump($periodo);die;
       $estado = '';
       if(!$registroConsol){
@@ -533,11 +536,10 @@ class InfoEspecialController extends Controller{
       $inconsistencia = null;
       //dump($estado);die;
       if($estado==''){
-      
         //sp_validacion_regular_RUDE
         $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
-        $query->bindValue(':igestion_id', $form['gestion']);
-        $query->bindValue(':icod_ue', $form['sie']);
+        $query->bindValue(':igestion_id', $gestion);
+        $query->bindValue(':icod_ue', $cod_sie);
         $query->bindValue(':ibimestre', $periodo);
         $query->execute();
         $inconsistencia = $query->fetchAll();
@@ -555,7 +557,7 @@ class InfoEspecialController extends Controller{
         }
       }
       
-      return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo ,'estado' => $estado));
+      return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $cod_sie, 'gestion' => $gestion, 'periodo' => $periodo ,'estado' => $estado));
     }
 
     public function operativo($sie,$gestion){
