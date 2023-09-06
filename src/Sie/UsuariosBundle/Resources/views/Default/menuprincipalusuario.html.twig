@@ -6,11 +6,12 @@
                                                 {% if [persona.carnet,persona.complemento]|join|trim != persona.username %}
                                                     <li><a class="glyphicon glyphicon-star-empty" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> <span class="label label-danger">El nombre de usuario no coincide con el número de carnet y complemento.</span></a></li>
                                                 {% endif %}
-                                                <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li> 
-                                                <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li> 
-                                                <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
-                                                
-                                                {# {% if is_granted('ROLE_TECSN_SIG') or is_granted('ROLE_TECSD_SIG')  %}
+                                                    <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li> 
+                                                {% if rolid in [8, 7] %}
+                                                    <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
+                                                    <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li> 
+                                                {% endif %}
+                                                    {# {% if is_granted('ROLE_TECSN_SIG') or is_granted('ROLE_TECSD_SIG')  %}
                                                     <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                                                                        
                                                 {% endif %} #}
 

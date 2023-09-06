@@ -65,6 +65,7 @@ class InfoStudentsController extends Controller {
                   'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno'], 'programa' => $uEducativa['programa'], 'servicio' => $uEducativa['servicio'], 'areaEspecial' => $uEducativa['areaEspecial'], 'iecLugar'=>$uEducativa['iecLugar'], 'momento'=>$uEducativa['momento']),
                   'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'],'programaId'=>$uEducativa['especialProgramaTipo'],'servicioId'=>$uEducativa['especialServicioTipo'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId'], 'modalidadId' => $uEducativa['modalidadId']),
                   'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'])
+                  //'iecId' => array('iecId' => $uEducativa['iecId'])
               ));
 
               //send the values to the next steps
@@ -78,23 +79,35 @@ class InfoStudentsController extends Controller {
               if($uEducativa['momentoId']!=99)
                 $momento = ' ('.$uEducativa['momento'].')';
 
-              if($uEducativa['iecLugar']){
+              $especialidad = '';
+              $cont=1;
+              if($uEducativa['especialidadId']!=99){
+                $especialidad = ' ('.$uEducativa['iecId'].')';
+                //$especialidad = ' ('.$cont.')';
+                //$cont = $cont +1;
+              }
+
+              if($uEducativa['iecLugar']){ //dump("2");
                 if ($uEducativa['nivelId'] == 411){
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
-                }elseif($uEducativa['nivelId'] == 410){
+                }elseif($uEducativa['nivelId'] == 410){ 
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }else{
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }
                 
               }else{
-                if ($uEducativa['nivelId'] == 411){
+                if ($uEducativa['nivelId'] == 411){ 
                   
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa'].$momento][$uEducativa['paralelo']]  = array('infoUe' => $sinfoUeducativa);
                   
-                }elseif($uEducativa['nivelId'] == 410){
+                }elseif($uEducativa['nivelId'] == 410){ 
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
-                }else{
+                }elseif($uEducativa['nivelId'] == 405){ //tecnica
+                  //LUEGO QUITAR .especial
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].'-'.$uEducativa['grado'].') '.$uEducativa['nivel']][$uEducativa['especialidad']][$uEducativa['paralelo'].$especialidad]= array('infoUe' => $sinfoUeducativa);
+                }
+                else{
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }
               }              
@@ -129,7 +142,7 @@ class InfoStudentsController extends Controller {
       //get the info ue
       $infoUe = $request->get('infoUe');
       $aInfoUeducativa = unserialize($infoUe);
-      
+     // dump($aInfoUeducativa);die;
       //get the values throght the infoUe
       $sie = $aInfoUeducativa['requestUser']['sie'];
       $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
@@ -146,6 +159,7 @@ class InfoStudentsController extends Controller {
       $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
       $momento = $aInfoUeducativa['ueducativaInfo']['momento'];
       $modalidad = $aInfoUeducativa['ueducativaInfoId']['modalidadId'];
+      $programa = $aInfoUeducativa['ueducativaInfoId']['programaId'];
       
       //get db connexion
       $em = $this->getDoctrine()->getManager();
@@ -207,8 +221,9 @@ class InfoStudentsController extends Controller {
       if(($nivel==410 or $nivel==411) and $gestion>2020 and $objArea->getId()==3){
           $arrDataLibreta['calificaciones'] = false;
       }
-//dump($nivel);die;
-       //2023 llenado de calificaciones trimestrales
+     
+      //dump($nivel);die;
+      //2023 llenado de calificaciones trimestrales
        $nivelesConNotas = array(401,412,403,404);
        $programasConNotas = array(25,8); 
        
@@ -233,7 +248,10 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
-      
+      //auditiva- lengua de señas por modulo
+      if($nivel==411 and $gestion>2022 and $objArea->getId()==1 and $programa==22){
+        $arrDataLibreta['calificaciones'] = true;
+      }
 
       //para bono
       $arrDataLibreta['bono'] = false;

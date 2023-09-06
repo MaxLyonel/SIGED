@@ -649,7 +649,9 @@ class InstitucioneducativaRepository extends EntityRepository {
                           IDENTITY(iece.especialServicioTipo) as especialServicioTipo, est.servicio as servicio,
                           iec.id as iecId, eat.areaEspecial,iece.id as ieceId, iec.lugar as iecLugar, 
                           emt.momento, emt.id as momentoId, 
-                          emot.id as modalidadId, emot.modalidad as modalidad
+                          emot.id as modalidadId, emot.modalidad as modalidad,
+                          etet.id as especialidadId,
+                          etet.especialidad as especialidad
                           ')
                 ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iec.id = iece.institucioneducativaCurso')
@@ -662,16 +664,15 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->leftJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'iec.gradoTipo = gt.id')
                 ->leftJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'iec.paraleloTipo = pt.id')
                 ->leftJoin('SieAppWebBundle:EspecialMomentoTipo', 'emt', 'WITH', 'iece.especialMomentoTipo = emt.id')
+                ->leftJoin('SieAppWebBundle:EspecialTecnicaEspecialidadTipo', 'etet', 'WITH', 'iece.especialTecnicaEspecialidadTipo = etet.id')
                 ->where('iec.institucioneducativa = :sie')
                 ->andwhere('iec.gestionTipo =  :gestion')
                 ->setParameter('sie', $sie)
                 ->setParameter('gestion', $gestion)
                 //->distinct()
-                ->groupBy('tt.id, nt.id, ept.programa, est.servicio, emt.momento, emt.id, emot.modalidad, emot.id, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
+                ->groupBy('tt.id, nt.id, ept.programa, est.servicio, emt.momento, emt.id, emot.modalidad,etet.id, etet.especialidad, emot.id, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
                 //->orderBy('tt.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
-                ->orderBy('tt.id, eat.id, nt.id,ept.programa, est.servicio, emt.momento, emt.id, gt.id, pt.id, iec.cicloTipo, iec.id,iece.id')
-
-
+                ->orderBy('tt.id, eat.id, nt.id,ept.programa, est.servicio, emt.momento,  emt.id, etet.id,etet.especialidad, gt.id, pt.id, iec.cicloTipo, iec.id,iece.id')
         ;
         return $qb->getQuery()->getResult();
     }
