@@ -28,7 +28,7 @@
                         <td>                           
                             {% if persona.username %}
                                 {% if persona.usuarioesactivo == true or 1 == 1 %}
-                                    {% include 'SieUsuariosBundle:Default:menuprincipalusuario.html.twig' with {'persona': persona} %}
+                                    {% include 'SieUsuariosBundle:Default:menuprincipalusuario.html.twig' with {'persona': persona, 'rolid': rolid} %}
                                     {#<div class="btn-group">
                                         <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
                                             Acciones <span class="caret"></span>
