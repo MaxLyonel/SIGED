@@ -52,7 +52,7 @@ class DefaultController extends Controller
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        $arrRolAllow = array(7,8,31);
+        $arrRolAllow = array(10,7,8,31);
         if(!in_array($this->session->get('roluser'), $arrRolAllow)){
             return $this->redirectToRoute('principal_web');
         }
@@ -224,6 +224,7 @@ class DefaultController extends Controller
                 }
                 $form = $this->createForm(new UploadFotoPersonaType(), null, array('action' => $this->generateUrl('sie_persona_uploadfoto'), 'method' => 'POST',));                
 //                print_r($usuariodatos[0]['personaid']);
+                // dump($usuariodatos);die;
                 $form->get('personaid')->setData($usuariodatos[0]['personaid']);
                 return $this->render('SieUsuariosBundle:Default:usuariomostrar.html.twig', array('personas' => $datos_filas,'usuariodatos' => $usuariodatos,'form' => $form->createView())); 
             }            
@@ -270,10 +271,10 @@ class DefaultController extends Controller
         $stmt->execute($params);        
         $po = $stmt->fetchAll();
         $countdir = count($po);
-        //dump($po);        die;
-
-        if (($this->session->get('roluser') == '8')||($this->session->get('roluser') == '7')){//NACIONAL - DEPARTAMENTAL
+        
+        if (($this->session->get('roluser') == '8')||($this->session->get('roluser') == '7')||($this->session->get('roluser') == '10')){//NACIONAL - DEPARTAMENTAL
             //ESTABLECER PARAMETROS DE LA UNIDAD EDUCATIVA SELECCIONADA PARA TRABAJAR DESDE EL DISTRITAL
+            
             $this->session->set('ie_activo','1');
             $this->session->set('ie_id',$ie_id);
             $this->session->set('ie_nombre',$ie_nombre);
@@ -294,7 +295,6 @@ class DefaultController extends Controller
             $this->session->set('dep_nombre',$this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($dep_id) );
             $this->session->set('dis_id',$dis_id);
             $this->session->set('dis_nombre',$this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id) );
-                        
             if ($countdir == 1){//CORRECTO 
                 $this->session->getFlashBag()->add('success', 'La unidad educativa no presenta observaciones de Director - Usuario.');                
                 return $this->redirectToRoute('sie_usuarios_personas_ie');      
@@ -309,38 +309,38 @@ class DefaultController extends Controller
             }
         }
         
-        if ($this->session->get('roluser') == '10'){//DISTRITO
-            //ESTABLECER PARAMETROS DE LA UNIDAD EDUCATIVA SELECCIONADA PARA TRABAJAR DESDE EL DISTRITAL               
-            $query = "SELECT get_ie_distrito_id(".$ie_id.");";
-            $stmt = $db->prepare($query);
-            $params = array();
-            $stmt->execute($params);
-            $podis = $stmt->fetchAll();
-            foreach ($podis as $p){
-                $lugarestipoid = $p["get_ie_distrito_id"];           
-            }
-            $lugarids = explode(",", $lugarestipoid);
-            $dep_id = substr($lugarids[1],0,strlen($lugarids[1])-1);
-            $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));
-            $this->session->set('dep_id',$dep_id);
-            $this->session->set('dep_nombre',$this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($dep_id) );
-            $this->session->set('dis_id',$dis_id);
-            $this->session->set('dis_nombre',$this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id) );
+        // if ($this->session->get('roluser') == '10'){//DISTRITO
+        //     //ESTABLECER PARAMETROS DE LA UNIDAD EDUCATIVA SELECCIONADA PARA TRABAJAR DESDE EL DISTRITAL               
+        //     $query = "SELECT get_ie_distrito_id(".$ie_id.");";
+        //     $stmt = $db->prepare($query);
+        //     $params = array();
+        //     $stmt->execute($params);
+        //     $podis = $stmt->fetchAll();
+        //     foreach ($podis as $p){
+        //         $lugarestipoid = $p["get_ie_distrito_id"];           
+        //     }
+        //     $lugarids = explode(",", $lugarestipoid);
+        //     $dep_id = substr($lugarids[1],0,strlen($lugarids[1])-1);
+        //     $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));
+        //     $this->session->set('dep_id',$dep_id);
+        //     $this->session->set('dep_nombre',$this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($dep_id) );
+        //     $this->session->set('dis_id',$dis_id);
+        //     $this->session->set('dis_nombre',$this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id) );
             
-            $this->session->set('ie_activo','1');
-            $this->session->set('ie_id',$ie_id);
-            $this->session->set('ie_nombre',$ie_nombre);
+        //     $this->session->set('ie_activo','1');
+        //     $this->session->set('ie_id',$ie_id);
+        //     $this->session->set('ie_nombre',$ie_nombre);
                         
-            if ($countdir == 1){//CORRECTO
-                $this->session->getFlashBag()->add('success', 'La unidad educativa no presenta observaciones de Director - Usuario.');                
-                return $this->redirectToRoute('sie_usuarios_personas_ie');      
-            } 
+        //     if ($countdir == 1){//CORRECTO
+        //         $this->session->getFlashBag()->add('success', 'La unidad educativa no presenta observaciones de Director - Usuario.');                
+        //         return $this->redirectToRoute('sie_usuarios_personas_ie');      
+        //     } 
 
-            if (($countdir == 0) || ($countdir > 1)) {//ERROR              
-                 $this->session->getFlashBag()->add('error', 'Existe '.$countdir.' registros con el cargo de cargo de director en la unidad educativa!');
-                return $this->redirectToRoute('sie_usuarios_personas_ie');                
-            }
-        }
+        //     if (($countdir == 0) || ($countdir > 1)) {//ERROR              
+        //          $this->session->getFlashBag()->add('error', 'Existe '.$countdir.' registros con el cargo de cargo de director en la unidad educativa!');
+        //         return $this->redirectToRoute('sie_usuarios_personas_ie');                
+        //     }
+        // }
         
         if ($this->session->get('roluser') == '9') {//DIRECTOR            
             //ESTABLECER PARAMETROS DE LA UNIDAD EDUCATIVA SELECCIONADA PARA TRABAJAR

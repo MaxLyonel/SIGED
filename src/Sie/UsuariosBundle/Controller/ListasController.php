@@ -412,7 +412,10 @@ class ListasController extends Controller
     
     public function personasieAction() {
 
-        if(!($this->session->get('roluser') == 8)){
+        // if(!($this->session->get('roluser') == 8)){
+        // se  esta habilitando lista para DEPARTAMENTO Y DISTIRTO POR UE
+        $rid = $this->session->get('roluser');
+        if (!in_array($rid, [8, 7, 10])) {
             if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
                 return $this->redirectToRoute('sie_usuarios_homepage');
             }
@@ -465,13 +468,18 @@ class ListasController extends Controller
             $this->session->getFlashBag()->add('error', 'No se encontro administrativos con usuarios asociadas a la institucion educativa en la presente gestión.');
             //RENDERIZADO        
             return $this->render('SieUsuariosBundle:Listas:personasie.html.twig', array(
+                'rolid' => '',
                 'depid' => '',
                 'disid' => '',
                 'personas' => $po,
             ));
         }        
-    
+        // dump($rid);
+        // dump($this->session->get('dep_id'));
+        // dump($this->session->get('dis_id'));
+        // die;
         return $this->render('SieUsuariosBundle:Listas:personasie.html.twig', array(
+            'rolid' => $rid,
             'depid' => $this->session->get('dep_id'),
             'disid' => $this->session->get('dis_id'),
             'personas' => $po,

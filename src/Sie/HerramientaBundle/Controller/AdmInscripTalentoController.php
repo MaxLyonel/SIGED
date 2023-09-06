@@ -53,7 +53,11 @@ class AdmInscripTalentoController extends Controller
             return $this->redirect($this->generateUrl('login'));
         }
         $userId = $this->session->get('userId');
-        $userRol = $this->session->get('roluser');
+        $userRol =$this->session->get('roluser');
+        /*if($this->session->get('roluser') == 20){
+          //CONSULTA NAC
+          $userRol = 8;
+        }*/
 
         return $this->render($this->session->get('pathSystem').':AdmInscripTalento:index.html.twig', array(
             'rol' => $userRol,
@@ -81,7 +85,8 @@ class AdmInscripTalentoController extends Controller
 
             // get info about the user
             switch ($userRol) {
-                case 8://Nacional
+                case 8://Tecnico SIE Nacional
+                case 20:// consulta Nacional
                     $arrayDepartamentos = $this->getDepartamentos();
                     $arrayDistritos = array();
                     $arrayUE = array();
