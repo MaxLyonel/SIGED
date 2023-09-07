@@ -279,6 +279,12 @@ class InfoMaestroController extends Controller {
         $data = [
             'carnet' => $form['carnet'],
             'complemento' => $form['complemento'],
+            'paterno' => '',
+            'materno' => '',
+            'nombre' => '',
+            'fecha_nacimiento' => '',
+            'id' => '',
+            
         ];
         
         $formVerificarPersona = $this->createForm(new VerificarPersonaSegipType(), 
@@ -288,7 +294,8 @@ class InfoMaestroController extends Controller {
                 'method' => 'POST'
             )
         );
-
+        //dump($formVerificarPersona);die;
+       //dump($this->session->get('pathSystem'));die;
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:result.html.twig', array(
             'data' => $data,
             'persona' => $persona,

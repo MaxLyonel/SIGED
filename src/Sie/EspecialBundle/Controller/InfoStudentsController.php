@@ -142,7 +142,7 @@ class InfoStudentsController extends Controller {
       //get the info ue
       $infoUe = $request->get('infoUe');
       $aInfoUeducativa = unserialize($infoUe);
-     // dump($aInfoUeducativa);die;
+     //dump($aInfoUeducativa);die;
       //get the values throght the infoUe
       $sie = $aInfoUeducativa['requestUser']['sie'];
       $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
@@ -160,6 +160,7 @@ class InfoStudentsController extends Controller {
       $momento = $aInfoUeducativa['ueducativaInfo']['momento'];
       $modalidad = $aInfoUeducativa['ueducativaInfoId']['modalidadId'];
       $programa = $aInfoUeducativa['ueducativaInfoId']['programaId'];
+      $servicio = $aInfoUeducativa['ueducativaInfoId']['servicioId'];
       
       //get db connexion
       $em = $this->getDoctrine()->getManager();
@@ -217,7 +218,7 @@ class InfoStudentsController extends Controller {
           $arrDataLibreta['calificaciones'] = false;
       }
     //para visual y programas
-    //dump($nivel); dump($objArea->getId()); die;
+     //dump($nivel); dump($objArea->getId()); die;
       if(($nivel==410 or $nivel==411) and $gestion>2020 and $objArea->getId()==3){
           $arrDataLibreta['calificaciones'] = false;
       }
@@ -248,8 +249,9 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
-      //auditiva- lengua de señas por modulo
-      if($nivel==411 and $gestion>2022 and $objArea->getId()==1 and $programa==22){
+      
+      //auditiva- lengua de señas, modulo o servicio lbs y programas
+      if($gestion>2022 and $objArea->getId()==1 and (($nivel==411 and in_array($programa,[19,22,41,43,44,46])) or ($nivel==410 and $servicio==40))){
         $arrDataLibreta['calificaciones'] = true;
       }
 

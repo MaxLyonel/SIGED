@@ -1,0 +1,241 @@
+{#
+	variable vista
+	vista = 0  // La vista estara totalmente bloqueada
+	vista = 1  // Se podran modificar las notas dirferentes a cero y vacio
+	vista = 2  // Se podra modificar todo
+#}
+
+<input type="hidden" name="tipoNota" value="{{notas.tipoNota}}">
+<input type="hidden" name="nivel" value="{{notas.nivel}}">
+<input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
+
+<div class="row">
+    <div class="col-lg-12">
+     <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <ul id="myTab" class="nav nav-tabs">
+                            {% for tn in notas.tiposNotasArray %}
+                                <li {% if tn.id == tn.ultimo  %} class="active" {% endif %} ><a href="tabs-accordions.html#modulo{{tn.id}}" data-toggle="tab"> {{tn.nota}}</a>
+                                </li>
+                            {% endfor %}    
+                            </ul>
+                            <div id="myTabContent" class="tab-content">                            
+                              
+                               {% for tn in notas.tiposNotasArray %}
+                                
+                                    <div {% if tn.id == tn.ultimo  %} class="tab-pane fade  in active " {% else %} class="tab-pane fade" {% endif %}  id="modulo{{tn.id}}">
+                                        {% if tn.id <= tn.ultimo+1  %} 
+                                            <table class="table table-bordered" id="tbl_nota">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="30%"><b>Resultados del Proceso de Atención</b></th>
+                                                        <th width="70%"><b>Informe Semestral</b></th>
+                                                    </tr>
+                                                </thead>
+                                            
+                                                <tbody>
+                                                    <input type="hidden" name="id_nota[]" class="form-control jnumbersletters noresize ids" value="{{tn.id}}">
+                                                    <input type="hidden" name="tipo{{tn.id}}" id="tipo{{tn.id}}"  value="{{tn.nota}}">
+                                                
+                                                    <tr>
+                                                        <td width="30%">
+                                                            Cultura del Sordo
+                                                        </td>
+                                                        <td width="70%">
+                                                            <textarea class="form-control jnumbersletters noresize cultura" name="cultura{{tn.id}}" id="cultura{{tn.id}}" maxlength="180" >{{tn.cultura}}</textarea>
+                                                        </td>
+                                                    </tr>
+                                                    {% if tn.identidad != 'noaplica' %}
+                                                        <tr>
+                                                            <td width="30%">
+                                                                Identidad del Sordo
+                                                            </td>
+                                                            <td width="70%">
+                                                                <textarea class="form-control jnumbersletters noresize identidad" name="identidad{{tn.id}}" id="identidad{{tn.id}}" maxlength="180" >{{tn.identidad}}</textarea>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <input type="hidden" value="" name="identidad{{tn.id}}" id="identidad{{tn.id}}">
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td width="30%">
+                                                        Lengua de Señas de Boliviana
+                                                        </td>
+                                                        <td width="70%">
+                                                            <textarea class="form-control jnumbersletters noresize lengua" name="lengua{{tn.id}}" id="lengua{{tn.id}}" maxlength="180" >{{tn.lengua}}</textarea>
+                                                        </td>
+                                                    </tr>
+                                                    {% if tn.dactilologia != 'noaplica' %}
+                                                    <tr>
+                                                        <td width="30%">
+                                                            Dactilologia
+                                                        </td>
+                                                        <td width="70%">
+                                                            <textarea class="form-control jnumbersletters noresize dactilologia" name="dactilologia{{tn.id}}" id="dactilologia{{tn.id}}" maxlength="180" >{{tn.dactilologia}}</textarea>
+                                                        </td>
+                                                    </tr>
+                                                      {% else %}
+                                                        <input type="hidden" value="" name="dactilologia{{tn.id}}" id="dactilologia{{tn.id}}">
+                                                    {% endif %}
+
+                                                    {% if tn.dialogo != 'noaplica' %}
+                                                    <tr>
+                                                        <td width="30%">
+                                                            Diálogo e interpretación en LSB
+                                                        </td>
+                                                        <td width="70%">
+                                                            <textarea class="form-control jnumbersletters noresize dialogo" name="dialogo{{tn.id}}" id="dialogo{{tn.id}}" maxlength="180" >{{tn.dialogo}}</textarea>
+                                                        </td>
+                                                    </tr>
+                                                        {% else %}
+                                                        <input type="hidden" value="" name="dialogo{{tn.id}}" id="dialogo{{tn.id}}">
+                                                    {% endif %}
+
+                                                    <tr>
+                                                        <td width="30%">
+                                                        Producción con uso de recursos tecnológicos en LSB
+                                                        </td>
+                                                        <td width="70%">
+                                                            <textarea class="form-control jnumbersletters noresize produccion" name="produccion{{tn.id}}" id="produccion{{tn.id}}" maxlength="180" >{{tn.produccion}}</textarea>
+                                                        </td>
+                                                    </tr>
+                                                  
+                                                     <tr>
+                                                        <td width="30%">
+                                                        Estado del módulo:
+                                                        </td>
+                                                        <td width="70%">
+                                                            <select class="form-control" name="nuevoEstado{{tn.id}}" id="nuevoEstado{{tn.id}}" >
+                                                            <option value="">Seleccionar estado a registrar o actualizar</option>
+                                                            {% for estadoF in notas.estadosFinales %}
+                                                            <option value="{{estadoF.id}}" {% if estadoF.estadomatricula == tn.recomendacion %} selected {% endif %} >{{estadoF.estadomatricula}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>                                                
+                                            </table>
+                                        {% else %} 
+                                        aun no completo calificaciones de su ultimo módulo
+                                        {% endif %} 
+                                </div> 
+                              
+                            {% endfor %}
+                                
+                           </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="0" name="nuevoEstadomatricula" id="nuevoEstadomatricula">
+                   
+        </div>                    
+   
+    </div>
+    <br/>
+    
+    
+</div>
+<script>
+    var indexg = 2;
+    $('#brow').click(function(){
+        $('#tbl_nota tbody').append('<tr><td><textarea class="form-control noresize pi" name="int'+indexg+'" required></textarea></td><td><textarea class="form-control noresize dc" name="des'+indexg+'" required></textarea></td><td><button type="button" class="btn btn-danger btn-xs drow"><i class="fa fa-minus"></i></button></td></tr>');
+        indexg++;
+    });
+    $(document).on('click', '.drow', function(event) {
+        $(this).parent().parent().remove();
+    });
+    var validarEnvioNotas = function(){
+        var ultimo = 0;
+        var total = 0;
+        var tc = 0;
+        var ti = 0;
+        var tl = 0;
+        var td = 0;
+        var tdi = 0;
+        var tp = 0;
+        var enviar = true;
+        $(".ids").each(function (index) {
+            if( $("#nuevoEstado"+$(this).val()).val()!=''){
+                ultimo = $("#nuevoEstado"+$(this).val()).val();
+            }
+           
+            if( $("#cultura"+$(this).val()).val().length>0){
+                tc =  $("#cultura"+$(this).val()).val().length;
+            }
+            if( $("#identidad"+$(this).val().length>0)){
+                tl =  $("#identidad"+$(this).val()).val().length;
+            }
+            if( $("#lengua"+$(this).val()).val().length>0 ){
+                ti = $("#lengua"+$(this).val()).val().length;
+            }
+            
+            if( $("#dactilologia"+$(this).val()).val().length>0){
+                td =  $("#dactilologia"+$(this).val()).val().length;
+            }
+            if( $("#dialogo"+$(this).val()).val().length>0){
+                tdi =  $("#dialogo"+$(this).val()).val().length;
+            }
+            
+            if( $("#produccion"+$(this).val()).val().length>0){
+                tp =  $("#produccion"+$(this).val()).val().length;
+            }
+           
+             total = parseInt(tc) + parseInt(ti) + parseInt(tl) + parseInt(td) + parseInt(tdi) + parseInt(tp);
+             if(total>499)
+                { 
+                    enviar = false;
+                }
+           
+            total = 0;
+            tc = 0;
+            ti = 0;
+            tl = 0;
+            td = 0;
+            tdi = 0;
+            tp = 0;
+        });
+        //ponemos el ultimo estado
+        document.getElementById('nuevoEstadomatricula').value=ultimo;
+         
+         if(enviar == false){
+            alert("Debe reducir alguno de los textos es demasiado extenso de lo permitido");
+            return false;
+        }else{
+            return true;
+        }
+          
+    }
+
+    $(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+</script>
+<style>
+.noresize {
+    resize: none;
+}
+</style>
