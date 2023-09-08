@@ -123,7 +123,7 @@ class BusquedasController extends Controller
                 $arrayDatosPersona['carnet']=$persona['ci'];
                 unset($arrayDatosPersona['fecha_nacimiento']);
                 $arrayDatosPersona['fechaNacimiento'] = str_replace('/','-',$persona['fecha_nacimiento']);
-
+                $rolid = $this->session->get('roluser');
                 $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
                 
                 $us = array(7,8,31); //solo los que pueden crear usuarios
@@ -208,7 +208,9 @@ class BusquedasController extends Controller
                         $potuision = $stmt->fetchAll(); 
 
                         //VERIFICANDO TUISION JURISDICCIÓN
-                        
+                        // dump($idperson);
+                        // dump($this->session->get('roluser'));
+                        // dump($potuision);die;
                         if (count($potuision) == 0)
                         {
                             $accion = 'okuser';
@@ -237,6 +239,7 @@ class BusquedasController extends Controller
                         return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
                             'accion' => $accion,
                             'po' => $po,
+                            'rolid' => $rolid,
                         ));
                     }
 
@@ -248,6 +251,7 @@ class BusquedasController extends Controller
                             'accion' => $accion,
                             //'po' => $resultService->result,
                             'po' => array($personaEncontrada),
+                            'rolid' => $rolid,
                         ));
                     }
 
@@ -258,6 +262,7 @@ class BusquedasController extends Controller
                         return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
                             'accion' => $accion,
                             'po'   => $po,
+                            'rolid' => $rolid,
                         ));
                     }
                 }
@@ -272,6 +277,7 @@ class BusquedasController extends Controller
                            //'complemento'   => trim($data['complemento']),
                            'accion' => $accion,
                            'po'   => $po,
+                           'rolid' => $rolid,
                     ));
                 }
             }
