@@ -25,7 +25,7 @@
                             <tr>                  
                                 <td>
                                     {% if (accion == 'okuser') %}
-                                        {% include 'SieUsuariosBundle:Default:menuprincipalusuario.html.twig' with {'persona': persona} %}                                        
+                                        {% include 'SieUsuariosBundle:Default:menuprincipalusuario.html.twig' with {'persona': persona, 'rolid': rolid} %}                                        
                                     {% elseif (accion == 'sintuision') %}
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
