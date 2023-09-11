@@ -1628,6 +1628,7 @@ class PrevImmediateModiVer2Controller extends Controller{
 
             $em->getConnection()->commit();
 
+            // se redireccion a ventana principal
             return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
 
         } catch (Exception $e) {
