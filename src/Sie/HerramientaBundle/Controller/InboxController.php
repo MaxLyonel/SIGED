@@ -198,7 +198,7 @@ class InboxController extends Controller {
 
         //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
         $this->unidadEducativa = $this->session->get('ie_id');
-
+        //dump( $this->unidadEducativa);die;
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -281,6 +281,10 @@ class InboxController extends Controller {
           'id'=>$this->unidadEducativa,
           'institucioneducativaTipo'=>1
         ));
+
+        
+         
+         //dump($objEspecial);die;
         // dump($this->unidadEducativa);die;
 
         // if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
@@ -322,6 +326,12 @@ class InboxController extends Controller {
 
         //$objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId' => $data['sie']));
 
+        $objEspecial = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+          'id'=>$this->unidadEducativa,
+          'institucioneducativaTipo'=>4
+        ));
+      //dump($objEspecial);die;
+
         $repository = $em->getRepository('SieAppWebBundle:Tramite');
 
         $query = $repository->createQueryBuilder('t')
@@ -341,7 +351,7 @@ class InboxController extends Controller {
         $entities = $query->getResult();
 
         $this->session->set('ue_sol_regularizar',false);
-        
+        //dump($this->session->get('pathSystem'));die;
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
             'objValidateUePlena'=>($objValidateUePlena)?1:0,
             'arrSieInfo'=>$arrSieInfo[0],
@@ -353,6 +363,7 @@ class InboxController extends Controller {
             'entities' => $entities,
 
             'esGuanawek' => $esGuanawek,
+            'objEspecial' => $objEspecial,
             'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($ie_id,$this->session->get('currentyear'),14),
         ));
     }
