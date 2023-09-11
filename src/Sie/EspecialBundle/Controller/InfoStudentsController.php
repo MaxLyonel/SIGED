@@ -256,11 +256,15 @@ class InfoStudentsController extends Controller {
       }
 
       //para bono
+      //dump($objArea->getId());die;
+      //dump($modalidad);die;
+      //dump($nivel);die;
       $arrDataLibreta['bono'] = false;
-      $areasBono=array(3,1,2,4,5);  
-      if( $gestion>2021 and in_array($objArea->getId(), $areasBono) and $modalidad==1){
-        $arrDataLibreta['bono'] = false; //true para activar
+      $areasBono=array(1,2,3,4,10,12);  
+      if( $gestion>2021 and in_array($objArea->getId(), $areasBono) and $modalidad==1 and $nivel!=410){
+        $arrDataLibreta['bono'] = true; //true para activar
       }
+      
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
       $objRegistroConsolidacion = $em->createQueryBuilder()
@@ -287,7 +291,8 @@ class InfoStudentsController extends Controller {
           }
         }
       }
-     // dump($arrDataLibreta['calificaciones']);die;
+      //dump($arrDataLibreta['calificaciones']);die;
+      //dump($arrDataLibreta['bono']);die;
       
      
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
