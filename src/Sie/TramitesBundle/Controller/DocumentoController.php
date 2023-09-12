@@ -149,7 +149,7 @@ public function getDocumentoTokenImpreso($token) {
         left join persona as p on p.id = df.persona_id
         left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
         left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
-        where d.token_impreso = :token and dt.id in (1,3,4,5,6,7,8,9)
+        where d.token_impreso = :token and dt.id in (1,2,3,4,5,6,7,8,9)
         order by e.paterno, e.materno, e.nombre
     ");
     $queryEntidad->bindValue(':token', $token);
