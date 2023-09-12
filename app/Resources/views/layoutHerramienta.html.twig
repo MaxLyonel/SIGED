@@ -833,7 +833,10 @@
                     
                     
                     {# % if app.session.get('roluser') in [99] % #}
-                    {% if app.session.get('roluser') in [9,10,8,7] %}
+                    {# a peticion de BRUNO por email, solo habilitar seguimiento para tecs deparrtamentales #}
+
+                    {#% if app.session.get('roluser') in [9,10,8,7] %#}
+                    {% if app.session.get('roluser') in [8,7] %}
                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
