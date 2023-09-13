@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\ObservacionExtranjeroTipo:
+    type: entity
+    table: observacion_extranjero_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observacionExtranjero:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: observacion_extranjero
+    lifecycleCallbacks: {  }
