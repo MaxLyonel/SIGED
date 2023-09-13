@@ -27,6 +27,8 @@ use Sie\AppWebBundle\Entity\ApoderadoInscripcion;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EstadoCivilTipo;
+use Sie\AppWebBundle\Entity\ObservacionExtranjeroTipo;
+use Sie\AppWebBundle\Entity\RudeObservacionExtranjero;
 
 use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
 
@@ -135,7 +137,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $formTutor = $this->createFormApoderado($rude, $idInscripcion, $tutor[0]);
 
         $ayudaComplemento = ["Complementito","Contenido del complemento, no se refiere al lugar de expedición del documento."];
-
+        $swextranjero = $estudiante->getPaisTipo()->getId();
+        $obsexttipo = $em->getRepository('SieAppWebBundle:ObservacionExtranjeroTipo')->findAll();
+        $rudeObs = $em->getRepository('SieAppWebBundle:RudeObservacionExtranjero')->findBy(['rude' => $rude->getId(),]);
         return $this->render('SieHerramientaBundle:InfoEstudianteRudeNuevo:index.html.twig', [
             'sie'=>$sie,
             'estudiante'=>$estudiante,
@@ -153,8 +157,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
             'formLugar'=>$this->createFormLugar($rude)->createView(),
             'inscripcion'=>$inscripcion,
             'rude'=>$rude,
-
-
+            'swext'=>$swextranjero,
+            'rudeobs'=>$rudeObs,
+            'obsexttipo'=>$obsexttipo,
             'estadoCivilData'=>$estadoCivilData,
         ]);
     }
@@ -2600,4 +2605,30 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
         return $ids;
     }
+
+    /*
+     * GUARDAR OBSERVACIÓN PARA EXTRANJEROS
+     */
+
+     public function saveExtObsAction(Request $request){
+        $rudeId = $request->get('rudeId');
+        $obsExtTipo = $request->get('obsExpTipo');
+        $obsExtJust = $request->get('obsExpJust');
+        $em = $this->getDoctrine()->getManager();
+        $rudeObs = $em->getRepository('SieAppWebBundle:RudeObservacionExtranjero')->findBy(['rude' => $rudeId,]);
+        if (!$rudeObs){
+            $newRudeObsExt = new RudeObservacionExtranjero();
+            $newRudeObsExt->setRude($em->getRepository('SieAppWebBundle:Rude')->find($rudeId));
+            $newRudeObsExt->setObservacionExtranjeroTipo($em->getRepository('SieAppWebBundle:ObservacionExtranjeroTipo')->find($obsExtTipo));
+            $newRudeObsExt->setObservacionOtro($obsExtJust);
+            $newRudeObsExt->setFechaRegistro(new \DateTime('now'));
+            $em->persist($newRudeObsExt);
+            $em->flush();
+            $response = new JsonResponse();
+            return $response->setData(['msg'=>'ok']);
+        } else {
+            $response = new JsonResponse();
+            return $response->setData(['msg'=>'Ya Justificó']);
+        }
+     }
 }
