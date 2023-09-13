@@ -1,0 +1,57 @@
+Sie\AppWebBundle\Entity\RudeObservacionExtranjero:
+    type: entity
+    table: rude_observacion_extranjero
+    indexes:
+        IDX_CF66AB18443E4890:
+            columns:
+                - rude_id
+        IDX_CF66AB18A651230A:
+            columns:
+                - observacion_extranjero_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observacionOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: observacion_otro
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        observacionExtranjeroTipo:
+            targetEntity: ObservacionExtranjeroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                observacion_extranjero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

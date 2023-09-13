@@ -88,3 +88,9 @@ info_estudiante_rude_nuevo_save_formLugar:
     defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormLugar" }
     options:
          expose: true
+
+info_estudiante_rude_nuevo_save_extObs:
+    path:     /saveExtObs
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveExtObs" }
+    options:
+         expose: true
