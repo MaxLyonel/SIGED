@@ -836,7 +836,8 @@
                     {# a peticion de BRUNO por email, solo habilitar seguimiento para tecs deparrtamentales #}
 
                     {#% if app.session.get('roluser') in [9,10,8,7] %#}
-                    {% if app.session.get('roluser') in [8,7] %}
+                    {# a peticion de BRUNO por email, solo habilitar la opcion que esta en el menu recibidos #}
+                    {% if app.session.get('roluser') in [99] %}
                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
