@@ -33,9 +33,9 @@ class CreacionCursosSolicitudController extends Controller {
     public function indexAction(Request $request, $op) {
 
         // Verificacmos si existe la session de usuario
-        if (!$this->session->get('userId')) {
+        // if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
-        }
+        // }
 
        
        
