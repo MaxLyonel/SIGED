@@ -256,93 +256,155 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $asignaturaId = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
         
         
-        if($operativo == 1 and $asignaturaId ==1039) {
-            
-            try {
-                if($estudianteAsignatura) {
-                    
-                    //ELIMINAMOS ESPECIALIDAD
-                    $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
-            
-                    if($especialidadEstudiante) {
-                        $em->remove($especialidadEstudiante);
-                        $em->flush();
-                    }
-                    
-
-                    $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
-                    if($estudianteNota) {
-                        foreach ($estudianteNota as $key => $nota) {
-                            $notaAntLog = [];
-                            $notaAntLog['id'] = $nota->getId();
-                            $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
-                            $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
-                            $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
-                            $notaAntLog['usuario'] = $nota->getUsuarioId();
-
-                            $this->get('funciones')->setLogTransaccion(
-                                $nota->getId(),
-                                'estudiante_nota',
-                                'D',
-                                '',
-                                '',
-                                $notaAntLog,
-                                'Academico',
-                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
-                                
-                            $em->remove($nota);
+        if($operativo <= 2 and $asignaturaId ==1039) {
+            if ($operativo == 1){
+                try {
+                    if($estudianteAsignatura) {
+                        
+                        //ELIMINAMOS ESPECIALIDAD
+                        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+                
+                        if($especialidadEstudiante) {
+                            $em->remove($especialidadEstudiante);
                             $em->flush();
                         }
+                        
+
+                        $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
+                        if($estudianteNota) {
+                            foreach ($estudianteNota as $key => $nota) {
+                                $notaAntLog = [];
+                                $notaAntLog['id'] = $nota->getId();
+                                $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
+                                $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
+                                $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
+                                $notaAntLog['usuario'] = $nota->getUsuarioId();
+
+                                $this->get('funciones')->setLogTransaccion(
+                                    $nota->getId(),
+                                    'estudiante_nota',
+                                    'D',
+                                    '',
+                                    '',
+                                    $notaAntLog,
+                                    'Academico',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                                    
+                                $em->remove($nota);
+                                $em->flush();
+                            }
+                        }
+
+                        $eaAntLog = [];
+                        $eaAntLog['id'] = $estudianteAsignatura->getId();
+                        $eaAntLog['gestionTipo'] = $estudianteAsignatura->getGestionTipo()->getId();
+                        $eaAntLog['estudianteInscripcion'] = $estudianteAsignatura->getEstudianteInscripcion()->getId();
+                        $eaAntLog['institucioneducativaCursoOferta'] = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getId();
+
+                        $this->get('funciones')->setLogTransaccion(
+                            $estudianteAsignatura->getId(),
+                            'estudiante_asignatura',
+                            'D',
+                            '',
+                            '',
+                            $eaAntLog,
+                            'Academico',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                        
+                        $em->remove($estudianteAsignatura);
+                        $em->flush();
                     }
 
-                    $eaAntLog = [];
-                    $eaAntLog['id'] = $estudianteAsignatura->getId();
-                    $eaAntLog['gestionTipo'] = $estudianteAsignatura->getGestionTipo()->getId();
-                    $eaAntLog['estudianteInscripcion'] = $estudianteAsignatura->getEstudianteInscripcion()->getId();
-                    $eaAntLog['institucioneducativaCursoOferta'] = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getId();
+                    $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+
+                    $eiAntLog = [];
+                    $eiAntLog['id'] = $inscripcion->getId();
+                    $eiAntLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+                    $em->persist($inscripcion);
+                    $em->flush();
+                    
+                    $eiNuevoLog = [];
+                    $eiNuevoLog['id'] = $inscripcion->getId();
+                    $eiNuevoLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
 
                     $this->get('funciones')->setLogTransaccion(
-                        $estudianteAsignatura->getId(),
-                        'estudiante_asignatura',
-                        'D',
+                        $inscripcion->getId(),
+                        'estudiante_inscripcion',
+                        'U',
                         '',
-                        '',
-                        $eaAntLog,
+                        $eiNuevoLog,
+                        $eiAntLog,
                         'Academico',
                         json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
                     
-                    $em->remove($estudianteAsignatura);
+                    $em->getConnection()->commit();
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                }   
+            } 
+            if ($operativo == 2 and count($estudianteNota) == 0){
+                try {
+                    if($estudianteAsignatura) {
+                        
+                        //ELIMINAMOS ESPECIALIDAD
+                        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+                
+                        if($especialidadEstudiante) {
+                            $em->remove($especialidadEstudiante);
+                            $em->flush();
+                        }
+
+                        $eaAntLog = [];
+                        $eaAntLog['id'] = $estudianteAsignatura->getId();
+                        $eaAntLog['gestionTipo'] = $estudianteAsignatura->getGestionTipo()->getId();
+                        $eaAntLog['estudianteInscripcion'] = $estudianteAsignatura->getEstudianteInscripcion()->getId();
+                        $eaAntLog['institucioneducativaCursoOferta'] = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getId();
+
+                        $this->get('funciones')->setLogTransaccion(
+                            $estudianteAsignatura->getId(),
+                            'estudiante_asignatura',
+                            'D',
+                            '',
+                            '',
+                            $eaAntLog,
+                            'Academico',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                        
+                        $em->remove($estudianteAsignatura);
+                        $em->flush();
+                    }
+
+                    $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+
+                    $eiAntLog = [];
+                    $eiAntLog['id'] = $inscripcion->getId();
+                    $eiAntLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+                    $em->persist($inscripcion);
                     $em->flush();
-                }
+                    
+                    $eiNuevoLog = [];
+                    $eiNuevoLog['id'] = $inscripcion->getId();
+                    $eiNuevoLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
 
-                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
-
-                $eiAntLog = [];
-                $eiAntLog['id'] = $inscripcion->getId();
-                $eiAntLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
-
-                $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
-                $em->persist($inscripcion);
-                $em->flush();
-                
-                $eiNuevoLog = [];
-                $eiNuevoLog['id'] = $inscripcion->getId();
-                $eiNuevoLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
-
-                $this->get('funciones')->setLogTransaccion(
-                    $inscripcion->getId(),
-                    'estudiante_inscripcion',
-                    'U',
-                    '',
-                    $eiNuevoLog,
-                    $eiAntLog,
-                    'Academico',
-                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
-                
-                $em->getConnection()->commit();
-            } catch (Exception $ex) {
-                $em->getConnection()->rollback();
-            }   
+                    $this->get('funciones')->setLogTransaccion(
+                        $inscripcion->getId(),
+                        'estudiante_inscripcion',
+                        'U',
+                        '',
+                        $eiNuevoLog,
+                        $eiAntLog,
+                        'Academico',
+                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                    
+                    $em->getConnection()->commit();
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                }   
+            } 
         
         }
         else {
