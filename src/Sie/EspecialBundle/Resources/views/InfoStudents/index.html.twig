@@ -143,8 +143,9 @@
     </div>
     <!-- Start body content -->
     <!--/ End body content -->
-    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
 
+    <!--/ Se comento temporalmente porque ya acabo proceso de inscripcion 14-09-23 activar al año-->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
     </div><!-- /.modal -->
     <!--/ End body content -->
 {% endblock %}
@@ -394,8 +395,12 @@
         };
         var doRudeInscription = function () {
             //get data send
+            // alert(rude.length);
+
             rude = $('#form_rude').val();
             dataInscription = $('#form_dataInscription').val();
+
+            
             if (rude.length <= 0) {
                 alert('Necesita introducir codigo Rude');
                 return false;
