@@ -162,7 +162,7 @@
                 </div><!-- /.form-group -->
             </div><!-- /.sign-header -->
 
-            <form class="form-signin" action="{{path('login_check')}}" accept-charset="utf-8" method="post" style="border: 1px solid #1b3f61" >
+            <form class="form-signin" id="form_login" action="{{path('login_check')}}" accept-charset="utf-8" method="post" style="border: 1px solid #1b3f61" >
                 {% if 'SISTEMA ACADÉMICO EDUCACIÓN REGULARssssss'==app.session.get('sysname')|upper %}
                     <div class="alert alert-warning alert-dismissible" role="alert">
                         <p class="text-center"> <i class="fa fa-4x fa-refresh"></i></p>
@@ -208,7 +208,7 @@
                         </div>
                         <div class="form-group">
                             <br>
-                            <button class="btn btn-lg btn-block no-margin rounded btn-aceptar" type="submit"><i class="fa fa-unlock"></i>Aceptar</button>
+                            <button class="btn btn-lg btn-block no-margin rounded btn-aceptar" type="submit" onclick="functionToExecute()"><i class="fa fa-unlock"></i>Aceptar</button>
                             {#
                             {% if app.session.get('sistemaid') == 1 %}
                                 <div class="consulta text-center">
@@ -278,6 +278,26 @@
                     $('#form_captcha').attr('required', 'true');
                 }
             }
+
+    //         var formulario = document.getElementById("form_login");
+
+    // formulario.addEventListener("submit", function(event) {
+    //     event.preventDefault();
+
+    //     var username = document.getElementById("username").value;
+    //     var password = document.getElementById("password").value;
+        
+    //     localStorage.setItem('user', JSON.stringify({username: username, password: password }));
+
+    // });
+
+        function functionToExecute(){
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+        
+            localStorage.setItem('user', JSON.stringify({username: username, password: password }));
+            console.log('ok');
+        }
         </script>
 
     </body>

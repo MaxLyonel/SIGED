@@ -117,7 +117,7 @@
                                     <img src="{{asset('img/avatar.png')}}" alt="" class="img-user">
                                 </div>
                                 <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10"> #}
-                                    <div>Usuario: {{  user }}</div>
+                                    <div>Usuario: {{  user }} </div>
                                     <div>Nombre y Apellido: {{  persona }}</div>
                                     {# <div>C.I.: {{  carnet }}</div> #}
                                 {# </div> #}
@@ -241,6 +241,7 @@
         <!-- GLOBAL SCRIPTS -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{asset('js/plugins/bootstrap/bootstrap.min.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
         
         <script>
             //CAMBIA NOMBRE DE USUARIO AL CARNET
@@ -272,6 +273,27 @@
                         }                            
                         //$('#ModalUser').modal('show');
                     }
+                
+                $(document).ready(function(){
+                    var user = JSON.parse(localStorage.getItem('user'));
+                    console.log(user.password);
+
+                    const url = 'https://api.itt.sie.gob.bo/user/changePasswordCI';
+                    const piload = {
+                     ci: user.username,
+                     password: user.password,
+                    };
+
+                    axios.put(url, piload)
+                    .then(response => {
+                        localStorage.setItem('user','');
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud:', error);
+                    });
+
+                });
+                    
         </script>
     </body>
 
