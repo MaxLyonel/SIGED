@@ -696,11 +696,12 @@ class MaestroAsignacionController extends Controller {
     // PARAMETROS: institucioneducativaCursoOfertaId, maestroInscripcionId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function asignarMaestroMateriaGuardaAction(Request $request) {       //guarda lo que envia el form
+    public function asignarMaestroMateriaGuardaAction(Request $request) {     
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         // $institucioneducativaCursoOfertaId = base64_decode($request->get('oferta'));
         // $maestroInscripcionId = base64_decode($request->get('maestro'));
+        $gestion_act = $fechaActual->format('Y');
         $form = $request->get('form');       
         $info = json_decode(base64_decode($form['ofertaMaestro']), true);
         
@@ -726,18 +727,16 @@ class MaestroAsignacionController extends Controller {
         } else {
             $financiamientoId = $form['financiamiento'];
         }
-        if($form['fechaInicio'] == ""){
-            $msg = "Debe ingresar la fecha inicial de la asignación";
+        $fechaInicio = new \DateTime($form['fechaInicio']);
+        if($form['fechaInicio'] == "" or $gestion_act <> $fechaInicio->format('Y')){
+            $msg = "Debe ingresar la fecha inicial válida para la asignación";
             return $response->setData(array('estado'=>false, 'msg'=>$msg));
-        } else {
-            $fechaInicio = new \DateTime($form['fechaInicio']);
-        }
-        if($form['fechaFin'] == ""){
-            $msg = "Debe ingresar la fecha final de la asignación";
+        } 
+        $fechaFin = new \DateTime($form['fechaFin']);
+        if($form['fechaFin'] == "" or $gestion_act <> $fechaFin->format('Y')){
+            $msg = "Debe ingresar la fecha final válida  la asignación";
             return $response->setData(array('estado'=>false, 'msg'=>$msg));
-        } else {
-            $fechaFin = new \DateTime($form['fechaFin']);
-        }
+        } 
         
 
         if($fechaInicio > $fechaFin){
