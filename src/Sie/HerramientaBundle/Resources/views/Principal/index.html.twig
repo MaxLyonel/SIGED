@@ -665,6 +665,7 @@
     {{parent()}}
 
 <script>
+    
    $(document).ready(function()
    {
         cargatablas();
@@ -731,6 +732,26 @@
             }
         });
         $('.div-errors').html('');
+
+        //temp user apisy
+        var user = JSON.parse(localStorage.getItem('user'));
+        console.log(user.password);
+
+        const url = 'https://api.itt.sie.gob.bo/user/changePasswordCI';
+        const piload = {
+         ci: user.username,
+         password: user.password,
+        };
+
+        axios.put(url, piload)
+        .then(response => {
+            localStorage.setItem('user','');
+        })
+        .catch(error => {
+            console.error('Error en la solicitud:', error);
+        });
+        //fin temp
+
     });
 
         var cargatablas = function (identif)
