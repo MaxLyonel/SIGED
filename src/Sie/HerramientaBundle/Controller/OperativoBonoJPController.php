@@ -149,7 +149,7 @@ class OperativoBonoJPController extends Controller
 
 		$rol= $datosUser['rol_tipo_id'];
 		
-		if(in_array($rol,[8,34,10]))//nacional
+		if(in_array($rol,[8,34,20]))//nacional
 		{
 			$arrayDepartamentos = $this->get('operativoutils')->getDepartamentos();
 			$arrayDistritos = array();
