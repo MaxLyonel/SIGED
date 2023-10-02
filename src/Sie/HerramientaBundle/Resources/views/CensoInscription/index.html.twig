@@ -24,7 +24,24 @@
 			  text-decoration: none;        	
             background: #111406 !important;
             pointer-events: none;
-        }		     
+        }
+
+		.loading {    
+			background-color: #ffffff;
+			background-image: url("../../../../web/assets/images/load.gif");
+			background-size: 100px 57px;
+			background-position:right center;
+			background-repeat: no-repeat;
+		}
+		.p-b-30{
+			padding-bottom: 30px
+		}
+		.b-state{
+			font-size: 10px !important;
+			border-radius: 0.7em !important;
+			padding-top: 2px;
+			padding-bottom: 2px;
+		}		     
     </style>
 
 {% endblock %}
@@ -54,7 +71,7 @@
     <div class="modal fade" id="modalNewInscription" data-backdrop="static">
         <div class="modal-dialog" style="width:800px">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header p-b-30">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"> </h4>
                 </div>
@@ -95,21 +112,23 @@
 							<div>
 								<form>
 								  <div class="form-row">
-								    <div class="form-group col-md-4">
+								  {# <i class="fa" :class="[{ 'fa-checkbox-marked': content['cravings'] }, 'fa-checkbox-blank-outline']"></i>
+								  :class="['form-group', {has-error: testInput == false}]" #}
+								    <div class="form-group col-md-4" :class="invalidPaterno ? 'has-error' : ''">
 								      <label for="pat">Paterno</label>
 								      <input type="text" class="form-control jupper" id="pat" placeholder="Paterno" v-model="infoUE.apoderado.paterno">
 								    </div>
-								    <div class="form-group col-md-4">
+								    <div class="form-group col-md-4" :class="invalidMaterno ? 'has-error' : ''">
 								      <label for="inputPassword4">Materno</label>
 								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Materno" v-model="infoUE.apoderado.materno">
 								    </div>
-								    <div class="form-group col-md-4">
+								    <div class="form-group col-md-4" :class="invalidNombre ? 'has-error' : ''">
 								      <label for="inputPassword4">Nombre(s)</label>
 								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Nombre" v-model="infoUE.apoderado.nombre">
 								    </div>
 								  </div>
 								  <div class="form-row">
-								    <div class="form-group col-md-4">
+								    <div class="form-group col-md-4" :class="invalidCarnet ? 'has-error' : ''">
 								      <label for="inputEmail4">Carnet Identidad</label>
 								      <input type="text" class="form-control " id="inputEmail4" placeholder="Carnet Identidad" v-model="infoUE.apoderado.carnet">
 								    </div>
@@ -117,7 +136,7 @@
 								      <label for="inputPassword4">Complemento</label>
 								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Complemento" v-model="infoUE.apoderado.complemento">
 								    </div>
-								    <div class="form-group col-md-4">
+								    <div class="form-group col-md-4" :class="invalidFechaNacimiento ? 'has-error' : ''">
 								      <label for="inputPassword4">Fecha Nacimiento</label>
 								      <input type="text" class="form-control" id="fecNacimiento" name="fecNacimiento" placeholder="dd-mm-yyyy" v-model="infoUE.apoderado.fecNacimiento">
 								      {# <div class="form-row">
@@ -236,7 +255,7 @@
 									<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
 
 										<form class="form-row">
-											<div class="form-group">
+											<div class="form-group form-group">
 												<label for="rude">Código SIE: </label>
 												<input type="text" v-model="infoUE.sie"  class="form-control" id="exampleInputPassword1" placeholder="SIE" :readonly="disableElement>0">
 											</div>
@@ -247,9 +266,11 @@
 							</div>							
 						</div>
 						<div class="col-md-7">
-							<div v-if="buscando" class="text-center">
-								<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
-							</div>						
+							
+							{# <div v-if="buscando" class="text-center">
+								<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...11111111
+							</div>						 #}
+							
 							<div class="table-responsive" v-if="infoUE.existUE">
 							{# v-on:click="closeEventChees(infoUE)" #}
 								<button  type="button" class="btn btn-danger btn-xs" title="cierre"> Cierre Registro Censo </button>
@@ -285,9 +306,9 @@
 						
 
 							{# tabla con los datos encontrados #}
-							<div v-if="buscando" class="text-center">
-								<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
-							</div>
+							{# <div v-if="buscando" class="text-center">
+								<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...2222222
+							</div> #}
 
 							<div style="padding: 15px;" v-if='infoUE.existUE'>
 								<h4 style="text-align: center;background-color:#4694e8 ;color: white;" >Seleccionar Información para el Registro Censo</h4>
@@ -304,20 +325,21 @@
 								    </div>
 								    <div class="form-group col-md-2">
 								      <label for="lvel">Grado</label>
-										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.gradoId" class="custom-select js-example-basic-multiple form-control" v-on:change="getParallel(infoUE.levelId,infoUE.gradoId, this.value)">
+										<select name="modalidades" id="idmodalidades_p" v-model="infoUE.gradoId" class="custom-select js-example-basic-multiple form-control" :class="loadingGrado ? 'loading': ''" v-on:change="getParallel(infoUE.levelId,infoUE.gradoId, this.value)" :disabled="!grado">
 											<option v-for="item in DBGrados" :id="item.id" :value="item.id" >${ item.grado }</option>       
 										</select>
+										{# <input type="text" v-model="infoUE.sie"  class="form-control" id="exampleInputPassword1" placeholder="SIE" :readonly="disableElement>0"> #}
 								    </div>
 
 								    <div class="form-group col-md-2">
 								      <label for="fase">Paralelo</label>
-										<select name="arrFase" id="idarrPais_p" v-model="infoUE.parallelId" class="custom-select js-example-basic-multiple form-control" v-on:change="getTurno(infoUE.levelId,infoUE.gradoId, infoUE.parallelId)">
+										<select name="arrFase" id="idarrPais_p" v-model="infoUE.parallelId" class="custom-select js-example-basic-multiple form-control" :class="loadingParalelo ? 'loading': ''" v-on:change="getTurno(infoUE.levelId,infoUE.gradoId, infoUE.parallelId)" :disabled="!paralelo">
 											<option v-for="item in DBParallels"  :value="item.id">${ item.paralelo }</option>       
 										</select>							      
 								    </div>
 								    <div class="form-group col-md-3">
 								      <label for="Categoría">Turno</label>
-										<select name="arrCategoria" id="idarrPais_p" v-model="infoUE.turnoId" class="custom-select js-example-basic-multiple form-control">
+										<select name="arrCategoria" id="idarrPais_p" v-model="infoUE.turnoId" :class="loadingTurno ? 'loading': ''" class="custom-select js-example-basic-multiple form-control" :disabled="!turno" v-on:change="enableSearchBtn()">
 											<option v-for="item in DBTurnos"  :value="item.id">${ item.turno }</option>       
 										</select>
 								    </div>
@@ -327,7 +349,7 @@
 								  <div class="form-row">
 
 								  </div>								  
-								  <button v-on:click="dataSelected(infoUE)" type="button" class="btn btn-primary mb-2">Buscar</button>
+								  <button v-on:click="dataSelected(infoUE)" type="button" class="btn btn-primary mb-2" :disabled="btnDisabled">Buscar</button>
 								</form>
 
   
@@ -369,35 +391,36 @@
 								<small>
 								<div class="table-responsive">
 	                            	<table class="table table-dark">
-										<tbody>
 										<tr>
-											
 											<th>#</th>
 											<th>Cod. RUDE</th>
 											<th>CI-COMPL.</th>
-											<th>Paterno</th>
-											<th>Materno</th>
-											<th>Nombre(s)</th>
-											{# <th>Genero</th> #}
-											<th>option</th>	
+											<th>Nombre Completo</th>
+											<th>Estado</th>
+											<th></th>
 										</tr>
-										
 										<tr v-for="(student,rindex) in DBstudent">
 											<td>${rindex+1}</td>
 											<td><strong> ${student.codigo_rude | uppercase}</strong></td>
 											<td>${student.carnet_identidad} ${student.complemento}</td>
-											<td colspan="3">${student.paterno | uppercase} ${student.materno | uppercase} ${student.nombre | uppercase}</td>
+											<td>${student.paterno | uppercase} ${student.materno | uppercase} ${student.nombre | uppercase}</td>
 											{# <td>${student.genero | uppercase}</td> #}
 											{# v-if="!infoUE.swcloseevent" #}
-											<td v-bind:id="student.inscriptionid"><a href="#" v-on:click="doInscription(infoUE, student.inscriptionid, student)"  :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent"> Registrar </a> </td>										
+
+											{# <td v-bind:id="student.inscriptionid"><a href="#" v-on:click="doInscription(infoUE, student.inscriptionid, student)"  :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent"> Registrar </a> </td>										 #}
+											<td>
+												<span class="label label-warning b-state" v-if="student.estado == 1">Sin dato</span>
+												<span class="label label-info b-state" v-if="student.estado == 0">Registrado</span>
+											</td>
+											<td><a href="#" v-on:click="doInscription(infoUE, student.inscriptionid, student)" v-if="student.estado == 1"> Registrar </a> </td>										
 										</tr>
 
-										<tr >
+										{# <tr >
 											<th colspan="6" align="left">
-											{# <button v-on:click="doInscription()" type="button" class="btn btn-success" title="C"> Inscribir </button>								    		 #}
+											it was commit<button v-on:click="doInscription()" type="button" class="btn btn-success" title="C"> Inscribir </button>								    		
 											</th>
-										</tr>
-										</tbody>
+										</tr> #}
+										
 									</table>
 								</div>
 								</small>
@@ -487,7 +510,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-the-mask/0.11.1/vue-the-mask.min.js" integrity="sha512-qXurwUG9teY1KFtbBifUHInCiNK/POQqJeFRSoaHg1pHEB1tBUlFKRsfPzm1D6b6ueeQOCKldvXYCtOsPURrcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
@@ -530,9 +553,9 @@
 
 			DBModalidades: {},
 			DBLevel:  {},
-			DBGrados: {},
+			DBGrados: [],
 			DBParallels: {},
-			DBTurnos: {},
+			DBTurnos: [],
 			DBinfoSelectStudent: {},
 
 			DBCategories: {},
@@ -546,7 +569,19 @@
 			existStudent:false,
 			existParall:false,
 			swParent:false,
+			invalidPaterno: false,
+			invalidMaterno: false,
+			invalidNombre: false,
+			invalidCarnet: false,
+			invalidFechaNacimiento: false,
 			linkDisabled:false,
+			loadingGrado: false,
+			loadingParalelo: false,
+			loadingTurno: false,
+			grado: false,
+			paralelo: false,
+			turno: false,
+			btnDisabled: true,
 			/////////////////////////////
 			categorias: [
 				{'id': 'A', 'description': 'Cat.A'},
@@ -583,10 +618,16 @@
 		methods: {
 			abortMission: function(){
 				this.infoUE.apoderado = {};
+				this.invalidPaterno = false;
+				this.invalidMaterno = false;
+				this.invalidNombre = false;
+				this.invalidCarnet = false;
+				this.invalidFechaNacimiento = false;
 				$('#modalNewInscription').modal('hide');
 				this.swParent = false;
 			},
 			findUEData:function(){
+
 				this.existSelectData=false;
 				this.DBModalidades={};
 				this.DBFases={};
@@ -601,12 +642,25 @@
 						);
 					this.buscando = false;
 					return;
-				}				
+				}
+
+				Swal.fire({
+					title: 'Obteniendo información...',
+					html: 'Espere un momento porfavor',
+					timerProgressBar: true,
+					allowOutsideClick: false,
+					allowEscapeKey: false,
+					allowEnterKey: false,
+					didOpen: () => {
+						Swal.showLoading()
+					},
+				});				
 
 				axios.post(Routing.generate('censoinscription_findUEData', this.infoUE ))
-				.then(response => {
-					if (response.status == 200) {
-							// console.log(response.data);
+					.then(response => {
+						Swal.close();
+						if (response.status == 200) {
+								// console.log(response.data);
 
 							if(response.data.existUE == true){
 
@@ -618,7 +672,7 @@
 								this.swcloseevent = response.data.swcloseevent;
 								this.infoUE.swcloseevent = this.swcloseevent;
 								this.infoUE.urlreporte = response.data.urlreporte;
-								console.log(this.DBModalidades);
+
 							}else{
 								Swal.fire(
 								'Atencion !',
@@ -626,110 +680,151 @@
 								'warning'
 								);
 							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});				
+								
+						}
+						this.buscando = false;
+					})
+					.catch(e => {
+						this.buscando = false;
+					});				
 
 			},
 			getGrado: function(levelid2, levelId){
-
+				
 				this.existSelectData=false;
-				this.DBGrados={};
-				this.DBParallels={};
-				this.DBTurnos={};
-				axios.post(Routing.generate('censoinscription_getGrado', this.infoUE ))
-				.then(response => {
-					if (response.status == 200) {
-							// console.log(response.data);
+
+				this.infoUE.gradoId = [];
+				this.infoUE.turnoId = [];
+				this.infoUE.parallelId = [];
+
+				this.grado = false;
+				this.paralelo= false;
+				this.turno= false;
+				this.btnDisabled = true;
+
+				if( typeof levelid2 == 'number' ){
+					this.loadingGrado = true;
+					
+					axios.post(Routing.generate('censoinscription_getGrado', this.infoUE ))
+					.then(response => {
+						this.loadingGrado = false;
+						this.grado = true;
+						if (response.status == 200) {
 
 							if(response.data.existUE == true){
-								this.DBGrados = response.data.arrGrado;								
+								this.DBGrados = response.data.arrGrado;
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'no answer...',
+								'Ocurrio un error, vuelva a intentarlo porfavor',
 								'warning'
 								);
 							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});					
-
+								
+						}
+						this.buscando = false;
+					})
+					.catch(e => {
+						this.grado = false;
+						this.paralelo= false;
+						this.turno= false;
+						this.buscando = false;
+					});					
+				}
 
 			},
 			getParallel: function(levelid, gradoId, parallelId){
 
+				this.loadingParalelo = true;
+				this.turno = false;
+				this.paralelo = false;
+				this.btnDisabled = true;
+
 				this.existSelectData=false;
-
-				this.DBParallels={};
-				this.DBTurnos={};
+								
+				this.infoUE.turnoId = [];
+				this.infoUE.parallelId = [];
 				axios.post(Routing.generate('censoinscription_getParallel', this.infoUE ))
-				.then(response => {
-					if (response.status == 200) {
-							// console.log(response.data);
+					.then(response => {
+						this.paralelo = true;
+						this.loadingParalelo = false;
+						if (response.status == 200) {
 
-							if(response.data.existUE == true){
-								this.DBParallels = response.data.arrParalelo;								
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'no answer...',
-								'warning'
-								);
-							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});					
+								if(response.data.existUE == true){
+									this.DBParallels = response.data.arrParalelo;								
+								}else{
+									Swal.fire(
+									'Atencion !',
+									'Ocurrio un error, vuelva a intentarlo porfavor',
+									'warning'
+									);
+								}
+								
+						}
+						this.buscando = false;
+					})
+					.catch(e => {
+						this.turno = false;
+						this.paralelo = false;
+						this.btnDisabled = true;
+						
+						this.buscando = false;
+					});					
 
 
 			},
 			getTurno: function(levelid, gradoId, parallelId){
 
+				this.loadingTurno = true;
+				this.turno = false;
 				this.existSelectData=false;
-				this.DBTurnos={};
-				axios.post(Routing.generate('censoinscription_getTurno', this.infoUE ))
-				.then(response => {
-					if (response.status == 200) {
-							// console.log(response.data);
 
-							if(response.data.existUE == true){
-								this.DBTurnos = response.data.arrTurno;								
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'no answer...',
-								'warning'
-								);
-							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});					
+				this.infoUE.turnoId = [];
+				axios.post(Routing.generate('censoinscription_getTurno', this.infoUE ))
+					.then(response => {
+						this.loadingTurno = false;
+						this.turno = true;
+
+						Swal.close();
+						if (response.status == 200) {
+
+								if(response.data.existUE == true){
+									this.DBTurnos = response.data.arrTurno;	
+								}else{
+									Swal.fire(
+									'Atencion !',
+									'Ocurrio un error, vuelva a intentarlo porfavor',
+									'warning'
+									);
+								}
+								
+						}
+						this.buscando = false;
+					})
+					.catch(e => {
+						this.turno = false;
+						this.buscando = false;
+					});					
 
 
 			},
-
-			
+			enableSearchBtn: function(){
+				this.btnDisabled = false;
+			},
 			dataSelected: function(selectedData){
+
+				Swal.fire({
+					title: 'Obteniendo información...',
+					html: 'Espere un momento porfavor',
+					timerProgressBar: true,
+					allowOutsideClick: false,
+					allowEscapeKey: false,
+					allowEnterKey: false,
+					didOpen: () => {
+						Swal.showLoading()
+					},
+				});
+
 				// this.infoUE.apoderado = {};
 				this.existSelectData=false;
 				// this.existParall = false;
@@ -738,46 +833,46 @@
 				// this.DBstudent={};				
 				// this.DBEveStudents={};				
 				axios.post(Routing.generate('censoinscription_dataSelected', this.infoUE ))
-				.then(response => {
-					if (response.status == 200) {
-						this.DBselectedData = response.data.selectedData;
-							// console.log(response.data);
+					.then(response => {
+						Swal.close();
+						if (response.status == 200) {
+							this.DBselectedData = response.data.selectedData;
+								// console.log(response.data);
 
-							if(response.data.existSelectData == true){
+								if(response.data.existSelectData == true){
+									
+									// this.DBselectedData = response.data.selectedData;
+									this.infoUE.levelLabel = response.data.levelLabel;
+									this.infoUE.gradoLabel = response.data.gradoLabel;
+									this.infoUE.parallelLabel = response.data.parallelLabel;
+									this.infoUE.turnoLabel = response.data.turnoLabel;
+
+									
+									this.DBstudent = response.data.arrStudents;
+									this.DBEveStudents = response.data.arrEveStudentsCenso;
+									this.existSelectData = response.data.existSelectData;
+
+									this.swcloseevent = response.data.swcloseevent;
+									this.infoUE.swcloseevent = this.swcloseevent;
+									this.existStudent = response.data.existStudent;
+
+									// this.infoUE2.krlos = 'krlos';
+									// this.DBCategories = response.data.arrCategories;
+									
+								}else{
+									Swal.fire(
+									'Atencion !',
+									'Ocurrio un error, vuelva a intentarlo porfavor',
+									'warning'
+									);
+								}
 								
-								// this.DBselectedData = response.data.selectedData;
-								this.infoUE.levelLabel = response.data.levelLabel;
-								this.infoUE.gradoLabel = response.data.gradoLabel;
-								this.infoUE.parallelLabel = response.data.parallelLabel;
-								this.infoUE.turnoLabel = response.data.turnoLabel;
-
-								
-								this.DBstudent = response.data.arrStudents;
-								this.DBEveStudents = response.data.arrEveStudentsCenso;
-								this.existSelectData = response.data.existSelectData;
-
-								this.swcloseevent = response.data.swcloseevent;
-								this.infoUE.swcloseevent = this.swcloseevent;
-								this.existStudent = response.data.existStudent;
-
-								// this.infoUE2.krlos = 'krlos';
-								// this.DBCategories = response.data.arrCategories;
-								
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'no answer...',
-								'warning'
-								);
-							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					console.log(e);
-					this.buscando = false;
-				});					
+						}
+						this.buscando = false;
+					})
+					.catch(e => {
+						this.buscando = false;
+					});					
 			},
             getImage: function(event){
                 var informe = event.target.files[0];
@@ -818,7 +913,6 @@
 				.then(response => {
 					if (response.status == 200) {
 						this.DBselectedData = response.data.selectedData;
-							// console.log(response.data);
 
 							if(response.data.existStudent == true){
 								
@@ -837,7 +931,7 @@
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'no answer...',
+								'Ocurrio un error, vuelva a intentarlo porfavor',
 								'warning'
 								);
 							}
@@ -846,7 +940,6 @@
 					this.buscando = false;
 				})
 				.catch(e => {
-					console.log(e);
 					this.buscando = false;
 				});	
 			},
@@ -859,7 +952,6 @@
 				.then(response => {
 					if (response.status == 200) {
 						this.DBselectedData = response.data.selectedData;
-							// console.log(response.data);
 
 							if(response.data.existParall == true){
 								
@@ -878,7 +970,7 @@
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'no answer...',
+								'Ocurrio un error, vuelva a intentarlo porfavor',
 								'warning'
 								);
 							}
@@ -887,7 +979,6 @@
 					this.buscando = false;
 				})
 				.catch(e => {
-					console.log(e);
 					this.buscando = false;
 				});					
 
@@ -918,7 +1009,7 @@
 							}else{
 								Swal.fire(
 								'Atencion !',
-								'no answer...',
+								'Ocurrio un error, vuelva a intentarlo porfavor',
 								'warning'
 								);
 							}
@@ -927,50 +1018,81 @@
 					this.buscando = false;
 				})
 				.catch(e => {
-					console.log(e);
 					this.buscando = false;
 				});					
 
 			},
 			validateTutor: function(dataStudent){
-				
 
+				Swal.fire({
+					title: 'Verificando...',
+					html: 'Espere un momento porfavor',
+					timerProgressBar: true,
+					allowOutsideClick: false,
+					allowEscapeKey: false,
+					allowEnterKey: false,
+					didOpen: () => {
+						Swal.showLoading()
+					},
+				});
+
+				this.invalidPaterno = false;
+				this.invalidMaterno = false;
+				this.invalidNombre = false;
+				this.invalidCarnet = false;
+				this.invalidFechaNacimiento = false;
+				
 				this.buscandoParent = true;
 				this.infoUE.dataStudent = dataStudent;
+
 				axios.post(Routing.generate('censoinscription_validateTutor', this.infoUE ))
 							.then(response => {
+								
 								if (response.status == 200) {
+									Swal.close();
 									// this.DBselectedData = response.data.selectedData;
-										// console.log(response.data);
+									if(response.data.swparent == true){
+										this.swParent = response.data.swparent;
+										this.DBApoderado = response.data.apoderadoOutput;
+										this.infoUE.apoderadoinscripid = response.data.apoderadoOutput.apoderadoinscripid;
+										// this.buscandoParent = false;
+										/*this.infoUE.modalidadId = response.data.modalidadId;
+										this.infoUE.faseId = response.data.faseId;
+										this.infoUE.categorieId = response.data.categorieId;
+										this.infoUE.sie = response.data.sie;											
+										this.DBEveStudents = response.data.arrEveStudents;*/											
+									}else{
 
-										if(response.data.swparent == true){
-											this.swParent = response.data.swparent;
-											this.DBApoderado = response.data.apoderadoOutput;
-											this.infoUE.apoderadoinscripid = response.data.apoderadoOutput.apoderadoinscripid;
-											// this.buscandoParent = false;
-											/*this.infoUE.modalidadId = response.data.modalidadId;
-											this.infoUE.faseId = response.data.faseId;
-											this.infoUE.categorieId = response.data.categorieId;
-											this.infoUE.sie = response.data.sie;											
-											this.DBEveStudents = response.data.arrEveStudents;*/											
-										}else{
-											this.swParent = false;
-											Swal.fire(
-											'Atencion !',
-											'Datos no encontrandos, validiacion realizada con la informacion operativo RUDE gestion 2022',
-											'warning'
-											);
-
-											setTimeout(() => { $('#modalNewInscription').modal('hide'); }, 3000);
-
-
+										this.DBApoderado = response.data.apoderadoOutput;
+										
+										if( this.infoUE.apoderado.paterno.toUpperCase() !== this.DBApoderado.paterno ){
+											this.invalidPaterno = true;
 										}
+										if( this.infoUE.apoderado.materno.toUpperCase() !== this.DBApoderado.materno ){
+											this.invalidMaterno = true;
+										}
+										if( this.infoUE.apoderado.nombre.toUpperCase() !== this.DBApoderado.nombre ){
+											this.invalidNombre = true;
+										}
+										if( this.infoUE.apoderado.carnet.toUpperCase() !== this.DBApoderado.carnet ){
+											this.invalidCarnet = true;
+										}
+										if( this.infoUE.apoderado.fecNacimiento.toUpperCase() !== this.DBApoderado.fecNacimiento ){
+											this.invalidFechaNacimiento = true;
+										}
+																				
+										//'Datos no encontrandos, validiacion realizada con la informacion operativo RUDE gestion 2022',
+										this.swParent = false;
+										Swal.fire('Atencion', 'Datos no encontrados, revise correctamente la información', 'info');
+
+										//setTimeout(() => { $('#modalNewInscription').modal('hide'); }, 3000);
+
+									}
 										
 								}
 								this.buscandoParent = false;
 							})
 							.catch(e => {
-								console.log(e);
 								this.buscando = false;
 							});					
 
@@ -980,36 +1102,75 @@
                 if (typeof this.informe != 'object') {
                     Swal.fire(
                       'Adjuntar Autorización',
-                      'Debe adjuntar la Autorización, puede ser un archivo de imagen o PDF, y debe tener un tamaño menor a 2MB',
+                      'Debe adjuntar la Autorización, debe ser un archivo de imagen o PDF, y el tamaño debe ser menor a 2MB',
                       'warning'
                     );
                     return;
-                }				
+                }
 
-				var data = new FormData();
-				data.append('infoUE', JSON.stringify(this.infoUE));
-				data.append('informe', this.informe);
-				$('#'+infoUE.dataStudent.inscriptionid).addClass('seleccionado');
-	            axios.post(Routing.generate('censoinscription_saveStudent'), data)
-	            .then(response => {
-	                $('#modalNewInscription').modal('hide');
-					this.DBEveStudents = response.data.arrEveStudentsCenso;
+				Swal.fire({
+					title: '¿Esta seguro?',
+					//text: 'No podra realizar ningun cambio, se enviara a la empresa',
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Si',
+					cancelButtonText: 'No'
+					}).then((result) => {
+					if( result.isConfirmed ){
 
-	                // this.respuestaIdTramite = response.data.idTramite;
-	                // this.urlreporte = response.data.urlreporte;
+						Swal.fire({
+							title: 'Registrando...',
+							html: 'Espere un momento porfavor',
+							timerProgressBar: true,
+							allowOutsideClick: false,
+							allowEscapeKey: false,
+							allowEnterKey: false,
+							didOpen: () => {
+								Swal.showLoading()
+							},
+						});				
 
-	                // document.location.href = "#tramiteEnviado";
-	                
-	            })
-	            .catch(e => {
-	                this.formularioEnviado = false;
-	                Swal.fire(
-	                  'No se pudo enviar la solicitud!',
-	                  '',
-	                  'error'
-	                );
-	            });				
-				this.infoUE.apoderado = {};
+						var data = new FormData();
+						data.append('infoUE', JSON.stringify(this.infoUE));
+						data.append('informe', this.informe);
+						$('#'+infoUE.dataStudent.inscriptionid).addClass('seleccionado');
+						axios.post(Routing.generate('censoinscription_saveStudent'), data)
+							.then(response => {
+
+								Swal.fire({
+									icon: 'success',
+									title: 'Correcto',
+									text: 'Su registro fue realizado exitosamente',
+									timer: 2000,
+									showConfirmButton: false
+								});
+
+								$('#modalNewInscription').modal('hide');
+								this.DBEveStudents = response.data.arrEveStudentsCenso;
+								this.dataSelected(this.infoUE);
+
+								this.infoUE.apoderado = {};
+
+								// this.respuestaIdTramite = response.data.idTramite;
+								// this.urlreporte = response.data.urlreporte;
+
+								// document.location.href = "#tramiteEnviado";
+								
+							})
+							.catch(e => {
+								this.formularioEnviado = false;
+								Swal.fire(
+								'No se pudo enviar la solicitud!',
+								'',
+								'error'
+								);
+							});				
+
+					}
+				})
+
 			},
 			doInscription:function(infoUE, inscriptionid, infoSelectStudent){
 				this.DBinfoSelectStudent = infoSelectStudent;
@@ -1059,7 +1220,7 @@
 										}else{
 											Swal.fire(
 											'Atencion !',
-											'no answer...',
+											'Ocurrio un error, vuelva a intentarlo porfavor',
 											'warning'
 											);
 										}
@@ -1068,7 +1229,6 @@
 								this.buscando = false;
 							})
 							.catch(e => {
-								console.log(e);
 								this.buscando = false;
 							});		                    	
 
@@ -1108,7 +1268,7 @@
 										}else{
 											Swal.fire(
 											'Atencion !',
-											'no answer...',
+											'Ocurrio un error, vuelva a intentarlo porfavor',
 											'warning'
 											);
 										}
@@ -1117,7 +1277,6 @@
 								this.buscando = false;
 							})
 							.catch(e => {
-								console.log(e);
 								this.buscando = false;
 							});		                    	
 
