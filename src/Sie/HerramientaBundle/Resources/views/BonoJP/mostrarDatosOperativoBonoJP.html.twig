@@ -20,8 +20,8 @@
 				      <th scope="row">{{loop.index}}</th>
 				      <td class="text-center td-estado-operativo">
 				      	{% if d.estado_menu %}
-				      		{#<span style="background-color:rgba(0,255,0,0.2);padding:2px;">Cerrado</span>#}
-				      		<button type="button" onclick="abrirOperativo({{d.id}}); return false;" class="btn btn-success">Abrir Operativo</button>
+				      		<span style="background-color:rgba(0,255,0,0.2);padding:2px;">Cerrado</span>
+				      		{#<button type="button" onclick="abrirOperativo({{d.id}}); return false;" class="btn btn-success">Abrir Operativo</button>#}
 				      	{% else %}
 				      		<span style="background-color:rgba(255,0,0,0.2);padding:2px;">No cerrado</span>
 				      	{% endif %}
