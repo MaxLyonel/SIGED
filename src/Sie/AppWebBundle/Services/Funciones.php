@@ -113,7 +113,7 @@ class Funciones {
                 if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
                     $operativo = 5; // Fin de gestion o cerrado
                 }
-            }
+            }            
 
         }else{
             $operativo = 4;
@@ -137,7 +137,7 @@ class Funciones {
                 if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1){
                     $operativo = 1; // Fin de gestion o cerrado
                 }
-            }
+            }  
         }
 
 
@@ -190,7 +190,7 @@ class Funciones {
 
         return $operativo;
 
-    }
+    }    
 
 
 
@@ -311,7 +311,7 @@ class Funciones {
     public function reporteConsol($gestionid, $roluser, $roluserlugarid, $instipoid){
 
         $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
-
+        
         switch ($roluser) {
             case '7':
                 $where = "lt4.codigo = '".$lugar->getCodigo()."'";
@@ -328,7 +328,7 @@ class Funciones {
             case '20':
                 $where = '1 = 1';
                 break;
-
+                
             default:
                 $where = '1 = 0';
                 break;
@@ -364,7 +364,7 @@ class Funciones {
             codigo_distrito,
             codigo_sie;
         ");
-
+        
         $query->execute();
         $registro_consolidacion = $query->fetchAll();
         return $registro_consolidacion;
@@ -375,9 +375,9 @@ class Funciones {
      * los que NO han cerrado operativo en la gestion actual
      */
     public function reporteNoConsol($gestionid, $roluser, $roluserlugarid, $instipoid){
-
+        
         $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
-
+        
         switch ($roluser) {
             case '7':
                 $where = "lt4.codigo = '".$lugar->getCodigo()."'";
@@ -428,7 +428,7 @@ class Funciones {
 
         $query = $this->em->getConnection()->prepare("
         SELECT
-            *
+            * 
         FROM
             (
             SELECT
@@ -443,7 +443,7 @@ class Funciones {
                 'NO' AS bim2,
                 'NO' AS bim3,
                 'NO' AS bim4 --rc.gestion
-
+                
             FROM
                 institucioneducativa inst
                 INNER JOIN jurisdiccion_geografica jg ON jg.ID = inst.le_juridicciongeografica_id
@@ -452,13 +452,13 @@ class Funciones {
                 LEFT JOIN lugar_tipo lt2 ON lt2.ID = lt1.lugar_tipo_id
                 LEFT JOIN lugar_tipo lt3 ON lt3.ID = lt2.lugar_tipo_id
                 LEFT JOIN lugar_tipo lt4 ON lt4.ID = lt3.lugar_tipo_id
-                INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.ID
-            WHERE ".$where."  AND inst.estadoinstitucion_tipo_id =  10 and inst.institucioneducativa_acreditacion_tipo_id = 1 and inst.institucioneducativa_tipo_id = 1
+                INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.ID 
+            WHERE ".$where."  AND inst.estadoinstitucion_tipo_id =  10 and inst.institucioneducativa_acreditacion_tipo_id = 1 and inst.institucioneducativa_tipo_id = 1 
             ORDER BY
                 codigo_departamento,
                 codigo_distrito,
-                codigo_sie
-            ) AS datos
+                codigo_sie 
+            ) AS datos 
         WHERE
             datos.codigo_sie NOT IN ( SELECT unidad_educativa FROM registro_consolidacion WHERE gestion = ".$gestionid." AND institucioneducativa_tipo_id = ".$instipoid." )
         ");
@@ -610,10 +610,10 @@ class Funciones {
     // look for the new row
     $objDownloadFilenewOpe = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
         'gestionTipoId' => $data['gestion'],
-        'institucioneducativa' => $data['id'],
+        'institucioneducativa' => $data['id'], 
         'institucioneducativaOperativoLogTipo' => $data['operativoTipo'],
     ));
-
+    
     //check if the row exists with sie, year & operativoLog
     if(!$objDownloadFilenewOpe){
         $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
@@ -634,7 +634,7 @@ class Funciones {
       $objDownloadFilenewOpe->setClienteDescripcion($dataClient);
       $this->em->persist($objDownloadFilenewOpe);
       $this->em->flush();
-
+        
         return $objDownloadFilenewOpe;
 
 
@@ -656,8 +656,8 @@ class Funciones {
                 LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
                 LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
                 LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
-
-                WHERE
+                
+                WHERE 
                 ieol.gestion_tipo_id = ".$data['gestion']." AND
                 ieol.institucioneducativa_operativo_log_tipo_id = 5
                 GROUP BY
@@ -697,7 +697,7 @@ class Funciones {
                                     ->getQuery()
                                     ->getResult();
                                     // dump($cursoOferta);die;
-
+        
         return array('cursoOferta' => $cursoOferta, 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso);
     }
 
@@ -707,14 +707,14 @@ class Funciones {
         $instEduCursoId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         //look for the curricula to the UE
         $objInstEduCursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$instEduCursoId));
-
+        
         try {
             $this->em->getConnection()->beginTransaction();
             //define the id-s curricula
             $arrCurricula = array(2008,2009,2010,2011,2012);
 // dump($instEduCursoId);die;
             if(!$objInstEduCursoOferta){
-                //set ciclo_id with ID 12 like primaria
+                //set ciclo_id with ID 12 like primaria 
                 $objInstEduCurso = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($instEduCursoId);
 
                 $objInstEduCurso->setCicloTipo($this->em->getRepository('SieAppWebBundle:CicloTipo')->find(12));
@@ -729,7 +729,7 @@ class Funciones {
                     $newObjInstEduCursoOferta->setInsitucioneducativaCurso($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($instEduCursoId));
 
                     $this->em->persist($newObjInstEduCursoOferta);
-
+                                         
                 }
                 $this->em->flush();
 
@@ -737,17 +737,17 @@ class Funciones {
             $this->em->getConnection()->commit();
             $objInstEduCursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($instEduCursoId);
             return $objInstEduCursoOferta;
-
+                
         } catch (Exception $e) {
             $this->em->getConnection()->rollback();
-            return new JsonResponse(array('msg'=>'error'));
+            return new JsonResponse(array('msg'=>'error')); 
         }
-
+        
     }
 
 
     public function setCurriculaStudent($data){
-
+        
         // check if Exists CURSO
         // $objInstCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($data['iecId']);
         // if($objInstCurso){
@@ -766,11 +766,11 @@ class Funciones {
                                           ->where('ieco.insitucioneducativaCurso = :iecoId')
                                           ->andWhere('ieco.asignaturaTipo = 0')
                                           ->setParameter('iecoId', $data['iecId']);
-
+                                          
                   $objAreas = $queryInstCursoOferta->getQuery()->getResult();
 
                   foreach ($objAreas as $area) {
-
+                    
                     $studentAsignatura = new EstudianteAsignatura();
                     $studentAsignatura->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear') ));
                     $studentAsignatura->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($data['eInsId']));
@@ -783,7 +783,7 @@ class Funciones {
                   }
 
             }*/
-
+            
         // }
 
                 $queryInstCursoOferta = $this->em->createQueryBuilder()
@@ -792,7 +792,7 @@ class Funciones {
                                           ->where('ieco.insitucioneducativaCurso = :iecoId')
                                           // ->andWhere('ieco.asignaturaTipo = 0')
                                           ->setParameter('iecoId', $data['iecId']);
-
+                                          
                 $objAreas = $queryInstCursoOferta->getQuery()->getResult();
 
                 $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
@@ -805,7 +805,7 @@ class Funciones {
                         'institucioneducativaCursoOferta'=>$area->getId(),
                         'estudianteInscripcion' => $data['eInsId'],
                         'gestionTipo' => $data['gestion']
-                    ));
+                    )); 
                     if(!$oldcurriculaStudent){
                         $studentAsignatura = new EstudianteAsignatura();
                         $studentAsignatura->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($data['gestion'] ));
@@ -817,9 +817,9 @@ class Funciones {
                         $this->em->flush();
                         // dump($studentAsignatura);
                     }
-
-
-                }
+                    
+                    
+                }               
 
              $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
                 'estudianteInscripcion'=>$data['eInsId']
@@ -847,9 +847,9 @@ class Funciones {
         $query = $this->em->createQueryBuilder()
                 ->select('l.id as smpid, k.modulo, g.id as iecoid, k.codigo as codigo')
                 ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'g')
-                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.id = g.insitucioneducativaCurso')
-                ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'l', 'WITH', 'l.id = g.superiorModuloPeriodo')
-                ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'k', 'WITH', 'k.id = l.superiorModuloTipo')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.id = g.insitucioneducativaCurso')               
+                ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'l', 'WITH', 'l.id = g.superiorModuloPeriodo')              
+                ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'k', 'WITH', 'k.id = l.superiorModuloTipo')              
                 ->where('h.id = :idCurso')
                 ->setParameter('idCurso', $iecId)
                 ->getQuery();
@@ -869,8 +869,8 @@ class Funciones {
                     ->setParameter('idCurso', $iecId)
                     ->getQuery()
                     ->getResult();
-
-
+        
+        
         foreach ($moduloPeriodo as $value) {
            // dump($value['codigo']);
            $foundElement = true;
@@ -886,11 +886,11 @@ class Funciones {
                 }else{
                     $foundElement=false;
                 }
-
+                
             next($objModulesInCourse);
            }
            if($foundElement){
-             //get the curricula to the course
+             //get the curricula to the course 
                 $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
                 $ieco = new InstitucioneducativaCursoOferta();
                 $ieco->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
@@ -921,7 +921,7 @@ class Funciones {
         // $em->getConnection()->beginTransaction();
 
         if($nivel == 15 || $nivel == 5){
-            try {
+            try {                
                 $iePeriodo = $this->em->createQueryBuilder()
                     ->select('g')
                     ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
@@ -930,7 +930,7 @@ class Funciones {
                     ->setParameter('idCurso', $iecId)
                     ->getQuery()
                     ->getResult();
-
+                
                 $moduloPeriodo = $this->em->createQueryBuilder()
                     ->select('l')
                     ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
@@ -978,7 +978,7 @@ class Funciones {
                     $this->em->flush();
                 }
                 $moduleToCurse = $this->setModuleToCourse($moduloPeriodo,$iecId);
-                if($moduloPeriodo) {
+                if($moduloPeriodo) {                                     
                     $modulos = $this->em->createQueryBuilder()
                     ->select('l')
                     ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
@@ -996,10 +996,10 @@ class Funciones {
                     ->setParameter('codigos', array(401,402,403,404))
                     ->getQuery()
                     ->getResult();
-                }
-
+                }                
+                
                 foreach ($modulos as $modulo) {
-                    //die("abc");
+                    //die("abc");        
                     $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                     $smp = new SuperiorModuloPeriodo();
                     $smp->setSuperiorModuloTipo($modulo);
@@ -1009,7 +1009,7 @@ class Funciones {
                     $this->em->flush();
                     // dump($smp->getId());
 
-                    //get the curricula to the course
+                    //get the curricula to the course 
                     $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
                     $ieco = new InstitucioneducativaCursoOferta();
                     $ieco->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
@@ -1020,7 +1020,7 @@ class Funciones {
                     $this->em->flush();
                 }
 
-
+                
 
                 return json_encode(array('id'=>400, 'status'=>'done'));
                 // $em->getConnection()->commit();
@@ -1031,7 +1031,7 @@ class Funciones {
     }
 
     public function validatePrimaria($sie,$gestion,$infoUe){
-
+       
         // get the send data
         $arrInfoUe = unserialize($infoUe);
         // check if the Centro is on the avalable list
@@ -1039,7 +1039,7 @@ class Funciones {
           'institucioneducativaId'=>$sie,
           'gestionTipoId'=>$gestion,
           'institucioneducativaHumanisticoTecnicoTipo'=>10,
-
+  
         ));
         //var to set true or false if the ue is primaria
         $swValidationPrimaria = false;
@@ -1052,7 +1052,7 @@ class Funciones {
           ){
             $swValidationPrimaria=true;
         }else{
-            if(
+            if( 
                 $gestion >= 2019 &&
                 $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
                 $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
@@ -1061,7 +1061,7 @@ class Funciones {
                 $swValidationPrimaria=true;
             }else{
                 $swValidationPrimaria=false;
-            }
+            }        
         }
 
         return $swValidationPrimaria;
@@ -1082,9 +1082,9 @@ class Funciones {
                     ->setParameter('idCurso', $iecId)
                     ->setParameter('codigo', 415)
                     ->getQuery();
-
+         
          $moduloIntEmer = $moduloIntEmer->getResult();
-
+         
          $swSetNameModIntEmer = false;
          $arrModIntEme = array('status'=>false,'codMIE'=>'');
          if($moduloIntEmer){
@@ -1094,7 +1094,7 @@ class Funciones {
                 $arrModIntEme = array('status'=>false,'codMIE'=>'');
             }
          }
-
+         
         return json_encode($arrModIntEme);
     }
 
@@ -1114,7 +1114,7 @@ class Funciones {
                     ->getQuery();
 
         $objInfoCourse = $query->getResult();
-
+        
         // get centroAllowed in the next query
          $centroAllowed = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
           'institucioneducativaId'=>$objInfoCourse[0]['sie'],
@@ -1124,7 +1124,7 @@ class Funciones {
 
         //set values to validate PRIMARIA course
         $swValidationPrimaria = false;
-
+        
         // check if the course is PRIMARIA
         if( $centroAllowed &&
             $objInfoCourse[0]['gestion'] == 2018 &&
@@ -1143,7 +1143,7 @@ class Funciones {
                 $swValidationPrimaria=true;
             }else{
                 $swValidationPrimaria=false;
-            }
+            }        
         }
         // return the response
         return $swValidationPrimaria;
@@ -1183,7 +1183,7 @@ class Funciones {
 
         public function appValidationQuality($data){
             //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
-
+        
           $query = $this->em->getConnection()->prepare("
                                                     select vp.*
                                                     from validacion_proceso vp
@@ -1287,7 +1287,7 @@ class Funciones {
                     ->setParameter('currentGestion',$data['currentGestion'])
                     ->orderBy('esp.id', 'ASC')
                     ->getQuery();
-
+         
             $arrSpeciality = $query->getResult();
             return $arrSpeciality;
     }
@@ -1307,7 +1307,7 @@ class Funciones {
         // if($regConsol[0]->getCierreSextosec() != null){
         //     $response = true;
         // }
-
+        
         return $response;
 
     }
@@ -1329,7 +1329,7 @@ class Funciones {
             return true;
         }
 
-    }
+    }    
 
 
      /**
@@ -1510,13 +1510,13 @@ class Funciones {
         $today_d = $today_a[0];$today_m = $today_a[1];$today_y = $today_a[2];
         $years = $today_y - $dob_y;
         $months = $today_m - $dob_m;
-        if ($today_m.$today_d < $dob_m.$dob_d)
+        if ($today_m.$today_d < $dob_m.$dob_d) 
         {
             $years--;
             $months = 12 + $today_m - $dob_m;
         }
 
-        if ($today_d < $dob_d)
+        if ($today_d < $dob_d) 
         {
             $months--;
         }
@@ -1525,16 +1525,16 @@ class Funciones {
         $secondMonths=array(4,6,9,11);
         $thirdMonths=array(2);
 
-        if($today_m - $dob_m == 1)
+        if($today_m - $dob_m == 1) 
         {
-            if(in_array($dob_m, $firstMonths))
+            if(in_array($dob_m, $firstMonths)) 
             {
                 array_push($firstMonths, 0);
             }
-            elseif(in_array($dob_m, $secondMonths))
+            elseif(in_array($dob_m, $secondMonths)) 
             {
                 array_push($secondMonths, 0);
-            }elseif(in_array($dob_m, $thirdMonths))
+            }elseif(in_array($dob_m, $thirdMonths)) 
             {
                 array_push($thirdMonths, 0);
             }
@@ -1544,7 +1544,7 @@ class Funciones {
         // $dias = explode("-", $fechanacimiento, 3);
         // $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
         // $edad = (int)((time()-$dias)/31556926 );
-        // return $edad;
+        // return $edad;        
         // list($dia,$mes,$anno) = explode("-",$fechanacimiento);
         // list($diaLimit,$mesLimit,$annoLimit) = explode("-",$fechaLimit);
 
@@ -1552,13 +1552,13 @@ class Funciones {
         // $ano_diferencia = $annoLimit - $anno;
         // $mes_diferencia = $mesLimit - $mes;
         // $dia_diferencia = $diaLimit - $dia;
-
+        
         // if ($dia_diferencia < 0 && $mes_diferencia <= 0){
         //     $ano_diferencia--;
         // }
 
         // return $ano_diferencia;
-    }
+    }    
 
 
 
@@ -1573,7 +1573,7 @@ class Funciones {
     public function findturno($form) {
 
         $arrInstitucioneducativa = json_decode($form['jsonInstitucioneducativa'], true);
-
+        
         $aturnos = array();
 
         $entity = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
@@ -1686,9 +1686,9 @@ class Funciones {
 
     public function saveDataInstitucioneducativaOperativoLog($data){
         //conexion to DB
-
+        
         try {
-
+        
         $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
 
         //save the log data
@@ -1713,10 +1713,10 @@ class Funciones {
         $this->em->flush();
 
         return $objDownloadFilenewOpe;
-        } catch (Exception $e) {
+        } catch (Exception $e) {  
           echo 'Excepción capturada: ', $ex->getMessage(), "\n";
         }
-    }
+    }    
 
     /**
      * Servicio para validar si un estudiante tiene diploma de bachiller
@@ -1744,7 +1744,7 @@ class Funciones {
             return $tieneDocumento;
 
         } catch (Exception $e) {
-
+            
         }
     }
 
@@ -1774,7 +1774,7 @@ class Funciones {
      * Autor: Patricia
      */
     public function getCantidadEstudiantes($infoUe,$estudiantes){
-
+        
         $infoUe = unserialize($infoUe);
         $cantidad = 0;
         $area = $infoUe['ueducativaInfoId']['areaEspecialId'];
@@ -1788,7 +1788,7 @@ class Funciones {
                     }
                 }
                // Se ha quitado el cupo de inscripcion
-               // if(($programa == 14 and $cantidad >= 4) or ($programa == 8 and $cantidad >= 6) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 7) or ($programa == 11  and $cantidad >= 3) or ($programa == 12  and $cantidad >= 8)){
+               // if(($programa == 14 and $cantidad >= 4) or ($programa == 8 and $cantidad >= 6) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 7) or ($programa == 11  and $cantidad >= 3) or ($programa == 12  and $cantidad >= 8)){ 
                 if(($programa == 14 and $cantidad >= 444) or ($programa == 8 and $cantidad >= 966) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 777) or ($programa == 11  and $cantidad >= 333) or ($programa == 12  and $cantidad >= 888)){
                     $data['cupo'] = "NO";
                     $data['msg'] = "El curso para este programa no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
@@ -1818,7 +1818,7 @@ class Funciones {
                 $data['msg'] = "El curso cuenta con cupos";
         }
         return $data;
-    }
+    }    
 
 
     /**
@@ -1828,7 +1828,7 @@ class Funciones {
      * @return [boolean]             [Retorna true si elimmino las especialidades y false si no tiene especialidades]
      */
     public function eliminarEspecialidad($codsie,$gestion){
-
+       
         $ieht = $this->em->createQueryBuilder()
         ->delete('esp')
         ->from('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico','esp')
@@ -1836,7 +1836,7 @@ class Funciones {
         ->andWhere('esp.gestionTipo='. $gestion)
         ->getQuery()
         ->getResult();
-
+        
     }
 
     /**
@@ -1863,7 +1863,7 @@ class Funciones {
                 ->setParameter('gestion', $gestion)
                 ->orderBy('ei.fechaInscripcion', 'DESC')
                 ->getQuery();
-
+        
         $objCurrentInscripcion = $query->getResult();
         //dump($objCurrentInscripcion);die;
         $swtucion = false;
@@ -1876,7 +1876,7 @@ class Funciones {
                 $query->bindValue(':sie', $currentSie);
                 $query->bindValue(':rolId', $this->session->get('roluser'));
                 $query->execute();
-                $aTuicion = $query->fetch();
+                $aTuicion = $query->fetch(); 
                 if($aTuicion['get_ue_tuicion']){
                     $swtucion = $aTuicion['get_ue_tuicion'];
                 }
@@ -1886,8 +1886,8 @@ class Funciones {
         }else{
             return false;
         }
-
-    }
+                
+    }    
 
     /**
      * Service to check the users tuicion in inscription process
@@ -1909,20 +1909,20 @@ class Funciones {
                 ->setParameter('gestion', $gestion)
                 ->orderBy('ei.fechaInscripcion', 'DESC')
                 ->getQuery();
-
+        
         $objCurrentInscripcion = $query->getResult();
         $swtucion = false;
         if($objCurrentInscripcion){
             while (($objectUe = current($objCurrentInscripcion)) !== FALSE && !$swtucion) {
                 // check the tución info
                 $currentSie = $objectUe->getInstitucioneducativa()->getId();
-
+              
                 $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
                 $query->bindValue(':user_id', $this->session->get('userId'));
                 $query->bindValue(':sie', $currentSie);
                 $query->bindValue(':rolId', $this->session->get('roluser'));
                 $query->execute();
-                $aTuicion = $query->fetch();
+                $aTuicion = $query->fetch(); 
                 if($aTuicion['get_ue_tuicion']){
                     $swtucion = $aTuicion['get_ue_tuicion'];
                 }
@@ -1932,8 +1932,8 @@ class Funciones {
         }else{
             return false;
         }
-
-    }
+                
+    } 
     /**
      * [existeInscripcionSimilarAprobado description]
      * @param  integer    $idInscripcion [inscripcion del estudiante para verificar si existe otra inscripcion similar con los diferentes estados]
@@ -2002,8 +2002,8 @@ class Funciones {
             nt.nivel,
             ct.id as ciclo_tipo_id,
             ct.ciclo,
-            sat.codigo as grado_tipo_id,
-            sat.acreditacion as grado,
+            sat.codigo as grado_tipo_id,  
+            sat.acreditacion as grado,  
             pt.id as paralelo_tipo_id,
             pt.paralelo,
             tt.id as turno_tipo_id,
@@ -2012,7 +2012,7 @@ class Funciones {
             pet.periodo,
             e.id as estudiante_id,
             e.codigo_rude,
-            e.carnet_identidad as carnet,
+            e.carnet_identidad as carnet,  
             e.complemento,
             cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
             e.pasaporte,
@@ -2022,11 +2022,11 @@ class Funciones {
             e.segip_id,
             gt.id as genero_tipo_id,
             gt.genero,
-            to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,
+            to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,  
             e.localidad_nac,
             emt.id as estadomatricula_tipo_id,
             emt.estadomatricula,
-            ei.id as estudiante_inscripcion_id,
+            ei.id as estudiante_inscripcion_id,  
             case pat.id when 1 then lt2.lugar when 0 then '' else pat.pais end as lugar_nacimiento,
             CASE
             WHEN sfat.codigo = 13 THEN
@@ -2071,10 +2071,10 @@ class Funciones {
             left join estudiante_inscripcion_diplomatico as eid on eid.estudiante_inscripcion_id = ei.id
             where ie.id = ".$institucioneducativa_id."
             and ies.gestion_tipo_id = ".$gestion_id."::DOUBLE PRECISION
-            and gt.id = ".$genero_id."
+            and gt.id = ".$genero_id."        
             and sfat.codigo in (15) and sat.codigo in (3) and sest.codigo in (2)
             and ei.estadomatricula_tipo_id in (4,5,55)
-            order by nt.id, nt.nivel, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, ies.periodo_tipo_id desc
+            order by nt.id, nt.nivel, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, ies.periodo_tipo_id desc        
         ");
 
         $query->execute();
@@ -2112,7 +2112,7 @@ class Funciones {
 
     public function lookforRudesbyDataStudent($data){
 
-
+        
         $query = $this->em->createQueryBuilder('e')
                 ->select('e')
                 ->from('SieAppWebBundle:Estudiante','e')
@@ -2127,64 +2127,11 @@ class Funciones {
         $entities = $query->getResult();
 
         return $entities;
-
-    }
-
-    public function searchByExcaustiveDataStudent($data){
-
-        $oficialia = $data['oficialia'];
-        if( empty($oficialia) || $oficialia == 'UNDEFINED' ){
-            $oficialia = '';
-        }
-
-        $libro = $data['libro'];
-        if( empty($libro) || $libro == 'UNDEFINED' ){
-            $libro = '';
-        }
-
-        $partida = $data['partida'];
-        if( empty($partida) || $partida == 'UNDEFINED' ){
-            $partida = '';
-        }
-
-        $folio = $data['folio'];
-        if( empty($folio) || $folio == 'UNDEFINED' ){
-            $folio = '';
-        }
-        // dump($oficialia);
-        // dump($libro);
-        // dump($partida);
-        // dump($folio);
-        // die;
-        $query = $this->em->createQueryBuilder('e')
-                ->select('e')
-                ->from('SieAppWebBundle:Estudiante','e')
-                ->where('e.paterno like :paterno')
-                ->andWhere('upper(e.materno) like :materno')
-                ->andWhere('upper(e.nombre) like :nombre')
-                ->andWhere('e.fechaNacimiento = :fechaNacimiento')
-                ->andWhere('e.oficialia = :oficialia')
-                ->andWhere('e.libro = :libro')
-                ->andWhere('e.partida = :partida')
-                ->andWhere('e.folio = :folio')
-                ->setParameter('paterno', '%' . mb_strtoupper($data['paterno'], 'utf8') . '%')
-                ->setParameter('materno', '%' . mb_strtoupper($data['materno'], 'utf8') . '%')
-                ->setParameter('nombre', '%' . mb_strtoupper($data['nombre'], 'utf8') . '%')
-                ->setParameter('fechaNacimiento', $data['fechaNacimiento'])
-                ->setParameter('oficialia', mb_strtoupper($oficialia, 'utf8'))
-                ->setParameter('libro', mb_strtoupper($libro, 'utf8'))
-                ->setParameter('partida', mb_strtoupper($partida, 'utf8'))
-                ->setParameter('folio', mb_strtoupper($folio, 'utf8'))
-                ->orderBy('e.paterno, e.materno, e.nombre', 'ASC')
-                ->getQuery();
-        $entities = $query->getResult();
-
-        return $entities;
-
+        
     }
 
     public function getAllInscriptionRegular($codigoRude){
-
+        
         $query = $this->em->createQueryBuilder('e')
                 ->select('ei.id as studenInscriptionId,n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
                  'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
@@ -2208,12 +2155,12 @@ class Funciones {
                 ->getQuery();
         $entities = $query->getResult();
 
-        return $entities;
+        return $entities;                
     }
 
 
     public function getCurrentInscriptionRegular($codigoRude, $gestion){
-
+        
         $query = $this->em->createQueryBuilder('e')
                 ->select('ei.id as studenInscriptionId,n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
                  'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
@@ -2239,11 +2186,11 @@ class Funciones {
                 ->getQuery();
         $entities = $query->getResult();
 
-        return $entities;
-    }
+        return $entities;                
+    }    
 
     public function getCurrentInscriptionByRudeAndGestionAndMatricula($data){
-
+        
         $query = $this->em->createQueryBuilder('e')
                 ->select('ei.id as studenInscriptionId', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
                  'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
@@ -2255,8 +2202,8 @@ class Funciones {
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
-                ->andWhere('iec.gestionTipo = :gestion')
-                ->andWhere('ei.estadomatriculaTipo = :matricula')
+                ->andWhere('iec.gestionTipo = :gestion')                
+                ->andWhere('ei.estadomatriculaTipo = :matricula')                
                 ->andWhere('it = :idTipo')
                 ->setParameter('id', $data['codigoRude'])
                 ->setParameter('gestion', $data['gestion'])
@@ -2267,14 +2214,14 @@ class Funciones {
                 ->getQuery();
         $entities = $query->getResult();
 
-        return $entities;
-    }
+        return $entities;                
+    } 
 
     public function getuserInscriptions($userId){
         $query = $this->em->getConnection()->prepare("
             select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
-            from usuario a
-                inner join usuario_rol b on a.id=b.usuario_id
+            from usuario a 
+                inner join usuario_rol b on a.id=b.usuario_id 
                 inner join lugar_tipo c on b.lugar_tipo_id=c.id
             where substring(c.codigo,1,1) in ('7') and codigo not in ('04') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo='t'and a.id = ".$userId);
 
@@ -2282,7 +2229,7 @@ class Funciones {
         $userInscriptions = $query->fetchAll();
 
         return $userInscriptions;
-    }
+    }    
 
     public function getuserAccessToCalifications($userId,$valor){
         $valor =implode(',', $valor);
@@ -2299,7 +2246,7 @@ class Funciones {
                     inner join usuario_rol f on e.id=f.usuario_id
           where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1) in ('7','8','9','1','3','6','0') and e.esactivo='t') a
             where user_id=".$userId.";
-        ";*/
+        ";*/      
         $queryAccess = "
           select *
           from (
@@ -2312,8 +2259,8 @@ class Funciones {
                     inner join usuario_rol f on e.id=f.usuario_id
           where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1)::integer in (".$valor.") and e.esactivo='t') a
             where user_id='".$userId."';
-
-        ";
+           
+        ";   
 
         $query = $this->em->getConnection()->prepare($queryAccess);
 
@@ -2321,10 +2268,10 @@ class Funciones {
         $userInscriptions = $query->fetchAll();
 
         return $userInscriptions;
-    }
+    }  
 
     public function getUEspreInscription($idDepto, $gestion){
-
+        
         $queryUes = "
          select distinct(g.id),  g.institucioneducativa
             from institucioneducativa g
@@ -2332,8 +2279,8 @@ class Funciones {
                      inner join distrito_tipo i on h.distrito_tipo_id = i.id
                         inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
                             inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
-                            where dt.id = '".$idDepto."' and gestion_tipo_id = '".$gestion."';
-        ";
+                            where dt.id = '".$idDepto."' and gestion_tipo_id = '".$gestion."';           
+        ";   
 
         $query = $this->em->getConnection()->prepare($queryUes);
 
@@ -2341,9 +2288,9 @@ class Funciones {
         $uesPreins = $query->fetchAll();
 
         return $uesPreins;
-    }
+    }         
     public function chooseUE($idDepto, $sie, $gestion){
-
+        
         $queryUes = "
          select *
             from institucioneducativa g
@@ -2354,8 +2301,8 @@ class Funciones {
                                 inner join dependencia_tipo dpt on (g.dependencia_tipo_id = dpt.id)
                                     inner join institucioneducativa_tipo int on (g.institucioneducativa_tipo_id = int.id)
                                         inner join estadoinstitucion_tipo eitt on (g.estadoinstitucion_tipo_id = eitt.id)
-                            where dt.id = '".$idDepto."' and  g.id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." '
-        limit 1";
+                            where dt.id = '".$idDepto."' and  g.id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." '           
+        limit 1";   
 
         $query = $this->em->getConnection()->prepare($queryUes);
 
@@ -2363,8 +2310,8 @@ class Funciones {
         $uesPreins = $query->fetchAll();
 
         return $uesPreins;
-    }
-
+    }      
+    
     public function getAllJustify(){
         $allJustify = $this->em->getRepository('SieAppWebBundle:PreinsJustificativoTipo')->findAll();
 
@@ -2383,19 +2330,19 @@ class Funciones {
         //     ->orderBy('iec.nivelTipo', 'ASC')
         //     ->distinct()
         //     ->getQuery()
-        //     ->getResult();
+        //     ->getResult();  
         $queryUes = "
          select distinct(pin.nivel_tipo_id)
             from preins_institucioneducativa_curso_cupo pin
-                where  pin.institucioneducativa_id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." '
+                where  pin.institucioneducativa_id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." ' 
                 order by pin.nivel_tipo_id
-                ";
+                ";   
 
         $query = $this->em->getConnection()->prepare($queryUes);
 
         $query->execute();
-        $uesPreins = $query->fetchAll();
-
+        $uesPreins = $query->fetchAll();        
+        
         return($uesPreins);
 
 
@@ -2407,7 +2354,7 @@ class Funciones {
         $estudiante = $inscripcion->getEstudiante()->getId();
         $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-
+        
         $response = false;
         $dataRemove = array();
 
@@ -2419,7 +2366,7 @@ class Funciones {
                         ->andWhere('ei.estadomatriculaTipo IN (:estados)')
                         ->andWhere('iec.nivelTipo = :nivel')
                         ->andWhere('iec.gradoTipo = :grado')
-                        ->setParameter('estudiante', $estudiante)
+                        ->setParameter('estudiante', $estudiante)                        
                         ->setParameter('estados', array(4,5,24,26,37,45,46,55,56,57,58)) // Estados que deveria validar
                         ->setParameter('nivel', $nivel)
                         ->setParameter('grado', $grado)
@@ -2446,7 +2393,7 @@ class Funciones {
                     ->where('ei.id = :idInscripcion')
                     ->setParameter('idInscripcion',$currentInscription[0]->getId())
                     ->getQuery()
-                    ->getResult();
+                    ->getResult();   
                  // dumP($asignaturas);
             $dataRemove['inscripcion']['asignaturas'] = $asignaturas;
 
@@ -2463,10 +2410,10 @@ class Funciones {
                                     ->where('ea.id = :estAsigId')
                                     ->setParameter('estAsigId',$a['estAsigId'])
                                     ->getQuery()
-                                    ->getResult();
+                                    ->getResult();                    
                 $dataRemove['inscripcion']['asignaturasNotas'][] = $asignaturasNotas;
 
-            }
+            }          
 
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$currentInscription[0]->getId()),array('notaTipo'=>'ASC'));
             $dataRemove['inscripcion']['cualitativas'] = $cualitativas;
@@ -2475,6 +2422,6 @@ class Funciones {
         }
 
         return $dataRemove;
-    }
+    }     
 
 }
