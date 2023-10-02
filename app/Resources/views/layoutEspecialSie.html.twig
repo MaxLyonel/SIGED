@@ -319,7 +319,7 @@
                             </ul>
                         </li>
                     {% endif %}                    
-                    {% if app.session.get('roluser') in [7,8,10] %}
+                    {% if app.session.get('roluser') in [7,8,10,20] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>
@@ -341,12 +341,12 @@
                             <ul>
                                 <li><a href="{{ path('operativo_bono_jp_seguimiento')}}">Seguimiento</a></li>
                                 {#<li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de titular</a></li>#}
-                                <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
+                                {# <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li> #}
                             </ul>
                         </li>
                     {% endif %}
                     
-                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %}
+                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                     
 
                     <li class="submenu">
@@ -481,7 +481,7 @@
                         </a>
                     </li>
                     {% if app.session.get('roluser') in [7,8,10, 9] %}
-                        <li class="submenu">
+                     {#}   <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>
                                 <span class="text">Bono Juancito Pinto</span>
@@ -489,14 +489,14 @@
                             </a>
                             <ul>                                
                                 {#<li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de titular</a></li>#}
-                                <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
+                                {# 190923 <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li> 
                                 
                                 {% if app.session.get('roluser') in [9] %}
                                     <li><a href="{{ path('operativo_bono_jp_ValidaNoPagados')}}">Valida No Pagados</a></li>
                                 {% endif %}
                                 
                             </ul>
-                        </li>                        
+                        </li>       #}                 
                     {% endif %}
 
                     <!-- Start navigation - dashboard -->

@@ -163,8 +163,8 @@ class InfoEspecialController extends Controller{
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
                 'operativo'=>$periodo,
-               // 'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
-               // 'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
+                'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
+                'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
 
     ));
 
@@ -242,6 +242,7 @@ class InfoEspecialController extends Controller{
 
   private function cerrarOperativoForm($goToPath, $nextButton, $data)
   {
+    //dump($goToPath);die;
       //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
       $onClick = '';
       $this->unidadEducativa = $data['idInstitucion'];
@@ -256,8 +257,8 @@ class InfoEspecialController extends Controller{
       }
       return $this->createFormBuilder()
                       ->setAction($this->generateUrl($goToPath))
-                      ->add('gestion', 'hidden', array('data' => $data['gestion']))
-                      ->add('sie', 'hidden', array('data' => $data['idInstitucion']))
+                      ->add('gestion', 'hidden', array('data' => bin2hex($data['gestion'])))
+                      ->add('sie', 'hidden', array('data' => bin2hex($data['idInstitucion'])))
                       ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block', 'onclick'=>$onClick )))
                       ->getForm()
       ;

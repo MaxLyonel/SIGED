@@ -36,17 +36,22 @@ class OperativoBonoJPController extends Controller
 
 	public function cerrarAction(Request $request)
 	{
+		//dump($request); die;
 		$esAjax=$request->isXmlHttpRequest();
 
 		$form = $request->get('form');
 
-		$request_sie = $form['sie'];
+		$request_sie = hex2bin($form['sie']);
 		$request_sie = filter_var($request_sie,FILTER_SANITIZE_NUMBER_INT);
 		$request_sie = is_numeric($request_sie)?$request_sie:-1;
 
-		$request_gestion = $form['gestion'];
+		$request_gestion = hex2bin($form['gestion']);
 		$request_gestion = filter_var($request_gestion,FILTER_SANITIZE_NUMBER_INT);
 		$request_gestion = is_numeric($request_gestion)?$request_gestion:-1;
+
+		/*dump($request_sie);
+		dump($request_gestion);
+		die;*/
 
 		$request_estado = $this->estado; // si existe algun regsitro con el nro 14 en el estado_menu, eso signifca que el operativo de esa unidad educativa ya fue cerrada
 
@@ -58,6 +63,7 @@ class OperativoBonoJPController extends Controller
 		try
 		{
 			list($observacionesBonpJP, $observacionesControlCalidad) = $this->puedeCerrarOperativo($request_gestion,$request_sie);
+
 			if(!$observacionesBonpJP && !$observacionesControlCalidad)
 			{
 				if($esAjax && $request_sie >0 && $request_gestion >0)
@@ -143,7 +149,7 @@ class OperativoBonoJPController extends Controller
 
 		$rol= $datosUser['rol_tipo_id'];
 		
-		if(in_array($rol,[8,34]))//nacional
+		if(in_array($rol,[8,34,20]))//nacional
 		{
 			$arrayDepartamentos = $this->get('operativoutils')->getDepartamentos();
 			$arrayDistritos = array();
@@ -258,6 +264,7 @@ class OperativoBonoJPController extends Controller
 
 	public function ddjjAction(Request $request, $sie,$gestion)
 	{
+		//dump($gestion); die;
 		$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
 		//$pdf='http://127.0.0.1:63170/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
 		
