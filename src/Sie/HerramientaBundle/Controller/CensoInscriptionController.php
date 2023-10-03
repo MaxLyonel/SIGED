@@ -34,36 +34,40 @@ class CensoInscriptionController extends Controller
     public function indexAction(){
         
         $ie_id=$this->session->get('ie_id');
-        
-        if(in_array($ie_id, $this->arrUesCapinota)){
 
+        // if(in_array($ie_id, $this->arrUesCapinota)){
+
+        // }else{
+        //     // return $this->redirect($this->generateUrl('login'));            
+        // }
+
+        $swregistry = false;
+        $id_usuario = $this->session->get('userId');
+        // dump($id_usuario);die;
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+        $disableElement=0;
+        if(in_array($this->session->get('roluser'),array(9))){
+            $sie=$ie_id=$this->session->get('ie_id');
+            $disableElement=1;
         }else{
-            return $this->redirect($this->generateUrl('login'));            
+            if(in_array($this->session->get('roluser'),array(7,8,10))){
+                $sie='';
+            }
         }
 
-            $swregistry = false;
-            $id_usuario = $this->session->get('userId');
-            if (!isset($id_usuario)) {
-                return $this->redirect($this->generateUrl('login'));
-            }        
-            $disableElement=0;
-            if(in_array($this->session->get('roluser'),array(9))){
-                $sie=$ie_id=$this->session->get('ie_id');
-                $disableElement=1;
-            }else{
-                if(in_array($this->session->get('roluser'),array(7,8,10))){
-                    $sie='';
-                }
-            }
-
-            return $this->render('SieHerramientaBundle:CensoInscription:index.html.twig',array(
-                'codsie'=>$sie,
-                'disableElement'=>$disableElement,
-                
-            ));        
+        return $this->render('SieHerramientaBundle:CensoInscription:index.html.twig',array(
+            'codsie'=>$sie,
+            'disableElement'=>$disableElement
+        ));        
     }
 
     public function findUEDataAction(Request $request){
+
+
+        // VALIDAR QUE SEA UNA UNIDAD DE ALTERNATIVA
+
         // get the vars send        
         $sie = $request->get('sie');
         // create db conexion
@@ -75,7 +79,7 @@ class CensoInscriptionController extends Controller
         $query->bindValue(':roluser', $this->session->get('roluser'));
         $query->execute();
         $aTuicion = $query->fetchAll();
-        
+
         $existUE = 0;
         $arrModalidades = array();        
         // $arrLevel = array(
@@ -166,11 +170,11 @@ class CensoInscriptionController extends Controller
                     'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 ); 
         }
-// dump($arrResponse);die;
         
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData($arrResponse);
+
         return $response;        
     }
 
@@ -378,11 +382,14 @@ class CensoInscriptionController extends Controller
             $statement->execute();
             $arrStudentsRegistered = $statement->fetchAll();
             if(sizeof($arrStudentsRegistered)>0){
+                // dump($value);die;
+                $value["estado"] = 0;
+                $arrStudentsList[] = $value;
             }else{
+                $value['estado'] = 1;
                 $arrStudentsList[] = $value;
             }
         }
-
         //end   get the students
       
         $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;            
@@ -411,6 +418,8 @@ class CensoInscriptionController extends Controller
     }
 
     public function validateTutorAction(Request $request){
+        
+        // dump($this->session->get('currentyear'));die;
 
         $dataStudent = $request->get('dataStudent');
         $apoderadoInput = $request->get('apoderado');
@@ -418,6 +427,7 @@ class CensoInscriptionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $year = $this->session->get('currentyear');
         $query="
                 select p.*, ai.id as apoderadoInscripId
                 from apoderado_inscripcion ai
@@ -448,12 +458,11 @@ class CensoInscriptionController extends Controller
                       "nombre" => $arrDataStudents['nombre'],
                       "carnet" => $arrDataStudents['carnet'],
                       "complemento" => $arrDataStudents['complemento'],
-                      "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ) ,              
+                      "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ),              
                     );
                     $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
                     // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
                 // check if the values of parent/tutor are the same
-                    
                 if(($apoderadoInput == $apoderadoOutput)){
                     $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents['apoderadoinscripid'];
                     $swparent = 0;
@@ -478,99 +487,100 @@ class CensoInscriptionController extends Controller
             'apoderadoOutput' => $apoderadoOutput,
             'swparent' => !$swparent,
         ); 
-        // dump($arrResponse);die;
-        // dump($apoderadoOutput);
-        // dump($apoderadoInput);
-        // dump($swparent);
-        // die;
+        
         $response = new JsonResponse();
         $response->setStatusCode(200);
         $response->setData($arrResponse);
-        return $response;          
-
+        return $response;
 
     }
 
-     function strtoupper($ele){
+    function strtoupper($ele){
         return strtoupper($ele);
     }
 
     public function saveStudentAction(Request  $request){
-        $dataInfoUE = json_decode($request->get('infoUE'),true);
-        $em = $this->getDoctrine()->getManager();
-        // dump($dataInfoUE);
-        // die;
-        if(isset($_FILES['informe'])){
-            $file = $_FILES['informe'];
 
-            if ($file['name'] != "") {
-                $type = $file['type'];
-                $size = $file['size'];
-                $tmp_name = $file['tmp_name'];
-                $name = $file['name'];
-                $extension = explode('.', $name);
-                $extension = $extension[count($extension)-1];
-                $new_name = $dataInfoUE['dataStudent']['inscriptionid'].'-'.date('YmdHis').'.'.$extension;
-
-                // GUARDAMOS EL ARCHIVO
-                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/opecenso/' . $dataInfoUE['sie'];
-                if (!file_exists($directorio)) {
-                    mkdir($directorio, 0777, true);
+        try {
+            //code...
+            $dataInfoUE = json_decode($request->get('infoUE'),true);
+            
+            if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+    
+                if ($file['name'] != "") {
+                    $type = $file['type'];
+                    $size = $file['size'];
+                    $tmp_name = $file['tmp_name'];
+                    $name = $file['name'];
+                    $extension = explode('.', $name);
+                    $extension = $extension[count($extension)-1];
+                    $new_name = $dataInfoUE['dataStudent']['inscriptionid'].'-'.date('YmdHis').'.'.$extension;
+    
+                    // GUARDAMOS EL ARCHIVO
+                    $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/opecenso/' . $dataInfoUE['sie'];
+                    if (!file_exists($directorio)) {
+                        mkdir($directorio, 0777, true);
+                    }
+    
+                    $archivador = $directorio.'/'.$new_name;
+                    //unlink($archivador);
+                    if(!move_uploaded_file($tmp_name, $archivador)){
+                        $response->setStatusCode(500);
+                        return $response;
+                    }
+                    
+                    // CREAMOS LOS DATOS DE LA IMAGEN
+                    $informe = array(
+                        'name' => $name,
+                        'type' => $type,
+                        'tmp_name' => 'nueva_ruta',
+                        'size' => $size,
+                        'new_name' => $new_name
+                    );
+                }else{
+                    $informe = null;
                 }
-
-                $archivador = $directorio.'/'.$new_name;
-                //unlink($archivador);
-                if(!move_uploaded_file($tmp_name, $archivador)){
-                    $response->setStatusCode(500);
-                    return $response;
-                }
-                
-                // CREAMOS LOS DATOS DE LA IMAGEN
-                $informe = array(
-                    'name' => $name,
-                    'type' => $type,
-                    'tmp_name' => 'nueva_ruta',
-                    'size' => $size,
-                    'new_name' => $new_name
-                );
             }else{
                 $informe = null;
             }
-        }else{
-            $informe = null;
+    
+            $em = $this->getDoctrine()->getManager();
+
+            $cenEstudianteInscripcionCenso = new CenEstudianteInscripcionCenso();
+
+            $cenEstudianteInscripcionCenso->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($dataInfoUE['dataStudent']['inscriptionid']));
+            $cenEstudianteInscripcionCenso->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($dataInfoUE['apoderadoinscripid']));
+            $cenEstudianteInscripcionCenso->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($dataInfoUE['sie']));
+
+            $cenEstudianteInscripcionCenso->setDocumentoPath($archivador);
+            $cenEstudianteInscripcionCenso->setEmail($dataInfoUE['email']);
+            $cenEstudianteInscripcionCenso->setCelnumero($dataInfoUE['celular']);
+            $cenEstudianteInscripcionCenso->setEsVigente(1);
+            $cenEstudianteInscripcionCenso->setFechaRegistro(new \DateTime('now'));
+            $cenEstudianteInscripcionCenso->setFechaModificacion(new \DateTime('now'));
+    
+            $em->persist($cenEstudianteInscripcionCenso);
+            $em->flush();
+    
+            $arrEveStudentsCenso = $this->getAllRegisteredInscription($dataInfoUE['sie']);
+
+            $arrResponse = array(
+                
+                'arrEveStudentsCenso' => $arrEveStudentsCenso,
+                
+            ); 
+    
+            $response = new JsonResponse();
+            $response->setStatusCode(200);
+            $response->setData($arrResponse);
+            return $response;
+                            
+        } catch (\Exception $e) {
+            dump($e);die;
         }
-
-        $CenEstudianteInscripcionCensoObj = new CenEstudianteInscripcionCenso();
-        $CenEstudianteInscripcionCensoObj->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($dataInfoUE['dataStudent']['inscriptionid']));
-        $CenEstudianteInscripcionCensoObj->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($dataInfoUE['apoderadoinscripid']));
-        $CenEstudianteInscripcionCensoObj->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($dataInfoUE['sie']));
-        $CenEstudianteInscripcionCensoObj->setDocumentoPath($archivador);
-        $CenEstudianteInscripcionCensoObj->setEmail($dataInfoUE['email']);
-        $CenEstudianteInscripcionCensoObj->setCelnumero($dataInfoUE['celular']);
-        $CenEstudianteInscripcionCensoObj->setEsVigente(1);
-        $CenEstudianteInscripcionCensoObj->setFechaRegistro(new \DateTime('now'));
-
-        $em->persist($CenEstudianteInscripcionCensoObj);
-        $em->flush();
-
-        $arrEveStudentsCenso = $this->getAllRegisteredInscription($dataInfoUE['sie']);
         
-        $arrResponse = array(
-            
-            'arrEveStudentsCenso' => $arrEveStudentsCenso,
-            
-        ); 
-
-        $response = new JsonResponse();
-        $response->setStatusCode(200);
-        $response->setData($arrResponse);
-        return $response;  
-        die;
-    }   
-
-
-
-
+    }
 
     private function getLastDayRegistryOpeCheesEventStatus($limitDay){
         $today = date('d-m-Y');
@@ -650,7 +660,7 @@ class CensoInscriptionController extends Controller
 
           $swcloseevent = 1;
 
-        } catch (Exception $e) {
+        } catch (\Exception $ex) {
             $swcloseevent = 0;
           $em->getConnection()->rollback();
           echo 'Excepción capturada: ', $ex->getMessage(), "\n";
