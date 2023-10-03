@@ -64,6 +64,10 @@ class CensoInscriptionController extends Controller
     }
 
     public function findUEDataAction(Request $request){
+
+
+        // VALIDAR QUE SEA UNA UNIDAD DE ALTERNATIVA
+
         // get the vars send        
         $sie = $request->get('sie');
         // create db conexion
@@ -166,7 +170,6 @@ class CensoInscriptionController extends Controller
                     'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
                 ); 
         }
-// dump($arrResponse);die;
         
         $response = new JsonResponse();
         $response->setStatusCode(200);
