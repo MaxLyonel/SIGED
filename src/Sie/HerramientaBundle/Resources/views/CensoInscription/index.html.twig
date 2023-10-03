@@ -137,7 +137,7 @@
 								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Complemento" v-model="infoUE.apoderado.complemento">
 								    </div>
 								    <div class="form-group col-md-4" :class="invalidFechaNacimiento ? 'has-error' : ''">
-								      <label for="inputPassword4">Fecha Nacimiento</label>
+								      <label for="inputPassword4">Fecha de Nacimiento - (dd-mm-yyyy)</label>
 								      <input type="text" class="form-control" id="fecNacimiento" name="fecNacimiento" placeholder="dd-mm-yyyy" v-model="infoUE.apoderado.fecNacimiento">
 								      {# <div class="form-row">
 									      <div class="form-group col-md-4">
@@ -450,31 +450,24 @@
 		                            	<table class="table table-dark" >
 											<tbody>
 											<tr>
-												
 												<th>#</th>
 												<th>Cod. RUDE</th>
 												<th>CI-COMPL.</th>
-												<th>Paterno</th>
-												<th>Materno</th>
-												<th>Nombre(s)</th>
+												<th>Nombre Completo</th>
 												<th>Nivel / Grado / Paralelo</th>
 												<th>option</th>	
 											</tr>
+											<tr v-if="DBEveStudents.length == 0">
+												<td class="text-center text-nodata" colspan="6">No se encontraron registros</td>
+											</tr>
 											<tr v-for="(competitor, index) in DBEveStudents">
-
 												<td>${index+1}</td>
 												<td><strong>${competitor.codigo_rude}</strong> </td>
 												<td>${competitor.carnet_identidad} ${competitor.complemento}</td>
-												<td colspan="3">
-												${competitor.paterno} ${competitor.materno} ${competitor.nombre}
-												</td>
+												<td>${competitor.paterno} ${competitor.materno} ${competitor.nombre}</td>
 												<td>${competitor.nivel} / ${competitor.grado} /<strong>${competitor.paralelo}</strong> </td>
-												<th><a href="#" v-on:click="removeInscriptionCenso(competitor.eveinscriptionid)" v-bind:id="competitor.eveinscriptionid" :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent" style="color: red;"> <i class="fa fa-trash"></i> </a> </td>										
-
+												<th><a href="#" v-on:click="removeInscriptionCenso(competitor.eveinscriptionid)" v-bind:id="competitor.eveinscriptionid" :class="{disabled: linkDisabled}" v-if="!infoUE.swcloseevent" style="color: red;"> <i class="fa fa-trash"></i> </a> </td>
 											</tr>
-											
-
-
 											<tr >
 												<th colspan="6" align="left">
 												{# <button v-on:click="doInscription()" type="button" class="btn btn-success" title="C"> Inscribir </button>								    		 #}
@@ -626,8 +619,22 @@
 				$('#modalNewInscription').modal('hide');
 				this.swParent = false;
 			},
+
+			resetFormEtapa: function(){
+				this.infoUE.levelId = [];
+				this.infoUE.gradoId = [];
+				this.infoUE.turnoId = [];
+				this.infoUE.parallelId = [];
+
+				this.grado = false;
+				this.paralelo= false;
+				this.turno= false;
+				this.btnDisabled = true;
+			},
+
 			findUEData:function(){
 
+				this.resetFormEtapa();
 				this.existSelectData=false;
 				this.DBModalidades={};
 				this.DBFases={};
@@ -660,7 +667,6 @@
 					.then(response => {
 						Swal.close();
 						if (response.status == 200) {
-								// console.log(response.data);
 
 							if(response.data.existUE == true){
 
@@ -674,11 +680,7 @@
 								this.infoUE.urlreporte = response.data.urlreporte;
 
 							}else{
-								Swal.fire(
-								'Atencion !',
-								'CÓDIGO SIE NO EXISTE',
-								'warning'
-								);
+								Swal.fire('Atención', 'Esta unidad no fue encontrada', 'warning');
 							}
 								
 						}
@@ -686,6 +688,13 @@
 					})
 					.catch(e => {
 						this.buscando = false;
+						if(e.response.status == 404){
+							Swal.fire({
+								icon: 'info',
+								title: "Atención", 
+								html: "Esta unidad no cuenta con un nivel <p><b>Secundaria Comunitaria Productiva</b></p>" 
+							});
+						}
 					});				
 
 			},
@@ -778,6 +787,7 @@
 				this.loadingTurno = true;
 				this.turno = false;
 				this.existSelectData=false;
+				this.btnDisabled = true;
 
 				this.infoUE.turnoId = [];
 				axios.post(Routing.generate('censoinscription_getTurno', this.infoUE ))
@@ -837,7 +847,6 @@
 						Swal.close();
 						if (response.status == 200) {
 							this.DBselectedData = response.data.selectedData;
-								// console.log(response.data);
 
 								if(response.data.existSelectData == true){
 									
@@ -949,38 +958,38 @@
 				this.existStudent=false;
 				this.DBstudent={};
 				axios.post(Routing.generate('censoinscription_getParalelos', infoUEAll ))
-				.then(response => {
-					if (response.status == 200) {
-						this.DBselectedData = response.data.selectedData;
+					.then(response => {
+						if (response.status == 200) {
+							this.DBselectedData = response.data.selectedData;
 
-							if(response.data.existParall == true){
+								if(response.data.existParall == true){
+									
+									// this.DBselectedData = response.data.selectedData;
+									// this.infoUE.modalidadId = response.data.modalidadId;
+									// this.infoUE.faseId = response.data.faseId;
+									// this.infoUE.categorieId = response.data.categorieId;
+									// this.infoUE.sie = response.data.sie;
+									this.DBParallels = response.data.arrParallels;
+
+									this.existParall = response.data.existParall;
+
+									// this.infoUE2.krlos = 'krlos';
+									// this.DBCategories = response.data.arrCategories;
+									
+								}else{
+									Swal.fire(
+									'Atención',
+									'Ocurrio un error, vuelva a intentarlo porfavor',
+									'warning'
+									);
+								}
 								
-								// this.DBselectedData = response.data.selectedData;
-								// this.infoUE.modalidadId = response.data.modalidadId;
-								// this.infoUE.faseId = response.data.faseId;
-								// this.infoUE.categorieId = response.data.categorieId;
-								// this.infoUE.sie = response.data.sie;
-								this.DBParallels = response.data.arrParallels;
-
-								this.existParall = response.data.existParall;
-
-								// this.infoUE2.krlos = 'krlos';
-								// this.DBCategories = response.data.arrCategories;
-								
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'Ocurrio un error, vuelva a intentarlo porfavor',
-								'warning'
-								);
-							}
-							
-					}
-					this.buscando = false;
-				})
-				.catch(e => {
-					this.buscando = false;
-				});					
+						}
+						this.buscando = false;
+					})
+					.catch(e => {
+						this.buscando = false;
+					});					
 
 			},
 			showStudents:function(infoUEAll){
@@ -1047,7 +1056,6 @@
 
 				axios.post(Routing.generate('censoinscription_validateTutor', this.infoUE ))
 							.then(response => {
-								
 								if (response.status == 200) {
 									Swal.close();
 									// this.DBselectedData = response.data.selectedData;
@@ -1102,7 +1110,7 @@
                 if (typeof this.informe != 'object') {
                     Swal.fire(
                       'Adjuntar Autorización',
-                      'Debe adjuntar la Autorización, debe ser un archivo de imagen o PDF, y el tamaño debe ser menor a 2MB',
+                      'Debe adjuntar la Autorización, debe ser un archivo de imagen o PDF, el tamaño debe ser menor a 2MB',
                       'warning'
                     );
                     return;
@@ -1182,48 +1190,62 @@
 			removeInscriptionCenso:function(inscriptionid){
 
                     Swal.fire({
-                        title: '¿Realizar la eliminación??',
-                        text: "Se eliminará al estudiante seleccionado...",
+                        title: '¿Esta seguro?',
+                        text: "Se eliminará al estudiante seleccionado",
                         type: 'question',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Si, registrar',
-                        cancelButtonText: 'Cancelar'
+                        confirmButtonText: 'Si',
+                        cancelButtonText: 'No'
                     }).then((result) => {
 	                    if (result.value) {
+
+							Swal.fire({
+								title: 'Eliminando...',
+								html: 'Espere un momento porfavor',
+								timerProgressBar: true,
+								allowOutsideClick: false,
+								allowEscapeKey: false,
+								allowEnterKey: false,
+								didOpen: () => {
+									Swal.showLoading()
+								},
+							});		
 
 							this.infoUE.remoinscriptionid=inscriptionid;
 							// $('#'+inscriptionid).addClass('seleccionado');
 							axios.post(Routing.generate('censoinscription_removeInscriptionCenso', this.infoUE ))
 							.then(response => {
 								if (response.status == 200) {
+									Swal.fire({
+										icon: 'success',
+										title: 'Correcto',
+										text: 'Se elimino exitosamente',
+										timer: 2000,
+										showConfirmButton: false
+									});
 									// this.DBselectedData = response.data.selectedData;
-										// console.log(response.data);
+									this.dataSelected(this.infoUE);
+									if(response.data.existRemoveStudent == true){
+										this.DBEveStudents ={};
+										
+										// this.DBselectedData = response.data.selectedData;
+										this.infoUE.modalidadId = response.data.modalidadId;
+										this.infoUE.faseId = response.data.faseId;
+										this.infoUE.categorieId = response.data.categorieId;
+										this.infoUE.sie = response.data.sie;
+										// this.DBstudent = response.data.arrStudents;
+										this.DBEveStudents = response.data.arrEveStudents;
 
-										if(response.data.existRemoveStudent == true){
-											this.DBEveStudents ={};
-											
-											// this.DBselectedData = response.data.selectedData;
-											this.infoUE.modalidadId = response.data.modalidadId;
-											this.infoUE.faseId = response.data.faseId;
-											this.infoUE.categorieId = response.data.categorieId;
-											this.infoUE.sie = response.data.sie;
-											// this.DBstudent = response.data.arrStudents;
-											this.DBEveStudents = response.data.arrEveStudents;
+										// this.existStudent = response.data.existStudent;
 
-											// this.existStudent = response.data.existStudent;
-
-											// this.infoUE2.krlos = 'krlos';
-											// this.DBCategories = response.data.arrCategories;
-											
-										}else{
-											Swal.fire(
-											'Atencion !',
-											'Ocurrio un error, vuelva a intentarlo porfavor',
-											'warning'
-											);
-										}
+										// this.infoUE2.krlos = 'krlos';
+										// this.DBCategories = response.data.arrCategories;
+										
+									}else{
+										Swal.fire('Atención', 'Ocurrio un error, vuelva a intentarlo porfavor', 'warning');
+									}
 										
 								}
 								this.buscando = false;
