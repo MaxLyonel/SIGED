@@ -89,11 +89,13 @@
             {# endif #}
             {# commented by krlos 15.04.2020 app.session.get('ie_gestion') == app.session.get('currentyear') or #}
             {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_gestion') == app.session.get('currentyear') ) %}
-            <div class="col-md-3">
-                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
-                    <i class="fa fa-user"></i> Inscripción con CI
-                </button>
-            </div>
+                {% if ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')) %}
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
+                            <i class="fa fa-user"></i> Inscripción con CI
+                        </button>
+                    </div>
+                {% endif %}
             {% endif %}
             <!--div class="col-md-3">
                 <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{#{{infoUe}}#}');" >
@@ -217,20 +219,22 @@
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
                                                     {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%}
                                                     {# commented by krlos 07.07.2020  #}
-                                                        {% if primariaNuevo %}
-                                                            <li>
-                                                              <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                                <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
-                                                              </a>
-                                                            </li>
-                                                        {% else %}
-                                                            <li>
-                                                              <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                                <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
-                                                              </a>
-                                                            </li>
-  
-                                                        {% endif %}
+                                                                <li>
+                                                                    <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                        <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                                    </a>
+                                                                </li>
+                                                        {% if ( app.session.get('ie_per_estado') == '2' ) %}
+                                                            {% if primariaNuevo %}
+                                                            {% else %}
+                                                                <li>
+                                                                <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                    <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                                </a>
+                                                                </li>
+    
+                                                            {% endif %}
+                                                        {% endif %}   
                                                    
                                                     {% endif %}
 
@@ -242,18 +246,18 @@
                                                           </a>
                                                         </li>
                                                     {% endif %}
-                                                    
                                                     {#IMPRIMIR FORMULARIO RUDE AL SEGUN EL CASO#}
-                                                    {% if (((app.session.get('ie_gestion') == '2016') and (app.session.get('ie_per_cod') == '3')) 
-                                                            or ((app.session.get('ie_gestion') >= '2017') and (app.session.get('ie_per_cod') in ['2','3']))
+                                                    {% if (((app.session.get('ie_gestion') == '2016') and (app.session.get('ie_per_cod') == '3')) or ((app.session.get('ie_gestion') >= '2017') and (app.session.get('ie_per_cod') in ['2','3']))
                                                             ) %}
                                                             {% if (app.session.get('ie_per_estado') == '0') %}
                                                                 <li>
-                                                                <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
-                                                                    <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
-                                                                </a>
+                                                                    <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
+                                                                        <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
+                                                                    </a>
                                                                 </li>
                                                             {% else %}
+                                                                {# SOLO DESPUES DE LAS INSCRIPCIONES #}
+                                                                {% if (app.session.get('ie_per_estado') == '2') %}
                                                                     <li>
                                                                         <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealNew('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                             <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
@@ -269,7 +273,8 @@
                                                                             <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
                                                                         </a>
                                                                     </li> #}
-                                                                {% endif %}                                                            
+                                                                {% endif %}
+                                                            {% endif %}                                                            
                                                     {% endif %} 
                                                     
                                                     {#ACTIVO ELIMINACION SOLO EN INSCRIPCIONES Y REGULARIZAION#}
@@ -292,20 +297,23 @@
                                                                                                          
                                                     {% endif %}
                                                     <li class="divider"></li>
-                                                    {#ACTIVO DECLARACION JURADA EN LOS ULTIMOS GRADOS DE HUMANISTICA Y TECNICA#}
-                                                    {% if ( ((data.nivelId == 15) and (data.cicloId == 2) and (data.gradoId == 3)) or ((data.nivelId == 5) and (data.cicloId == 2) and (data.gradoId == 2)) )%}
-                                                        <li>
-                                                          <a href="{{path('herramienta_alter_reporte_ddjj_hum', {'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') , 'sie': app.session.get('ie_id') } )}}">
-                                                              <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
-                                                          </a>
-                                                        </li>
-                                                    {% endif %}
-                                                    {% if data.nivelId in ['18','19','20','21','22','23','24','25'] %}
-                                                        <li>
-                                                          <a href="{{path('herramienta_alter_reporte_ddjj_tec', {'insId': data.eInsId, 'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') } )}}">
-                                                              <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
-                                                          </a>
-                                                        </li>
+                                                    {# DESCARGAR DESPUES DE CIERRE DE OPERATIVO INSCRIPCION #}
+                                                    {% if ( app.session.get('ie_per_estado') == '2' ) %}
+                                                        {#ACTIVO DECLARACION JURADA EN LOS ULTIMOS GRADOS DE HUMANISTICA Y TECNICA#}
+                                                        {% if ( ((data.nivelId == 15) and (data.cicloId == 2) and (data.gradoId == 3)) or ((data.nivelId == 5) and (data.cicloId == 2) and (data.gradoId == 2)) )%}
+                                                            <li>
+                                                            <a href="{{path('herramienta_alter_reporte_ddjj_hum', {'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') , 'sie': app.session.get('ie_id') } )}}">
+                                                                <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
+                                                            </a>
+                                                            </li>
+                                                        {% endif %}
+                                                        {% if data.nivelId in ['18','19','20','21','22','23','24','25'] %}
+                                                            <li>
+                                                            <a href="{{path('herramienta_alter_reporte_ddjj_tec', {'insId': data.eInsId, 'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') } )}}">
+                                                                <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
+                                                            </a>
+                                                            </li>
+                                                        {% endif %}
                                                     {% endif %}
                                                 </ul>
                                           </div>

@@ -27,13 +27,18 @@
         width: 300px;
         background-color: #6E89FF;
     }
+    .m-t-r{
+        margin-top: revert !important;
+    }
 </style>
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="panel panel-danger">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Adición y Eliminación de Áreas / Asignación de Maestros</h3>
+                    <h3 class="panel-title">
+                    Adición y Eliminación de{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %}/ Asignación de Maestros
+                    </h3>
                 </div>
                 <div class="pull-right">
                     <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
@@ -62,7 +67,7 @@
                         <div class="btn-group" style="width:650px; float:right;">
 
                             <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
-                                Agregar Área <span class="caret"></span>
+                                Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
                                 {% if asignaturas|length > 0 %}
@@ -76,7 +81,7 @@
                         </div>
                     {% endif %}    
                     <br>
-                <h4>Áreas actuales del curso</h4>
+                <h4 class="m-t-r">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %}actuales del curso</h4>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -131,7 +136,8 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}')"><i class="fa fa-users text-lilac"></i></button>
+                                        {{app.session.get('ie_per_estado')}}
+                                        <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}', '{{ app.session.get('ie_per_estado') }}' )"><i class="fa fa-users text-lilac"></i></button>
                                         <div class="arrow-before" style="display:none; margin-left:10px;" id=""></div><div class="arrow-after" style="display:none;margin-left:10px;" id=""></div>
                                         <div id="{{co.iecoid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
                                         </div>
@@ -277,7 +283,8 @@
         }
     };
 
-    var addpop = function(idco){
+    var addpop = function(idco, ie_estado){
+
         if ($('#'+idco).is(':hidden')){
             $.ajax({
                 type: 'post',

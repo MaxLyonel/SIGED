@@ -72,8 +72,8 @@ class CursosController extends Controller {
 //        dump($objUeducativa);
 //        die;
         return $this->render($this->session->get('pathSystem') . ':Cursos:index.html.twig', array(
-                    'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
-                    'exist' => $exist,
+            'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
+            'exist' => $exist,
         ));
     }
 

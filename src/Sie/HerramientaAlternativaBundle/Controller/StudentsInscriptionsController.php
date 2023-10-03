@@ -336,6 +336,9 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function inscriptionbyCiAction(Request $request){
+
+      // IS FIRST
+
       // ini var to the function
       $em = $this->getDoctrine()->getManager();
       $response = new JsonResponse();
@@ -523,7 +526,7 @@ class StudentsInscriptionsController extends Controller {
       // dump($arrResponse);die;
       $response->setStatusCode(200);
       $response->setData($arrResponse);
-       
+      
       return $response;    
       
     }    
@@ -580,9 +583,9 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
- // dump($request);
- // dump($_FILES);
- // die;
+      
+      // IS SECOND
+     
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -596,6 +599,12 @@ class StudentsInscriptionsController extends Controller {
       $paterno = mb_strtoupper($request->get('paterno'), 'utf-8');
       $materno = mb_strtoupper($request->get('materno'), 'utf-8');
       $nombre = mb_strtoupper($request->get('nombre'), 'utf-8');
+
+      $oficialia = mb_strtoupper($request->get('oficialia'), 'utf-8');
+      $libro = mb_strtoupper($request->get('libro'), 'utf-8');
+      $partida = mb_strtoupper($request->get('partida'), 'utf-8');
+      $folio = mb_strtoupper($request->get('folio'), 'utf-8');
+
       $fecNac = $request->get('fecNac');
       $generoId = $request->get('generoId');
       $carnet = $request->get('carnet');
@@ -605,7 +614,7 @@ class StudentsInscriptionsController extends Controller {
       $expedidoId = $request->get('expedidoId');
       $withoutsegip = ($request->get('withoutsegip')=='true')?true:false;
 
-      $casespecial = ($request->get('casespecial')=='false')?false:true;;
+      $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
       $arrRudesStudent = false;
@@ -619,35 +628,43 @@ class StudentsInscriptionsController extends Controller {
       );
       if($request->get('extranjero') == 1){
         $arrParametros['extranjero'] = 'e';
-      }      
+      } 
+      
+      // dump($carnet);
+      // dump($arrParametros);
       if(!$withoutsegip){
+        // dump($withoutsegip);
+        // dump("no tiene carnet");
         // get info segip
         $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
       }else{
+        // dump("si tiene carnet");
         $answerSegip = true;
       }
-
+      
       // check if the data person is true
       if($answerSegip){
 
-
         $arrdataStudent = array(
-        'paterno'=>$paterno,
-        'materno'=>$materno,
-        'nombre'=>$nombre,
+          'paterno'=>$paterno,
+          'materno'=>$materno,
+          'nombre'=>$nombre,
+          'fechaNacimiento'=>$fecNac,
+          'oficialia'=>$oficialia,
+          'libro'=>$libro,
+          'partida'=>$partida,
+          'folio'=>$folio
         );
         
-        $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
-        // dump($objRudesStudent);die;
-        
+        $objRudesStudent = $this->get('funciones')->searchByExcaustiveDataStudent($arrdataStudent);
+
         if(!($objRudesStudent)){
-        // if(true){
+          // if(true){
 
-        // set parameter to validate inscription
-        $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
-        // get the studnets age
-        $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
-
+          // set parameter to validate inscription
+          $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
+          // get the studnets age
+          $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
           // check if the students has the required
           if(!($swyearStudent)){
 
@@ -676,6 +693,11 @@ class StudentsInscriptionsController extends Controller {
                 $estudiante->setFechaNacimiento(new \DateTime($fecNac));            
                 $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId));
                 $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
+
+                $estudiante->setOficialia($oficialia);
+                $estudiante->setLibro($libro);
+                $estudiante->setPartida($partida);
+                $estudiante->setFolio($folio);
                 // check if the country is Bolivia
                 if ($paisId === '1'){                    
                     $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
@@ -722,8 +744,7 @@ class StudentsInscriptionsController extends Controller {
                   '',
                   'ALTERNATIVA',
                   json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-              );
-
+                );
 
                 $em->flush();
 
@@ -742,11 +763,11 @@ class StudentsInscriptionsController extends Controller {
             }
           }else{
 
-              $status = 'error';
-              $code = 400;
-              $message = "Estudiante no cumple con la edad Requerida";
-              $swcreatestudent = false;            
-            }
+            $status = 'error';
+            $code = 400;
+            $message = "Estudiante no cumple con la edad Requerida";
+            $swcreatestudent = false;            
+          }
 
         }else{
 
@@ -785,12 +806,11 @@ class StudentsInscriptionsController extends Controller {
 
       //send the response info
        $arrResponse = array(
-            'status'          => $status,
-            'code'            => $code,
-            'message'         => $message,
-            'swcreatestudent' => $swcreatestudent,
-            'arrRudesStudent' => $arrRudesStudent,
-            
+          'status'          => $status,
+          'code'            => $code,
+          'message'         => $message,
+          'swcreatestudent' => $swcreatestudent,
+          'arrRudesStudent' => $arrRudesStudent
       );
       
       $response->setStatusCode(200);

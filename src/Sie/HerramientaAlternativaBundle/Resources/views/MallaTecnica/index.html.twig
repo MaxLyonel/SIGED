@@ -3,7 +3,7 @@
 {% block contentoption %}
     {#///PARA SUBIR EL ARCHIVO#}
     <div class="header-content">
-        <h2><i class="fa fa-language"></i> Malla Técnica <span>Lista de áreas, especialidades y módulos del centro de educación alternativa.</span></h2>
+        <h2><i class="fa fa-language"></i> Malla Técnica <span>Lista de áreas, {% if ( app.session.get('ie_gestion') >= 2023 ) %} carreras {% else %} especialidades {% endif %}y módulos del centro de educación alternativa.</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">

@@ -3,14 +3,14 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-plus-circle animated flip"></i> Habilitar Sucursal<span></span></h2>
+        <h2><i class="fa fa-plus-circle animated flip"></i> Habilitar SubCentro<span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                     <i class="fa fa-home"></i>
                     <a href="{{path('principal_web')}}">Inicio </a>
                     <i class="fa fa-angle-right"></i>
-                     <li class="active">Habilitar Sucursal</li>
+                     <li class="active">Habilitar SubCentro</li>
                 </li>
 
                 <li class="active"></li>
@@ -24,7 +24,7 @@
                 <div class="panel rounded shadow panel-success">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Habilitar Sucursal</h3>
+                            <h3 class="panel-title">Habilitar SubCentro</h3>
                         </div>
                         <div class="pull-right">
 
@@ -35,7 +35,7 @@
                         <div class="row">
                             <div class="alert alert-info alert-dismissible" role="info">
                                 <button type="button" class="close" data-dismiss="info" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <strong><i class='fa fa-info'></i></strong> Para la habilitación de una nueva sucursal, debe considerar que: la sucursal será registrada para la gestión actual en el CEA y Periodo seleccionado.
+                                <strong><i class='fa fa-info'></i></strong> Para la habilitación de un nuevo SubCentro, debe considerar que: el SubCentro será registrado para la gestión actual en el CEA y Periodo seleccionado.
                             </div>
                             {% for flashMessage in app.session.flashbag.get('errorMsg') %}
                                         <div class="alert alert-danger alert-dismissible" role="alert">

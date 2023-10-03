@@ -142,7 +142,7 @@ class MallaTecnicaController extends Controller {
     }
 
     public function mallaseemodulosAction(Request $request) {
-
+        
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
         $em = $this->getDoctrine()->getManager();
@@ -267,6 +267,9 @@ select idsae,idacr
         else{
             $exist = false;
         }
+        // LUIS
+        // dump($mallafinal);
+        // die;
 
         return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:seemodulosnew.html.twig', array(
             'exist' => $exist,
@@ -1282,9 +1285,8 @@ select idsae,idacr
     }
 
     public function showModuloEditAction(Request $request)
-    {  $em = $this->getDoctrine()->getManager();
-        // dump($request);die;
-        $horas= [80,100,120];
+    {  
+        // $horas= [80,100,120]; // BY LUIS NOW CAN'T CHANGE ONLY SCHEDULE 100
         $idmodulo = $request->get('idmodulo');
         $idspm = $request->get('idspm');
         $modulo = $request->get('modulo');
@@ -1292,31 +1294,55 @@ select idsae,idacr
         $idesp = $request->get('idesp');
         $totalhoras = $request->get('totalhoras');
         $idacreditacion =$request->get('idacred');
-       for($i=0;$i<=2;$i++)
-       {
-           if($horas[$i]==$horasmodulo){
-               $horasid = $i;
-           }
-       }
-
+        // for($i=0;$i<=2;$i++)
+        // {
+        //    if($horas[$i]==$horasmodulo){
+        //        $horasid = $i;
+        //    }
+        // }
         $form = $this->createFormBuilder()
             // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
             ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-            ->add('horas', 'choice', array('choices'=> $horas,'data' => $horasid, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('horas', 'choice', array('choices'=> [$horasmodulo],'data' => 1, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'updateModulo();')))
             ->add('idmodulo', 'hidden', array('data' => $idmodulo))
             ->add('idspm', 'hidden', array('data' => $idspm))
             ->add('idesp', 'hidden', array('data' => $idesp))
             ->add('totalhoras', 'hidden', array('data' => $totalhoras))
             ->getForm();
-        return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:editarmodulo.html.twig', array(
 
+        return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:editarmodulo.html.twig', array(
             'form' => $form->createView(),
             'totalhoras'=>$totalhoras,
             'idacreditacion'=>$idacreditacion,
             'horasmodulo'=>$horasmodulo
-
         ));
+    }
+
+    public function checkConsolidateAction( Request $request ){
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $query = "select ic.id, sia.institucioneducativa_id,sia.acreditacion_especialidad_id, smp.superior_modulo_tipo_id,smp.institucioneducativa_periodo_id, smp.horas_modulo 
+        from institucioneducativa_curso ic
+        inner join superior_institucioneducativa_periodo sip on ic.superior_institucioneducativa_periodo_id=sip.id
+        inner join superior_institucioneducativa_acreditacion sia on ic.superior_institucioneducativa_periodo_id=sia.id
+        inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id
+        where smp.id=".$request->get('idspm')."";
+
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $results = $stmt->fetchAll();
+
+        $edit = false;
+        if( !$results ){
+            $edit=true;
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('data'=>$edit));
     }
 
     public function updateModuloNuevoAction(Request $request)
@@ -1653,8 +1679,6 @@ select idsae,idacr
             $em->flush($smtipo);
 
             //  dump($smtipo);die;
-
-
 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
             $smperiodo = new SuperiorModuloPeriodo();

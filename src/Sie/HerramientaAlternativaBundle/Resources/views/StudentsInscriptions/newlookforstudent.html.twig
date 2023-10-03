@@ -189,7 +189,27 @@
                                 </select>
                               </div>
                             </div>
-                            </br>     
+
+
+                            <div class="row">
+                              <div class="col-sm-3">
+                                <label for="ci">Oficilia</label>
+                                <input type="text" class="form-control" placeholder="Oficialia" maxlength="20" v-model="newStudent.oficialia">
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="complemento(s)">Libro</label>
+                                <input type="text" class="form-control" placeholder="Libro"  maxlength="20" autocomplete="off" style="text-transform:uppercase" v-model="newStudent.libro">
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="complemento(s)">Partida</label>
+                                <input type="text" class="form-control" placeholder="Partida"  maxlength="20" autocomplete="off" style="text-transform:uppercase" v-model="newStudent.partida">
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="fechanac">Folio</label>
+                                <input type="text" class="form-control" placeholder="Folio" maxlength="20" v-model="newStudent.folio">
+                              </div>
+                            </div>
+
                             <div class="row">
                               <div class="col-sm-4">
                               <label for="paterno">Paterno</label>
@@ -346,10 +366,10 @@
               </div>
               
               <div v-if="swperson">
-                <button v-on:click="validateandregisterNewStudent(1)" type="button" class="btn btn-warning">Verificar - Inscribir</button>
+                <button v-on:click="validateandregisterNewStudent(1)" type="button" class="btn btn-warning">Verificar - Inscribir 11</button>
               </div>
               <div v-if="swnewperson">
-                <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar - Inscribir</button>
+                <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar - Inscribir 22</button>
               </div>
               <div v-if="swstudent">
                 <div class="row">
@@ -669,6 +689,11 @@ var app = new Vue({
             }))
             .then(response => {
               if(response.status == 200){
+                console.log('NEW PERSON:', response.data.swnewperson);
+                console.log('EXIST PERSON:', response.data.swstudent);
+                
+                console.log(response.data.dataStudent);
+                
                 this.swstudent   = response.data.swstudent;
                 this.swperson    = response.data.swperson;
                 this.dataStudent = response.data.dataStudent;
@@ -822,24 +847,29 @@ var app = new Vue({
 
       /*this.dataStudent.expedidoId2 = 0;*/
       if(newperson){
+        console.log('new persona');
           this.dataStudent.paisId = this.newStudent.paisId;
           this.dataStudent.lugarNacTipoId = this.newStudent.lugarNacTipoId;
           this.dataStudent.lugarProvNacTipoId = this.newStudent.lugarProvNacTipoId;
           this.dataStudent.localidad = this.newStudent.localidad;
           this.dataStudent.iecId = this.iecId;
           
-        }else{
-          this.newStudent.casespecial = this.dataStudent.casespecial;
-          this.newStudent.excepcional = this.dataStudent.excepcional;
-          this.newStudent.infocomplementaria = this.dataStudent.infocomplementaria;
-          this.newStudent.carnet = this.cival;
-          this.newStudent.complementoval = this.complementoval;
-          this.newStudent.iecId = this.iecId;
-          this.newStudent.withoutsegip = this.dataStudent.withoutsegip;
-          this.dataStudent = this.newStudent;
-          this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
-        }
-        this.dataStudent.extranjero = this.newStudent.extranjero;
+      }else{
+        console.log('no new');
+        this.newStudent.casespecial = this.dataStudent.casespecial;
+        this.newStudent.excepcional = this.dataStudent.excepcional;
+        this.newStudent.infocomplementaria = this.dataStudent.infocomplementaria;
+        this.newStudent.carnet = this.cival;
+        this.newStudent.complementoval = this.complementoval;
+        this.newStudent.iecId = this.iecId;
+        this.newStudent.withoutsegip = this.dataStudent.withoutsegip;
+        this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
+        this.dataStudent = this.newStudent;
+
+        console.log('DATA NEW:', this.newStudent);
+
+      }
+      this.dataStudent.extranjero = this.newStudent.extranjero;
                 /*validate the file attached
         if(this.showupfile){
             if (typeof this.informe != 'object') {
@@ -854,26 +884,75 @@ var app = new Vue({
             }
         }*/
 
+      if((this.dataStudent.fecNac == null)){
+          Swal.fire(
+          'Fecha de Nacimiento!',
+          'Debe registrar la Fecha de Nacimiento del Estudiante',
+          'warning'
+          );
+          this.swproceso = false;
+          return;
+      } 
 
-        if((this.dataStudent.nombre == null)){
-           Swal.fire(
-            'Nombre!',
-            'Debe registrar Nombre del Estudiante',
-            'warning'
-           );
-           this.swproceso = false;
-           return;
-        } 
+      if((this.dataStudent.nombre == null)){
+          Swal.fire(
+          'Nombre!',
+          'Debe registrar Nombre del Estudiante',
+          'warning'
+          );
+          this.swproceso = false;
+          return;
+      } 
 
-        if((this.dataStudent.paterno == null && this.dataStudent.materno == null )){
-           Swal.fire(
-            'Paterno y/o Materno!',
-            'Debe registrar Paterno y/o Materno',
-            'warning'
-           );
-           this.swproceso = false;
-           return;
-        } 
+      if((this.dataStudent.paterno == null && this.dataStudent.materno == null )){
+          Swal.fire(
+          'Paterno y/o Materno!',
+          'Debe registrar Paterno y/o Materno',
+          'warning'
+          );
+          this.swproceso = false;
+          return;
+      }
+
+      if(!(this.dataStudent.oficialia)){
+        Swal.fire(
+          'Oficialia!',
+          'Debe registrar la Oficialia',
+          'warning'
+        );
+        this.swproceso = false;
+        return;
+      } 
+
+      if(!(this.dataStudent.libro)){
+        Swal.fire(
+          'Libro!',
+          'Debe registrar el Libro',
+          'warning'
+        );
+        this.swproceso = false;
+        return;
+      } 
+
+      if(!(this.dataStudent.partida)){
+        Swal.fire(
+          'Partida!',
+          'Debe registrar la Partida',
+          'warning'
+        );
+        this.swproceso = false;
+        return;
+      } 
+
+      if(!(this.dataStudent.folio)){
+        Swal.fire(
+          'Folio!',
+          'Debe registrar el Folio',
+          'warning'
+        );
+        this.swproceso = false;
+        return;
+      } 
 
       if(this.dataStudent.paisId == null ){
             Swal.fire(
@@ -911,28 +990,26 @@ var app = new Vue({
             );
             this.swproceso = false;
             return;
-
           }
-        if(!(this.dataStudent.expedidoId2 > 0)){
-           Swal.fire(
-            'Expedido!',
-            'Debe registrar Expedido del carnet de identidad',
-            'warning'
-           );
-           this.swproceso = false;
-           return;
-          }            
-         }
-      }
+          if(!(this.dataStudent.expedidoId2 > 0)){
+            Swal.fire(
+              'Expedido!',
+              'Debe registrar Expedido del carnet de identidad',
+              'warning'
+            );
+            this.swproceso = false;
+            return;
+            }            
+          }
+        }
 
-      if(typeof this.dataStudent.casespecial  == 'undefined'){  
-          this.dataStudent.casespecial=false;
-      }
-      if(typeof this.dataStudent.excepcional  == 'undefined'){  
-          this.dataStudent.excepcional=false;
-      }
-      
-
+        if(typeof this.dataStudent.casespecial  == 'undefined'){  
+            this.dataStudent.casespecial=false;
+        }
+        if(typeof this.dataStudent.excepcional  == 'undefined'){  
+            this.dataStudent.excepcional=false;
+        }
+        
       Swal.fire({
             title: '¿Realizar incripción?',
             text: "El estudiante será inscrito en el curso seleccionado",

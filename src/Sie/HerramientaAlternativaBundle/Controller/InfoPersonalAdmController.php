@@ -119,7 +119,6 @@ class InfoPersonalAdmController extends Controller {
      */
 
     public function newAction(Request $request) {
-
         // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -159,8 +158,8 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $financiamiento = $em->createQuery(
-                        'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
-                WHERE ft.id NOT IN  (:id) ORDER BY ft.id')
+                        "SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
+                WHERE ft.id NOT IN (:id) AND ft.financiamiento<>'TGN OTROS' ORDER BY ft.id")
                 ->setParameter('id', array(0, 5))
                 ->getResult();
         $financiamientoArray = array();

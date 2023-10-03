@@ -130,6 +130,12 @@ herramienta_show_modulo_edit:
     options:
          expose: true
 
+herramienta_check_consolidate:
+    path:     /checkconsolidate/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:checkConsolidate"}
+    options:
+         expose: true
+
 herramienta_show_modulo_delete:
     path:     /showmodulodelete/
     defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:showModuloDelete"}

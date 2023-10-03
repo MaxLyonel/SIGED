@@ -60,23 +60,31 @@
                             <div class="panel-body">
 
                                 {% if (app.session.get('ie_per_estado') != '0') %}
+                                    
+                                    {# TECNICO BASICO #}
                                     {% if (malla.idacreditacion == '1') %}
                                         {% if (malla.tothoras < '500' and malla.sw_esoficial == 0) %}
                                             <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
                                         {% endif %}
+
+
+                                    {# TECNICO AUXILIAR #}
                                     {% elseif (malla.idacreditacion == '20') %}
                                         {% if (malla.tothoras < '500' and malla.sw_esoficial == 0) %}
                                             <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
                                         {% endif %}
+
+                                    {# TECNICO MEDIO #}
                                     {% elseif (malla.idacreditacion == '32') %}
+                                        {# TECNICO MEDIO ES ESTE ID #}
                                         {% if (malla.tothoras < '1000' and malla.sw_esoficial == 0) %}
                                             <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
                                         {% endif %}
                                     {% endif %}
+
                                 {% endif %}
                                 <br>
                                 {% if (malla.modulo!='') %}
-
 
                                     <div>
                                         <div class="table-responsive col-md-12">
@@ -86,10 +94,7 @@
                                                     <th class="text-center border-right">N°</th>
                                                     <th class="text-center border-right">Modulo</th>
                                                     <th class="text-center border-right">Horas</th>
-                                                    <th class="text-center border-right">Operaciones</th>
-
-
-
+                                                    <th class="text-center border-right">Operacion</th>
                                                 </tr>
                                                 </thead>
 
@@ -109,7 +114,7 @@
                                                             {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
                                                             {% if (app.session.get('ie_per_estado') != '0') %}
                                                                 {% if malla.sw_esoficial == 0 %}
-                                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
+                                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
                                                                     <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button>
                                                                 {% endif %}
                                                              {% endif %}
@@ -147,6 +152,7 @@
 </div>
 {% endblock %}
 {% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
     var nuevoModulo= function (idsip,idesp,totalhoras,idacred) {
@@ -209,8 +215,50 @@
             }
 
         };
+ 
+    var checkConsolidate = function(idmodulo,idspm,modulo,horas,idesp,totalhoras,idacred){
+
+        Swal.fire({
+            title: 'Verificando...',
+            html: 'Espere un momento porfavor',
+            timerProgressBar: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+            },
+        });
+
+        $.ajax({
+            type: "get",
+            url: "{{ path('herramienta_check_consolidate') }}",
+            data: ({idmodulo:idmodulo,idspm:idspm,modulo:modulo,horas:horas,idesp:idesp,totalhoras:totalhoras,idacred:idacred}),
+            success: function(res){
+                Swal.close();
+                if( res.data ){
+                    editarModulo(idmodulo,idspm,modulo,horas,idesp,totalhoras,idacred);
+                }else{
+                    Swal.fire('Opps','No puede realizar esta accion porque el modulo se encuentra consolidado','info');
+                }
+            }
+        })
+    };
 
     var editarModulo= function (idmodulo,idspm,modulo,horas,idesp,totalhoras,idacred) {
+
+        Swal.fire({
+            title: 'Obteniendo informacion...',
+            html: 'Espere un momento porfavor',
+            timerProgressBar: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+            },
+        });
+
         $.ajax({
             type: 'post',
             url: "{{ path('herramienta_show_modulo_edit') }}",
@@ -219,10 +267,10 @@
                 $('#modal').empty();
             },
             success: function (data) {
+                Swal.close();
                 $('#modal').empty();
                 $('#modal').modal('show');
                 $('#modal').append(data);
-
             },
 
             statusCode: {
@@ -235,33 +283,43 @@
     };
 
     var eliminarModuloCL= function (idmodulo,idspm,modulo,horas,idesp) {
-       // alert('dsfasdfasd');
-        if(confirm('Esta seguro que desea eliminar el modulo?')){
-            $.ajax({
-                type: 'post',
-                url: "{{ path('herramienta_show_modulo_delete') }}",
-                data: ({idmodulo:idmodulo,idspm:idspm,modulo:modulo,horas:horas,idesp:idesp}),
-                beforeSend: function () {
-                    $('#modal').empty();
-                },
-                success: function (data) {
-                    $("#listamodulos").empty();
-                    $('#mengestionmod').empty();
-                    //    $('#mengestioncurso').empty();
-                    $("#listamodulos").append(data);
-//                $('#modal').modal('show');
-//                $('#modal').append(data);
-                },
-                error: function(data){
-                    $('#mengestionmod').empty();
-                    $('#mengestionmod').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea borrar el modulo antes debe eliminar lo siguiente:  modulo asignado al curso, participantes y notas.</div>");
-                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
-                }
-            });
 
-        }else{
-            return false;
-        }
+        Swal.fire({
+        title: '¿Esta seguro que desea eliminar el modulo?',
+        //text: 'No podra realizar ningun cambio, se enviara a la empresa',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
+        }).then((result) => {
+            if( result.isConfirmed ){
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('herramienta_show_modulo_delete') }}",
+                    data: ({idmodulo:idmodulo,idspm:idspm,modulo:modulo,horas:horas,idesp:idesp}),
+                    beforeSend: function () {
+                        $('#modal').empty();
+                    },
+                    success: function (data) {
+                        Swal.fire('Correcto','Se elimino exitosamente','success');
+                        $("#listamodulos").empty();
+                        $('#mengestionmod').empty();
+                        //    $('#mengestioncurso').empty();
+                        $("#listamodulos").append(data);
+    //                $('#modal').modal('show');
+    //                $('#modal').append(data);
+                    },
+                    error: function(data){
+                        $('#mengestionmod').empty();
+                        Swal.fire('Opps','Si desea borrar el modulo antes debe eliminar lo siguiente:  modulo asignado al curso, participantes y notas','warning');
+                        //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                    }
+                });
+                
+            }
+        });
 
     };
 

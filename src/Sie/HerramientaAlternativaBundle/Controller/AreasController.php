@@ -63,7 +63,6 @@ class AreasController extends Controller {
         $data['mallaActual'] = $mallaActual;
         
         return $this->render('SieHerramientaAlternativaBundle:Areas:'.$templateToView, $data);
-
         
     }
 
@@ -658,6 +657,10 @@ class AreasController extends Controller {
         $ieco = $request->get('idco');
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+
+        // dump($ieco);
+        // dump($infoUe);
+        // die;
 
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');

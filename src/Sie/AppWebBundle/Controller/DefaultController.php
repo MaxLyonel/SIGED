@@ -103,7 +103,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 break;
-            case '172.20.196.191:8016':
+            case '172.20.196.5:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
             case 'alternativa.local':

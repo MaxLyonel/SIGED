@@ -39,7 +39,7 @@
                                 <th>Turno</th><td>{{turno}}</td>
                             </tr>
                             <tr>
-                                <th>Especialidad</th><td>{{especialidad}}</td>
+                                <th>Carrera</th><td>{{especialidad}}</td>
                                 <th>Paralelo</th><td>{{paralelo}}</td>
                             </tr>
                             <tr>
@@ -47,13 +47,13 @@
                             </tr>
                         </table>
                     {% endif %}
-                    <h5 class="text-info">Datos del Estudiante</h5>
+                    <h5 class="text-info">Datos del Participante</h5>
                     <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                         <tr>
                             <th>Código Rudeal</th><td>{{estudiante.codigoRude}}</td>
                         </tr>
                         <tr>
-                            <th>Estudiante</th><td>{{estudiante.estudiante}}</td>
+                            <th>Participante</th><td>{{estudiante.estudiante}}</td>
                         </tr>
                     </table>
                 </div>
@@ -184,7 +184,7 @@
                 </div>
             {% else %}
                 <div class="alert alert-info">
-                    <i class="fa fa-info-circle"></i> El estudiante no realizó la toma de materias, para proceder con el registro de notas.
+                    <i class="fa fa-info-circle"></i> El participante no realizó la toma de materias, para proceder con el registro de notas.
                 </div>
             {% endif %}
         </div>
