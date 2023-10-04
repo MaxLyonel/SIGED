@@ -283,42 +283,46 @@
         }
     };
 
-    var addpop = function(idco, ie_estado){
-
-        if ($('#'+idco).is(':hidden')){
-            $.ajax({
-                type: 'post',
-                data: ({idco: idco}),
-                url: "{{ path('herramienta_alter_areas_maestros') }}",
-                beforeSend: function () {
-                    $('.divMaestros').hide();
-                    $('.arrow-before').hide();
-                    $('.arrow-after').hide();
-                    $("#"+idco).empty();
-                    $('#before'+idco).fadeIn();
-                    $('#after'+idco).fadeIn();
-                    $('#'+idco).fadeIn();
-                    $('#'+idco).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando maestros<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
-                },
-                success: function (data) {
-                    $("#"+idco).empty();
-                    $("#"+idco).append(data);
-                    $('.chosen-select').chosen({allow_single_deselect: false});
-                    $('#'+idco).fadeIn();
-                },
-                statusCode: {
-                    500: function () {
-
+    var addpop = function(idco, infoUe, ie_estado){
+        console.log('estado de la ue: ', ie_estado);
+        if( ie_estado !== 2 ){
+            if ($('#'+idco).is(':hidden')){
+                $.ajax({
+                    type: 'post',
+                    data: ({idco: idco}),
+                    url: "{{ path('herramienta_alter_areas_maestros') }}",
+                    beforeSend: function () {
+                        $('.divMaestros').hide();
+                        $('.arrow-before').hide();
+                        $('.arrow-after').hide();
+                        $("#"+idco).empty();
+                        $('#before'+idco).fadeIn();
+                        $('#after'+idco).fadeIn();
+                        $('#'+idco).fadeIn();
+                        $('#'+idco).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando maestros<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
                     },
-                    404: function () {
+                    success: function (data) {
+                        $("#"+idco).empty();
+                        $("#"+idco).append(data);
+                        $('.chosen-select').chosen({allow_single_deselect: false});
+                        $('#'+idco).fadeIn();
+                    },
+                    statusCode: {
+                        500: function () {
 
+                        },
+                        404: function () {
+
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                $('#'+idco).fadeOut();
+                $('#before'+idco).fadeOut();
+                $('#after'+idco).fadeOut();
+            }
         }else{
-            $('#'+idco).fadeOut();
-            $('#before'+idco).fadeOut();
-            $('#after'+idco).fadeOut();
+            Swal.fire('Atencion', 'Solo puede asignar maestros en la etapa de inscripcion', 'info');
         }
     };
 
