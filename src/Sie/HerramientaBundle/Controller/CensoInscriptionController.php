@@ -65,9 +65,6 @@ class CensoInscriptionController extends Controller
 
     public function findUEDataAction(Request $request){
 
-
-        // VALIDAR QUE SEA UNA UNIDAD DE ALTERNATIVA
-
         // get the vars send        
         $sie = $request->get('sie');
         // create db conexion
@@ -113,17 +110,19 @@ class CensoInscriptionController extends Controller
 	                ->distinct()
 	                ->getQuery();
 	        $aNiveles = $query->getResult();
-	        
-	        if($aNiveles){
+
+            if(sizeof($aNiveles)>0){
 		        $arrniveles = array();
 		        foreach ($aNiveles as $nivel) {
 		            $arrniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
-		        }
-			
-		    }
+		        }			
+		    }else{
+                $response = new JsonResponse();
+                $response->setStatusCode(404);
+                return $response;
+            }
 
-
-	     }        
+	    }        
         // end   look for the level, grado, parallel & turno
 
 
@@ -419,8 +418,6 @@ class CensoInscriptionController extends Controller
 
     public function validateTutorAction(Request $request){
         
-        // dump($this->session->get('currentyear'));die;
-
         $dataStudent = $request->get('dataStudent');
         $apoderadoInput = $request->get('apoderado');
         $sie = $request->get('sie');
@@ -447,21 +444,22 @@ class CensoInscriptionController extends Controller
 
         $apoderadoInput['fecNacimiento'] = str_replace('/', '-', $apoderadoInput['fecNacimiento']);
         $apoderadoInput = array_map("strtoupper", $apoderadoInput);
+        $apoderadoInput['complemento'] = (isset($apoderadoInput['complemento'])) ? $apoderadoInput['complemento'] : '';
         
         if(sizeof($arrDataStudentsFull)>0){
             // foreach ($arrDataStudentsFull as $arrDataStudents) {
             while (($arrDataStudents = current($arrDataStudentsFull)) !== FALSE && $swparent) {                
 
-                    $apoderadoOutput = array(
-                      "paterno" => $arrDataStudents['paterno'],
-                      "materno" => $arrDataStudents['materno'],
-                      "nombre" => $arrDataStudents['nombre'],
-                      "carnet" => $arrDataStudents['carnet'],
-                      "complemento" => $arrDataStudents['complemento'],
-                      "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ),              
-                    );
-                    $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
-                    // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
+                $apoderadoOutput = array(
+                    "paterno" => $arrDataStudents['paterno'],
+                    "materno" => $arrDataStudents['materno'],
+                    "nombre" => $arrDataStudents['nombre'],
+                    "carnet" => $arrDataStudents['carnet'],
+                    "complemento" => $arrDataStudents['complemento'],
+                    "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ),              
+                );
+                $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
+                // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
                 // check if the values of parent/tutor are the same
                 if(($apoderadoInput == $apoderadoOutput)){
                     $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents['apoderadoinscripid'];
