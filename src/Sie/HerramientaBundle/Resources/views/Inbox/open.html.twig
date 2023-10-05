@@ -147,14 +147,15 @@
                     </div>
                 </div>
             {% endif %}
-           {% if data.gestion ==2023 %} <!--Se deshabilito hasta nueva instruccion 240123-->
+           {# inhabilitado en fecha 05/10 #}
+           {% if data.gestion ==2029 %} <!--Se deshabilito hasta nueva instruccion 240123-->
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
                     &nbsp;
                     <div class="caption text-center">
                         <h4>Operativo Bono JP</h4>
-                        <div class="thumbnail-action">
+                       {# <div class="thumbnail-action">
                             {% if operativoBonoJP %}
                                 <a href="{{path('operativo_bono_jp_ddjj',{sie:data.ieducativa.id,gestion:data.gestion})}}" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>
                             {% else %}
@@ -162,7 +163,7 @@
                                 {{form_widget(operativoBonoJPform.next)}}
                             {{form_end(operativoBonoJPform)}}
                             {% endif %}
-                        </div>
+                        </div>#}
                     </div>
                 </div>
             </div>            
