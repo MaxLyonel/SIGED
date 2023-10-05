@@ -490,6 +490,7 @@
                                     {# a peticion de bruno SOLO EFECTIVOS #}
                                     {# a peticion de bruno SOLO EFECTIVOS + Retirado por abandono, no incorporado, Retirado traslado. #}
                                     {# if gestion >= 2023 and nivel >= 12 and data.estadomatriculaId in [4,10,9,6] and swRegisterPersonBjp and app.session.get('estado') != 14  #}                                       
+                                    {# inhabilitado el 05/10 a las 1200 #}
                                     {% if gestion >= 2024 and nivel >= 12 and data.estadomatriculaId in [999] and swRegisterPersonBjp and app.session.get('estado') != 14  %}                                       
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Asignar Titular">
                                                 <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
