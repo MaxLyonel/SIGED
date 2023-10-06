@@ -2,21 +2,21 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
     type: entity
     table: bth_estudiante_nivelacion
     indexes:
-        IDX_3E42F685D3248FB5:
-            columns:
-                - estudiante_nota_cualitativa_id
-        IDX_3E42F685D72DBC59:
-            columns:
-                - especialidad_tecnico_humanistico_tipo_id
-        IDX_3E42F685C6447610:
-            columns:
-                - grado_tipo_id
         IDX_3E42F685585AE0D9:
             columns:
                 - asignatura_tipo_id
+        IDX_3E42F685D72DBC59:
+            columns:
+                - especialidad_tecnico_humanistico_tipo_id
         IDX_3E42F685A1104027:
             columns:
                 - estudiante_inscripcion_id
+        IDX_3E42F685D3248FB5:
+            columns:
+                - estudiante_nota_cualitativa_id
+        IDX_3E42F685C6447610:
+            columns:
+                - grado_tipo_id
     id:
         id:
             type: integer
@@ -43,14 +43,20 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        tramiteId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tramite_id
     manyToOne:
-        estudianteNotaCualitativa:
-            targetEntity: EstudianteNotaCualitativa
+        asignaturaTipo:
+            targetEntity: AsignaturaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estudiante_nota_cualitativa_id:
+                asignatura_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         especialidadTecnicoHumanisticoTipo:
@@ -62,24 +68,6 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
                 especialidad_tecnico_humanistico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        gradoTipo:
-            targetEntity: GradoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                grado_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        asignaturaTipo:
-            targetEntity: AsignaturaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                asignatura_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         estudianteInscripcion:
             targetEntity: EstudianteInscripcion
             cascade: {  }
@@ -87,6 +75,24 @@ Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
             inversedBy: null
             joinColumns:
                 estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteNotaCualitativa:
+            targetEntity: EstudianteNotaCualitativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_nota_cualitativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
