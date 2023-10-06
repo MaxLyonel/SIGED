@@ -48,7 +48,7 @@ class EstudianteInformacionController extends Controller {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('estudianteinformacion_result'))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'RUDE', 'required' => true, 'invalid_message' => 'Campo Obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{14,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestión', 'choices' => array('2022' => '2022','2021' => '2021','2020' => '2020','2019' => '2019','2018' => '2018', '2017' => '2017', '2016' => '2016', '2015' => '2015', '2014' => '2014', '2013' => '2013'), 'attr' => array('class' => 'form-control')))
+                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestión', 'choices' => array('2023' => '2023','2022' => '2022','2021' => '2021','2020' => '2020','2019' => '2019','2018' => '2018', '2017' => '2017', '2016' => '2016', '2015' => '2015', '2014' => '2014', '2013' => '2013'), 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'submit', array('label' => 'Buscar estudiante'))
                 ->getForm();
         return $form;
