@@ -105,3 +105,15 @@ sie_procesos_tramite_reg_doble_promocion:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteRegDobleProm.yml"
     prefix:   /sie/tramite/tramiteRegDobleProm
 
+sie_procesos_tramite_bth_nivelacion:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteBthNivelacion.yml"
+    prefix:   /sie/tramite/tramiteBthNivelacion
+
+# sie_procesos_tramite_bth_stt_estudiante:
+#     resource: "@SieProcesosBundle/Resources/config/routing/tramiteBthSttEstudiante.yml"
+#     prefix:   /sie/tramite/tramiteBthSttEstudiante
+
+# sie_procesos_tramite_reg_pre_bachillerato:
+#     resource: "@SieProcesosBundle/Resources/config/routing/regularizacionPreBachillerato.yml"
+#     prefix:   /sie/tramite/regularizacionPreBachillerato
+

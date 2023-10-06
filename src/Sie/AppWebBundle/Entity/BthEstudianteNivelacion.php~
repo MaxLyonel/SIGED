@@ -248,32 +248,4 @@ class BthEstudianteNivelacion
     {
         return $this->estudianteInscripcion;
     }
-    /**
-     * @var integer
-     */
-    private $tramiteId;
-
-
-    /**
-     * Set tramiteId
-     *
-     * @param integer $tramiteId
-     * @return BthEstudianteNivelacion
-     */
-    public function setTramiteId($tramiteId)
-    {
-        $this->tramiteId = $tramiteId;
-    
-        return $this;
-    }
-
-    /**
-     * Get tramiteId
-     *
-     * @return integer 
-     */
-    public function getTramiteId()
-    {
-        return $this->tramiteId;
-    }
 }

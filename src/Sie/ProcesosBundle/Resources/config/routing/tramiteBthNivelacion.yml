@@ -1,0 +1,43 @@
+tramite_bth_nivelacion_index:
+    path:     /btnue/solicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:index }
+
+tramite_bth_nivelacion_busca_rude:
+    path:     /btnue/buscarude
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:buscaRude }
+    options:
+         expose: true
+
+tramite_bth_nivelacion_envia_solicitud:
+    path:     /btnue/enviasolicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:enviaSolitudUe }
+    options:
+         expose: true
+
+tramite_bth_nivelacion_vista_imprimir:
+    path:     /btnue/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:formularioVistaImprimir }
+
+tramite_bth_nivelacion_ddd_recibe:
+    path:     /btnddd/recibe
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:dddRecibeVerifica }
+    options:
+         expose: true
+
+tramite_bth_nivelacion_distrito_envia_solicitud:
+    path:     /btnddd/enviasolicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:dddEnviaSolitud }
+    options:
+         expose: true
+
+tramite_bth_nivelacion_dde_recibe:
+    path:     /btndde/recibe
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:ddeRecibeVerifica }
+    options:
+         expose: true
+
+tramite_bth_nivelacion_departamento_consolida_solicitud:
+    path:     /btndde/consolida
+    defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:ddeConsolidaSolicitud }
+    options:
+         expose: true
