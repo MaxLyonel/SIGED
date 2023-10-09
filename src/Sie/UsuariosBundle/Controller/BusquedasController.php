@@ -185,25 +185,22 @@ class BusquedasController extends Controller
                     $params = array($idperson);
                     $stmt->execute($params);
                     $po=$stmt->fetchAll();
-
+                    // dump($this->session->get('roluser'));
+                    // dump($idperson); die;
                     if (count($po) === 1)//PERSONA SEGIP CON UN USUARIO CORRECTAMENTE ENCONTRADOS
                     {
-                        //VERIFICANDO TUISION DE ROLES DEL USUARIO
-                        $query = "
-                                    select * from (
-                                        select c.id 
-                                        from rol_tipo c 
-                                        where c.id not in(
-                                        select roles as id from rol_roles_asignacion b where b.rol_id = ?
-                                        ) ) abc 
-                                        inner join (
-                                            select a.rol_tipo_id as roltipoid from usuario_rol a
-                                            inner join usuario b on a.usuario_id = b.id 
-                                            where b.persona_id = ? and a.esactivo is true
-                                        ) xyz
-                                        on abc.id = xyz.roltipoid";
+                        $query = "select a.roltipoid, b.rol_tuicion_id
+                                from (
+                                select a.rol_tipo_id as roltipoid from usuario_rol a
+                                    inner join usuario b on a.usuario_id = b.id 
+                                    where b.persona_id = ? and a.esactivo is true) a
+                                left join (
+                                select * 
+                                from rol_tuicion b 
+                                where b.rol_tipo_id = ?) b on  a.roltipoid = b.rol_tuicion_id 
+                                where  b.rol_tuicion_id is null";
                         $stmt = $db->prepare($query);
-                        $params = array($this->session->get('roluser'),$idperson);
+                        $params = array($idperson,$this->session->get('roluser'));
                         $stmt->execute($params);
                         $potuision = $stmt->fetchAll(); 
 
