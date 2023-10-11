@@ -840,7 +840,7 @@
 
                     {#% if app.session.get('roluser') in [9,10,8,7] %#}
                     {# a peticion de BRUNO por email, solo habilitar la opcion que esta en el menu recibidos #}
-                    {% if app.session.get('roluser') in [99] %}
+                    {% if app.session.get('roluser') in [9,7,8] %}
                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -850,8 +850,10 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                {#
+                                 {% if app.session.get('roluser') in [9] %}
                                 <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de Titular</a></li> 
+                                 {% endif %}
+                                {#
                                 {% if app.session.get('roluser') in [9,10,8] %}
                                   <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
                                 {% endif %}
@@ -861,6 +863,7 @@
                                 #}
 
                                 {# se inhabilita a peticion de Bruno en fecha 03032023 antes era 7 y 8#}
+                                {# if app.session.get('roluser') in [7,8] #}
                                 {% if app.session.get('roluser') in [7,8] %}
                                   <li><a href="{{ path('operativo_bono_jp_ValidaNoPagadosSeguimiento')}}">Seguimiento BJP</a></li>
                                 {% endif %}

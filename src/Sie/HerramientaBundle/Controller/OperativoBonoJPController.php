@@ -314,7 +314,7 @@ class OperativoBonoJPController extends Controller
 
 	public function formularioCambiarTutorAction()
 	{
-		return $this->redirect($this->generateUrl('login'));
+		//return $this->redirect($this->generateUrl('login'));
 		return $this->render($this->session->get('pathSystem') .':BonoJP:fomularioCambiarTutor.html.twig');
 	}
 
@@ -774,6 +774,7 @@ class OperativoBonoJPController extends Controller
 				'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
 				'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
 				'6' =>' El tutor ya se encuentra registrado',
+				'7' =>' El estudiante no cuenta con notas del 2 trimestre',
 	        );
 	        // check if the has an error on change
 	        if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
