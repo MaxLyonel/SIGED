@@ -208,7 +208,7 @@ class CensoInscriptionController extends Controller
 	                ->setParameter('sie', $sie)
 	                ->setParameter('idnivel', $idnivel)
 	                ->setParameter('gestion', $gestionselected)
-	                ->setParameter('agrados', array(5,6))
+	                ->setParameter('agrados', array(4,5,6))
 	                ->distinct()
 	                ->orderBy('iec.gradoTipo', 'ASC')
 	                ->getQuery();
@@ -578,6 +578,47 @@ class CensoInscriptionController extends Controller
             dump($e);die;
         }
         
+    }
+
+    public function checkEdadCensoAction( Request $request ){
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $query = $db->prepare("select e.fecha_nacimiento from estudiante e where e.carnet_identidad='".$request->get('carnet')."' and e.codigo_rude='".$request->get('rude')."'");
+        $query->execute();
+        $resultStudent = $query->fetch();
+
+        $queryGestion = $db->prepare("SELECT TO_CHAR(NOW()::date, 'yyyy-mm-dd') as currentyear");
+        $queryGestion->execute();
+        $resultDate = $queryGestion->fetch();
+
+        $yearAdd = substr( $resultDate['currentyear'], 0,4 ) + 1;
+        $dateAdd = $yearAdd.'-03-21';
+
+        $queryAge = $db->prepare("select public.sp_obtener_edad(to_date('".$resultStudent['fecha_nacimiento']."','YYYY-MM-DD'),to_date('".$dateAdd."','YYYY-MM-DD')) as edad");
+        $queryAge->execute();
+        $resultAge = $queryAge->fetch();
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+
+        $arrResponse = array(
+            'statusCode' => 200
+        );
+
+        if( $resultAge['edad'] < 16 ){
+            
+            $arrResponse = array(
+                'statusCode' => 401,
+                'message' => "Este estudiante no cumple con 16 años al 21 de Marzo de ".$yearAdd
+            );
+
+        }
+        
+        $response->setData($arrResponse);
+        return $response;
+
     }
 
     private function getLastDayRegistryOpeCheesEventStatus($limitDay){
