@@ -49,7 +49,7 @@ class CursosController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
-// dump($objUeducativa);die;
+
         $exist = true;
         $aInfoUnidadEductiva = array();
         if ($objUeducativa) {
@@ -61,7 +61,7 @@ class CursosController extends Controller {
                 ));
 
                 $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId'], 'iecId' => $uEducativa['iecId']);
-
+                
             }
         } else {
             $message = 'No existe información del Centro de Educación Alternativa para la gestión seleccionada.';
@@ -71,6 +71,9 @@ class CursosController extends Controller {
        // dump($aInfoUnidadEductiva);die;
 //        dump($objUeducativa);
 //        die;
+
+        // dump($aInfoUnidadEductiva);die;
+        // dump("heree");die;
         return $this->render($this->session->get('pathSystem') . ':Cursos:index.html.twig', array(
             'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
             'exist' => $exist,
@@ -102,9 +105,9 @@ class CursosController extends Controller {
             }
         }
         
+            //    dump($aInfoUeducativa['ueducativaInfoId']['iecId']);
+            //    die;
         $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
-//        dump($aInfoUeducativa['ueducativaInfoId']['iecId']);
-//        die;
         $dupcursover = $this->verificarcursoduplicado($aInfoUeducativa, $aInfoUeducativa['ueducativaInfoId']['iecId']);
         if ($dupcursover != '-1'){
             // $message = '¡Se ha detectado inconsistencia de datos! Existe un curso duplicado para este Nivel/Especialidad, Etapa/Grado, debe corregir este problema lo antes posivle, consulte con su técnico distrital.';
@@ -127,8 +130,9 @@ class CursosController extends Controller {
             $etapaespecialidad = $aInfoUeducativa['ueducativaInfo']['grado'];
         }
 
+        // dump($dataUe['ueducativaInfoId']['iecId']);die;
         $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($dataUe['ueducativaInfoId']['iecId']);
-        //dump($objStudents); die;
+        // dump($objStudents); die;
         // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId']);
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:seeStudents.html.twig', array(

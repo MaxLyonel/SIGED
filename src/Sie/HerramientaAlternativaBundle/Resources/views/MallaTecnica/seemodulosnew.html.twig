@@ -64,21 +64,21 @@
                                     {# TECNICO BASICO #}
                                     {% if (malla.idacreditacion == '1') %}
                                         {% if (malla.tothoras < '500' and malla.sw_esoficial == 0) %}
-                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo 1</button>
                                         {% endif %}
 
 
                                     {# TECNICO AUXILIAR #}
                                     {% elseif (malla.idacreditacion == '20') %}
                                         {% if (malla.tothoras < '500' and malla.sw_esoficial == 0) %}
-                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo 2</button>
                                         {% endif %}
 
                                     {# TECNICO MEDIO #}
                                     {% elseif (malla.idacreditacion == '32') %}
                                         {# TECNICO MEDIO ES ESTE ID #}
                                         {% if (malla.tothoras < '1000' and malla.sw_esoficial == 0) %}
-                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo</button>
+                                            <button type="button" class="btn btn-lilac btn-xs btn-stroke" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});" >Nuevo 3</button>
                                         {% endif %}
                                     {% endif %}
 
@@ -156,10 +156,12 @@
 
     <script>
     var nuevoModulo= function (idsip,idesp,totalhoras,idacred) {
-//       alert(idacred);
+            //alert(idacred); //20
             if((idacred==1)||(idacred==20))
             {
+                console.log('HORAS: ', totalhoras);
                 if(totalhoras<=420){
+                    console.log("into");
                     $.ajax({
                         type: 'post',
                         url: "{{ path('herramienta_show_modulo_nuevo') }}",
@@ -183,9 +185,11 @@
                         }
                     });
                 }else{
+                    console.log("out");
                     alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs, por lo que antes de proceder y añadir uno Nuevo, debera editar y cambiar las horas de los modulos anteriormente guardados...');
                 }
             }else {
+                console.log(totalhoras);
                 if(totalhoras<=920){
                     $.ajax({
                         type: 'post',

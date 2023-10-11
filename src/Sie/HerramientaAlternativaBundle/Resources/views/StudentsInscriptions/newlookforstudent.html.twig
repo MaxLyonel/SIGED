@@ -114,6 +114,26 @@
                               ${dataStudent.nombre}
                           </div>
                         </div>
+
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <label for="ci">Oficilia</label>
+                            <input type="text" class="form-control" placeholder="Oficialia" maxlength="20" v-model="newStudent.oficialia">
+                          </div>
+                          <div class="col-sm-3">
+                            <label for="complemento(s)">Libro</label>
+                            <input type="text" class="form-control" placeholder="Libro"  maxlength="20" autocomplete="off" style="text-transform:uppercase" v-model="newStudent.libro">
+                          </div>
+                          <div class="col-sm-3">
+                            <label for="complemento(s)">Partida</label>
+                            <input type="text" class="form-control" placeholder="Partida"  maxlength="20" autocomplete="off" style="text-transform:uppercase" v-model="newStudent.partida">
+                          </div>
+                          <div class="col-sm-3">
+                            <label for="fechanac">Folio</label>
+                            <input type="text" class="form-control" placeholder="Folio" maxlength="20" v-model="newStudent.folio">
+                          </div>
+                        </div>
+
                         <div class="row">
                           <div class="col-sm-3">
                             <label for="inputEmail4">Pais</label>                                  
@@ -142,7 +162,7 @@
                         </div>
                         <div class="row">
                           <div class="col-sm-3">
-                                <label for="ext">Extranejero</label>
+                                <label for="ext">Extranjero</label>
                                 <select name="arrApode" id="idarrGenero" v-model="newStudent.extranjero" class="custom-select form-control" v-model="newPerson.apoderado">  
                                 <option value="0">No</option>
                                 <option value="1">Si</option>
@@ -252,7 +272,7 @@
 
                           <div class="row">
                             <div class="col-sm-3">
-                                  <label for="ext">Extranejero</label>
+                                  <label for="ext">Extranjero</label>
                                   <select name="arrApode" id="idarrGenero" v-model="newStudent.extranjero" class="custom-select form-control" v-model="newPerson.apoderado">  
                                   <option value="0">No</option>
                                   <option value="1">Si</option>
@@ -689,10 +709,6 @@ var app = new Vue({
             }))
             .then(response => {
               if(response.status == 200){
-                console.log('NEW PERSON:', response.data.swnewperson);
-                console.log('EXIST PERSON:', response.data.swstudent);
-                
-                console.log(response.data.dataStudent);
                 
                 this.swstudent   = response.data.swstudent;
                 this.swperson    = response.data.swperson;
@@ -841,21 +857,27 @@ var app = new Vue({
       
     },
     validateandregisterNewStudent: function(newperson){
-      this.swproceso = true;
+      //this.swproceso = true;
+      
       this.DBRudesStudent = false;
       this.message = false;
 
       /*this.dataStudent.expedidoId2 = 0;*/
       if(newperson){
-        console.log('new persona');
+
           this.dataStudent.paisId = this.newStudent.paisId;
           this.dataStudent.lugarNacTipoId = this.newStudent.lugarNacTipoId;
           this.dataStudent.lugarProvNacTipoId = this.newStudent.lugarProvNacTipoId;
           this.dataStudent.localidad = this.newStudent.localidad;
           this.dataStudent.iecId = this.iecId;
-          
+
+          this.dataStudent.oficialia = this.newStudent.oficialia;
+          this.dataStudent.libro = this.newStudent.libro;
+          this.dataStudent.partida = this.newStudent.partida;          
+          this.dataStudent.folio = this.newStudent.folio;        
+
       }else{
-        console.log('no new');
+
         this.newStudent.casespecial = this.dataStudent.casespecial;
         this.newStudent.excepcional = this.dataStudent.excepcional;
         this.newStudent.infocomplementaria = this.dataStudent.infocomplementaria;
@@ -865,8 +887,6 @@ var app = new Vue({
         this.newStudent.withoutsegip = this.dataStudent.withoutsegip;
         this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
         this.dataStudent = this.newStudent;
-
-        console.log('DATA NEW:', this.newStudent);
 
       }
       this.dataStudent.extranjero = this.newStudent.extranjero;
@@ -1011,102 +1031,131 @@ var app = new Vue({
         }
         
       Swal.fire({
-            title: '¿Realizar incripción?',
+            title: '¿Esta seguro?',
             text: "El estudiante será inscrito en el curso seleccionado",
-            type: 'question',
+            icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, continuar...',
-            cancelButtonText: 'Cancelar'
+            confirmButtonText: 'Si',
+            cancelButtonText: 'No'
         }).then((result) => {
-            if (result.value) {    
-              var data = new FormData();
-                  data.append('datos', JSON.stringify(this.dataStudent));
-                  data.append('informe', this.informe);                                     
-                
-                axios.post(Routing.generate('alter_inscriptionstudent_checkDataStudent', this.dataStudent ))
-                .then(response => {
-                    if (response.status == 200) {
-                      this.DBRudesStudent = response.data.arrRudesStudent;
-                      this.message = response.data.message;
-                      this.swcreatestudent = response.data.swcreatestudent;
-                      this.swproceso = false;
-                      if(this.swcreatestudent){
-                        showListStudent(this.iecId, this.infoUe);
-                      }
+            if ( result.isConfirmed ) {    
 
-                      this.buscando = false;
-                      this.swproceso = false;                      
+              Swal.fire({
+                title: 'Registrando...',
+                html: 'Espere un momento porfavor',
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                didOpen: () => {
+                  Swal.showLoading()
+                },
+              });
+
+              var data = new FormData();
+              data.append('datos', JSON.stringify(this.dataStudent));
+              data.append('informe', this.informe);                                     
+            
+              axios.post(Routing.generate('alter_inscriptionstudent_checkDataStudent', this.dataStudent ))
+                .then(response => {
+                  Swal.close();
+                  if (response.status == 200) {
+
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Su registro fue exitoso',
+                      showConfirmButton: false,
+                      timer: 2000
+                    });
+
+                    this.DBRudesStudent = response.data.arrRudesStudent;
+                    this.message = response.data.message;
+                    this.swcreatestudent = response.data.swcreatestudent;
+                    this.swproceso = false;
+                    if(this.swcreatestudent){
+                      showListStudent(this.iecId, this.infoUe);
                     }
-                    if( response.status == 202){
-                        //this.respuesta = response.data;
-                    }
+
+                    this.buscando = false;
+                    this.swproceso = false;                      
+                  }
+                  if( response.status == 202){
+                      //this.respuesta = response.data;
+                  }
 
                 })
                 .catch(e => {
-                    console.log(e);
-                    this.buscando = false;
+                  this.swproceso = false;
+                  this.buscando = false;
                 });
 
-      /*console.log(newperson);
-      console.log(this.dataStudent);*/
-      //return ;
-         }
+                /*console.log(newperson);
+                console.log(this.dataStudent);*/
+                //return ;
+            }else{
+              this.swproceso = false;
+              this.buscando = false;
+            }
          //console.log(this.message);
         
       })
     },
     studentsInscription: function(){                                                                                                                                                                       
-    this.dataStudent.iecId = this.iecId;
-    this.swproceso = true;
-    this.DBRudesStudent = false;
-    this.message = false;    
-    this.historyReg = false;    
-    this.historyPer = false;    
-    this.historyEsp = false;    
-    this.historyAlt = false;    
+      this.dataStudent.iecId = this.iecId;
+      this.swproceso = true;
+      this.DBRudesStudent = false;
+      this.message = false;    
+      this.historyReg = false;    
+      this.historyPer = false;    
+      this.historyEsp = false;    
+      this.historyAlt = false;    
 
-          Swal.fire({
-            title: '¿Realizar incripción?',
-            text: "El estudiante será inscrito en el curso seleccionado",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, continuar...',
-            cancelButtonText: 'Cancelar'
+      Swal.fire({
+        title: '¿Esta seguro?',
+        text: "El estudiante será inscrito en el curso seleccionado",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
         }).then((result) => {
         if (result.value) {
 
-      axios.post(Routing.generate('alter_inscriptionstudent_studentsInscription', this.dataStudent ))
-      .then(response => {
-          if (response.status == 200) {
+        axios.post(Routing.generate('alter_inscriptionstudent_studentsInscription', this.dataStudent ))
+          .then(response => {
+            if (response.status == 200) {
 
-            this.DBRudesStudent = response.data.arrRudesStudent;
-            this.message = response.data.message;
-            this.swcreatestudent = response.data.swcreatestudent;
-            if(this.swcreatestudent){
-              showListStudent(this.iecId, this.infoUe);
+              this.DBRudesStudent = response.data.arrRudesStudent;
+              this.message = response.data.message;
+              this.swcreatestudent = response.data.swcreatestudent;
+              if(this.swcreatestudent){
+                showListStudent(this.iecId, this.infoUe);
+              }
+
+              this.buscando = false;
+              this.swproceso = false;
+              
             }
 
+            if( response.status == 202){
+                //this.respuesta = response.data;
+            } 
+              
+          })
+          .catch(e => {
             this.buscando = false;
-            this.swproceso = false;
-            
-          }
-          if( response.status == 202){
-              //this.respuesta = response.data;
-          }
-
-          
+            if( e.response.status == 401 ){
+              Swal.fire('Atención', e.response.data.message, 'info');
+            }else{
+              Swal.fire('Opps', 'Ocurrio un problema vuelva a intentarlo porfavor', 'warning');
+            }
+          });
+        }
+        
       })
-      .catch(e => {
-          console.log(e);
-          this.buscando = false;
-      });
-      }
-      
-    })
       
     },
 

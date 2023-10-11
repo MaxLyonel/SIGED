@@ -150,7 +150,6 @@ class AreasController extends Controller {
 
                     $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpId']);
                     
-                    
                     $ieco = new InstitucioneducativaCursoOferta();
                     $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
                     $ieco->setInsitucioneducativaCurso($curso);
@@ -362,7 +361,7 @@ class AreasController extends Controller {
         } else {
             $turnoId = $curso->getTurnoTipo()->getId();
         }
-
+        
         if($nivel == 15 || $nivel == 5){
                             
             $iePeriodo = $em->createQueryBuilder()

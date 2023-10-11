@@ -78,7 +78,8 @@
                     </button>
                 </form>
             </div>
-        {% endif%}
+        {% endif %}
+        {{app.session.get('ie_per_estado')}}
         {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}
             {# if existins == false #}
                 <div class="col-md-3">
@@ -88,20 +89,32 @@
                 </div>
             {# endif #}
             {# commented by krlos 15.04.2020 app.session.get('ie_gestion') == app.session.get('currentyear') or #}
-            {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_gestion') == app.session.get('currentyear') ) %}
-                {% if ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')) %}
+
+            {# {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_gestion') == app.session.get('currentyear') ) %}
+                {% if ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0')) %}
                     <div class="col-md-3">
                         <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                             <i class="fa fa-user"></i> Inscripción con CI
                         </button>
                     </div>
                 {% endif %}
-            {% endif %}
+            {% endif %} #}
+            
             <!--div class="col-md-3">
                 <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{#{{infoUe}}#}');" >
                     <i class="fa fa-user-plus"></i> Inscrip. sin Rudeal
                 </button>
             </div-->
+        {% endif %}
+
+        {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_gestion') == app.session.get('currentyear') ) %}
+            {% if ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0')) %}
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
+                        <i class="fa fa-user"></i> Inscripción con CI
+                    </button>
+                </div>
+            {% endif %}
         {% endif %}
         
         {#
@@ -219,18 +232,18 @@
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
                                                     {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%}
                                                     {# commented by krlos 07.07.2020  #}
-                                                                <li>
+                                                                {# <li>
                                                                     <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                         <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
                                                                     </a>
-                                                                </li>
+                                                                </li> #}
                                                         {% if ( app.session.get('ie_per_estado') == '2' ) %}
                                                             {% if primariaNuevo %}
                                                             {% else %}
                                                                 <li>
-                                                                <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                                    <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
-                                                                </a>
+                                                                    <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                        <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                                    </a>
                                                                 </li>
     
                                                             {% endif %}
@@ -257,12 +270,12 @@
                                                                 </li>
                                                             {% else %}
                                                                 {# SOLO DESPUES DE LAS INSCRIPCIONES #}
-                                                                {% if (app.session.get('ie_per_estado') == '2') %}
                                                                     <li>
                                                                         <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealNew('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                             <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
                                                                         </a>
                                                                     </li>
+                                                                {% if (app.session.get('ie_per_estado') == '2') %}
                                                                     {# <li>
                                                                         <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudeal('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                             <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
@@ -282,7 +295,7 @@
                                                         <li>
                                                             <a href="#" type="link"  class="" onclick="removeInscriptionStudent('{{infoUe}}', '{{ jsnInfoStudent }}');" >
                                                               <span class="label label-danger"><i class="fa fa-remove"></i>Eliminar Inscripción</span>
-                                                          </a>
+                                                            </a>
                                                         </li>
                                                     {% endif %}
 
@@ -358,7 +371,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready( function(){
         $(".tooltips").tooltip();
@@ -476,7 +490,6 @@
             beforeSend: function () {
                 $('#modal').empty();
                 $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
-
             },
             success: function (data) {
                 $('#modal').empty();
@@ -488,7 +501,7 @@
 
                 },
                 404: function () {
-
+                    console.log("in 404");
                 }
             }
         });
@@ -552,12 +565,12 @@
              $('#modal').append(data);
          },
          statusCode: {
-             500: function () {
+            500: function () {
 
-             },
-             404: function () {
+            },
+            404: function () {
 
-             }
+            }
          }
      });
    };

@@ -585,7 +585,7 @@ class StudentsInscriptionsController extends Controller {
     public function checkDataStudentAction(Request $request){
       
       // IS SECOND
-     
+
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -633,18 +633,15 @@ class StudentsInscriptionsController extends Controller {
       // dump($carnet);
       // dump($arrParametros);
       if(!$withoutsegip){
-        // dump($withoutsegip);
         // dump("no tiene carnet");
         // get info segip
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
+        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
       }else{
         // dump("si tiene carnet");
         $answerSegip = true;
       }
-      
       // check if the data person is true
       if($answerSegip){
-
         $arrdataStudent = array(
           'paterno'=>$paterno,
           'materno'=>$materno,
@@ -655,12 +652,12 @@ class StudentsInscriptionsController extends Controller {
           'partida'=>$partida,
           'folio'=>$folio
         );
-        
+        // dump("hereee");die;
         $objRudesStudent = $this->get('funciones')->searchByExcaustiveDataStudent($arrdataStudent);
 
         if(!($objRudesStudent)){
           // if(true){
-
+          dump("into");die;
           // set parameter to validate inscription
           $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
           // get the studnets age
@@ -770,7 +767,7 @@ class StudentsInscriptionsController extends Controller {
           }
 
         }else{
-
+          dump("outt");die;
           $arrRudesStudent = array();
           
           foreach ($objRudesStudent as $value) {
@@ -913,7 +910,6 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function studentsInscriptionAction(Request $request){
-
       //ini json var
       $response = new JsonResponse();
       $em = $this->getDoctrine()->getManager();
@@ -936,22 +932,110 @@ class StudentsInscriptionsController extends Controller {
       if(!($swyearStudent)){
         // set data to validate STUDENTS RUDE
         $arrdataStudent = array(
-        'paterno'=>$request->get('paterno'),
-        'materno'=>$request->get('materno'),
-        'nombre'=>$request->get('nombre'),
+          'paterno'=>$request->get('paterno'),
+          'materno'=>$request->get('materno'),
+          'nombre'=>$request->get('nombre'),
         );
+
+
+        // LUIS
         
         // $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
         
         // if(sizeof($objRudesStudent)==1){
         if(true){
           try {
+            // dump($studentId);die;
             // get info about the students inscriptions
-            $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId); 
+            // dump($iecId);die;
+            $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId);
+            
+            // ANTES DE LAS VALIDACIONES VERIFICAR SI NO CUMPLE
+            $aproved = true; 
+            $message = '';
+
+            $resultsRegular = $this->checkIfRegularStudentNowGestion( $studentId );
+
+            $epaIds = '35, 34';
+            $courseEPA = $this->checkCeaStudyType( $iecId, $epaIds );
+
+            $esaIds = '45, 49, 52';
+            $courseESA = $this->checkCeaStudyType( $iecId, $esaIds );
+
+            if( $resultsRegular && ( $courseEPA || $courseESA ) ){
+              $responseArray = array(
+                'status'  => 401,
+                'message' => "El estudiante pertenece a regular, no puede inscribirse en Humanistica",
+              );
+              
+              $response->setStatusCode(401);
+              $response->setData($responseArray);
+              return $response;
+            }
+
+            // SOLO SON PERMITIDAS ESTE TIPO DE COMBINACIONES PARA LA INSCRIPCION
+            // 1 - DE REGULAR A ALTERNATIVA SOLO (ETA)
+
+            $etaIds = '1,12,20';
+            $resultsEta = $this->checkCeaStudyType( $iecId, $etaIds );
+            if( $resultsRegular && $resultsEta ){
+              $aproved = false;
+              $message = 'El estudiante pertenece a regular, no puede inscribirse en mismos horarios';
+              // $message = 'No puede inscribirse, porque se encuentra inscrito en Educacion Regular de la gestion actual';
+              if( $resultsRegular[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
+                $aproved = true;
+              } 
+
+            }
+
+            // 2 -  DE EPA A ETA, DIFERENTES HORARIOS SI ES DIFERENTE CEA
+            $etaIds = '34, 35';
+            $existStudentEPA = $this->checkCeaOfStudent( $studentId, $etaIds );
+
+            if( $existStudentEPA && $resultsEta ){
+              $aproved = false;
+              $message = 'El estudiante pertenece a EPA, no puede incribirse en mismos horarios';
+              if( $existStudentEPA[0]['institucioneducativa_id'] != $resultsEta[0]['institucioneducativa_id'] ){
+                if( $existStudentEPA[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
+                  $aproved = true;
+                }
+              }
+
+            }
+            // 3 - DE ESA A ETA, DIFERENTES HORARIOS SI ES DIFERENTE CEA
+            $etaIds = '45, 49, 52';
+            $existStudentESA = $this->checkCeaOfStudent( $studentId, $etaIds );
+
+            if( $existStudentESA && $resultsEta ){
+              $aproved = false;
+              $message = 'El estudiante pertenece a ESA, no puede incribirse en mismos horarios';
+              if( $existStudentESA[0]['institucioneducativa_id'] != $resultsEta[0]['institucioneducativa_id'] ){
+                if( $existStudentESA[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
+                  $aproved = true;
+                }
+              }
+
+            }
+
+            if( !$aproved ){
+
+              $responseArray = array(
+                'status'  => 401,
+                'message' => $message,
+              );
+              
+              $response->setStatusCode(401);
+              $response->setData($responseArray);
+              return $response;
+
+            }
+
+            dump("this is your result");die;
+
             // check if the student has an inscription on this course
               if(!$objCurrentInscription){
-              // do inscription
-              // set the inscription to the new student
+                // do inscription
+                // set the inscription to the new student
                 $studentInscription = new EstudianteInscripcion();
                 $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
                 $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
@@ -1059,6 +1143,100 @@ class StudentsInscriptionsController extends Controller {
       $response->setData($arrResponse);
 
       return $response;
+    }
+
+    public function checkCeaStudyType( $institucionEducativaCursoId, $etaIds ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $queryETA = "select sae.superior_acreditacion_tipo_id, ic.id,ic.turno_tipo_id, ic.institucioneducativa_id 
+                    from superior_facultad_area_tipo sfat 
+                    inner join superior_especialidad_tipo set2 on sfat.id=set2.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad sae on set2.id=sae.superior_especialidad_tipo_id 
+                    inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
+                    inner join superior_institucioneducativa_acreditacion sia on sia.acreditacion_especialidad_id=sae.id
+                    inner join superior_institucioneducativa_periodo sip on sip.superior_institucioneducativa_acreditacion_id=sia.id
+                    inner join institucioneducativa_curso ic on ic.superior_institucioneducativa_periodo_id=sip.id 
+                    where sae.superior_acreditacion_tipo_id in (".$etaIds.")
+                    and ic.id=".$institucionEducativaCursoId."";
+      $stmt = $db->prepare($queryETA);
+      $params = array();
+      $stmt->execute($params);
+      $resultsETA = $stmt->fetchAll();
+
+      return $resultsETA;
+
+    }
+
+    public function checkCeaOfStudent( $estudianteId, $acreditacionTipoIds ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $query = "select sae.superior_acreditacion_tipo_id, ic.id,ic.turno_tipo_id, ic.institucioneducativa_id 
+                    from superior_facultad_area_tipo sfat 
+                    inner join superior_especialidad_tipo set2 on sfat.id=set2.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad sae on set2.id=sae.superior_especialidad_tipo_id 
+                    inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
+                    inner join superior_institucioneducativa_acreditacion sia on sia.acreditacion_especialidad_id=sae.id
+                    inner join superior_institucioneducativa_periodo sip on sip.superior_institucioneducativa_acreditacion_id=sia.id
+                    inner join institucioneducativa_curso ic on ic.superior_institucioneducativa_periodo_id=sip.id 
+                    inner join estudiante_inscripcion ei on ic.id=ei.institucioneducativa_curso_id 
+                    where sae.superior_acreditacion_tipo_id in (".$acreditacionTipoIds.")
+                    and ei.estudiante_id=".$estudianteId."
+                    order by ic.gestion_tipo_id desc
+                    ";
+      $stmt = $db->prepare($query);
+      $params = array();
+      $stmt->execute($params);
+      $results = $stmt->fetchAll();
+
+      return $results;
+
+    }
+
+    public function checkIfRegularStudentNowGestion( $studentId ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $query = "select ic.id, ei.estudiante_id, ic.gestion_tipo_id, ic.turno_tipo_id from estudiante_inscripcion ei 
+                        inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id=ic.id 
+                        inner join institucioneducativa i on ic.institucioneducativa_id=i.id 
+                        where i.institucioneducativa_tipo_id=1
+                        and ei.estudiante_id=".$studentId."
+                        and ic.gestion_tipo_id=2023
+                        order by ic.gestion_tipo_id desc
+                        limit 1
+                        ";
+      $stmt = $db->prepare($query);
+      $params = array();
+      $stmt->execute($params);
+      $results = $stmt->fetchAll();
+
+      return $results;
+
+    }
+
+    public function checkCeaTypeOfStudent( $estudianteId ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $query = "select ei.estudiante_id, ic.gestion_tipo_id, i.institucioneducativa_tipo_id,i.id from estudiante_inscripcion ei 
+                  inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id=ic.id 
+                  inner join institucioneducativa i on ic.institucioneducativa_id=i.id 
+                  where ei.estudiante_id=".$estudianteId."
+                  order by ic.gestion_tipo_id desc
+                  limit 1";
+      $stmt = $db->prepare($query);
+      $params = array();
+      $stmt->execute($params);
+      $results = $stmt->fetchAll();
+
+      return $results;      
+
     }
 
     public function studentsInscriptionlistAction(Request $request){
