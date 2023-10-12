@@ -723,30 +723,30 @@
 					this.loadingGrado = true;
 					
 					axios.post(Routing.generate('censoinscription_getGrado', this.infoUE ))
-					.then(response => {
-						this.loadingGrado = false;
-						this.grado = true;
-						if (response.status == 200) {
+						.then(response => {
+							this.loadingGrado = false;
+							this.grado = true;
+							if (response.status == 200) {
 
-							if(response.data.existUE == true){
-								this.DBGrados = response.data.arrGrado;
-							}else{
-								Swal.fire(
-								'Atencion !',
-								'Ocurrio un error, vuelva a intentarlo porfavor',
-								'warning'
-								);
+								if(response.data.existUE == true){
+									this.DBGrados = response.data.arrGrado;
+								}else{
+									Swal.fire(
+									'Atencion !',
+									'Ocurrio un error, vuelva a intentarlo porfavor',
+									'warning'
+									);
+								}
+									
 							}
-								
-						}
-						this.buscando = false;
-					})
-					.catch(e => {
-						this.grado = false;
-						this.paralelo= false;
-						this.turno= false;
-						this.buscando = false;
-					});					
+							this.buscando = false;
+						})
+						.catch(e => {
+							this.grado = false;
+							this.paralelo= false;
+							this.turno= false;
+							this.buscando = false;
+						});					
 				}
 
 			},
@@ -1189,11 +1189,34 @@
 
 			},
 			doInscription:function(infoUE, inscriptionid, infoSelectStudent){
-				this.DBinfoSelectStudent = infoSelectStudent;
-					$('#modalNewInscription').modal('show');
-					this.swParent = false;
-					// console.log(infoSelectStudent);
-					// return false;
+
+				Swal.fire({
+					title: 'Verificando...',
+					html: 'Espere un momento porfavor',
+					timerProgressBar: true,
+					allowOutsideClick: false,
+					allowEscapeKey: false,
+					allowEnterKey: false,
+					didOpen: () => {
+						Swal.showLoading()
+					},
+				});
+
+				axios.post(Routing.generate('censoinscripcion_checkEdad', {'carnet': infoSelectStudent.carnet_identidad, 'rude': infoSelectStudent.codigo_rude} ))
+					.then(res => {
+						Swal.close();
+						if( res.data.statusCode != 200 ){
+							Swal.fire('Atención', res.data.message, 'info');
+						}else{
+							this.DBinfoSelectStudent = infoSelectStudent;
+							$('#modalNewInscription').modal('show');
+							this.swParent = false;
+						}
+					})
+					.catch(e => {
+						Swal.fire('Atención', 'Ocurrio un error, vuelva a intentarlo porfavor', 'warning');
+					});
+
 			},
 			removeInscriptionCenso:function(inscriptionid){
 
@@ -1224,43 +1247,43 @@
 							this.infoUE.remoinscriptionid=inscriptionid;
 							// $('#'+inscriptionid).addClass('seleccionado');
 							axios.post(Routing.generate('censoinscription_removeInscriptionCenso', this.infoUE ))
-							.then(response => {
-								if (response.status == 200) {
-									Swal.fire({
-										icon: 'success',
-										title: 'Correcto',
-										text: 'Se elimino exitosamente',
-										timer: 2000,
-										showConfirmButton: false
-									});
-									// this.DBselectedData = response.data.selectedData;
-									this.dataSelected(this.infoUE);
-									if(response.data.existRemoveStudent == true){
-										this.DBEveStudents ={};
-										
+								.then(response => {
+									if (response.status == 200) {
+										Swal.fire({
+											icon: 'success',
+											title: 'Correcto',
+											text: 'Se elimino exitosamente',
+											timer: 2000,
+											showConfirmButton: false
+										});
 										// this.DBselectedData = response.data.selectedData;
-										this.infoUE.modalidadId = response.data.modalidadId;
-										this.infoUE.faseId = response.data.faseId;
-										this.infoUE.categorieId = response.data.categorieId;
-										this.infoUE.sie = response.data.sie;
-										// this.DBstudent = response.data.arrStudents;
-										this.DBEveStudents = response.data.arrEveStudents;
+										this.dataSelected(this.infoUE);
+										if(response.data.existRemoveStudent == true){
+											this.DBEveStudents ={};
+											
+											// this.DBselectedData = response.data.selectedData;
+											this.infoUE.modalidadId = response.data.modalidadId;
+											this.infoUE.faseId = response.data.faseId;
+											this.infoUE.categorieId = response.data.categorieId;
+											this.infoUE.sie = response.data.sie;
+											// this.DBstudent = response.data.arrStudents;
+											this.DBEveStudents = response.data.arrEveStudents;
 
-										// this.existStudent = response.data.existStudent;
+											// this.existStudent = response.data.existStudent;
 
-										// this.infoUE2.krlos = 'krlos';
-										// this.DBCategories = response.data.arrCategories;
-										
-									}else{
-										Swal.fire('Atención', 'Ocurrio un error, vuelva a intentarlo porfavor', 'warning');
+											// this.infoUE2.krlos = 'krlos';
+											// this.DBCategories = response.data.arrCategories;
+											
+										}else{
+											Swal.fire('Atención', 'Ocurrio un error, vuelva a intentarlo porfavor', 'warning');
+										}
+											
 									}
-										
-								}
-								this.buscando = false;
-							})
-							.catch(e => {
-								this.buscando = false;
-							});		                    	
+									this.buscando = false;
+								})
+								.catch(e => {
+									this.buscando = false;
+								});		                    	
 
 						}		
 					 });
