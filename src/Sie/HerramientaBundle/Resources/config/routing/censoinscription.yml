@@ -44,14 +44,17 @@ censoinscription_saveStudent:
     options:
          expose: true
 
+censoinscripcion_checkEdad:
+    path:   /checkEdadCenso
+    defaults: { _controller: SieHerramientaBundle:CensoInscription:checkEdadCenso }
+    options:
+         expose: true
          
 censoinscription_closeEventChees:
     path:     /closeEventChees
     defaults: { _controller: SieHerramientaBundle:CensoInscription:closeEventChees }
     options:
          expose: true
-
-
 
 
          
