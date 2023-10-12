@@ -657,7 +657,6 @@ class StudentsInscriptionsController extends Controller {
 
         if(!($objRudesStudent)){
           // if(true){
-          dump("into");die;
           // set parameter to validate inscription
           $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
           // get the studnets age
@@ -767,7 +766,7 @@ class StudentsInscriptionsController extends Controller {
           }
 
         }else{
-          dump("outt");die;
+
           $arrRudesStudent = array();
           
           foreach ($objRudesStudent as $value) {
@@ -947,9 +946,7 @@ class StudentsInscriptionsController extends Controller {
           try {
             // dump($studentId);die;
             // get info about the students inscriptions
-            // dump($iecId);die;
-            $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId);
-            
+            // dump($iecId);die;            
             // ANTES DE LAS VALIDACIONES VERIFICAR SI NO CUMPLE
             $aproved = true; 
             $message = '';
@@ -1030,71 +1027,69 @@ class StudentsInscriptionsController extends Controller {
 
             }
 
-            dump("this is your result");die;
-
             // check if the student has an inscription on this course
-              if(!$objCurrentInscription){
-                // do inscription
-                // set the inscription to the new student
-                $studentInscription = new EstudianteInscripcion();
-                $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
-                $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
-                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
-                $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
-                $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
-                $studentInscription->setObservacion(1);
-                $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
-                $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
-                $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
-                //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
-                $studentInscription->setCodUeProcedenciaId(0);
-                $em->persist($studentInscription);
+            $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId);
+            if(!$objCurrentInscription){
+              // do inscription
+              // set the inscription to the new student
+              $studentInscription = new EstudianteInscripcion();
+              $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
+              $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+              $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+              $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
+              $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
+              $studentInscription->setObservacion(1);
+              $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
+              $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
+              $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+              //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
+              $studentInscription->setCodUeProcedenciaId(0);
+              $em->persist($studentInscription);
 
-                //save the inscription data when the inscription is excepcional
-                if($casespecial){
-                  $estudianteInscripcionAlternativaExcepcionalObjNew = new EstudianteInscripcionAlternativaExcepcional();
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcionAlternativaExcepcionalTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->find($excepcional));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setFecha(new \DateTime('now'));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentId));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setDocumento($infocomplementaria);
-                  $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
-                }
+              //save the inscription data when the inscription is excepcional
+              if($casespecial){
+                $estudianteInscripcionAlternativaExcepcionalObjNew = new EstudianteInscripcionAlternativaExcepcional();
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcionAlternativaExcepcionalTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->find($excepcional));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setFecha(new \DateTime('now'));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentId));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setDocumento($infocomplementaria);
+                $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
+              }
 
+              // set all the courses modules to the student
+              $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
+              $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
 
-                // set all the courses modules to the student
-                $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
-                $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
-
-                $this->get('funciones')->setLogTransaccion(
-                  $studentInscription->getId(),
-                  'estudiante_inscripcion',
-                  'C',
-                  '',
-                  '',
-                  '',
-                  'ALTERNATIVA',
-                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+              $this->get('funciones')->setLogTransaccion(
+                $studentInscription->getId(),
+                'estudiante_inscripcion',
+                'C',
+                '',
+                '',
+                '',
+                'ALTERNATIVA',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
               );
 
-                $em->flush();
-                //do the commit in DB
-                $em->getConnection()->commit();
-                $status = 'success';
-                $code = 200;
-                $message = "Estudiante registrado existosamente!!!";
-                $swcreatestudent = true;   
+              $em->flush();
+              //do the commit in DB
+              $em->getConnection()->commit();
+              $status = 'success';
+              $code = 200;
+              $message = "Estudiante registrado existosamente!!!";
+              $swcreatestudent = true;   
 
 
-              }else{
-                $arrIdCourse = array('TEC'=>' en el mismo nivel - Técnica',1511=>'Elementales',1512=>'Avanzados',1521=>'Aplicados',1522=>'Complementarios',1523=>'Especializados');
+            }else{
+              $arrIdCourse = array('TEC'=>' en el mismo nivel - Técnica',1511=>'Elementales',1512=>'Avanzados',1521=>'Aplicados',1522=>'Complementarios',1523=>'Especializados');
 
-                $status = 'error';
-                $code = 400;
-                $message = "Estudiante ya cuenta con una inscripcion en el curso ".$objCurrentInscription;
-                $swcreatestudent = false;   
+              $status = 'error';
+              $code = 400;
+              $message = "Estudiante ya cuenta con una inscripcion en el curso ".$objCurrentInscription;
+              $swcreatestudent = false;   
 
-              }
+            }
             
           } catch (Exception $e) {
             echo 'error in save the data inscription';
