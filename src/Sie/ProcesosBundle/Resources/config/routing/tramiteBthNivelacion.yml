@@ -15,7 +15,7 @@ tramite_bth_nivelacion_envia_solicitud:
          expose: true
 
 tramite_bth_nivelacion_vista_imprimir:
-    path:     /btnue/{idTramite}
+    path:     /btnue/imprimir
     defaults: { _controller: SieProcesosBundle:TramiteBthNivelacion:formularioVistaImprimir }
 
 tramite_bth_nivelacion_ddd_recibe:
