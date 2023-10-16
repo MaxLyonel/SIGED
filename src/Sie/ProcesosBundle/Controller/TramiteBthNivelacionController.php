@@ -334,7 +334,7 @@ class TramiteBthNivelacionController extends Controller {
             $response->setData(array(
                 'msg'=>"",
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('tramite_bth_nivelacion_vista_imprimir', array('idTramite'=>$idTramite))
+                'urlreporte'=> $this->generateUrl('tramite_bth_nivelacion_vista_imprimir', array('idtramite'=>$idTramite))
             ));
 
             $em->getConnection()->commit();
@@ -426,9 +426,10 @@ class TramiteBthNivelacionController extends Controller {
         }
     }
 
-    public function formularioVistaImprimirAction(Request $request, $idTramite)
+    public function formularioVistaImprimirAction(Request $request)
     {
         $response = new Response();
+        $idTramite = $request->get('idtramite');
         $gestion = $this->session->get('currentyear');
         $codigoQR = 'BTN'.$idTramite.'|'.$gestion;
         $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
@@ -444,7 +445,7 @@ class TramiteBthNivelacionController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-    
+
     public function dddRecibeVerificaAction (Request $request) {
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
