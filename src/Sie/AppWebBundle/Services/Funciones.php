@@ -1760,7 +1760,7 @@ class Funciones {
                     inner join tramite as t on t.id = d.tramite_id
                     inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                     inner join estudiante as e on e.id = ei.estudiante_id
-                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1 /*and d.documento_tipo_id = 1*/
+                    where e.codigo_rude = '". $codigoRude ."' and d.documento_estado_id = 1 and d.documento_tipo_id in (1,9,8) /*and d.documento_tipo_id = 1*/
                     ");
 
         $query->execute();
