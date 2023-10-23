@@ -12,21 +12,33 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-        <div class="row">
-            <div class="form-body col-lg-4 col-md-4">
-                <label> Nombre del Modulo</label>
-                <strong>{{form_widget(form.modulo)}}</strong>
-            </div>
-            <div class="form-body col-lg-4 col-md-4">
-                <label> Tipo de SubModulo</label>
-                <strong>{{form_widget(form.mallaModuloPeriodo)}}</strong>
-            </div>
-            <div class="form-body col-lg-4 col-md-4">
-                <label> Horas</label>
-                <strong>{{form_widget(form.horas)}}</strong>
-            </div>
-
-        </div>
+                {% if ( idacreditacion == 32 and modules >= 0 ) %}
+                    <div class="row">
+                        <div class="form-body col-lg-4 col-md-4">
+                            <label> Nombre del Modulo</label>
+                            <strong>{{form_widget(form.modulo)}}</strong>
+                        </div>
+                        <div class="form-body col-lg-4 col-md-4">
+                            <label> Tipo de SubModulo</label>
+                            <strong>{{form_widget(form.periodoTecnicoMedio)}}</strong>
+                        </div>
+                        <div class="form-body col-lg-4 col-md-4">
+                            <label> Horas</label>
+                            <strong>{{form_widget(form.horas)}}</strong>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="form-body col-lg-6 col-md-6">
+                            <label> Nombre del Modulo</label>
+                            <strong>{{form_widget(form.modulo)}}</strong>
+                        </div>
+                        <div class="form-body col-lg-6 col-md-6">
+                            <label> Horas</label>
+                            <strong>{{form_widget(form.horas)}}</strong>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="panel-footer">
                 <div class="text-right">
@@ -40,75 +52,132 @@
 {{ form_end(form) }}
     </div>
 </div>
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-
+ 
     var guardarModulo= function () {
-       var formData = $('#formModulo').serialize();
 
+        var moduleMalla = $('#form_modulo').val();
+        var horas = $("#form_horas option:selected").html();
+
+        if( !moduleMalla || !horas ){
+            Swal.fire('Atención', 'Todos los campos son requeridos', 'warning');
+            return;
+        }
+    
         var totalhoras= $('#totalhoras').val();
         var idacreditacion= $('#idacreditacion').val();
        // var horasmodulo= $('#horasmodulo').val();
         var horas = $("#form_horas option:selected").html();
         var horavalida=  parseFloat(totalhoras) +parseFloat(horas) ;
         var formData = $('#formModulo').serialize();
-        // alert(horavalida);
-        if((idacreditacion==1)||(idacreditacion==20))
-        {
+
+        if((idacreditacion==1)||(idacreditacion==20)){
             if(horavalida<=500){
+
+                Swal.fire({
+                    title: 'Registrando...',
+                    html: 'Espere un momento porfavor',
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                });
+
                 $('#modal').modal('hide');
                 $.ajax({
                     type: 'post',
                     url: "{{ path('herramienta_create_modulo_nuevo') }}",
-                    data:formData,
+                    data:   formData,
                     beforeSend: function () {
-
                         $("#listamodulos").empty();
                         $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
                     },
                     success: function (data) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Correcto',
+                            text: 'Su registro fue exitoso',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
                         $('#listamodulos').empty();
                         $('#listamodulos').html(data);
 
                     },
                     complete: function () {
-//                swal.stopLoading();
-//                swal.close();
-//                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-//                    $(".alert").slideUp(1000);
-//                });
+
+                    },
+                    error: function(data){
+                        Swal.fire("oppps", "asdasdas", "error");
                     }
-
-
                 });
 
             }else{
                 alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs, por lo que antes de proceder y guardar un modulo, debera cambiar las horas ingresadas...');
             }
         }else {
+
+            var periodo = $("#form_periodoTecnicoMedio option:selected").html();
+            if( !periodo || periodo == 'Seleccione' ){
+                Swal.close();
+                Swal.fire('Atención', 'Todos los campos son requeridos', 'warning');
+                return;
+            }
+
             if(horavalida<=1000){
+
+                Swal.fire({
+                    title: 'Registrando...',
+                    html: 'Espere un momento porfavor',
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                });
+
                 $('#modal').modal('hide');
                 $.ajax({
                     type: 'post',
                     url: "{{ path('herramienta_create_modulo_nuevo') }}",
                     data:formData,
                     beforeSend: function () {
-
-                        $("#listamodulos").empty();
-                        $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        //$("#listamodulos").empty();
+                        //$("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
                     },
-                    success: function (data) {
-                        $('#listamodulos').empty();
-                        $('#listamodulos').html(data);
-
+                    success: function ( data ) {
+                        if( data.statusCode ){
+                            if( data.statusCode == 401 ){
+                                Swal.fire( 'Atencion', data.message, 'info' );
+                            }
+                        }else{
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto',
+                                text: 'Su registro fue exitoso',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            $('#listamodulos').empty();
+                            $('#listamodulos').html(data);
+                        }
                     },
                     complete: function () {
-//                swal.stopLoading();
-//                swal.close();
-//                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-//                    $(".alert").slideUp(1000);
-//                });
-                    }
 
+                    },
+                    error: function(data){
+                        Swal.fire("oppps", "asdasdas", "error");
+                    }
 
                 });
 
@@ -116,9 +185,6 @@
                 alert('Las horas de los Modulos Ingresados no deben Exceder las 1000 hrs, por lo que antes de proceder y guardar un modulo, debera cambiar las horas ingresadas...');
             }
         }
-
-
-
 
     };
 
@@ -164,3 +230,6 @@
     {#};#}
 
 </script>
+
+
+{% endblock %}

@@ -153,3 +153,9 @@ herramienta_malla_update_modulo:
     defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:updateModuloNuevo }
     options:
          expose: true
+
+herramienta_add_nivel_malla:
+    path:     /addNivelMalla
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:addNivelMalla }
+    options:
+         expose: true
