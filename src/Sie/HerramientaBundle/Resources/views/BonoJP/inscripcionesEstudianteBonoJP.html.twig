@@ -126,7 +126,7 @@
 					{% for t in tutoresEliminados %}
 					{% set cont = cont + 1 %}
 					<tr>
-						<td  style="background:#ff00001d"> {{ t.carnet }} </td>
+						<td  style="background:#ff00001d"> {{ t.carnet }} {{ t.complemento }} </td>
 						<td  style="background:#ff00001d"> {{ t.paterno }} </td>
 						<td  style="background:#ff00001d"> {{ t.materno }} </td>
 						<td  style="background:#ff00001d"> {{ t.nombre }} </td>
@@ -172,7 +172,7 @@
 
 					{% for t in tutoresActuales %}
 					<tr>
-						<td style="background:#0080001f"> {{ t.carnet }} </td>
+						<td style="background:#0080001f"> {{ t.carnet }} {{ t.complemento }}  </td>
 						<td style="background:#0080001f"> {{ t.paterno }} </td>
 						<td style="background:#0080001f"> {{ t.materno }} </td>
 						<td style="background:#0080001f"> {{ t.nombre }} </td>
