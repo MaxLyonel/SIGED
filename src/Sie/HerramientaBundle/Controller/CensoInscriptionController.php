@@ -549,7 +549,7 @@ class CensoInscriptionController extends Controller
 
             $cenEstudianteInscripcionCenso->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($dataInfoUE['dataStudent']['inscriptionid']));
             $cenEstudianteInscripcionCenso->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($dataInfoUE['apoderadoinscripid']));
-            $cenEstudianteInscripcionCenso->setInstitucioneducativa($em->getRepository('SieAppWebBundle:InstitucionEducativa')->find($dataInfoUE['sie']));
+            $cenEstudianteInscripcionCenso->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($dataInfoUE['sie']));
 
             $cenEstudianteInscripcionCenso->setDocumentoPath($archivador);
             $cenEstudianteInscripcionCenso->setEmail($dataInfoUE['email']);
