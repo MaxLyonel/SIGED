@@ -57,6 +57,11 @@ tramite_impresion_certificado_permanente_lista_habilitados:
 tramite_impresion_certificado_permanente_imprimirCertificado:
     path:     /certificado/permanente/imprimir
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:imprimirCertificado }
+
+tramite_impresion_certificado_permanente_reimprimirCertificado:
+    path:     /certificado/permanente/reimprimir
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:reimprimirCertificado }
+
 #COMPROBANTE DE INICIO DE TRAMITE
 tramite_impresion_certificado_permanente_comprobante:
     path:     /certificado/permanente/comprobante

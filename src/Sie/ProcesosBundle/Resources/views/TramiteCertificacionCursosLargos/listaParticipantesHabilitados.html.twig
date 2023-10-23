@@ -109,7 +109,21 @@
                             </div>
                             
                         </div>
-                        {% endif %}   
+                        {% else %}   
+                                {% if (app.session.get('roluser') == 7) %}  
+                                <button class="btn btn-lilac" id="btn_imprimir" title="Imprimir Comprobante" onclick="imprimirCertificadosEmitidos(2)" ><i class='fa fa-print'></i> Imprimir Certificados ... </button>
+                                <form name="comprobante_certificado_emitido" method="post" action="{{ path('tramite_impresion_certificado_permanente_reimprimirCertificado') }}" target="_blank">
+                                <input type="hidden" name="gestion" value="{{ gestion }}"/>
+                                <input type="hidden" name="sie" value="{{ infoAutorizacionCentro }}"/>
+                                <input type="hidden" name="centro" value="{{ datosCentro.institucioneducativa }}"/>
+                                <input type="hidden" name="mencion" value="{{ mencionDatos.especialidad }}"/>
+                                <input type="hidden" name="nivel" value="{{ nivelDatos.acreditacion }}"/>
+                                <input type="hidden" name="idMencion" value="{{ mencionDatos.id }}"/>
+                                <input type="hidden" name="idnivel" value="{{ nivelDatos.id }}"/>
+                                <input type="hidden" name="datos_certificado" id="datos_certificado"/>
+                                </form>
+                                {% endif %} 
+                        {% endif %}  
                     </div>                
                 </div>
             </div>
@@ -182,6 +196,60 @@
             }
         });        
     }
+    
+    }
+
+
+    function imprimirCertificadosEmitidos(tipo){ //console.log(tipo);
+        if(tipo==1){//CUANDO ES TECNICO NACIONAL
+            swal({
+            title: "¿Está Segura/o de generar la lista de participantes para la emision de certificados ?",
+            text: "Se generará un documento xls, el cual incluye a todos los participantes habilitados mostrados en la lista.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+            }).then(function(willDelete)  {
+                if (willDelete) {
+                    var imagen = '{{ asset("img/loading96.gif") }}';
+                    document.comprobante_certificado_emitido.submit();
+                    swal({
+                        title: "Generando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                    setTimeout(function(){
+                        swal.stopLoading();
+                        swal.close();
+                    }, 3000);
+                }
+            });
+        } else {
+            swal({
+            title: "¿Está Segura/o de generar los certificados ?",
+            text: "Se generará un documento pdf, el cual incluye todos los certificados de los participantes emitidos.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+            }).then(function(willDelete)  {
+                if (willDelete) {
+                    var imagen = '{{ asset("img/loading96.gif") }}';
+                    document.comprobante_certificado_emitido.submit();
+                    swal({
+                        title: "Generando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                    setTimeout(function(){
+                        swal.stopLoading();
+                        swal.close();
+                    }, 3000);
+                }
+            });        
+        }
     
     }
     
