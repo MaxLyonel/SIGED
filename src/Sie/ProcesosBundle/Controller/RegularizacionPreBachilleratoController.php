@@ -3941,7 +3941,7 @@ class RegularizacionPreBachilleratoController extends Controller
 			$estudianteInscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
 			$estudianteInscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
 			//HAY QUE VERIFICAR ESTO DEL ESTADO DE LA MATRICULA se creara la matricula ID (106) con estadomatricula:PROMOVIDO POR PRE-BACHILLERATO
-			$estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(106));
+			$estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(101));
 			$estudianteInscripcion->setEstudiante($estudiante);
 			$estudianteInscripcion->setFechaInscripcion(new \DateTime('now'));
 			$estudianteInscripcion->setOperativoId(1);
