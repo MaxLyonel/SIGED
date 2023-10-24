@@ -1,0 +1,37 @@
+									<style>
+									.truncate {
+										width: 170px !important;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+										display: inline-block;
+									}
+									</style>
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12" >
+											<fieldset>
+												<legend>Archivos adjuntos</legend>
+													<div class="row">
+														<div class="col-xs-12">
+															{% if adjuntosDocsInteresado %}
+																{% for d in adjuntosDocsInteresado %}
+																	<div class="col-xs-12 col-sm-3 col-md-3" style="padding-top:0.8rem">
+																		{#<a href="{{path}}{{tramite}}/{{d.docs_interesado}}"> <i class="fa fa-file-pdf-o fa-3x text-primary" aria-hidden="true"></i> <span class='truncate'> {{d.docs_interesado}} </span></a>#}
+																		<a href="{{path('regularizacion_estudiantesPostBachillerato_mostrarAdjunto',{tramite:tramite,archivo:d.docs_interesado})}}"> <i class="fa fa-file-pdf-o fa-3x text-primary" aria-hidden="true"></i> <span class='truncate'> {{d.docs_interesado}} </span></a>
+																	</div>
+																{% endfor %}
+															{% endif %}
+															
+															{% if adjuntosInformes %}
+																{% for i in adjuntosInformes %}
+																	<div class="col-xs-12 col-sm-3 col-md-3" style="padding-top:0.8rem">
+																		{#<a href="{{path}}{{tramite}}/{{i.informe}}"> <i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> <span class='truncate'> {{i.informe}} </span></a>#}
+																		<a href="{{path('regularizacion_estudiantesPostBachillerato_mostrarAdjunto',{tramite:tramite,archivo:i.informe})}} "> <i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> <span class='truncate'> {{i.informe}} </span></a>
+																	</div>
+																{% endfor %}
+															{% endif %}
+														</div>
+													</div>
+											</fieldset>
+										</div>
+									</div>

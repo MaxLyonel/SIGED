@@ -1,0 +1,686 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block contentoption %}
+
+	<!--Modal registrar inscripción-->
+	{% include 'SieProcesosBundle:RegularizacionPreBachillerato:Fragmentos/frag_modalRegistrarInscripcion.html.twig' %}
+
+	<div class="header-content">
+		<h2><i class="fa fa-list-alt"></i> Solicitud Pre-Bachillerato <span> Buscar Estudiante</span></h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<a href="#">Regularización Pre-Bachillerato</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<a href="#">Solicitud</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</ol>
+		</div><!-- /.breadcrumb-wrapper -->
+	</div>
+
+	<div class="body-content animated fadeIn">
+		<div class="row">
+			<div class="col-lg-12">
+				<div id="msg-response"><!--Esto sera devuelto por la funcion ajax -->
+				</div>
+				<div class="panel" id="form_tramite">
+					<div class="panel-heading">
+						<div class="pull-left">
+							<h3 class="panel-title">Inicio de trámite de Pre-Bachillerato</h3>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="panel-body">
+						<div class="panel-body panel-primary">
+							<div class="div-form-search">
+								<form method="POST" class="form-inline text-center" style="margin-bottom: 8px">
+									<input type="hidden" name="token" value="{{ csrf_token('form-search-student') }}">
+									<div class="form-group mx-sm-3 mb-2">
+										<div class="input-group">
+											<input type="text" class="form-control" name='codigo_rude' id='codigo_rude' placeholder="Buscar código RUDE" autocomplete="off">
+											<div class="input-group-addon"><i class="fa fa-search"></i></div>
+										</div>
+										<button type="button" class="btn btn-primary" onclick="buscarEstudiante();"> Buscar</button>
+									</div>
+								</form>
+							</div>
+
+							<div class="clearfix"><br></div>
+							<div class="div-response"><!--Esto sera devuelto por la funcion ajax -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts%}
+
+	{{ parent() }}
+	<script type="text/javascript" >
+
+		$('.form-create-inscription').on('submit',function (e)
+		{
+			e.preventDefault(); 
+			$(this).find('#register_rude').val($('.target-rude').html().trim());
+			formCreateInscription($(this),e);
+		});
+
+		$('.div-response').on('submit','.form-send-request',function (e)
+		{	//console.log('oki');
+			formSendRequest(this,e);
+		});
+
+		$('.register-nivel').on('change',function(e){
+			buscarGrado($(this).val(),e);
+			var tmp=$('.hidden-register-nivel');
+			if(typeof(tmp)!='undefined')
+			{
+				tmp.val('');
+				tmp.val( $(this).children("option:selected").text().trim() );
+			}
+		})
+		$('.register-grado').on('change',function(e){
+			var tmp=$('.hidden-register-grado');
+			if(typeof(tmp)!='undefined')
+			{
+				tmp.val('');
+				tmp.val( $(this).children("option:selected").text().trim() );
+			}
+		})
+
+		var buscarNivel = function ()
+		{
+			var option_default='<option value="" class="option-nivel">Seleccione el nivel</option>';
+			var option_default_grado='<option value="" class="option-grado">Seleccione el grado</option>';
+			var option_error='<option value="" class="option-nivel">Acaba de ocurrir un error, por favor vuelva a seleccionar la géstion</option>';
+
+			$('.register-grado').html(option_default_grado);
+
+			$.ajax({
+				type:'GET',
+				url:Routing.generate('regularizacion_pre_bachillerato_buscarNivel'),
+				beforeSend:function(){
+					$('.option-nivel').html('Buscando niveles ...');
+				},
+				success:function (data)
+				{
+					try
+					{
+						var tmpData = JSON.parse(data.data);
+						var niveles = tmpData.niveles;
+						if(typeof(niveles)!='undefined')
+						{
+							var option=option_default;
+							$.each(niveles,function(i, item)
+							{
+								option+="<option value='"+item.id+"'>"+item.nivel+"</option>";
+							});
+							$('.register-nivel').html(option);
+						}
+						else
+						{
+							$('.register-nivel').html(option_error);
+						}
+					}
+					catch(e)
+					{
+						$('.register-nivel').html(option_error);
+					}
+				},
+				error:function()
+				{
+					$('.register-nivel').html(option_default);
+					try
+					{
+						var data 	= JSON.parse(xhr.responseText);
+						var msj 	= data.msj;
+						var status 	= data.status;
+						if(status== 404)
+							$('.register-nivel').html('<option value="" class="option-nivel">'+data.msj+'</option>');
+						else
+							$('.register-nivel').html(option_error);
+					}
+					catch(e)
+					{
+						$('.register-nivel').html(option_error);
+					}
+				}
+			});
+		}
+
+		var buscarGrado = function (_nivel,e)
+		{
+			e.preventDefault();
+			var option_default='<option value="" class="option-grado">Seleccione el grado</option>';
+			var option_error='<option value="" class="option-grado">Acaba de ocurrir un error, por favor vuelva a seleccionar el nivel</option>';
+
+			if(_nivel.toString().length<=0 || isNaN(_nivel))
+			{
+				$('.register-grado').html(option_default);
+				return;
+			}
+			var _gestion = (typeof($('.register-gestion'))!='undefined')?$('.register-gestion').val():'';
+			$.ajax({
+				type:'GET',
+				url:Routing.generate('regularizacion_pre_bachillerato_buscarGrado',{nivel:_nivel}),
+				beforeSend:function(){
+					$('.option-grado').html('Buscando grados ...');
+				},
+				success:function (data)
+				{
+					try
+					{
+						var tmpData = JSON.parse(data.data);
+						var grados = tmpData.grados;
+						if(typeof(grados)!='undefined')
+						{
+							var option=option_default;
+							$.each(grados,function(i, item)
+							{
+								option+="<option value='"+item.id+"'>"+item.grado+"</option>";
+							});
+							$('.register-grado').html(option);
+						}
+						else
+						{
+							$('.register-grado').html(option_error);
+						}
+					}
+					catch(e)
+					{
+						$('.register-grado').html(option_error);
+					}
+				},
+				error:function()
+				{
+					$('.register-grado').html(option_default);
+					try
+					{
+						var data 	= JSON.parse(xhr.responseText);
+						var msj 	= data.msj;
+						var status 	= data.status;
+						if(status== 404)
+							$('.register-grado').html('<option value="" class="option-grado">'+data.msj+'</option>');
+						else
+							$('.register-grado').html(option_error);
+					}
+					catch(e)
+					{
+						$('.register-grado').html(option_error);
+					}
+				}
+			});
+		}
+
+		function buscarEstudiante(){	
+			var rude=$('#codigo_rude').val();
+			
+			if(typeof(rude)!='undefined' && rude.length>5)
+			{
+				$.ajax({
+					type:'POST',
+					url:'{{path("regularizacion_pre_bachillerato_buscarRude")}}',
+					data:{ rude: rude},
+					beforeSend:function(){
+						$('.div-response').html('<div class="text-center">Buscando...</div>');
+					},
+					success:function (data){
+						$('.div-response').html(data);
+					},
+					error:function(){
+					}
+				});
+			}
+			else
+			{
+				$('.div-response').html('Debe registrar un RUDE valido');
+			}
+		}
+
+		$('#modal-create-inscription').on('shown.bs.modal', function (e) {
+    		buscarNivel();
+		});
+
+		var cantidadDeInscripciones = function ()
+		{
+			var cantidad,tbody,tr;
+			cantidad=0;
+			tbody 	= $('.tbody-subject-assignment');
+			tr 		= tbody.find('tr[class^="regularizacion-materias-inscritas-"]');
+			if(typeof(tr)!='undefined')
+				cantidad=tr.length;
+
+			return cantidad;
+		}
+
+		var ultimoNroDeInscripcion=function()
+		{
+			var ultimo,tbody,tr,th,mayor;
+			mayor=-999999999999;
+			ultimo=1;
+			tbody 	= $('.tbody-subject-assignment');
+			tr 		= tbody.find('tr[class^="regularizacion-materias-inscritas-"]');
+			$.each(tr,function(i, td)
+			{
+				thTmp 	= $(td).find('th');
+				if(typeof(thTmp)!='undefined')
+				{
+					ultimo=isNaN($(thTmp).text())?mayor:parseInt($(thTmp).text());
+					if(ultimo>mayor)
+					{
+						mayor=ultimo;
+					}
+				}
+			});
+			return mayor;
+		}
+
+		var unserialize=function (serializedData)
+		{
+			var urlParams = new URLSearchParams(serializedData); 
+			unserializedData = {}; 
+			for ([key, value] of urlParams)
+			{
+				unserializedData[key] = value;
+			}
+			return unserializedData;
+		}
+
+		var formCreateInscription=function (_form,e)
+		{
+			e.preventDefault();
+			var cantidad=cantidadDeInscripciones();
+			// if(cantidad>=2)
+			// {
+			// 	alert('Solo puede registrar dos inscripciones.');
+			// 	return;
+			// }
+			var cantidadInscripciones =_form.find('#register_inscripciones');
+			if(typeof(cantidadInscripciones)!='undefined')
+			{
+				cantidadInscripciones.val(cantidad);
+			}
+			var form=_form.serialize();
+			var _btn_submit='btn-create-inscription';
+			var tbody=$('.tbody-subject-assignment');
+			deshabilitarElemento(_form,_btn_submit);
+			ejecutandoAccion('form-create-inscription',_btn_submit,'Procesando ...');
+
+			$('.tbody-subject-assignment').append('<tr class="tmp-tr"><td colspan=10 class="text-center">Cargando datos ...</td></tr>');
+			var nro=(ultimoNroDeInscripcion()<0?cantidad+1:ultimoNroDeInscripcion()+1);
+			if(typeof(tbody)!='undefined')
+			{
+				verificarInscripcion(form,
+					function (data)
+					{
+						var data=unserialize(form);
+						var dateTmp = new Date();
+						var id = Math.round((Math.random()*Math.pow(10,17)) + dateTmp.getMilliseconds());
+						var newTr = '<tr class="regularizacion-materias-inscritas-'+(id)+'">\
+							<th scope="row">'+nro+'</th>\
+							<td> Inscripción '+nro+'</td>\
+							<td class="data-nivel" data-nivel="'+data.register_nivel+'">'+data.hidden_register_nivel+'</td>\
+							<td class="data-grado" data-grado="'+data.register_grado+'">'+data.hidden_register_grado+'</td>\
+							<td width="5%">\
+								<button type="button" class="btn btn-danger btn-xs btn-remove-inscripction" data-inscription='+id+' onclick="formRemoveInscription(this)"><i class="fa fa-trash"></i></button>\
+							</td>\
+						</tr>';
+
+						setTimeout(function ()
+						{
+							eliminarFilasTmp(tbody);
+							tbody.append(newTr);
+							cerrarModal('modal-create-inscription');
+							habilitarElemento(_form,_btn_submit);
+							ejecutandoAccion('form-create-inscription',_btn_submit,'Registrar');
+							buscarNivel();
+							buscarGrado('',e);
+							setSerializeTmpData('tbody-subject-assignment','regularizacion-materias-inscritas',0,{1:'nivel',2:'grado'},'request-inscriptions');
+						},1000);
+					},
+					function (xhr)
+					{
+						eliminarFilasTmp(tbody);
+						habilitarElemento(_form,_btn_submit);
+						ejecutandoAccion('form-create-inscription',_btn_submit,'Registrar');
+						//alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+
+						try
+						{
+							var data 	= JSON.parse(xhr.responseText);
+							var msj 	= data.msj;
+							var status 	= data.status;
+							if(status== 404)
+								alert(data.msj);
+							else
+								alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+						}
+						catch(e)
+						{
+							alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+						}
+
+					}
+				);
+			}
+			else
+			{
+				eliminarFilasTmp(tbody);
+				habilitarElemento(_form,_btn_submit);
+				ejecutandoAccion('form-create-inscription',_btn_submit,'Registrar');
+				alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+			}
+		}
+
+		var formRemoveInscription=function (e)
+		{
+			var btn,_id;
+			btn=$(e);
+			if(typeof(btn)!='undefined')
+			{
+				_id=btn.attr('data-inscription');
+			}
+			else
+			{
+				_id=0;
+				return;
+			}
+			var q=confirm('¿Está seguro de eliminar este registro?');
+			if(q==false)
+			{
+				return;
+			}
+			ejecutandoAccion('regularizacion-materias-inscritas-'+_id,'btn-remove-inscripction','Eliminando ...');
+			var tbody=$('.tbody-subject-assignment');
+			var trRemove=tbody.find('.regularizacion-materias-inscritas-'+_id);
+			if(typeof(trRemove)!='undefined')
+			{
+				setTimeout(function (){
+					trRemove.remove();
+					setSerializeTmpData('tbody-subject-assignment','regularizacion-materias-inscritas',0,{1:'gestion',2:'nivel',3:'grado',},'request-inscriptions');
+				},1000);
+			}
+			else
+			{
+				alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+				ejecutandoAccion('regularizacion-materias-inscritas-'+_id,'btn-remove-inscripction','Eliminar');
+			}
+		}
+		
+		var serializeTmpData=function (_tbody,_class,_inicio,_arrayDatos,_arrayExtras)
+		{
+			var r=null;
+			var tbody=$('.'+_tbody);
+			var trs=tbody.find('tr[class^="'+_class+'"]');
+			var inscripcionArray=new Array();
+			var arrayExtras = (_arrayExtras!=null)?_arrayExtras:undefined;
+
+			if(typeof(tbody)!='undefined' && trs.length>0)
+			{
+				$.each(trs,function(i, tr)
+				{
+					var inscripcion=new Object();
+					var tdTmp=$(tr).find('td');
+					$.each(tdTmp,function(j, td)
+					{
+						if(j==0)
+						{
+							var dateTmp=new Date();
+							var id=Math.round((Math.random()*Math.pow(10,17)));
+							inscripcion['id']=(id+dateTmp.getMilliseconds()).toString();
+						}
+						if(j>_inicio)
+						{
+							if(_arrayDatos.hasOwnProperty(j))
+							{
+								//var texto=$(td).text();
+								var texto=$(td).attr('data-'+_arrayDatos[j]);
+								inscripcion[_arrayDatos[j]]=(texto);
+							}
+						}
+
+					});
+					//este recorrido es para añadir propiedades al objeto, si fuera necesario
+					if(typeof(arrayExtras)!='undefined')
+					{
+						$.each(arrayExtras,function(k, ek)
+						{
+							//console.log(k);
+							//console.log(ek);
+							inscripcion[arrayExtras[k]]=[];
+						});
+					}
+					inscripcionArray.push(inscripcion);
+				});
+			}
+			else
+			{
+				r=null;
+			}
+			try
+			{
+				r=JSON.stringify(inscripcionArray);
+			}
+			catch(e)
+			{
+				r=null;
+			}
+			//$('.request-inscriptions').val(r);
+			return r;
+		}
+
+		var setSerializeTmpData=function (_tbody,_class,_inicio,_arrayDatos,_input,_arrayExtras)
+		{
+			var datos=serializeTmpData(_tbody,_class,_inicio,_arrayDatos,_arrayExtras);
+			var tmp=$('.'+_input);
+			if(typeof(tmp)!='undefined')
+			{
+				$('.'+_input).val('');
+				$('.'+_input).val(datos);
+			}
+		}
+
+		var formSendRequest=function (_form,e)
+		{
+			e.preventDefault();
+			var _btn_submit='btn-send-request-distrital';
+			//Esta funcion serializa los datos de la tabla y los asigna al input hidden
+			setSerializeTmpData('tbody-subject-assignment','regularizacion-materias-inscritas',0,{1:'nivel',2:'grado'},'request-inscriptions');
+
+			var form = new FormData(_form);
+			form.append('request_flujo_id',{{flujo_id}});
+			form.append('request_flujo_tipo','{{flujo_tipo}}');
+
+			if(cantidadDeInscripciones()<1)
+			{
+				alert('Debe registrar por lo menos una inscripción');
+				return;
+			}
+			// if(cantidadDeInscripciones()>2)
+			// {
+			// 	alert('Solo puede registrar dos inscripciones.');
+			// 	return;
+			// }
+			var inscripciones 	= $('#request_inscriptions');
+			var docsInteresado 	= $('#request_fileDocsInteresado');
+			var informe 		= $('#request_fileInforme');
+			var distrito 		= $('#request_distrito');
+
+			// console.log(inscripciones);
+			// console.log(docsInteresado);
+			// console.log(informe);
+			// console.log(distrito);
+
+			if(typeof(inscripciones)=='undefined' || inscripciones.val()=='')
+			{
+				alert('Acaba de ocurrir un error, por favor elimine  las inscripciones y vuelva a crearlas.');
+				return;
+			}
+			if(typeof(docsInteresado)=='undefined' || docsInteresado.val()=='')
+			{
+				alert('Debe adjuntar los documentos del interesado');
+				return;
+			}
+			if(typeof(informe)=='undefined' || informe.val()=='')
+			{
+				alert('Debe adjuntar el informe');
+				return;
+			}
+			if(typeof(distrito)=='undefined' || distrito.val()=='')
+			{
+				alert('Debe seleccionar un distrito');
+				return;
+			}
+
+			var q=confirm('¿Está seguro de enviar la solicitud?');
+			if(q==false)
+			{
+				return;
+			}
+
+			$.ajax({
+					type: 'POST',
+					url: '{{path("regularizacion_pre_bachillerato_registrarSolicitud")}}',
+					data: form,
+					dataType: 'json',
+					contentType: false,
+					cache: false,
+					processData:false,
+					beforeSend: function()
+					{
+						deshabilitarElemento($(_form),_btn_submit);
+						ejecutandoAccion('div-response',_btn_submit,'Procesando solicitud ...');
+					},
+					success: function(data)
+					{
+						var status=data.status;
+						var msg= data.msj;
+						var tramite = data.data;
+						var urlReporte =  data.urlReporte;
+						if(status==200)
+						{
+							$('#ci_rude').val('');
+							$('#form_tramite').fadeOut(function ()
+							{
+								$('#form_tramite').html('');
+							});
+
+							$('#form_tramite').fadeIn(function ()
+							{
+								swal({
+								  title: msg,
+								  icon: "success",
+								});
+								var reporte = '<a href="'+urlReporte+'" target="_blank" title="Descarga solicitud"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga solicitud</a>';
+								$('#msg-response').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'<br>'+reporte+'</div>');
+							});
+						}
+						else
+						{
+							habilitarElemento($(_form),_btn_submit);
+							ejecutandoAccion('div-response',_btn_submit,'Enviar a la Distrital');
+							alert(msg);
+						}
+					},
+					error:function (xhr)
+					{
+						habilitarElemento($(_form),_btn_submit);
+						ejecutandoAccion('div-response',_btn_submit,'Enviar a la Distrital');
+						try
+						{
+							var data 	= JSON.parse(xhr.responseText);
+							var msj 	= data.msj;
+							var status 	= data.status;
+							if(status== 404)
+								alert(data.msj);
+							else
+								alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+						}
+						catch(e)
+						{
+							alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+						}
+					}
+			});
+		}
+
+		var ejecutandoAccion=function (_con,_ele,_text)
+		{
+			var ele=$('.'+_con).find('.'+_ele);
+			if(typeof(ele)!=null)
+			{
+				ele.text(_text);
+			}
+		}
+
+		var eliminarFilasTmp=function (tbody)
+		{
+
+			tbody.find('.tmp-tr').remove();
+		}
+		var habilitarElemento=function(_con,_ele)
+		{
+			var ele=$(_con).find('.'+_ele);
+			if(typeof(ele)!=null)
+			{
+				ele.removeAttr('disabled');
+			}
+		}
+		var deshabilitarElemento=function(_con,_ele)
+		{
+			var ele=$(_con).find('.'+_ele);
+			if(typeof(ele)!=null)
+			{
+				ele.attr('disabled',true);
+			}
+		}
+		var abrirModal=function(_nombreModal)
+		{	
+			var modal=$("#"+_nombreModal);
+			if(typeof(modal)!=null) {
+				modal.modal('show');
+			}
+				
+		}
+		var cerrarModal=function(_nombreModal)
+		{
+			var modal=$("#"+_nombreModal);
+			if(typeof(modal)!=null)
+			{
+				modal.modal('hide');
+				limpiarModal(_nombreModal)
+			}
+		}
+		var limpiarModal=function (_nombreModal)
+		{
+
+			$("#"+_nombreModal).find('form')[0].reset();
+		}
+
+		var verificarInscripcion = function(_form,callbackVerificacion,callbackErrorVerificacion)
+		{
+			$.ajax({
+				type:'POST',
+				url:'{{ path("regularizacion_pre_bachillerato_verificarInscripcion") }}',
+				data:_form,
+				dataType: 'json',
+				//processData: false,
+				//contentType: false,
+				success:callbackVerificacion,
+				error: callbackErrorVerificacion,
+			});
+		}
+	</script>
+{% endblock %}
+

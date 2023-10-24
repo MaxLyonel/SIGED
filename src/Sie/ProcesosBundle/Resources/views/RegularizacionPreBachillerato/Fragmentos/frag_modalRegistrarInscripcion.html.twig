@@ -1,0 +1,58 @@
+	<!--Modal registrar inscripción-->
+	<div class="modal fade" id="modal-create-inscription" tabindex="-1" role="dialog" aria-labelledby="modal-crear-inscripcion">
+		<form action="#" method="POST" class="form-create-inscription">
+			{#<input type="hidden" name="token" value="{{ csrf_token('form-create-inscription') }}">#}
+			
+			<input type="hidden" name="register_rude" id="register_rude" class="register-rude">
+			<input type="hidden" name="register_inscripciones" id="register_inscripciones" class="register-inscripciones">
+
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="modal-crear-inscripcion">Registrar inscripción</h4>
+					</div>
+					
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12">
+
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Nivel:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="hidden" name="hidden_register_nivel" id="hidden_register_nivel" class="hidden-register-nivel" autocomplete="off">
+												<select name="register_nivel" id="register_nivel" class="form-control register-nivel" autocomplete="off" required>
+													<option value=""  class="option-nivel"> Seleccione el nivel</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Grado:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="hidden" name="hidden_register_grado" id="hidden_register_grado" class="hidden-register-grado" autocomplete="off">
+												<select name="register_grado" id="register_grado" class="form-control register-grado" autocomplete="off" required>
+													<option value=""  class="option-grado"> Seleccione el grado</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-success btn-create-inscription">Registrar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>

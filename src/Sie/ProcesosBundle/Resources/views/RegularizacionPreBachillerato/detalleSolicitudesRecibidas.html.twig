@@ -1,0 +1,594 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+
+	<pre>detalleSolicitudesRecibidas.html.twig</pre>
+	<!--Modal registrar inscripción0
+	<div class="modal fade" id="modal-create-inscription" tabindex="-1" role="dialog" aria-labelledby="modal-crear-inscripcion">
+		<form action="#" method="POST" class="form-create-inscription">
+			<input type="hidden" name="token" value="{{ csrf_token('form-create-inscription') }}">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="modal-crear-inscripcion">Registrar inscripción</h4>
+					</div>
+					
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Gestión:</label>
+											<div class="col-xs-12 col-sm-9">
+												<select name="register_gestion" id="register_gestion" class="form-control" required>
+													<option></option>
+													{% for y in range(2020,2009) %}
+													<option value="{{y}}">{{y}}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">SIE:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_sie" id="register_sie" required>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Nivel:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_nivel" id="register_nivel" required>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Grado:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_grado" id="register_grado" required>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Paralelo:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_paralelo" id="register_paralelo" required>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Turno:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_turno" id="register_turno" required>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-success btn-create-inscription">Registrar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	-->
+
+	<!--Modal registrar notas
+	<div class="modal fade" id="modal-register-grade" tabindex="-1" role="dialog" aria-labelledby="modal-registrar-notas">
+		<form action="#" method="POST" class="form-register-grade" onsubmit="...">
+			<input type="hidden" name="token" value="{{ csrf_token('form-register-grade') }}">
+			<input type="hidden" name="inscription_id" id="inscription_id" class="inscription-id" value="">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="modal-registrar-mostas">Registrar notas</h4>
+					</div>
+					
+					<div class="modal-body">
+						<div class="div-add-grade"></div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-success btn-register-grade">Registrar/Actualizar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	-->
+
+
+	<div class="header-content">
+		<h2><i class="fa fa-list-alt"></i> Detalle Solicitudes recibidas <span> Estudiantes post bachillerato</span></h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<a href="#">Estudiantes post bachillerato</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<a href="#">Detalle solicitudes recibidas</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</ol>
+		</div><!-- /.breadcrumb-wrapper -->
+	</div>
+
+	<div class="body-content animated fadeIn">
+		<div class="row" style="padding-top:1rem">
+			<div class="col-lg-12">
+				<div class="panel panel-icon panel-primary">
+					<div class="panel-heading">
+						<div class="pull-left">
+							<h3 class="panel-title">Detalle solicitud recibida </h3>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="panel-body">
+						<div class="panel-body panel-primary">
+							<div class="div-form-">
+
+								{% if estudiante %}
+								<div class="container-fluid-">
+									{#
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<a href="#" class="btn btn-success">Ver Historial</a>
+										</div>
+									</div>
+									#}
+
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Datos del estudiante</legend>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Nombre(s):</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.nombre}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Materno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.materno}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Paterno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.paterno}}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<br>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">R.U.D.E.:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.codigoRude}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">C.I.:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.carnetIdentidad}} {{estudiante.complemento}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">F. Nacimiento:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.fechaNacimiento|date('d/m/Y')}}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+											</fieldset>
+										</div>
+									</div>
+
+									<!--Tabla inscripcion-->
+									<div class="row" style="padding-top:1.5rem">
+
+										<div class="col-xs-12 table-responsive ">
+											<table class="table table-striped">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Inscripción</th>
+														<th>Gestión</th>
+														<th>Nivel</th>
+														<th>Grado</th>
+														<th>Paralelo</th>
+														<th>Turno</th>
+														<th width="5%" colspan="2"></th>
+													</tr>
+												</thead>
+												<tbody class="tbody-subject-assignment">
+													{% for m in regularizacion_materias_inscritas %}
+													<tr class="regularizacion-materias-inscritas-{{m.id}}">
+														<th scope="row">{{m.id}}</th>
+														<td>Inscripción {{m.id}}</td>
+														<td class="data-gestion">{{m.gestion}}</td>
+														<td class="data-nivel">{{m.nivel}}</td>
+														<td class="data-grado">{{m.grado}}</td>
+														<td class="data-paralelo">{{m.paralelo}}</td>
+														<td class="data-turno">{{m.turno}}</td>
+														<td><button type="button" class="btn btn-primary btn-xs btn-open-modal-register-grade" data-inscription={{m.id}} onclick="abrirModalRegistrarCalificaciones(this)">Ver notas</button></td>
+													</tr>
+													{% endfor %}
+												</tbody>
+											</table>
+										</div>
+
+									</div><!--FIN Tabla inscripcion-->
+
+									{% block seccionArchivosAdjuntos %}{% endblock %}
+
+									<form action="#" method="POST" class="form-send-request">
+									<input type="hidden" name="token" value="{{ csrf_token('form-send-request') }}">
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12" >
+											<fieldset>
+												<legend>Creación y subida del informe</legend>
+													<div class="row">
+														<div class="col-xs-12">
+															<mark>Los campos marcados con <span class='text-danger text'>*</span> son requeridos.</mark>
+														</div>
+														<div class="col-xs-12" style="padding-top:1rem">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label"><sup class='text-danger text'>*</sup> Adjuntar informe:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<input type="file" name="request_fileInforme" id="request_fileInforme" accept="application/pdf"required>
+																</div>
+															</div>
+														</div>
+													</div>
+											</fieldset>
+										</div>
+									</div>
+
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Asignación de Unidad Educativa y envio del informe</legend>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-6">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label"><sup class='text-danger text'>*</sup> Buscar Unidad Educativa por SIE:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<input type="text" class="form-control" name="" id="" placeholder="Por favor ingrese el código SIE de la Unidad Educativa">
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-6">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Nombre de la Unidad Educativa:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.materno}}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+											</fieldset>
+										</div>
+									</div>
+
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12" style="padding-top:1rem">
+											<div class="form-group">
+												<div class="col-xs-12 col-sm-12">
+													<button type="submit" class="btn btn-primary">Enviar a la Unidad Educativa</button>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									</form>
+
+								</div>
+								{% else %}
+								<div class="container-fluid">
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											No existe resultados
+										</div>
+									</div>
+								</div>
+								{% endif %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock %}
+
+
+{% block javascripts%}
+	{{ parent() }}
+	<script type="text/javascript" >
+		$('.form-search-student').on('submit',function (e)
+		{
+			buscarEstudiante($(this),e);
+		});
+
+		$('.form-create-inscription').on('submit',function (e)
+		{
+			formCreateInscription($(this),e);
+		});
+
+		$('.form-register-grade').on('submit',function (e)
+		{
+			formRegisterGrade($(this),e);
+		});
+
+		var buscarEstudiante=function (_form,e)
+		{
+			e.preventDefault();
+			var form=_form.serialize();
+			$.ajax({
+				type:'POST',
+				url:'{{path("regularizacion_estudiantesPostBachillerato_buscarEstudiante")}}',
+				data:form,
+				beforeSend:function(){
+					$('.div-response').html('<div class="text-center">Buscando...</div>');
+				},
+				success:function (data){
+					$('.div-response').html(data);
+				},
+				error:function(){
+
+				}
+			});
+		}
+
+		var cantidadDeInscripciones = function ()
+		{
+			var cantidad,tbody,tr;
+			cantidad=0;
+			tbody 	= $('.tbody-subject-assignment');
+			tr 		= tbody.find('tr[class^="regularizacion-materias-inscritas-"]');
+			if(typeof(tr)!='undefined')
+				cantidad=tr.length;
+
+			return cantidad;
+		}
+
+		var formCreateInscription=function (_form,e)
+		{
+			e.preventDefault();
+			var cantidad=cantidadDeInscripciones();
+			if(cantidad>=2)
+			{
+				alert('Solo puede registrar 2 inscripciones.');
+				return;
+			}
+			var form=_form.serialize();
+			var _btn_submit='btn-create-inscription';
+			deshabilitarElemento(_form,_btn_submit);
+			$.ajax({
+				type:'POST',
+				url:'{{path("regularizacion_estudiantesPostBachillerato_crearInscripcion")}}',
+				data:form,
+				beforeSend:function(){
+					$('.tbody-subject-assignment').append('<tr class="tmp-tr"><td colspan=10 class="text-center">Cargando datos ...</td></tr>');
+				},
+				success:function (data)
+				{
+					var tbody=$('.tbody-subject-assignment');
+					eliminarFilasTmp(tbody);
+					try
+					{
+						var status=data.status;
+						if(status==200)
+						{
+							$('.tbody-subject-assignment').append(data.data);
+							setTimeout(function ()
+							{
+								cerrarModal('modal-create-inscription');
+								habilitarElemento(_form,_btn_submit);
+							},2000);
+						}
+						else
+						{
+							alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+							habilitarElemento(_form,_btn_submit);
+						}
+					}
+					catch(e)
+					{
+						alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+						eliminarFilasTmp(tbody);
+						habilitarElemento(_form,_btn_submit);
+					}
+				},
+				error:function()
+				{
+					alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+					eliminarFilasTmp(tbody);
+					habilitarElemento(_form,_btn_submit);
+				}
+			});
+		}
+
+		var abrirModalRegistrarCalificaciones=function (b)
+		{
+			var id=$(b).attr('data-inscription');
+			$.ajax({
+				type:'GET',
+				//url:'{# url("regularizacion_gestionesPasadas_getMaterias") #}',
+				url:'{# url("base_url") #}',
+				beforeSend:function()
+				{
+					$('.div-add-grade').html('<div class="text-center">Cargando datos ...</div>');
+				},
+				success:function (data)
+				{
+					var div=$('.div-add-grade');
+					$('.div-add-grade').html('');
+					try
+					{
+						var status=data.status;
+						if(status==200)
+						{
+							$('.div-add-grade').html(data.data);
+							abrirModal("modal-register-grade");
+						}
+						else
+						{
+							alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+							$('.div-add-grade').html('');
+						}
+					}
+					catch(e)
+					{
+						alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+						$('.div-add-grade').html('');
+
+					}
+				},
+				error:function()
+				{
+					alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+					$('.div-add-grade').html('');
+
+				}
+			});
+
+		}
+
+		var formRegisterGrade=function (_form,e)
+		{
+			e.preventDefault();
+			var form=_form.serialize();
+			var _btn_submit='btn-register-grade';
+			deshabilitarElemento(_form,_btn_submit);
+			$.ajax({
+				type:'POST',
+				url:'{{path("regularizacion_estudiantesPostBachillerato_registrarNota")}}',
+				data:form,
+				beforeSend:function(){
+					$('.tbody-subject-assignment').append('<tr class="tmp-tr"><td colspan=10 class="text-center">Cargando datos ...</td></tr>');
+				},
+				success:function (data)
+				{
+					var tbody=$('.tbody-subject-assignment');
+					eliminarFilasTmp(tbody);
+					try
+					{
+						var status=data.status;
+						if(status==200)
+						{
+							$('.tbody-subject-assignment').append(data.data);
+							setTimeout(function ()
+							{
+								cerrarModal('modal-create-inscription');
+								habilitarElemento(_form,_btn_submit);
+							},2000);
+						}
+						else
+						{
+							alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+							habilitarElemento(_form,_btn_submit);
+						}
+					}
+					catch(e)
+					{
+						alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+						eliminarFilasTmp(tbody);
+						habilitarElemento(_form,_btn_submit);
+					}
+				},
+				error:function()
+				{
+					alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+					eliminarFilasTmp(tbody);
+					habilitarElemento(_form,_btn_submit);
+				}
+			});
+		}
+
+		var eliminarFilasTmp=function (tbody)
+		{
+
+			tbody.find('.tmp-tr').remove();
+		}
+		var habilitarElemento=function(_con,_ele)
+		{
+			var ele=$(_con).find('.'+_ele);
+			if(typeof(ele)!=null)
+			{
+				ele.removeAttr('disabled');
+			}
+		}
+		var deshabilitarElemento=function(_con,_ele)
+		{
+			var ele=$(_con).find('.'+_ele);
+			if(typeof(ele)!=null)
+			{
+				ele.attr('disabled',true);
+			}
+		}
+		var abrirModal=function(_nombreModal)
+		{
+			var modal=$("#"+_nombreModal);
+			if(typeof(modal)!=null)
+				modal.modal('show');
+		}
+		var cerrarModal=function(_nombreModal)
+		{
+			var modal=$("#"+_nombreModal);
+			if(typeof(modal)!=null)
+			{
+				modal.modal('hide');
+				limpiarModal(_nombreModal)
+			}
+		}
+		var limpiarModal=function (_nombreModal)
+		{
+
+			$("#"+_nombreModal).find('form')[0].reset();
+		}
+	</script>
+{% endblock %}
+

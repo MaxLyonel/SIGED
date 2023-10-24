@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SIGED | Herramienta web</title>
+		<style type="text/css">
+			.header-th
+			{
+				background-color:grey;
+				color:white;
+			}
+			.text-td
+			{
+				border:1px solid grey;
+			}
+			.center
+			{
+				text-align: center;
+			}
+			.upper
+			{
+				text-transform:uppercase !important;
+			}
+			.left
+			{
+				text-align: left;
+			}
+			.right
+			{
+				text-align: right;
+			}
+			.text-12
+			{
+				font-size: 12px !import;
+			}
+			table.table-12 tr td
+			{
+				font-size: 11px !import;
+			}
+
+		</style>
+	</head>
+	<body>
+			<table  width="100%" cellspacing="0" cellpadding="0" border="0" class="table-12">
+				<thead>
+					<tr>
+						<th class="center">
+							<img src="{{asset('img/escudoDeBoliviaReporte.png')}}" width="100px">
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="center">Estado Plurinacional de Bolivia</td>
+					</tr>
+					<tr>
+						<td class="center">Ministerio de Educación</td>
+					</tr>
+					<tr >
+						<td class="center" >
+							<h2>Solicitud de Regularización Pre-Bachillerato</h2>
+						</td>
+					</tr>
+					<tr>
+						<td class="right">
+							<h2>Trámite: <b>{{tramite}}</b></h2>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<br>
+			<br>
+			
+			<table  width="100%" cellspacing="0" cellpadding="6" border="1" class="table-12">
+				<thead>
+					<tr>
+						<th colspan="3"><strong>Datos del Estudiante:</strong></th>
+					</tr>
+				</thead>
+				<tbody>
+				  <tr>
+				    <th scope="row" width="30%" class="header-th">CÓDIGO RUDE:</th>
+				    <td width="70%">{{estudiante.codigo_rude}} </td>
+				  </tr>
+				  <tr>
+				    <th scope="row" width="30%" class="header-th">NOMBRE:</th>
+				    <td width="70%">{{estudiante.nombre}}</td>
+				  </tr>
+				  <tr>
+				    <th scope="row" width="30%" class="header-th">APELLIDO PATERNO:</th>
+				    <td width="70%">{{estudiante.paterno}}</td>
+				  </tr>
+				  <tr>
+				    <th scope="row" width="30%" class="header-th">APELLIDO MATERNO:</th>
+				    <td width="70%">{{estudiante.materno}}</td>
+				  </tr>
+				  <tr>
+				    <th scope="row" width="30%" class="header-th">C.I:</th>
+				    <td width="70%">{{estudiante.carnet_identidad}} {{estudiante.complemento}}</td>
+				  </tr>
+				</tbody>
+			</table>
+			
+			<br>
+			<br>
+			
+			<table width="100%" cellspacing="0" cellpadding="4" border="1" class="table-12">
+				<thead>
+					<tr>
+						<th colspan="4"><strong>Años de Escolaridad a Regularizar:</strong></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="background-color:grey; color:white;" width="10%">#</th>
+						<th style="background-color:grey; color:white;" width="20%">INSCRIPCIÓN</th>
+						<th style="background-color:grey; color:white;" width="40%">NIVEL</th>
+						<th style="background-color:grey; color:white;" width="30%">AÑO DE ESCOLARIDAD</th>
+					</tr>
+					{% if tablaInscripciones %}
+						{% for m in tablaInscripciones %}
+						{% set primeraColumna = '10%' %}
+						{% set segundaColumna = '20%' %}
+						{% set cuartaColumna =  '40%' %}
+						{% set quintaColumna =  '30%' %}
+						<tr class="regularizacion-materias-inscritas-{{loop.index}}">
+							<th scope="row" width="{{primeraColumna}}">{{loop.index}}</th>
+							<td width="{{segundaColumna}}">Inscripción {{loop.index}}</td>
+							<td width="{{cuartaColumna}}">{% if m.nivel == 12 %}Primaria Comunitaria Vocacional{% else %}Secundaria Comunitaria Productiva{% endif %}</td>
+							<td width="{{quintaColumna}}">{{m.grado}}</td>
+						</tr>
+						{% endfor %}
+
+					{% else %}
+						<tr><td colspan="6">No existen datos de inscripciones</td></tr>
+					{% endif %}
+				</tbody>
+			</table>
+			
+			{% for i in 0..10 %}<br>{% endfor %}
+			<table  width="100%" cellspacing="0" cellpadding="0" border="0" class="table-12">
+				<tbody>
+					<tr>
+						<td width="45%" >{% for i in 0..90 %}.{% endfor %}</td>
+						<td width="55%" >{% for i in 0..110 %}.{% endfor %}</td>
+					</tr>
+					<tr>
+						<td width="45%" >
+							Directora(o) Departamental
+						</td>
+						<td width="55%" >
+							Madre, Padre de familia, apoderado, tutor del Estudiante o Solicitante
+						</td>
+					</tr>
+					<tr>
+						<td>Nombre:</td>
+						<td>Nombre:</td>
+					</tr>
+					<tr>
+						<td>C.I.:</td>
+						<td>C.I.:</td>
+					</tr>
+					<tr>
+						<td class="center">Sello y firma</td>
+						<td class="center">Firma</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<br><br>
+			<table  width="100%" cellspacing="0" cellpadding="0" border="0" class="table-12">
+				<tbody>
+					<tr>
+						<td width="80%" align="top" >  </td>
+						<td width="20%" class="right" rowspan="6">
+							<img src="@{{codigoQR}}" width="100px">
+						</td>
+					</tr>
+					{% for i in 1..2 %}
+					<tr><td></td></tr>
+					{% endfor %}
+					<tr>
+						<td> Lugar: {% for i in 0..113 %}.{% endfor %} y Fecha:......../......../................ </td>
+					</tr>
+					<tr><td></td></tr>
+					<tr>
+						<td style="font-size:9px; !important, text-align:justify; background-color:#fcf8e3;" rowspan="2">Mediante la presente se instruye a la Dirección Distrital Educativa asignar según normativa una Unidad Educativa para llevar el proceso de evaluación del año o años de escolaridad. El trámite debe ser concluido antes de cierre de la gestión escolar:</td>
+					</tr>
+				</tbody>
+			</table>
+
+	</body>
+
+</html>
