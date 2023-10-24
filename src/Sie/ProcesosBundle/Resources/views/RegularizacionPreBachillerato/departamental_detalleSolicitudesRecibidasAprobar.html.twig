@@ -1,0 +1,748 @@
+{% extends 'SieProcesosBundle:RegularizacionPreBachillerato:Templates/detalleSolicitudesRecibidas.html.twig' %}
+
+								{% block stylesheets %}
+									{{ parent() }}
+									<style>
+										.opcion-tramite-si:hover  label {
+											text-transform: uppercase;
+											font-weight: bold;
+											color: green;
+										}
+										.opcion-tramite-no:hover  label {
+											text-transform: uppercase;
+											font-weight: bold;
+											color: red;
+										}
+									</style>
+								{% endblock %}
+
+								{% block modalRegistrarNotas %}
+									<!--Modal registrar notas-->
+									<div class="modal fade" id="modal-view-grade" tabindex="-1" role="dialog" aria-labelledby="modal-registrar-notas">
+										<form action="#" method="POST" class="form-register-grade">
+											{#<input type="hidden" name="token" value="{{ csrf_token('form-register-grade') }}">#}
+											<input type="hidden" name="inscription_id" id="inscription_id" class="inscription-id" value="">
+											<div class="modal-dialog" role="document">
+												<div class="modal-content">
+													<div class="modal-header yearOld">
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+														<h4 class="modal-title" id="modal-registrar-mostas">Ver notas</h4>
+													</div>
+													
+													<div class="modal-body">
+														<div class="div-add-grade">
+
+															<div class="row">
+																<div class="col-xs-12">
+																	<div class="row" style="padding-top:1rem">
+																		<div class="col-xs-12 col-sm-12">
+																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">Unidad Educativa:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-ue" disabled>{{institucioneducativa}}</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-xs-12">
+																	<div class="row" style="padding-top:1rem">
+																		<div class="col-xs-12 col-sm-6">
+																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">Gestión:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-gestion" disabled></div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="col-xs-12 col-sm-6">
+																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">SIE:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-sie" disabled></div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-xs-12">
+																	<div class="row" style="padding-top:1rem">
+																		<div class="col-xs-12 col-sm-6">
+																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">Nivel:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-nivel" style="font-size:0.77rem" disabled></div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="col-xs-12 col-sm-6">
+																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">Grado:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-grado" disabled></div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-xs-12">
+																	<div class="row" style="padding-top:1rem">
+																		<div class="col-xs-12 col-sm-6">
+																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">Turno:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-turno" disabled></div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="col-xs-12 col-sm-6">
+																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">Paralelo:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-paralelo" disabled></div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-xs-12">
+																	<div class="row" style="padding-top:1rem">
+																		<div class="col-xs-12 col-sm-12">
+																			<div class="form-group">
+																				<div class="col-xs-12 col-sm-12">
+																					<div class="text-center request-estado-aprobacion"></div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-xs-12">
+																	<div class="row" style="padding-top:1rem; height: 300px;overflow:auto">
+																		<div class="col-xs-12 table-responsive">
+																			<table class="table table-striped table-condensed">
+																				<thead>
+																					<tr>
+																						<th scope="col" width="5%">#</th>
+																						<th scope="col" >Materia</th>
+																						<th scope="col" width="15%">Calificación</th>
+																						<th scope="col" width="15%">Estado</th>
+																					</tr>
+																				</thead>
+																				<tbody class="tbody-grades-assignment">
+
+																				</tbody>
+																			</table>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+														</div>
+													</div>
+
+													<div class="modal-footer">
+														<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								{% endblock %}
+
+								{# aqui se recibira el array de inscripciones #}
+								{% block seccionTablaInscripciones %}
+									<div class="row" style="padding-top:1.5rem">
+										<div class="col-xs-12 table-responsive ">
+											<table class="table table-striped">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Inscripción</th>
+														<th>Unidad Educativa Asignada</th>
+														<th>Nivel</th>
+														<th>Grado</th>
+														<th width="7%"></th>
+													</tr>
+												</thead>
+												<tbody class="tbody-subject-assignment">
+													{% if tablaInscripciones %}
+														{% for m in tablaInscripciones %}
+														<tr class="regularizacion-materias-inscritas-{{m.id}}" data-id="{{m.id}}">
+															<th scope="row">{{loop.index}}</th>
+															<td>Inscripción {{loop.index}}</td>
+															<td class="data-uedesignada">{{ue_designada}}</td>
+															<td class="data-nivel">{{m.nivel}}</td>
+															<td class="data-grado">{{m.grado}}</td>
+															<td>
+																{# <button type="button" class="btn btn-success btn-sm btn-register-grade" data-id="{{m.id}}" data-tramite="{{tramite}}" data-inscripciones="{{m|json_encode}}" onclick="abrirModalVerCalificaciones(this)">Ver notas</button> #}
+															</td>
+														</tr>
+														{% endfor %}
+													{% else %}
+														<tr><td colspan="7">No existen datos de inscripciones</td></tr>
+													{% endif %}
+												</tbody>
+											</table>
+										</div>
+									</div><!--FIN Tabla inscripcion-->
+								{% endblock %}
+
+								{% block seccionArchivosAdjuntos %}
+									{% include 'SieProcesosBundle:RegularizacionPreBachillerato:Fragmentos/frag_seccionArchivosAdjuntos.html.twig' %}
+								{% endblock %}
+
+								{% block seccionAceptarORechazar %}
+									<input type="hidden" name="request_tramite" id="request_tramite" value="{{tramite}}">
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Finalización del trámite</legend>
+													<mark>Los campos marcados con <span class='text-danger text'>*</span> son requeridos.</mark>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-12 text-center">
+															<div class="form-group">
+																<h4 class="col-xs-12 col-sm-12 control-label"><sup class='text-danger text'>*</sup> ¿La solicitud procede? </h4>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-xs-6 col-sm-6 text-center">
+															<div class="radio">
+																<label>
+																	<input type="radio" name="request_procede" id="request_procede" class="request-procede" value="1" autocomplete="off"> Si
+																</label>
+															</div>
+														</div>
+														<div class="col-xs-6 col-sm-6 text-center">
+															<div class="radio">
+																<label>
+																	<input type="radio" name="request_procede" id="request_procede" class="request-procede" value="0" autocomplete="off"> No
+																</label>
+															</div>
+														</div>
+													</div>
+											</fieldset>
+										</div>
+									</div>
+
+									<!--La solicitud SI procede-->
+
+									<div class="row opcion-tramite-si" style="display:none">
+										<div class="col-xs-12" style="padding-top:1rem">
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-3 control-label"><sup class='text-danger text'>*</sup> Adjuntar informe:</label>
+												<div class="col-xs-12 col-sm-9">
+													<input type="file" name="request_fileInforme" id="request_fileInforme" accept="application/pdf" >
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!--La solicitud NO procede-->
+									<div class="row opcion-tramite-no" style="display:none">
+										<div class="col-xs-12 col-sm-12" style="padding-top:1rem">
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-3 control-label"><sup class='text-danger text'>*</sup> Observación:</label>
+												<div class="col-xs-12 col-sm-9">
+													<textarea name="request_observacion" id="request_observacion" class="form-control" rows="7"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row" style="padding-top:1rem;">
+										<div class="col-xs-12" style="padding-top:1rem">
+											<div class="form-group">
+												<div class="col-xs-12 col-sm-12">
+													{% if error %}
+														<div class="alert alert-danger" role="alert">{{error}}</div>
+													{% else %}
+														<button type="submit" class="btn btn-primary btn-end-request" style="display:none;">¡Primero seleccione si el trámite procede o no!</button>
+													{% endif %}
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endblock %}
+
+								{% block javascripts %}
+									{{parent()}}
+									<script type="text/javascript">
+
+										$('.form-send-request').on('submit',function (e)//codigo repetido se pensara volver en un plantilla
+										{
+											formSendRequest(this,e);
+										});
+
+										$('.request-procede').on('change',function(e)
+										{
+											if (this.checked)
+											{
+												var aceptado = $(".opcion-tramite-si");
+												var rechazado = $(".opcion-tramite-no");
+												var button = $('.btn-end-request');
+												if(typeof(aceptado)!='undefined' && typeof(rechazado)!='undefined' && typeof(button)!='undefined')
+												{
+													if(this.value==1)
+													{
+														button.html('Guardar y finalizar');
+														aceptado.show();
+														rechazado.hide();
+													}
+													else if(this.value == 0)
+													{
+														button.html('Finalizar');
+														rechazado.show();
+														aceptado.hide();
+													}
+													button.show();
+												}
+												else
+												{
+													alert('Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo.');
+												}
+											}
+										});
+
+										var ejecutandoAccion=function (_con,_ele,_text)//codigo repetido se pensara volver en un plantilla
+										{
+											var ele=$('.'+_con).find('.'+_ele);
+											if(typeof(ele)!=null)
+											{
+												ele.text(_text);
+											}
+										}
+
+										var abrirModal=function(_nombreModal)//codigo repetido se pensara volver en un plantilla
+										{
+											var modal=$("#"+_nombreModal);
+											if(typeof(modal)!=null)
+												modal.modal('show');
+										}
+
+										var cerrarModal=function(_nombreModal)//codigo repetido se pensara volver en un plantilla
+										{
+											var modal=$("#"+_nombreModal);
+											if(typeof(modal)!=null)
+											{
+												modal.modal('hide');
+												limpiarModal(_nombreModal)
+											}
+										}
+
+										var llenarSelect = function (_datos,_contendor,_campos)//codigo repetido se pensara volver en un plantilla
+										{
+											var completado = 0;
+											if(typeof(_datos)!='undefined')
+											{
+												var items='<option value="">No seleccionado</option>';
+												$.each(_datos,function(i, item)
+												{
+													var opcion=new Object();
+													for(var i in _campos)
+													{
+														if(item.hasOwnProperty(_campos[i]))
+															opcion[_campos[i]]=item[_campos[i]];
+														else
+															continue;
+													}
+													var tmp='<option value="'+opcion[_campos[0]]+'">'+opcion[_campos[1]]+'</option>';
+													items=items+tmp;
+												});
+												if(items.length>0)
+												{
+													completado = 1;
+													$('.'+_contendor).html(items);
+												}
+												else
+												{
+													completado = 0;
+												}
+											}
+											else
+											{
+												completado = 0;
+											}
+											return completado;
+										}
+
+										var habilitarElemento=function(_con,_ele)//codigo repetido se pensara volver en un plantilla
+										{
+											var ele=$(_con).find('.'+_ele);
+											if(typeof(ele)!=null)
+											{
+												ele.removeAttr('disabled');
+											}
+										}
+
+										var deshabilitarElemento=function(_con,_ele)//codigo repetido se pensara volver en un plantilla
+										{
+											var ele=$(_con).find('.'+_ele);
+											if(typeof(ele)!=null)
+											{
+												ele.attr('disabled',true);
+											}
+										}
+
+										var llenarMaterias = function (_datos,_contendor,_tramite,_idInscripcion)//codigo repetido se pensara volver en un plantilla
+										{
+											var completado = 0;
+											var tr='';
+											var c=1;
+											$.each(_datos,function(i, materia)
+											{
+												var estadoAprobacion = (materia.estado_aprobacion)?'APROBO':'REPROBO';
+												var classEstadoAprobacion = (materia.estado_aprobacion)?"":"style='background-color:#f2dede;'";
+												var tmp=
+													'<tr class="regularizacion-registrar-notas-'+materia.id+'">\
+														<th '+classEstadoAprobacion+' scope="row">'+c+'</th>\
+														<td '+classEstadoAprobacion+'>'+materia.nombre+'</td>\
+														<td '+classEstadoAprobacion+'>\
+															<div class="col-xs-12 col-sm-12 text-right">\
+																<div class="form-control disabled request-nota" disabled>'+materia.nota+'</div>\
+															</div>\
+														</td>\
+														<td '+classEstadoAprobacion+'>'+estadoAprobacion+'</td>\
+													</tr>';
+												tr=tr+tmp;
+												c=c+1;
+											});
+											if (tr.length>0)
+											{
+												completado=1;
+												$('.'+_contendor).html(tr);
+											}
+											else
+												completado=0;
+
+											return completado;
+										}
+
+										var llenarDatosInscripcion = function(inscripciones)//codigo repetido se pensara volver en un plantilla
+										{
+											var seLlenoDatos=true;
+											if(inscripciones)
+											{
+
+											}
+											else
+											{
+												seLlenoDatos=false;
+											}
+											if(typeof(inscripcion)!='undefined')
+											{
+												var datos=inscripcion.val();
+												try
+												{
+													var json=JSON.parse(datos);
+													json=json[_inscripcion_id];
+													var paralelo= json.paralelo;
+													var turno = json.turno;
+													var materias =json.materias;
+													if(typeof(paralelo)!='undefined')
+													{
+														var tmp=$('.register-paralelo');
+														if(typeof(tmp)!='undefined')
+														{
+															tmp.val(paralelo).change();
+														}
+													}
+													if(typeof(turno)!='undefined')
+													{
+														var tmp=$('.register-turno');
+														if(typeof(tmp)!='undefined')
+														{
+															tmp.val(turno).change();
+														}
+													}
+													if(typeof(materias)!='undefined')
+													{
+														for (var i=0; i<materias.length;i++)
+														{
+															var tmp=materias[i];
+															if(typeof(tmp)!='undefined')
+															{
+																if(tmp.hasOwnProperty('id'))
+																{
+																	var tr = $('.regularizacion-registrar-notas-'+tmp.id);
+																	if(typeof(tr)!='undefined')
+																	{
+																		var input = tr.find('td input.register-notas');
+																		if(typeof(input)!='undefined')
+																		{
+																			if(tmp.hasOwnProperty('nota'))
+																			{
+																				var nota=parseInt(tmp.nota);
+																				if(!isNaN(nota))
+																				{
+																					input.val(nota);
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+												catch(e)
+												{
+													inscripcion.val('');
+												}
+											}
+											return seLlenoDatos;
+										}
+
+										var abrirModalVerCalificaciones=function (btn,e)//codigo repetido se pensara volver en un plantilla
+										{
+											$('.inscription-id').val('');
+											if(typeof(btn)!='undefined')
+											{
+												var tramite=$(btn).attr('data-tramite');
+												var id=$(btn).attr('data-id');
+												var inscripciones=$(btn).attr('data-inscripciones');
+
+												if(typeof(tramite)!='undefined' && typeof(id)!='undefined' && inscripciones != 'undefined')
+												{
+													//console.log('tramite: '+tramite);
+													//console.log('id: '+id);
+													ejecutandoAccion('regularizacion-materias-inscritas-'+id,'btn-register-grade','Procesando ...');
+
+													try
+													{
+														var inscripciones_decode=JSON.parse(inscripciones);
+														//verificamos si ya existe un registro de notas de la inscripcion con el ID id, de ser asi lo cargamos
+														var materias=inscripciones_decode.materias;
+
+														var m = llenarMaterias(materias,'tbody-grades-assignment',tramite,id);
+
+														var gestion=$('#modal-view-grade').find('.request-gestion');
+														var sie=$('#modal-view-grade').find('.request-sie');
+														var nivel=$('#modal-view-grade').find('.request-nivel');
+														var grado=$('#modal-view-grade').find('.request-grado');
+														var paralelo=$('#modal-view-grade').find('.request-paralelo');
+														var turno=$('#modal-view-grade').find('.request-turno');
+														var estadoAprobacion=$('#modal-view-grade').find('.request-estado-aprobacion');
+
+														if(m==1 && typeof(gestion) != 'undefined' && typeof(sie) != 'undefined' && typeof(nivel) != 'undefined' && typeof(grado) != 'undefined' && typeof(paralelo) != 'undefined' && typeof(turno) != 'undefined' && typeof(estadoAprobacion) != 'undefined')
+														{
+															var estadoAprobacionTmp= (inscripciones_decode.estado_aprobacion)?'APROBO':'REPROBO';
+															var color='red';
+															gestion.html(inscripciones_decode.gestion);
+															sie.html(inscripciones_decode.sie);
+															nivel.html(inscripciones_decode.nivel);
+															grado.html(inscripciones_decode.grado);
+															paralelo.html(inscripciones_decode.paralelo);
+															turno.html(inscripciones_decode.turno);
+															estadoAprobacion.html(estadoAprobacionTmp);
+															if(inscripciones_decode.estado_aprobacion)
+																color='green';
+															estadoAprobacion.css({'font-size': '32px','font-weight': 'bold','color':color});
+															abrirModal('modal-view-grade');
+														}
+														else
+															alert('Acaba de ocurrir un error, no se pudo obtener los datos de la inscripción, por favor vuelva a intentarlo.');
+
+														ejecutandoAccion('regularizacion-materias-inscritas-'+id,'btn-register-grade','Ver notas');
+													}
+													catch(e)
+													{
+														ejecutandoAccion('regularizacion-materias-inscritas-'+id,'btn-register-grade','Ver notas');
+														alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+													}
+												}
+												else
+												{
+													alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+												}
+											}
+											else
+											{
+												alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+											}
+										}
+
+										var procedeEstaSeleccionado = function (procedeEstados)
+										{
+											var seleccionado 	= true;
+											var valor 			=-1;
+											var cantidadEstados = procedeEstados.length;
+											if(typeof(procedeEstados)!='undefined')
+											{
+												if(cantidadEstados==2)
+												{
+													for(var i =0;i<cantidadEstados;i++)
+													{
+														if( $(procedeEstados[i]).is(':checked') == true)
+														{
+															valor=$(procedeEstados[i]).val();
+														}
+													}
+												}
+												else
+													seleccionado =false;
+											}
+											else
+												seleccionado =false;
+
+											if(valor==-1)
+												seleccionado=false;
+
+											return {'seleccionado':seleccionado,'valor':valor};
+										}
+
+
+										var formSendRequest=function (_form,e)
+										{
+											e.preventDefault();
+											var _btn_submit 			='btn-end-request';
+											var _form_submit 			='form-send-request';
+											var form 					= new FormData(_form);
+											console.log('form: '+form);
+											var tramite 				= $('#request_tramite');
+											var informe 				= $('#request_fileInforme');
+											var procede 				= $('.request-procede');
+											var observacion 			= $('#request_observacion');
+											var procedeVerificacion 	= procedeEstaSeleccionado(procede);
+											var btnTxt 					= $(_form).find('.btn-end-request');
+
+											if( typeof(tramite) == 'undefined' || (typeof(tramite) != 'undefined' && tramite.val().length<=0) )
+											{
+												alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+												return;
+											}
+
+											if( typeof(procede) == 'undefined' || procedeVerificacion.seleccionado==false)
+											{
+												alert('Debe selecionar SI procede o NO procede el trámite.');
+												return;
+											}
+											else
+											{
+												switch(procedeVerificacion.valor)
+												{
+													case '0':
+														informe.val('');
+														if( typeof(observacion) == 'undefined' || (typeof(observacion) != 'undefined' && observacion.val().length<=0) )
+														{
+															alert('Debe escribir una razón de por que NO procede el trámite');
+															return;
+														}
+													break;
+													case '1':
+														observacion.val('');
+														if( typeof(informe)=='undefined' || (typeof(informe)!='undefined' && informe.val()=='') )
+														{
+															alert('Debe adjuntar el informe');
+															return;
+														}
+													break;
+													default:
+														informe.val('');
+														observacion.val('');
+														alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+														return;
+													break;
+												}
+											}
+											var q=confirm('¿Está seguro de finalizar el trámite?');
+											if(q==false)
+											{
+												return;
+											}
+											var btnTmp = (typeof(btnTxt)!='undefined')?btnTxt.val():'Terminar trámite';
+											$.ajax({
+													type: 'POST',
+													url: '{{path("regularizacion_pre_bachillerato_postEnviarAprobarDepartamental")}}',
+													data: form,
+													dataType: 'json',
+													contentType: false,
+													cache: false,
+													processData:false,
+													beforeSend: function()
+													{
+														deshabilitarElemento(_form,_btn_submit);
+														ejecutandoAccion(_form_submit,_btn_submit,'Procesando solicitud ...');
+													},
+													success: function(data)
+													{
+														var status=data.status;
+														var msg= data.msj;
+														// var urlCertificacionConclusionEstudios = data.urlCertificacionConclusionEstudios;
+														if(status==200)
+														{
+															$('.container-fluid-').fadeOut(function ()
+															{
+																$('.container-fluid-').html('');
+															});
+															$('.container-fluid-').fadeIn(function ()
+															{
+																swal({
+																  title: msg,
+																  icon: "success",
+																});
+																// if(typeof(urlCertificacionConclusionEstudios)!='undefined' && urlCertificacionConclusionEstudios != null)
+																// {
+																// 	var certificacionConclusionEstudios = '<a href="'+urlCertificacionConclusionEstudios+'" target="_blank" title="Descarga Certificado de Conclusión de Estudios"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga Certificado de Conclusión de Estudios</a>';
+																// 	$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'<br>'+certificacionConclusionEstudios+'<br></div>');
+																// }
+																// else
+																// {
+																	$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+																// }
+															});
+															// {#
+															// setTimeout(function ()
+															// {
+															// 	window.location.href="{{path('wf_tramite_index')}}";
+															// 	//swal.close();
+															// },3700);
+															// #}
+															
+														}
+														else
+														{
+															habilitarElemento(_form,_btn_submit);
+															ejecutandoAccion(_form_submit,_btn_submit,'Enviar a la Departamental');
+															alert(msg);
+														}
+													},
+													error:function (xhr)
+													{
+														habilitarElemento(_form,_btn_submit);
+														ejecutandoAccion(_form_submit,_btn_submit,'Enviar a la Departamental');
+														try
+														{
+															var data 	= JSON.parse(xhr.responseText);
+															var msj 	= data.msj;
+															var status 	= data.status;
+															if(status== 404)
+																alert(data.msj);
+															else
+																alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+														}
+														catch(e)
+														{
+															alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+														}
+													}
+												});
+										}
+
+									</script> 
+								{% endblock %}

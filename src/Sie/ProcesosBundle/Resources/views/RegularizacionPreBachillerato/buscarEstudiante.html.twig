@@ -1,0 +1,218 @@
+								{% if msg != '' %}
+									<div class="alert alert-warning ">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										{{ msg }}
+									</div>
+								{% endif %}
+								{% if estudiante %}
+								<div class="container-fluid-">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h3 class="panel-title">Datos del estudiante:</h3>
+										</div>
+										<div class="panel-body">
+									{# <div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Datos del estudiante</legend>#}
+													<div class="row" style="padding-top:1rem"> 
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Nombre(s):</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.nombre}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Materno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.materno}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Paterno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.paterno}}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<br>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Codigo RUDE:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control target-rude">{{estudiante.codigo_rude|trim}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">C.I.:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.carnet_identidad}} {{estudiante.complemento}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+														</div>
+													</div>
+											</fieldset>
+
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h3 class="panel-title">Inscripción Actual:</h3>
+										</div>
+										<div class="panel-body">
+									{# <div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Datos de Inscripcion</legend> #}
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">SIE:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.institucioneducativa_id}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">U. Educativa:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.institucioneducativa}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+														</div>
+													</div>
+													<br>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Cod Distrito:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.distrito_tipo_id}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Distrito:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.distrito}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+														</div>
+													</div>
+													<br>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Año de Escolaridad:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control target-rude">{{estudiante.grado_tipo_id|trim}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Nivel:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.nivel}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+														</div>
+													</div>
+											{# </fieldset> #}
+
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h3 class="panel-title">Años de Escolaridad a Regularizar:</h3>
+										</div>
+										<div class="panel-body">
+											<!--Tabla inscripcion-->
+											<div class="row" style="padding-top:1rem">
+												<div class="col-xs-9">
+													<table class="table table-primary">
+														<thead>
+															<tr>
+																<th>#</th>
+																<th>Inscripción</th>
+																<th>Nivel</th>
+																<th>Grado</th>
+																<th width="5%"></th>
+															</tr>
+														</thead>
+														<tbody class="tbody-subject-assignment">
+														</tbody>
+													</table>
+												</div>
+											</div><!--FIN Tabla inscripcion-->
+											<div class="row" style="padding-top:1rem">
+												<div class="col-xs-12">
+													<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-create-inscription" id="open-modal-inscription"><span class="glyphicon glyphicon-plus"></span>Registrar inscripción</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h3 class="panel-title">Documentación a Adjuntar:</h3>
+										</div>
+										<div class="panel-body">
+									{# <div class="row" style="padding-top:1rem"> #}
+										<form action="#" method="POST" class="form-send-request" enctype="multipart/form-data">
+											<input type="hidden" name="token" value="{{ csrf_token('form-send-request') }}">
+											<input type="hidden" name="request_inscriptions" id="request_inscriptions" class="request-inscriptions">
+											<input type="hidden" name="request_estudiante" id="request_estudiante" class="request-estudiante" value="{{estudiante.codigo_rude}}">
+											<input type="hidden" name="request_distrito" id="request_distrito" class="request_distrito" value="{{estudiante.distrito_tipo_id}}">
+										{# <div class="col-xs-12"> #}
+											{# <fieldset> #}
+												{# <legend>Creación y envio del informe</legend> #}
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label"> Adjuntar documentos del Solicitante: </label>
+																<div class="col-xs-12 col-sm-9">
+																	<input type="file" name="request_fileDocsInteresado" id="request_fileDocsInteresado" accept="application/pdf" required>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Adjuntar informe: </label>
+																<div class="col-xs-12 col-sm-9">
+																	<input type="file" name="request_fileInforme" id="request_fileInforme" accept="application/pdf" required>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12" style="padding-top:1rem">
+															<div class="form-group">
+																<div class="col-xs-12 col-sm-12">
+																	<button type="submit" class="btn btn-primary btn-send-request-distrital"><i class="fa fa-save"></i> Enviar a la Distrital</button>
+																</div>
+															</div>
+														</div>
+													</div>
+											{# </fieldset> #}
+										</form>
+										</div>
+									</div>
+								</div>
+								{% endif %}
