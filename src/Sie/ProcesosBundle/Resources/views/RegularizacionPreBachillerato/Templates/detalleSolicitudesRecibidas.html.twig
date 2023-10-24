@@ -1,0 +1,143 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+
+	{% block modalRegistrarNotas %}{% endblock %}
+
+	<div class="header-content">
+		<h2><i class="fa fa-list-alt"></i> Detalle Solicitudes recibidas <span> Regularización Pre-Bachillerato</span></h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<a href="#">Regularización Pre-Bachillerato</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<a href="#">Detalle solicitudes recibidas</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</ol>
+		</div><!-- /.breadcrumb-wrapper -->
+	</div>
+
+	<div class="body-content animated fadeIn">
+		<div class="row" style="padding-top:1rem">
+			<div class="col-lg-12">
+				<div class="panel panel-icon panel-primary">
+					<div class="panel-heading">
+						<div class="pull-left">
+							<h3 class="panel-title">Tramite Pre-Bachillerato Nº <strong>{{tramite}}</strong></h3>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="panel-body">
+						<div class="panel-body panel-primary">
+							<div class="div-form-">
+
+								{% if estudiante %}
+								<div class="container-fluid-">
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Datos del estudiante</legend>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Nombre(s):</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.nombre}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Materno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.materno}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Paterno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.paterno}}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<br>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Código RUDE:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.codigo_rude}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">C.I.:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.carnet_identidad}} {{estudiante.complemento}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															{# <div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">F. Nacimiento:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.fechaNacimiento|date('d/m/Y')}}</div>
+																</div>
+															</div> #}
+														</div>
+													</div>
+											</fieldset>
+										</div>
+									</div>
+
+									{% block seccionTablaInscripciones %}{% endblock %}
+									{# {% block seccionArchivosAdjuntos %}{% endblock %} #}
+
+									<form action="#" method="POST" class="form-send-request">
+									<input type="hidden" name="token" value="{{ csrf_token('form-send-request') }}">
+									
+										{% block seccionCreacionYSubidaDelInforme %}{% endblock %}
+										{% block seccionAsignarUe %}{% endblock %}
+										{% block seccionAceptarORechazar %}{% endblock %}
+										{% block seccionBtnEnviar %}{% endblock %}
+
+									</form>
+
+								</div>
+								{% else %}
+								<div class="container-fluid">
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											No existe resultados
+										</div>
+									</div>
+								</div>
+								{% endif %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock %}
+
+
+{% block javascripts%}
+	{{ parent() }}
+	<script type="text/javascript" >
+
+	</script>
+{% endblock %}
+
