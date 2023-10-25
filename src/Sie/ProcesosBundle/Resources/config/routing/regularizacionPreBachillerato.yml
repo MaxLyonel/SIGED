@@ -129,12 +129,6 @@ regularizacion_pre_bachillerato_reporteDepartamental:
     options:
         expose: true
 
-regularizacion_pre_bachillerato_reporteUE: 
-    path:     /ue/reporte/{idtramite}
-    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:reporteUE }
-    options:
-        expose: true
-
 regularizacion_pre_bachillerato_reporteUEActaSupletoria: 
     path:     /ue/reporte/acta-supletoria/{idtramite}
     defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:reporteUEActaSupletoria }
