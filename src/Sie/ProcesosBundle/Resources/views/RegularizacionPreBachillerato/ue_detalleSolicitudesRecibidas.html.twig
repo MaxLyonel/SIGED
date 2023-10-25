@@ -1192,7 +1192,7 @@
 					var status=data.status;
 					var msg= data.msj;
 					var tramite = data.data;
-					var urlReporte =  data.urlReporte;
+					// var urlReporte =  data.urlReporte;
 					var urlActaSupletoria =  data.urlActaSupletoria;
 
 					if(status==200)
@@ -1209,9 +1209,9 @@
 							});
 						
 							//$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
-							var reporte = '<a href="'+urlReporte+'" target="_blank" title="Descarga evaluación"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga evaluación</a>';
+							// var reporte = '<a href="'+urlReporte+'" target="_blank" title="Descarga evaluación"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga evaluación</a>';
 							var actaSupletoria = '<a href="'+urlActaSupletoria+'" target="_blank" title="Descarga Acta Supletoria"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga Acta Supletoria</a>';
-							$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'<br>'+reporte+'<br>'+actaSupletoria+'</div>');
+							$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'<br>'+actaSupletoria+'</div>');
 						});
 						{#
 							setTimeout(function ()
