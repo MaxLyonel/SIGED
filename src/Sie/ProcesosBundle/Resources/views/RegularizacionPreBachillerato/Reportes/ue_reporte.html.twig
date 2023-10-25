@@ -79,7 +79,7 @@
 				<tbody>
 				  <tr>
 				    <th scope="row" width="20%" class="header-th">CÓDIGO RUDE:</th>
-				    <td width="25%">{{estudiante.codigoRude}} </td>
+				    <td width="25%">{{estudiante.codigo_rude}} </td>
 				    <th scope="row" width="20%" class="header-th">NOMBRE:</th>
 				    <td width="35%">{{estudiante.nombre}}</td>
 				  </tr>
@@ -91,9 +91,9 @@
 				  </tr>
 				  <tr>
 				    <th scope="row" width="25%" class="header-th">C.I:</th>
-				    <td width="25%">{{estudiante.carnetIdentidad}} {{estudiante.complemento}}</td>
-				    <th scope="row" width="25%" class="header-th" style="font-size:13px !important;">FECHA DE NACIMIENTO:</th>
-				    <td width="25%">{{estudiante.fechaNacimiento|date('d/m/Y')}}</td>
+				    <td width="25%">{{estudiante.carnet_identidad}} {{estudiante.complemento}}</td>
+				    {# <th scope="row" width="25%" class="header-th" style="font-size:13px !important;">FECHA DE NACIMIENTO:</th>
+				    <td width="25%">{{estudiante.fechaNacimiento|date('d/m/Y')}}</td> #}
 				  </tr>
 				</tbody>
 			</table>
@@ -147,7 +147,7 @@
 						<tr class="regularizacion-materias-inscritas-{{loop.index}}">
 							<th scope="row" width="{{primeraColumna}}">{{loop.index}}</th>
 							<td width="{{segundaColumna}}">Inscripción {{loop.index}}</td>
-							<td width="{{terceraColumna}}">{{m.gestion}}</td>
+							<td width="{{terceraColumna}}"></td>
 							<td width="{{cuartaColumna}}">{{m.nivel}}</td>
 							<td width="{{quintaColumna}}">{{m.grado}}</td>
 							{% set materias = materias|merge([m|json_encode]) %}
@@ -193,7 +193,7 @@
 								<tbody>
 									{% for j in materiaTmp.materias %}
 									<tr>
-										<td width="85%">{{j.nombre}}</td>
+										<td width="85%"></td>
 										<td width="15%" class="right">{{j.nota}}</td>
 										
 									</tr>

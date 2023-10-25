@@ -877,6 +877,7 @@ class RegularizacionPreBachilleratoController extends Controller
 			--INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.tramite_detalle_id::INT)
 			INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.id::INT)
 			where t1.id=?
+			order by t3 desc
 			limit 1';
 		$stmt = $db->prepare($query);
 		$params = array($tramite_id);
@@ -1167,7 +1168,7 @@ class RegularizacionPreBachilleratoController extends Controller
 	{
 		$em = $this->getDoctrine()->getManager();
         $datosInscripciones_procesada = array();
-		$tieneErrores = false;
+		// $tieneErrores = false;
 		if($inscripciones)
 		{
 			$tmpInscripciones=$inscripciones;
@@ -1202,35 +1203,31 @@ class RegularizacionPreBachilleratoController extends Controller
 							else
 							{
 								$datosInscripciones_procesada= array();
-								$tieneErrores = true;
 								break;
 							}
 						}
 						else
 						{
 							$datosInscripciones_procesada= array();
-							$tieneErrores = true;
 							break;
 						}
 					}
 					catch(Exception $e)
 					{
 						$datosInscripciones_procesada= array();
-						$tieneErrores = true;
 						break;
 					}
 				}
 				else
 				{
 					$datosInscripciones_procesada= array();
-					$tieneErrores = true;
 					break;
 				}
 			}
 		}
 		else
 		{
-			$tieneErrores = false;
+			$datosInscripciones_procesada= array();
 		}
 		return $datosInscripciones_procesada;
 	}
@@ -1615,6 +1612,9 @@ class RegularizacionPreBachilleratoController extends Controller
 						if(isset($nArcInforme))
 						{
 							// $datosJSONInscripcion_decode->informes['informe_ddd'] = $nArcInforme;
+							dump($datosJSONInscripcion_decode);
+							dump($datosJSONInscripcion_decode->informes);
+							die;
 							$datosJSONInscripcion_decode->informes->informe_ddd = $nArcInforme;
 							
 							$inscripciones = $datosJSONInscripcion_decode->inscripciones;
@@ -2492,7 +2492,7 @@ class RegularizacionPreBachilleratoController extends Controller
 		$data 					= NULL;
 		$status 				= 404;
 		$msj 					= NULL;
-		$urlReporte 			= NULL;
+		// $urlReporte 			= NULL;
 		$urlActaSupletoria 		= NULL;
 
 		//Buscamos el trámite apartir del codigo de trámite enviado en la peticion
@@ -2598,8 +2598,8 @@ class RegularizacionPreBachilleratoController extends Controller
 												$data 				= $registroTramite['idtramite'];
 												$status 			= 200;
 												$msj 				= $registroTramite['msg'];
-												$urlReporte 		= $this->generateUrl('regularizacion_estudiantesPostBachillerato_reporteUE',array('idtramite' => $registroTramite['idtramite'])) ;
-												$urlActaSupletoria 	= $this->generateUrl('regularizacion_estudiantesPostBachillerato_reporteUEActaSupletoria',array('idtramite' => $registroTramite['idtramite'])) ;
+												// $urlReporte 		= $this->generateUrl('regularizacion_pre_bachillerato_reporteUE',array('idtramite' => $registroTramite['idtramite'])) ;
+												$urlActaSupletoria 	= $this->generateUrl('regularizacion_pre_bachillerato_reporteUEActaSupletoria',array('idtramite' => $registroTramite['idtramite'])) ;
 											}
 											else
 											{
@@ -2686,7 +2686,9 @@ class RegularizacionPreBachilleratoController extends Controller
 
 		$response = new JsonResponse($data,$status);
 		$response->headers->set('Content-Type', 'application/json');
-		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data,'urlReporte'=>$urlReporte,'urlActaSupletoria'=>$urlActaSupletoria ));
+		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data,
+									// 'urlReporte'=>$urlReporte,
+									'urlActaSupletoria'=>$urlActaSupletoria ));
 	}
 
 	function verificarInscripcionesRecibidas($inscripciones,$materias)
@@ -2724,170 +2726,13 @@ class RegularizacionPreBachilleratoController extends Controller
 		return array($observado,$listaMaterias);
 	}
 
-	public function reporteUEAction(Request $request,$idtramite)
-	{
-		$em = $this->getDoctrine()->getManager();
-		$request_id = $request->get('id');
-		$request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
-		$request_id = is_numeric($request_id)?$request_id:-1;
-
-		$request_tipo = $request->get('tipo');
-		$request_tipo = filter_var($request_tipo,FILTER_SANITIZE_STRING);
-
-		$tramite_id = filter_var($idtramite,FILTER_SANITIZE_NUMBER_INT);
-		$tramite_id = is_numeric($tramite_id)?$tramite_id:-1;
-
-
-		$determinarAprobacionOReprobacionSolicitud = false;
-		//Verificamos que el id de trámite haya sido enviado, caso contrario redireccionamos a la anteriro pagina
-		if($tramite_id>0)
-		{
-			//Buscamos el trámite segun el id enviado
-			$tramite =$this->getTramiteReporte($tramite_id);
-
-			if($tramite)
-			{
-				$datosJSONInscripcion = $tramite['datos'];
-
-				if(strlen($datosJSONInscripcion)>0)//verificamos que el JSon existe
-				{
-					try
-					{
-						//intentamos decodificar la cadena
-						$datosJSONInscripcion_decode=json_decode($datosJSONInscripcion);
-						$rude=property_exists($datosJSONInscripcion_decode,'estudiante')?$datosJSONInscripcion_decode->estudiante:-1;
-
-						$qb = $em->createQueryBuilder();
-						$estudiante=$qb->select('e')
-						 ->from('SieAppWebBundle:Estudiante', 'e')
-						 ->where('e.codigoRude = :codigoRude')
-						 ->setParameters(array('codigoRude'=>$rude))
-						 ->getQuery()
-						 ->getSingleResult();
-
-						//verificamos que exista el estudiante
-						if($estudiante)
-						{
-							if( $datosJSONInscripcion_decode && property_exists($datosJSONInscripcion_decode,'inscripciones'))
-							{
-								//Ahora procedemos a procesar los datos
-								$inscripcionesDecode 	= $datosJSONInscripcion_decode;
-
-								list($tieneErrores,$tablaInscripciones_procesada)=$this->obtenerNombresDeInscripciones($inscripcionesDecode);
-
-								$institucioneducativa=null;
-								if($inscripcionesDecode && property_exists($inscripcionesDecode,'sie'))
-								{
-									//obtenemos con la unidad educativa
-									$institucioneducativaTMP=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $inscripcionesDecode->sie));
-									$institucioneducativa= $institucioneducativaTMP->getInstitucioneducativa();
-								}
-								if($tieneErrores==false && $institucioneducativa)
-								{
-									//verificamos que la inscripcion tenga los campos inscripciones, docsInteresadoe informess
-									$tablaInscripciones=array();
-									if($tablaInscripciones_procesada && property_exists($tablaInscripciones_procesada,'inscripciones'))
-									{
-										//empezamos con las inscripciones
-										$tablaInscripciones = $tablaInscripciones_procesada->inscripciones;
-										$determinarAprobacionOReprobacionSolicitud = $this->determinarAprobacionOReprobacionSolicitud($tablaInscripciones);
-									}
-									$adjuntosDocsInteresado=array();
-									if($inscripcionesDecode && property_exists($inscripcionesDecode,'docsInteresado'))
-									{
-										//continuamos con los documentos del interesado
-										$adjuntosDocsInteresado = $inscripcionesDecode->docsInteresado;
-									}
-
-									$adjuntosInformes=array();
-									if($inscripcionesDecode && property_exists($inscripcionesDecode,'informes'))
-									{
-										//continuamos con los informes
-										$adjuntosInformes = $inscripcionesDecode->informes;
-									}
-
-									$datosInscripcion = base64_encode(json_encode($datosJSONInscripcion_decode->inscripciones));
-
-									$etapa = "Evaluacion Unidad Educativa";
-									$datosQR = "Etapa: ".$etapa."\n"."Tramite: ".$tramite_id."\n"."Solicitante: ".$rude."\n"."Fecha inicio de tramite: ".$tramite['fecha_tramite']."\n\n";
-									$codigoQR = $this->getCodigoQR($datosQR,$datosInscripcion);
-									$codigoQR=preg_replace('#^data:image/[^;]+;base64,#', '',base64_encode($codigoQR) );
-
-									$html= 
-									$this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:Reportes/ue_reporte.html.twig',array(
-										'estudiante'=>$estudiante,
-										'path' => $this->path,
-										'error' => $error,
-										'tablaInscripciones' => $tablaInscripciones,
-										'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
-										'adjuntosInformes' => $adjuntosInformes,
-										'institucioneducativa' => $institucioneducativaTMP,
-										"tramite" => $tramite_id,
-										"codigoQR" => $codigoQR
-									));
-									$pdf=$this->generarPdf($html, $tramite_id, $rude,$descripcion="EVALUACION_UE_");
-									$this->descargarPdf($pdf,$tramite_id, $rude,$descripcion="EVALUACION_UE_");
-								}
-								else
-								{
-									$tablaInscripciones = array();
-									$adjuntosDocsInteresado = array();
-									$adjuntosInformes = array();
-									$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
-								}
-							}
-							else
-							{
-								$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
-							}
-						}
-						else
-						{
-							$error='No se puede encontrar al estudiante, por favor verifique que el trámite fue realizado correctamente.';
-						}
-					}
-					catch(Exception $e)
-					{
-						$tablaInscripciones = array();
-						$adjuntosDocsInteresado = array();
-						$adjuntosInformes = array();
-						$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
-					}
-				}
-				else
-				{
-					$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
-				}
-			}
-			else
-			{
-				$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
-			}
-
-			return $this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:distrital_detalleSolicitudesRecibidasPorConcluir.html.twig',array(
-				'estudiante'=>$estudiante,
-				'path' => $this->path,
-				'error' => $error,
-				'tablaInscripciones' => $tablaInscripciones,
-				'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
-				'adjuntosInformes' => $adjuntosInformes,
-				'institucioneducativa' => $institucioneducativa,
-				"tramite" => $tramite_id,
-			));
-		}
-		else
-		{
-			return $this->redirect($this->generateUrl('login'));
-		}
-	}
-
 	public function reporteUEActaSupletoriaAction(Request $request,$idtramite)
-	{
+	{	
 		$em = $this->getDoctrine()->getManager();
 		$request_id = $request->get('id');
 		$request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
 		$request_id = is_numeric($request_id)?$request_id:-1;
-
+		
 		$request_tipo = $request->get('tipo');
 		$request_tipo = filter_var($request_tipo,FILTER_SANITIZE_STRING);
 
@@ -2895,7 +2740,7 @@ class RegularizacionPreBachilleratoController extends Controller
 		$tramite_id = is_numeric($tramite_id)?$tramite_id:-1;
 
 		$determinarAprobacionOReprobacionSolicitud= false;
-
+		
 		if($tramite_id>0)
 		{
 			//Buscamos el trámite segun el id enviado
@@ -2911,96 +2756,26 @@ class RegularizacionPreBachilleratoController extends Controller
 					{
 						//intentamos decodificar la cadena
 						$datosJSONInscripcion_decode=json_decode($datosJSONInscripcion);
-						$rude=property_exists($datosJSONInscripcion_decode,'estudiante')?$datosJSONInscripcion_decode->estudiante:-1;
-
-						$qb = $em->createQueryBuilder();
-						$estudiante=$qb->select('e')
-						 ->from('SieAppWebBundle:Estudiante', 'e')
-						 ->where('e.codigoRude = :codigoRude')
-						 ->setParameters(array('codigoRude'=>$rude))
-						 ->getQuery()
-						 ->getSingleResult();
-
-						//verificamos que exista el estudiante
-						if($estudiante)
-						{
-							if( $datosJSONInscripcion_decode && property_exists($datosJSONInscripcion_decode,'inscripciones'))
-							{
-								//Ahora procedemos a procesar los datos
-								$inscripcionesDecode 	= $datosJSONInscripcion_decode;
-
-								list($tieneErrores,$tablaInscripciones_procesada)=$this->obtenerNombresDeInscripciones($inscripcionesDecode);
-
-								$institucioneducativa=null;
-								if($inscripcionesDecode && property_exists($inscripcionesDecode,'sie'))
-								{
-									//obtenemos con la unidad educativa
-									$institucioneducativaTMP=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $inscripcionesDecode->sie));
-									$institucioneducativa= $institucioneducativaTMP->getInstitucioneducativa();
-								}
-								if($tieneErrores==false && $institucioneducativa)
-								{
-									//verificamos que la inscripcion tenga los campos inscripciones, docsInteresadoe informess
-									$tablaInscripciones=array();
-									if($tablaInscripciones_procesada && property_exists($tablaInscripciones_procesada,'inscripciones'))
-									{
-										//empezamos con las inscripciones
-										$tablaInscripciones = $tablaInscripciones_procesada->inscripciones;
-										$determinarAprobacionOReprobacionSolicitud = $this->determinarAprobacionOReprobacionSolicitud($tablaInscripciones);
-									}
-									$adjuntosDocsInteresado=array();
-									if($inscripcionesDecode && property_exists($inscripcionesDecode,'docsInteresado'))
-									{
-										//continuamos con los documentos del interesado
-										$adjuntosDocsInteresado = $inscripcionesDecode->docsInteresado;
-									}
-
-									$adjuntosInformes=array();
-									if($inscripcionesDecode && property_exists($inscripcionesDecode,'informes'))
-									{
-										//continuamos con los informes
-										$adjuntosInformes = $inscripcionesDecode->informes;
-									}
-
-									$pdf=$this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
-									//$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Regularizacion_EstudiantesPostBachillerato\reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
-									
-									$status = 200;
-									$arch           = 'ACTA_SUPLETORIA-'.$tramite_id.'-'.$estudiante->getCodigoRude().'.pdf';
-									$response       = new Response();
-									$response->headers->set('Content-type', 'application/pdf');
-									$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-									$response->setContent(file_get_contents($pdf));
-									$response->setStatusCode($status);
-									$response->headers->set('Content-Transfer-Encoding', 'binary');
-									$response->headers->set('Pragma', 'no-cache');
-									$response->headers->set('Expires', '0');
-									return $response;
-
-								}
-								else
-								{
-									$tablaInscripciones = array();
-									$adjuntosDocsInteresado = array();
-									$adjuntosInformes = array();
-									$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
-								}
-							}
-							else
-							{
-								$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
-							}
-						}
-						else
-						{
-							$error='No se puede encontrar al estudiante, por favor verifique que el trámite fue realizado correctamente.';
-						}
+						$institucionEducativaId = intval($datosJSONInscripcion_decode->sie);
+						$estudianteInscripcionId = intval($datosJSONInscripcion_decode->estudiante->inscripcion_id);
+						$response = new Response();
+						$gestion = $this->session->get('currentyear');
+						$codigoQR = 'RPB'.$idTramite.'|'.$gestion;
+						$data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
+					
+						$response->headers->set('Content-type', 'application/pdf');
+						$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'RPB_ACTA_SUPLEATORIA'.$idTramite.'_'.$this->session->get('currentyear'). '.pdf'));
+						// dump($this->container->getParameter('urlreportweb'));
+						// die;
+						$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_tramite_pre_bachillerato_supleatorio_v0.rptdesign&tramite_id='.$tramite_id.'&estudiante_inscripcion_id='.$estudianteInscripcionId.'&institucioneducativa_id='.$institucionEducativaId.'&&__format=pdf&'));
+						$response->setStatusCode(200);
+						$response->headers->set('Content-Transfer-Encoding', 'binary');
+						$response->headers->set('Pragma', 'no-cache');
+						$response->headers->set('Expires', '0');
+						return $response;
 					}
 					catch(Exception $e)
 					{
-						$tablaInscripciones = array();
-						$adjuntosDocsInteresado = array();
-						$adjuntosInformes = array();
 						$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
 					}
 				}
@@ -3014,16 +2789,9 @@ class RegularizacionPreBachilleratoController extends Controller
 				$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
 			}
 
-			return $this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:distrital_detalleSolicitudesRecibidasPorConcluir.html.twig',array(
-				'estudiante'=>$estudiante,
-				'path' => $this->path,
-				'error' => $error,
-				'tablaInscripciones' => $tablaInscripciones,
-				'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
-				'adjuntosInformes' => $adjuntosInformes,
-				'institucioneducativa' => $institucioneducativa,
-				"tramite" => $tramite_id,
-			));
+			return $this->redirectToRoute('wf_tramite_index', [
+                'tipo' => 2,
+            ]);
 		}
 		else
 		{
