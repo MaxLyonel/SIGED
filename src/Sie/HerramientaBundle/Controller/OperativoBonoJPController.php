@@ -315,6 +315,7 @@ class OperativoBonoJPController extends Controller
 	public function formularioCambiarTutorAction()
 	{
 		//return $this->redirect($this->generateUrl('login'));
+		//dump($this->session->get('pathSystem'));die; sieEspecialBundle
 		return $this->render($this->session->get('pathSystem') .':BonoJP:fomularioCambiarTutor.html.twig');
 	}
 
@@ -345,19 +346,41 @@ class OperativoBonoJPController extends Controller
 		$estado_matricula = 4;
 		$swError = false;
 		$messageError = false;
-		$query = "select iec.institucioneducativa_id
+		if($idtipoInstitucion==4){
+			//2023 bjp EXCEPTO SERVICIOS, INDIRECTA Y TALENTO Y DIF. APRENDIZAJE
+			$query = "select iec.institucioneducativa_id
 					from estudiante e
 					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
+					inner join institucioneducativa_curso_especial iece on ( iec.id = iece.institucioneducativa_curso_id )
 					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
 					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	
-					". $whereregular;
+					and iec.nivel_tipo_id <>410 and iece.especial_area_tipo_id in (1,2,3,4,10,12) and iece.especial_modalidad_tipo_id =1
+					";
+		}
+		if($idtipoInstitucion==1){
+			$query = "select iec.institucioneducativa_id
+			from estudiante e
+			inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
+			inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
+			inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
+			where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	
+			". $whereregular;
+		}
+		
+		
 		// dump($query);die();
 		$query2 = $em->getConnection()->prepare($query);
 		$query2->execute();
         $currentInscription = $query2->fetchAll();
         // dump(sizeof($currentInscription)); die();
+		 //check if the student has current inscription and especial,conditioms
+		if(sizeof($currentInscription)==0 && $idtipoInstitucion==4){
+			$messageError = 'El estudiante no cumple las condiciones de cobro de BJP para Educación Especial';
+	        $swError = true;
+		}
          //check if the student has current inscription
+
         if(sizeof($currentInscription)>0){
          	// if the student is in the same UE
          	if($currentInscription[0]['institucioneducativa_id']!=$this->session->get('ie_id')){
