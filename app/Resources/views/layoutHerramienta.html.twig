@@ -864,10 +864,11 @@
 
                                 {# se inhabilita a peticion de Bruno en fecha 03032023 antes era 7 y 8#}
                                 {# if app.session.get('roluser') in [7,8] #}
+                                {#
                                 {% if app.session.get('roluser') in [7,8] %}
                                   <li><a href="{{ path('operativo_bono_jp_ValidaNoPagadosSeguimiento')}}">Seguimiento BJP</a></li>
                                 {% endif %}
-                                
+                                 #}
                                 {#
                                 {% if app.session.get('roluser') in [9] %}
                                   <li><a href="{{ path('operativo_bono_jp_ValidaNoPagados')}}">Valida No Pagados</a></li>
