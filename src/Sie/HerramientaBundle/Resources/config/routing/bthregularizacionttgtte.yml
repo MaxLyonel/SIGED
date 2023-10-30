@@ -1,0 +1,36 @@
+bth_regularizacion_ttg_tte_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:index }
+
+bth_regularizacion_ttg_tte_bucarsie:
+    path:     /buscarsie
+    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:busquedaSie }
+    methods:  [POST]
+    options:
+         expose: true
+
+bth_regularizacion_ttg_tte_grado:
+    path:     /grado/
+    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:listaGrados }
+    options:
+        expose: true
+
+bth_regularizacion_ttg_tte_paralelo:
+    path:     /paralelo/
+    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:listaParalelos }
+    options:
+        expose: true
+
+bth_regularizacion_ttg_tte_bucarEstudiantes:
+    path:     /buscarEst
+    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:busquedaEstudiantes }
+    methods:  [POST]
+    options:
+         expose: true
+
+bth_regularizacion_ttg_tte_guardaCalificaciones:
+    path:     /guardaCalificacion
+    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:GuardaCalificaciones }
+    methods:  [POST]
+    options:
+         expose: true
