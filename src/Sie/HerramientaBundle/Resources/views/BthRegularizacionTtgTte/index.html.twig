@@ -1,0 +1,449 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+<div class="header-content">
+	<h2><i class="fa fa-table"></i> Regularización Calificaciones TTE Y TTG (UE's autorizadas) <span></span></h2>
+	<div class="breadcrumb-wrapper hidden-xs">
+		<span class="label">Usted esta aquí:</span>
+		<ol class="breadcrumb">
+			<li>
+				<i class="fa fa-home"></i>
+				<a href="#">Regularización Calificaciones TTE Y TTG</a>
+				<i class="fa fa-angle-right"></i>
+			</li>
+			<li class="active"></li>
+		</ol>
+	</div>
+</div>
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3 class="titulo">Registro de calificaciones</h3>
+                    
+                    <div id="buscaSie">
+                        <div class="col-md-6">
+							<form class="form-row"> 
+								<div class="form-group col-md-6">
+                                    {# <label for="codigoSie">Código SIE:</label> #}
+                                    <input type="text" class="form-control" id="codigoSIE" placeholder="SIE">
+								</div>
+                                
+                                <div class="form-group col-md-3">
+                                    {# <label for="gestion">Gestión:</label> #}
+                                    <select name="gestionId" id="gestionId" class="custom-select form-control">
+                                        <option value="">Gestion</option>
+                                        <option value="{{ gestion.id}}">{{ gestion.gestion}}</option>
+                                    </select>		
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label class="control-label"></label>
+								    <button onclick="buscarSIE()" type="button" id="buscaSIE" class="btn btn-primary"><i class="fa fa-search"></i> Buscar SIE </button>
+                                </div>
+							</form>
+						</div>
+                    </div>
+
+                    <div id="respuestaSie" style="display: none;">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel rounded shadow panel-teal">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">Información de la Unidad Educativa</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <tr>
+                                                <th>Código RUE:</th>
+                                                <td id="td_codigo_rue"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Unidad Educativa:</th>
+                                                <td id="td_ue"></td>
+                                            </tr>
+                                            {# <tr>
+                                                <th>Dependencia:</th>
+                                                <td id="td_dependencia"></td>
+                                            </tr> #}
+                                            <tr>
+                                                <th>Distrito Educativo:</th>
+                                                <td id="td_distrito"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="selectCurso">
+                            
+                            <div style="padding: 15px;">
+                                <h4>Seleccionar curso</h4>
+                                <hr>
+                                <form>								
+                                  <div class="form-row">
+                                    <div class="form-group col-md-5">
+                                        <label for="nivel">Nivel</label>
+                                        <select name="modalidades" id="nivelId" class="custom-select js-example-basic-multiple form-control" >
+                                            <option value="13">Secundaria Comunitaria Productiva</option>
+                                        </select>								      
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="turno">Turno</label>
+                                        <select name="turnoId" id="turnoId" class="custom-select js-example-basic-multiple form-control" onchange="getGrado()" >
+                                            <option value="">Seleccionar Turno</option>
+                                        </select>		
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="grado">Grado</label>
+                                        <select name="gradoId" id="gradoId" class="custom-select js-example-basic-multiple form-control" onchange="getParalelo()">
+                                            {# <option value="">Seleccionar Grado</option> #}
+                                        </select>
+                                    </div>
+                        
+                                    <div class="form-group col-md-2">
+                                        <label for="paralelo">Paralelo</label>
+                                        <select name="paraleloId" id="paraleloId" class="custom-select js-example-basic-multiple form-control">
+                                            {# <option value="">Seleccionar Paralelo</option> #}
+                                        </select>
+                                    </div>
+                                  </div>
+                                  <button onclick="buscarCursoEst()" id="buscaEst" type="button" class="btn btn-primary mb-2" >Buscar Estudiantes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="estudiantesreg" style="display: none;">
+                        {# <div class="col-md-9">
+							<div v-if=" existStudent ">
+                            	<!-- data new studen  -->
+                            	<h4>ESTUDIANTES</h4>
+								<small>
+								<div class="table-responsive">
+	                            	<table class="table table-dark">
+										<tr>
+											<th>#</th>
+											<th>Cod. RUDE</th>
+											<th>CI-COMPL.</th>
+											<th>Nombre Completo</th>
+											<th>Trim 1</th>
+                                            <th>Trim 1</th>
+                                            <th>Trim 1</th>
+											<th>Prom</th>
+										</tr>
+										<tr v-for="(student,rindex) in DBstudent">
+											<td>${rindex+1}</td>
+											<td><strong> ${student.codigo_rude | uppercase}</strong></td>
+											<td>${student.carnet_identidad} ${student.complemento}</td>
+											<td>${student.paterno | uppercase} ${student.materno | uppercase} ${student.nombre | uppercase}</td>
+											<td>
+												<input type="text" class="form-control" id="codigo" placeholder="T1">
+											</td>
+                                            <td>
+												<input type="text" class="form-control" id="codigo" placeholder="T2">
+											</td>
+                                            <td>
+												<input type="text" class="form-control" id="codigo" placeholder="T3">
+											</td>
+											<td>
+                                                <input type="text" class="form-control" id="codigo" placeholder="PROM">
+                                            </td>										
+										</tr>
+									</table>
+								</div>
+								</small>
+                        	</div>
+                            <button onclick="GuardarCursoEst()" type="button" class="btn btn-primary mb-2" :disabled="btnDisabled">Registrar Calificaciones</button>
+						</div> #}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        	
+    </div>
+</div>
+<!--/ End page header -->
+{% endblock %}
+{% block javascripts%}
+{{ parent() }}
+<script>
+
+    function buscarSIE(){
+        sie = $('#codigoSIE').val();
+        gestion = $('#gestionId').val();
+        
+        if(typeof(sie)=='undefined' || sie=='')
+		{
+		    alert('Debe registrar el código SIE');
+			return;
+		}
+        if(typeof(gestion)=='undefined' || gestion=='')
+		{
+		    alert('Debe seleccionar la gestión');
+			return;
+		}
+        $.ajax({
+                type: 'POST',
+                url: Routing.generate('bth_regularizacion_ttg_tte_bucarsie'),
+                data: {
+                        sie: sie,
+                        gestion: gestion
+                        },
+                beforeSend:function(){
+					$('#buscaSIE').attr('disabled',true);
+                    $('#buscaSIE').text('Buscando...');
+				},
+                success: function (data) {
+                    // console.log(data);
+                    var msj = data.msj;
+                    var status = data.status;
+                    var institucion = data.institucion;
+                    var turno = data.turno;
+                    // console.log(turno);
+                    if (status == 200) {
+                        document.getElementById("buscaSie").style.display = "none";
+                        document.getElementById("respuestaSie").style.display = "block";
+                        $('#td_codigo_rue').text(institucion.sie);
+                        $('#td_ue').text(institucion.institucioneducativa);
+                        $('#td_distrito').text(institucion.distrito);
+                        $("#gradoId").append('<option value="">Seleccionar Grado</option>');
+                        $("#paraleloId").append('<option value="">Seleccionar Paralelo</option>');
+                        // Suponiendo que 'turno' es un array de objetos
+                        for (var i in turno) {
+                            $("#turnoId").append('<option value="' + turno[i].turnoid + '">' + turno[i].turno.toUpperCase() + '</option>');
+                        }
+
+                    }else{
+                        swal({
+							title: msj,
+							icon: "warning",
+						});
+                        $('#buscaSIE').attr('disabled',false);
+                        $('#buscaSIE').html('<i class="fa fa-search"></i> Buscar SIE');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+    }
+
+    function getGrado(){
+        var turno = document.getElementById('turnoId').value;
+        var nivel = document.getElementById('nivelId').value;
+        sie = $('#codigoSIE').val();
+        gestion = $('#gestionId').val();
+        
+        $("#gradoId").empty();
+        $("#paraleloId").empty();
+        if(turno == null || turno == "" || turno == 0){
+                return false;
+        }
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('bth_regularizacion_ttg_tte_grado', {'turno': turno, 'nivel': nivel, 'sie': sie, 'gestion': gestion}),
+            success: function (data) {            
+                $("#gradoId").append('<option value="">Seleccionar Grado</option>');
+                $("#paraleloId").append('<option value="">Seleccionar Paralelo</option>');
+                for (var i in data.grados) {
+                            $("#gradoId").append('<option value="' + data.grados[i].id + '">' + data.grados[i].grado.toUpperCase() + '</option>');
+                        }
+                                        
+                },
+                error: function(error){      
+                    alert("Error, no existe informacion para el nivel seleccionado"); 
+                        $("#form_grado").empty();
+                        $("#form_asignatura").empty();
+                },      
+                    
+            });
+
+    }
+
+    function getParalelo(){
+        var turno = document.getElementById('turnoId').value;
+        var nivel = document.getElementById('nivelId').value;
+        var grado = document.getElementById('gradoId').value;
+        sie = $('#codigoSIE').val();
+        gestion = $('#gestionId').val();
+        
+        $("#paraleloId").empty();
+        if(grado == null || grado == "" || grado == 0){
+                return false;
+        }
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('bth_regularizacion_ttg_tte_paralelo', {'turno': turno, 'nivel': nivel,'grado': grado, 'sie': sie, 'gestion': gestion}),
+            success: function (data) {            
+                $("#paraleloId").empty();
+                $("#paraleloId").append('<option value="">Seleccionar Paralelo/option>');
+                for (var i in data.paralelos) {
+                            $("#paraleloId").append('<option value="' + data.paralelos[i].id + '">' + data.paralelos[i].paralelo + '</option>');
+                        }
+                                        
+                },
+                error: function(error){      
+                    alert("Error, no existe informacion para el nivel seleccionado"); 
+                        $("#paraleloId").empty();
+                },      
+                    
+            });
+    }
+
+    function buscarCursoEst(){
+        var turno = document.getElementById('turnoId').value;
+        var nivel = document.getElementById('nivelId').value;
+        var grado = document.getElementById('gradoId').value;
+        var paralelo = document.getElementById('paraleloId').value;
+        sie = $('#codigoSIE').val();
+        gestion = $('#gestionId').val();
+        if (!turno) {
+            alert("Por favor, seleccione un turno.");
+            return; // Detiene la ejecución si el turno no tiene valor
+        }
+
+        if (!nivel) {
+            alert("Por favor, seleccione un nivel.");
+            return; // Detiene la ejecución si el nivel no tiene valor
+        }
+
+        if (!grado) {
+            alert("Por favor, seleccione un grado.");
+            return; // Detiene la ejecución si el grado no tiene valor
+        }
+
+        if (!paralelo) {
+            alert("Por favor, seleccione un paralelo.");
+            return; // Detiene la ejecución si el paralelo no tiene valor
+        }
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('bth_regularizacion_ttg_tte_bucarEstudiantes'),
+            data: {
+                turno: turno, 
+                nivel: nivel,
+                grado: grado,
+                paralelo: paralelo,
+                sie: sie,
+                gestion: gestion
+            },
+                beforeSend:function(){
+					$('#buscaEst').attr('disabled',true);
+                    $('#buscaEst').text('Buscando...');
+				},
+                success: function (data) {
+                    document.getElementById("selectCurso").style.display = "none";
+                    document.getElementById("estudiantesreg").style.display = "block";
+                    $("#estudiantesreg").append(data);
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+    }
+
+    
+    function GuardarCursoEst() {
+        var data = [];
+
+        // Variable para controlar si se cumplen las validaciones
+        var valid = true;
+        var icoid = $("#icoId").val();
+        var sie = $('#codigoSIE').val();
+        var gestion = $('#gestionId').val();
+        console.log(icoid)
+        // Recorremos todas las filas de la tabla
+        $("#tb_estudiante tr").each(function () {
+            var estudianteId = $(this).data("estudiante-id");
+            var tri1 = $(this).find("#tri1").val();
+            var tri2 = $(this).find("#tri2").val();
+            var tri3 = $(this).find("#tri3").val();
+            var promedio = $(this).find("#prom").val();
+
+            // Validación de promedio (entre 1 y 100)
+            if (promedio < 1 || promedio > 100) {
+                valid = false;
+            } 
+            if (tri1 < 1 || tri1 > 100) {
+                valid = false;
+            } 
+            if (tri2 < 1 || tri2 > 100) {
+                valid = false;
+            } 
+            if (tri3 < 1 || tri3 > 100) {
+                valid = false;
+            } 
+
+            // Si se cumple la validación, agregamos los datos al arreglo
+            if (valid) {
+                data.push({
+                    estudianteId: estudianteId,
+                    icoid: icoid,
+                    tri1: tri1,
+                    tri2: tri2,
+                    tri3: tri3,
+                    promedio: promedio,
+                    sie: sie,
+                    gestion: gestion,
+                });
+            }
+        });
+
+        // Verificamos si se cumplieron las validaciones
+        if (!valid) {
+           alert("Error: Registre todas las calificaciones para todos los estudiantes.");
+            return;
+        }
+        console.log(JSON.stringify(data));
+        // Realizamos la solicitud POST para guardar los datos
+        $.ajax({
+            type: "POST",
+            url: "{{ path('bth_regularizacion_ttg_tte_guardaCalificaciones') }}",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            beforeSend:function(){
+					$('#btn_guarda_curso').attr('disabled',true);
+                    $('#btn_guarda_curso').text('Procesando...');
+                    $('#btn_cancela_curso').attr('disabled',true);
+				},
+            success: function (data) {
+
+                var msj = data.msj;
+                var status = data.status;
+                if (status == 200) {
+                    swal({
+							title: msj,
+							icon: "success",
+						}).then((value) => {
+                        if (value) {
+                            window.location.href = "{{ path('bth_regularizacion_ttg_tte_index') }}";
+                        }
+                    });
+
+                }else{
+                    swal({
+				    	title: msj,
+						icon: "warning",
+					});
+                    $('#btn_guarda_curso').attr('disabled',false);
+                    $('#btn_guarda_curso').text('Registrar Calificaciones');       
+                    $('#btn_cancela_curso').attr('disabled',false);
+                 }
+            },
+            error: function (error) {
+                console.log('Error en la petición AJAX:', error);
+            }
+        });
+    }
+
+
+</script>
+
+{% endblock %}
