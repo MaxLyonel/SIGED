@@ -459,15 +459,15 @@ class CensoInscriptionController extends Controller
                 );
                 $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
                 // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
-                // check if the values of parent/tutor are the same
+                // check if the values of parent/tutor are the same                
                 if(($apoderadoInput == $apoderadoOutput)){
                     $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents['apoderadoinscripid'];
                     $swparent = 0;
                 }
-
                     //$apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
                 next($arrDataStudentsFull);
             }
+
         }
 
         if($swparent){
