@@ -235,7 +235,7 @@ class BthRegularizacionTtgTteController extends Controller {
             inner join estudiante_inscripcion ei on ei.estudiante_id = e.id
             inner join institucioneducativa_curso ic on ic.id = ei.institucioneducativa_curso_id 
             inner join institucioneducativa_curso_oferta ico on ic.id = ico.insitucioneducativa_curso_id 
-            left join estudiante_asignatura ea on ei.id = ea.estudiante_inscripcion_id 
+            left join estudiante_asignatura ea on ei.id = ea.estudiante_inscripcion_id and ico.id = ea.institucioneducativa_curso_oferta_id
             where ic.institucioneducativa_id = ".$sie."
             and ei.estadomatricula_tipo_id = 5
             and ic.gestion_tipo_id = ".$gestion."
