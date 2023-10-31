@@ -70,7 +70,7 @@ class BthRegularizacionTtgTteController extends Controller {
 
         $institucion = array();
         $turno = array();
-        $ueAutorizada= [81390028]; 
+        $ueAutorizada= [81430046,81430004,81390028,81390007,81400072,51450055,71380001]; 
         // $ueAutorizada= [81430046,81430004,81390028,81390007,81400072,51450055,71380001,81110030]; 
         $status = 200;
         $msj = '';
