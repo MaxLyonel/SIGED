@@ -1,0 +1,137 @@
+#Departamental
+regularizacion_pre_bachillerato_index: 
+    path:     /dde/solicitud
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:index }
+
+regularizacion_pre_bachillerato_buscarRude:
+    path:     /dde/buscar_rude
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:buscarRude }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_buscarNivel:
+    path:     /dde/buscar-nivel
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:buscarNivel}
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_buscarGrado:
+    path:     /dde/buscar-grado/{nivel}
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:buscarGrado,nivel:-1 }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_verificarInscripcion: 
+    path:     /dde/verificar-inscripcion
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:verificarInscripcion }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_registrarSolicitud: #enlace para enviar los datos de .la solicitud a la distrital
+    path:     /dde/enviar-solicitud
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:registrarSolicitud }
+    options:
+        expose: true
+
+
+regularizacion_pre_bachillerato_solicitudeRecibidasDistrital: #enlace a la pagina de con detalle de solicitudes recibidas
+    path:     /ddd/solicitudes-recibidas
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:solicitudesRecibidasDistrital }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_buscaListaUEValidas:
+    path:     /ddd/listar-unidades-educativas
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:buscaListaUEValidas }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_buscarUE:
+    path:     /ddd/buscar-unidad-educativa
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:regularizacionBuscarUE }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_enviarSolicitudUE:
+    path:     /ddd/enviar-solicitud-ue
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:enviarDddSolicitudUe }
+    options:
+        expose: true
+
+# #UE
+regularizacion_pre_bachillerato_solicitudeRecibidasUe: #enlace a la pagina de con detalle de solicitudes recibidas
+    path:     /ue/solicitudes-recibidas-ue
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:solicitudesRecibidasUE }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_getDetalleInscripcion:
+    path:     /ue/obtener-detalle-inscripcion
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:getDetalleInscripcion }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_getTurnos:
+    path:     /ue/obtener-turnos
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:getTurnosApartirDeParalelo }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_getParalelos:
+    path:     /ue/obtener-paralelos
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:getParalelosApartirDeTurno }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_getMaterias:
+    path:     /ue/obtener-materias
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:getMaterias }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_postEnviarSolicitudDistrital: #enlace para enviar los datos de .la solicitud a la unidad educativa
+    path:     /ue/enviar-solicitud
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:enviarSolicitudDistritalUe }
+    options:
+        expose: true
+
+# Aprueba pre-bachillerato DISTRITO
+regularizacion_pre_bachillerato_postRecibeDistrital: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+    path:     /ddd/aprobacion/distrital
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:postAprobacionDistrital }
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_postEnviarAprobarDistrital: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa final de la solicitud
+    path:     /ddd/aprobacion/enviar-dde
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:postEnviarAprobarDistrital }
+    options:
+        expose: true
+
+# Aprueba pre-bachillerato DEPARTAMENTAL
+regularizacion_pre_bachillerato_postRecibeDepartamental: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+    path:     /dde/aprobacion/departamental
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:postAprobacionDepartamental}
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_postEnviarAprobarDepartamental: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa acepatcion o rechazo
+    path:     /dde/aprobacion/finalizar
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:postFinalizarDepartamental }
+    options:
+        expose: true
+
+
+# #REPORTES
+regularizacion_pre_bachillerato_reporteDepartamental: 
+    path:     /dde/reporte/{idtramite}
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:reporteDepartamental}
+    options:
+        expose: true
+
+regularizacion_pre_bachillerato_reporteUEActaSupletoria: 
+    path:     /ue/reporte/acta-supletoria/{idtramite}
+    defaults: { _controller: SieProcesosBundle:RegularizacionPreBachillerato:reporteUEActaSupletoria }
+    options:
+        expose: true
+

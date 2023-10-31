@@ -386,3 +386,7 @@ sie_adm_pla:
 # index:
 #     path:     /index
 #     defaults: { _controller: SieHerramientaBundle:AdmPla:index }
+
+sie_regularizacion_bth_ttg_tte:
+     resource: "@SieHerramientaBundle/Resources/config/routing/bthregularizacionttgtte.yml"
+     prefix:   /sie/rbtt

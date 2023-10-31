@@ -1,0 +1,138 @@
+					{# <div class="panel rounded shadow panel-teal">
+						
+					</div> #}
+					<div class="panel rounded shadow panel-teal">
+						
+						{% if status != 200 %}	
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="mensaje">
+								<div class="alert alert-warning alert-dismissible">  <i class="fa fa-warning"></i>
+									<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+									{{ msj }}
+									<a href="{{path('bth_regularizacion_ttg_tte_index')}}">volver</a>
+								</div>	
+							</div>
+						{% else %}
+						<div class="panel-heading">
+							<div class="pull-left">
+								<h3 class="panel-title">Datos del Curso a Regularizar</h3>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<input type="hidden" name="icoId" id="icoId" value="{{curso.icoid}}">
+						<div class="panel-body">
+							<table class="table table-bordered table-striped table-hover">
+								<tr>
+									<th>Gestión:</th>
+									<td id="td_gestion">{{curso.gestion}}</td>
+									<th>Nivel</th>
+									<td id="td_nivel">{{curso.nivel}}</td>
+								</tr>
+								<tr>
+									<th>Turno:</th>
+									<td id="td_turno">{{curso.turno}}</td>
+									<th>Grado:</th>
+									<td id="td_grado">{{curso.grado}}</td>
+								</tr>
+								<tr>
+									<th>Paralelo:</th>
+									<td id="td_paralelo">{{curso.paralelo}}</td>
+									<th>Área:</th>
+									<td id="td_area">{{curso.asignatura}}</td>
+								</tr>
+							</table>
+						</div>
+
+							{% if estudiante is not empty %}
+                            	<!-- data new studen  -->
+                            	<div class="panel-heading">
+									<div class="pull-left">
+										<h3 class="panel-title">Estudiantes</h3>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="table-responsive">
+	                            	<table class="table table-dark table-striped table-hover">
+										<thead>
+											<tr>
+												<th style="width: 3%;">#</th>
+												<th style="width: 15%;">Cod. RUDE</th>
+												<th style="width: 10%;">CI-COMPL.</th>
+												<th style="width: 32%;">Nombre Completo</th>
+												<th style="width: 5%;">Trim 1</th>
+												<th style="width: 5%;">Trim 2</th>
+												<th style="width: 5%;">Trim 3</th>
+												<th style="width: 5%;">Prom</th>
+											</tr>
+										</thead>
+										<tbody id="tb_estudiante">
+											{% for estudiante in estudiante %}
+												<tr data-estudiante-id="{{ estudiante.eiid }}">
+													<td data-title="nro">{{ loop.index }}</td>
+													<td data-title="codigo"><strong>{{ estudiante.codigo_rude }}</strong></td>
+													<td data-title="carnet">{{ estudiante.carnet_identidad }} {{ estudiante.complemento }}</td>
+													<td data-title="nombre">{{ estudiante.paterno }} {{ estudiante.materno }} {{ estudiante.nombre }}</td>
+													<td data-title="trimestre1">
+														<input type="text" class="col-md-9 trimestre" id="tri1" data-trimestre="1" required max="100" min="1">
+													</td>
+													<td data-title="trimestre2">
+														<input type="text" class="col-md-9 trimestre" id="tri2" data-trimestre="2" required max="100" min="1">
+													</td>
+													<td data-title="trimestre3">
+														<input type="text" class="col-md-9 trimestre" id="tri3" data-trimestre="3" required max="100" min="1">
+													</td>
+													<td data-title="Promedio">
+														<input type="text" class="col-md-9 promedio" id="prom" data-trimestre="prom" readonly max="100" min="1">
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+								</small>
+							{% endif %}
+							
+                            <button onclick="GuardarCursoEst()" type="button" id="btn_guarda_curso" class="btn btn-primary mb-2" :disabled="btnDisabled">Registrar Calificaciones</button>
+							<button onclick="window.location.href='{{path('bth_regularizacion_ttg_tte_index')}}';" id="btn_cancela_curso" type="button" class="btn btn-danger mb-2" :disabled="btnDisabled">Cancelar</button>
+
+						{% endif %}
+					</div>
+
+<script>
+	
+	$(document).ready(function () {
+		// Selecciona todos los campos de entrada de trimestres
+		var trimestreInputs = $(".trimestre");
+
+		// Escucha cambios en los campos de entrada de trimestres
+		trimestreInputs.on("input", function () {
+			var total = 0;
+
+			// Encuentra el valor de promedio correspondiente
+			var promedioInput = $(this).closest("tr").find(".promedio");
+			var promedio = 0;
+			
+			var value = parseInt($(this).val()) || 0;
+
+			// Verifica si el valor está dentro del rango 1-100
+			if (value < 1 || value > 100) {
+				alert("El valor debe estar entre 1 y 100");
+				$(this).val(""); // Borra el valor si es inválido
+			}
+
+			// Itera sobre los campos de entrada de trimestres en la misma fila y suma sus valores
+			$(this).closest("tr").find(".trimestre").each(function () {
+				var value = parseInt($(this).val()) || 0;
+				total += value;
+			});
+			console.log(total);
+			// Calcula el promedio
+			var promedio = Math.round(total / 3);
+
+			// Actualiza el campo de entrada de promedio
+			promedioInput.val(promedio);
+		});
+	});
+	
+</script>
+
+
