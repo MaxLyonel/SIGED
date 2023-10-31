@@ -119,15 +119,15 @@
 								  :class="['form-group', {has-error: testInput == false}]" #}
 								    <div class="form-group col-md-4" :class="invalidPaterno ? 'has-error' : ''">
 								      <label for="pat">Paterno</label>
-								      <input type="text" class="form-control jupper" id="pat" placeholder="Paterno" v-model="infoUE.apoderado.paterno">
+								      <input type="text" class="form-control jupper" id="pat" placeholder="Paterno" oninput="this.value = this.value.toUpperCase()" v-model="infoUE.apoderado.paterno">
 								    </div>
 								    <div class="form-group col-md-4" :class="invalidMaterno ? 'has-error' : ''">
 								      <label for="inputPassword4">Materno</label>
-								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Materno" v-model="infoUE.apoderado.materno">
+								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Materno" oninput="this.value = this.value.toUpperCase()" v-model="infoUE.apoderado.materno">
 								    </div>
 								    <div class="form-group col-md-4" :class="invalidNombre ? 'has-error' : ''">
 								      <label for="inputPassword4">Nombre(s)</label>
-								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Nombre" v-model="infoUE.apoderado.nombre">
+								      <input type="text" class="form-control jupper" id="inputPassword4" placeholder="Nombre" oninput="this.value = this.value.toUpperCase()" v-model="infoUE.apoderado.nombre">
 								    </div>
 								  </div>
 								  <div class="form-row">
