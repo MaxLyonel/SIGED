@@ -105,7 +105,7 @@ class BthRegularizacionTtgTteController extends Controller {
             inner join turno_tipo tt on ic.turno_tipo_id = tt.id
             where ic.institucioneducativa_id = ".$sie." 
             and ic.gestion_tipo_id = ".$gestion." 
-            and ic.grado_tipo_id in (3,4,5)
+            and ic.grado_tipo_id in (4)
             and ic.nivel_tipo_id = 13
             and ico.asignatura_tipo_id in (1038,1039);");
         $query->execute();
@@ -156,7 +156,7 @@ class BthRegularizacionTtgTteController extends Controller {
                 ->andWhere('iec.institucioneducativa = :institucioneducativaId')
                 ->andWhere('iec.turnoTipo = :turnoId')
                 ->andWhere('iec.nivelTipo = :nivelId')
-                ->andWhere('gt.id in (3,4,5)')
+                ->andWhere('gt.id in (4)')
                 ->setParameter('gestionTipoId', $gestionId)
                 ->setParameter('institucioneducativaId', $institucionEducativaId)
                 ->setParameter('turnoId', $turnoId)
