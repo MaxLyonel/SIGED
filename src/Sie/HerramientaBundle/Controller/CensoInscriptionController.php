@@ -65,9 +65,6 @@ class CensoInscriptionController extends Controller
 
     public function findUEDataAction(Request $request){
 
-
-        // VALIDAR QUE SEA UNA UNIDAD DE ALTERNATIVA
-
         // get the vars send        
         $sie = $request->get('sie');
         // create db conexion
@@ -113,17 +110,19 @@ class CensoInscriptionController extends Controller
 	                ->distinct()
 	                ->getQuery();
 	        $aNiveles = $query->getResult();
-	        
-	        if($aNiveles){
+
+            if(sizeof($aNiveles)>0){
 		        $arrniveles = array();
 		        foreach ($aNiveles as $nivel) {
 		            $arrniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
-		        }
-			
-		    }
+		        }			
+		    }else{
+                $response = new JsonResponse();
+                $response->setStatusCode(404);
+                return $response;
+            }
 
-
-	     }        
+	    }        
         // end   look for the level, grado, parallel & turno
 
 
@@ -209,7 +208,7 @@ class CensoInscriptionController extends Controller
 	                ->setParameter('sie', $sie)
 	                ->setParameter('idnivel', $idnivel)
 	                ->setParameter('gestion', $gestionselected)
-	                ->setParameter('agrados', array(5,6))
+	                ->setParameter('agrados', array(4,5,6))
 	                ->distinct()
 	                ->orderBy('iec.gradoTipo', 'ASC')
 	                ->getQuery();
@@ -419,8 +418,6 @@ class CensoInscriptionController extends Controller
 
     public function validateTutorAction(Request $request){
         
-        // dump($this->session->get('currentyear'));die;
-
         $dataStudent = $request->get('dataStudent');
         $apoderadoInput = $request->get('apoderado');
         $sie = $request->get('sie');
@@ -435,7 +432,7 @@ class CensoInscriptionController extends Controller
                 inner join estudiante_inscripcion ei on (ai.estudiante_inscripcion_id = ei.id)
                 inner join estudiante e on (ei.estudiante_id = e.id)
                 inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
-                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id = 2022
+                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id in (2022, 2023)
         ";
 
         $statement = $em->getConnection()->prepare($query);
@@ -447,30 +444,30 @@ class CensoInscriptionController extends Controller
 
         $apoderadoInput['fecNacimiento'] = str_replace('/', '-', $apoderadoInput['fecNacimiento']);
         $apoderadoInput = array_map("strtoupper", $apoderadoInput);
-        
+        $apoderadoInput['complemento'] = (isset($apoderadoInput['complemento'])) ? $apoderadoInput['complemento'] : '';
+
         if(sizeof($arrDataStudentsFull)>0){
             // foreach ($arrDataStudentsFull as $arrDataStudents) {
             while (($arrDataStudents = current($arrDataStudentsFull)) !== FALSE && $swparent) {                
-
-                    $apoderadoOutput = array(
-                      "paterno" => $arrDataStudents['paterno'],
-                      "materno" => $arrDataStudents['materno'],
-                      "nombre" => $arrDataStudents['nombre'],
-                      "carnet" => $arrDataStudents['carnet'],
-                      "complemento" => $arrDataStudents['complemento'],
-                      "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ),              
-                    );
-                    $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
-                    // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
-                // check if the values of parent/tutor are the same
+                $apoderadoOutput = array(
+                    "paterno" => $arrDataStudents['paterno'],
+                    "materno" => $arrDataStudents['materno'],
+                    "nombre" => $arrDataStudents['nombre'],
+                    "carnet" => $arrDataStudents['carnet'],
+                    "complemento" => $arrDataStudents['complemento'],
+                    "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ),              
+                );
+                $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
+                // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
+                // check if the values of parent/tutor are the same                
                 if(($apoderadoInput == $apoderadoOutput)){
                     $apoderadoOutput['apoderadoinscripid'] = $arrDataStudents['apoderadoinscripid'];
                     $swparent = 0;
                 }
-
                     //$apoderadoOutput['apoderadoinscripid'] = $arrDataStudents[0]['apoderadoinscripid'];
                 next($arrDataStudentsFull);
             }
+
         }
 
         if($swparent){
@@ -580,6 +577,47 @@ class CensoInscriptionController extends Controller
             dump($e);die;
         }
         
+    }
+
+    public function checkEdadCensoAction( Request $request ){
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $query = $db->prepare("select e.fecha_nacimiento from estudiante e where e.carnet_identidad='".$request->get('carnet')."' and e.codigo_rude='".$request->get('rude')."'");
+        $query->execute();
+        $resultStudent = $query->fetch();
+
+        $queryGestion = $db->prepare("SELECT TO_CHAR(NOW()::date, 'yyyy-mm-dd') as currentyear");
+        $queryGestion->execute();
+        $resultDate = $queryGestion->fetch();
+
+        $yearAdd = substr( $resultDate['currentyear'], 0,4 ) + 1;
+        $dateAdd = $yearAdd.'-03-21';
+
+        $queryAge = $db->prepare("select public.sp_obtener_edad(to_date('".$resultStudent['fecha_nacimiento']."','YYYY-MM-DD'),to_date('".$dateAdd."','YYYY-MM-DD')) as edad");
+        $queryAge->execute();
+        $resultAge = $queryAge->fetch();
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+
+        $arrResponse = array(
+            'statusCode' => 200
+        );
+
+        if( $resultAge['edad'] < 16 ){
+            
+            $arrResponse = array(
+                'statusCode' => 401,
+                'message' => "Este estudiante no cumple con 16 años al 21 de Marzo de ".$yearAdd
+            );
+
+        }
+        
+        $response->setData($arrResponse);
+        return $response;
+
     }
 
     private function getLastDayRegistryOpeCheesEventStatus($limitDay){
