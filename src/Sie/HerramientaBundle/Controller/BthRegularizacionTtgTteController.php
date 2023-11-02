@@ -46,7 +46,7 @@ class BthRegularizacionTtgTteController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         $em = $this->getDoctrine()->getManager();
-        $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById(2022);
+        $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findBy(['id' => [2021, 2022]]);
         return $this->render('SieHerramientaBundle:BthRegularizacionTtgTte:index.html.twig', array('gestion' => $gestion));
     }
     public function busquedaSieAction (Request $request)
@@ -70,13 +70,19 @@ class BthRegularizacionTtgTteController extends Controller {
 
         $institucion = array();
         $turno = array();
-        $ueAutorizada= [81430046,81430004,81390028,81390007,81400072,51450055,71380001]; 
+        if ($gestion == 2022){
+            $ueAutorizada= [81390028]; 
+        }
+        
+        if ($gestion == 2021){
+            $ueAutorizada= [81110030,62460063]; 
+        }
         // $ueAutorizada= [81430046,81430004,81390028,81390007,81400072,51450055,71380001,81110030]; 
         $status = 200;
         $msj = '';
         if (!in_array($sie,$ueAutorizada)){
             $status = 400;
-            $msj = 'La Unidad Educativa con codigo SIE : '.$sie.' no esta autorizada. Favor verificar...';
+            $msj = 'La Unidad Educativa con codigo SIE : '.$sie.' no esta autorizada para esa gestión. Favor verificar...';
             return new JsonResponse(array(
                 'status' => $status,
                 'institucion' => $institucion,
@@ -99,7 +105,7 @@ class BthRegularizacionTtgTteController extends Controller {
             inner join turno_tipo tt on ic.turno_tipo_id = tt.id
             where ic.institucioneducativa_id = ".$sie." 
             and ic.gestion_tipo_id = ".$gestion." 
-            and ic.grado_tipo_id in (3,4,5)
+            and ic.grado_tipo_id in (4)
             and ic.nivel_tipo_id = 13
             and ico.asignatura_tipo_id in (1038,1039);");
         $query->execute();
@@ -150,7 +156,7 @@ class BthRegularizacionTtgTteController extends Controller {
                 ->andWhere('iec.institucioneducativa = :institucioneducativaId')
                 ->andWhere('iec.turnoTipo = :turnoId')
                 ->andWhere('iec.nivelTipo = :nivelId')
-                ->andWhere('gt.id in (3,4,5)')
+                ->andWhere('gt.id in (4)')
                 ->setParameter('gestionTipoId', $gestionId)
                 ->setParameter('institucioneducativaId', $institucionEducativaId)
                 ->setParameter('turnoId', $turnoId)

@@ -33,7 +33,9 @@
                                     {# <label for="gestion">Gestión:</label> #}
                                     <select name="gestionId" id="gestionId" class="custom-select form-control">
                                         <option value="">Gestion</option>
-                                        <option value="{{ gestion.id}}">{{ gestion.gestion}}</option>
+                                        {% for gest in gestion %}
+                                            <option value="{{ gest.id}}">{{ gest.gestion}}</option>
+                                        {% endfor %}
                                     </select>		
                                 </div>
                                 <div class="form-group col-md-3">
@@ -64,10 +66,6 @@
                                                 <th>Unidad Educativa:</th>
                                                 <td id="td_ue"></td>
                                             </tr>
-                                            {# <tr>
-                                                <th>Dependencia:</th>
-                                                <td id="td_dependencia"></td>
-                                            </tr> #}
                                             <tr>
                                                 <th>Distrito Educativo:</th>
                                                 <td id="td_distrito"></td>
@@ -99,14 +97,12 @@
                                     <div class="form-group col-md-2">
                                         <label for="grado">Grado</label>
                                         <select name="gradoId" id="gradoId" class="custom-select js-example-basic-multiple form-control" onchange="getParalelo()">
-                                            {# <option value="">Seleccionar Grado</option> #}
                                         </select>
                                     </div>
                         
                                     <div class="form-group col-md-2">
                                         <label for="paralelo">Paralelo</label>
                                         <select name="paraleloId" id="paraleloId" class="custom-select js-example-basic-multiple form-control">
-                                            {# <option value="">Seleccionar Paralelo</option> #}
                                         </select>
                                     </div>
                                   </div>
@@ -117,47 +113,6 @@
                     </div>
 
                     <div id="estudiantesreg" style="display: none;">
-                        {# <div class="col-md-9">
-							<div v-if=" existStudent ">
-                            	<!-- data new studen  -->
-                            	<h4>ESTUDIANTES</h4>
-								<small>
-								<div class="table-responsive">
-	                            	<table class="table table-dark">
-										<tr>
-											<th>#</th>
-											<th>Cod. RUDE</th>
-											<th>CI-COMPL.</th>
-											<th>Nombre Completo</th>
-											<th>Trim 1</th>
-                                            <th>Trim 1</th>
-                                            <th>Trim 1</th>
-											<th>Prom</th>
-										</tr>
-										<tr v-for="(student,rindex) in DBstudent">
-											<td>${rindex+1}</td>
-											<td><strong> ${student.codigo_rude | uppercase}</strong></td>
-											<td>${student.carnet_identidad} ${student.complemento}</td>
-											<td>${student.paterno | uppercase} ${student.materno | uppercase} ${student.nombre | uppercase}</td>
-											<td>
-												<input type="text" class="form-control" id="codigo" placeholder="T1">
-											</td>
-                                            <td>
-												<input type="text" class="form-control" id="codigo" placeholder="T2">
-											</td>
-                                            <td>
-												<input type="text" class="form-control" id="codigo" placeholder="T3">
-											</td>
-											<td>
-                                                <input type="text" class="form-control" id="codigo" placeholder="PROM">
-                                            </td>										
-										</tr>
-									</table>
-								</div>
-								</small>
-                        	</div>
-                            <button onclick="GuardarCursoEst()" type="button" class="btn btn-primary mb-2" :disabled="btnDisabled">Registrar Calificaciones</button>
-						</div> #}
 
                     </div>
 
