@@ -1612,9 +1612,9 @@ class RegularizacionPreBachilleratoController extends Controller
 						if(isset($nArcInforme))
 						{
 							// $datosJSONInscripcion_decode->informes['informe_ddd'] = $nArcInforme;
-							dump($datosJSONInscripcion_decode);
-							dump($datosJSONInscripcion_decode->informes);
-							die;
+							// dump($datosJSONInscripcion_decode);
+							// dump($datosJSONInscripcion_decode->informes);
+							// die;
 							$datosJSONInscripcion_decode->informes->informe_ddd = $nArcInforme;
 							
 							$inscripciones = $datosJSONInscripcion_decode->inscripciones;
