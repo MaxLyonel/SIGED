@@ -165,4 +165,32 @@ class EstudianteInscripcionHumnisticoTecnico {
     {
         return $this->estudianteInscripcion;
     }
+    /**
+     * @var boolean
+     */
+    private $esvalido;
+
+
+    /**
+     * Set esvalido
+     *
+     * @param boolean $esvalido
+     * @return EstudianteInscripcionHumnisticoTecnico
+     */
+    public function setEsvalido($esvalido)
+    {
+        $this->esvalido = $esvalido;
+    
+        return $this;
+    }
+
+    /**
+     * Get esvalido
+     *
+     * @return boolean 
+     */
+    public function getEsvalido()
+    {
+        return $this->esvalido;
+    }
 }

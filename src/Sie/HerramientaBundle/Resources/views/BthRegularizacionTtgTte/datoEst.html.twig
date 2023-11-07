@@ -55,34 +55,61 @@
 										<thead>
 											<tr>
 												<th style="width: 3%;">#</th>
-												<th style="width: 15%;">Cod. RUDE</th>
+												<th style="width: 10%;">Cod. RUDE</th>
 												<th style="width: 10%;">CI-COMPL.</th>
-												<th style="width: 32%;">Nombre Completo</th>
+												<th style="width: 17%;">Nombre Completo</th>
 												<th style="width: 5%;">Trim 1</th>
 												<th style="width: 5%;">Trim 2</th>
 												<th style="width: 5%;">Trim 3</th>
 												<th style="width: 5%;">Prom</th>
+												<th style="width: 10%;">Especialidad</th>
+												<th style="width: 5%;">Acción</th>
 											</tr>
 										</thead>
 										<tbody id="tb_estudiante">
 											{% for estudiante in estudiante %}
-												<tr data-estudiante-id="{{ estudiante.eiid }}">
+												<tr data-estudiante-id="{{ estudiante.eiid }}" class="activa">
 													<td data-title="nro">{{ loop.index }}</td>
 													<td data-title="codigo"><strong>{{ estudiante.codigo_rude }}</strong></td>
 													<td data-title="carnet">{{ estudiante.carnet_identidad }} {{ estudiante.complemento }}</td>
 													<td data-title="nombre">{{ estudiante.paterno }} {{ estudiante.materno }} {{ estudiante.nombre }}</td>
 													<td data-title="trimestre1">
-														<input type="text" class="col-md-9 trimestre" id="tri1" data-trimestre="1" required max="100" min="1">
+														<input type="text" class="col-md-9 form-control trimestre" id="tri1" data-trimestre="1" required max="100" min="1">
 													</td>
 													<td data-title="trimestre2">
-														<input type="text" class="col-md-9 trimestre" id="tri2" data-trimestre="2" required max="100" min="1">
+														<input type="text" class="col-md-9 form-control trimestre" id="tri2" data-trimestre="2" required max="100" min="1">
 													</td>
 													<td data-title="trimestre3">
-														<input type="text" class="col-md-9 trimestre" id="tri3" data-trimestre="3" required max="100" min="1">
+														<input type="text" class="col-md-9 form-control trimestre" id="tri3" data-trimestre="3" required max="100" min="1">
 													</td>
 													<td data-title="Promedio">
-														<input type="text" class="col-md-9 promedio" id="prom" data-trimestre="prom" readonly max="100" min="1">
+														<input type="text" class="col-md-9 form-control promedio" id="prom" data-trimestre="prom" readonly max="100" min="1">
 													</td>
+													<td data-title="Especialidad">
+														{% if (curso.gradoid == 5) %}
+															<select name="especialidadId" id="espe" data-trimestre="especialidad" class="custom-select form-control">
+																<option value="">Seleccione Especialidad</option>
+																{% for esp in especialidad %}
+																	<option value="{{ esp.id}}">{{ esp.especialidad}}</option>
+																{% endfor %}
+															</select>
+														{% endif %}
+														{# <input type="text" class="col-md-9 promedio" id="prom" data-trimestre="prom" readonly max="100" min="1"> #}
+													</td>
+													<td data-title="Acción">
+														<div class="btn-group">
+															<button type="button" class="btn btn-sm" onclick="toggleEstadoEstudiante(this, {{estudiante.eiid}}, '{{ estudiante.paterno }} {{ estudiante.materno }} {{ estudiante.nombre }}')">
+																<i class="glyphicon glyphicon-trash" style="color:red;"></i>
+															</button>
+														</div>
+													</td>
+													{# <td data-title="Acción">
+														<div class="btn-group">
+															<button type="button" class="btn btn-sm" onclick="eliminarEstudiante({{estudiante.eiid}},'{{ estudiante.paterno }} {{ estudiante.materno }} {{ estudiante.nombre }}')">
+																<i class="glyphicon glyphicon-trash" style="color:red;"></i>
+															</button>
+														</div>
+													</td> #}
 												</tr>
 											{% endfor %}
 										</tbody>
@@ -124,7 +151,6 @@
 				var value = parseInt($(this).val()) || 0;
 				total += value;
 			});
-			console.log(total);
 			// Calcula el promedio
 			var promedio = Math.round(total / 3);
 

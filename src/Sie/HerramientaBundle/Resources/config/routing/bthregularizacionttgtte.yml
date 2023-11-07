@@ -9,15 +9,15 @@ bth_regularizacion_ttg_tte_bucarsie:
     options:
          expose: true
 
-bth_regularizacion_ttg_tte_grado:
-    path:     /grado/
-    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:listaGrados }
-    options:
-        expose: true
-
 bth_regularizacion_ttg_tte_paralelo:
     path:     /paralelo/
     defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:listaParalelos }
+    options:
+        expose: true
+
+bth_regularizacion_ttg_tte_turno:
+    path:     /turno/
+    defaults: { _controller: SieHerramientaBundle:BthRegularizacionTtgTte:listaTurnos }
     options:
         expose: true
 
