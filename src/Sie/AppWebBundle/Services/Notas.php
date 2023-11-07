@@ -4903,7 +4903,8 @@ die;/*
                             ->setParameter('averagePrima',9)
                             ->getQuery()
                             ->getResult();  
-        dump(sizeof($asignaturasNotas));
+        // dump(sizeof($asignaturasNotas));
+        $averaTotal = 0;
         if(sizeof($asignaturasNotas)>0){
             $averaSum = 0;
             foreach ($asignaturasNotas as $value) {
@@ -4911,7 +4912,7 @@ die;/*
                 dump($value->getNotaCuantitativa());
             }
             $averaTotal = round($averaSum/sizeof($asignaturasNotas));
-            dump($averaTotal);
+            // dump($averaTotal);
             $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
             $averagePrim->setNotaCuantitativa($averaTotal);
             $this->em->persist($averagePrim);
