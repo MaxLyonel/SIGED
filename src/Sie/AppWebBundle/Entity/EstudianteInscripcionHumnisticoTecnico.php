@@ -193,4 +193,116 @@ class EstudianteInscripcionHumnisticoTecnico {
     {
         return $this->esvalido;
     }
+    /**
+     * @var string
+     */
+    private $observacion;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanistico
+     */
+    private $institucioneducativaHumanistico;
+
+
+    /**
+     * Set observacion
+     *
+     * @param string $observacion
+     * @return EstudianteInscripcionHumnisticoTecnico
+     */
+    public function setObservacion($observacion)
+    {
+        $this->observacion = $observacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get observacion
+     *
+     * @return string 
+     */
+    public function getObservacion()
+    {
+        return $this->observacion;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return EstudianteInscripcionHumnisticoTecnico
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return EstudianteInscripcionHumnisticoTecnico
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set institucioneducativaHumanistico
+     *
+     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanistico $institucioneducativaHumanistico
+     * @return EstudianteInscripcionHumnisticoTecnico
+     */
+    public function setInstitucioneducativaHumanistico(\Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanistico $institucioneducativaHumanistico = null)
+    {
+        $this->institucioneducativaHumanistico = $institucioneducativaHumanistico;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaHumanistico
+     *
+     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanistico 
+     */
+    public function getInstitucioneducativaHumanistico()
+    {
+        return $this->institucioneducativaHumanistico;
+    }
 }

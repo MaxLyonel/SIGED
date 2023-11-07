@@ -1,4 +1,12 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        tr.activa {
+            background-color: #f0f0f0; 
+        }
+    </style>
+{% endblock %}
 {% block contentoption %}
 <div class="header-content">
 	<h2><i class="fa fa-table"></i> Regularización Calificaciones TTE Y TTG (UE's autorizadas) <span></span></h2>
@@ -88,22 +96,23 @@
                                             <option value="13">Secundaria Comunitaria Productiva</option>
                                         </select>								      
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="turno">Turno</label>
-                                        <select name="turnoId" id="turnoId" class="custom-select js-example-basic-multiple form-control" onchange="getGrado()" >
-                                            <option value="">Seleccionar Turno</option>
-                                        </select>		
-                                    </div>
                                     <div class="form-group col-md-2">
                                         <label for="grado">Grado</label>
                                         <select name="gradoId" id="gradoId" class="custom-select js-example-basic-multiple form-control" onchange="getParalelo()">
+                                            <option value="">Seleccionar Grado</option>
                                         </select>
                                     </div>
                         
                                     <div class="form-group col-md-2">
                                         <label for="paralelo">Paralelo</label>
-                                        <select name="paraleloId" id="paraleloId" class="custom-select js-example-basic-multiple form-control">
+                                        <select name="paraleloId" id="paraleloId" class="custom-select js-example-basic-multiple form-control" onchange="getTurno()">
                                         </select>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label for="turno">Turno</label>
+                                        <select name="turnoId" id="turnoId" class="custom-select js-example-basic-multiple form-control"  >
+                                        </select>		
                                     </div>
                                   </div>
                                   <button onclick="buscarCursoEst()" id="buscaEst" type="button" class="btn btn-primary mb-2" >Buscar Estudiantes</button>
@@ -158,19 +167,18 @@
                     var msj = data.msj;
                     var status = data.status;
                     var institucion = data.institucion;
-                    var turno = data.turno;
-                    // console.log(turno);
+                    var grado = data.grado;
                     if (status == 200) {
                         document.getElementById("buscaSie").style.display = "none";
                         document.getElementById("respuestaSie").style.display = "block";
                         $('#td_codigo_rue').text(institucion.sie);
                         $('#td_ue').text(institucion.institucioneducativa);
                         $('#td_distrito').text(institucion.distrito);
-                        $("#gradoId").append('<option value="">Seleccionar Grado</option>');
                         $("#paraleloId").append('<option value="">Seleccionar Paralelo</option>');
+                        $("#turnoId").append('<option value="">Seleccionar Turno</option>');
                         // Suponiendo que 'turno' es un array de objetos
-                        for (var i in turno) {
-                            $("#turnoId").append('<option value="' + turno[i].turnoid + '">' + turno[i].turno.toUpperCase() + '</option>');
+                        for (var i in grado) {
+                            $("#gradoId").append('<option value="' + grado[i].gradoid + '">' + grado[i].grado.toUpperCase() + '</option>');
                         }
 
                     }else{
@@ -189,55 +197,25 @@
             });
     }
 
-    function getGrado(){
-        var turno = document.getElementById('turnoId').value;
-        var nivel = document.getElementById('nivelId').value;
-        sie = $('#codigoSIE').val();
-        gestion = $('#gestionId').val();
-        
-        $("#gradoId").empty();
-        $("#paraleloId").empty();
-        if(turno == null || turno == "" || turno == 0){
-                return false;
-        }
-        $.ajax({
-            type: 'get',
-            url: Routing.generate('bth_regularizacion_ttg_tte_grado', {'turno': turno, 'nivel': nivel, 'sie': sie, 'gestion': gestion}),
-            success: function (data) {            
-                $("#gradoId").append('<option value="">Seleccionar Grado</option>');
-                $("#paraleloId").append('<option value="">Seleccionar Paralelo</option>');
-                for (var i in data.grados) {
-                            $("#gradoId").append('<option value="' + data.grados[i].id + '">' + data.grados[i].grado.toUpperCase() + '</option>');
-                        }
-                                        
-                },
-                error: function(error){      
-                    alert("Error, no existe informacion para el nivel seleccionado"); 
-                        $("#form_grado").empty();
-                        $("#form_asignatura").empty();
-                },      
-                    
-            });
-
-    }
 
     function getParalelo(){
-        var turno = document.getElementById('turnoId').value;
+        // var turno = document.getElementById('turnoId').value;
         var nivel = document.getElementById('nivelId').value;
         var grado = document.getElementById('gradoId').value;
         sie = $('#codigoSIE').val();
         gestion = $('#gestionId').val();
         
-        $("#paraleloId").empty();
         if(grado == null || grado == "" || grado == 0){
                 return false;
         }
         $.ajax({
             type: 'get',
-            url: Routing.generate('bth_regularizacion_ttg_tte_paralelo', {'turno': turno, 'nivel': nivel,'grado': grado, 'sie': sie, 'gestion': gestion}),
+            url: Routing.generate('bth_regularizacion_ttg_tte_paralelo', {'nivel': nivel,'grado': grado, 'sie': sie, 'gestion': gestion}),
             success: function (data) {            
                 $("#paraleloId").empty();
-                $("#paraleloId").append('<option value="">Seleccionar Paralelo/option>');
+                $("#paraleloId").append('<option value="">Seleccionar Paralelo</option>');
+                $("#turnoId").empty();
+                $("#turnoId").append('<option value="">Seleccionar Turno</option>');
                 for (var i in data.paralelos) {
                             $("#paraleloId").append('<option value="' + data.paralelos[i].id + '">' + data.paralelos[i].paralelo + '</option>');
                         }
@@ -249,6 +227,40 @@
                 },      
                     
             });
+    }
+
+    function getTurno(){
+        var nivel = document.getElementById('nivelId').value;
+        var grado = document.getElementById('gradoId').value;
+        var paralelo = document.getElementById('paraleloId').value;
+        sie = $('#codigoSIE').val();
+        gestion = $('#gestionId').val();
+        
+        if(grado == null || grado == "" || grado == 0){
+                return false;
+        }
+        if(paralelo == null || paralelo == "" || paralelo == 0){
+                return false;
+        }
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('bth_regularizacion_ttg_tte_turno', {'nivel': nivel, 'grado': grado, 'paralelo': paralelo,'sie': sie, 'gestion': gestion}),
+            success: function (data) { 
+                $("#turnoId").empty();           
+                $("#turnoId").append('<option value="">Seleccionar Turno</option>');
+                for (var i in data.turnos) {
+                            $("#turnoId").append('<option value="' + data.turnos[i].id + '">' + data.turnos[i].turno.toUpperCase() + '</option>');
+                        }
+                                        
+                },
+                error: function(error){      
+                    alert("Error, no existe informacion para el nivel seleccionado"); 
+                        $("#form_grado").empty();
+                        $("#form_asignatura").empty();
+                },      
+                    
+            });
+
     }
 
     function buscarCursoEst(){
@@ -303,37 +315,91 @@
                 }
             });
     }
+       
+    function toggleEstadoEstudiante(boton, eiid, nombre) {
+        // Verificar el estado actual
+        if (boton.getAttribute('data-estado') === 'inactivo') {
+            // Confirmar si el usuario está seguro de activar
+            if (confirm("¿Está seguro de activar al estudiante " + nombre + "?")) {
+                var fila = boton.closest('tr');
+                boton.setAttribute('data-estado', 'activo');
+                boton.querySelector('i').className = 'glyphicon glyphicon-trash';
+                boton.querySelector('i').style.color = 'red';
+                fila.classList.add('activa');
+                // Habilitar los campos y restaurar los valores
+                var fila = boton.closest('tr');
+                fila.querySelectorAll('input, select').forEach(function (element) {
+                    if (element.tagName === 'INPUT' || (element.tagName === 'SELECT' && fila.querySelector("#espe") !== null)) {
+                        element.removeAttribute('disabled');
+                        // Restaurar el valor original si es necesario
+                        if (element.getAttribute('data-valor-original')) {
+                            element.value = element.getAttribute('data-valor-original');
+                        }
+                    }
 
-    
+                    // input.removeAttribute('disabled');
+                    // // Restaurar el valor original si es necesario
+                    // if (input.getAttribute('data-valor-original')) {
+                    //     input.value = input.getAttribute('data-valor-original');
+                    // }
+                });
+                
+            }
+        } else {
+            // Confirmar si el usuario está seguro de desactivar
+            if (confirm("¿Está seguro de desactivar al estudiante " + nombre + "?")) {
+                var fila = boton.closest('tr');
+                boton.setAttribute('data-estado', 'inactivo');
+                boton.querySelector('i').className = 'glyphicon glyphicon-ok';
+                boton.querySelector('i').style.color = 'green';
+                fila.classList.remove('activa'); 
+                // Desactivar los campos y guardar los valores originales
+                var fila = boton.closest('tr');
+                fila.querySelectorAll('input, select').forEach(function (element) {
+                    if (element.tagName === 'INPUT' || (element.tagName === 'SELECT' && fila.querySelector("#espe") !== null)) {
+                        element.setAttribute('disabled', 'disabled');
+                        // Guardar el valor original antes de borrarlo
+                        element.setAttribute('data-valor-original', element.value);
+                        element.value = '';
+                    }
+                });
+                
+            }
+        }
+    }
+
     function GuardarCursoEst() {
         var data = [];
 
-        // Variable para controlar si se cumplen las validaciones
         var valid = true;
         var icoid = $("#icoId").val();
         var sie = $('#codigoSIE').val();
         var gestion = $('#gestionId').val();
-        console.log(icoid)
         // Recorremos todas las filas de la tabla
-        $("#tb_estudiante tr").each(function () {
+        $("#tb_estudiante tr.activa").each(function () {
+            var fila = $(this);
             var estudianteId = $(this).data("estudiante-id");
             var tri1 = $(this).find("#tri1").val();
             var tri2 = $(this).find("#tri2").val();
             var tri3 = $(this).find("#tri3").val();
             var promedio = $(this).find("#prom").val();
-
+            var especialidad = $(this).find("#espe").val();
             // Validación de promedio (entre 1 y 100)
             if (promedio < 1 || promedio > 100) {
-                valid = false;
+                   valid = false;
             } 
             if (tri1 < 1 || tri1 > 100) {
                 valid = false;
             } 
-            if (tri2 < 1 || tri2 > 100) {
+             if (tri2 < 1 || tri2 > 100) {
+                 valid = false;
+             } 
+             if (tri3 < 1 || tri3 > 100) {
                 valid = false;
             } 
-            if (tri3 < 1 || tri3 > 100) {
-                valid = false;
+
+            if (especialidad == '') {
+                 valid = false;
             } 
 
             // Si se cumple la validación, agregamos los datos al arreglo
@@ -345,18 +411,18 @@
                     tri2: tri2,
                     tri3: tri3,
                     promedio: promedio,
+                    especialidad: especialidad, 
                     sie: sie,
                     gestion: gestion,
                 });
             }
         });
-
         // Verificamos si se cumplieron las validaciones
         if (!valid) {
-           alert("Error: Registre todas las calificaciones para todos los estudiantes.");
+           alert("Error: Registre todas las calificaciones y especialidades para todos los estudiantes.");
             return;
         }
-        console.log(JSON.stringify(data));
+        
         // Realizamos la solicitud POST para guardar los datos
         $.ajax({
             type: "POST",

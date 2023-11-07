@@ -2,10 +2,14 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
     type: entity
     table: estudiante_inscripcion_humnistico_tecnico
     indexes:
+        IDX_9977FBB1877D22F:
+            columns:
+                - institucioneducativa_humanistico_id
         IDX_9977FBBD72DBC59:
             columns:
                 - especialidad_tecnico_humanistico_tipo_id
-        IDX_9977FBBA1104027:
+    uniqueConstraints:
+        uq_estudiante_inscripcion_hum_tec:
             columns:
                 - estudiante_inscripcion_id
     id:
@@ -18,12 +22,6 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
             generator:
                 strategy: SEQUENCE
     fields:
-        institucioneducativaHumanisticoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: institucioneducativa_humanistico_id
         horas:
             type: integer
             nullable: true
@@ -33,14 +31,30 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
             type: boolean
             nullable: true
             comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     manyToOne:
-        especialidadTecnicoHumanisticoTipo:
-            targetEntity: EspecialidadTecnicoHumanisticoTipo
+        institucioneducativaHumanistico:
+            targetEntity: InstitucioneducativaEspecialidadTecnicoHumanistico
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                especialidad_tecnico_humanistico_tipo_id:
+                institucioneducativa_humanistico_id:
                     referencedColumnName: id
             orphanRemoval: false
         estudianteInscripcion:
@@ -50,6 +64,15 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
             inversedBy: null
             joinColumns:
                 estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        especialidadTecnicoHumanisticoTipo:
+            targetEntity: EspecialidadTecnicoHumanisticoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especialidad_tecnico_humanistico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
