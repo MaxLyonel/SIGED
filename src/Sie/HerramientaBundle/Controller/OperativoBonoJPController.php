@@ -390,7 +390,10 @@ class OperativoBonoJPController extends Controller
 	         		$messageError = 'El estudiante no esta inscrito en esta UE';
 	         		$swError = true;
          		}
-         	}  
+         	} 
+			 if(($this->session->get('roluser') == '7' || $this->session->get('roluser') == '8'  || $this->session->get('roluser') == '9' || $this->session->get('roluser') == '10') && $idtipoInstitucion==4){
+					$swError = false;
+			}  
          	/*if( ($this->session->get('roluser') == '7') || ($this->session->get('roluser') == '8')  || ($this->session->get('roluser') == '9')) {
          		// $messageError = 'roles...';
          		$swError = false;
@@ -423,6 +426,14 @@ class OperativoBonoJPController extends Controller
 				$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ?");
 				$params = array($codigo_rude, $gestion);
 			}
+ //educ especial
+			if($idtipoInstitucion == 4)
+			{
+				$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial_gen(?) where  gestion_tipo_id_raep = ? AND especial_modalidad_tipo_id_e=1 AND area_especial_id_e  IN (1,2,3,4,10,12) AND nivel_id_e<>410 ");
+				// $params = array($codigo_rude, $gestion, $estado_matricula);
+				$params = array($codigo_rude, $gestion);
+
+			}
 
 			$query->execute($params);
 			$dataInscription = $query->fetchAll();
@@ -446,8 +457,14 @@ class OperativoBonoJPController extends Controller
 					break;
 				}
 			}
+			
 			$tutoresActuales = $this->listarTutores($inscriptionId,array(1,2,4));
 			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
+			//dump($inscriptionId);
+			//dump($tutoresActuales);
+			//dump($tutoresEliminados);
+			//die;
+
         }
          // dump($dataInscriptionR);die;
 		return $this->render($this->session->get('pathSystem') .':BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
@@ -692,6 +709,7 @@ class OperativoBonoJPController extends Controller
 		return $this->render('SieHerramientaBundle:BonoJP:form_tutor_estudiante.html.twig',array('id' => $id,'estado' => $estado,'estudianteInscripcion' => $estudianteInscripcion));
 	}
 	public function guardar_datos_tutorAction(Request $request){
+		//dump("guardar tutorrr");die;
 		$em = $this->getDoctrine()->getManager();
 
 		$id_bjp_estudiante_apoderado_beneficiarios = $request->get('id');
@@ -771,7 +789,7 @@ class OperativoBonoJPController extends Controller
 	        }
         }
 
-        if(!$data['error']){
+        if(!$data['error']){ 
         	$query = "select e.codigo_rude,iec.*
 			from estudiante e
 			inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
@@ -780,13 +798,18 @@ class OperativoBonoJPController extends Controller
 			 $query2 = $em->getConnection()->prepare($query);
 			 $query2->execute();
 	         $obj = $query2->fetch();
- 			
+ 			 //dump($obj['institucioneducativa_id']);
+			 //dump($obj['codigo_rude']);
+			 //dump($idpersona);
+			 //dump($parentesco);
+			//die;
 	        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','".$idpersona."','".$parentesco."')";
 
 
          	$query = $em->getConnection()->prepare($queryChange);
 	        $query->execute();
 	        $result2 = $query->fetchAll();
+			//dump($result2);die;
 	        // the errors on DB
 	        $noTransfer = array(
 				'0' =>' THIS IS OK',
