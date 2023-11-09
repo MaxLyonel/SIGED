@@ -87,26 +87,25 @@
 					    <div class="panel-body">
 							<div class="table-responsive" v-if="existStudent">
 								<div class="alert alert-primary" role="alert">Estudiante Seleccionado</div>
-		                    	<table class="table table-dark">
-		                    		<thead>
-										<tr>
-											<th>RUDE</th>
-											<th>CI</th>
-											<th>Paterno</th>
-											<th>Materno</th>
-											<th>Nombre(s)</th>
-										</tr>
-		                    			
-		                    		</thead>
+									<table class="table table-dark">
+										<thead>
+											<tr>
+												<th>RUDE</th>
+												<th>CI</th>
+												<th>Paterno</th>
+												<th>Materno</th>
+												<th>Nombre(s)</th>
+											</tr>	
+		                </thead>
 									<tbody>
-									<tr>
-										<td>${DBinfoSelectStudent.codigo_rude}</td>
-										<td>${DBinfoSelectStudent.carnet_identidad} ${DBinfoSelectStudent.complemento}</td>
-										<td>${DBinfoSelectStudent.paterno}</td>
-										<td>${DBinfoSelectStudent.materno}</td>
-										<td>${DBinfoSelectStudent.nombre}</td>
-										
-									</tr>				
+										<tr>
+											<td>${DBinfoSelectStudent.codigo_rude}</td>
+											<td>${DBinfoSelectStudent.carnet_identidad} ${DBinfoSelectStudent.complemento}</td>
+											<td>${DBinfoSelectStudent.paterno}</td>
+											<td>${DBinfoSelectStudent.materno}</td>
+											<td>${DBinfoSelectStudent.nombre}</td>
+											
+										</tr>				
 									</tbody>
 								</table>							
 							</div>
@@ -1203,6 +1202,8 @@
 					},
 				});
 
+				
+				this.infoUE.apoderado = {};
 				axios.post(Routing.generate('censoinscripcion_checkEdad', {'carnet': infoSelectStudent.carnet_identidad, 'rude': infoSelectStudent.codigo_rude} ))
 					.then(res => {
 						Swal.close();
