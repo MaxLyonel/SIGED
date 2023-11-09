@@ -432,7 +432,7 @@ class CensoInscriptionController extends Controller
                 inner join estudiante_inscripcion ei on (ai.estudiante_inscripcion_id = ei.id)
                 inner join estudiante e on (ei.estudiante_id = e.id)
                 inner join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
-                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id in (2022, 2023)
+                where e.codigo_rude =  '".$dataStudent['codigo_rude']."'  and iec.gestion_tipo_id=2023
         ";
 
         $statement = $em->getConnection()->prepare($query);
@@ -445,18 +445,19 @@ class CensoInscriptionController extends Controller
         $apoderadoInput['fecNacimiento'] = str_replace('/', '-', $apoderadoInput['fecNacimiento']);
         $apoderadoInput = array_map("strtoupper", $apoderadoInput);
         $apoderadoInput['complemento'] = (isset($apoderadoInput['complemento'])) ? $apoderadoInput['complemento'] : '';
-        
+
         if(sizeof($arrDataStudentsFull)>0){
             // foreach ($arrDataStudentsFull as $arrDataStudents) {
             while (($arrDataStudents = current($arrDataStudentsFull)) !== FALSE && $swparent) {                
                 $apoderadoOutput = array(
-                    "paterno" => $arrDataStudents['paterno'],
-                    "materno" => $arrDataStudents['materno'],
-                    "nombre" => $arrDataStudents['nombre'],
+                    "paterno" => trim($arrDataStudents['paterno']),
+                    "materno" => trim($arrDataStudents['materno']),
+                    "nombre" => trim($arrDataStudents['nombre']),
                     "carnet" => $arrDataStudents['carnet'],
                     "complemento" => $arrDataStudents['complemento'],
                     "fecNacimiento" =>date('d-m-Y',strtotime($arrDataStudents['fecha_nacimiento']) ),              
                 );
+                
                 $apoderadoOutput = array_map("strtoupper", $apoderadoOutput);
                 // $apoderadoInput = array_map("strtoupper", $apoderadoInput);
                 // check if the values of parent/tutor are the same                
