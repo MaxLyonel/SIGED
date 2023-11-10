@@ -6,7 +6,7 @@
 
 {% block contentoption %}
     <div class="header-content">
-        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite BTH - Nivelación <span></span></h2>
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite BTH - Suspensión Excepcional en la Formación Técnica Tecnológica Especializada <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <!-- ... Resto del código ... -->
         </div><!-- /.breadcrumb-wrapper -->
@@ -20,7 +20,7 @@
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> Solicitud de Trámite de Nivelación Nº : <strong>{{tramitenro}}</strong></h3>
+                                        <h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> Solicitud de Trámite de Suspensión Excepcional en la Formación TTE Nº : <strong>{{tramitenro}}</strong></h3>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
@@ -72,7 +72,7 @@
                                                             <div class="col-md-6 col-md-offset-3">
                                                                 <div class="panel panel-default">
                                                                     <div class="panel-heading">
-                                                                        <h3 class="panel-title">Información del Estudiante y la Solicitud de Nivelación</h3>
+                                                                        <h3 class="panel-title">Información del Estudiante para la Suspención Excepcional en la Formación T.T.E.</h3>
                                                                     </div>
                                                                     <div class="panel-body">
                                                                         <dl class="dl-horizontal">
@@ -84,10 +84,10 @@
                                                                             <dd>{{data.fecha_nacimiento}}</span></dd>
                                                                             <dt>Carnet de Identidad :</dt>
                                                                             <dd>{{data.carnet_identidad}} {{data.complemento}}</dd>
-                                                                            <dt>Año de Escolaridad a Nivelar:</dt>
-                                                                            <dd><strong><h4>{{data.grado_nivelar}}º de Secundaria Comunitaria Productiva</h4></strong></dd>
-                                                                            <dt>Calificación de Nivelación:</dt>
-                                                                            <dd><strong><h4>{{data.calificacion}}</h4></strong></dd>
+                                                                            <dt>Año de Escolaridad:</dt>
+                                                                            <dd>{{data.grado_tipo_id}}º de {{data.nivel}}</dd>
+                                                                            <dt>Carrera:</dt>
+                                                                            <dd>{{data.especialidad}}</dd>
                                                                         </dl>
                                                                     </div>
                                                                 </div>
@@ -107,7 +107,7 @@
                                                                             <br>
                                                                             <ol>
                                                                                 <li>La Unidad Educativa debe pertenecer a Educación Regular.</li>
-                                                                                <li>La Unidad Educativa no puede realizar Nivelación</li>
+                                                                                <li>La Unidad Educativa no puede realizar el trámite de suspensión formación TTE</li>
                                                                                 <li>La Unidad Educativa no es Unidad Educativa PLENA - BTH</li>
                                                                             </ol>    
                                                                         </div>
@@ -123,31 +123,31 @@
                                                             <div class="panel-body">
                                                                 <div class="panel panel-info col-md-9">
                                                                     <div class="panel-heading">
-                                                                        <h2 class="panel-title"><i class="glyphicon glyphicon-cog"></i> Aprobación de Nivelación Distrital</h2>
+                                                                        <h2 class="panel-title"><i class="glyphicon glyphicon-cog"></i> Aprobación  Distrital de Suspención Excepcional en la Formación T.T.E.</h2>
                                                                     </div>
                                                                     <div class="panel-body">
                                                                         <div class="row">
                                                                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                                                                     <input type="hidden" name="idTramite" value="idTramite">
                                                                                     
-                                                                                    <label>Marcar los requisitos presentados por la Unidad Educativa</label>
+                                                                                    <label>Marcar los requisitos presentados por la Unidad Educativa que fuerón verificados:</label>
                                                                                     <div class="requisitos">
                                                                                         <div class="checkbox">
                                                                                             <label>
                                                                                                 <input type="checkbox" name="checkCuaderno" id="checkCuaderno">
-                                                                                                Fotocopia Legalizada del registro pedagógico.
+                                                                                                Fotocopia de C.I.
                                                                                             </label>
                                                                                         </div>
                                                                                         <div class="checkbox">
                                                                                             <label>
                                                                                                 <input type="checkbox" name="checkNivelacion" id="checkNivelacion">
-                                                                                                Informe del proceso de Nivelación.
+                                                                                                Solicitud de Suspención Técnica Tecnológica Especializada.
                                                                                             </label>
                                                                                         </div>
                                                                                         <div class="checkbox">
                                                                                             <label>
                                                                                                 <input type="checkbox" name="checkSolicitud" id="checkSolicitud">
-                                                                                                Formulario de solicitud de Nivelación.
+                                                                                                Certificado Médico.
                                                                                             </label>
                                                                                         </div>
                                                                                     </div>
@@ -306,12 +306,12 @@
                 return;
             }
             if (siProcede.checked){
-                msg = '¿Reviso todos los requisitos y documentacion del trámite de nivelacion - BTH Nº '+{{tramitenro}}+' para remitir a la Departamental?';
+                msg = '¿Reviso todos los requisitos y documentacion del trámite de Suspención Excepcional en la Formación T.T.E. Nº '+{{tramitenro}}+' para remitir a la Departamental?';
                 msg2 = 'Si acepta, se remitirá el trámite a la Dirección Departamental de Educación Correspondiente... ';
             }
             
             if (noProcede.checked){
-                msg = '¿Esta seguro que el trámite de nivelación - BTH Nº '+{{tramitenro}}+' no procede? se finalizará el trámite';
+                msg = '¿Esta seguro que el trámite de Suspención Excepcional en la Formación T.T.E. Nº '+{{tramitenro}}+' no procede? se finalizará el trámite';
                 msg2 = 'Si acepta, el trámite finalizará y deberá comunicar a la Unidad Educativa.. ';
             }
             
@@ -335,15 +335,15 @@
                                 // Agregar archivos al objeto FormData
                                 formData.append('fileinformeDis', informeDis);
                                 // Agregar otros datos al objeto FormData
-                                formData.append('cuaderno', checkCuaderno.checked);
-                                formData.append('infNivelacion', checkNivelacion.checked);
-                                formData.append('solicitud', checkSolicitud.checked);
+                                formData.append('fotocopiaci', checkCuaderno.checked);
+                                formData.append('solicitud', checkNivelacion.checked);
+                                formData.append('certificadomedico', checkSolicitud.checked);
                                 formData.append('siprocede', siProcede.checked);
                                 formData.append('noprocede', noProcede.checked);
                                 formData.append('observacion', observacion.value);
                                 $.ajax({
                                     type: 'POST',
-                                    url: "{{ path('tramite_bth_nivelacion_distrito_envia_solicitud') }}",
+                                    url: "{{ path('tramite_bth_suspension_tt_ddd_envia_solicitud') }}",
                                     data:formData,
                                     processData: false, // Evitar el procesamiento automático de datos
                                     contentType: false, // Evitar el encabezado "Content-Type"
