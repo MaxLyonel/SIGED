@@ -30,8 +30,14 @@ tramite_bth_suspension_tt_ddd_envia_solicitud:
     options:
          expose: true
 
-# tramite_bth_suspension_tt_dde_recibe:
-#     path:     /bsfdde/recibe
-#     defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:ddeRecibeVerifica }
-#     options:
-#          expose: true
+tramite_bth_suspension_tt_dde_recibe:
+    path:     /bsfdde/recibe
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:ddeRecibeVerifica }
+    options:
+         expose: true
+
+tramite_bth_suspension_tt_dde_consolida_solicitud:
+    path:     /bsfdde/consolida
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:ddeConsolidaSolicitud }
+    options:
+         expose: true
