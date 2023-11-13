@@ -198,6 +198,7 @@
                     <div class="cbp-caption-activeWrap">
                         <div class="cbp-l-caption-alignCenter">
                             <div class="cbp-l-caption-body">
+                                {# action="{{path('sie_alt_ges_sub_sem_open', {'teid':'0', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" #}
                                 <form action="{{path('herramienta_ceducativa_index')}}" method="post" style="display:inline-block"> 
                                     <button class="btn btn-inverse btn-stroke">INGRESAR</button>
                                 </form>
@@ -395,6 +396,10 @@
 {% block javascripts %}
     {{parent()}}
     <script>
+
+    console.log('GESTION: ', gestion);
+
+
     function verificarCerrado(){
         var myText = '¡AVISO IMPORTANTE LEA CON ATENCIÓN!\nUna ves cerrado el operativo cualquier modificación\ndeberá ser a través de su técnico de distrito.\nSi no esta seguro de este mensaje presione CANCELAR.';
         if(!confirm(myText)){

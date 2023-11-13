@@ -2130,6 +2130,59 @@ class Funciones {
         
     }
 
+    public function searchByExcaustiveDataStudent($data){
+
+        $oficialia = $data['oficialia'];
+        if( empty($oficialia) || $oficialia == 'UNDEFINED' ){
+            $oficialia = '';
+        }
+
+        $libro = $data['libro'];
+        if( empty($libro) || $libro == 'UNDEFINED' ){
+            $libro = '';
+        }
+
+        $partida = $data['partida'];
+        if( empty($partida) || $partida == 'UNDEFINED' ){
+            $partida = '';
+        }
+
+        $folio = $data['folio'];
+        if( empty($folio) || $folio == 'UNDEFINED' ){
+            $folio = '';
+        }
+        // dump($oficialia);
+        // dump($libro);
+        // dump($partida);
+        // dump($folio);
+        // die;
+        $query = $this->em->createQueryBuilder('e')
+                ->select('e')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->where('e.paterno like :paterno')
+                ->andWhere('upper(e.materno) like :materno')
+                ->andWhere('upper(e.nombre) like :nombre')
+                ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+                ->andWhere('e.oficialia = :oficialia')
+                ->andWhere('e.libro = :libro')
+                ->andWhere('e.partida = :partida')
+                ->andWhere('e.folio = :folio')
+                ->setParameter('paterno', '%' . mb_strtoupper($data['paterno'], 'utf8') . '%')
+                ->setParameter('materno', '%' . mb_strtoupper($data['materno'], 'utf8') . '%')
+                ->setParameter('nombre', '%' . mb_strtoupper($data['nombre'], 'utf8') . '%')
+                ->setParameter('fechaNacimiento', $data['fechaNacimiento'])
+                ->setParameter('oficialia', mb_strtoupper($oficialia, 'utf8'))
+                ->setParameter('libro', mb_strtoupper($libro, 'utf8'))
+                ->setParameter('partida', mb_strtoupper($partida, 'utf8'))
+                ->setParameter('folio', mb_strtoupper($folio, 'utf8'))
+                ->orderBy('e.paterno, e.materno, e.nombre', 'ASC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;
+
+    }
+
     public function getAllInscriptionRegular($codigoRude){
         
         $query = $this->em->createQueryBuilder('e')

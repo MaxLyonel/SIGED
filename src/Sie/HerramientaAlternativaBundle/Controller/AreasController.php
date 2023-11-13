@@ -63,7 +63,6 @@ class AreasController extends Controller {
         $data['mallaActual'] = $mallaActual;
         
         return $this->render('SieHerramientaAlternativaBundle:Areas:'.$templateToView, $data);
-
         
     }
 
@@ -92,6 +91,7 @@ class AreasController extends Controller {
             
             $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($idAsignatura);
             $codigo = $smp->getSuperiorModuloTipo()->getCodigo();
+            // dump($codigo);die;
             if ($codigo != '415'){
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
                 
@@ -107,11 +107,71 @@ class AreasController extends Controller {
             }
             // Mostramos nuevamente las areas del curso
             $data = $this->getAreas($infoUe);
+            // dump($data);die;
             $data['primaria'] = $primaria;
             return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!' . $ex));
+        }
+    }
+
+    public function addAreasAllAction(Request $request) {
+        // dump("herreeee");die;
+        $infoUe = $request->get('infoUe');
+
+        // $idAsignatura = $request->get('ida');
+
+        // $gestion = $this->session->get('ie_gestion');
+
+        $aInfoUeducativa = unserialize($infoUe);
+
+        $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+    
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe)
+          ){
+            $primaria = true;
+        }else{
+            $primaria = false;
+        }
+        try {
+            $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
+
+            $asignaturas = $this->getAreas($infoUe);
+            // dump($asignaturas);die;
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+            
+            foreach ($asignaturas['asignaturas'] as $value) {
+
+                if ($value['codigo'] != '415'){
+
+                    $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpId']);
+                    
+                    $ieco = new InstitucioneducativaCursoOferta();
+                    $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
+                    $ieco->setInsitucioneducativaCurso($curso);
+                    $ieco->setSuperiorModuloPeriodo($smp);
+                    $ieco->setHorasmes(0);
+                    $em->persist($ieco);
+                    $em->flush();
+                    
+                }
+            }
+            
+            $em->getConnection()->commit();
+            $asignaturas = $this->getAreas($infoUe);
+
+            // Mostramos nuevamente las areas del curso
+            // dump($data);die;
+            $asignaturas['primaria'] = $primaria;
+            return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $asignaturas);
+        } catch (\Exception $ex) {
+            dump($ex);die;
+            // $em->getConnection()->rollback();
+            // return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!' . $ex));
         }
     }
 
@@ -301,7 +361,7 @@ class AreasController extends Controller {
         } else {
             $turnoId = $curso->getTurnoTipo()->getId();
         }
-
+        
         if($nivel == 15 || $nivel == 5){
                             
             $iePeriodo = $em->createQueryBuilder()
@@ -658,6 +718,10 @@ class AreasController extends Controller {
         $ieco = $request->get('idco');
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+
+        // dump($ieco);
+        // dump($infoUe);
+        // die;
 
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');

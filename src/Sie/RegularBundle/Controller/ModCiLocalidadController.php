@@ -164,6 +164,7 @@ class ModCiLocalidadController extends Controller {
             if($esGuanawek)
                 $form=$this->createFormStudentGuanawek($infoStudent[0])->createView();
             // dump($this->session->get('pathSystem'));die;
+            // dump($form['cedulatipo']);die;
             return $this->render($this->session->get('pathSystem') . ':ModCiLocalidad:result.html.twig', array(
                 //'form' => $this->createFormStudent($infoStudent[0])->createView(),
                 'form' => $form,
@@ -179,6 +180,7 @@ class ModCiLocalidadController extends Controller {
     }
 
     private function createFormStudent($data) {
+        
         $formStudent = $this->createFormBuilder()
             ->setAction($this->generateUrl('modificar_ci_localidad_save'))
             ->add('idStudent', 'hidden', array('data' => $data['idStudent']));
@@ -205,11 +207,12 @@ class ModCiLocalidadController extends Controller {
             } else {
                 $cedulaTipo = $data['cedulaTipo'];
             }
-            
+
             if ($data['segipId']==0) {
                 $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-' y marcar en Tipo de Cedula como 'EXTRANJERO', pero debe escribir los ceros que contenga el C.I.")));
                 $formStudent->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")));
-                $formStudent->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase', 'maxlength' => 50)));
+                $formStudent->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase', 'maxlength' => 50))); 
+
                 $formStudent->add('cedulatipo', 'choice', array(
                     'choices'   => array(1 => 'Nacional', 2 => 'Extranjero'),
                     'data' => $cedulaTipo,
@@ -221,7 +224,14 @@ class ModCiLocalidadController extends Controller {
             } else {
                 $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
                 $formStudent->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'disabled' => true)));
-                $formStudent->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'disabled' => true)));
+
+                //  SOLO ALTERNATIVA
+                if( $this->session->get('pathSystem') == 'SieHerramientaAlternativaBundle' ){
+                    $formStudent->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control')));
+                }else{
+                    $formStudent->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'disabled' => true)));
+                }
+                
                 $formStudent->add('cedulatipo', 'choice', array(
                     'choices'   => array(1 => 'Nacional', 2 => 'Extranjero'),
                     'data' => $cedulaTipo,
@@ -231,6 +241,7 @@ class ModCiLocalidadController extends Controller {
                     'label' => "Tipo de Cedula de Identidad",
                     'disabled' => true
                 ));
+
             }
 
             $formStudent->add('paterno', 'text', array('label' => 'Paterno', 'data' => $data['paterno'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
@@ -339,7 +350,7 @@ class ModCiLocalidadController extends Controller {
             $localidad = "";
 
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
-            // dump($student);die;
+
             $oldDataStudent = clone $student;
             $oldDataStudent = (array)$oldDataStudent;
 
@@ -379,15 +390,11 @@ class ModCiLocalidadController extends Controller {
                 } else {
                     $fechaNacimiento =  $student->getFechaNacimiento()->format('d-m-Y'); 
                 }
-                
                 if(isset($form['cedulatipo'])){
                     $cedulaTipo = $form['cedulatipo'];
                 } else {
                     $cedulaTipo =  $student->getCedulaTipo(); 
                 }
-
-                // dump($student->getCedulaTipo());
-                // dump($cedulaTipo);die;
 
                 //$fechaNacimiento = date('dd-MM-yyyy',$student->getFechaNacimiento()); 
 
@@ -403,14 +410,12 @@ class ModCiLocalidadController extends Controller {
                     'segundo_apellido' => $materno,
                     'nombre' => $nombre,
                     'fecha_nacimiento' => $fechaNacimiento,
-                    'tipo_persona' => $cedulaTipo
+                    'tipo_persona' => $cedulaTipo == null ? 1 : $cedulaTipo->getId()
                 ];
                 
-                // dump($cedulaTipo);
                 $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad, $data, 'prod', 'academico');
-                //quitamos la validacion solo para guanawek
-                
-        
+                //quitamos la validacion solo para guanawek                
+
                 if($resultado) {
                     if(isset($form['ci'])){
                         $student->setCarnetIdentidad(mb_strtoupper($carnetIdentidad, 'utf-8'));
@@ -440,8 +445,10 @@ class ModCiLocalidadController extends Controller {
                         $student->setFechaNacimiento(new \DateTime($fechaNacimiento));
                     }
 
-                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
-                                        
+                    if( $cedulaTipo !== null ){
+                        $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
+                    }
+
                     $student->setSegipId(1);
                     $em->persist($student);
                     $em->flush();
@@ -472,7 +479,8 @@ class ModCiLocalidadController extends Controller {
             $message = 'Operación realizada correctamente.';
             $this->addFlash('goodcilocalidad', $message);
             return $this->redirectToRoute('modificar_ci_localidad_index');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
+            
             $em->getConnection()->rollback();
             $message = 'Operación no realizada. Ocurrió un error interno.';
             $this->addFlash('noticilocalidad', $message);

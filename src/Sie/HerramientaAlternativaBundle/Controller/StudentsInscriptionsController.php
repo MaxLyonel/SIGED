@@ -336,6 +336,9 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function inscriptionbyCiAction(Request $request){
+
+      // IS FIRST
+
       // ini var to the function
       $em = $this->getDoctrine()->getManager();
       $response = new JsonResponse();
@@ -523,7 +526,7 @@ class StudentsInscriptionsController extends Controller {
       // dump($arrResponse);die;
       $response->setStatusCode(200);
       $response->setData($arrResponse);
-       
+      
       return $response;    
       
     }    
@@ -580,9 +583,9 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
- // dump($request);
- // dump($_FILES);
- // die;
+      
+      // IS SECOND
+
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -596,6 +599,12 @@ class StudentsInscriptionsController extends Controller {
       $paterno = mb_strtoupper($request->get('paterno'), 'utf-8');
       $materno = mb_strtoupper($request->get('materno'), 'utf-8');
       $nombre = mb_strtoupper($request->get('nombre'), 'utf-8');
+
+      $oficialia = mb_strtoupper($request->get('oficialia'), 'utf-8');
+      $libro = mb_strtoupper($request->get('libro'), 'utf-8');
+      $partida = mb_strtoupper($request->get('partida'), 'utf-8');
+      $folio = mb_strtoupper($request->get('folio'), 'utf-8');
+
       $fecNac = $request->get('fecNac');
       $generoId = $request->get('generoId');
       $carnet = $request->get('carnet');
@@ -605,7 +614,7 @@ class StudentsInscriptionsController extends Controller {
       $expedidoId = $request->get('expedidoId');
       $withoutsegip = ($request->get('withoutsegip')=='true')?true:false;
 
-      $casespecial = ($request->get('casespecial')=='false')?false:true;;
+      $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
       $arrRudesStudent = false;
@@ -619,35 +628,39 @@ class StudentsInscriptionsController extends Controller {
       );
       if($request->get('extranjero') == 1){
         $arrParametros['extranjero'] = 'e';
-      }      
+      } 
+      
+      // dump($carnet);
+      // dump($arrParametros);
       if(!$withoutsegip){
+        // dump("no tiene carnet");
         // get info segip
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
+        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
       }else{
+        // dump("si tiene carnet");
         $answerSegip = true;
       }
-
       // check if the data person is true
       if($answerSegip){
-
-
         $arrdataStudent = array(
-        'paterno'=>$paterno,
-        'materno'=>$materno,
-        'nombre'=>$nombre,
+          'paterno'=>$paterno,
+          'materno'=>$materno,
+          'nombre'=>$nombre,
+          'fechaNacimiento'=>$fecNac,
+          'oficialia'=>$oficialia,
+          'libro'=>$libro,
+          'partida'=>$partida,
+          'folio'=>$folio
         );
-        
-        $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
-        // dump($objRudesStudent);die;
-        
+        // dump("hereee");die;
+        $objRudesStudent = $this->get('funciones')->searchByExcaustiveDataStudent($arrdataStudent);
+
         if(!($objRudesStudent)){
-        // if(true){
-
-        // set parameter to validate inscription
-        $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
-        // get the studnets age
-        $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
-
+          // if(true){
+          // set parameter to validate inscription
+          $arrParameterToValidate = array('fecNac' => $fecNac , 'casespecial'=>$casespecial , 'iecId' => $iecId) ;
+          // get the studnets age
+          $swyearStudent = $this->validateYearsStudent($arrParameterToValidate );
           // check if the students has the required
           if(!($swyearStudent)){
 
@@ -676,6 +689,11 @@ class StudentsInscriptionsController extends Controller {
                 $estudiante->setFechaNacimiento(new \DateTime($fecNac));            
                 $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId));
                 $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
+
+                $estudiante->setOficialia($oficialia);
+                $estudiante->setLibro($libro);
+                $estudiante->setPartida($partida);
+                $estudiante->setFolio($folio);
                 // check if the country is Bolivia
                 if ($paisId === '1'){                    
                     $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
@@ -722,8 +740,7 @@ class StudentsInscriptionsController extends Controller {
                   '',
                   'ALTERNATIVA',
                   json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-              );
-
+                );
 
                 $em->flush();
 
@@ -742,11 +759,11 @@ class StudentsInscriptionsController extends Controller {
             }
           }else{
 
-              $status = 'error';
-              $code = 400;
-              $message = "Estudiante no cumple con la edad Requerida";
-              $swcreatestudent = false;            
-            }
+            $status = 'error';
+            $code = 400;
+            $message = "Estudiante no cumple con la edad Requerida";
+            $swcreatestudent = false;            
+          }
 
         }else{
 
@@ -785,12 +802,11 @@ class StudentsInscriptionsController extends Controller {
 
       //send the response info
        $arrResponse = array(
-            'status'          => $status,
-            'code'            => $code,
-            'message'         => $message,
-            'swcreatestudent' => $swcreatestudent,
-            'arrRudesStudent' => $arrRudesStudent,
-            
+          'status'          => $status,
+          'code'            => $code,
+          'message'         => $message,
+          'swcreatestudent' => $swcreatestudent,
+          'arrRudesStudent' => $arrRudesStudent
       );
       
       $response->setStatusCode(200);
@@ -893,7 +909,6 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function studentsInscriptionAction(Request $request){
-
       //ini json var
       $response = new JsonResponse();
       $em = $this->getDoctrine()->getManager();
@@ -916,81 +931,165 @@ class StudentsInscriptionsController extends Controller {
       if(!($swyearStudent)){
         // set data to validate STUDENTS RUDE
         $arrdataStudent = array(
-        'paterno'=>$request->get('paterno'),
-        'materno'=>$request->get('materno'),
-        'nombre'=>$request->get('nombre'),
+          'paterno'=>$request->get('paterno'),
+          'materno'=>$request->get('materno'),
+          'nombre'=>$request->get('nombre'),
         );
+
+
+        // LUIS
         
         // $objRudesStudent = $this->get('funciones')->lookforRudesbyDataStudent($arrdataStudent);
         
         // if(sizeof($objRudesStudent)==1){
         if(true){
           try {
+            // dump($studentId);die;
             // get info about the students inscriptions
-            $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId); 
+            // dump($iecId);die;            
+            // ANTES DE LAS VALIDACIONES VERIFICAR SI NO CUMPLE
+            $aproved = true; 
+            $message = '';
+
+            $resultsRegular = $this->checkIfRegularStudentNowGestion( $studentId );
+
+            $epaIds = '35, 34';
+            $courseEPA = $this->checkCeaStudyType( $iecId, $epaIds );
+
+            $esaIds = '45, 49, 52';
+            $courseESA = $this->checkCeaStudyType( $iecId, $esaIds );
+
+            if( $resultsRegular && ( $courseEPA || $courseESA ) ){
+              $responseArray = array(
+                'status'  => 401,
+                'message' => "El estudiante pertenece a regular, no puede inscribirse en Humanistica",
+              );
+              
+              $response->setStatusCode(401);
+              $response->setData($responseArray);
+              return $response;
+            }
+
+            // SOLO SON PERMITIDAS ESTE TIPO DE COMBINACIONES PARA LA INSCRIPCION
+            // 1 - DE REGULAR A ALTERNATIVA SOLO (ETA)
+
+            $etaIds = '1,12,20';
+            $resultsEta = $this->checkCeaStudyType( $iecId, $etaIds );
+            if( $resultsRegular && $resultsEta ){
+              $aproved = false;
+              $message = 'El estudiante pertenece a regular, no puede inscribirse en mismos horarios';
+              // $message = 'No puede inscribirse, porque se encuentra inscrito en Educacion Regular de la gestion actual';
+              if( $resultsRegular[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
+                $aproved = true;
+              } 
+
+            }
+
+            // 2 -  DE EPA A ETA, DIFERENTES HORARIOS SI ES DIFERENTE CEA
+            $etaIds = '34, 35';
+            $existStudentEPA = $this->checkCeaOfStudent( $studentId, $etaIds );
+
+            if( $existStudentEPA && $resultsEta ){
+              $aproved = false;
+              $message = 'El estudiante pertenece a EPA, no puede incribirse en mismos horarios';
+              if( $existStudentEPA[0]['institucioneducativa_id'] != $resultsEta[0]['institucioneducativa_id'] ){
+                if( $existStudentEPA[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
+                  $aproved = true;
+                }
+              }
+
+            }
+            // 3 - DE ESA A ETA, DIFERENTES HORARIOS SI ES DIFERENTE CEA
+            $etaIds = '45, 49, 52';
+            $existStudentESA = $this->checkCeaOfStudent( $studentId, $etaIds );
+
+            if( $existStudentESA && $resultsEta ){
+              $aproved = false;
+              $message = 'El estudiante pertenece a ESA, no puede incribirse en mismos horarios';
+              if( $existStudentESA[0]['institucioneducativa_id'] != $resultsEta[0]['institucioneducativa_id'] ){
+                if( $existStudentESA[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
+                  $aproved = true;
+                }
+              }
+
+            }
+
+            if( !$aproved ){
+
+              $responseArray = array(
+                'status'  => 401,
+                'message' => $message,
+              );
+              
+              $response->setStatusCode(401);
+              $response->setData($responseArray);
+              return $response;
+
+            }
+
             // check if the student has an inscription on this course
-              if(!$objCurrentInscription){
+            $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId);
+            if(!$objCurrentInscription){
               // do inscription
               // set the inscription to the new student
-                $studentInscription = new EstudianteInscripcion();
-                $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
-                $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
-                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
-                $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
-                $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
-                $studentInscription->setObservacion(1);
-                $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
-                $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
-                $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
-                //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
-                $studentInscription->setCodUeProcedenciaId(0);
-                $em->persist($studentInscription);
+              $studentInscription = new EstudianteInscripcion();
+              $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
+              $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+              $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+              $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
+              $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
+              $studentInscription->setObservacion(1);
+              $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
+              $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
+              $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+              //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
+              $studentInscription->setCodUeProcedenciaId(0);
+              $em->persist($studentInscription);
 
-                //save the inscription data when the inscription is excepcional
-                if($casespecial){
-                  $estudianteInscripcionAlternativaExcepcionalObjNew = new EstudianteInscripcionAlternativaExcepcional();
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcionAlternativaExcepcionalTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->find($excepcional));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setFecha(new \DateTime('now'));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentId));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
-                  $estudianteInscripcionAlternativaExcepcionalObjNew->setDocumento($infocomplementaria);
-                  $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
-                }
+              //save the inscription data when the inscription is excepcional
+              if($casespecial){
+                $estudianteInscripcionAlternativaExcepcionalObjNew = new EstudianteInscripcionAlternativaExcepcional();
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcionAlternativaExcepcionalTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->find($excepcional));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setFecha(new \DateTime('now'));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentId));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
+                $estudianteInscripcionAlternativaExcepcionalObjNew->setDocumento($infocomplementaria);
+                $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
+              }
 
+              // set all the courses modules to the student
+              $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
+              $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
 
-                // set all the courses modules to the student
-                $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
-                $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
-
-                $this->get('funciones')->setLogTransaccion(
-                  $studentInscription->getId(),
-                  'estudiante_inscripcion',
-                  'C',
-                  '',
-                  '',
-                  '',
-                  'ALTERNATIVA',
-                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+              $this->get('funciones')->setLogTransaccion(
+                $studentInscription->getId(),
+                'estudiante_inscripcion',
+                'C',
+                '',
+                '',
+                '',
+                'ALTERNATIVA',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
               );
 
-                $em->flush();
-                //do the commit in DB
-                $em->getConnection()->commit();
-                $status = 'success';
-                $code = 200;
-                $message = "Estudiante registrado existosamente!!!";
-                $swcreatestudent = true;   
+              $em->flush();
+              //do the commit in DB
+              $em->getConnection()->commit();
+              $status = 'success';
+              $code = 200;
+              $message = "Estudiante registrado existosamente!!!";
+              $swcreatestudent = true;   
 
 
-              }else{
-                $arrIdCourse = array('TEC'=>' en el mismo nivel - Técnica',1511=>'Elementales',1512=>'Avanzados',1521=>'Aplicados',1522=>'Complementarios',1523=>'Especializados');
+            }else{
+              $arrIdCourse = array('TEC'=>' en el mismo nivel - Técnica',1511=>'Elementales',1512=>'Avanzados',1521=>'Aplicados',1522=>'Complementarios',1523=>'Especializados');
 
-                $status = 'error';
-                $code = 400;
-                $message = "Estudiante ya cuenta con una inscripcion en el curso ".$objCurrentInscription;
-                $swcreatestudent = false;   
+              $status = 'error';
+              $code = 400;
+              $message = "Estudiante ya cuenta con una inscripcion en el curso ".$objCurrentInscription;
+              $swcreatestudent = false;   
 
-              }
+            }
             
           } catch (Exception $e) {
             echo 'error in save the data inscription';
@@ -1039,6 +1138,100 @@ class StudentsInscriptionsController extends Controller {
       $response->setData($arrResponse);
 
       return $response;
+    }
+
+    public function checkCeaStudyType( $institucionEducativaCursoId, $etaIds ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $queryETA = "select sae.superior_acreditacion_tipo_id, ic.id,ic.turno_tipo_id, ic.institucioneducativa_id 
+                    from superior_facultad_area_tipo sfat 
+                    inner join superior_especialidad_tipo set2 on sfat.id=set2.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad sae on set2.id=sae.superior_especialidad_tipo_id 
+                    inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
+                    inner join superior_institucioneducativa_acreditacion sia on sia.acreditacion_especialidad_id=sae.id
+                    inner join superior_institucioneducativa_periodo sip on sip.superior_institucioneducativa_acreditacion_id=sia.id
+                    inner join institucioneducativa_curso ic on ic.superior_institucioneducativa_periodo_id=sip.id 
+                    where sae.superior_acreditacion_tipo_id in (".$etaIds.")
+                    and ic.id=".$institucionEducativaCursoId."";
+      $stmt = $db->prepare($queryETA);
+      $params = array();
+      $stmt->execute($params);
+      $resultsETA = $stmt->fetchAll();
+
+      return $resultsETA;
+
+    }
+
+    public function checkCeaOfStudent( $estudianteId, $acreditacionTipoIds ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $query = "select sae.superior_acreditacion_tipo_id, ic.id,ic.turno_tipo_id, ic.institucioneducativa_id 
+                    from superior_facultad_area_tipo sfat 
+                    inner join superior_especialidad_tipo set2 on sfat.id=set2.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad sae on set2.id=sae.superior_especialidad_tipo_id 
+                    inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
+                    inner join superior_institucioneducativa_acreditacion sia on sia.acreditacion_especialidad_id=sae.id
+                    inner join superior_institucioneducativa_periodo sip on sip.superior_institucioneducativa_acreditacion_id=sia.id
+                    inner join institucioneducativa_curso ic on ic.superior_institucioneducativa_periodo_id=sip.id 
+                    inner join estudiante_inscripcion ei on ic.id=ei.institucioneducativa_curso_id 
+                    where sae.superior_acreditacion_tipo_id in (".$acreditacionTipoIds.")
+                    and ei.estudiante_id=".$estudianteId."
+                    order by ic.gestion_tipo_id desc
+                    ";
+      $stmt = $db->prepare($query);
+      $params = array();
+      $stmt->execute($params);
+      $results = $stmt->fetchAll();
+
+      return $results;
+
+    }
+
+    public function checkIfRegularStudentNowGestion( $studentId ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $query = "select ic.id, ei.estudiante_id, ic.gestion_tipo_id, ic.turno_tipo_id from estudiante_inscripcion ei 
+                        inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id=ic.id 
+                        inner join institucioneducativa i on ic.institucioneducativa_id=i.id 
+                        where i.institucioneducativa_tipo_id=1
+                        and ei.estudiante_id=".$studentId."
+                        and ic.gestion_tipo_id=2023
+                        order by ic.gestion_tipo_id desc
+                        limit 1
+                        ";
+      $stmt = $db->prepare($query);
+      $params = array();
+      $stmt->execute($params);
+      $results = $stmt->fetchAll();
+
+      return $results;
+
+    }
+
+    public function checkCeaTypeOfStudent( $estudianteId ){
+
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+
+      $query = "select ei.estudiante_id, ic.gestion_tipo_id, i.institucioneducativa_tipo_id,i.id from estudiante_inscripcion ei 
+                  inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id=ic.id 
+                  inner join institucioneducativa i on ic.institucioneducativa_id=i.id 
+                  where ei.estudiante_id=".$estudianteId."
+                  order by ic.gestion_tipo_id desc
+                  limit 1";
+      $stmt = $db->prepare($query);
+      $params = array();
+      $stmt->execute($params);
+      $results = $stmt->fetchAll();
+
+      return $results;      
+
     }
 
     public function studentsInscriptionlistAction(Request $request){

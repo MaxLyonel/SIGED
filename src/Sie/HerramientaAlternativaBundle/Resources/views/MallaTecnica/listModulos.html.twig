@@ -64,8 +64,7 @@
 
                 {% if (malla.modulo!='') %}
 
-
-                    <div>
+                    {% if ( malla.idacreditacion == '32' and isSuperiorMallaModuloPeriodo  ) %}
                         <div class="table-responsive col-md-12">
                             <table class="table table-bordered table-striped" id="listaEsp">
                                 <thead>
@@ -73,41 +72,97 @@
                                     <th class="text-center border-right">N°</th>
                                     <th class="text-center border-right">Modulo</th>
                                     <th class="text-center border-right">Horas</th>
+                                    <th class="text-center border-right">Periodo</th>
                                     <th class="text-center border-right">Operaciones</th>
-
-
-
                                 </tr>
                                 </thead>
 
                                 <tbody>
-                                {#{{ dump(malla.modulo |split(',')) }}#}
-                                {% set foo = malla.modulo|split('|') %}
-                                {% set horas = malla.horas|split(',') %}
-                                {% set idmodulo = malla.idmodulo|split(',') %}
-                                {% set idspm = malla.idspm|split(',') %}
-                                {#{{ dump(foo) }}#}
-                                {% for i in 0..foo|length-1 %}
-                                    <tr>
-                                        <td data-title="N°" class="text-center">{{ loop.index }}</td>
-                                        <td data-title="Especialidad" class="text-center"> {{foo[i]}}</td>
-                                        <td data-title="Especialidad" class="text-center">{{ horas[i] }}</td>
-                                        <td data-title="Acciones" class="text-center">
-                                            {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
-                                            {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
-                                            <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
-                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button>
+                                    {#{{ dump(malla.modulo |split(',')) }}#}
+                                    {% set foo = malla.modulo|split('|') %}
+                                    {% set periodo_medio = malla.periodo_medio|split(',') %}
+                                    {% set mallaModuloPeriodoId = malla.malla_modulo_periodo_id|split(',') %}
+                                    {% set horas = malla.horas|split(',') %}
+                                    {% set idmodulo = malla.idmodulo|split(',') %}
+                                    {% set idspm = malla.idspm|split(',') %}
+                                    {#{{ dump(foo) }}#}
+                                    {% for i in 0..foo|length-1 %}
+                                        <tr>
+                                            <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                                            <td data-title="Especialidad" class="text-center"> {{foo[i]}}</td>
+                                            <td data-title="Especialidad" class="text-center">{{ horas[i] }}</td>
+                                            <td data-title="Medios" class="text-center">
+                                                {% if ( periodo_medio[i] == 4 ) %}
+                                                    Medio 1
+                                                {% else %}
+                                                    Medio 2
+                                                {% endif %}
+                                            </td>
+                                            <td data-title="Acciones" class="text-center">
+                                                {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
+                                                {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
+                                                
+                                                {# FOR DELETE                                            
+                                                <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
+                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button> #}
+                                                
+                                                {% if ( malla.sw_esoficial != 1) %} 
+                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{periodo_medio[i]}},{{ malla.idacreditacion }}, {{mallaModuloPeriodoId[i]}},'edit');"><i class="fa fa-pencil"></i></button>
 
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-
-
+                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }}, '',{{periodo_medio[i]}},'','delete');"><i class="fa fa-times"></i></button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
 
                             </table>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped" id="listaEsp">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center border-right">N°</th>
+                                        <th class="text-center border-right">Modulo</th>
+                                        <th class="text-center border-right">Horas</th>
+                                        <th class="text-center border-right">Operaciones</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {#{{ dump(malla.modulo |split(',')) }}#}
+                                    {% set foo = malla.modulo|split('|') %}
+                                    {% set horas = malla.horas|split(',') %}
+                                    {% set idmodulo = malla.idmodulo|split(',') %}
+                                    {% set idspm = malla.idspm|split(',') %}
+                                    {#{{ dump(foo) }}#}
+                                    {% for i in 0..foo|length-1 %}
+                                        <tr>
+                                            <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                                            <td data-title="Especialidad" class="text-center"> {{foo[i]}}</td>
+                                            <td data-title="Especialidad" class="text-center">{{ horas[i] }}</td>
+                                            <td data-title="Acciones" class="text-center">
+                                                {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
+                                                {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
+                                                
+                                                {# FOR DELETE                                            
+                                                <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{ malla.idacreditacion }});"><i class="fa fa-pencil"></i></a>
+                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button> #}
+
+                                                {# {{malla.sw_esoficial}} #}
+                                                {% if ( malla.sw_esoficial != 1) %} 
+                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},'',{{ malla.idacreditacion }},'','edit');"><i class="fa fa-pencil"></i></a>
+                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},'','','','','delete');"><i class="fa fa-times"></i></button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    {% endif %}
 
 
                 {% else %}
