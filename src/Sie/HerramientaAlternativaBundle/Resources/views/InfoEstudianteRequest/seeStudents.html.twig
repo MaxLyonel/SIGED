@@ -310,8 +310,10 @@
                                                                                                          
                                                     {% endif %}
                                                     <li class="divider"></li>
+
+
                                                     {# DESCARGAR DESPUES DE CIERRE DE OPERATIVO INSCRIPCION #}
-                                                    {% if ( app.session.get('ie_per_estado') == '2' ) %}
+                                                    {% if ( app.session.get('ie_per_estado') != '0' ) %}
                                                         {#ACTIVO DECLARACION JURADA EN LOS ULTIMOS GRADOS DE HUMANISTICA Y TECNICA#}
                                                         {% if ( ((data.nivelId == 15) and (data.cicloId == 2) and (data.gradoId == 3)) or ((data.nivelId == 5) and (data.cicloId == 2) and (data.gradoId == 2)) )%}
                                                             <li>
