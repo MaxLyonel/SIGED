@@ -1,0 +1,77 @@
+Sie\AppWebBundle\Entity\BthSuspensionTte:
+    type: entity
+    table: bth_suspension_tte
+    indexes:
+        IDX_68FB6002A1104027:
+            columns:
+                - estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigoRude:
+            type: string
+            nullable: false
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        datos:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        tramiteId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tramite_id
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        ferchaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fercha_registro
+        fechaModfiicacion:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: fecha_modfiicacion
+        estudianteInscripcionHumnisticoTecnicoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_humnistico_tecnico_id
+        especialidadTecnicoHumanisticoTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: especialidad_tecnico_humanistico_tipo_id
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

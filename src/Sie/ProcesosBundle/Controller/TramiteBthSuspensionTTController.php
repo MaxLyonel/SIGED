@@ -9,12 +9,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-// use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-// use Symfony\Component\Security\Core\User\User;
 
 use Sie\AppWebBundle\Entity\WfSolicitudTramite;
-use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
-use Sie\AppWebBundle\Entity\BthEstudianteNivelacion;
+use Sie\AppWebBundle\Entity\EstudianteNota;
+use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico;
+use Sie\AppWebBundle\Entity\BthSuspensionTte;
 
 
 /**
@@ -586,40 +586,374 @@ class TramiteBthSuspensionTTController extends Controller {
 
     }
 
-    // public function departamentoAction (Request $request) {
-    //     $id_usuario     = $this->session->get('userId');
-    //     $id_rol     = $this->session->get('roluser');
-    //     $ie_id = $this->session->get('ie_id');
-    //     //validation if the user is logged
-    //     if (!isset($id_usuario)) {
-    //         return $this->redirect($this->generateUrl('login'));
-    //     }
-    //     // Verificamos si no ha caducado la session
-    //     if (!$this->session->get('userId')) {
-    //         return $this->redirect($this->generateUrl('login'));
-    //     }
-    //     $em = $this->getDoctrine()->getManager();
+    public function ddeRecibeVerificaAction (Request $request) {
+        
+        $id_usuario     = $this->session->get('userId');
+        $id_rol     = $this->session->get('roluser');
+        $ie_id = $this->session->get('ie_id');
+        $idTramite = $request->get('id');
+        
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $datos = $this->datosFormulario($idTramite);
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($tramite->getTramite());
+        $flujo_proceso_act = $tramiteDetalle->getFlujoProceso()->getId();
+        $tramite_estado_act = $tramiteDetalle->getTramiteEstado()->getId();
+        /*******************si ya realizo este etapa no ingresa*********/
+        if ($flujo_proceso_act==148 and $tramite_estado_act==15){
+            return $this->redirectToRoute('wf_tramite_index', [
+                'tipo' => 2,
+            ]);
+        }
 
-    //     $sie = ($this->session->get('ie_id')>0)?$this->session->get('ie_id'):'';
-    //     $institucioneducativa = $this->session->get('ie_nombre');
-    //     $dependencia = $this->session->get('dependencia');
-    //     $gestion = $this->session->get('currentyear');
-    //     $ihtt = [1,7];
-    //     $uebth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findBy(['gestionTipoId' => $gestion,
-    //     'institucioneducativaId' => $sie,
-    //     'institucioneducativaHumanisticoTecnicoTipo' => $ihtt,
-    //     ]);
-    //     $uebthesp = '';
-    //     if ($uebth) {
-    //         $uebthesp = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(['gestionTipo' => $gestion,
-    //         'institucioneducativa' => $sie,
-    //         ]);
-    //     }
-    //     return $this->render('SieProcesosBundle:TramiteBthSuspencionTT:departamento.html.twig',array(
-    //         'uebth'=>$uebth,
-    //         'institucioneducativa'=>$institucioneducativa,
-    //         'uebthespecialidad'=>$uebthesp,               
-    //     ));
-    // }
+
+        $sie = $tramite->getInstitucioneducativa()->getId();
+        $gestion = $this->session->get('currentyear');
+        $ihtt = [1,7];
+        $uebth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findBy(['gestionTipoId' => $gestion,
+        'institucioneducativaId' => $sie,
+        'institucioneducativaHumanisticoTecnicoTipo' => $ihtt,
+        ]);
+        $uebthesp = '';
+        if ($uebth) {
+            $uebthesp = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(['gestionTipo' => $gestion,
+            'institucioneducativa' => $sie,
+            ]);
+        }
+        return $this->render('SieProcesosBundle:TramiteBthSuspensionTT:departamento.html.twig',array(
+            'uebth'=>$uebth,
+            // 'institucioneducativa'=>$institucioneducativa,
+            'uebthespecialidad'=>$uebthesp,
+            'data'=>$datos,
+            'tramitenro'=>$idTramite,            
+        ));
+    }
+
+    public function ddeConsolidaSolicitudAction(Request $request){
+        $response = new JsonResponse();
+        try {
+            $form = $request->request->all();
+            $idTramite = $form['request_tramite_nro'];
+            // $informe_distrito = $form['fileinformeDis'];
+		    $fotocopia_ci = $form['fotocopiaci'];
+            $solicitud = $form['solicitud'];
+            $certificado_medico = $form['certificadomedico'];
+            $inf_distrito = $form['InformeDistrito'];
+            $si_procede = $form['siprocede'];
+            $no_procede = $form['noprocede'];
+            $observacion = mb_strtoupper($form['observacion'],'UTF-8');
+            $gestion = $this->session->get('currentyear');
+            $msj= '';
+           
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            $datos = $this->datosFormulario($idTramite);
+            $sie = $datos['institucioneducativa_id'];
+            $codigoRude = $datos['codigo_rude'];
+            $flujo_tipo = $datos['flujoTipo'];
+            $est_asig_id = $datos['eaid'];
+            $inscripcionId = $datos['inscid'];
+            $ei_esp_id = $datos['eiespid'];
+            list($data, $msj) = $this->validacionRudeBth($codigoRude, $gestion, $sie);
+            if ($msj !== ''){
+                $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$msj,
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                return $response; 
+            }
+
+            if ($est_asig_id != $data['eaid'] or $inscripcionId != $data['inscid'] or $ei_esp_id != $data['eiespid']){
+                $msj = 'Existe insconsistencia en la información solicitada, el trámite no puede continuar.';
+                $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$msj,
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                return $response; 
+            }
+
+            if ($si_procede == 'true' and ($fotocopia_ci == 'false' or $solicitud == 'false' or $certificado_medico == 'false' or $inf_distrito == 'false')){
+                $msj = 'Marque y verifique todos los documentos para que sea procedente el trámite';
+                $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$msj,
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                return $response; 
+            }
+            /*****SE GUARDA ARCHIVO Y OBTIENE NOMBRE *****/
+            $nArcInfDep = $this->guardarArch($sie, $codigoRude,$gestion,'DDEINF', $_FILES['fileinformeDep']);
+            $procedente = '';
+            $finalizar = '';
+            /*****SE VERIFICA SI EL PROCESO SIGUE O NO *****/
+            if ($si_procede == 'true') {
+                $procedente = 'SI';
+            } elseif ($no_procede == 'true') {
+                $procedente = 'NO';
+            }
+            $finalizar = 'SI';
+            $datosTr = json_encode(array(
+                'sie'=>$sie,
+                'fotocopia_ci'=>$fotocopia_ci,
+                'solicitud'=>$solicitud,
+                'certificado_medico'=>$certificado_medico,
+                'informe_distrito'=>$inf_distrito,
+                'procedente'=>$procedente,
+                'observacion'=>$observacion,
+                'informe_dde'=>$nArcInfDep
+            ), JSON_UNESCAPED_UNICODE);
+
+            $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+            // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
+            $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+            
+            $tareaActual = '';
+            $tareaSiguienteSi = '';
+            $tareaSiguienteNo = '';
+            foreach ($tarea as $t) {
+                $tareaActual = $t['tarea_actual'];
+                if ($t['condicion'] == 'SI') {
+                    $tareaSiguienteSi = $t['tarea_siguiente'];
+                }
+                if ($t['condicion'] == 'NO') {
+                    $tareaSiguienteNo = $t['tarea_siguiente'];
+                }
+            }
+            $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                $this->session->get('userId'),
+                $this->session->get('roluser'),
+                $flujo_tipo,
+                $tareaActual,
+                'institucioneducativa',
+                $sie,
+                $observacion,
+                $procedente,
+                $idTramite,
+                $datosTr,
+                '',
+                $lugarTipo['lugarTipoIdDistrito']
+            );
+               
+            if ($enviarTramite['dato'] == false) {
+                $em->getConnection()->rollback();
+                if ($enviarTramite['msg'] == "") {
+                    $response->setStatusCode(500);
+                    return $response;
+                } else {
+                    $response->setStatusCode(200);
+                    $response->setData(array(
+                        'msg'=>$enviarTramite['msg'],
+                        'idTramite'=>"",
+                        'urlreporte'=>""
+                    ));
+                    return $response;
+                }
+
+            } else {
+                
+                 // VERIFICAR SI EL TRAMITE NO ES PROCEDENTE PARA REGISTRAR LA TAREA DE OBSERVACION
+                 if ($procedente == 'NO') {
+
+                    $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                        $this->session->get('userId'),
+                        $tareaSiguienteNo,
+                        $idTramite
+                    );
+
+                    $datosTr = json_encode(array(
+                        'sie'=>$sie,
+                        'finalizar'=>$finalizar,
+                        'observacion'=>$observacion
+                    ), JSON_UNESCAPED_UNICODE);
+
+                    $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                        $this->session->get('userId'),
+                        $this->session->get('roluser'),
+                        $flujo_tipo,
+                        $tareaSiguienteNo,
+                        'institucioneducativa',
+                        $sie,
+                        $observacion,
+                        $finalizar,
+                        $idTramite,
+                        $datosTr,
+                        '',
+                        $lugarTipo['lugarTipoIdDistrito']
+                    );
+                    if ($enviarTramite['dato'] == false) {
+                        $em->getConnection()->rollback();
+                        if ($enviarTramite['msg'] == "") {
+                            $response->setStatusCode(500);
+                            return $response;
+                        } else {
+                            $response->setStatusCode(200);
+                            $response->setData(array(
+                                'msg'=>$enviarTramite['msg'],
+                                'idTramite'=>"",
+                                'urlreporte'=>""
+                            ));
+                            return $response;
+                        }
+        
+                    } else {
+                        $msg = 'El trámite Nº '. $idTramite. ' fué finalizado. NO FUE CONSOLIDADO';
+                        $em->getConnection()->commit();
+                        $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$msg,
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                        return $response;
+                    
+                    }
+                }
+
+                /******ANTES DE REGISTRAR EL TRAMITE SE VERIFICA SI CUMPLE DATA GUARDAR SUSPENSION**********/
+                $query = $em->getConnection()->prepare("select * from estudiante_asignatura ea where ea.id = ". $est_asig_id." ;");
+                $query->execute();
+                $est_asignatura = $query->fetchAll();  
+                
+                $query = $em->getConnection()->prepare("select * from estudiante_nota en where en.estudiante_asignatura_id = ". $est_asig_id ." ;");
+                $query->execute();
+                $est_nota = $query->fetchAll();  
+                
+                $query = $em->getConnection()->prepare("select * from estudiante_inscripcion_humnistico_tecnico eiht where eiht.id = ". $ei_esp_id ." ;");
+                $query->execute();
+                $est_insc_carrera = $query->fetchAll();  
+                
+                if (count($est_asignatura)!=1 or count($est_nota)>4 or count( $est_insc_carrera)>1){
+                    $msj = 'Existe insconsistencia en la información solicitada, el trámite no puede continuar.';
+                    $response->setStatusCode(200);
+                    $response->setData(array(
+                        'msg'=>$msj,
+                        'idTramite'=>"",
+                        'urlreporte'=>""
+                    ));
+                    return $response;
+                } else {
+                    $datosBsf = json_encode(array(
+                        'estudiante_asignatura'=>$est_asignatura[0],
+                        'estudiante_nota'=>$est_nota,
+                        'estdiante_inscripcion_humanistico_tecnico'=>$est_insc_carrera[0]
+                    ), JSON_UNESCAPED_UNICODE);
+                }
+                
+                
+                /******PROCEDEMOS A GUARDAR LA INFORMACIÓN*******/
+
+                if ($procedente == 'SI') {
+                    $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                        $this->session->get('userId'),
+                        $tareaSiguienteSi,
+                        $idTramite
+                    );
+
+                    $datosTr = json_encode(array(
+                        'sie'=>$sie,
+                        'finalizar'=>$finalizar,
+                        'observacion'=>$observacion
+                    ), JSON_UNESCAPED_UNICODE);
+
+                    $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                        $this->session->get('userId'),
+                        $this->session->get('roluser'),
+                        $flujo_tipo,
+                        $tareaSiguienteSi,
+                        'institucioneducativa',
+                        $sie,
+                        $observacion,
+                        $finalizar,
+                        $idTramite,
+                        $datosTr,
+                        '',
+                        $lugarTipo['lugarTipoIdDistrito']
+                    );
+                    if ($enviarTramite['dato'] == false) {
+                        $em->getConnection()->rollback();
+                        if ($enviarTramite['msg'] == "") {
+                            $response->setStatusCode(500);
+                            return $response;
+                        } else {
+                            $response->setStatusCode(200);
+                            $response->setData(array(
+                                'msg'=>$enviarTramite['msg'],
+                                'idTramite'=>"",
+                                'urlreporte'=>""
+                            ));
+                            return $response;
+                        }
+        
+                    } else {
+                        try {
+                            foreach ($est_nota as $est_nota) {
+                                // Busca y elimina la nota
+                                $nota=$em->getRepository('SieAppWebBundle:EstudianteNota')->find($est_nota['id']);
+                                if ($nota) {
+                                    $em->remove($nota);
+                                }
+                            }
+
+                            $est_asignatura=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($est_asig_id);
+                            if ($est_asignatura) {
+                                $em->remove($est_asignatura);
+                            }
+                            
+                            $est_carrera=$em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->find($ei_esp_id);
+                            if ($est_carrera) {
+                                $em->remove($est_carrera);
+                            }
+                            $em->flush();
+                            // save nota
+                            $estSuspension = new BthSuspensionTte();
+                            $estSuspension->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionId));
+                            $estSuspension->setCodigoRude($codigoRude);
+                            $estSuspension->setDatos($datosBsf);
+                            $estSuspension->setTramiteId($idTramite);
+                            $estSuspension->setEstudianteInscripcionHumnisticoTecnicoId($ei_esp_id);
+                            $estSuspension->setEspecialidadTecnicoHumanisticoTipoId($est_insc_carrera[0]['especialidad_tecnico_humanistico_tipo_id']);
+                            $estSuspension->setFerchaRegistro(new \DateTime('now'));
+                            $em->persist($estSuspension);
+                            $em->flush();
+                            // save regularization
+                            $em->getConnection()->commit();
+                            $msg = 'El trámite Nº '. $idTramite. ' se ha consolidado satisfactoriamente. SE REGISTRO LA SUSPENSIÓN EXCEPCIONAL EN LA FORMACIÓN TTE.';
+                        } catch (Exception $e) {
+                            $msg = 'Se presento algunos problemas...';
+                            $em->getConnection()->rollback();
+                        }
+                    }
+                }
+
+                // $em->getConnection()->commit();
+                $response->setStatusCode(200);
+                $response->setData(array(
+                    'msg'=>$msg,
+                    'idTramite'=>"",
+                    'urlreporte'=>""
+                ));
+                return $response;
+            }
+
+        } catch (Exception $e) {
+            
+            $em->getConnection()->rollback();
+            $response->setStatusCode(500);
+            return $response;
+        }  
+    }
 
 }
