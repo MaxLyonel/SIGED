@@ -451,7 +451,9 @@
                            {# <span class="selected"></span> #}
                         </a>
                     </li>
-                    {% if app.session.get('roluser') in [7,8,9,10] %}
+
+                    {# SE QUITA SEGUN EL ANALISIS DE LA DGEA #}
+                    {# {% if app.session.get('roluser') in [7,8,9,10] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>
@@ -463,7 +465,8 @@
                                 <li><a href="{{ path('ie_acceso_internet_seguimiento')}}">Seguimiento</a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
+                    
                     {% if app.session.get('ie_id') == '80730796' %}
                     <li class="submenu">
                             <a href="javascript:void(0);">
@@ -522,9 +525,9 @@
                         </li>
                     {% endif %}
 
-
+                    {# SE QUITA SEGUN EL ANALISIS DE LA DGEA #}
                     {# Seguimiento de operativo de salud #}
-                    {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                    {# {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -535,7 +538,7 @@
                                 <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
 
                     {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
                         <li class="submenu">

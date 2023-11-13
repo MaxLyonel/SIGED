@@ -2114,7 +2114,7 @@ select idsae,idacr
                                             and cap.superior_especialidad_tipo_id=".$sestId."");
                 $queryFive->execute();
                 $modules = $queryFive->fetchAll();
-                
+
                 $contModulesTM = 0; 
                 foreach ($modules as $value) {
     
@@ -2197,7 +2197,7 @@ select idsae,idacr
             // }
     
             $modules = $this->findModulesBySest( $sestId );
-    
+
             $superiorMallaModuloPeriodo = $this->checkIsNewMallaModuloPeriodo( $modules );
 
             return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:listModulos.html.twig', array(
