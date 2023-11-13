@@ -76,9 +76,8 @@
                             <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} pendientes: <strong>{{asignaturas|length}}</strong></p>
                         </div>
 
-
-                        <div class="btn-group" style="width:650px; float:right;">
-
+                        {# AGREGAR LOS MODULOS UNO POR UNO --- VERSION ANTIGUA #}
+                        {# <div class="btn-group" style="width:650px; float:right;">
                             <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
                                 Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
                             </button>
@@ -91,7 +90,7 @@
                                     <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
                                 {% endif %}
                             </ul>
-                        </div>
+                        </div> #}
 
 
                         {# <div class="btn-group" style="width:650px; float:right;">
