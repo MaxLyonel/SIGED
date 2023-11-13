@@ -1,0 +1,43 @@
+tramite_bth_modificacion_carrera_tte_index:
+    path:     /bmcue/solicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:index }
+
+tramite_bth_modificacion_carrera_tte_busca_rude:
+    path:     /bmcue/buscarude
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:buscaRude }
+    options:
+         expose: true
+
+tramite_bth_modificacion_carrera_tte_envia_solicitud:
+    path:     /bmcue/enviasolicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:enviaSolitudUe }
+    options:
+         expose: true
+
+tramite_bth_modificacion_carrera_tte_vista_imprimir:
+    path:     /bmcue/imprimir
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:formularioVistaImprimir }
+
+tramite_bth_modificacion_carrera_tte_ddd_recibe:
+    path:     /bmcddd/recibe
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:dddRecibeVerifica }
+    options:
+         expose: true
+
+tramite_bth_modificacion_carrera_tte_ddd_envia_solicitud:
+    path:     /bmcddd/enviasolicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:dddEnviaSolitud }
+    options:
+         expose: true
+
+tramite_bth_modificacion_carrera_tte_dde_recibe:
+    path:     /bmcdde/recibe
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:ddeRecibeVerifica }
+    options:
+         expose: true
+
+tramite_bth_modificacion_carrera_tte_dde_consolida_solicitud:
+    path:     /bmcdde/consolida
+    defaults: { _controller: SieProcesosBundle:TramiteBthModificacionCarreraTTE:ddeConsolidaSolicitud }
+    options:
+         expose: true
