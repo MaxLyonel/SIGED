@@ -117,3 +117,6 @@ sie_procesos_tramite_reg_pre_bachillerato:
     resource: "@SieProcesosBundle/Resources/config/routing/regularizacionPreBachillerato.yml"
     prefix:   /sie/tramite/regularizacionPreBachillerato
 
+sie_procesos_tramite_bth_modificacion_carrera_tte:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteBthModificacionCarreraTTE.yml"
+    prefix:   /sie/tramite/tramiteBthModificacionCarreraTTE
