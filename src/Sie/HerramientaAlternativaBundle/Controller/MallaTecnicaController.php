@@ -2108,13 +2108,12 @@ select idsae,idacr
             $contModules = count($superiorModuloPeriodo);
 
             // if( $contModules == 0 ){
-                
                 $queryFive = $db->prepare("select * from ctr_altenativa_planes cap where 
                                             cap.superior_acreditacion_tipo=".$nivelId."
                                             and cap.superior_especialidad_tipo_id=".$sestId."");
                 $queryFive->execute();
                 $modules = $queryFive->fetchAll();
-
+                // dump($modules);die;
                 $contModulesTM = 0; 
                 foreach ($modules as $value) {
     
@@ -2125,7 +2124,7 @@ select idsae,idacr
                                                     and smt.modulo like '".$modulo."'");
                     $querySeven->execute();
                     $superiorModuloTipo = $querySeven->fetch();
-    
+                    // dump($superiorModuloTipo);die;
                     if(!$superiorModuloTipo){
                         $smtipo = new SuperiorModuloTipo();
                         $smtipo -> setModulo($modulo);
@@ -2193,6 +2192,7 @@ select idsae,idacr
                     }
 
                 }
+                // die;
     
             // }
     
