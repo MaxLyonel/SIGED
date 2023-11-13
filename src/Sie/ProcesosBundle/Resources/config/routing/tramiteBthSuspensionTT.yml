@@ -1,0 +1,43 @@
+tramite_bth_suspension_tt_index:
+    path:     /bsfue/solicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:index }
+
+tramite_bth_suspension_tt_busca_rude:
+    path:     /bsfue/buscarude
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:buscaRude }
+    options:
+         expose: true
+
+tramite_bth_suspension_tt_envia_solicitud:
+    path:     /bsfue/enviasolicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:enviaSolitudUe }
+    options:
+         expose: true
+
+tramite_bth_suspension_tt_vista_imprimir:
+    path:     /bsfue/imprimir
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:formularioVistaImprimir }
+
+tramite_bth_suspension_tt_ddd_recibe:
+    path:     /bsfddd/recibe
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:dddRecibeVerifica }
+    options:
+         expose: true
+
+tramite_bth_suspension_tt_ddd_envia_solicitud:
+    path:     /bsfddd/enviasolicitud
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:dddEnviaSolitud }
+    options:
+         expose: true
+
+tramite_bth_suspension_tt_dde_recibe:
+    path:     /bsfdde/recibe
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:ddeRecibeVerifica }
+    options:
+         expose: true
+
+tramite_bth_suspension_tt_dde_consolida_solicitud:
+    path:     /bsfdde/consolida
+    defaults: { _controller: SieProcesosBundle:TramiteBthSuspensionTT:ddeConsolidaSolicitud }
+    options:
+         expose: true

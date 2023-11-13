@@ -6,7 +6,7 @@
 
 {% block contentoption %}
     <div class="header-content">
-        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite BTH - Nivelación <span></span></h2>
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite BTH - Suspensión Excepcional en la Formación Técnica Tecnológica Especializada <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <!-- ... Resto del código ... -->
         </div><!-- /.breadcrumb-wrapper -->
@@ -20,11 +20,11 @@
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> Solicitud de Trámite de Nivelación Nº : <strong>{{tramitenro}}</strong></h3>
+                                        <h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> Solicitud de Trámite de Suspensión Excepcional en la Formación TTE Nº : <strong>{{tramitenro}}</strong></h3>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
-                                <div class="panel-body" id="tramite_formulario_dde">
+                                <div class="panel-body" id="tramite_formulario_ddd">
                                     <div class="panel panel-default">
                                         <div class="panel-body">
                                             <div class="row">
@@ -55,12 +55,12 @@
                                                             <div class="col-md-6">
                                                                 <div class="panel panel-default">
                                                                     <div class="panel-heading">
-                                                                        <h3 class="panel-title">Información BTH</h3>
+                                                                        <h3 class="panel-title">Información Bachillerato Técnico Humanístico</h3>
                                                                     </div>
                                                                     <div class="panel-body">
                                                                         <dl class="dl-horizontal">
-                                                                            <dt>Año de Escolaridad BTH:</dt>
-                                                                            <dd>{{ uebth[0].gradoTipo.id }} Secundaria Comunitaria Productiva (Implementado)</dd>
+                                                                            <dt>Año Habilitado:</dt>
+                                                                            <dd>{{ uebth[0].gradoTipo.id }}º Secundaria Comunitaria Productiva (Implementado)</dd>
                                                                             {% for uebthespecialidad in uebthespecialidad %}
                                                                                 <dt>Especialidad BTH {{loop.index}}:</dt>
                                                                                 <dd>{{ uebthespecialidad.especialidadTecnicoHumanisticoTipo.especialidad }}</dd>
@@ -69,10 +69,10 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-9 col-md-offset-3">
+                                                            <div class="col-md-6 col-md-offset-3">
                                                                 <div class="panel panel-default">
                                                                     <div class="panel-heading">
-                                                                        <h3 class="panel-title">Información del Estudiante y la Solicitud de Nivelación</h3>
+                                                                        <h3 class="panel-title">Información del Estudiante para la Suspención Excepcional en la Formación T.T.E.</h3>
                                                                     </div>
                                                                     <div class="panel-body">
                                                                         <dl class="dl-horizontal">
@@ -84,10 +84,10 @@
                                                                             <dd>{{data.fecha_nacimiento}}</span></dd>
                                                                             <dt>Carnet de Identidad :</dt>
                                                                             <dd>{{data.carnet_identidad}} {{data.complemento}}</dd>
-                                                                            <dt>Año de Escolaridad a Nivelar:</dt>
-                                                                            <dd><strong><h4>{{data.grado_nivelar}}º de Secundaria Comunitaria Productiva</h4></strong></dd>
-                                                                            <dt>Calificación de Nivelación:</dt>
-                                                                            <dd><strong><h4>{{data.calificacion}}</h4></strong></dd>
+                                                                            <dt>Año de Escolaridad:</dt>
+                                                                            <dd>{{data.grado_tipo_id}}º de {{data.nivel}}</dd>
+                                                                            <dt>Carrera:</dt>
+                                                                            <dd>{{data.especialidad}}</dd>
                                                                         </dl>
                                                                     </div>
                                                                 </div>
@@ -107,7 +107,7 @@
                                                                             <br>
                                                                             <ol>
                                                                                 <li>La Unidad Educativa debe pertenecer a Educación Regular.</li>
-                                                                                <li>La Unidad Educativa no puede realizar Nivelación</li>
+                                                                                <li>La Unidad Educativa no puede realizar el trámite de suspensión formación TTE</li>
                                                                                 <li>La Unidad Educativa no es Unidad Educativa PLENA - BTH</li>
                                                                             </ol>    
                                                                         </div>
@@ -123,35 +123,31 @@
                                                             <div class="panel-body">
                                                                 <div class="panel panel-info col-md-9">
                                                                     <div class="panel-heading">
-                                                                        <h2 class="panel-title"><i class="glyphicon glyphicon-cog"></i> Aprobación de Nivelación Departamental</h2>
+                                                                        <h2 class="panel-title"><i class="glyphicon glyphicon-cog"></i> Aprobación  Distrital de Suspención Excepcional en la Formación T.T.E.</h2>
                                                                     </div>
                                                                     <div class="panel-body">
                                                                         <div class="row">
-                                                                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                                                                                    <label>Marcar los todos los documentoa que fueron verificados:</label>
+                                                                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                                                                    <input type="hidden" name="idTramite" value="idTramite">
+                                                                                    
+                                                                                    <label>Marcar los requisitos presentados por la Unidad Educativa que fuerón verificados:</label>
                                                                                     <div class="requisitos">
                                                                                         <div class="checkbox">
                                                                                             <label>
                                                                                                 <input type="checkbox" name="checkCuaderno" id="checkCuaderno">
-                                                                                                Fotocopia Legalizada del registro pedagógico.
+                                                                                                Fotocopia de C.I. Estudiante.
                                                                                             </label>
                                                                                         </div>
                                                                                         <div class="checkbox">
                                                                                             <label>
                                                                                                 <input type="checkbox" name="checkNivelacion" id="checkNivelacion">
-                                                                                                Informe del proceso de Nivelación.
+                                                                                                Solicitud de Suspención Técnica Tecnológica Especializada.
                                                                                             </label>
                                                                                         </div>
                                                                                         <div class="checkbox">
                                                                                             <label>
                                                                                                 <input type="checkbox" name="checkSolicitud" id="checkSolicitud">
-                                                                                                Formulario de solicitud de Nivelación.
-                                                                                            </label>
-                                                                                        </div>
-                                                                                        <div class="checkbox">
-                                                                                            <label>
-                                                                                                <input type="checkbox" name="checkInformeDistrito" id="checkInformeDistrito">
-                                                                                                Informe técnico de la Dirección Distrital.
+                                                                                                Certificado Médico.
                                                                                             </label>
                                                                                         </div>
                                                                                     </div>
@@ -175,19 +171,19 @@
                                                                                     </div>
                                                                                     <div class="checkbox">
                                                                                         <label>
-                                                                                            <input type="checkbox" id="informe_departamento" name="informe_departamento" onclick="checkInformeDepartamentoChange();"> Adjuntar informe Dirección Departamental de Educación <i class="ayuda fa fa-question-circle" data-toggle="popover" data-html="true" data-placement="right" data-trigger="hover" data-content="Debe adjuntar un archivo pdf o una imagen, el tamaño del archivo debe ser menor a 2MB"></i>: 
+                                                                                            <input type="checkbox" id="informe_distrito" name="informe_distrito" onclick="checkInformeDistritoChange();"> Adjuntar informe Distrito <i class="ayuda fa fa-question-circle" data-toggle="popover" data-html="true" data-placement="right" data-trigger="hover" data-content="Debe adjuntar un archivo pdf o una imagen, el tamaño del archivo debe ser menor a 2MB"></i>: 
                                                                                         </label>
                                                                                     </div>
                                                                                     <div class="form-group">
-                                                                                        <label for="archivo_subir_informe_departamento" class="col-sm-3 control-label">Subir informe</label>
+                                                                                        <label for="archivo_subir_informe_director" class="col-sm-3 control-label">Subir informe</label>
                                                                                         <div class="col-sm-9">
                                                                                             <div class="input-group">
                                                                                                 <span class="input-group-btn">
-                                                                                                    <button class="btn btn-xs btn-warning" type="button" id="archivo_subir_informe_departamento_btn" onclick="document.getElementById('archivo_subir_informe_departamento').click();">
+                                                                                                    <button class="btn btn-xs btn-warning" type="button" id="archivo_subir_informe_distrito_btn" onclick="document.getElementById('archivo_subir_informe_distrito').click();">
                                                                                                         <i class="glyphicon glyphicon-upload"></i> Subir informe
                                                                                                     </button>
                                                                                                 </span>
-                                                                                                <input type="file" class="form-control-file" id="archivo_subir_informe_departamento" name="archivo_subir_informe_departamento" style="display: none;" onchange="handleInformeDepartamentoArchivoChange();">
+                                                                                                <input type="file" class="form-control-file" id="archivo_subir_informe_distrito" name="archivo_subir_informe_distrito" style="display: none;" onchange="handleInformeDistritoArchivoChange();">
                                                                                             </div>
                                                                                             <p class="file-name-informe"></p>
                                                                                         </div>
@@ -198,11 +194,9 @@
                                                                     <div class="panel-footer">
                                                                         <div class="form-group">
                                                                             <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-danger"> <i class="glyphicon glyphicon-remove"></i>  Cancelar</a>
-                                                                            <button type="button" class="btn btn-primary" onclick="tramiteEnviarDepartamento();"><i class="glyphicon glyphicon-save"></i> Guardar</button>
+                                                                            <button type="button" class="btn btn-primary" onclick="tramiteEnviarDistrito();"><i class="glyphicon glyphicon-send"></i> Enviar</button>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -220,9 +214,10 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    
     <script>
+
         var observacionInput = document.getElementById('observacion');
 
         // Agrega un controlador de eventos para el evento 'input'
@@ -230,20 +225,20 @@
             this.value = this.value.toUpperCase(); // Convierte el texto a mayúsculas
         });
 
-        document.getElementById('informe_departamento').disabled = true;
+        document.getElementById('informe_distrito').disabled = true;
 
-        function checkInformeDepartamentoChange() {
-            toggleUpload('archivo_subir_informe_departamento_btn');
-            document.getElementById('informe_departamento').disabled = true;
-            document.getElementById('archivo_subir_informe_departamento').disabled = false;
+        function checkInformeDistritoChange() {
+            toggleUpload('archivo_subir_informe_distrito_btn');
+            document.getElementById('informe_distrito').disabled = true;
+            document.getElementById('archivo_subir_informe_distrito').disabled = false;
         }
 
-        function handleInformeDepartamentoArchivoChange() {
-            toggleUpload('archivo_subir_informe_departamento_btn');
-            updateFileName('archivo_subir_informe_departamento', 'file-name-informe');
-            document.getElementById('informe_departamento').checked = true;
-            document.getElementById('informe_departamento').disabled = false;
-            document.getElementById('archivo_subir_informe_departamento').disabled = true;
+        function handleInformeDistritoArchivoChange() {
+            toggleUpload('archivo_subir_informe_distrito_btn');
+            updateFileName('archivo_subir_informe_distrito', 'file-name-informe');
+            document.getElementById('informe_distrito').checked = true;
+            document.getElementById('informe_distrito').disabled = false;
+            document.getElementById('archivo_subir_informe_distrito').disabled = true;
         }
 
         function toggleUpload(btnId) {
@@ -266,17 +261,15 @@
             }
         }
         
-        function tramiteEnviarDepartamento()
+        function tramiteEnviarDistrito()
         {
-            var archivoInformeDepartamento = document.getElementById('archivo_subir_informe_departamento');
-            var informeDepartamento = document.getElementById('informe_departamento');
+            var archivoInformeDistrito = document.getElementById('archivo_subir_informe_distrito');
+            var informeDistrito = document.getElementById('informe_distrito');
             // Obtener elementos de casilla de verificación
 
             var checkCuaderno = document.getElementById('checkCuaderno');
             var checkNivelacion = document.getElementById('checkNivelacion');
             var checkSolicitud = document.getElementById('checkSolicitud');
-            var checkInformeDistrito = document.getElementById('checkInformeDistrito');
-            
             var siProcede = document.getElementById('siProcede');
             var noProcede = document.getElementById('noProcede');
             var observacion = document.getElementById('observacion');
@@ -289,8 +282,8 @@
                 return;
             }
 
-            if (siProcede.checked && (!checkCuaderno.checked || !checkSolicitud.checked || !checkNivelacion.checked || !checkInformeDistrito.checked)) {
-                alert('Por favor, debe marcar los requisitos que cumpla el trámite. Si no cumple algún requisito debe indicar que no procede el trámite');
+            if (siProcede.checked && (!checkCuaderno.checked || !checkSolicitud.checked || !checkNivelacion.checked )) {
+                alert('Por favor, debe marcar los requisitos que cumplan el trámite. Si no cumple algun requisito debe indicar que no procede el trámite');
                 event.preventDefault(); // Detiene el envío del formulario
                 return;
             }
@@ -307,27 +300,27 @@
                 return;
             }
 
-            if (archivoInformeDepartamento.files.length === 0 || !informeDepartamento.checked || !validarArchivo(archivoInformeDepartamento)) {
-                alert('El informe del departamento no se subio o no es válido, por favor verifique.');
+            if (archivoInformeDistrito.files.length === 0 || !informeDistrito.checked || !validarArchivo(archivoInformeDistrito)) {
+                alert('El informe del distrito no se subio o no es valido, por favor verifique.');
                 event.preventDefault(); // Detiene el envío del formulario
                 return;
             }
             if (siProcede.checked){
-                msg = '¿Reviso todos los requisitos y documentacion del trámite de nivelacion - BTH Nº '+{{tramitenro}}+' para aprobar y consolidar la información?';
-                msg2 = 'Si acepta, se consolidará el trámite Correspondiente... ';
+                msg = '¿Reviso todos los requisitos y documentacion del trámite de Suspención Excepcional en la Formación T.T.E. Nº '+{{tramitenro}}+' para remitir a la Departamental?';
+                msg2 = 'Si acepta, se remitirá el trámite a la Dirección Departamental de Educación Correspondiente... ';
             }
             
             if (noProcede.checked){
-                msg = '¿Esta seguro que el trámite de nivelación - BTH Nº '+{{tramitenro}}+' no procede? se finalizará el trámite';
-                msg2 = 'Si acepta, el trámite finalizará y deberá comunicar al Distrito y Unidad Educativa correspondiente.. ';
+                msg = '¿Esta seguro que el trámite de Suspención Excepcional en la Formación T.T.E. Nº '+{{tramitenro}}+' no procede? se finalizará el trámite';
+                msg2 = 'Si acepta, el trámite finalizará y deberá comunicar a la Unidad Educativa.. ';
             }
             
-            var informeDep = archivoInformeDepartamento.files[0];// informe
+            var informeDis = archivoInformeDistrito.files[0];// informe
 
              Swal.fire({
                         
                             title: msg,
-                            text: "¿Verfico toda la documentación presentada por la Unidad Educativa y Distrto Educativo?",
+                            text: "¿Verfico toda la documentación presentada por la Unidad Educativa?",
                             type: 'question',
                             html: msg2,
                             showCancelButton: true,
@@ -340,18 +333,17 @@
                                 var formData = new FormData();
                                 formData.append('request_tramite_nro',{{tramitenro}});
                                 // Agregar archivos al objeto FormData
-                                formData.append('fileinformeDep', informeDep);
+                                formData.append('fileinformeDis', informeDis);
                                 // Agregar otros datos al objeto FormData
-                                formData.append('cuaderno', checkCuaderno.checked);
-                                formData.append('infNivelacion', checkNivelacion.checked);
-                                formData.append('solicitud', checkSolicitud.checked);
-                                formData.append('InformeDistrito', checkInformeDistrito.checked);
+                                formData.append('fotocopiaci', checkCuaderno.checked);
+                                formData.append('solicitud', checkNivelacion.checked);
+                                formData.append('certificadomedico', checkSolicitud.checked);
                                 formData.append('siprocede', siProcede.checked);
                                 formData.append('noprocede', noProcede.checked);
                                 formData.append('observacion', observacion.value);
                                 $.ajax({
                                     type: 'POST',
-                                    url: "{{ path('tramite_bth_nivelacion_departamento_consolida_solicitud') }}",
+                                    url: "{{ path('tramite_bth_suspension_tt_ddd_envia_solicitud') }}",
                                     data:formData,
                                     processData: false, // Evitar el procesamiento automático de datos
                                     contentType: false, // Evitar el encabezado "Content-Type"
@@ -360,13 +352,13 @@
                                         // $('#enviarTramite').prop('disabled', true);
                                     },
                                     success: function (data) {
-                                            $('#tramite_formulario_dde').hide();
+                                            $('#tramite_formulario_ddd').hide();
                                             Swal.fire(data.msg).then(function () {
                                                 window.location.href = "{{ path('wf_tramite_index', {'tipo': 2}) }}";
                                             });
                                     },
                                     error: function () {
-                                        $('#tramite_formulario_dde').show();
+                                        $('#tramite_formulario_ddd').show();
                                         console.log('Error en la solicitud.');
                                     },
                                     complete: function () {

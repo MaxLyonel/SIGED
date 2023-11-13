@@ -6,7 +6,7 @@
 
 {% block contentoption %}
     <div class="header-content">
-        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite BTH - Nivelación <span></span></h2>
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite BTH - Suspensión Excepcional en la Formación Técnica Tecnológica Especializada<span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <!-- ... Resto del código ... -->
         </div><!-- /.breadcrumb-wrapper -->
@@ -20,7 +20,7 @@
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> Solicitud Inicio de Trámite de Nivelación</h3>
+                                        <h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> Solicitud Inicio de Trámite de Suspencion Excepcional en la Formación T.T.E.</h3>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
@@ -104,7 +104,7 @@
                                                                             <br>
                                                                             <ol>
                                                                                 <li>La Unidad Educativa debe pertenecer a Educación Regular.</li>
-                                                                                <li>La Unidad Educativa no puede realizar Nivelación</li>
+                                                                                <li>La Unidad Educativa no puede realizar el Trámite de Suspensión en la Formación TT</li>
                                                                                 <li>La Unidad Educativa no es Unidad Educativa PLENA - BTH</li>
                                                                             </ol>    
                                                                         </div>
@@ -122,17 +122,17 @@
                                                                 <span id="mensaje_txt"></span>
                                                             </div>
                                                         </div>
-                                                        <div id="formularioNivelacion">
+                                                        <div id="formularioSuspension">
                                                             <div class="panel-body">
                                                                 <div class="panel panel-info col-md-12">
                                                                     <div class="panel-heading">
-                                                                        <h2 class="panel-title"><i class="glyphicon glyphicon-cog"></i> Formulario de Nivelación</h2>
+                                                                        <h2 class="panel-title"><i class="glyphicon glyphicon-cog"></i> Formulario de Inicio Trámite</h2>
                                                                     </div>
                                                                     <div class="panel-body">
                                                                         <div class="col-md-6 col-md-offset-3">
                                                                             <div class="panel panel-default">
                                                                                 <div class="panel-heading">
-                                                                                    <h3 class="panel-title">Información Estudiante / Inscripción</h3>
+                                                                                    <h3 class="panel-title">Información para la Suspención Excepcional en la Formación T.T.E.</h3>
                                                                                 </div>
                                                                                 <div class="panel-body">
                                                                                     <dl class="dl-horizontal">
@@ -146,31 +146,13 @@
                                                                                         <dd><span id="carnet"></span></dd>
                                                                                         <dt>Año de Escolaridad:</dt>
                                                                                         <dd><span id="grado"></span></dd>
+                                                                                        <dt>Carrera:</dt>
+                                                                                        <dd><span id="carrera"></span></dd>
                                                                                     </dl>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6 col-md-offset-3">
-                                                                            {# <form class="form-horizontal"> #}
-                                                                                <div class="panel">
-                                                                                    <div class="panel-heading">
-                                                                                        <h3 class="panel-title">Información para la Nivelación</h3>
-                                                                                    <div class="panel-heading">
-                                                                                    <div class="panel-body">
-                                                                                        <div class="form-group">
-                                                                                            <label for="nivel" class="col-sm-6 control-label">Solicitar Nivelación en:</label>
-                                                                                            <div class="col-sm-6">
-                                                                                                <h3><span id="gradoNivelar"></span></h3>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label for="calificacion" class="col-sm-6 control-label">Calificación :</label>
-                                                                                            <div class="col-sm-3">
-                                                                                                <input type="number" class="form-control" id="calificacion" name="calificacion" placeholder="Ingrese la calificación" min="1" max="100" >
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
                                                                                 <div class="panel">
                                                                                     <div class="panel-heading">
                                                                                         <h3 class="panel-title">Requisitos del Trámite</h3>
@@ -184,7 +166,7 @@
                                                                                         
                                                                                         <div class="checkbox">
                                                                                             <label>
-                                                                                                <input type="checkbox" id="memorandum_designacion" name="memorandum_designacion" onclick="checkMemorandumDesignacionChange();"> Memorándum de designación del responsable de nivelación:
+                                                                                                <input type="checkbox" id="memorandum_designacion" name="memorandum_designacion" onclick="checkMemorandumDesignacionChange();"> Solicitud de Suspención Técnica Tecnológica Especializada:
                                                                                             </label>
                                                                                         </div>
                                                                                         
@@ -194,7 +176,7 @@
                                                                                                 <div class="input-group">
                                                                                                     <span class="input-group-btn">
                                                                                                         <button class="btn btn-xs btn-warning" type="button" id="archivo_subir_btn" onclick="document.getElementById('archivo_subir').click();">
-                                                                                                            <i class="glyphicon glyphicon-upload"></i> Subir memorandum
+                                                                                                            <i class="glyphicon glyphicon-upload"></i> Subir solicitud
                                                                                                         </button>
                                                                                                     </span>
                                                                                                     <input type="file" class="form-control-file" id="archivo_subir" name="archivo_subir" style="display: none;" onchange="handleArchivoSubirChange();">
@@ -204,16 +186,16 @@
                                                                                         </div>
                                                                                         <div class="checkbox">
                                                                                             <label>
-                                                                                                <input type="checkbox" id="informe_director" name="informe_director" onclick="checkInformeDirectorChange();"> Informe de Director/a U.E.:
+                                                                                                <input type="checkbox" id="informe_director" name="informe_director" onclick="checkInformeDirectorChange();"> Certificado Médico:
                                                                                             </label>
                                                                                         </div>
                                                                                         <div class="form-group">
-                                                                                            <label for="archivo_subir_informe_director" class="col-sm-3 control-label">Subir informe</label>
+                                                                                            <label for="archivo_subir_informe_director" class="col-sm-3 control-label">Subir certificado</label>
                                                                                             <div class="col-sm-9">
                                                                                                 <div class="input-group">
                                                                                                     <span class="input-group-btn">
                                                                                                         <button class="btn btn-xs btn-warning" type="button" id="archivo_subir_informe_director_btn" onclick="document.getElementById('archivo_subir_informe_director').click();">
-                                                                                                            <i class="glyphicon glyphicon-upload"></i> Subir informe
+                                                                                                            <i class="glyphicon glyphicon-upload"></i> Subir certificado
                                                                                                         </button>
                                                                                                     </span>
                                                                                                     <input type="file" class="form-control-file" id="archivo_subir_informe_director" name="archivo_subir_informe_director" style="display: none;" onchange="handleInformeDirectorArchivoChange();">
@@ -263,10 +245,10 @@
         document.getElementById('memorandum_designacion').disabled = true;
         document.getElementById('informe_director').disabled = true;
         var codigoRude;
-        var gradoNivelar;
+        // var gradoNivelar;
         var sie;
         $(document).ready(function() {
-            $('#formularioNivelacion').hide();
+            $('#formularioSuspension').hide();
             $('#archivo_subir').change(function() {
                 var antval = $(this).val();
                 if (!validarArchivo(this)){
@@ -340,24 +322,21 @@
                
         function buscarRude() {
             codigoRude = $('#codigoRude').val();
-            var formularioNivelacion = document.getElementById('formularioNivelacion');
+            var formularioSuspension = document.getElementById('formularioSuspension');
             // console.log(codigoRude);
             if (codigoRude.length < 13) {
                 alert('Registre un código RUDE valido');
             } else {
                 $.ajax({
                     type: 'POST',
-                    url: Routing.generate('tramite_bth_nivelacion_busca_rude'),
+                    url: Routing.generate('tramite_bth_suspension_tt_busca_rude'),
                     data: { rude: codigoRude, flujoTipo: {{flujo_id}}},
                     beforeSend:function(){
-					    formularioNivelacion.style.display = 'none';
+					    formularioSuspension.style.display = 'none';
                         $('#mensaje_alert').hide();
-                        // $('#datosestudiante').hide();
 				    },
                     success: function (data) 
                     {
-                        // console.log(data);
-                        // console.log(data.data.codigo_rude);
                         if (data.msj !== ''){
                             $('#mensaje_txt').text(data.msj);
                             $('#mensaje_alert').show();
@@ -373,14 +352,10 @@
                                 carnetIdentidad += ' ' + ndata.complemento;
                             }
                             $('#carnet').text(carnetIdentidad);
-                            $('#grado').text(ndata.grado_tipo_id);
-                            gradoNivelar = data.gradoniv;
-                            var gradoNivelartxt = data.gradoniv;
-                            if (data.gradoniv !== null) {
-                                gradoNivelartxt += 'º año de Secundaria Comunitaria Productiva';
-                            }
-                            $('#gradoNivelar').text(gradoNivelartxt);
-                            formularioNivelacion.style.display = 'block';
+                            gradonivel = ndata.grado_tipo_id + 'º año de '+ ndata.nivel
+                            $('#grado').text(gradonivel);
+                            $('#carrera').text(ndata.especialidad);
+                            formularioSuspension.style.display = 'block';
                         }
                     },
                     error: function (xhr, status, error) {
@@ -403,18 +378,18 @@
             var informeDirector = document.getElementById('informe_director');
         
             // Obtener campo de calificación
-            var calificacion = document.getElementById('calificacion');
+            // var calificacion = document.getElementById('calificacion');
             
-            if ((calificacion.value.trim() === '') || (calificacion.value < 51) || (calificacion.value > 100)){
-                alert('Por favor, registre una calificación entre 51 y 100.');
-                return false;
-            }
+            // if ((calificacion.value.trim() === '') || (calificacion.value < 51) || (calificacion.value > 100)){
+            //     alert('Por favor, registre una calificación entre 51 y 100.');
+            //     return false;
+            // }
             if (archivoSubir.files.length === 0 || !memorandumDesignacion.checked ||!validarArchivo(archivoSubir)) {
-                alert('El memoradum no se subio o no es valido, por favor verifique.');
+                alert('La solicitud no se subio o no es valido, por favor verifique.');
                 return false; // Detener el envío del formulario si el archivo no es válido
             }
             if (archivoInformeDirector.files.length === 0 || !informeDirector.checked || !validarArchivo(archivoInformeDirector)) {
-                alert('El informe del director no se subio o no es valido, por favor verifique.');
+                alert('El certificado médico no se subio o no es valido, por favor verifique.');
                 return false; // Detener el envío del formulario si el archivo no es válido
             }
             var memorandum = archivoSubir.files[0];// memorandum
@@ -425,8 +400,8 @@
                 return false; // Evita que el formulario se envíe
             } else {
                 Swal.fire({
-                            title: '¿Está seguro de enviar la solicitud de Trámite Nivelación BTH - '+gradoNivelar+'º de Secundaria?',
-                            text: "¿Adjunto todos los requisitos para el tramite para la solicitar la nivelacion en de Secundaria Comunitaria Productiva?",
+                            title: '¿Está seguro de enviar la solicitud de Trámite Suspención TTE?',
+                            text: "¿Adjunto todos los requisitos para el tramite para la solicitar la suspención TTE?",
                             type: 'question',
                             html:
                                 'Si acepta, se remitira el trámite al Distrito correspondiente... ',
@@ -441,17 +416,17 @@
                                 formData.append('request_flujo_id',{{flujo_id}});
 			                    formData.append('request_flujo_tipo','{{flujo_tipo}}');
                                 // Agregar archivos al objeto FormData
-                                formData.append('filememo', memorandum);
-                                formData.append('fileinformeDir', informeDir);
+                                formData.append('filesolicitud', memorandum);
+                                formData.append('filecertificado', informeDir);
                                 
                                 // Agregar otros datos al objeto FormData
                                 formData.append('codigoRude', codigoRude);
-                                formData.append('gradoNivelar', gradoNivelar);
-                                formData.append('calificacion', calificacion.value);
+                                // formData.append('gradoNivelar', gradoNivelar);
+                                // formData.append('calificacion', calificacion.value);
                                 formData.append('sie', sie);
                                 $.ajax({
                                     type: 'POST',
-                                    url: "{{ path('tramite_bth_nivelacion_envia_solicitud') }}",
+                                    url: "{{ path('tramite_bth_suspension_tt_envia_solicitud') }}",
                                     data:formData,
                                     processData: false, // Evitar el procesamiento automático de datos
                                     contentType: false, // Evitar el encabezado "Content-Type"
@@ -463,7 +438,7 @@
                                         
                                         if(data.msg==='')
                                         {   
-                                            $('#formularioNivelacion').hide();
+                                            $('#formularioSuspension').hide();
                                             $('#solicitudTramite').hide();
                                             var msg = 'El trámite Nº '+data.idTramite+' se envió correctamente a Distrito, descargue formulario solicitud.';
                                             Swal.fire(msg);
