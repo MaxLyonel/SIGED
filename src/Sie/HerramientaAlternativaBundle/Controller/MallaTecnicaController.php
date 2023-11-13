@@ -2144,7 +2144,7 @@ select idsae,idacr
                                                     and smp2.institucioneducativa_periodo_id=".$superiorInstitucioneducativaPeriodo."");
                     $queryEight->execute();
                     $superiorModuloPeriodo = $queryEight->fetch();
-                    
+                    // dump($superiorModuloPeriodo);die;
                     if( !$superiorModuloPeriodo ){
                         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                         $smperiodo = new SuperiorModuloPeriodo();
