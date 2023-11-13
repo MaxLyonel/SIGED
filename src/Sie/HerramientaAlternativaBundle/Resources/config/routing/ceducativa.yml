@@ -1,6 +1,6 @@
 herramienta_ceducativa_index:
     path:     /
-    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:index}  
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:index}
          
 sie_alt_ges_sub_sem_open:
     path:     /{teid}/{gestion}/{subcea}/{semestre}/{idiesuc}/gessubsemopen/
@@ -53,7 +53,7 @@ herramienta_ceducativa_distrito_listaceas:
 
 herramienta_ceducativa_seleccionar_cea:
     path:     /seleccionarcea/
-    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:seleccionarcea} 
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:seleccionarcea}
 
 herramienta_ceducativa_registro_jurisdiccion_subcea:
     path:     /registro/jurisdiccion/subcea

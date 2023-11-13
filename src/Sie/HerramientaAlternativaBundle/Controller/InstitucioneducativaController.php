@@ -35,6 +35,8 @@ class InstitucioneducativaController extends Controller {
      */
     public function indexAction(Request $request) {
         //get the session's values
+        // dump($request->get('gestion'));die;
+
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         //validation if the user is logged
@@ -184,7 +186,7 @@ class InstitucioneducativaController extends Controller {
     }
 
     private function editSucursalForm($sucursal) {
-        
+
         $institucion = $this->session->get('ie_id');
 
         $em = $this->getDoctrine()->getManager();
@@ -195,8 +197,13 @@ class InstitucioneducativaController extends Controller {
         $turnos = $query->getResult();
         $turnosArray = array();
         foreach ($turnos as $t) {
-            $turnosArray[$t->getId()] = $t->getTurno();
+            // CHANGED
+            // dump($t->getGestionTipo());
+            if( $t->getId() !== 0 ){
+                $turnosArray[$t->getId()] = $t->getTurno();
+            }
         }
+        // die;
         
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_ceducativa_update'))
@@ -421,6 +428,7 @@ class InstitucioneducativaController extends Controller {
    
 
     public function gessubsemopenAction(Request $request, $teid, $gestion, $subcea, $semestre, $idiesuc) {
+
         $sesion = $request->getSession();
         $sesion->set('ie_gestion', $gestion);
         $sesion->set('ie_subcea', $subcea);
@@ -459,7 +467,7 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_per_nom', 'Segundo Semestre');
                 break;
         }
-        //dump($teid);die;
+        // dump($teid);die;
         $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($idiesuc);
         
         vuelve:
@@ -628,7 +636,7 @@ class InstitucioneducativaController extends Controller {
                         $lugarestipoid = $p["get_ie_distrito_id"];           
                     }
                     $lugarids = explode(",", $lugarestipoid);
-    //                $dep_id = substr($lugarids[1],0,strlen($lugarids[1])-1);
+        //                $dep_id = substr($lugarids[1],0,strlen($lugarids[1])-1);
                     $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));                
                     $dis_cod = $em->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id);
                     $iest->setDistritoCod($dis_cod->getCodigo());
@@ -644,7 +652,6 @@ class InstitucioneducativaController extends Controller {
                 //return $this->redirectToRoute('principal_web');
                 break;
             case 99: //SOLO LECTURA
-                //dump(date('Y-m-d'));die;
                 $sesion->set('ie_per_estado', '0');
                 $sesion->set('ie_operativo', '!En modo vista!');
                 break;
@@ -720,7 +727,7 @@ class InstitucioneducativaController extends Controller {
             $sesion->set('ie_operativo', '!En operativo de regularización!');
         }*/
 
-        return $this->render($this->session->get('pathSystem') . ':Principal:menuprincipal.html.twig',array('estadoOperativo'=>$estadoOperativo,'rutaObservaciones'=>$rutaObservaciones));
+        return $this->render($this->session->get('pathSystem') . ':Principal:menuprincipal.html.twig',array('estadoOperativo'=>$estadoOperativo,'rutaObservaciones'=>$rutaObservaciones,'gestion'=>$request->get('gestion') ));
     }
 
     public function verificarOperativo($request) {
@@ -1891,7 +1898,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         ));
     }
     
-    public function buscarceaAction(Request $request) {        
+    public function buscarceaAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         /*
@@ -2021,6 +2028,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     $semestre = $semestreArray;
                 }
                 $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo1($ie_id,$gestion,$subcea,$semestre);
+                // dump($iesubsea[0]['teid']);die;
+                $this->session->set('tramiteEstadoId', $iesubsea[0]['teid']);
+
                 return $this->render($this->session->get('pathSystem') . ':Centroeducativo:tablahistorial.html.twig', array(
                     'iesubsea' => $iesubsea,
                 ));
@@ -2280,7 +2290,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 ->add('canton', 'choice', array('label' => 'Canton', 'empty_value' => 'Seleccione Canton', 'choices' => $entidadCanton, 'data' => $cantonId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaLocalidad(this.value)')))
                 ->add('localidad', 'choice', array('label' => 'Localidad', 'empty_value' => 'Seleccione Localidad', 'choices' => $entidadLocalidad, 'data' => $localidadId, 'attr' => array('class' => 'form-control', 'required' => true)))
                 ->add('distrito', 'choice', array('label' => 'Distrito Educativo', 'empty_value' => 'Seleccione Distrito', 'choices' => $entidadDistrito, 'data' => $distritoId, 'attr' => array('class' => 'form-control', 'required' => true)))
-                ->add('subcea', 'text', array('label' => 'Nombre Sub Centro', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Nombre del Sub Centro', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('subcea', 'text', array('label' => 'Nombre SubCentro', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Nombre del Sub Centro', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('direccion', 'text', array('label' => 'Direccion', 'attr' => array('value' => $direccion, 'class' => 'form-control', 'placeholder' => 'Dirección', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('zona', 'text', array('label' => 'Zona', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Zona', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('crear', 'submit', array('label' => 'Crear Sucursal', 'attr' => array('class' => 'btn btn-primary')))
@@ -2786,7 +2796,10 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
         return $form;
     }
-
+    ///////////////////----------------------------------------->
+    ///////////////////----------------------------------------->
+    ///////////////////----------------------------------------->
+    ///////////////////----------------------------------------->
     public function historialceasForm($rol,$ie_id)
     {   
         $form = $this->createFormBuilder();

@@ -49,7 +49,7 @@ class EstudianteRudealController extends Controller {
     }
 
     public function indexAction(Request $request) {
-
+        
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
@@ -71,29 +71,65 @@ class EstudianteRudealController extends Controller {
         $estudiante = $inscripcion->getEstudiante();
         // Validacion de datos del estudiante
         // if()
-
+        // FIND RUDE CURRENT GESTION
         $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array(
             'estudianteInscripcion'=>$inscripcion->getId()
         ));
-
-
+        // dump($inscripcion->getId());die;
         if(!is_object($rude)){
-            /**
-             * OBTENEMOS UN REGISTRO ANTERIOR
-             */
-            $rudeAnterior = $em->createQueryBuilder()
-                        ->select('r')
-                        ->from('SieAppWebBundle:Rude','r')
-                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','r.estudianteInscripcion = ei.id')
-                        ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
-                        ->where('e.id = :estudiante')
-                        ->setParameter('estudiante', $estudiante->getId())
-                        ->setMaxResults(1)
-                        ->orderBy('r.id','desc')
-                        ->getQuery()
-                        ->getResult();
 
             try {
+                /**
+                 * OBTENEMOS UN REGISTRO ANTERIOR
+                 */
+                // dump("NO RUDEEEEEEEEEEEEEEEEEEEEEEEEEEE");die;
+                // $rudeAnterior = $em->createQueryBuilder()
+                //             ->select('r')
+                //             ->from('SieAppWebBundle:Rude','r')
+                //             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','r.estudianteInscripcion = ei.id')
+                //             ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                //             ->where('e.id = :estudiante')
+                //             ->setParameter('estudiante', $estudiante->getId())
+                //             //->setMaxResults(1)
+                //             ->orderBy('r.id','desc')
+                //             ->getQuery()
+                //             ->getResult();
+
+                // SOLO DE HASTA 3 PERIODOS O UN YEAR Y MEDIO DESDE LA ULTIMA INSCRIPCION
+
+                $db = $em->getConnection();
+                $query = "select ei.id, ic.gestion_tipo_id, r.id as rude_id from estudiante_inscripcion ei 
+                            inner join institucioneducativa_curso ic on ic.id=ei.institucioneducativa_curso_id
+                            inner join estudiante e on ei.estudiante_id=e.id
+                            left join rude r on r.estudiante_inscripcion_id=ei.id 
+                            where e.codigo_rude='".$estudiante->getCodigoRude()."'
+                            group by 1,2,3
+                            order by ei.id desc
+                            limit 3";
+                $stmt = $db->prepare($query);
+                $params = array();
+                $stmt->execute($params);
+                $results = $stmt->fetchAll();
+                
+                $rudeAnterior = [];
+                if( $results ){
+                    
+                    foreach( $results as $value ){
+                        if( $value['rude_id'] !== null ){
+                            $rudeAnterior = $em->createQueryBuilder()
+                                ->select('r')
+                                ->from('SieAppWebBundle:Rude','r')
+                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','r.estudianteInscripcion = ei.id')
+                                ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                                ->where('r.id = :rude_id')
+                                ->setParameter('rude_id', $value['rude_id'])
+                                ->getQuery()
+                                ->getResult();
+                        }
+                    }
+
+                }
+
                 if(count($rudeAnterior) == 1){
                     
                     $rudeAnterior = $rudeAnterior[0];

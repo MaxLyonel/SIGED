@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\SuperiorMallaModuloPeriodo:
+    type: entity
+    table: superior_malla_modulo_periodo
+    indexes:
+        IDX_EFAD79E88166BE86:
+            columns:
+                - superior_modulo_periodo_id
+        IDX_EFAD79E8D26A1FD0:
+            columns:
+                - superior_periodo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        superiorModuloPeriodo:
+            targetEntity: SuperiorModuloPeriodo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_modulo_periodo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorPeriodoTipo:
+            targetEntity: SuperiorPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

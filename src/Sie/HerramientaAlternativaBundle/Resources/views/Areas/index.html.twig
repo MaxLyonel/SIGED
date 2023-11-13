@@ -27,13 +27,22 @@
         width: 300px;
         background-color: #6E89FF;
     }
+    .m-t-r{
+        margin-top: revert !important;
+    }
+    .text-pendient{
+        margin-top: 5px;
+        font-size: 0.9rem;
+    }
 </style>
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="panel panel-danger">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Adición y Eliminación de Áreas / Asignación de Maestros</h3>
+                    <h3 class="panel-title">
+                    Adición y Eliminación de{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %}/ Asignación de Maestros
+                    </h3>
                 </div>
                 <div class="pull-right">
                     <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
@@ -47,7 +56,7 @@
                         <ul class="clearfix notification-meta">
                             <li class="pull-left notification-sender"><span><a href="javascript:void()">{{nivelCurso}}</a></span></li>
                             <li class="pull-right notification-time">
-                                
+
                             </li>
                         </ul>
                         <p>{{gradoParaleloCurso}}</p>
@@ -59,10 +68,19 @@
                                 Agregar M.I.E.
                             </button>
                         {% endif %}
+                        
+                        <div style="float:right">
+                            <button onclick="addAreaAll('{{infoUe}}', '{{tieneCursoOferta}}', '{{asignaturas|length}}')" class="btn btn-primary">
+                                Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %}
+                            </button>
+                            <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} pendientes: <strong>{{asignaturas|length}}</strong></p>
+                        </div>
+
+
                         <div class="btn-group" style="width:650px; float:right;">
 
                             <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
-                                Agregar Área <span class="caret"></span>
+                                Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
                                 {% if asignaturas|length > 0 %}
@@ -74,9 +92,27 @@
                                 {% endif %}
                             </ul>
                         </div>
-                    {% endif %}    
+
+
+                        {# <div class="btn-group" style="width:650px; float:right;">
+
+                            <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
+                                Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
+                                {% if asignaturas|length > 0 %}
+                                    {% for a in asignaturas %}
+                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
+                                        <li><button class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                                {% endif %}
+                            </ul>
+                        </div> #}
+                    {% endif %}
                     <br>
-                <h4>Áreas actuales del curso</h4>
+                <h4 class="m-t-r">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %}actuales del curso</h4>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -131,7 +167,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}')"><i class="fa fa-users text-lilac"></i></button>
+                                        <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}', '{{ app.session.get('ie_per_estado') }}' )"><i class="fa fa-users text-lilac"></i></button>
                                         <div class="arrow-before" style="display:none; margin-left:10px;" id=""></div><div class="arrow-after" style="display:none;margin-left:10px;" id=""></div>
                                         <div id="{{co.iecoid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
                                         </div>
@@ -141,7 +177,7 @@
                                             {% if (primaria == true and co.codigo == '408') or primaria == false %}
                                                 <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
                                             {% endif %}
-                                        </td> 
+                                        </td>
                                     {% endif %}
                                 </tr>
                             {% endfor %}
@@ -159,17 +195,23 @@
         </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
+
     var newArea = function(ida, infoUe){
-    
+
         if(confirm('¿Realmente desea adicionar el área?\nPresione aceptar para confirmar.')){
             $.ajax({
                 type: 'post',
                 data: ({ida:ida, infoUe: infoUe}),
                 url: "{{ path('herramienta_alter_areas_add') }}",
+                //url: "{{ path('herramienta_alter_add_areas_all') }}",
                 beforeSend: function () {
-                    $('#mensajeModal').empty();
-                    $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Agregando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+                    //$('#mensajeModal').empty();
+                    //$('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Agregando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
                 },
                 success: function (data) {
                     $('#mensajeModal').empty();
@@ -187,6 +229,79 @@
                 }
             });
         }
+    };
+    var addAreaAll = function( infoUe, tieneCursoOferta, size ){
+        console.log('SIZE', size);
+
+        if( size == 0 ){
+            Swal.fire('Atención', 'No hay modulo para agregar', 'info');
+            return;
+        } 
+
+        if( tieneCursoOferta == false ){
+            Swal.fire('Atención', 'El curso no tiene módulos asignados, seleccione la malla', 'warning');
+            return;
+        }
+
+        Swal.fire({
+        title: '¿Esta seguro?',
+        text: 'Esta intentando adicionar el o los modulo(s), confirme su acción',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
+        }).then((result) => {
+            if( result.isConfirmed ){
+
+                Swal.fire({
+                    title: 'Agregando...',
+                    html: 'Espere un momento porfavor',
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                });
+
+                $.ajax({
+                    type: 'post',
+                    data: ({infoUe: infoUe}),
+                    //url: "{{ path('herramienta_alter_areas_add') }}",
+                    url: "{{ path('herramienta_alter_add_areas_all') }}",
+                    beforeSend: function () {
+                        $('#mensajeModal').empty();
+                        $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Agregando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+                    },
+                    success: function (data) {
+                        $('#mensajeModal').empty();
+                        $('#modal').empty();
+                        $('#modal').append(data);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Correcto',
+                            text: 'Se agregaron exitosamente',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    },
+                    statusCode: {
+                        500: function () {
+                            Swal.fire('Opps', 'Ocurrio un error al agregar, intente de nuevo', 'warning');
+                            $('#mensajeModal').empty();
+                            //$('#mensajeModal').append("<div class='alert alert-danger'>Ocurrió un error al agregar el área.</div>");
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }
+        })
+
     };
 
     var guardarMalla = function(infoUe){
@@ -264,7 +379,7 @@
                     $('#modal').append(data);
                 },
                 statusCode: {
-                    500: function () {  
+                    500: function () {
                         $('#mensajeModal').empty();
                         $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrió un error al eliminar el área.</div>");
                         //setTimeout("$('#mensajeModal').empty()",5000);
@@ -277,41 +392,46 @@
         }
     };
 
-    var addpop = function(idco){
-        if ($('#'+idco).is(':hidden')){
-            $.ajax({
-                type: 'post',
-                data: ({idco: idco}),
-                url: "{{ path('herramienta_alter_areas_maestros') }}",
-                beforeSend: function () {
-                    $('.divMaestros').hide();
-                    $('.arrow-before').hide();
-                    $('.arrow-after').hide();
-                    $("#"+idco).empty();
-                    $('#before'+idco).fadeIn();
-                    $('#after'+idco).fadeIn();
-                    $('#'+idco).fadeIn();
-                    $('#'+idco).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando maestros<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
-                },
-                success: function (data) {
-                    $("#"+idco).empty();
-                    $("#"+idco).append(data);
-                    $('.chosen-select').chosen({allow_single_deselect: false});
-                    $('#'+idco).fadeIn();
-                },
-                statusCode: {
-                    500: function () {
-
+    var addpop = function(idco, infoUe, ie_estado){
+        console.log('estado de la ue: ', ie_estado);
+        if( ie_estado !== 2 ){
+            if ($('#'+idco).is(':hidden')){
+                $.ajax({
+                    type: 'post',
+                    data: ({idco: idco}),
+                    url: "{{ path('herramienta_alter_areas_maestros') }}",
+                    beforeSend: function () {
+                        $('.divMaestros').hide();
+                        $('.arrow-before').hide();
+                        $('.arrow-after').hide();
+                        $("#"+idco).empty();
+                        $('#before'+idco).fadeIn();
+                        $('#after'+idco).fadeIn();
+                        $('#'+idco).fadeIn();
+                        $('#'+idco).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando maestros<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
                     },
-                    404: function () {
+                    success: function (data) {
+                        $("#"+idco).empty();
+                        $("#"+idco).append(data);
+                        $('.chosen-select').chosen({allow_single_deselect: false});
+                        $('#'+idco).fadeIn();
+                    },
+                    statusCode: {
+                        500: function () {
 
+                        },
+                        404: function () {
+
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                $('#'+idco).fadeOut();
+                $('#before'+idco).fadeOut();
+                $('#after'+idco).fadeOut();
+            }
         }else{
-            $('#'+idco).fadeOut();
-            $('#before'+idco).fadeOut();
-            $('#after'+idco).fadeOut();
+            Swal.fire('Atencion', 'Solo puede asignar maestros en la etapa de inscripcion', 'info');
         }
     };
 
@@ -335,7 +455,7 @@
                 $('#'+idco).empty();
                 $('#'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios guardados</div>");
                 setTimeout("cerrarMaestros('"+idco+"')",2000)
-                
+
             },
             statusCode: {
                 500: function () {
@@ -355,7 +475,7 @@
             && (k != 13) //ENTER
             && (k != 8) //retroceso
             && (k != 9) //tab
-        )            
+        )
         return false;
     };
 
@@ -425,3 +545,5 @@
         $('#emergente_after_'+smpid).fadeOut();
     };
 </script>
+
+{% endblock %}

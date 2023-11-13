@@ -16,7 +16,7 @@
             <!--/ END META SECTION -->
 
             <!-- START @FAVICONS -->
-            
+
             <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
             <!--/ END FAVICONS -->
 
@@ -48,25 +48,25 @@
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.css')}}" rel="stylesheet">#}
             {#NO EXSTE ESTE ARCHIVO#}
             {#<link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
-            
+
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/dropzone/downloads/css/dropzone.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jvectormap/jquery-jvectormap.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/css/horizBarChart.css')}}" rel="stylesheet">#}
-                                      
+
             <!--/ END PAGE LEVEL STYLES -->
 
             <!-- START @THEME STYLES -->
             <link href="{{asset('webherramienta/assets/admin/css/reset.css')}}" rel="stylesheet">
-           
+
             <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/plugins.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/themes/default.theme.css')}}" rel="stylesheet" id="theme">
             {#<link href="{{asset('webherramienta/assets/admin/css/pages/dashboard-retail.css')}}" rel="stylesheet">#}
             <link href="{{asset('webherramienta/assets/admin/css/custom.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/admin/css/menuTree.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/admin/css/pages/gallery.css')}}" rel="stylesheet"> 
-            <link href="{{asset('css/layout.css')}}" rel="stylesheet">           
+            <link href="{{asset('webherramienta/assets/admin/css/pages/gallery.css')}}" rel="stylesheet">
+            <link href="{{asset('css/layout.css')}}" rel="stylesheet">
             <!--/ END THEME STYLES -->
 
             <!-- START @IE SUPPORT -->
@@ -175,7 +175,7 @@
                                     <form action="{{path('history_new_inscription_index')}}" method="post" class="navbar-form">
                                         <div class="form-group has-feedback">
                                             <input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">
-                                            <input type="hidden" id="form_tipo" class="form-control" name="form[tipo]" value="0">                                            
+                                            <input type="hidden" id="form_tipo" class="form-control" name="form[tipo]" value="0">
                                             <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
                                         </div>
                                     </form>
@@ -183,7 +183,7 @@
                             {#{% endif %}#}
                             <!--/ End form search -->
                         </ul><!-- /.navbar-left -->
-                        
+
                         <ul class="nav navbar-nav navbar-right">
                             {#<li class="dropdown navbar-message">
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope-o"></i><span class="rounded count label label-danger">1</span></a>
@@ -263,7 +263,7 @@
                                                     </a>
                                                 {% endfor %}
                                             {%endif%}                                            #}
-                                            {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %} 
+                                            {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}
                                             <a href="form-element.html#" class="media">
                                                 <div class="media-object pull-left"><i class="fa fa-filter fg-info"></i></div>
                                                 <div class="media-body">
@@ -320,44 +320,44 @@
                                                     <span class="media-text">¡Aviso! Para la regularización de gestiones pasadas se ampliara el plazo hasta el siguiente mes, y se habilitaran las opciones desde la siguiente semana una ves concluido trabajos de corrección de datos (Centralizadores, Inscripciones faltantes, Otros).</span>
                                                     <span class="media-meta">14/10/2016</span>
                                                 </div>
-                                            </a>#}                                            
-                                                                                                                                   
+                                            </a>#}
+
                                             {#<a href="page-messages.html" class="media">
                                                 <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
                                                 <div class="media-body">
                                                     <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">Se ha habilitado la modificación de la carga horaria en la malla curricular. En caso con "0" el director o en caso de modificación con su técnico distrital o departamental.</span>                                                    
+                                                    <span class="media-text">Se ha habilitado la modificación de la carga horaria en la malla curricular. En caso con "0" el director o en caso de modificación con su técnico distrital o departamental.</span>
                                                     <span class="media-meta pull-right">14/10/2016</span>
                                                 </div>
                                             </a>#}
-                                            
+
                                             {#<a href="page-messages.html" class="media">
                                                 <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
                                                 <div class="media-body">
                                                     <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">Se ha habilitado el boton de cerrar operativo 2do semestre 2016.</span>                                                    
-                                                    <span class="media-meta pull-right">14/10/2016</span>                                            
+                                                    <span class="media-text">Se ha habilitado el boton de cerrar operativo 2do semestre 2016.</span>
+                                                    <span class="media-meta pull-right">14/10/2016</span>
                                                 </div>
                                             </a>#}
-                                                
+
                                             {#<a href="page-messages.html" class="media">
                                                 <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
                                                 <div class="media-body">
                                                     <span class="media-heading">Victor Jimenez</span>
                                                     <span class="media-text">El equipo del SIGED les desea una exitosa gestión 2017 y les agradece enormemente el apoyo de todos para que la transición del antiguo sistema al nuevo haya concluido. Además les informamos que ya se encuentra habilitado todas las opciones para Inicio del primer semestre 2017.</span>
-                                                    <span class="media-meta pull-right">16/01/2017</span>                                            
+                                                    <span class="media-meta pull-right">16/01/2017</span>
                                                 </div>
-                                            </a> #}   
-                                                
+                                            </a> #}
+
                                             {#<a href="page-messages.html" class="media">
                                                 <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
                                                 <div class="media-body">
                                                     <span class="media-heading">Victor Jimenez</span>
                                                     <span class="media-text">El equipo del SIGED les informa que se procederá a cerrar el sistema para inscripciones por vencimiento de plazo para la presentación de este reporte, y se ha habilitado en el menú la lista de CEAS pendientes.</span>
-                                                    <span class="media-meta pull-right">19/04/2017</span>                                            
+                                                    <span class="media-meta pull-right">19/04/2017</span>
                                                 </div>
-                                            </a>#}   
-                                            
+                                            </a>#}
+
                                             {#<a href="form-element.html#" class="media indicator inline">
                                                 <span class="spinner">Leyendo mas notificaciones...</span>
                                             </a>#}
@@ -451,7 +451,9 @@
                            {# <span class="selected"></span> #}
                         </a>
                     </li>
-                    {% if app.session.get('roluser') in [7,8,9,10] %}
+
+                    {# SE QUITA SEGUN EL ANALISIS DE LA DGEA #}
+                    {# {% if app.session.get('roluser') in [7,8,9,10] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>
@@ -463,7 +465,8 @@
                                 <li><a href="{{ path('ie_acceso_internet_seguimiento')}}">Seguimiento</a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
+                    
                     {% if app.session.get('ie_id') == '80730796' %}
                     <li class="submenu">
                             <a href="javascript:void(0);">
@@ -517,14 +520,14 @@
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
-                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
+                                {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>    ----------------> NO APLICA SEGUN DGEA #}
                             </ul>
                         </li>
                     {% endif %}
-                    
 
+                    {# SE QUITA SEGUN EL ANALISIS DE LA DGEA #}
                     {# Seguimiento de operativo de salud #}
-                    {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                    {# {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -535,7 +538,7 @@
                                 <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
 
                     {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
                         <li class="submenu">
@@ -556,11 +559,11 @@
                                     </a>
                                     <ul>
                                         {% if ( app.session.get('userName')== 4926577 or app.session.get('roluser') == 8) %}
-                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> 
-                                        <li><a href="{{path('alternativa_operativo_gestion_pasada')}}">Habilitar Operativo Gestión Pasada</a></li> 
-                                        <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> 
-                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li> 
-                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> 
+                                        {# <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>   ----------> SOLO A DEPARTAMENTAL #}
+                                        <li><a href="{{path('alternativa_operativo_gestion_pasada')}}">Habilitar Operativo Gestión Pasada</a></li>
+                                        {# <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>     ----------> SOLO A DEPARTAMENTAL #}
+                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                         {% endif %}
@@ -569,24 +572,28 @@
 
                                 {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
-                                {% endif %}                                
-                                
+                                {% endif %}
+
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
 
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                                 {# <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                        #}
-                                <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar SubCentro </a></li>
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
-                                <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
-                                <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li>
+
+                                {# <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li> #}
+                                {% if ( app.session.get('roluser') == 10 ) %}
+                                {% endif %}
+                                {# <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li> #}
+
                                 <li><a href="{{ path('printRecordCard_index')}}">Impresión de Libretas</a></li>
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
-                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
+                                {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>   ---------------------------> NO LAPLICA SEGUN DGEA #}
                                 {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
@@ -606,7 +613,7 @@
                             </ul>
                         </li>
 
-                         
+
                     {% endif %}
                     {% if (app.session.get('roluser') == 20 or app.session.get('roluser') == 32) %} {#NACIONAL INVITADO#}
                         <li class="submenu">
@@ -623,14 +630,14 @@
 
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
-                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
+                                {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>  ---------------------------> NO APLICA SEGUN DGEA #}
                                 {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
-                                <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
-                                <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
+                                {# <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li> ---------------------------> NO APLICA SEGUN DGEA
+                                <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li> ---------------------------> NO APLICA SEGUN DGEA #}
                             </ul>
                         </li>
                     {% endif %}
-                    
+
                     {% if (app.session.get('roluser') == 7) %} {#DEPTO#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -648,34 +655,35 @@
                                         <span class="arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> 
+                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> 
+                                        {# <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>  -----------------> SOLO A NACIONAL #}
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
                                 </li>
                                 {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
-                                {% endif %}                                
+                                {% endif %}
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante</a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
-                                <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
-                                 <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li>
+                                {# <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>   --------------------> NO APLICA SEGUN DGEA #}
+                                 {# <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li> #}
+
                                 <li><a href="{{ path('printRecordCard_index')}}">Impresión de Libretas</a></li>
 
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
 
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                       #}
-                                <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar SubCentro </a></li>
 
                                 {% if (app.session.get('ie_id') != -1) %}
 
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
-                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
+                                {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>   ---------------------> NO APLICA SEGN DGEA #}
                                 {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
@@ -709,10 +717,10 @@
                                         <span class="arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>
-                                        <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
-                                        <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>
+                                        {# <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> --------------------> SOLO A DEPARTAMENTAL #}
+                                        <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar SubCentro </a></li>
+                                        {# <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> -------------------> SOLO A DEPARTAMENTAL #}
+                                        {# <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>   ------------------> SOLO A NACIONAL #}
                                         <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
@@ -720,15 +728,18 @@
                                 </li>
                                 {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
-                                {% endif %}                                
-                                <li><a href="{{path('herramienta_ceducativa_distrito_listaceas')}}">Listar mis CEAS.</a></li>                       #}
-                                <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
+                                {% endif %}
+                                <li><a href="{{path('herramienta_ceducativa_distrito_listaceas')}}">Listar mis CEAS</a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar SubCentro </a></li>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
-                                <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
-                                 <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li>
+                                {# <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>   --------------------> NO APLICA SEGUN DGEA #}
+
+                                {# <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li> #}
+                                <li><a href="{{ path('modificar_ci_localidad_index')}}">Mod. Datos de Lugar</a></li>
+
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>#}
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
 
@@ -737,7 +748,7 @@
 
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
-                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
+                                {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>   ----------> NO APLICA SEGU DGEA #}
                                 {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
@@ -767,11 +778,13 @@
                                 <li><a href="{{path('recognitionknowledge_index')}}">Registro de Reconocimiento de Saberes</a></li>
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
-                                <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
-                                 <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li>
+                                {# <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>    ----------------------> NO APLICA SEGUN DGEA #}
+
+                                 {# <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li> #}
+
                                 <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
-                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
-                                <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
+                                {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>    --------------> NO APLICA SEGUN DGEA #}
+                                {# <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>  --------------> NO APLICA SEGUN DGEA #}
                             </ul>
                         </li>
                         <li class="submenu">
@@ -784,7 +797,7 @@
                                 {#
                                 <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
                                 <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                                
+
                                 {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
                                 <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
 
@@ -828,7 +841,7 @@
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
                 <div class="header-content">
-                    <h2 style="font-weight:bold"><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
+                    <h2 style="font-weight:bold"><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}}
                         <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
                             {#{% if (app.session.get('ie_per_estado') != '0') %}#}
                                 : <i class="fa fa-wrench"></i> {{app.session.get('ie_operativo')}}
@@ -894,7 +907,7 @@
                             <div class="tab-pane" id="sidebar-profile">
                                 <div class="sidebar-profile">
                                     <!-- Start right navigation - menu -->
-                                    <ul class="sidebar-menu niceScroll">                                        
+                                    <ul class="sidebar-menu niceScroll">
                                         <!-- Start category about me -->
                                         <li class="sidebar-category">
                                             <span>ATENCIÓN AL CLIENTE</span>
@@ -903,7 +916,7 @@
                                         <!--/ End category about me -->
                                         <!--/ Start navigation - about me -->
                                         <li>
-                                            <ul class="list-unstyled">                                                
+                                            <ul class="list-unstyled">
                                                 <li>
                                                     <i class="fa fa-envelope"></i> roge.flores1@gmail.com
                                                 </li>
@@ -921,16 +934,16 @@
                                         <!--/ End category recent activity -->
                                         <!--/ Start navigation - reset settings -->
                                         <li>
-                                            <a onclick="getRudesUser();" class="btn btn-inverse btn-block"><i class="fa fa-refresh fa-spin"></i> Ver mis rudes generados </a>                                           
+                                            <a onclick="getRudesUser();" class="btn btn-inverse btn-block"><i class="fa fa-refresh fa-spin"></i> Ver mis rudes generados </a>
                                         </li>
                                         <!--/ End navigation - reset settings -->
                                         <!--/ Start navigation - activity -->
                                         <li>
                                             <div class="media-list activity">
-                                                <a class="media">                                                    
+                                                <a class="media">
                                                     <div id="divrudesuser">
-                                                        
-                                                    </div>    
+
+                                                    </div>
                                                 </a>
                                             </div>
                                         </li>
@@ -1342,24 +1355,24 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ion.rangeSlider/js/ion.rangeSlider.min.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>            
+            <script src="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js')}}"></script>
             {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/lib/typeahead.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/typeaheadjs.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.js')}}"></script>#}
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/raphael/raphael-min.js')}}"></script>            
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/raphael/raphael-min.js')}}"></script>
             {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.min.js')}}"></script>            #}
-            {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js')}}"></script>            
+            {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/waypoints/lib/jquery.waypoints.min.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/counter-up/jquery.counterup.min.js')}}"></script>            
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/counter-up/jquery.counterup.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-jvectormap-2.0.3.min/index.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jvectormap/tests/assets/jquery-jvectormap-world-mill-en.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/js/jquery.horizBarChart.min.js')}}"></script>#}
-            
+
             <!--/ END PAGE LEVEL PLUGINS -->
-            
+
             <!-- START @PAGE LEVEL SCRIPTS -->
             <script src="{{asset('webherramienta/assets/admin/js/apps.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.easypie.js')}}"></script>
@@ -1395,7 +1408,7 @@
                     autoclose: true
                 });
             </script>
-            
+
             <script>
             //ABRIR MODAL CON SUBCENTROS GESTIONES Y SEMESTRES
             //PENDIENTE DE LLEVAR A OTRO ARCHIVO
@@ -1423,7 +1436,7 @@
                         }
                     });
                 };*/
-                
+
             //ABRIR MODAL CON CEAS DEL DISTRITO
             //PENDIENTE DE LLEVAR A OTRO ARCHIVO
             function selceadistritoShow(){
@@ -1519,7 +1532,7 @@
                             $("#divrudesuser").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
                         }
                     });
-                };    
+                };
             </script>
             {#
             <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
