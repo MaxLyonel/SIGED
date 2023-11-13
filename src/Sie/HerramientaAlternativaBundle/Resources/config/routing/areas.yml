@@ -14,6 +14,12 @@ herramienta_alter_areas_add:
     path:     /areasadd
     defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areasadd }
     options:
+         expose: true
+
+herramienta_alter_add_areas_all:
+    path:     /addAreasAll
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:addAreasAll }
+    options:
          expose: true            
          
 herramienta_alter_areas_delete:

@@ -401,7 +401,6 @@ class InfoMaestroController extends Controller {
      */
 
     public function newAction(Request $request) {
-
         // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -493,8 +492,8 @@ class InfoMaestroController extends Controller {
         }
 
         $financiamiento = $em->createQuery(
-                        'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
-                WHERE ft.id NOT IN  (:id)')
+                        "SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
+                WHERE ft.id NOT IN (:id) AND ft.financiamiento<>'TGN OTROS'")
                 ->setParameter('id', array(0, 5))
                 ->getResult();
         $financiamientoArray = array();
@@ -1307,15 +1306,6 @@ class InfoMaestroController extends Controller {
 
         }
 
-
-
-
-
     }
-
-
-
-
-
 
 }

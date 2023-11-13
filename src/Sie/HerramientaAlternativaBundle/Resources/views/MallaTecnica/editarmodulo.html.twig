@@ -4,6 +4,10 @@
         <input type="hidden" id = "totalhoras" name="totalhoras" value="{{totalhoras}}"/>
         <input type="hidden" id = "idacreditacion" name="idacreditacion" value="{{idacreditacion}}"/>
         <input type="hidden" id = "horasmodulo" name="horasmodulo" value="{{horasmodulo}}"/>
+        <input type="hidden" id = "mallaModuloPeriodoId" name="mallaModuloPeriodoId" value="{{mallaModuloPeriodoId}}"/>
+
+        <input type="hidden" id = "idacreditacion" name="idacreditacion" value="{{idacreditacion}}"/>
+
         <div class="panel panel-danger">
             <div class="panel-heading ">
                 <div class="pull-left">
@@ -13,25 +17,49 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-        <div class="row">
-            <div class="form-body col-lg-12 col-md-12">
-                <label> Nombre del Modulo</label>
-                <strong>{{form_widget(form.modulo)}}</strong>
-             </div>
-            <div class="form-body col-lg-12 col-md-12">
-                <label> Horas</label>
-                <strong>{{form_widget(form.horas)}}</strong>
-            </div>
-
-
-        </div>
+                {# <div class="row">
+                    <div class="form-body col-lg-12 col-md-12">
+                        <label> Nombre del Modulo</label>
+                        <strong>{{form_widget(form.modulo)}}</strong>
+                    </div>
+                    <div class="form-body col-lg-12 col-md-12">
+                        <label> Hora</label>
+                        <strong>{{form_widget(form.horas)}}</strong>
+                    </div>
+                </div> #}
+                {% if ( idacreditacion == 32 and superiorMallaModuloPeriodoId ) %}
+                    <div class="row">
+                        <div class="form-body col-lg-4 col-md-4">
+                            <label> Nombre del Modulo</label>
+                            <strong>{{form_widget(form.modulo)}}</strong>
+                        </div>
+                        <div class="form-body col-lg-4 col-md-4">
+                            <label> Tipo de SubModulo</label>
+                            <strong>{{form_widget(form.periodoTecnicoMedio)}}</strong>
+                        </div>
+                        <div class="form-body col-lg-4 col-md-4">
+                            <label> Horas</label>
+                            <strong>{{form_widget(form.horas)}}</strong>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="form-body col-lg-6 col-md-6">
+                            <label> Nombre del Modulo</label>
+                            <strong>{{form_widget(form.modulo)}}</strong>
+                        </div>
+                        <div class="form-body col-lg-6 col-md-6">
+                            <label> Horas</label>
+                            <strong>{{form_widget(form.horas)}}</strong>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="panel-footer">
                 <div class="text-right">
                     <strong>{{form_widget(form.guardar)}}</strong>
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
                 </div>
-
             </div>
         </div>
 
@@ -48,15 +76,14 @@
         var horavalida= ( parseFloat(totalhoras)  -  parseFloat(horasmodulo) ) +parseFloat(horas) ;
        var formData = $('#formModulo').serialize();
        // alert(horavalida);
-        if((idacreditacion==1)||(idacreditacion==20))
-        {
+        if((idacreditacion==1)||(idacreditacion==20)){
             if(horavalida<=500){
                 $('#modal').modal('hide');
 
                 $.ajax({
                     type: 'post',
                     url: "{{ path('herramienta_malla_update_modulo') }}",
-                    data:formData,
+                    data: formData,
                     beforeSend: function () {
 //                swal({
 //                    title: "Guardando...",

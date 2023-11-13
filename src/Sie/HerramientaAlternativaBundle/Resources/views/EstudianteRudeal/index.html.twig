@@ -110,6 +110,15 @@
     .validar:invalid[multiple] {
         margin-top: 15px !important;
     }
+
+    .m-b--7{
+        margin-bottom: -7px !important;
+    }
+
+    .text-r-f{
+        margin-left: 10px;
+        margin-bottom: 20px
+    }
 </style>
 <div class="modal-dialog" style="width: 1000px">
     <div class="modal-content">
@@ -690,9 +699,10 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-md-6">Fecha de registro</label>
-                                        <div class="col-md-6 col-sm-6">
+                                        <div class="col-md-6 col-sm-6 m-b--7">
                                             {{ form_widget(formLugar.fechaRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
+                                        <p class="text-r-f">Fecha en la que lleno el formulario el estudiante</p>
                                     </div>
                                     <hr>
                                     {{ form_widget(formLugar) }}

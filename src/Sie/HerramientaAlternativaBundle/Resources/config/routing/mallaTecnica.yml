@@ -130,6 +130,12 @@ herramienta_show_modulo_edit:
     options:
          expose: true
 
+herramienta_check_consolidate:
+    path:     /checkconsolidate/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:checkConsolidate"}
+    options:
+         expose: true
+
 herramienta_show_modulo_delete:
     path:     /showmodulodelete/
     defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:showModuloDelete"}
@@ -145,5 +151,11 @@ herramienta_create_modulo_nuevo:
 herramienta_malla_update_modulo:
     path:     /updatemodulo
     defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:updateModuloNuevo }
+    options:
+         expose: true
+
+herramienta_add_nivel_malla:
+    path:     /addNivelMalla
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:addNivelMalla }
     options:
          expose: true
