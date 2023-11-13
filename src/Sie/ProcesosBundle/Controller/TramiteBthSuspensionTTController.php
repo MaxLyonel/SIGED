@@ -100,7 +100,7 @@ class TramiteBthSuspensionTTController extends Controller {
         if (count($tramitePendiente) !==0){
             $data = NULL;
             $nivelacion = NULL;
-            $msj = 'El estuidante tiene tramites pendientes de nivelación BTH, deben ser finalizados antes de iniciar otro trámite';
+            $msj = 'El estuidante tiene tramites pendientes de suspesion excepcional TTE - BTH, deben ser finalizados antes de iniciar otro trámite';
         } else {
             list($data, $msj) = $this->validacionRudeBth($rude, $gestion, $sie);
          }
