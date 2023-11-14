@@ -240,7 +240,9 @@ class WfTramiteController extends Controller
         //Verificamos si tiene competencia
         if($rol == $flujoproceso->getRolTipo()->getId()){
             //dump($flujoproceso->getRutaFormulario());die;
-            return $this->redirectToRoute($flujoproceso->getRutaFormulario(),array('id' => $tramite->getId(),'tipo'=>'idtramite'));
+            if($flujoproceso->getRutaFormulario()){
+                return $this->redirectToRoute($flujoproceso->getRutaFormulario(),array('id' => $tramite->getId(),'tipo'=>'idtramite'));
+            }
         }else{
             $request->getSession()
                     ->getFlashBag()
