@@ -317,14 +317,14 @@
                                                     {% if ( ((data.nivelId == 15) and (data.cicloId == 2) and (data.gradoId == 3)) or ((data.nivelId == 5) and (data.cicloId == 2) and (data.gradoId == 2)) )%}
                                                         <li>
                                                             <a href="{{path('herramienta_alter_reporte_ddjj_hum', {'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') , 'sie': app.session.get('ie_id') } )}}">
-                                                                <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
+                                                                <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ HUMA</span>
                                                             </a>
                                                         </li>
                                                     {% endif %}
                                                     {% if data.nivelId in ['18','19','20','21','22','23','24','25'] %}
                                                         <li>
                                                             <a href="{{path('herramienta_alter_reporte_ddjj_tec', {'insId': data.eInsId, 'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') } )}}">
-                                                                <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
+                                                                <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ TEC</span>
                                                             </a>
                                                         </li>
                                                     {% endif %}

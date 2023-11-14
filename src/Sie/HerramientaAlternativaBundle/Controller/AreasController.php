@@ -117,7 +117,7 @@ class AreasController extends Controller {
     }
 
     public function addAreasAllAction(Request $request) {
-        // dump("herreeee");die;
+
         $infoUe = $request->get('infoUe');
 
         // $idAsignatura = $request->get('ida');
