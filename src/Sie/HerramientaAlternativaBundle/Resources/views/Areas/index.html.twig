@@ -63,59 +63,57 @@
                     </div>
                 </div>
 
-                {% if (app.session.get('ie_per_estado') == '0') %}
+                {# {% if (app.session.get('ie_per_estado') == '0') %}
                     <div style="float:right">
                         <button onclick="addAreaAll('{{infoUe}}', '{{tieneCursoOferta}}', '{{asignaturas|length}}')" class="btn btn-primary">
                             Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %}
                         </button>
                         <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} pendientes: <strong>{{asignaturas|length}}</strong></p>
                     </div>
-                {% endif %}
+                {% endif %} #}
 
-                    {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') %}
-                        {% if primaria %}
-                            <button type="button" class="btn btn-default" style="float:right" onclick="newEmergente('{{infoUe}}')">
-                                Agregar M.I.E.
-                            </button>
-                        {% endif %}
-                        
-                        
-
-                        {# AGREGAR LOS MODULOS UNO POR UNO --- VERSION ANTIGUA #}
-                        {# <div class="btn-group" style="width:650px; float:right;">
-                            <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
-                                Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
-                                {% if asignaturas|length > 0 %}
-                                    {% for a in asignaturas %}                                    
-                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
-                                {% endif %}
-                            </ul>
-                        </div> #}
-
-
-                        {# <div class="btn-group" style="width:650px; float:right;">
-
-                            <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
-                                Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
-                                {% if asignaturas|length > 0 %}
-                                    {% for a in asignaturas %}
-                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
-                                        <li><button class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
-                                {% endif %}
-                            </ul>
-                        </div> #}
+                {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') %}
+                    {% if primaria %}
+                        <button type="button" class="btn btn-default" style="float:right" onclick="newEmergente('{{infoUe}}')">
+                            Agregar M.I.E.
+                        </button>
                     {% endif %}
-                    <br>
+
+                    {# AGREGAR LOS MODULOS UNO POR UNO --- VERSION ANTIGUA #}
+                    {# <div class="btn-group" style="width:650px; float:right;">
+                        <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
+                            Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
+                            {% if asignaturas|length > 0 %}
+                                {% for a in asignaturas %}                                    
+                                    <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
+                                {% endfor %}
+                            {% else %}
+                                <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                            {% endif %}
+                        </ul>
+                    </div> #}
+
+
+                    {# <div class="btn-group" style="width:650px; float:right;">
+
+                        <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
+                            Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
+                            {% if asignaturas|length > 0 %}
+                                {% for a in asignaturas %}
+                                    <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
+                                    <li><button class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
+                                {% endfor %}
+                            {% else %}
+                                <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                            {% endif %}
+                        </ul>
+                    </div> #}
+                {% endif %}
+                <br>
                 <h4 class="m-t-r">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %}actuales del curso</h4>
                 <div class="table-responsive">
                     <table class="table table-striped">
