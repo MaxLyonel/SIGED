@@ -2126,6 +2126,12 @@ select idsae,idacr
                     $superiorModuloTipo = $querySeven->fetch();
                     // dump($superiorModuloTipo);die;
                     if(!$superiorModuloTipo){
+                        // dump($sestId);
+                        // dump($modulo);
+                        // dump($superiorModuloTipo);
+                        // dump($modulo);
+                        // dump($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find());
+                        // die;
                         $smtipo = new SuperiorModuloTipo();
                         $smtipo -> setModulo($modulo);
                         $smtipo -> setEsvigente(true);
