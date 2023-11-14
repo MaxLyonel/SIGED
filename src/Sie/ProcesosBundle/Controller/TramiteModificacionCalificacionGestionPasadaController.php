@@ -2258,7 +2258,7 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
             foreach ($datosNotas['notas'] as $n) {
                 if ($n['idEstudianteNota'] == 'nuevo') {
                     // REGISTRAMOS LA NUEVA CALIFICACION
-                    //$datoNota = $this->get('notas')->registrarNota($n['idNotaTipo'], $n['idEstudianteAsignatura'],$n['notaNueva'], '');
+                    $datoNota = $this->get('notas')->registrarNota($n['idNotaTipo'], $n['idEstudianteAsignatura'],$n['notaNueva'], '');
                 }else{
                     // ACTUALIZAMOS LA CALIFICACION
                     $datoNota = $this->get('notas')->modificarNota($n['idEstudianteNota'],$n['notaNueva'], '');
