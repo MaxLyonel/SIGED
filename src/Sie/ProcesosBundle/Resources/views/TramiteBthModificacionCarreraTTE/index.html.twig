@@ -1,0 +1,550 @@
+{% extends app.session.get('layout') %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite BTH - Modificación de Carrera T.T.E. para Estudiantes<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <!-- ... Resto del código ... -->
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> Solicitud Inicio de Trámite de Modificación de Carrera T.T.E.</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="div-response"><!--Esto sera devuelto por la funcion ajax -->
+                                    </div>
+                                    <div class="panel panel-default" id="solicitudTramite">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            {% if uebth is not empty %}
+                                                            <div class="col-md-6">
+                                                                <div class="panel panel-default">
+                                                                    <div class="panel-heading">
+                                                                        <h3 class="panel-title">Información de la Unidad Educativa</h3>
+                                                                    </div>
+                                                                    <div class="panel-body">
+                                                                        <dl class="dl-horizontal">
+                                                                            <dt>Unidad Educativa:</dt>
+                                                                            <dd>{{ institucioneducativa }}</dd>
+                                                                
+                                                                            <dt>Código SIE:</dt>
+                                                                            <dd>{{ uebth[0].institucioneducativaId }}</dd>
+                                                                
+                                                                            <dt>Gestión:</dt>
+                                                                            <dd>{{ uebth[0].gestionTipoId }}</dd>
+                                                                
+                                                                        </dl>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="panel panel-default">
+                                                                    <div class="panel-heading">
+                                                                        <h3 class="panel-title">Información Bachillerato Técnico Humanístico</h3>
+                                                                    </div>
+                                                                    <div class="panel-body">
+                                                                        <dl class="dl-horizontal">
+                                                                            <dt>Año Autorizado:</dt>
+                                                                            <dd>{{ uebth[0].gradoTipo.id }} Secundaria Comunitaria Productiva (Implementado)</dd>
+                                                                            {% for uebthespecialidad in uebthespecialidad %}
+                                                                                <dt>Carreras BTH {{loop.index}}:</dt>
+                                                                                <dd>{{ uebthespecialidad.especialidadTecnicoHumanisticoTipo.especialidad }}</dd>
+                                                                            {% endfor %}
+                                                                        </dl>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-md-offset-3" id="busquedaRude">
+                                                                <div class="panel panel-default">
+                                                                    <div class="panel-heading">
+                                                                        <h3 class="panel-title">Búsqueda por Código RUDE</h3>
+                                                                    </div>
+                                                                    <div class="panel-body">
+                                                                        <form class="form-inline">
+                                                                            <div class="form-group">
+                                                                                <label for="codigoRude">Código RUDE:</label>
+                                                                                <input type="text" class="form-control" id="codigoRude" name="codigoRude">
+                                                                            </div>
+                                                                            <button type="button" class="btn btn-success" id="btnbuscarRude" onclick="buscarRude();">
+                                                                                <i class="fa fa-search"></i> Buscar
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="panel-heading">
+                                                                <h3 class="panel-title"></h3>
+                                                            </div>
+                                                            <div class="panel-body">
+                                                                <div class="row">
+                                                                    <div class="alert alert-warning ">
+                                                                        <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                                                        <div class="notification-info">
+                                                                            <p>
+                                                                                El trámite no se puede iniciar por las siguientes razones: 
+                                                                            </p>
+                                                                            <br>
+                                                                            <ol>
+                                                                                <li>La Unidad Educativa debe pertenecer a Educación Regular.</li>
+                                                                                <li>La Unidad Educativa no puede realizar el Trámite de Modificación de Carrera T.T.E</li>
+                                                                                <li>La Unidad Educativa no es Unidad Educativa PLENA - BTH</li>
+                                                                            </ol>    
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <a href="{{ path('wf_tramite_index') }}" class="btn btn-info">Volver</a>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div id="mensaje_alert" style="display: none;">
+                                                            <div class="alert alert-warning ">
+                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                <span id="mensaje_txt"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div id="formularioSuspension">
+                                                            <div class="panel-body">
+                                                                <div class="panel panel-info col-md-12">
+                                                                    <div class="panel-heading">
+                                                                        <h2 class="panel-title"><i class="glyphicon glyphicon-cog"></i> Formulario de Inicio Trámite</h2>
+                                                                    </div>
+                                                                    <div class="panel-body">
+                                                                        <div class="col-md-6 col-md-offset-3">
+                                                                            <div class="panel panel-default">
+                                                                                <div class="panel-heading">
+                                                                                    <h3 class="panel-title">Información del Estudiante/Inscripción Actual</h3>
+                                                                                </div>
+                                                                                <div class="panel-body">
+                                                                                    <dl class="dl-horizontal">
+                                                                                        <dt>Código RUDE :</dt>
+                                                                                        <dd><span id="rude"></span></dd>
+                                                                                        <dt>Estudiante :</dt>
+                                                                                        <dd><span id="estudiante"></span></dd>
+                                                                                        <dt>Fecha de Nacimiento:</dt>
+                                                                                        <dd><span id="fechanac"></span></dd>
+                                                                                        <dt>Carnet de Identidad :</dt>
+                                                                                        <dd><span id="carnet"></span></dd>
+                                                                                        <dt>Año de Escolaridad:</dt>
+                                                                                        <dd><span id="grado"></span></dd>
+                                                                                        <dt>Carrera Actual:</dt>
+                                                                                        <dd><span id="carrera"></span></dd>
+                                                                                    </dl>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-md-offset-3">
+                                                                            <div class="panel panel-default">
+                                                                                <div class="panel-heading">
+                                                                                    <h3 class="panel-title">Modificar nueva Carrera:</h3>
+                                                                                </div>
+                                                                                <div class="panel-body">
+                                                                                    <dl class="dl-horizontal">
+                                                                                        <dt>Nueva Carrera :</dt>
+                                                                                        <dd> 
+                                                                                            <select name="new_carrera" id="new_carrera" class="custom-select form-control">
+                                                                                                <option value="">Seleccione Carrera</option>
+                                                                                            </select>
+                                                                                        </dd>
+                                                                                    </dl>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-md-offset-3">
+                                                                                <div class="panel">
+                                                                                    <div class="panel-heading">
+                                                                                        <h3 class="panel-title">Requisitos del Trámite</h3>
+                                                                                    </div>
+                                                                                    <div class="panel-body">
+                                                                                        <div class="checkbox">
+                                                                                            <label>
+                                                                                                <input type="checkbox" id="fotocopia_ci" name="fotocopia_ci"> Fotocopia de C.I.:
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        
+                                                                                        <div class="checkbox">
+                                                                                            <label>
+                                                                                                <input type="checkbox" id="memorandum_designacion" name="memorandum_designacion" onclick="checkMemorandumDesignacionChange();"> Solicitud de modificacion y justificación:
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        
+                                                                                        <div class="form-group">
+                                                                                            <label for="archivo_subir" class="col-sm-3 control-label">Subir archivo</label>
+                                                                                            <div class="col-sm-9">
+                                                                                                <div class="input-group">
+                                                                                                    <span class="input-group-btn">
+                                                                                                        <button class="btn btn-xs btn-warning" type="button" id="archivo_subir_btn" onclick="document.getElementById('archivo_subir').click();">
+                                                                                                            <i class="glyphicon glyphicon-upload"></i> Subir solicitud
+                                                                                                        </button>
+                                                                                                    </span>
+                                                                                                    <input type="file" class="form-control-file" id="archivo_subir" name="archivo_subir" style="display: none;" onchange="handleArchivoSubirChange();">
+                                                                                                </div>
+                                                                                                <p class="file-name"></p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {# <div class="checkbox">
+                                                                                            <label>
+                                                                                                <input type="checkbox" id="informe_director" name="informe_director" onclick="checkInformeDirectorChange();"> Certificado Médico:
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <div class="form-group">
+                                                                                            <label for="archivo_subir_informe_director" class="col-sm-3 control-label">Subir certificado</label>
+                                                                                            <div class="col-sm-9">
+                                                                                                <div class="input-group">
+                                                                                                    <span class="input-group-btn">
+                                                                                                        <button class="btn btn-xs btn-warning" type="button" id="archivo_subir_informe_director_btn" onclick="document.getElementById('archivo_subir_informe_director').click();">
+                                                                                                            <i class="glyphicon glyphicon-upload"></i> Subir certificado
+                                                                                                        </button>
+                                                                                                    </span>
+                                                                                                    <input type="file" class="form-control-file" id="archivo_subir_informe_director" name="archivo_subir_informe_director" style="display: none;" onchange="handleInformeDirectorArchivoChange();">
+                                                                                                </div>
+                                                                                                <p class="file-name-informe"></p>
+                                                                                            </div>
+                                                                                        </div> #}
+                                                                                    </div>
+                                                                                </div>
+                                                                                
+                                                                            {# </form> #}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group text-center">
+                                                                <a href="{{ path('wf_tramite_index') }}" class="btn btn-danger">
+                                                                    <i class="glyphicon glyphicon-remove"></i> Cancelar
+                                                                </a>
+                                                                <button type="button" class="btn btn-success" id="enviarTramite" onclick="enviarTramite();">
+                                                                    <i class="glyphicon glyphicon-send"></i> Enviar
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    
+    <script type="text/javascript" >
+
+        document.getElementById('memorandum_designacion').disabled = true;
+        // document.getElementById('informe_director').disabled = true;
+        var codigoRude;
+        // var gradoNivelar;
+        var sie;
+        $(document).ready(function() {
+            $('#formularioSuspension').hide();
+            $('#archivo_subir').change(function() {
+                var antval = $(this).val();
+                if (!validarArchivo(this)){
+                    $('.file-name').text('');
+                    checkMemorandumDesignacionChange();
+                    // $('#archivo_subir_btn').prop('disabled', false);
+                    $('#memorandum_designacion').prop('checked', false);
+                    // document.getElementById('memorandum_designacion').disabled = ;
+                }
+            });
+
+            // $('#archivo_subir_informe_director').change(function() {
+            //     if (!validarArchivo(this)){
+            //         $('.file-name-informe').text('');
+            //         checkInformeDirectorChange();
+            //         // $('#archivo_subir_informe_director_btn').prop('disabled', false);
+            //         $('#informe_director').prop('checked', false);
+            //         // document.getElementById('informe_director').disabled = true;
+            //     }
+            // });
+        });
+
+        function checkMemorandumDesignacionChange() {
+            toggleUpload('archivo_subir_btn');
+            document.getElementById('memorandum_designacion').disabled = true;
+            document.getElementById('archivo_subir').disabled = false;
+        }
+
+        function handleArchivoSubirChange() {
+            toggleUpload('archivo_subir_btn');
+            updateFileName('archivo_subir', 'file-name');
+            document.getElementById('memorandum_designacion').checked = true;
+            document.getElementById('memorandum_designacion').disabled = false;
+            document.getElementById('archivo_subir').disabled = true;
+        }
+
+        // function checkInformeDirectorChange() {
+        //     toggleUpload('archivo_subir_informe_director_btn');
+        //     document.getElementById('informe_director').disabled = true;
+        //     document.getElementById('archivo_subir_informe_director').disabled = false;
+        // }
+
+        // function handleInformeDirectorArchivoChange() {
+        //     toggleUpload('archivo_subir_informe_director_btn');
+        //     updateFileName('archivo_subir_informe_director', 'file-name-informe');
+        //     document.getElementById('informe_director').checked = true;
+        //     document.getElementById('informe_director').disabled = false;
+        //     document.getElementById('archivo_subir_informe_director').disabled = true;
+        // }
+
+        function toggleUpload(btnId) {
+            var btn = document.getElementById(btnId);
+            if (!btn.disabled) {
+                btn.disabled = true;
+            } else {
+                btn.disabled = false;
+            }
+        }
+
+        function updateFileName(inputId, outputId) {
+            var input = document.getElementById(inputId);
+            var output = document.querySelector('.' + outputId);
+            
+            if (input.files && input.files.length > 0) {
+                output.textContent = 'Archivo seleccionado: ' + input.files[0].name;
+            } else {
+                output.textContent = '';
+            }
+        }
+
+               
+        function buscarRude() {
+            codigoRude = $('#codigoRude').val();
+            var formularioSuspension = document.getElementById('formularioSuspension');
+            // console.log(codigoRude);
+            if (codigoRude.length < 13) {
+                alert('Registre un código RUDE valido');
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: Routing.generate('tramite_bth_modificacion_carrera_tte_busca_rude'),
+                    data: { rude: codigoRude, flujoTipo: {{flujo_id}}},
+                    beforeSend:function(){
+					    formularioSuspension.style.display = 'none';
+                        $('#mensaje_alert').hide();
+				    },
+                    success: function (data) 
+                    {
+                        if (data.msj !== ''){
+                            $('#mensaje_txt').text(data.msj);
+                            $('#mensaje_alert').show();
+                        } else {
+                            var ndata = data.data;
+                            var new_carreras = data.carrerasdisp;
+                            sie = ndata.institucioneducativa_id;
+                            $('#rude').text(ndata.codigo_rude);
+                            var nombreCompleto = ndata.nombre + ' ' + ndata.paterno + ' ' + ndata.materno;
+                            $('#estudiante').text(nombreCompleto);
+                            $('#fechanac').text(ndata.fecha_nacimiento);
+                            var carnetIdentidad = ndata.carnet_identidad;
+                            if (ndata.complemento) {
+                                carnetIdentidad += ' ' + ndata.complemento;
+                            }
+                            $('#carnet').text(carnetIdentidad);
+                            gradonivel = ndata.grado_tipo_id + 'º año de '+ ndata.nivel
+                            $('#grado').text(gradonivel);
+                            $('#carrera').text(ndata.especialidad);
+
+                            var selectCarrera = document.getElementById('new_carrera');
+                            selectCarrera.innerHTML = '';
+                            var defaultOption = document.createElement('option');
+                            defaultOption.value = '';
+                            defaultOption.text = 'Seleccione Carrera';
+                            selectCarrera.appendChild(defaultOption);
+                            new_carreras.forEach(function (carrera) {
+                                var option = document.createElement('option');
+                                option.value = carrera.id;
+                                option.text = carrera.especialidad;
+                                selectCarrera.appendChild(option);
+                            });
+
+                            formularioSuspension.style.display = 'block';
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error en la petición AJAX:', error);
+                        
+                    }
+                });
+            }
+            
+        }
+
+        function enviarTramite()
+        {
+            var archivoSubir = document.getElementById('archivo_subir');
+        
+            // Obtener elementos de casilla de verificación
+            var fotocopiaCI = document.getElementById('fotocopia_ci');
+            var memorandumDesignacion = document.getElementById('memorandum_designacion');
+            var informeDirector = document.getElementById('informe_director');
+            var nuevaCarrera = document.getElementById('new_carrera');
+
+            // Obtén el valor seleccionado
+            var nuevaCarreraId = nuevaCarrera.value;
+            // console.log(nuevaCarreraId);
+            // Verifica si se seleccionó algo
+            if (!nuevaCarreraId) {
+                alert('Debe seleccinar la nueva carrera a modificar.');
+                return false; 
+            }
+            // Obtener campo de calificación
+            // var calificacion = document.getElementById('calificacion');
+            
+            // if ((calificacion.value.trim() === '') || (calificacion.value < 51) || (calificacion.value > 100)){
+            //     alert('Por favor, registre una calificación entre 51 y 100.');
+            //     return false;
+            // }
+            if (archivoSubir.files.length === 0 || !memorandumDesignacion.checked ||!validarArchivo(archivoSubir)) {
+                alert('La solicitud no se subio o no es valido, por favor verifique.');
+                return false; // Detener el envío del formulario si el archivo no es válido
+            }
+            // if (archivoInformeDirector.files.length === 0 || !informeDirector.checked || !validarArchivo(archivoInformeDirector)) {
+            //     alert('El certificado médico no se subio o no es valido, por favor verifique.');
+            //     return false; // Detener el envío del formulario si el archivo no es válido
+            // }
+            var memorandum = archivoSubir.files[0];// memorandum
+            // var informeDir = archivoInformeDirector.files[0];// informe
+            if (!fotocopiaCI.checked) {
+            // Mostrar un mensaje de error o realizar alguna acción
+                alert('Por favor, verifique si tiene CI validado antes de enviar el formulario.');
+                return false; // Evita que el formulario se envíe
+            } else {
+                Swal.fire({
+                            title: '¿Está seguro de enviar la solicitud de Trámite Suspención TTE?',
+                            text: "¿Adjunto todos los requisitos para el tramite para la solicitar la suspención TTE?",
+                            type: 'question',
+                            html:
+                                'Si acepta, se remitira el trámite al Distrito correspondiente... ',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Si, proceder',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.value) {
+                                var formData = new FormData();
+                                formData.append('request_flujo_id',{{flujo_id}});
+			                    formData.append('request_flujo_tipo','{{flujo_tipo}}');
+                                // Agregar archivos al objeto FormData
+                                formData.append('filesolicitud', memorandum);
+                                // formData.append('filecertificado', informeDir);
+                                
+                                // Agregar otros datos al objeto FormData
+                                formData.append('codigoRude', codigoRude);
+                                // formData.append('gradoNivelar', gradoNivelar);
+                                formData.append('nueva_carrera_id', nuevaCarreraId);
+                                formData.append('sie', sie);
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "{{ path('tramite_bth_modificacion_carrera_tte_envia_solicitud') }}",
+                                    data:formData,
+                                    processData: false, // Evitar el procesamiento automático de datos
+                                    contentType: false, // Evitar el encabezado "Content-Type"
+                                    beforeSend: function () {
+                                        $('#cancelarBtn').prop('disabled', true);
+                                        $('#enviarTramite').prop('disabled', true);
+                                    },
+                                    success: function (data) {
+                                        
+                                        if(data.msg==='')
+                                        {   
+                                            $('#formularioSuspension').hide();
+                                            $('#solicitudTramite').hide();
+                                            var msg = 'El trámite Nº '+data.idTramite+' se envió correctamente a Distrito, descargue formulario solicitud.';
+                                            Swal.fire(msg);
+                                            $('.div-response').fadeIn(function () {
+                                                var reporte = '<a href="' + data.urlreporte + '" target="_blank" title="Descarga solicitud"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga solicitud de trámite ' + data.idTramite + '</a>';
+                                                $('.div-response').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.msg + '<br>' + reporte + '</div>');
+                                            });
+                                        } else {
+                                            Swal.fire(data.msg+' no puede continuar con el trámite. Comunique a su técnico distrital...');
+                                        }
+                                        
+        
+                                    },
+                                    error: function () {
+                                        console.log('Error en la solicitud.');
+                                    },
+                                    complete: function () {
+                                        $('#cancelarBtn, #enviarTramite').prop('disabled', false);
+                                    }
+                                });
+                            }   
+                        })
+            }
+        }
+
+        function validarArchivo(input) {
+            // Obtener el archivo seleccionado
+            var archivo = input.files[0];
+
+            // Definir las extensiones permitidas
+            var extensionesPermitidas = ['pdf', 'jpg', 'jpeg', 'png', 'gif'];
+
+            // Inicializar la variable de error
+            var error = '';
+
+            // Verificar si se seleccionó un archivo
+            if (!archivo) {
+                error = 'No se ha seleccionado ningún archivo.';
+            } else {
+                // Obtener la extensión del archivo
+                var extension = archivo.name.split('.').pop().toLowerCase();
+
+                // Verificar si la extensión es válida
+                if (extensionesPermitidas.indexOf(extension) === -1) {
+                    error = 'Por favor, seleccione un archivo con una extensión válida (pdf, jpg, jpeg, png, gif).';
+                }
+
+                // Verificar el tamaño del archivo (menos de 2MB)
+                var maxSize = 2 * 1024 * 1024; // 2MB en bytes
+                if (archivo.size > maxSize) {
+                    error = 'El tamaño del archivo debe ser menor a 2MB.';
+                }
+            }
+
+            // Si hay un error, mostrar la alerta y devolver false
+            if (error) {
+                alert(error);
+                input.value = ''; // Limpiar el valor del input
+                return false;
+            }
+
+            // Si no hay error, devolver true
+            return true;
+        }
+
+
+        
+    </script>
+{% endblock %}
