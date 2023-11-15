@@ -377,7 +377,6 @@ class PreInscriptionController extends Controller
 
     public function saveAllDataAction(Request $request){
 
-
         $dataParent = $request->get('dataParent');
         $addrressParent = $request->get('addrressParent');
         $ueInfo = $request->get('ueInfo');
@@ -451,7 +450,7 @@ class PreInscriptionController extends Controller
             $newPreinsEstudiante->setPaterno(mb_strtoupper($student['paterno'], 'utf-8'));
             $newPreinsEstudiante->setMaterno(mb_strtoupper($student['materno'], 'utf-8'));
             $newPreinsEstudiante->setNombre(mb_strtoupper($student['nombre'], 'utf-8'));
-            $newPreinsEstudiante->setFechaNacimiento(new \DateTime($student['fechaNacimiento']));
+            $newPreinsEstudiante->setFechaNacimiento(new \DateTime(str_replace('/', '-', $student['fechaNacimiento'])));
 
             $newPreinsEstudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($student['genero']));
             $newPreinsEstudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
