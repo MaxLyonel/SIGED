@@ -15,7 +15,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
     public function getAlterCursosBySieGestSubPer($ie_id, $ie_gestion, $ie_subcea, $per_id_cod) {
         $qb = $this->getEntityMAnager()->createQueryBuilder();
         $qb
-                ->select('h.id as iecId, a.codigo as nivelId, a.facultadArea as nivel, b.codigo as cicloId, b.especialidad as ciclo,
+                ->select('h.id as iecId, a.codigo as nivelId, a.facultadArea as nivel, b.codigo as cicloId, b.especialidad as ciclo, d.id as superiorAcreditacionTipoId,
                  d.codigo as gradoId, d.acreditacion as grado, q.id as turnoId, q.turno, p.id as paraleloId, p.paralelo,
                  b.codigo as setCodigo, d.codigo as satCodigo, a.codigo as sfatCodigo, b.id as setId, f.periodoTipoId as periodoId
                  ')
@@ -33,7 +33,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->andwhere('h.gestionTipo = :gestion')
                 ->andwhere('f.sucursalTipo = :sucursal')
                 ->andwhere('f.periodoTipoId = :periodo')
-                ->groupBy('h.id, a.codigo, a.facultadArea, b.codigo, b.especialidad, d.codigo, d.acreditacion, q.id, p.id, a.codigo, b.id,f.periodoTipoId')
+                ->groupBy('h.id, a.codigo, a.facultadArea, b.codigo, b.especialidad, d.codigo, d.acreditacion, d.id, q.id, p.id, a.codigo, b.id,f.periodoTipoId')
                 ->orderBy('a.codigo, b.codigo, d.codigo, p.id')
                 ->setParameter('sie', $ie_id)
                 ->setParameter('gestion', $ie_gestion)

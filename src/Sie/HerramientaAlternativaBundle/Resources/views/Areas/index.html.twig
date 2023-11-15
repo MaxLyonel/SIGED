@@ -63,14 +63,35 @@
                     </div>
                 </div>
 
-                {# {% if (app.session.get('ie_per_estado') == '0') %}
-                    <div style="float:right">
-                        <button onclick="addAreaAll('{{infoUe}}', '{{tieneCursoOferta}}', '{{asignaturas|length}}')" class="btn btn-primary">
-                            Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %}
-                        </button>
-                        <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} pendientes: <strong>{{asignaturas|length}}</strong></p>
-                    </div>
-                {% endif %} #}
+                {# {% if ( app.session.get('ie_gestion') >= 2023 and ((superiorAcreditacionTipoId == 1) or (superiorAcreditacionTipoId == 20) or (superiorAcreditacionTipoId == 32 )) ) %} #}
+
+                {% if (app.session.get('ie_per_estado') == '0') %}
+                    {% if ( app.session.get('ie_gestion') >= 2023 ) %}
+                        {% if (cursoOferta|length < 5) %}
+                            <div style="float:right">
+                                <button onclick="addAreaAll('{{infoUe}}', '{{tieneCursoOferta}}', '{{asignaturas}}', '{{count}}')" class="btn btn-primary">
+                                    Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %}
+                                </button>
+                                <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} pendientes: <strong>{{count}}</strong></p>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="btn-group" style="width:650px; float:right;">
+                            <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
+                                Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
+                                {% if asignaturas|length > 0 %}
+                                    {% for a in asignaturas %}                                    
+                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endif %}
 
                 {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') %}
                     {% if primaria %}
@@ -80,20 +101,6 @@
                     {% endif %}
 
                     {# AGREGAR LOS MODULOS UNO POR UNO --- VERSION ANTIGUA #}
-                    {# <div class="btn-group" style="width:650px; float:right;">
-                        <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
-                            Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %} <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
-                            {% if asignaturas|length > 0 %}
-                                {% for a in asignaturas %}                                    
-                                    <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
-                                {% endfor %}
-                            {% else %}
-                                <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
-                            {% endif %}
-                        </ul>
-                    </div> #}
 
 
                     {# <div class="btn-group" style="width:650px; float:right;">
@@ -134,7 +141,7 @@
                                     <tr id="mallaDiv">
                                         <td colspan="5">
                                             <div class="col-md-12 alert alert-warning">
-                                                El curso no tiene módulos asignados, seleccione la malla {#(Nueva o antigua)#}
+                                                El curso no tiene módulos asignados {#(Nueva o antigua)#}
                                             </div>
                                             <div class="col-md-12 text-center">
                                                 <form id="mallaForm" name="mallaForm">
@@ -232,18 +239,17 @@
             });
         }
     };
-    var addAreaAll = function( infoUe, tieneCursoOferta, size ){
-        console.log('SIZE', size);
+    var addAreaAll = function( infoUe, tieneCursoOferta, asignaturas, count ){
 
-        if( size == 0 ){
+        if( count == 0 ){
             Swal.fire('Atención', 'No hay modulo para agregar', 'info');
             return;
         } 
-
-        if( tieneCursoOferta == false ){
-            Swal.fire('Atención', 'El curso no tiene módulos asignados, seleccione la malla', 'warning');
-            return;
-        }
+        
+        //if( tieneCursoOferta == false ){
+            //Swal.fire('Atención', 'El curso no tiene módulos asignados, seleccione la malla', 'warning');
+            //return;
+        //}
 
         Swal.fire({
         title: '¿Esta seguro?',
@@ -268,10 +274,10 @@
                         Swal.showLoading()
                     },
                 });
-
+                
                 $.ajax({
                     type: 'post',
-                    data: ({infoUe: infoUe}),
+                    data: ({infoUe: infoUe, asignaturas: asignaturas}),
                     //url: "{{ path('herramienta_alter_areas_add') }}",
                     url: "{{ path('herramienta_alter_add_areas_all') }}",
                     beforeSend: function () {

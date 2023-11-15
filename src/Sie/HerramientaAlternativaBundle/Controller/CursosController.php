@@ -50,13 +50,15 @@ class CursosController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
 
+        // dump($this->session->get('ie_subcea'));
+        // dump($objUeducativa);die;
         $exist = true;
         $aInfoUnidadEductiva = array();
         if ($objUeducativa) {
             foreach ($objUeducativa as $uEducativa) {
 
                 $sinfoUeducativa = serialize(array(
-                    'ueducativaInfo' => array('ciclo' => $uEducativa['ciclo'], 'nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
+                    'ueducativaInfo' => array('ciclo' => $uEducativa['ciclo'], 'nivel' => $uEducativa['nivel'], 'superiorAcreditacionTipoId' => $uEducativa['superiorAcreditacionTipoId'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
                     'ueducativaInfoId' => array('nivelId' => $uEducativa['nivelId'], 'cicloId' => $uEducativa['cicloId'], 'gradoId' => $uEducativa['gradoId'], 'turnoId' => $uEducativa['turnoId'], 'paraleloId' => $uEducativa['paraleloId'], 'iecId' => $uEducativa['iecId'], 'setCodigo'=>$uEducativa['setCodigo'], 'satCodigo'=>$uEducativa['satCodigo'],'sfatCodigo'=>$uEducativa['sfatCodigo'],'setId'=>$uEducativa['setId'],'periodoId'=>$uEducativa['periodoId'],)
                 ));
 
@@ -68,12 +70,8 @@ class CursosController extends Controller {
             $this->addFlash('warninresult', $message);
             $exist = false;
         }
-       // dump($aInfoUnidadEductiva);die;
-//        dump($objUeducativa);
-//        die;
 
         // dump($aInfoUnidadEductiva);die;
-        // dump("heree");die;
         return $this->render($this->session->get('pathSystem') . ':Cursos:index.html.twig', array(
             'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
             'exist' => $exist,
