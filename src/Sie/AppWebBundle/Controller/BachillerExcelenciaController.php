@@ -29,7 +29,7 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2022-11-22');
+        $this->fechaCorte = new \DateTime('2023-11-30');
         $this->gestionOperativo =  $this->session->get('currentyear'); //2022        
 
     }
@@ -124,7 +124,7 @@ class BachillerExcelenciaController extends Controller {
 
     public function resultSearchIeDirAction(Request $request) {
 
-        //dump('xxxxxxxxxx'); die;
+        //dump('procesa el form incial de busqeda'); die;
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
@@ -529,6 +529,7 @@ class BachillerExcelenciaController extends Controller {
             $params = array();
             $stmt->execute($params);
             $po = $stmt->fetchAll();
+            //dump($po); die;
             $ue_no_reporta = $po[0]['existe'];
             if($ue_no_reporta > 0) {
                 return $this->redirect($this->generateUrl('principal_web'));
@@ -545,7 +546,7 @@ class BachillerExcelenciaController extends Controller {
                 A INNER JOIN estudiante_inscripcion b ON A.ID = b.institucioneducativa_curso_id 
             WHERE
                 A.institucioneducativa_id = " .$formulario['institucioneducativa'] ." 
-                AND A.gestion_tipo_id = 2022 
+                AND A.gestion_tipo_id = 2023 
                 AND A.nivel_tipo_id = 13 
                 AND A.grado_tipo_id = 6 
                 AND b.estadomatricula_tipo_id = 4;";
@@ -554,10 +555,11 @@ class BachillerExcelenciaController extends Controller {
             $params = array();
             $stmt->execute($params);
             $po = $stmt->fetchAll();
+            //dump($po); die;
             $existe_efectivos = $po[0]['existe'];
-            if($existe_efectivos > 0) {
+            /*if($existe_efectivos > 0) {
                 return $this->redirect($this->generateUrl('principal_web'));
-            }
+            }*/
 
             /*
             * verificamos si tiene tuicion
@@ -653,9 +655,9 @@ class BachillerExcelenciaController extends Controller {
             /*
              * Lista de estudiantes de 6to de secundaria
              */
-            $repository = $em->getRepository('SieAppWebBundle:Estudiante');
+           // $repository = $em->getRepository('SieAppWebBundle:Estudiante');
 
-            $query = $repository->createQueryBuilder('e')
+            /*$query = $repository->createQueryBuilder('e')
                     ->select('e.id estId, e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, e.segipId, ei.id estinsId, i.id instId, gn.id genId, gn.genero, pt.paralelo, nt.nivel, ct.ciclo, gt.grado')
                     ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
@@ -711,11 +713,27 @@ class BachillerExcelenciaController extends Controller {
                     ->addOrderBy('e.paterno, e.materno, e.nombre', 'asc')
                     ->getQuery();
 
-            $estudiantesM = $query->getResult();
+            $estudiantesM = $query->getResult();*/
 
-            return $this->render('SieAppWebBundle:BachillerExcelencia:resultSearchIe.html.twig', array(
+            // SI PASA TODS LAS VALIDACIONES MANDA A LA VISTA
+
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = 'select * from public.sp_genera_regular_bachiller_destacado_vista(?,?);';
+            $stmt = $db->prepare($query);
+            //$params = array($gestion,$sie);
+            $params = array('2023','80730425');
+            $stmt->execute($params);
+
+            $estudiantes = $stmt->fetchAll();
+            //dump($estudiantes); die; 
+
+            /*return $this->render('SieAppWebBundle:BachillerExcelencia:resultSearchIe2023.html.twig', array(
                         'estudiantesF' => $estudiantesF,
                         'estudiantesM' => $estudiantesM,
+            ));*/
+            return $this->render('SieAppWebBundle:BachillerExcelencia:resultSearchIe2023.html.twig', array(
+                        'estudiantes' => $estudiantes
             ));
         }
     }
@@ -914,7 +932,7 @@ class BachillerExcelenciaController extends Controller {
         $turno_tipo_id = $po[0]['turno_tipo_id'];
 
 
-        $igestion = 2022;
+        $igestion = 2023; //2022;
         $iinstitucioneducativa_id = $ie;
         $inivel_tipo_id=13;
         $igrado_tipo_id=6;
@@ -1016,7 +1034,7 @@ class BachillerExcelenciaController extends Controller {
                     inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
                         inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
             where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
-            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " .$genero_id."
+            and a.gestion_tipo_id=2023 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " .$genero_id."
             group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
             order by round(avg(nota_cuantitativa),0) desc limit 3) a
             union 
@@ -1029,7 +1047,7 @@ class BachillerExcelenciaController extends Controller {
                     inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
                         inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
             where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
-            and a.gestion_tipo_id=2022 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " . $genero_id ."
+            and a.gestion_tipo_id=2023 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " . $genero_id ."
             group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
             order by round(avg(nota_cuantitativa),0) desc limit 3) b) a
                 inner join estudiante b on a.estudiante_id=b.id
