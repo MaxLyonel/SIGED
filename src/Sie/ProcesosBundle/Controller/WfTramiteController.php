@@ -236,13 +236,10 @@ class WfTramiteController extends Controller
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         //dump($tramiteDetalle);die;
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tramiteDetalle->getFlujoProceso()->getId());
-        //dump($flujoproceso);die;
         //Verificamos si tiene competencia
         if($rol == $flujoproceso->getRolTipo()->getId()){
             //dump($flujoproceso->getRutaFormulario());die;
-            if($flujoproceso->getRutaFormulario()){
-                return $this->redirectToRoute($flujoproceso->getRutaFormulario(),array('id' => $tramite->getId(),'tipo'=>'idtramite'));
-            }
+            return $this->redirectToRoute($flujoproceso->getRutaFormulario(),array('id' => $tramite->getId(),'tipo'=>'idtramite'));
         }else{
             $request->getSession()
                     ->getFlashBag()
