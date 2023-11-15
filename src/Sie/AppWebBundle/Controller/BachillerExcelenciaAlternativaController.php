@@ -27,7 +27,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2022-11-22');
+        $this->fechaCorte = new \DateTime('2023-11-30');
         $this->gestionOperativo = $this->session->get('currentyear');
     }
 
@@ -185,15 +185,15 @@ class BachillerExcelenciaAlternativaController extends Controller {
                     ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'sae', 'WITH', 'sia.acreditacionEspecialidad = sae.id')
                     ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'sat', 'WITH', 'sae.superiorAcreditacionTipo = sat.id')
                     ->where('i.id = :institucion')
-                    ->andWhere('sat.codigo = :codigo')
+                    ->andWhere('sat.id = :codigo')
                     ->andWhere('sia.gestionTipo = :gestion')
                     ->setParameter('institucion', $formulario['institucioneducativa'])
-                    ->setParameter('codigo', 3)
+                    ->setParameter('codigo', 52)
                     ->setParameter('gestion', $formulario['gestion'])
                     ->getQuery();
 
             $quinto = $query->getResult();
-
+            // dump($query);die;
             if ($quinto[0][1] == 0) {
                 $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa ' . $formulario['institucioneducativa'] . ' no cuenta con aprendizajes especializados.');
                 return $this->redirect($this->generateUrl('bach_exc_alt_dir'));

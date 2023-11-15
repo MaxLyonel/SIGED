@@ -423,23 +423,22 @@
                     {% if app.session.get('roluser') == 9 %}
                     
                     <!--MENU BACHILLER DE EXCELENCIA PARA UE -->
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
                             <span class="arrow"></span>
                         </a>
                         <ul>
+                            
+                            <li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>                            
+                            <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
                             {#
-                            <li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
+                            <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
+                            <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>                             
                             #}
-                            {# <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>                            #}
-                            
-                            {#<li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
-                            {# <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li> #}
-                            
-                        {# </ul>
-                    </li> #} 
+                         </ul>
+                    </li>
                     
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -737,19 +736,6 @@
                             </ul>
                         </li>  
                     {% endif %}
-                    {% if app.session.get('userId') in [92506087,92520145,92937258] %}
-                        <li class="submenu">    
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-diamond"></i></span>
-                                <span class="text">Regularización BTH</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ path('bth_regularizacion_ttg_tte_index')}}">Registro de Calificaciones TT</a></li>
-                                                            
-                            </ul>
-                        </li>  
-                    {% endif %}
                     
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
@@ -826,7 +812,7 @@
                         </li>
                     {% endif %}
                     {# Preinscripciones #}
-                    {% if app.session.get('roluser') in [9,10,8,7] %}
+                    {# {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -843,7 +829,7 @@
                                 <li><a href="{{path('uealtademanda')}}">Modificar cupo</a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
 
                     {# Cambio de tutor BJP 2021  #}
                     
@@ -866,27 +852,30 @@
                                  {% if app.session.get('roluser') in [9] %}
                                 <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de Titular</a></li> 
                                  {% endif %}
-                                {#
+                                
                                 {% if app.session.get('roluser') in [9,10,8] %}
                                   <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
                                 {% endif %}
+                                
                                 {% if app.session.get('roluser') in [8,37] %}
                                 <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}"> Generar file</a></li>
                                 {% endif %} 
-                                #}
+                                
 
                                 {# se inhabilita a peticion de Bruno en fecha 03032023 antes era 7 y 8#}
-                                {# if app.session.get('roluser') in [7,8] #}
+                                
                                 {#
                                 {% if app.session.get('roluser') in [7,8] %}
                                   <li><a href="{{ path('operativo_bono_jp_ValidaNoPagadosSeguimiento')}}">Seguimiento BJP</a></li>
                                 {% endif %}
-                                 #}
+                                #}
+                                
                                 {#
                                 {% if app.session.get('roluser') in [9] %}
                                   <li><a href="{{ path('operativo_bono_jp_ValidaNoPagados')}}">Valida No Pagados</a></li>
                                 {% endif %}
                                 #}
+                                
                                 
 
                             </ul>
