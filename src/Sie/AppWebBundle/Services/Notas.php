@@ -4909,14 +4909,16 @@ die;/*
             $averaSum = 0;
             foreach ($asignaturasNotas as $value) {
                 $averaSum += $value->getNotaCuantitativa();
-                dump($value->getNotaCuantitativa());
+                // dump($value->getNotaCuantitativa());
             }
             $averaTotal = round($averaSum/sizeof($asignaturasNotas));
             // dump($averaTotal);
             $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
-            $averagePrim->setNotaCuantitativa($averaTotal);
-            $this->em->persist($averagePrim);
-            $this->em->flush(); 
+            if (count($averagePrim) > 0) {
+                $averagePrim->setNotaCuantitativa($averaTotal);
+                $this->em->persist($averagePrim);
+                $this->em->flush(); 
+            }
         }
         return $averaTotal;
 
