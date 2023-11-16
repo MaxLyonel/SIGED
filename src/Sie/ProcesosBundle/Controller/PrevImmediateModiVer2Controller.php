@@ -2378,7 +2378,7 @@ class PrevImmediateModiVer2Controller extends Controller{
         }
         // ACTUALIZAMOS EL ESTADO DE MATRICULA
         // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
-        $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);                    
+        $this->evaluarEstadomatricula($idInscripcion);    
 
         return true;
     }
@@ -2550,7 +2550,31 @@ class PrevImmediateModiVer2Controller extends Controller{
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/
 
+    private function evaluarEstadomatricula($inscripcionid) {
+        $em = $this->getDoctrine()->getManager();            
+        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+        
+        $igestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+        $iinstitucioneducativa_id = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $inivel_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $igrado_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $iturno_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+        $iparalelo_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $icodigo_rude = $inscripcion->getEstudiante()->getCodigoRude();
+        $complementario = "";
+        $estado_inicial = $inscripcion->getEstadomatriculaTipo()->getEstadomatricula();
 
+        if($igestion >= 2022) {            
+            $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
+        }
+
+        $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+        $query->execute();        
+        $resultado = $query->fetchAll();
+
+        return $resultado;
+    }
 
 
 }
