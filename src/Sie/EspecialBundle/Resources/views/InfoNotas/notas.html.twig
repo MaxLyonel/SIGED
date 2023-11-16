@@ -48,10 +48,13 @@
 						{% endif %}
 						<h4 style="color:#3d237e" align="center">{{desc_discapacidad}}</h4>
 						
-						{% if progserv != 99 and (discapacidad == 6 or  discapacidad == 7 or  discapacidad == 1) %}
+						{% if progserv != 99 and (discapacidad == 6 or  discapacidad == 7 or  discapacidad == 1 ) %}
 							<h4 style="color:#2d1a5c" align="center"><b> Programa: {{desc_programa}}</b></h4>
 						{% endif %}
-						{% if servicio != 99 and  discapacidad == 1 %}
+						{% if progserv == 99 and discapacidad == 2 %}
+							<h4 style="color:#2d1a5c" align="center"><b> Programa: {{desc_programa}}</b></h4>
+						{% endif %}
+						{% if servicio != 99 and (discapacidad == 1 or discapacidad == 2) %}
 							<h4 style="color:#2d1a5c" align="center"><b> Servicio: {{desc_servicio}}</b></h4>
 						{% endif %}
 
@@ -152,7 +155,7 @@
 	}
 
     var registrarNotasEspecial = function(infoUe){
-		//alert('entra');    	
+		
     	var enviar = validarEnvioNotas();
         if(enviar == true){
 	    	var formData = $('#formNotasEspecial').serialize();//"textarea[name!=int1]", .not('form[textarea]')
