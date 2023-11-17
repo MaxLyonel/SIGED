@@ -505,27 +505,26 @@
                         </li>#}
                     {% endif %}
 
-                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10  or app.session.get('roluser') == 20  %}
-                    {#
-                    #}
+                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10    %}
+                   
                     
                     <!--MENU BACHILLER DE EXCELENCIA PARA SIE NAL Y DDE -->
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                        {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
+                        {#% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %#}
                         {% if app.session.get('roluser') in [7,8,10] %}
                            {#<li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>#}
-                        {# {% endif %} #}
-                            {# <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li> #}
+                    
+                            <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                             {#<li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>#}
-                        {# </ul>
+                         </ul>
                         {% endif %}
-                    </li>  #}
+                    </li>  
                     <!--MENU BACHILLER DE EXCELENCIA -->
                     <li class="submenu">
                         <a href="javascript:void(0);">
