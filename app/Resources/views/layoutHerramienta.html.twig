@@ -736,6 +736,20 @@
                             </ul>
                         </li>  
                     {% endif %}
+
+                    {% if app.session.get('userId') in [92506087] %}
+                        <li class="submenu">    
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Regularización BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('bth_regularizacion_ttg_tte_index')}}">Calificaciónes TT</a></li>
+                                                            
+                            </ul>
+                        </li>  
+                    {% endif %}
                     
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
