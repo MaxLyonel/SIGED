@@ -405,8 +405,34 @@ class PreInscriptionController extends Controller
 
             
             if(sizeof($newPreinsPersona)>0){
+                $newPreinsPersona->setCarnet($dataParent['carnet']);
+                $newPreinsPersona->setComplemento(mb_strtoupper($dataParent['complemento'], 'utf-8'));
+                $newPreinsPersona->setPaterno(mb_strtoupper($dataParent['paterno'], 'utf-8'));
+                $newPreinsPersona->setMaterno(mb_strtoupper($dataParent['materno'], 'utf-8'));
+                $newPreinsPersona->setNombre(mb_strtoupper($dataParent['nombre'], 'utf-8'));
+                $newPreinsPersona->setFechaNacimiento(new \DateTime($dataParent['fechaNacimiento']));  
+                $newPreinsPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($dataParent['genero']));  
+                $newPreinsPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));  
 
+                $residencia = explode('/',$addrressParent['dirresidencia']);
+                $campos = array('setZona','setAvenida','setCalle','setNumero','setCelular');
+                if(count($residencia) > 0)
+                {
+                    for($i = 0; $i < count($residencia); $i++)
+                    {
+                        $campo = $campos[$i];
+                        $newPreinsPersona->{$campo}(mb_strtoupper($residencia[$i], 'utf-8'));
+                    }
+                }
 
+                $newPreinsPersona->setNomLugTrab(mb_strtoupper($addrressParent['lugarTrabajo'], 'utf-8'));
+                $newPreinsPersona->setMunLugTrab(mb_strtoupper($addrressParent['municipio'], 'utf-8'));
+                $newPreinsPersona->setZonaLugTrab(mb_strtoupper($addrressParent['zona'], 'utf-8'));
+                $newPreinsPersona->setAvenidaLugTrab(mb_strtoupper($addrressParent['avenida'], 'utf-8'));
+                $newPreinsPersona->setCelularLugTrab($addrressParent['fono']);
+                $newPreinsPersona->setSegipId(1);
+
+                $em->persist($newPreinsPersona);
             }else{
 
                 $newPreinsPersona = new PreinsPersona();
@@ -923,7 +949,7 @@ class PreInscriptionController extends Controller
     public function verificacion_datosAction(Request $request){
         $ci = $request->get('ci');
         $compl = $request->get('compl');
-
+        $gestion = $this->session->get('currentyear');
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:PreinsApoderadoInscripcion');
         $query = $entity->createQueryBuilder('ai')
@@ -931,12 +957,14 @@ class PreInscriptionController extends Controller
                 ->leftjoin('SieAppWebBundle:PreinsPersona', 'p', 'WITH', 'p.id=ai.preinsPersona')
                 ->where('p.carnet = :carnet')
                 ->andwhere('p.complemento = :complemento')
+                ->andwhere("ai.fechaRegistro >= :gestion")
                 ->setParameter('carnet', $ci)
                 ->setParameter('complemento', $compl)
+                ->setParameter('gestion', new \DateTime($gestion . '-01-01'))
                 ->getQuery();
         $lista_estado = $query->getResult();
         // $lista_estado = $query->fetchAll();
-        // dump($lista_estado); exit();
+        
         return $this->render('SieAppWebBundle:PreInscription:listar_busqueda_preinscripcion.html.twig',array
         (
             'lista_estado'=>$lista_estado
