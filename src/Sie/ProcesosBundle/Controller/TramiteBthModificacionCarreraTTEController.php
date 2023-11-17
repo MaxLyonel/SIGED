@@ -299,7 +299,6 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
             $extension = explode('.', $name);
             $extension = $extension[count($extension) - 1];
             $new_name = $prefijo.date('YmdHis') . '.' . $extension;
-    
             // GUARDAR EL ARCHIVO
             $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionCarreraTTE/'.$gestion.'/'. $sie . '/' . $codigoRude;
             if (!file_exists($directorio)) {
@@ -387,12 +386,10 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
     }
 
     public function dddRecibeVerificaAction (Request $request) {
-        dump('ok');die;
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
         $ie_id = $this->session->get('ie_id');
         $idTramite = $request->get('id');
-        // dump('ok');die;
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -444,13 +441,12 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
     public function dddEnviaSolitudAction(Request $request){
         $response = new JsonResponse();
         try {
-            dump('ok');die;
             $form = $request->request->all();
             $idTramite = $form['request_tramite_nro'];
 		    // $informe_distrito = $form['fileinformeDis'];
-		    $fotocopia_ci = $form['fotocopiaci'];
-            $solicitud_sftt = $form['solicitud'];
-            $certificado_medico = $form['certificadomedico'];
+		    $fotocopia_ci = $form['fotocopia_ci'];
+            $solicitud_mctte = $form['solicitud_justificado'];
+            $formulario_solicitud = $form['formulario_solicitud'];
             $si_procede = $form['siprocede'];
             $no_procede = $form['noprocede'];
             $observacion = mb_strtoupper($form['observacion'],'UTF-8');
@@ -463,7 +459,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
             $sie = $datos['institucioneducativa_id'];
             $codigoRude = $datos['codigo_rude'];
             $flujo_tipo = $datos['flujoTipo'];
-            list($data, $msj) = $this->validacionRudeBth($codigoRude, $gestion, $sie);
+            list($data, $msj, $carreras_disp) = $this->validacionRudeBth($codigoRude, $gestion, $sie);
             if ($msj !== ''){
                 $response->setStatusCode(200);
                         $response->setData(array(
@@ -474,7 +470,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
                 return $response; 
             }
 
-            if ($si_procede == 'true' and ($fotocopia_ci == 'false' or $solicitud_sftt == 'false' or $certificado_medico == 'false')){
+            if ($si_procede == 'true' and ($fotocopia_ci == 'false' or $solicitud_mctte == 'false' or $formulario_solicitud == 'false')){
                 $msj = 'La unidad solicitante debe presentar todos los requisitos para continuar con el trámite';
                 $response->setStatusCode(200);
                         $response->setData(array(
@@ -485,7 +481,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
                 return $response; 
             }
             /*****SE GUARDA ARCHIVO Y OBTIENE NOMBRE *****/
-            $nArcInfDis = $this->guardarArch($sie, $codigoRude,$gestion,'DDDINF', $_FILES['fileinformeDis']);
+            $nArcInfDis = $this->guardarArch($sie, $codigoRude,$gestion,'DDDINF', $_FILES['file_sancion']);
             $procedente = '';
             $finalizar = '';
             /*****SE VERIFICA SI EL PROCESO SIGUE O NO *****/
@@ -498,11 +494,11 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
             $datosTr = json_encode(array(
                 'sie'=>$sie,
                 'fotocopia_ci'=>$fotocopia_ci,
-                'solicitud_sftt'=>$solicitud_sftt,
-                'certificado_medico'=>$certificado_medico,
+                'solicitud_mctte'=>$solicitud_mctte,
+                'formulario_solicitud'=>$formulario_solicitud,
                 'procedente'=>$procedente,
                 'observacion'=>$observacion,
-                'informe_ddd'=>$nArcInfDis
+                'ddd_sancion'=>$nArcInfDis
             ), JSON_UNESCAPED_UNICODE);
 
             $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
@@ -607,7 +603,6 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
     }
 
     public function ddeRecibeVerificaAction (Request $request) {
-        dump('ok');die;
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
         $ie_id = $this->session->get('ie_id');
@@ -660,14 +655,13 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
     public function ddeConsolidaSolicitudAction(Request $request){
         $response = new JsonResponse();
         try {
-            dump('ok');die;
             $form = $request->request->all();
             $idTramite = $form['request_tramite_nro'];
             // $informe_distrito = $form['fileinformeDis'];
-		    $fotocopia_ci = $form['fotocopiaci'];
-            $solicitud = $form['solicitud'];
-            $certificado_medico = $form['certificadomedico'];
-            $inf_distrito = $form['InformeDistrito'];
+		    $fotocopia_ci = $form['fotocopia_ci'];
+            $solicitud_mctte = $form['solicitud_justificado'];
+            $formulario_solicitud = $form['formulario_solicitud'];
+            $distrito_sancion = $form['distrito_sancion'];
             $si_procede = $form['siprocede'];
             $no_procede = $form['noprocede'];
             $observacion = mb_strtoupper($form['observacion'],'UTF-8');
@@ -680,10 +674,10 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
             $sie = $datos['institucioneducativa_id'];
             $codigoRude = $datos['codigo_rude'];
             $flujo_tipo = $datos['flujoTipo'];
-            $est_asig_id = $datos['eaid'];
+            $est_insc_ht = $datos['eiespid'];
             $inscripcionId = $datos['inscid'];
-            $ei_esp_id = $datos['eiespid'];
-            list($data, $msj) = $this->validacionRudeBth($codigoRude, $gestion, $sie);
+            $new_carrera_id = $datos['nueva_carrera_id'];
+            list($data, $msj, $carreras_disp) = $this->validacionRudeBth($codigoRude, $gestion, $sie);
             if ($msj !== ''){
                 $response->setStatusCode(200);
                         $response->setData(array(
@@ -694,7 +688,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
                 return $response; 
             }
 
-            if ($est_asig_id != $data['eaid'] or $inscripcionId != $data['inscid'] or $ei_esp_id != $data['eiespid']){
+            if ($est_insc_ht != $data['eiespid'] or $inscripcionId != $data['inscid'] or $est_insc_ht != $data['eiespid']){
                 $msj = 'Existe insconsistencia en la información solicitada, el trámite no puede continuar.';
                 $response->setStatusCode(200);
                         $response->setData(array(
@@ -705,7 +699,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
                 return $response; 
             }
 
-            if ($si_procede == 'true' and ($fotocopia_ci == 'false' or $solicitud == 'false' or $certificado_medico == 'false' or $inf_distrito == 'false')){
+            if ($si_procede == 'true' and ($fotocopia_ci == 'false' or $solicitud_mctte == 'false' or $formulario_solicitud == 'false' or $distrito_sancion == 'false')){
                 $msj = 'Marque y verifique todos los documentos para que sea procedente el trámite';
                 $response->setStatusCode(200);
                         $response->setData(array(
@@ -716,7 +710,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
                 return $response; 
             }
             /*****SE GUARDA ARCHIVO Y OBTIENE NOMBRE *****/
-            $nArcInfDep = $this->guardarArch($sie, $codigoRude,$gestion,'DDEINF', $_FILES['fileinformeDep']);
+            // $nArcInfDep = $this->guardarArch($sie, $codigoRude,$gestion,'DDEINF', $_FILES['fileinformeDep']);
             $procedente = '';
             $finalizar = '';
             /*****SE VERIFICA SI EL PROCESO SIGUE O NO *****/
@@ -729,12 +723,11 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
             $datosTr = json_encode(array(
                 'sie'=>$sie,
                 'fotocopia_ci'=>$fotocopia_ci,
-                'solicitud'=>$solicitud,
-                'certificado_medico'=>$certificado_medico,
-                'informe_distrito'=>$inf_distrito,
+                'solicitud_mctte'=>$solicitud_mctte,
+                'formulario_solicitud'=>$formulario_solicitud,
+                'distrito_sancion'=>$distrito_sancion,
                 'procedente'=>$procedente,
-                'observacion'=>$observacion,
-                'informe_dde'=>$nArcInfDep
+                'observacion'=>$observacion
             ), JSON_UNESCAPED_UNICODE);
 
             $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
@@ -844,19 +837,12 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
                 }
 
                 /******ANTES DE REGISTRAR EL TRAMITE SE VERIFICA SI CUMPLE DATA GUARDAR SUSPENSION**********/
-                $query = $em->getConnection()->prepare("select * from estudiante_asignatura ea where ea.id = ". $est_asig_id." ;");
-                $query->execute();
-                $est_asignatura = $query->fetchAll();  
                 
-                $query = $em->getConnection()->prepare("select * from estudiante_nota en where en.estudiante_asignatura_id = ". $est_asig_id ." ;");
-                $query->execute();
-                $est_nota = $query->fetchAll();  
-                
-                $query = $em->getConnection()->prepare("select * from estudiante_inscripcion_humnistico_tecnico eiht where eiht.id = ". $ei_esp_id ." ;");
+                $query = $em->getConnection()->prepare("select * from estudiante_inscripcion_humnistico_tecnico eiht where eiht.id = ". $est_insc_ht ." ;");
                 $query->execute();
                 $est_insc_carrera = $query->fetchAll();  
                 
-                if (count($est_asignatura)!=1 or count($est_nota)>4 or count( $est_insc_carrera)>1){
+                if (count($est_insc_carrera)==0){
                     $msj = 'Existe insconsistencia en la información solicitada, el trámite no puede continuar.';
                     $response->setStatusCode(200);
                     $response->setData(array(
@@ -867,8 +853,8 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
                     return $response;
                 } else {
                     $datosBsf = json_encode(array(
-                        'estudiante_asignatura'=>$est_asignatura[0],
-                        'estudiante_nota'=>$est_nota,
+                        'nueva_carrera'=>$datos['nueva_carrera'],
+                        'antigua_carrera'=>$datos['especialidad'],
                         'estdiante_inscripcion_humanistico_tecnico'=>$est_insc_carrera[0]
                     ), JSON_UNESCAPED_UNICODE);
                 }
@@ -920,38 +906,17 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
         
                     } else {
                         try {
-                            foreach ($est_nota as $est_nota) {
-                                // Busca y elimina la nota
-                                $nota=$em->getRepository('SieAppWebBundle:EstudianteNota')->find($est_nota['id']);
-                                if ($nota) {
-                                    $em->remove($nota);
-                                }
-                            }
 
-                            $est_asignatura=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($est_asig_id);
-                            if ($est_asignatura) {
-                                $em->remove($est_asignatura);
-                            }
-                            
-                            $est_carrera=$em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->find($ei_esp_id);
-                            if ($est_carrera) {
-                                $em->remove($est_carrera);
-                            }
+                            $nueva_esp_tipo=$em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($new_carrera_id);
+                            $est_carrera =$em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->find($est_insc_ht);
+                            $est_carrera->setObservacion('ANT-ETHID: '.$datos['etht_id'].', TRAMITE: '.$idTramite);
+                            $est_carrera->setFechaModificacion(new \DateTime('now'));
+                            $est_carrera->setEspecialidadTecnicoHumanisticoTipo($nueva_esp_tipo);
+                            $em->persist($est_carrera);
                             $em->flush();
-                            // save nota
-                            $estSuspension = new BthSuspensionTte();
-                            $estSuspension->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionId));
-                            $estSuspension->setCodigoRude($codigoRude);
-                            $estSuspension->setDatos($datosBsf);
-                            $estSuspension->setTramiteId($idTramite);
-                            $estSuspension->setEstudianteInscripcionHumnisticoTecnicoId($ei_esp_id);
-                            $estSuspension->setEspecialidadTecnicoHumanisticoTipoId($est_insc_carrera[0]['especialidad_tecnico_humanistico_tipo_id']);
-                            $estSuspension->setFerchaRegistro(new \DateTime('now'));
-                            $em->persist($estSuspension);
-                            $em->flush();
-                            // save regularization
+                            // save new carrera
                             $em->getConnection()->commit();
-                            $msg = 'El trámite Nº '. $idTramite. ' se ha consolidado satisfactoriamente. SE REGISTRO LA SUSPENSIÓN EXCEPCIONAL EN LA FORMACIÓN TTE.';
+                            $msg = 'El trámite Nº '. $idTramite. ' se ha consolidado satisfactoriamente. SE REGISTRO LA MODIFICACIÓN DE CARRERA TTE.';
                         } catch (Exception $e) {
                             $msg = 'Se presento algunos problemas...';
                             $em->getConnection()->rollback();
