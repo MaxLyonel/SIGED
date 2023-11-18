@@ -11,6 +11,8 @@
 
 <div class="row">
     <div class="col-lg-12">
+   
+    {% if discapacidad != 10 %}
         <table class="table table-bordered" id="tbl_nota">
             <thead>
                 <tr>
@@ -69,14 +71,47 @@
                         {% endfor %}
                     </tr>
              </tbody>
-            
         </table>
+    {% endif  %}
+       {% if discapacidad == 10 %}
+        <table class="table table-bordered" id="tbl_nota">
+            <thead>
+                <tr>
+                    <th><b>N°</b></th>
+                    <th><b>Resultados de proceso de atención por programa</b></th>
+                    <th><b>Informe Primer Semestre</b></th>
+                    <th><b>Informe Segundo Semestre</b></th>
+                </tr>
+            </thead>
+             <tbody>
+               
+                     <tr>
+                        <td>
+                         1.
+                        </td>
+                        <td>
+                           {{desc_programa}}
+                        </td>
+                        {% for tn in notas.tiposNotasArray %}
+                          <input type="hidden" name="id_nota[]" class="form-control jnumbersletters noresize ids" value="{{tn.id}}">
+                          <input type="hidden" name="tipo{{tn.id}}" id="tipo{{tn.id}}"  value="{{tn.nota}}">
+                 
+                            <td>
+                                <textarea class="form-control jnumbersletters noresize programa" name="programa{{tn.id}}" id="programa{{tn.id}}" maxlength="80" >{{tn.programa}}</textarea>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                   
+                   
+             </tbody>
+        </table>
+    {% endif  %}
     </div>
     <br/>
     
     <div class="col-lg-12">
         <div class="form-group">
-            <label for="nuevoEstadomatricula">Estado final al segundo semestre</label>
+            <label for="nuevoEstadomatricula">Estado final al Segundo Semestre</label>
             <select class="form-control" name="nuevoEstadomatricula" id="nuevoEstadomatricula" >
                 <option value="">Seleccionar....</option>
                 {% for estadoF in notas.estadosFinales %}
