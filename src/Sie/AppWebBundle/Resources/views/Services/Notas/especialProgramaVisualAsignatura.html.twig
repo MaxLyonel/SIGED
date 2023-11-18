@@ -12,8 +12,10 @@
 <div class="row">
     <div class="col-lg-12">
         <table class="table table-bordered" id="tbl_nota">
-             
+           
+                     
                {% for asig in notas.tiposNotasArray %}
+                 
                 <thead>
                 <tr>
                     <th width="30%"><b>{{asig.semestre}} </b></th>
@@ -28,6 +30,7 @@
                   
               </thead>
               <tbody>
+              {% if asig.subnotas|length>0 %}
                     {% for  tn in asig.subnotas %}
                         <tr>
                             <td>
@@ -50,7 +53,7 @@
                         <td>ESTADO FINAL:
                         </td>
                         <td>
-                        <select class="form-control" name="estado{{asig.estado}}" >
+                        <select class="form-control" name="estado{{asig.id}}" >
                             <option value="">Seleccionar....</option>
                             {% for valor in notas.estadosFinales %}
                             <option value="{{valor.id}}" {% if valor.id == asig.estado %} selected {% endif %}  >{{valor.estadomatricula}}</option>
@@ -58,7 +61,12 @@
                         </select>
                         </td>
                      </tr>  
+                     {% else  %}
+                <h4> No realizo la asignación de areas antes de la inscripción
+                </h4>
+                {% endif  %}
                 {% endfor %}
+               
               </tbody>
             </table>
     </div>

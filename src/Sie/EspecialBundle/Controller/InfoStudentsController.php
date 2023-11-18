@@ -204,7 +204,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(400,401,402,408,403,404,412);
-      $programasLibreta = array(7,8,9,12,14,25,15,47,48); //
+      $programasLibreta = array(7,8,9,12,14,25,15); //
      //dump($aInfoUeducativa['ueducativaInfoId']['programaId']);die; //escuelas mentoras = 32, areas transversales = 17
      //dump($nivel);die;
       if($gestion >2019 and $nivel <> 405){
@@ -230,7 +230,7 @@ class InfoStudentsController extends Controller {
       //dump($nivel);die;
       //2023 llenado de calificaciones trimestrales
        $nivelesConNotas = array(401,412,403,404);
-       $programasConNotas = array(25,8,47,48); 
+       $programasConNotas = array(25,8); 
        
       if($gestion == 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
        
@@ -263,10 +263,21 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = true;
       }
       //visual- programa multiple
-      if($gestion>2022 and $objArea->getId()==2 and ($nivel==411 and in_array($programa,[26]))){
+      if($gestion>2022 and $objArea->getId()==2 and ($nivel==411 and in_array($programa,[26, 47,48]))){
         $arrDataLibreta['calificaciones'] = true;
       }
-
+      //intelectual- atención temprana
+      if($gestion>2022 and $objArea->getId()==3 and ($nivel==409 and in_array($programa,[28])) ){
+        $arrDataLibreta['calificaciones'] = true;
+      }
+      //intelectual- programa multilple
+      if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37])) ){
+        $arrDataLibreta['calificaciones'] = true;
+      }
+      //metal-psiquica
+      if($gestion>2022 and $objArea->getId()==10  ){
+        $arrDataLibreta['calificaciones'] = true;
+      }
       //para bono
       //dump($objArea->getId());die;
       //dump($modalidad);die;
@@ -419,11 +430,12 @@ class InfoStudentsController extends Controller {
                 'exist'=>false
             ));
         }
-      }else { /*191123 esto comentar cuando sea etapa de inscripcuibm, solo se habilito para TALENTO por HR 54332/2023 */ 
-        $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
-            return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
-                'exist'=>false
-            ));
+      }
+      else { /*191123 esto comentar cuando sea etapa de inscripcuibm, solo se habilito para TALENTO por HR 54332/2023 */ 
+       $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
+          return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
+              'exist'=>false
+        ));
       }
 
       $listaprogramas = array(7,8,9,10,11,14,15,16);
