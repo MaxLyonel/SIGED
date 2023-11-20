@@ -361,6 +361,21 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {% if app.session.get('roluser') in [9] %}
+                        
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Operativo Bono Juancito Pinto</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                {#<li><a href="{{ path('operativo_bono_jp_seguimiento')}}">Seguimiento</a></li>#}
+                                {#<li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de titular</a></li>#}
+                                 <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li> 
+                            </ul>
+                        </li>
+                    {% endif %}
                     
                     
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
@@ -497,7 +512,7 @@
                             <span class="text">Trámites</span>
                         </a>
                     </li>
-                    {% if app.session.get('roluser') in [7,8,10, 9] %}
+                    {% if app.session.get('roluser') in [7,8,10,9] %}
                      {#}   <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>

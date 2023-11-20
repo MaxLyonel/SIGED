@@ -1276,7 +1276,10 @@ class TramiteModCalVigenteController extends Controller {
                                 break;    
                     case 2022:
                                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
-                                break;                                                                 
+                                break; 
+                    case 2023:
+                                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
+                                break;                                                                         
                     default:
                                 $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
                                 break;

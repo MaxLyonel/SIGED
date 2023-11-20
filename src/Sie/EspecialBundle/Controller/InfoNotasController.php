@@ -35,7 +35,7 @@ class InfoNotasController extends Controller {
      */
     public function indexAction(Request $request) { 
         try {
-            //dump("aaaaaqui");die;
+           // dump($request);die;
             $idInscripcionEspecial = $request->get('idInscripcionEspecial');
             $em = $this->getDoctrine()->getManager();
             $inscripcionEspecial = $em->getRepository('SieAppWebBundle:EstudianteInscripcionEspecial')->find($idInscripcionEspecial);
@@ -63,20 +63,22 @@ class InfoNotasController extends Controller {
             $desc_servicio = $cursoEspecial->getEspecialServicioTipo()->getServicio();
             $progserv = $cursoEspecial->getEspecialProgramaTipo()->getId();
             $servicio = $cursoEspecial->getEspecialServicioTipo()->getId();
-
+            $momento = $cursoEspecial->getEspecialMomentoTipo()->getId();
+            $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
+            $progserv = $cursoEspecial->getEspecialServicioTipo()->getId();
             $seguimiento = false;
 
             $estadosMatricula = null;
-            //dump($discapacidad);
-            //dump($nivel);die;
+          //  dump($discapacidad);
+           // dump($nivel);die;
            //dump($operativo);die;
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
-                        //dump($servicio); dump($progserv);dump($nivel);
+                            //dump($programa);dump($servicio); dump($progserv);dump($nivel); die;
                         if($nivel == 403 or $nivel == 404 ){//Verificar el seguimiento para 19
                             //dump("1");die;
-                            if($progserv == 19) {
+                            if($progserv == 19) { 
 
                                 $notas = $this->get('notas')->especial_auditiva($idInscripcion,$operativo);
 
@@ -87,7 +89,7 @@ class InfoNotasController extends Controller {
                                     $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                                 }
 
-                            } else{
+                            } else{ 
                                 //$operativo = 1; se forzo porque aun no habia registro de operativo
                                 $notas = $this->get('notas')->regularEspecial($idInscripcion,$operativo);
 
@@ -119,9 +121,8 @@ class InfoNotasController extends Controller {
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                             }
                         }
-                        if($nivel == 411 and in_array($progserv, array(19,41,43,44,46)) and $gestion > 2022){  
+                        if($nivel == 411 and $gestion > 2022 and (in_array($progserv, array(19,41,43,44,46)) or in_array($programa, array(19))) ){ 
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
-                           // dump($notas);die;
                             $template = 'especialPrograma';
                             $actualizarMatricula = false;
                             $seguimiento = true;
@@ -137,13 +138,16 @@ class InfoNotasController extends Controller {
                             $actualizarMatricula = false;
                             $seguimiento = true;
                         }
-                       
+                       //dump($notas);die;
                         
                         break;
                 case 2: // Visual
-                        $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
-                        $progserv = $cursoEspecial->getEspecialServicioTipo()->getId();
-                        if($nivel == 411 and in_array($programa, array(7,8,9,10,11,12,14,15,16,25))){
+                        // dump($nivel); 
+                    
+                        //dump($programa);
+                       // dump($progserv);
+                          //die;
+                        if($nivel == 411 and in_array($programa, array(7,8,9,10,11,12,14,15,16,25))){ 
                             if($gestion < 2020){
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
@@ -162,21 +166,33 @@ class InfoNotasController extends Controller {
                                 
                                 $template = 'especialCualitativoVisual';
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(78,79)));
-                                //dump($notas);die;
+                              //  dump($notas);die;
                             }
-                        }elseif($nivel <> 405 and $gestion >2019){
+                        }
+                        if($nivel <> 405 and $gestion >2019 and $gestion < 2023){   
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                             $template = 'especialSeguimiento';
                             $actualizarMatricula = false;
                             $seguimiento = true;
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                         }
+
+                        if($gestion > 2022 && ($nivel == 411 and in_array($programa, array(47,48,26))) or ($nivel == 410 and in_array($progserv, array(35,36,37,38))) ){ // programas visual y notas semestrales   
+                            $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                            $template = 'especialProgramaVisual'; //prog/ser con contenidos-resultados-recomendaciones
+                            if($momento<3)
+                                $template = 'especialProgramaVisualAsignatura'; //formato con asignaturas
+                            $actualizarMatricula = false;
+                            $seguimiento = true;
+                            if($operativo >= 3 or $gestion < $gestionActual){
+                                $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(78,79,80)));
+                            }
+                        }
                         
                         break;
                 case 3: //Intelectual
                 case 5: //Multiple
                 case 12: //Autista
-                    
                         switch ($nivel) {
                             case 400:
                             case 401:
@@ -212,13 +228,18 @@ class InfoNotasController extends Controller {
                                 break;
                             case 410:  // Programas
                             case 411:  //Servicios
-                                if($gestion >2019){
+                                if($gestion >2019){ 
                                     $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                                  
                                     $template = 'especialSeguimiento';
+                                    if($programa==37)
+                                        $template = 'especialProgramaVisual';
+                                    
                                     $actualizarMatricula = false;
                                     $seguimiento = true;
-                                    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
+                                    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,78)));
                                 }
+                                break;
                             case 409:  //Atencion temprana
                                 if($gestion >2022){
                                     $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
@@ -226,7 +247,7 @@ class InfoNotasController extends Controller {
                                     $template = 'especialSemestre';
                                     $actualizarMatricula = false;
                                     $seguimiento = true;
-                                    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(47,78)));
+                                    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(47,5)));
                                 }
                         }
                         
@@ -260,14 +281,27 @@ class InfoNotasController extends Controller {
 
                 case 9: // Problemas emocionales
                         break;
+                case 10: // Mental-Psiquica
+                        if($gestion > 2022 && $nivel == 411 ){ // programas visual y notas semestrales   
+                        $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                        $template = 'especialSemestre'; //prog/ser con contenidos-resultados-recomendaciones
+                        $actualizarMatricula = false;
+                        $seguimiento = true;
+                        if($operativo >= 3 or $gestion < $gestionActual){
+                            $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(78,79,80)));
+                            }
+                        }                          
+                        break;
                 case 100: // Modalidad Indirecta
                         break;
             }
-           // dump($template); 
-           // dump($notas);
+            
+            //dump($template); 
+            //dump($notas);
             //dump($progserv);
             //dump($desc_programa);
-           // die;
+           //
+              //die;
            //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
@@ -298,7 +332,7 @@ class InfoNotasController extends Controller {
 
     public function createUpdateAction(Request $request){ 
         try {
-            //dump($request); die;
+           // dump($request); die;
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
@@ -312,13 +346,26 @@ class InfoNotasController extends Controller {
                 }else{
                     $idEstadoMatriicula = $request->get('notaCualitativa');
                 }
-                $this->get('notas')->especialVisualRegistro($request, $discapacidad);
+               
+                if($request->get('tipoNota')=='Etapa'){ 
+                    $this->get('notas')->especialVisualRegistro($request, $discapacidad);
+                }
+
+                if($request->get('tipoNota')=='Semestral' or $request->get('tipoNota')=='SemestralAsignatura'){ 
+                   
+                    $this->get('notas')->especialRegistro($request, $discapacidad);
+                   /* $tipos_notas = $request->get('id_nota'); 
+                    $ultimo_estado = $request->get('estado'.$tipos_notas[count($tipos_notas)-1]);
+                    if($ultimo_estado!='');
+                        $idEstadoMatriicula =  $ultimo_estado;*/
+                }
+              
                 //Actualizar matricula cada etapa
-                if($idEstadoMatriicula){
+               /* if($idEstadoMatriicula){ 
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
                     $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($idEstadoMatriicula));
                     $em->flush();  
-                }
+                }   */
             }else{
                 //dump($request);die;
                 $this->get('notas')->especialRegistro($request, $discapacidad);
@@ -326,12 +373,20 @@ class InfoNotasController extends Controller {
             }
             // Verificamos si se actualizara el estado de matrícula
             if($request->get('actualizar') == true  or $request->get('actualizar') == 1 ){ 
-                
                 $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
-
             }
-            
-            
+            //actualizamos estado segun el ultimo subestado
+            $tipos_notas = $request->get('id_nota'); //dump( $tipos_notas);die;
+            $ultimo_estado = $request->get('estado'.$tipos_notas[count($tipos_notas)-1]);
+                if($ultimo_estado!='');
+                    $idEstadoMatriicula =  $ultimo_estado;
+                if($request->get('nuevoEstadomatricula')!='')
+                    $idEstadoMatriicula =  $request->get('nuevoEstadomatricula');
+            if($idEstadoMatriicula){ 
+                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+                $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($idEstadoMatriicula));
+                $em->flush();  
+            }              
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
             // y cuando esten en el cuarto bimestre
             

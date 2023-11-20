@@ -4909,14 +4909,16 @@ die;/*
             $averaSum = 0;
             foreach ($asignaturasNotas as $value) {
                 $averaSum += $value->getNotaCuantitativa();
-                dump($value->getNotaCuantitativa());
+                // dump($value->getNotaCuantitativa());
             }
             $averaTotal = round($averaSum/sizeof($asignaturasNotas));
             // dump($averaTotal);
             $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
-            $averagePrim->setNotaCuantitativa($averaTotal);
-            $this->em->persist($averagePrim);
-            $this->em->flush(); 
+            if (count($averagePrim) > 0) {
+                $averagePrim->setNotaCuantitativa($averaTotal);
+                $this->em->persist($averagePrim);
+                $this->em->flush(); 
+            }
         }
         return $averaTotal;
 
@@ -6375,7 +6377,7 @@ die;/*
             return null;
         }
     }
-
+    //nuevo regidtro especial
     public function especialRegistro(Request $request, $discapacidad){
         
         $this->session = $request->getSession();
@@ -6920,23 +6922,42 @@ die;/*
                 }
             }
             
-            if($tipo == 'Semestral'){
-                
+            if($tipo == 'Semestral'){ 
+              
                 $tipos_notas_array = $request->get('id_nota');
                 
                 for($x=0; $x<count($tipos_notas_array); $x++){
                     $actividad = $request->get('actividad'.$tipos_notas_array[$x]);
                     $valoracion = $request->get('valoracion'.$tipos_notas_array[$x]);
-                     $sw_talento = false;
+                    $sw_registro = false;
 
                     if($actividad && $valoracion){
                         $detalle = array('valoracion'=>$valoracion,'actividad'=>$actividad);
-                        $sw_talento = true;
+                        $sw_registro = true;
                     }
-                  
-                    
-                    if($sw_talento){                     
-                        //dump($detalle);die;
+                    $contenido = $request->get('contenido'.$tipos_notas_array[$x]);
+                    $resultado = $request->get('resultado'.$tipos_notas_array[$x]);
+                    $recomendacion = $request->get('recomendacion'.$tipos_notas_array[$x]);
+                    $estado = $request->get('estado'.$tipos_notas_array[$x]);
+                    if($contenido && $resultado){
+                        $detalle = array('contenido'=>$contenido,'resultado'=>$resultado, 'recomendacion'=>$recomendacion,'estado'=>$estado);
+                        $sw_registro = true;
+                    }
+
+                    $estimulacion = $request->get('estimulacion'.$tipos_notas_array[$x]);
+                    $orientacion = $request->get('orientacion'.$tipos_notas_array[$x]);
+                    $deteccion = $request->get('deteccion'.$tipos_notas_array[$x]);
+                    if($estimulacion && $orientacion){
+                        $detalle = array('estimulacion'=>$estimulacion,'orientacion'=>$orientacion, 'deteccion'=>$deteccion,'estado'=>$estado);
+                        $sw_registro = true;
+                    }
+                    $programa = $request->get('programa'.$tipos_notas_array[$x]);
+                    if($programa){
+                        $detalle = array('programa'=>$programa, 'estado'=> $request->get('nuevoEstadoMatricula'));
+                        $sw_registro = true;
+                    }
+                    if($sw_registro){                     
+                       // dump($detalle);die;
                         //$detalle = array('valoracion'=>$valoracion,'actividad'=>$actividad);
                         $id_tipo_nota = $tipos_notas_array[$x];
                         $newCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$id_tipo_nota));
@@ -7115,6 +7136,71 @@ die;/*
                     }
                 }
                 
+            }
+
+            if($tipo == 'SemestralAsignatura'){ //dump("registro de notas"); dump($request);
+                $programa = $request->get('progserv');
+                $tipos_notas_array = $request->get('id_nota');
+                
+                $asignaturas =  $this->em->createQuery(
+                    'SELECT at.id as asignatura_id, at.asignatura,eat.id
+                    FROM SieAppWebBundle:AsignaturaTipo at,
+                    SieAppWebBundle:EstudianteAsignatura eat,
+                    SieAppWebBundle:InstitucioneducativaCursoOferta ieco
+                    WHERE 
+                     at.id = ieco.asignaturaTipo and
+                     eat.institucioneducativaCursoOferta = ieco.id and
+                     eat.estudianteInscripcion IN (:ids)
+                     ORDER BY at.id ASC')
+                    ->setParameter('ids',$idInscripcion)
+                    ->getResult();
+               //dump($asignaturas);die;
+                for($x=0; $x<count($tipos_notas_array); $x++){
+                    $estado = $request->get('estado'.$tipos_notas_array[$x]);
+
+                    $detalle = [];
+                        foreach ($asignaturas as $as) {
+                            $contenido = $request->get('contenido'.$as["id"].$tipos_notas_array[$x]);
+                            $resultado = $request->get('resultado'.$as["id"].$tipos_notas_array[$x]);
+                            $recomendacion = $request->get('recomendacion'.$as["id"].$tipos_notas_array[$x]);
+                       
+                            if($contenido && $resultado){
+                                $detalle = array('contenido'=>$contenido,'resultado'=>$resultado, 'recomendacion'=>$recomendacion,'estado'=>$estado);
+                            }
+                            if(count($detalle)>0){    
+                                $newNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$as["id"], 'notaTipo'=>$tipos_notas_array[$x]));
+                                if(!$newNota){ 
+                                    $newNota = new EstudianteNota();
+                                    $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($tipos_notas_array[$x]));
+                                    $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($as["id"]));
+                                    $newNota->setNotaCuantitativa(0);
+                                    $newNota->setUsuarioId($this->session->get('userId'));
+                                    $newNota->setFechaRegistro(new \DateTime('now'));
+                                }
+                                $newNota->setNotaCualitativa(json_encode($detalle));
+                                $newNota->setRecomendacion('');
+                                $newNota->setFechaModificacion(new \DateTime('now'));
+                                $newNota->setObs('');
+                                $this->em->persist($newNota);
+                                $this->em->flush();
+                            }
+                        }     
+                        $newCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$tipos_notas_array[$x]));
+                        $estado_dato = array('estado'=>$estado);
+                        if(!$newCualitativa){ 
+                            $newCualitativa = new EstudianteNotaCualitativa();
+                            $newCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($tipos_notas_array[$x]));
+                            $newCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                            $newCualitativa->setNotaCuantitativa(0);
+                            $newCualitativa->setRecomendacion('');
+                            $newCualitativa->setUsuarioId($this->session->get('userId'));
+                            $newCualitativa->setFechaRegistro(new \DateTime('now'));
+                        }
+                            $newCualitativa->setFechaModificacion(new \DateTime('now'));
+                            $newCualitativa->setNotaCualitativa(json_encode($estado_dato));
+                            $this->em->persist($newCualitativa);
+                            $this->em->flush();
+                }
             }
 
             if($tipo == 'Modular'){   // dump("modular");
@@ -7331,7 +7417,6 @@ die;/*
         }
     }
 
-
     public function especial_seguimiento($idInscripcion,$operativo){
         try {
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -7345,7 +7430,8 @@ die;/*
             $gestionActual = $this->session->get('currentyear');
             $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
             $servicio = $cursoEspecial->getEspecialServicioTipo()->getId();
-            
+            $momento = $cursoEspecial->getEspecialMomentoTipo()->getId();
+
             $idNotaTipo = 0;
             $arrayCualitativas = array();
             // $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,$subarea);
@@ -7528,6 +7614,80 @@ die;/*
                 
             }
 
+            if ($subarea == 2 and $gestion > 2022 and $programa == 26 and $momento<3){ 
+                //Nueva evaluacion de programa de visual con diferentes asignaturas
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80));
+                $idNotaTipo = 'SemestralAsignatura';
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findBy(array('obs'=>'Semestral'));
+                $asignaturas =  $this->em->createQuery(
+                        'SELECT at.id as asignatura_id, at.asignatura,eat.id
+                        FROM SieAppWebBundle:AsignaturaTipo at,
+                        SieAppWebBundle:EstudianteAsignatura eat,
+                        SieAppWebBundle:InstitucioneducativaCursoOferta ieco
+                        WHERE 
+                         at.id = ieco.asignaturaTipo and
+                         eat.institucioneducativaCursoOferta = ieco.id and
+                         eat.estudianteInscripcion IN (:ids)
+                        ORDER BY at.id ASC'
+                        )->setParameter('ids',$idInscripcion)
+                        ->getResult();
+        
+                    foreach ($tiposNotas as $tn) {
+                        $subNotasArray = array();
+                        $estado = '';
+                        foreach ($asignaturas as $as) {
+                            $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$as["id"], 'notaTipo'=>$tn->getId()));
+                            $contenido = '';
+                            $resultado = '';
+                            $recomendacion = '';
+                          
+                            if($notaCualitativas){
+                                $arrayCualitativas = json_decode($notaCualitativas->getNotaCualitativa(), true); 
+                                $contenido = $arrayCualitativas["contenido"];
+                                $resultado = $arrayCualitativas["resultado"];
+                                $recomendacion = $arrayCualitativas["recomendacion"];   
+                             //   $estado = $arrayCualitativas["estado"];   
+                            }
+                            if($tn->getNotaTipo())
+                                $subNotasArray[] = array('idea'=>$as["id"],'asignatura'=>$as["asignatura"],'contenido'=> $contenido,'resultado'=> $resultado, 'recomendacion'=> $recomendacion );
+                        }
+                        $cualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$tn->getId()));
+                        if($cualitativa){
+                            $arrayCualitativa = json_decode($cualitativa->getNotaCualitativa(), true); 
+                            $estado = $arrayCualitativas["estado"];
+                        }
+                        $tiposNotasArray[] = array('id'=>$tn->getId(),'semestre'=>$tn->getNotaTipo(), 'estado'=> $estado, "subnotas" =>$subNotasArray );
+                }  
+                //dump($tiposNotasArray);die;
+            } 
+
+            if ( $subarea == 2 and $gestion > 2022 and ($nivel==411 or $nivel==410) and $momento>2){ //Visual - Programa Semestral
+                // dump("visual..........");
+                //  dump($momento);
+                //die;
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80));
+                $idNotaTipo = 'Semestral';
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findBy(array('obs'=>'Semestral'));
+                $subNotasArray = array();
+               
+                foreach ($tiposNotas as $tn) {
+                    $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$tn->getId()));
+                    $contenido = '';
+                    $resultado = '';
+                    $recomendacion = '';
+                    $estado = '';
+                    if($notaCualitativas){
+                        $arrayCualitativas = json_decode($notaCualitativas->getNotaCualitativa(), true);
+                        $contenido = $arrayCualitativas["contenido"];
+                        $resultado = $arrayCualitativas["resultado"];
+                        $recomendacion = $arrayCualitativas["recomendacion"];   
+                        $estado = $arrayCualitativas["estado"];   
+                    }
+                    $tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNotaTipo(),'titulo'=>$tn->getNotaTipo(),'contenido'=> $contenido, 'resultado'=> $resultado, 'recomendacion'=> $recomendacion, 'estado'=> $estado);
+                }
+
+               // dump($tiposNotasArray);die;
+            }
 
             if ( $subarea == 3 and $gestion > 2022 and $nivel==409){ //Intelectual - Atencion temprana
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47,78));
@@ -7545,6 +7705,44 @@ die;/*
                         $deteccion = $arrayCualitativas["deteccion"];   
                     }
                     $tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNotaTipo(),'estimulacion'=> $estimulacion, 'orientacion'=> $orientacion, 'deteccion'=> $deteccion);
+                }
+            }
+            if ( $subarea == 3 and $gestion > 2022 and $nivel==411 and $programa==37){ //Intelectual - itinerario personalizado
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47,5));
+                $idNotaTipo = 'Semestral';
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findBy(array('obs'=>'SEG'));
+                foreach ($tiposNotas as $tn) {
+                    $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$tn->getId()));
+                   
+                    $contenido = '';
+                    $resultado = '';
+                    $recomendacion = '';
+                    $estado = '';
+                    if($notaCualitativas){
+                        $arrayCualitativas = json_decode($notaCualitativas->getNotaCualitativa(), true);
+                        $contenido = $arrayCualitativas["contenido"];
+                        $resultado = $arrayCualitativas["resultado"];
+                        $recomendacion = $arrayCualitativas["recomendacion"];   
+                        $estado = $arrayCualitativas["estado"];   
+                    }
+                    $tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNotaTipo(),'contenido'=> $contenido, 'resultado'=> $resultado, 'recomendacion'=> $recomendacion, 'estado'=> $estado);
+                }
+                //dump( $tiposNotasArray);die;
+            }
+            if ( $subarea == 10 and $gestion > 2022 and $nivel==411){ //Mental Psiquica
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47, 5));
+                $idNotaTipo = 'Semestral';
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findBy(array('obs'=>'Semestral'));
+                foreach ($tiposNotas as $tn) {
+                    $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$tn->getId()));
+                    $programa = '';
+                    $estado = '';
+                    if($notaCualitativas){
+                        $arrayCualitativas = json_decode($notaCualitativas->getNotaCualitativa(), true);
+                        $programa = $arrayCualitativas["programa"];
+                        $estado = $arrayCualitativas["estado"]; 
+                    }
+                    $tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNotaTipo(),'programa'=> $programa,'estado'=> $estado);
                 }
             }
             
