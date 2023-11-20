@@ -8,6 +8,9 @@ Sie\AppWebBundle\Entity\SuperiorModuloTipo:
         IDX_4550B763C90FFEFC:
             columns:
                 - superior_area_saberes_tipo_id
+        IDX_370E73077C1FD987:
+            columns:
+                - superior_especialidad_tipo_id
     id:
         id:
             type: integer
@@ -64,6 +67,15 @@ Sie\AppWebBundle\Entity\SuperiorModuloTipo:
             inversedBy: null
             joinColumns:
                 superior_area_saberes_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorEspecialidadTipo:
+            targetEntity: SuperiorEspecialidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_especialidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

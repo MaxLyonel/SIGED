@@ -2026,6 +2026,7 @@ select idsae,idacr
             $superiorAcreditacionEspecialidad = $query->fetch();
 
             if( !$superiorAcreditacionEspecialidad ){
+                dump("here 1");die;
                 $sae = new SuperiorAcreditacionEspecialidad();                
                 $sae->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($nivelId));
                 $sae->setSuperiorEspecialidadTipo($em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($sestId));
@@ -2047,7 +2048,7 @@ select idsae,idacr
             $superiorInstitucioneducativaAcreditacion = $queryOne->fetch();
 
             if( !$superiorInstitucioneducativaAcreditacion ){
-
+                dump("here 2");die;
                 $querySucu = $db->prepare("select * from institucioneducativa_sucursal is2 where is2.id=".$this->session->get('ie_suc_id')." order by is2.id desc limit 1");
                 $querySucu->execute();
                 $institucioneducativaSucursal = $querySucu->fetch();
@@ -2084,7 +2085,7 @@ select idsae,idacr
                 }else{
                     $superiorPeriodoTipo = 4;
                 }
-
+                dump("here 3");die;
                 $siea = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($superiorInstitucioneducativaAcreditacion);
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_institucioneducativa_periodo');")->execute();
                 $siep = new SuperiorInstitucioneducativaPeriodo();                
@@ -2112,23 +2113,24 @@ select idsae,idacr
                                             and cap.superior_especialidad_tipo_id=".$sestId."");
                 $queryFive->execute();
                 $modules = $queryFive->fetchAll();
-
+                // dump($modules);die;
                 $contModulesTM = 0; 
                 foreach ($modules as $value) {
                     $modulo = $value['modulo'];
-                    
+
                     $querySeven = $db->prepare("select * from superior_modulo_tipo smt where 
                                                     smt.superior_especialidad_tipo_id=".$sestId." 
                                                     and smt.modulo like '".$modulo."'");
                     $querySeven->execute();
                     $superiorModuloTipo = $querySeven->fetch();
-                    
-                    if(!$superiorModuloTipo){
 
+                    if(!$superiorModuloTipo){
                         $smtipo = new SuperiorModuloTipo();
                         $smtipo -> setModulo($modulo);
                         $smtipo -> setEsvigente(true);
                         $smtipo -> setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
+                        $smtipo -> setSuperiorEspecialidadTipo($em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($sestId));
+
                         $em->persist($smtipo);
                         $em->flush();
 
