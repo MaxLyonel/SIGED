@@ -1997,7 +1997,6 @@ select idsae,idacr
             $form = $request->get('form');
             $nivelId = $form['nivel'];
             $sestId = $form['sestId'];
-
             switch ($nivelId) {
                 case '1':
                     $nivelId = 1;
@@ -2113,32 +2112,26 @@ select idsae,idacr
                                             and cap.superior_especialidad_tipo_id=".$sestId."");
                 $queryFive->execute();
                 $modules = $queryFive->fetchAll();
-                // dump($modules);die;
+
                 $contModulesTM = 0; 
                 foreach ($modules as $value) {
-    
                     $modulo = $value['modulo'];
-    
+                    
                     $querySeven = $db->prepare("select * from superior_modulo_tipo smt where 
                                                     smt.superior_especialidad_tipo_id=".$sestId." 
                                                     and smt.modulo like '".$modulo."'");
                     $querySeven->execute();
                     $superiorModuloTipo = $querySeven->fetch();
-                    // dump($superiorModuloTipo);die;
+                    
                     if(!$superiorModuloTipo){
-                        // dump($sestId);
-                        // dump($modulo);
-                        // dump($superiorModuloTipo);
-                        // dump($modulo);
-                        // dump($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find());
-                        // die;
+
                         $smtipo = new SuperiorModuloTipo();
                         $smtipo -> setModulo($modulo);
                         $smtipo -> setEsvigente(true);
                         $smtipo -> setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
                         $em->persist($smtipo);
-                        $em->flush($smtipo);
-    
+                        $em->flush();
+
                         $smtipo = $smtipo->getId();
                     }else{
                         $smtipo = $superiorModuloTipo['id'];
@@ -2149,7 +2142,7 @@ select idsae,idacr
                                                     and smp2.institucioneducativa_periodo_id=".$superiorInstitucioneducativaPeriodo."");
                     $queryEight->execute();
                     $superiorModuloPeriodo = $queryEight->fetch();
-                    // dump($superiorModuloPeriodo);die;
+
                     if( !$superiorModuloPeriodo ){
                         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                         $smperiodo = new SuperiorModuloPeriodo();
