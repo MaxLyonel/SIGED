@@ -91,7 +91,7 @@ class AreasController extends Controller {
         // dump($dataUE['ueducativaInfoId']['setId']);
         // dump($dataUE['ueducativaInfoId']['periodoId']);
         // die;
-        $query = $db->prepare("select smt.id, smp.id as smpid, smt.modulo, smt.codigo, smt.esvigente from superior_acreditacion_especialidad sae 
+        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid from superior_acreditacion_especialidad sae 
                                 inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
                                 inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
                                 inner join superior_institucioneducativa_acreditacion sia on sae.id=sia.acreditacion_especialidad_id 
@@ -175,8 +175,10 @@ class AreasController extends Controller {
             $aInfoUeducativa = unserialize($infoUe);
     
             $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
-            
+
             $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+
             $em->getConnection()->beginTransaction();
         
             if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe) ){
@@ -189,20 +191,67 @@ class AreasController extends Controller {
     
             // $asignaturas = $this->getAreas($infoUe);
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+
+
+            //  VERIFICAR SI CUMPLE CON EL SIP DE LA MALLA
+            $queryCurso = $db->prepare("select * from institucioneducativa_curso ic where ic.id=".$idCurso."");
+            $queryCurso->execute();
+            $resultCurso = $queryCurso->fetch();
+            
+            if( !isset($asignaturas[0]['sipid']) ){
+
+                $queryFindSIP = $db->prepare("select smp.id as smpid, sip.id as sipid from superior_modulo_periodo smp 
+                                                inner join superior_institucioneducativa_periodo sip on sip.id=smp.institucioneducativa_periodo_id 
+                                                where smp.id=".$asignaturas[0]['smpid']."");
+                $queryFindSIP->execute();
+                $resultSIP = $queryFindSIP->fetch();
+
+                $sipId = $resultSIP['sipid'];
+            }else{
+                $sipId = $asignaturas[0]['sipid'];
+            }
+
+            if( $sipId !== $resultCurso['superior_institucioneducativa_periodo_id'] ){
+
+                $queryFindIds = $db->prepare("select sia.id  as siaid, sip.id as sipid, sae.id as saeid from institucioneducativa_curso ic 
+                                                inner join superior_institucioneducativa_periodo sip on sip.id=ic.superior_institucioneducativa_periodo_id 
+                                                inner join superior_institucioneducativa_acreditacion sia on sia.id=sip.superior_institucioneducativa_acreditacion_id 
+                                                inner join superior_acreditacion_especialidad sae on sae.id=sia.acreditacion_especialidad_id 
+                                                where 
+                                                ic.id=".$idCurso."
+                                                and ic.gestion_tipo_id=".$this->session->get('ie_gestion')."
+                                                and sip.id=".$resultCurso['superior_institucioneducativa_periodo_id']."");
+                $queryFindIds->execute();
+                $resultFound = $queryFindIds->fetch();
+                // dump($resultFound);die;
+                $updateCurso = $db->prepare("update institucioneducativa_curso set superior_institucioneducativa_periodo_id=".$sipId." where id=".$idCurso."");
+                $updateCurso->execute();
+
+                // $deleteSIP = $db->prepare("delete from superior_institucioneducativa_periodo where id=".$resultFound['sipid']."");
+                // $deleteSIP->execute();
+
+                // $deleteSIA = $db->prepare("delete from superior_institucioneducativa_acreditacion where id=".$resultFound['siaid']."");
+                // $deleteSIA->execute();
+
+                // $deleteSAE = $db->prepare("delete from superior_acreditacion_especialidad where id=".$resultFound['saeid']."");
+                // $deleteSAE->execute();
                 
+            }
+            
             // foreach ($asignaturas['asignaturas'] as $value) {
             foreach ($asignaturas as $value) {
-    
+                
                 if ($value['codigo'] != '415'){    
-                    $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']);
 
                     $ieco = new InstitucioneducativaCursoOferta();
                     $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
                     $ieco->setInsitucioneducativaCurso($curso);
-                    $ieco->setSuperiorModuloPeriodo($smp);
+                    $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
+                    // $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
                     $ieco->setHorasmes(0);
                     $em->persist($ieco);
                     $em->flush();
+
                 }
             }
             
