@@ -296,8 +296,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
             $size = $file['size'];
             $tmp_name = $file['tmp_name'];
             $name = $file['name'];
-            $extension = explode('.', $name);
-            $extension = $extension[count($extension) - 1];
+            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             $new_name = $prefijo.date('YmdHis') . '.' . $extension;
             // GUARDAR EL ARCHIVO
             $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionCarreraTTE/'.$gestion.'/'. $sie . '/' . $codigoRude;
