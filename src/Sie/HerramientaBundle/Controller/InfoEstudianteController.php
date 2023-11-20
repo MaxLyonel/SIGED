@@ -1031,9 +1031,9 @@ class InfoEstudianteController extends Controller {
         
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         
-        if ($closeopesextosecc == true and $nivel = 13 and $grado = 6){
+        if ($closeopesextosecc == true and $nivel == 13 and $grado == 6){
             $this->session->set('donwloadLibreta', true);
-        }
+        } 
 
         // to enable 1er Trim 
         $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
