@@ -49,6 +49,11 @@ class SuperiorModuloTipo
      */
     private $superiorAreaSaberesTipo;
 
+    /**
+     * @var \Sie\AppWebBundle\Entity\SuperiorEspecialidadTipo
+     */
+    private $superiorEspecialidadTipo;
+
 
     /**
      * Get id
@@ -220,11 +225,35 @@ class SuperiorModuloTipo
     {
         return $this->superiorAreaSaberesTipo;
     }
+
+    /**
+     * Set superiorEspecialidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\SuperiorEspecialidadTipo $superiorEspecialidadTipo
+     * @return SuperiorEspecialidadTipo
+     */
+    public function setSuperiorEspecialidadTipo(\Sie\AppWebBundle\Entity\SuperiorEspecialidadTipo $superiorEspecialidadTipo = null)
+    {
+        $this->superiorEspecialidadTipo = $superiorEspecialidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get superiorEspecialidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\SuperiorEspecialidadTipo 
+     */
+    public function getSuperiorEspecialidadTipo()
+    {
+        return $this->superiorEspecialidadTipo;
+    }
+
+
     /**
      * @var boolean
      */
     private $esvigente;
-
 
     /**
      * Set esvigente
