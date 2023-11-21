@@ -83,8 +83,7 @@
                             <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
                                 {% if asignaturas|length > 0 %}
                                     {% for a in asignaturas %}
-                                        <p>no hay</p>                                    
-                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevosss)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
+                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
                                     {% endfor %}
                                 {% else %}
                                     <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
