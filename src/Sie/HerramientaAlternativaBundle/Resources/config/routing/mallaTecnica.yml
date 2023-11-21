@@ -142,6 +142,12 @@ herramienta_show_modulo_delete:
     options:
          expose: true
 
+herramienta_delete_module_tecnico:
+    path:     /deleteModuleTecnico
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:deleteModuleTecnico"}
+    options:
+         expose: true
+
 herramienta_create_modulo_nuevo:
     path:     /createmodnuevo/
     defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:createModuloNuevo"}
