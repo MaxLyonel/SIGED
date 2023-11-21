@@ -208,7 +208,7 @@ class CensoInscriptionController extends Controller
 	                ->setParameter('sie', $sie)
 	                ->setParameter('idnivel', $idnivel)
 	                ->setParameter('gestion', $gestionselected)
-	                ->setParameter('agrados', array(4,5,6))
+	                ->setParameter('agrados', array(3,4,5,6))
 	                ->distinct()
 	                ->orderBy('iec.gradoTipo', 'ASC')
 	                ->getQuery();
