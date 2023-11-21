@@ -708,7 +708,7 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
-        //dump('here'); die;
+        // dump('here'); die;
         //get the info ue
         $infoUe = $request->get('infoUe'); 
       //  dump($infoUe);die;
@@ -943,7 +943,7 @@ class InfoEstudianteController extends Controller {
       '61710004',
       '60900064'
       );
-
+    //   dump($operativo); die;
     $mostrarSextoCerrado = false;
     if($gestion >= 2018 and $operativo == 4 and $nivel == 13 and $grado == 6){
         $validacionSexto = $this->get('funciones')->verificarGradoCerrado($sie, $gestion);
@@ -1028,10 +1028,13 @@ class InfoEstudianteController extends Controller {
             $hasgrado = 6;
         }
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
-
         
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         
+        if ($closeopesextosecc == true and $nivel == 13 and $grado == 6){
+            $this->session->set('donwloadLibreta', true);
+        } 
+
         // to enable 1er Trim 
         $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
         if(sizeof($objUe1erTrin)>0){

@@ -208,7 +208,7 @@ class CensoInscriptionController extends Controller
 	                ->setParameter('sie', $sie)
 	                ->setParameter('idnivel', $idnivel)
 	                ->setParameter('gestion', $gestionselected)
-	                ->setParameter('agrados', array(4,5,6))
+	                ->setParameter('agrados', array(3,4,5,6))
 	                ->distinct()
 	                ->orderBy('iec.gradoTipo', 'ASC')
 	                ->getQuery();
@@ -362,7 +362,7 @@ class CensoInscriptionController extends Controller
                 inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
                 inner join institucioneducativa_curso ic on (ei.institucioneducativa_curso_id=ic.id)
                 inner join genero_tipo gt on (e.genero_tipo_id=gt.id)
-                where ic.nivel_tipo_id =$levelId and ic.grado_tipo_id =$gradoId and ic.paralelo_tipo_id = '".$parallelId."' and ic.turno_tipo_id = $turnoId and ic.institucioneducativa_id =$sie and ic.gestion_tipo_id =$year  and  ei.estadomatricula_tipo_id = 4 
+                where ic.nivel_tipo_id =$levelId and ic.grado_tipo_id =$gradoId and ic.paralelo_tipo_id = '".$parallelId."' and ic.turno_tipo_id = $turnoId and ic.institucioneducativa_id =$sie and ic.gestion_tipo_id =$year  and  ei.estadomatricula_tipo_id in (4,5)  
                 order by e.paterno, e.materno, e.nombre
         ";
 
