@@ -42,10 +42,9 @@ class AreasController extends Controller {
         //get the send values
         $infoUe = $request->get('infoUe');
         $arrInfoUe = unserialize($infoUe);
-        // dump($arrInfoUe);
-        // dump($this->session->get('ie_id'));
-        // die;
+        
         $idCurso = $arrInfoUe['ueducativaInfoId']['iecId'];
+        // dump($idCurso);die;
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
         $mallaActual = $curso->getModalidadTipoId();
         // dump($curso); die;
