@@ -181,7 +181,7 @@
                                                         <td data-title="Acciones" class="text-center">
                                                             {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
                                                             {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
-                                                            {% if ( sw_esoficial == 1 ) %}
+                                                            {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
                                                                 <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
                                                             {% endif %}
 
@@ -227,7 +227,7 @@
                                                             <td data-title="Acciones" class="text-center">
                                                                 {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
                                                                 {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
-                                                                {% if ( sw_esoficial == 1 ) %}
+                                                                {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
                                                                     <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
                                                                 {% endif %}
 

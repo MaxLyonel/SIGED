@@ -73,7 +73,7 @@ class StudentScoreController extends Controller{
                 $vista = 1;
             }else{
                 // Verificamos si el tipo es 1:plena, 2:tecnica tecnologica, 3:modular, 5: humanistica 7:transformacion (las que hayan hecho una solicitud pàra trabajar gestion actual)
-                if($tipoUE['id'] == 1 or $tipoUE['id'] == 2 or $tipoUE['id'] == 3 or $tipoUE['id'] == 5 or $tipoUE['id'] == 7 or $tipoUE['id'] == 11){
+                if($tipoUE['id'] == 1 or $tipoUE['id'] == 2 or $tipoUE['id'] == 3 or $tipoUE['id'] == 5 or $tipoUE['id'] == 7 or $tipoUE['id'] == 8 or $tipoUE['id'] == 11){
                     $plantilla = 'regularDB';
                     $vista = 1;
                 }else{
