@@ -1314,6 +1314,7 @@ class InfoConsolidationController extends Controller {
     }
     public function habilitarOpeAction(Request $request){
       // get the send values
+
       $sie = $request->get('sie');
       $gestion = $request->get('gestion');
       $em = $this->getDoctrine()->getManager();
@@ -1322,27 +1323,28 @@ class InfoConsolidationController extends Controller {
         'gestion'         => $gestion
       ));
 
-      $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-     
-        switch ($operativo) {
-          case 1:
-              $objRegistroConsolidado->setBim1(0);
-              break;
-          case 2:
-              $objRegistroConsolidado->setBim2(0);
-              break;
-          case 3:
-              $objRegistroConsolidado->setBim3(0);
-              break;
+      if($objRegistroConsolidado->getInstitucioneducativaTipoId()==4) {
+        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+      
+          switch ($operativo) {
+            case 1:
+                $objRegistroConsolidado->setBim1(0);
+                break;
+            case 2:
+                $objRegistroConsolidado->setBim2(0);
+                break;
+            case 3:
+                $objRegistroConsolidado->setBim3(0);
+                break;
+            
+            default:
+                // code...
+                break;
+          }
           
-          default:
-              // code...
-              break;
-        }
-         
-      $em->persist($objRegistroConsolidado);
-      $em->flush();
-
+        $em->persist($objRegistroConsolidado);
+        $em->flush();
+      }
       if($objRegistroConsolidado->getInstitucioneducativaTipoId()==4)   
           return $this->redirectToRoute('herramienta_especial_infoconsolidation_gestion_index');
       else
