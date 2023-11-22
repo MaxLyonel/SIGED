@@ -34,6 +34,10 @@
         margin-top: 5px;
         font-size: 0.9rem;
     }
+    .disabled-row > td{
+        background-color: #ddd !important;
+        opacity: 0.7
+    }
 </style>
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -161,34 +165,109 @@
                                 {% endif %}
                             {% endif %}
                             {% for co in cursoOferta %}
-                                <tr>
-                                    <td class="text-center border-right">{{loop.index}}</td>
-                                    <td>{{co.codigo}}</td>
-                                    <td>
-                                        <span id="modulo_{{co.smpid}}" {% if co.esvigente == true %}class="text-strong text-primary"{% endif %}>
-                                            {{co.modulo}} {% if co.esvigente == true %}(nuevo){% endif %}
-                                        </span>
-                                        {% if co.codigo == '415' %}
-                                            <button class="btn" onclick="addpopEmergente({{co.smpid}})"><i class="fa fa-edit text-lilac"></i></button>
-                                            <div class="arrow-before" style="display:none; margin-left:10px;" id="emergente_before_{{co.smpid}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="emergente_after_{{co.smpid}}"></div>
-                                            <div id="emergente_{{co.smpid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divEmergente">
-                                            </div>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}', '{{ app.session.get('ie_per_estado') }}' )"><i class="fa fa-users text-lilac"></i></button>
-                                        <div class="arrow-before" style="display:none; margin-left:10px;" id=""></div><div class="arrow-after" style="display:none;margin-left:10px;" id=""></div>
-                                        <div id="{{co.iecoid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
-                                        </div>
-                                    </td>
-                                    {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
-                                        <td class="text-center">
-                                            {% if (primaria == true and co.codigo == '408') or primaria == false %}
-                                                <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+
+                                {% if ( app.session.get('u_semestre') == 2 ) %}
+
+                                    {% if ( loop.index <= 5 ) %}
+
+                                        <tr>
+                                            <td class="text-center border-right">{{loop.index}}</td>
+                                            <td>{{co.codigo}}</td>
+                                            <td>
+                                                <span id="modulo_{{co.smpid}}" {% if co.esvigente == true %}class="text-strong text-primary"{% endif %}>
+                                                    {{co.modulo}} {% if co.esvigente == true %}(nuevo){% endif %}
+                                                </span>
+                                                {% if co.codigo == '415' %}
+                                                    <button class="btn" onclick="addpopEmergente({{co.smpid}})"><i class="fa fa-edit text-lilac"></i></button>
+                                                    <div class="arrow-before" style="display:none; margin-left:10px;" id="emergente_before_{{co.smpid}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="emergente_after_{{co.smpid}}"></div>
+                                                    <div id="emergente_{{co.smpid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divEmergente">
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}', '{{ app.session.get('ie_per_estado') }}' )"><i class="fa fa-users text-lilac"></i></button>
+                                                <div class="arrow-before" style="display:none; margin-left:10px;" id=""></div><div class="arrow-after" style="display:none;margin-left:10px;" id=""></div>
+                                                <div id="{{co.iecoid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
+                                                </div>
+                                            </td>
+                                            {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
+                                                <td class="text-center">
+                                                    {% if (primaria == true and co.codigo == '408') or primaria == false %}
+                                                        <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                                    {% endif %}
+                                                </td>
                                             {% endif %}
-                                        </td>
+                                        </tr>
+
+                                    {% else %}
+
+                                        <tr class="disabled-row">
+                                            <td class="text-center border-right">{{loop.index}}</td>
+                                            <td>{{co.codigo}}</td>
+                                            <td>
+                                                <span id="modulo_{{co.smpid}}" {% if co.esvigente == true %}class="text-strong text-primary"{% endif %}>
+                                                    {{co.modulo}} {% if co.esvigente == true %}(nuevo){% endif %}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button class="btn"><i class="fa fa-users text-lilac"></i></button>
+                                            </td>
+                                        </tr>
+
                                     {% endif %}
-                                </tr>
+
+                                {% else %}
+
+                                    {% if ( loop.index <= 5 ) %}
+
+                                        <tr class="disabled-row">
+                                            <td class="text-center border-right">{{loop.index}}</td>
+                                            <td>{{co.codigo}}</td>
+                                            <td>
+                                                <span id="modulo_{{co.smpid}}" {% if co.esvigente == true %}class="text-strong text-primary"{% endif %}>
+                                                    {{co.modulo}} {% if co.esvigente == true %}(nuevo){% endif %}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button class="btn"><i class="fa fa-users text-lilac"></i></button>
+                                            </td>
+                                        </tr>
+
+                                    {% else %}
+
+                                        <tr>
+                                            <td class="text-center border-right">{{loop.index}}</td>
+                                            <td>{{co.codigo}}</td>
+                                            <td>
+                                                <span id="modulo_{{co.smpid}}" {% if co.esvigente == true %}class="text-strong text-primary"{% endif %}>
+                                                    {{co.modulo}} {% if co.esvigente == true %}(nuevo){% endif %}
+                                                </span>
+                                                {% if co.codigo == '415' %}
+                                                    <button class="btn" onclick="addpopEmergente({{co.smpid}})"><i class="fa fa-edit text-lilac"></i></button>
+                                                    <div class="arrow-before" style="display:none; margin-left:10px;" id="emergente_before_{{co.smpid}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="emergente_after_{{co.smpid}}"></div>
+                                                    <div id="emergente_{{co.smpid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divEmergente">
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}', '{{ app.session.get('ie_per_estado') }}' )"><i class="fa fa-users text-lilac"></i></button>
+                                                <div class="arrow-before" style="display:none; margin-left:10px;" id=""></div><div class="arrow-after" style="display:none;margin-left:10px;" id=""></div>
+                                                <div id="{{co.iecoid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
+                                                </div>
+                                            </td>
+                                            {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
+                                                <td class="text-center">
+                                                    {% if (primaria == true and co.codigo == '408') or primaria == false %}
+                                                        <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+
+                                    {% endif %}
+
+                                {% endif %}
+
                             {% endfor %}
                         </tbody>
                     </table>

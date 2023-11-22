@@ -1896,6 +1896,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         return $this->render($this->session->get('pathSystem') . ':Principal:seleccionarcea.html.twig',array(
             'form'=>$historialForm->createView(),
         ));
+
     }
     
     public function buscarceaAction(Request $request) {
@@ -1923,6 +1924,8 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 $sesion->set('ie_nombre', $ie->getInstitucioneducativa());
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '¡En modo edición!');
+                // dump($form['semestre']);die;
+                $sesion->set('u_semestre', $form['semestre']);
                 //return $this->redirect($this->generateUrl('principal_web'));
                 /***
                  * Cargar funcion para inicio de semestre
