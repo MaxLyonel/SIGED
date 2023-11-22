@@ -1859,7 +1859,7 @@ class MallaTecnicaController extends Controller {
             ));
 
         }catch(\Exception $ex){
-            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado');
+            // $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado');
             // return $this->redirect($this->generateUrl('herramienta_alter_malla_tecnica_index'));
         }
 

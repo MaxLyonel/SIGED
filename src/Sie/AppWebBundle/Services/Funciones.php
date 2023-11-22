@@ -237,16 +237,6 @@ class Funciones {
     }
 
     public function setLogTransaccion($key,$tabla,$tipoTransaccion,$observacion,$valorNuevo,$valorAnt,$sistema,$archivo){
-        // dump("in transaccion");
-        // dump($key);
-        // dump($tabla);
-        // dump($tipoTransaccion);
-        // dump($observacion);
-        // dump($valorNuevo);
-        // dump($valorAnt);
-        // dump($sistema);
-        // dump($archivo);
-        // die;
         //try {
             // $serializer = SerializerBuilder::create()->build();
             // $valorAnt = $serializer->serialize($valorAnt, 'json');
