@@ -276,9 +276,8 @@ class AreasController extends Controller {
             return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $asignaturas);
             
         } catch (\Exception $ex) {
-            dump($ex);die;
-            // $em->getConnection()->rollback();
-            // return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!' . $ex));
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!' . $ex));
         }
     }
 
