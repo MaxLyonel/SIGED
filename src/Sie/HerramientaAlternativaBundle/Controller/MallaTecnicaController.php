@@ -13,7 +13,7 @@ use Sie\AppWebBundle\Entity\SuperiorMallaModuloPeriodo;
 use Sie\AppWebBundle\Entity\SuperiorModuloPeriodo;
 use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
 use Sie\AppWebBundle\Entity\SuperiorAcreditacionEspecialidad;
-
+use Sie\AppWebBundle\Services\Funciones;
 /**
  * EstudianteInscripcion controller.
  *
@@ -144,7 +144,6 @@ class MallaTecnicaController extends Controller {
     }
 
     public function mallaseemodulosAction(Request $request) {
-        
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
         $em = $this->getDoctrine()->getManager();
@@ -319,7 +318,7 @@ class MallaTecnicaController extends Controller {
         $modules = $this->findModulesBySest( $aInfoUeducativa['ueducativaInfoId']['especialidad_id'] );
 
         $superiorMallaModuloPeriodo = $this->checkIsNewMallaModuloPeriodo( $modules );
-
+        // dump($modules['mallafinal']);die;
         return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:seemodulosnew.html.twig', array(
             'exist'     => $modules['exist'],
             'malla'     => $modules['po'],
@@ -1649,6 +1648,7 @@ class MallaTecnicaController extends Controller {
                 'malla'     => $modules['po'],
                 'mallafin'  => $modules['mallafinal'],
                 'mallaniv'  => $modules['mallaniv'],
+                'sw_esoficial'  => $modules['mallafinal'][0]['sw_esoficial'],
                 'isSuperiorMallaModuloPeriodo'=>$superiorMallaModuloPeriodo
             ));
 
@@ -1732,6 +1732,7 @@ class MallaTecnicaController extends Controller {
                 'malla'     => $modules['po'],
                 'mallafin'  => $modules['mallafinal'],
                 'mallaniv'  => $modules['mallaniv'],
+                'sw_esoficial'  => $modules['mallafinal'][0]['sw_esoficial'],
                 'isSuperiorMallaModuloPeriodo'=>$superiorMallaModuloPeriodo
             ));
         
@@ -1739,6 +1740,127 @@ class MallaTecnicaController extends Controller {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron eliminados, Asegurese de que el modulo no se esta utilizando.');
             return $this->redirect($this->generateUrl('herramienta_alter_malla_tecnica_index'));
+        }
+
+    }
+
+    public function deleteModuleTecnicoAction( Request $request ){
+
+        try {
+
+            $smpId = $request->get('smpid');
+            $sestId = $request->get('sestId'); 
+    
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+
+            // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_asignatura
+            $queryAsignatura = $db->prepare("select * from superior_modulo_periodo smp 
+                                    inner join institucioneducativa_curso_oferta ico on ico.superior_modulo_periodo_id=smp.id
+                                    inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id 
+                                    where smp.id=".$smpId."");
+            $queryAsignatura->execute();
+            $resultAsignatura = $queryAsignatura->fetchAll();
+            if( count($resultAsignatura) > 0 ){
+
+                $response = new JsonResponse();
+    
+                return $response->setData(array(
+                    'statusCode' => 401,
+                    'message'    => "Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado"
+                ));
+
+            }
+
+            // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_nota
+            $queryNota = $db->prepare("select * from superior_modulo_periodo smp 
+                                    inner join institucioneducativa_curso_oferta ico on ico.superior_modulo_periodo_id=smp.id
+                                    inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
+                                    inner join estudiante_nota en on en.estudiante_asignatura_id=ea.id 
+                                    where smp.id=".$smpId."");
+            $queryNota->execute();
+            $resultNota = $queryNota->fetchAll();
+            if( count($resultNota) > 0 ){
+
+                $response = new JsonResponse();
+    
+                return $response->setData(array(
+                    'statusCode' => 401,
+                    'message'    => "Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado"
+                ));
+
+            }
+    
+            $samp = $em->getRepository('SieAppWebBundle:SuperiorMallaModuloPeriodo')->findOneBy(array('superiorModuloPeriodo' => $smpId));
+            if( $samp ){
+
+                $superiorMallaModuloPeriodo = (object) [
+                    'id' => $samp->getId(), 
+                    'superiorPeriodoTipoId' => $samp->getSuperiorPeriodoTipo()->getId(), 
+                    'superiorModuloPeriodo' => $samp->getSuperiorModuloPeriodo()->getId(),
+                    'observacion'=> $samp->getObservacion(),
+                    'fechaRegistro'=> $samp->getFechaRegistro()->format('d-m-Y H:i:s'),
+                    'fechaModificacion'=>$samp->getFechaModificacion()->format('d-m-Y H:i:s')
+                ];
+                
+                $this->get('funciones')->setLogTransaccion(
+                    $samp->getId(),
+                    'SuperiorMallaModuloPeriodo',
+                    'D',
+                    '',
+                    '',
+                    $superiorMallaModuloPeriodo,
+                    'ALTERNATIVA',
+                    ''
+                );
+
+                $em->remove($samp);
+            }
+    
+            $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' => $smpId));
+            if( $smp ){
+
+                $superiorModuloPeriodo = (object) [
+                    'id' => $smp->getId(),
+                    'superiorModuloTipoId' => $smp->getSuperiorModuloTipo()->getId(), 
+                    'institucioneducativaPeriodoId'=>$smp->getInstitucioneducativaPeriodo()->getId(),
+                    'obs' => $smp->getObs(), 
+                    'horasModulo'=>$smp->getHorasModulo()
+                ];
+                                
+                $this->get('funciones')->setLogTransaccion(
+                    $smp->getId(),
+                    'SuperiorModuloPeriodo',
+                    'D',
+                    '',
+                    '',
+                    $superiorModuloPeriodo,
+                    'ALTERNATIVA',
+                    ''
+                );
+
+                $em->remove($smp);
+            }
+
+            $em->flush();
+            $em->clear();
+    
+            $modules = $this->findModulesBySest( $sestId );
+    
+            $superiorMallaModuloPeriodo = $this->checkIsNewMallaModuloPeriodo( $modules );
+    
+            return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:listModulos.html.twig', array(
+                'exist'     => $modules['exist'],
+                'malla'     => $modules['po'],
+                'mallafin'  => $modules['mallafinal'],
+                'mallaniv'  => $modules['mallaniv'],
+                'sw_esoficial'  => $modules['mallafinal'][0]['sw_esoficial'],
+                'isSuperiorMallaModuloPeriodo'=>$superiorMallaModuloPeriodo
+            ));
+
+        }catch(\Exception $ex){
+            // $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado');
+            // return $this->redirect($this->generateUrl('herramienta_alter_malla_tecnica_index'));
         }
 
     }
@@ -1915,7 +2037,7 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
         // }else{
         //     $exist = false;
         // }
-        
+
         $db = $em->getConnection();
         $query = "select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.periodo_medio, v.malla_modulo_periodo_id, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad 
                     from (
@@ -2116,6 +2238,7 @@ select idsae,idacr
                 // dump($modules);die;
                 $contModulesTM = 0; 
                 foreach ($modules as $value) {
+
                     $modulo = $value['modulo'];
 
                     $querySeven = $db->prepare("select * from superior_modulo_tipo smt where 
@@ -2125,6 +2248,7 @@ select idsae,idacr
                     $superiorModuloTipo = $querySeven->fetch();
 
                     if(!$superiorModuloTipo){
+                        // dump("into");die;
                         $smtipo = new SuperiorModuloTipo();
                         $smtipo -> setModulo($modulo);
                         $smtipo -> setEsvigente(true);
@@ -2138,7 +2262,7 @@ select idsae,idacr
                     }else{
                         $smtipo = $superiorModuloTipo['id'];
                     }
-    
+                    // dump("out");
                     $queryEight = $db->prepare("select * from superior_modulo_periodo smp2 where 
                                                     smp2.superior_modulo_tipo_id=".$smtipo."
                                                     and smp2.institucioneducativa_periodo_id=".$superiorInstitucioneducativaPeriodo."");
@@ -2146,6 +2270,7 @@ select idsae,idacr
                     $superiorModuloPeriodo = $queryEight->fetch();
 
                     if( !$superiorModuloPeriodo ){
+                        // dump("into");
                         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                         $smperiodo = new SuperiorModuloPeriodo();
                         $smperiodo ->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtipo));
@@ -2156,9 +2281,21 @@ select idsae,idacr
 
                         $smperiodo = $smperiodo->getId();
                     }else{
-                        $smperiodo = $superiorModuloPeriodo['id'];
-                    }
 
+                        $smperiodo = $superiorModuloPeriodo['id'];
+                        
+                        //  FUNCIONAL TEMPORAL PARA ELIMINAR REGISTROS DOBLES QUE NO ESTAN RELACIONADO CON LAS NOTAS
+                        // $queryCheckNota = $db->prepare("select * from institucioneducativa_curso_oferta ico 
+                        //                                     inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
+                        //                                     inner join estudiante_nota en on ea.id=en.estudiante_asignatura_id 
+                        //                                     where ico.superior_modulo_periodo_id=".$smperiodo."");
+                        // $queryCheckNota->execute();
+                        // $resultChecking = $queryCheckNota->fetch();
+
+                        // dump($resultChecking);die;
+
+                    }
+                    // dump("out 2");die;
                     // TABLE NEW FOR IDENTIFY MIDDLE ONE Y TWO
                     $superiorPeriodoTipoId = 0;
                     switch ($nivelId) {
@@ -2202,10 +2339,11 @@ select idsae,idacr
             $superiorMallaModuloPeriodo = $this->checkIsNewMallaModuloPeriodo( $modules );
 
             return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:listModulos.html.twig', array(
-                'exist'     => $modules['exist'],
-                'malla'     => $modules['po'],
-                'mallafin'  => $modules['mallafinal'],
-                'mallaniv'  => $modules['mallaniv'],
+                'exist'         => $modules['exist'],
+                'malla'         => $modules['po'],
+                'mallafin'      => $modules['mallafinal'],
+                'mallaniv'      => $modules['mallaniv'],
+                'sw_esoficial'  => $modules['mallafinal'][0]['sw_esoficial'],
                 'isSuperiorMallaModuloPeriodo'=>$superiorMallaModuloPeriodo
             ));
 
@@ -2457,6 +2595,7 @@ select idsae,idacr
                 'malla'     => $modules['po'],
                 'mallafin'  => $modules['mallafinal'],
                 'mallaniv'  => $modules['mallaniv'],
+                'sw_esoficial'  => $modules['mallafinal'][0]['sw_esoficial'],
                 'isSuperiorMallaModuloPeriodo'=>$superiorMallaModuloPeriodo
             ));
 

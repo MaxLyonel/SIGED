@@ -42,10 +42,9 @@ class AreasController extends Controller {
         //get the send values
         $infoUe = $request->get('infoUe');
         $arrInfoUe = unserialize($infoUe);
-        // dump($arrInfoUe);
-        // dump($this->session->get('ie_id'));
-        // die;
+        
         $idCurso = $arrInfoUe['ueducativaInfoId']['iecId'];
+        // dump($idCurso);die;
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
         $mallaActual = $curso->getModalidadTipoId();
         // dump($curso); die;
@@ -77,8 +76,7 @@ class AreasController extends Controller {
 
         // $this->session->set('arrInfoUe', $arrInfoUe);
         // $this->session->set('arrInfoUe', $arrInfoUe);
-        // dump($this->session->get('arrInfoUe'));die;
-        
+        // dump($this->session->get('arrInfoUe'));die;        
         return $this->render('SieHerramientaAlternativaBundle:Areas:'.$templateToView, $data);
         
     }
@@ -87,11 +85,12 @@ class AreasController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
+        // dump($this->session->get('ie_id'));
         // dump($dataUE['ueducativaInfo']['superiorAcreditacionTipoId']);
         // dump($dataUE['ueducativaInfoId']['setId']);
         // dump($dataUE['ueducativaInfoId']['periodoId']);
         // die;
-        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid from superior_acreditacion_especialidad sae 
+        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId from superior_acreditacion_especialidad sae 
                                 inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
                                 inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
                                 inner join superior_institucioneducativa_acreditacion sia on sae.id=sia.acreditacion_especialidad_id 
@@ -99,6 +98,7 @@ class AreasController extends Controller {
                                 inner join superior_institucioneducativa_periodo sip on sia.id=sip.superior_institucioneducativa_acreditacion_id 
                                 inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
                                 inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id=smt.id 
+                                left join superior_malla_modulo_periodo smmp on smmp.superior_modulo_periodo_id=smp.id
                                 where
                                 is2.gestion_tipo_id=".$this->session->get('ie_gestion')."
                                 and is2.institucioneducativa_id=".$this->session->get('ie_id')."
@@ -106,7 +106,9 @@ class AreasController extends Controller {
                                 and set2.id=".$dataUE['ueducativaInfoId']['setId']."
                                 and is2.periodo_tipo_id=".$dataUE['ueducativaInfoId']['periodoId']."
                                 and smt.esvigente=true
-                                and set2.es_vigente=true");
+                                and set2.es_vigente=true
+                                order by smt.id asc
+                                ");
         $query->execute();
         $modules = $query->fetchAll();
         
@@ -814,13 +816,13 @@ class AreasController extends Controller {
 
         if( $this->session->get('ie_gestion') >= 2023 && ( $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 1 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 20 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 32 )  ){
             $curso = $this->getAreasCajon( $aInfoUeducativa );
+            // dump($curso);die;
         }
         
         $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
         $gradoParaleloCurso = $aInfoUeducativa['ueducativaInfo']['grado'] . " - " . $aInfoUeducativa['ueducativaInfo']['paralelo'];
         
         $contAsg = count($curso);
-
         return array('tieneCursoOferta' => $tieneCursoOferta, 'cursoOferta' => $cursoOferta, 'asignaturas' => serialize($curso), 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso, 'count' => $contAsg);
     }
 
