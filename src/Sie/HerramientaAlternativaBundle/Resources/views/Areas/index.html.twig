@@ -70,11 +70,13 @@
                 {# {% if ( app.session.get('ie_gestion') >= 2023 and ((superiorAcreditacionTipoId == 1) or (superiorAcreditacionTipoId == 20) or (superiorAcreditacionTipoId == 32 )) ) %} #}
                 {% if (app.session.get('ie_per_estado') == '0' or app.session.get('ie_per_estado') == '3') %}
                     {% if ( app.session.get('ie_gestion') >= 2023 ) %}
-                        {% if (cursoOferta|length < 5) %}
+                        {% if ((cursoOferta|length < 5 and superiorAcreditacionTipoId != 32 ) or (cursoOferta|length < 10 and superiorAcreditacionTipoId == 32) ) %}
+                        {# {% if (cursoOferta|length < 5) %} #}
                             <div style="float:right">
                                 <button onclick="addAreaAll('{{infoUe}}', '{{tieneCursoOferta}}', '{{asignaturas}}', '{{count}}')" class="btn btn-primary">
                                     Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulo {% else %} Área {% endif %}
                                 </button>
+                                {# <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} Asignados: <strong>{{count}} / {{countAdd}}</strong></p> #}
                                 <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} pendientes: <strong>{{count}}</strong></p>
                             </div>
                         {% endif %}
@@ -211,6 +213,11 @@
                                                 <td>
                                                     <button class="btn"><i class="fa fa-users text-lilac"></i></button>
                                                 </td>
+                                                {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
+                                                    <td class="text-center">
+                                                        
+                                                    </td>
+                                                {% endif %}
                                             </tr>
 
                                         {% endif %}
@@ -230,6 +237,11 @@
                                                 <td>
                                                     <button class="btn"><i class="fa fa-users text-lilac"></i></button>
                                                 </td>
+                                                {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
+                                                    <td class="text-center">
+                                                        
+                                                    </td>
+                                                {% endif %}
                                             </tr>
 
                                         {% else %}
