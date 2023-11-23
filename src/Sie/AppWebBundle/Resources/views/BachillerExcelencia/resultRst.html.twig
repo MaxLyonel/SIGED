@@ -50,6 +50,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
+                        <input type="hidden"  id="sie" value="80730306"  >
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tbody>
@@ -74,32 +75,70 @@
                                     <tr>
                                         <th><strong>Nro. Cta. Bancaria</strong></th><td>{{datadirector.cuentabancaria}}</td>
                                     </tr>
-                                    {#
+
                                     <tr>
-                                        <td colspan="2" class="text-center">
-                                            <a href="{{ path('cta_banc_dir_rst', { 'ie': ieducativa }) }}" class="btn btn-md btn-warning" onclick="return confirm('ESTA SEGURO DE REESTABLECER EL REGISTRO DEL DIRECTOR?, SE REESTABLECERAN TAMBIEN LOS DATOS DE AMBOS ESTUDIANTES')">Clic para restablecer el registro</a>
+                                        <th></th>
+                                        <td>
+                                            <div class="alert alert-warning" role="alert">                                                
+                                                <strong>IMPORTANTE:</strong>
+                                                <h5>Para efectuar el "RESETEO DE LA INFORMACIÓN", debe registar el Número de Memo y una Justificacion del por que se esta realizando el reseteo</h5>
+
+                                            </div>
+                                            <div class="alert alert-danger" role="alert">
+                                                <strong>SOLO SE PUEDE RESETEAR LOS DATOS DEL DIRECTOR UNA SOLA VEZ.</strong>
+                                            </div>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <th><strong>Numero de Memo:</strong></th>
+                                        <td>
+                                            <input type="text"  id="nromemo" size="30" maxlength="15"  min="3" max="100"  >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Justificacion Reseteo</strong></th>
+                                        <td>
+                                           <input type="text"  id="justifica" size="150" >
+                                        </td>
+                                    </tr>
+                                    
+
+                                    <tr id="rowbutton">
+                                        <td colspan="2" class="text-center">
+                                            <!--a href="{{ path('cta_banc_dir_rst', { 'ie': ieducativa }) }}" class="btn btn-md btn-warning" onclick="return confirm('ESTA SEGURO DE REESTABLECER EL REGISTRO DEL DIRECTOR?, SE REESTABLECERAN TAMBIEN LOS DATOS DE AMBOS ESTUDIANTES')">Clic para restablecer el registro</a -->
+                                             <button type="button" onclick="resetDatos()" class="btn btn-warning" data-dismiss="modal">Click para restablecer el registro</button>                                
+                                    
+                                        </td>
+                                    </tr>
+
                                     <tr>
                                         <td colspan="2" class="text-center">
                                             <div class="row">
                                             <div class="col-md-12">
                                                 <div class="alert alert-warning" role="alert">                                                 
                                                     <i class="fa fa-info-circle fa-fw"></i> 
-                                                    <strong>ATENCION: AL RESTABLECER EL REGISTRO DEL DIRECTOR DE LA UNIDAD EDUCATIVA, SE REESTABLECERAN TAMBIEN AUTOMATICAMENTE LOS REGISTROS DE LOS DOS ESTUDIANTES.
-                                                    <BR></BR>
+                                                    <!--strong>ATENCION: AL RESTABLECER EL REGISTRO DEL DIRECTOR DE LA UNIDAD EDUCATIVA, SE REESTABLECERAN TAMBIEN AUTOMATICAMENTE LOS REGISTROS DE LOS DOS ESTUDIANTES.
+                                                    <BR></BR -->
                                                     REQUISITO: ENTREGAR EN OFICINAS DISTRITALES LA DECLARACIÓN JURADA CON LOS DATOS QUE SE DESEAN RESTABLECER COMO CONSTANCIA DE ESTA OPERACIÓN
                                                     <BR></BR>
                                                     ES OBLIGACIÓN Y RESPONSABILIDAD DEL DIRECTOR DE LA U.E. VOLVER A REGISTRAR SUS DATOS Y LOS DATOS DE LOS ESTUDIANTES QUE SERAN BENEFICIADOS
-                                                    </strong>
+                                                    </!--strong>
                                                 </div>
                                             </div>
                                         </div>
                                         </td>
                                     </tr>
-                                    #}
+                                    
                                 </tbody>
                             </table>
+
+                            <div id="idBachiller"></div>
+                            <div  id="btnpaso4" class="btnpaso4" hidden>
+                                <div class="col-lg-6 col-lg-offset-3">
+                                    <p><a href="{{ path('bach_exc_rst') }}" class="btn btn-block btn-success">Continuar</a></p>
+                                </div>
+                            </div>
+
                         </div>   
                     </div>
                 </div>
@@ -110,6 +149,8 @@
     {% endif %}
 
     {% if(bachilleres) %}
+        
+        {#
         <div class="row">
             {% for datastudent in bachilleres%}
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -146,11 +187,13 @@
                                         <tr>
                                             <th><strong>Promedio Final</strong></th><td>{{datastudent.promedioFinal}}</td>
                                         </tr>
+                                        
                                         <tr>
                                             <td colspan="2" class="text-center">
                                                 <a href="{{ path('bach_exc_pf_rst', { 'ie': ieducativa, 'ed': datastudent.edId, 'g': datastudent.gen }) }}" class="btn btn-md btn-danger" onclick="return confirm('ESTA SEGURO DE REESTABLECER EL REGISTRO DEL ESTUDIANTE ? ')">Clic para restablecer el registro</a>
                                             </td>
                                         </tr>
+                                       
                                     </tbody>
                                 </table>
                             </div>
@@ -161,6 +204,95 @@
                 <!-- /.col-lg-12 -->
             {% endfor %}
         </div>
+        #}
+        
+
     {% endif %}
     </div>
+{% endblock %}
+
+
+{%block javascripts %}    
+    {{ parent() }}
+    <script>
+        
+        var resetDatos = function () { 
+
+            let sw = 0;
+
+            let nromemo = document.getElementById('nromemo').value 
+            let justificacion = document.getElementById('justifica').value 
+            let sie = document.getElementById('sie').value 
+
+            if( nromemo === "" || justificacion === "" ){
+                //alert('Checkbox not checked');
+                swal({
+                text: 'El Numero de Memo y la Justificacion son requeridos !! ',
+                icon: "warning",
+                dangerMode: true,
+                })
+                return false;
+            }
+
+            swal({
+                title: "¿ Resetear los Datos del Director de la Unidad Educativa ?",
+                text: " IMPORTANTE: es la unica vez que se puede realizar esta operacion",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Resetear"],
+            })
+            .then(function(respuesta)  {
+                if (respuesta) {   
+                    var imagen = '{{ asset("img/loading.gif") }}'; 
+                    $.ajax({
+                    type: 'post',
+                    url: Routing.generate('cta_banc_dir_rst2023'),      
+                    data: { id_sistema: 1,nromemo:nromemo, justificacion:justificacion, sie:sie },          
+                    beforeSend: function () {
+                        $("#idBachiller").empty();
+                        //$("#idBachiller").append('<div class="text-center"><img src="{{ asset('img/loading.gif') }}" class="loading" /></div>');
+                        swal({
+                            title: "Registrando la informacion...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                        if (data.estado == 1)
+                        {                           
+                            document.getElementById('rowbutton').style.display='none';
+                            $("#idBachiller").empty();
+                            $("#idBachiller").html('<div class="alert alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <i class="fa fa-info-circle fa-fw"></i> ' + data.mensaje + '</div>');                            
+                            $(".btnpaso4").show();
+                            document.getElementById("btnpaso4").style.display = 'inline';
+
+                        }else{
+                            $("#idBachiller").empty();                            
+                            $("#idBachiller").html('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <i class="fa fa-info-circle fa-fw"></i> ' + data.mensaje + '</div>');
+                        }
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();                       
+                    },
+                    statusCode: {
+                        500: function () {
+                            $("#idBachiller").empty();
+                        },
+                        404: function () {
+                            $("#idBachiller").empty();
+                        }
+                    }
+                });
+                    
+                 }
+    
+            });
+
+
+        };
+
+    </script>
 {% endblock %}
