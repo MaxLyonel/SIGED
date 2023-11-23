@@ -1310,7 +1310,7 @@ class MallaTecnicaController extends Controller {
         $horas= [100];
        // $horasmodulo = $request->get('horas');
         $idacreditacion =$request->get('idacred');
-
+        $selectOld = true;
         // dump($idsip);die;
         $form = $this->createFormBuilder()
                 // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
@@ -1320,6 +1320,7 @@ class MallaTecnicaController extends Controller {
                 ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'guardarModulo();')))
                 ->add('idsip', 'hidden', array('data' => $idsip))
                 ->add('idesp', 'hidden', array('data' => $idesp))
+                ->add('selectOld', 'hidden', array('data' => $selectOld))
                 ->add('totalhoras', 'hidden', array('data' => $totalhoras))
                 ->getForm(); 
 
@@ -1329,33 +1330,60 @@ class MallaTecnicaController extends Controller {
 
             $em = $this->getDoctrine()->getManager();
             $db = $em->getConnection();
-            $queryCheckModules = $db->prepare("select smp.id, smmp.superior_periodo_tipo_id, smt.modulo from superior_institucioneducativa_periodo sip 
+
+            // VERIFICAR SI CUENTA CON MODULOS ASIGNADOS
+            $queryCheckEmpty = $db->prepare("select * from superior_institucioneducativa_periodo sip 
+                                                inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
+                                                inner join superior_modulo_tipo smt on smt.id=smp.superior_modulo_tipo_id 
+                                                where sip.id=".$idsip."");
+            $queryCheckEmpty->execute();
+            $resultCheckEmpty = count($queryCheckEmpty->fetchAll());
+
+            // VERIFICAR SI CUENTA CON REGISTROS EN superior_malla_modulo_periodo
+            $queryCheckMallaModulo = $db->prepare("select smp.id, smmp.superior_periodo_tipo_id, smt.modulo from superior_institucioneducativa_periodo sip 
                                                     inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id
                                                     inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id=smt.id
                                                     inner join superior_malla_modulo_periodo smmp on smp.id=smmp.superior_modulo_periodo_id 
                                                     where sip.id=".$idsip."
                                                     and smt.esvigente=true");
-            $queryCheckModules->execute();
-            $resultsModules = count($queryCheckModules->fetchAll());
-
-            if( $resultsModules >= 0  ){
+            $queryCheckMallaModulo->execute();
+            $resultsModules = count($queryCheckMallaModulo->fetchAll());
+            
+            if( $resultCheckEmpty == 0 || $resultsModules > 0 ){
+                $selectOld = false;
                 $form = $this->createFormBuilder()
                     // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
                     ->add('modulo', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase' )))
                     ->add('horas', 'choice', array('choices'=> $horas, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
                     ->add('periodoTecnicoMedio', 'choice', array('choices'=> $periodoTecnicoMedio, 'empty_value' => 'Seleccione', 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
                    // ->add('seccioniiProvincia', 'choice', array('choices' => $provNac ? $provNac->getId() : 0, 'label' => 'Provincia', 'required' => false, 'choices' => $provNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                    ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'guardarModulo();')))
+                    ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>"guardarModulo(".$selectOld.");")))
                     ->add('idsip', 'hidden', array('data' => $idsip))
                     ->add('idesp', 'hidden', array('data' => $idesp))
+                    ->add('selectOld', 'hidden', array('data' => $selectOld))
                     ->add('totalhoras', 'hidden', array('data' => $totalhoras))
                     ->getForm();
+            }else{
+                $selectOld = true;
+                $form = $this->createFormBuilder()
+                    // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
+                    ->add('modulo', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
+                    ->add('horas', 'choice', array('choices'=> $horas, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+                // ->add('seccioniiProvincia', 'choice', array('choices' => $provNac ? $provNac->getId() : 0, 'label' => 'Provincia', 'required' => false, 'choices' => $provNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                    ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>"guardarModulo(".$selectOld.");")))
+                    ->add('idsip', 'hidden', array('data' => $idsip))
+                    ->add('idesp', 'hidden', array('data' => $idesp))
+                    ->add('selectOld', 'hidden', array('data' => $selectOld))
+                    ->add('totalhoras', 'hidden', array('data' => $totalhoras))
+                    ->getForm(); 
+
             }
              
         }
 
         return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:nuevomodulo.html.twig', array(
             'form' => $form->createView(),
+            'selectOld' => $selectOld, 
             'totalhoras'=>$totalhoras,
             'idacreditacion'=>$idacreditacion,
             'modules'=>$resultsModules
@@ -1376,7 +1404,8 @@ class MallaTecnicaController extends Controller {
         $idacreditacion =$request->get('idacred');
         $periodoTecnicoMedio = $request->get('periodoTecnicoMedio');
         $mallaModuloPeriodoId = $request->get('mallaModuloPeriodoId');
-
+        $sipId = $request->get('idsip');
+        // dump($request->get('selectOld'));die;
         $arrayPeriodoTM = ['Medio 1','Medio 2'];    
         
         $periodoTecnicoMedio = $periodoTecnicoMedio == 4 ? 'Medio 1' : 'Medio 2';
@@ -1394,9 +1423,17 @@ class MallaTecnicaController extends Controller {
                                                     where smp.id=".$idspm."");
         $queryMallaModuloPeriodo->execute();
         $existMallaModuloPeriodo = ($queryMallaModuloPeriodo->fetch()) ? true : false; 
-        // dump($mallaModuloPeriodoId);die;
+
+        // $queryCheckEmpty = $db->prepare("select * from superior_institucioneducativa_periodo sip 
+        //                                     inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
+        //                                     inner join superior_modulo_tipo smt on smt.id=smp.superior_modulo_tipo_id 
+        //                                     where sip.id=".$sipId."");
+        // $queryCheckEmpty->execute();
+        // $resultCheckEmpty = $queryCheckEmpty->fetchAll();
+
+
         if( $idacreditacion == 32 && $existMallaModuloPeriodo ){
-             
+            // dump(" in 32");die;
             $form = $this->createFormBuilder()
                 // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
                 ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
@@ -1415,7 +1452,7 @@ class MallaTecnicaController extends Controller {
                 ->getForm();
 
         }else{
-
+            // dump("no 32");die;
             $form = $this->createFormBuilder()
                 // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
                 ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
@@ -1496,6 +1533,7 @@ class MallaTecnicaController extends Controller {
         try{
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
+            $db = $em->getConnection();
 
             $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->findOneBy(array('id' => $form['idmodulo']));
             $supmodtipo -> setModulo($modulo);
@@ -1508,7 +1546,14 @@ class MallaTecnicaController extends Controller {
             $em->persist($supmodper);
             $em->flush($supmodper);
 
-            if( $acreditacionId == 32 ){
+            // VERIFICAR SI ESTA REGISTRADO EN LA TABLA superior_malla_modulo_periodo
+            $queryMallaModuloPeriodo = $db->prepare("select * from superior_modulo_periodo smp 
+                                                    inner join superior_malla_modulo_periodo smmp on smp.id=smmp.superior_modulo_periodo_id 
+                                                    where smp.id=".$idspm."");
+            $queryMallaModuloPeriodo->execute();
+            $existMallaModuloPeriodo = ($queryMallaModuloPeriodo->fetch()) ? true : false; 
+
+            if( $acreditacionId == 32 && $existMallaModuloPeriodo ){
 
                 $periodoTecnicoMedio = $form['periodoTecnicoMedio'] == 0 ? 4 : 5; 
 
@@ -2357,6 +2402,7 @@ select idsae,idacr
     public function createModuloNuevoAction(Request $request){
 
         $form = $request->get('form');
+        // dump($form);die;
         // $horas= [80,100,120];
         $horas= [100];
 
@@ -2371,6 +2417,9 @@ select idsae,idacr
         $modulo = strtoupper($form['modulo']);
         $idsip = $form['idsip'];
         $idesp = $form['idesp'];
+        $selectOld = $form['selectOld']; 
+        // dump($form['selectOld']);die;
+
         $superiorAcreditacionTipoId = $request->get('idacreditacion');
 
         // $superiorAcreditacionTipoId = $form['idacred'];
@@ -2383,7 +2432,7 @@ select idsae,idacr
             $db = $em->getConnection();
             
             // VERIFY HOW MANY MODULES WERE CREATED
-            if( $superiorAcreditacionTipoId == 32 ){
+            if( $superiorAcreditacionTipoId == 32 && $selectOld == false ){
 
                 $queryCheckMedios = $db->prepare("select smp.id, smmp.superior_periodo_tipo_id from superior_institucioneducativa_periodo sip 
                                                     inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id
@@ -2437,31 +2486,36 @@ select idsae,idacr
             $em->persist($smperiodo);
             $em->flush($smperiodo);
 
-            $superiorPeriodoTipoId = 0;
-            switch ($superiorAcreditacionTipoId) {
-                case 1:
-                    $superiorPeriodoTipoId = 2;       
-                    break;
-                case 20:
-                    $superiorPeriodoTipoId = 3;
-                    break;
-                case 32:
-                    $superiorPeriodoTipoId = ( $periodoTecnicoMedio == 1 ) ? 4 : 5;
-                    break;
-                default:
-                    $superiorPeriodoTipoId = 0;
-                    break;
+            if( $selectOld == false ){
+                
+                $superiorPeriodoTipoId = 0;
+                switch ($superiorAcreditacionTipoId) {
+                    case 1:
+                        $superiorPeriodoTipoId = 2;       
+                        break;
+                    case 20:
+                        $superiorPeriodoTipoId = 3;
+                        break;
+                    case 32:
+                        $superiorPeriodoTipoId = ( $periodoTecnicoMedio == 1 ) ? 4 : 5;
+                        break;
+                    default:
+                        $superiorPeriodoTipoId = 0;
+                        break;
+                }
+    
+                $superiorPeriodoTipo = $em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find( $superiorPeriodoTipoId );
+    
+                $smmp = new SuperiorMallaModuloPeriodo();
+                $smmp->setSuperiorPeriodoTipo( $superiorPeriodoTipo );
+                $smmp->setSuperiorModuloPeriodo( $smperiodo );
+                $smmp->setFechaRegistro(new \DateTime('now'));
+                $smmp->setFechaModificacion(new \DateTime('now'));
+                $em->persist($smmp);
+                $em->flush($smmp);
+
             }
 
-            $superiorPeriodoTipo = $em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find( $superiorPeriodoTipoId );
-
-            $smmp = new SuperiorMallaModuloPeriodo();
-            $smmp->setSuperiorPeriodoTipo( $superiorPeriodoTipo );
-            $smmp->setSuperiorModuloPeriodo( $smperiodo );
-            $smmp->setFechaRegistro(new \DateTime('now'));
-            $smmp->setFechaModificacion(new \DateTime('now'));
-            $em->persist($smmp);
-            $em->flush($smmp);
 
             //  dump($smperiodo);die;
 //             $em->getConnection()->commit();
