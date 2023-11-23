@@ -156,7 +156,7 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
         $estudiantebth = $query->fetchAll();	
         
         if (count($estudiantebth)==0){
-            $msj = 'El estudiante no cuenta con el área Técnica Tecnológica Especializada, ni Carrrera seleccionada en la presente gestión';
+            $msj = 'El estudiante con rude '.$rude.' no cuenta con el área TTE, ni Carrrera seleccionada en la presente gestión o ya no esta como efectivo en la gestión.';
             return  array($data,$msj,$carreras_disp);
         }
 
