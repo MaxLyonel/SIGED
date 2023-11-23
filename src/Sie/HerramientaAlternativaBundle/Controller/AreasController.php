@@ -64,7 +64,7 @@ class AreasController extends Controller {
         // dump($modules);die;
 
         $data = $this->getAreas($infoUe);
-        // dump($data); die;
+
         $data['primaria'] = $primaria;
         $data['mallaActual'] = $mallaActual;
         
@@ -90,7 +90,8 @@ class AreasController extends Controller {
         // dump($dataUE['ueducativaInfoId']['setId']);
         // dump($dataUE['ueducativaInfoId']['periodoId']);
         // die;
-        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId from superior_acreditacion_especialidad sae 
+        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.es_oficial 
+                                from superior_acreditacion_especialidad sae 
                                 inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
                                 inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
                                 inner join superior_institucioneducativa_acreditacion sia on sae.id=sia.acreditacion_especialidad_id 
@@ -823,17 +824,18 @@ class AreasController extends Controller {
 //                ->getQuery()
 //                ->getResult();
         
-
+        $sest_esoficial = true;
         $contAsg = count($curso);
         if( $this->session->get('ie_gestion') >= 2023 && ( $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 1 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 20 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 32 )  ){
             $curso = $this->getAreasCajon( $aInfoUeducativa );
-            $contAsg = count($curso) - count($cursoOferta);            
+            $contAsg = count($curso) - count($cursoOferta);
+            $sest_esoficial = $curso[0]['es_oficial'];
         }
         
         $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
         $gradoParaleloCurso = $aInfoUeducativa['ueducativaInfo']['grado'] . " - " . $aInfoUeducativa['ueducativaInfo']['paralelo'];
 
-        return array('tieneCursoOferta' => $tieneCursoOferta, 'cursoOferta' => $cursoOferta, 'asignaturas' => serialize($curso), 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso, 'count' => $contAsg);
+        return array('tieneCursoOferta' => $tieneCursoOferta, 'cursoOferta' => $cursoOferta, 'asignaturas' => serialize($curso), 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso, 'count' => $contAsg, 'sest_esoficial' => $sest_esoficial);
     }
 
     public function areamaestroAction(Request $request) {
