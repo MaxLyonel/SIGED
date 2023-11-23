@@ -66,7 +66,6 @@
                         <p>{{gradoParaleloCurso}}</p>
                     </div>
                 </div>
-
                 {# {% if ( app.session.get('ie_gestion') >= 2023 and ((superiorAcreditacionTipoId == 1) or (superiorAcreditacionTipoId == 20) or (superiorAcreditacionTipoId == 32 )) ) %} #}
                 {% if (app.session.get('ie_per_estado') == '0' or app.session.get('ie_per_estado') == '3') %}
                     {% if ( app.session.get('ie_gestion') >= 2023 ) %}
@@ -166,7 +165,7 @@
                                 {% endif %}
                             {% endif %}
                             {% for co in cursoOferta %}
-                                {% if ( superiorAcreditacionTipoId == 32 ) %}
+                                {% if ( superiorAcreditacionTipoId == 32 and sest_esoficial ) %}
                                     {% if ( app.session.get('u_semestre') == 2 ) %}
 
                                         {% if ( loop.index <= 5 ) %}
