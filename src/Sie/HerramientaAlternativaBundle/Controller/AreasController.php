@@ -245,14 +245,23 @@ class AreasController extends Controller {
                 
                 if ($value['codigo'] != '415'){    
 
-                    $ieco = new InstitucioneducativaCursoOferta();
-                    $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
-                    $ieco->setInsitucioneducativaCurso($curso);
-                    $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
-                    // $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
-                    $ieco->setHorasmes(0);
-                    $em->persist($ieco);
-                    $em->flush();
+                    // VERIFICAR SI ESTA REGISTRADO EN InstitucioneducativaCursoOferta
+                    $queryCheckOferta = $db->prepare("select * from institucioneducativa_curso_oferta ico 
+                                                    where 
+                                                    ico.superior_modulo_periodo_id=".$value['smpid']."
+                                                    and ico.insitucioneducativa_curso_id=".$idCurso."");
+                    $queryCheckOferta->execute();
+                    $resultCheck = $queryCheckOferta->fetch(); 
+
+                    if(!$resultCheck){
+                        $ieco = new InstitucioneducativaCursoOferta();
+                        $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
+                        $ieco->setInsitucioneducativaCurso($curso);
+                        $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
+                        $ieco->setHorasmes(0);
+                        $em->persist($ieco);
+                        $em->flush();
+                    }
 
                 }
             }
@@ -367,7 +376,7 @@ class AreasController extends Controller {
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
         $mallaActual = $curso->getModalidadTipoId();
-        
+
         // eliminamos el area del curso
         $em->getConnection()->beginTransaction();
 
@@ -392,7 +401,6 @@ class AreasController extends Controller {
             $easig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('institucioneducativaCursoOferta' => $iecoen));
             $enota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura' => $easig));
 
-            //dump($iecoen);die;
             foreach($enota as $enota_aux){
                 $em->remove($enota_aux);
             }
@@ -418,8 +426,10 @@ class AreasController extends Controller {
             $data = $this->getAreas($infoUe);
             $data['primaria'] = $primaria;
             $data['mallaActual'] = $mallaActual;
+            $data['superiorAcreditacionTipoId'] = $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'];
+
             return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $em->getConnection()->rollback();
 //            return $this->render('SieHerramientaBundle:InfoEstudianteAreas:index.html.twig',$data);
             return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!' . $ex));
@@ -814,15 +824,15 @@ class AreasController extends Controller {
 //                ->getResult();
         
 
+        $contAsg = count($curso);
         if( $this->session->get('ie_gestion') >= 2023 && ( $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 1 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 20 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 32 )  ){
             $curso = $this->getAreasCajon( $aInfoUeducativa );
-            // dump($curso);die;
+            $contAsg = count($curso) - count($cursoOferta);            
         }
         
         $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
         $gradoParaleloCurso = $aInfoUeducativa['ueducativaInfo']['grado'] . " - " . $aInfoUeducativa['ueducativaInfo']['paralelo'];
-        
-        $contAsg = count($curso);
+
         return array('tieneCursoOferta' => $tieneCursoOferta, 'cursoOferta' => $cursoOferta, 'asignaturas' => serialize($curso), 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso, 'count' => $contAsg);
     }
 
