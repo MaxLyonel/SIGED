@@ -187,9 +187,9 @@
 
                                                             {% if (app.session.get('ie_per_estado') != '0') %}
                                                                 {% if malla.sw_esoficial == 0 %}
-                                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{periodo_medio[i]}},{{ malla.idacreditacion }},{{mallaModuloPeriodoId[i]}}, 'edit');"><i class="fa fa-pencil"></i></a>
+                                                                    <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{periodo_medio[i]}},{{ malla.idacreditacion }},{{mallaModuloPeriodoId[i]}}, 'edit', {{malla.idsip}});"><i class="fa fa-pencil"></i></a>
                                                                     
-                                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},'',{{periodo_medio[i]}},'','','delete');"><i class="fa fa-times"></i></button>
+                                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},'',{{periodo_medio[i]}},'','','delete', {{malla.idsip}});"><i class="fa fa-times"></i></button>
                                                                 {% endif %}
                                                             {% endif %}
                                                         </td>
@@ -233,8 +233,8 @@
 
                                                                 {% if (app.session.get('ie_per_estado') != '0') %}
                                                                     {% if malla.sw_esoficial == 0 %}
-                                                                        <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},'',{{ malla.idacreditacion }},'','edit');"><i class="fa fa-pencil"></i></a>
-                                                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},'','','','','delete');"><i class="fa fa-times"></i></button>
+                                                                        <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},'',{{ malla.idacreditacion }},'','edit', {{malla.idsip}});"><i class="fa fa-pencil"></i></a>
+                                                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},'','','','','delete', {{malla.idsip}});"><i class="fa fa-times"></i></button>
                                                                     {% endif %}
                                                                 {% endif %}
                                                             </td>
@@ -398,7 +398,7 @@
 
         };
     
-        var checkConsolidate = function(idmodulo,idspm,modulo,horas,idesp,totalhoras,mallaModuloPeriodo,idacred,mallaModuloPeriodoId,tipo){
+        var checkConsolidate = function(idmodulo,idspm,modulo,horas,idesp,totalhoras,mallaModuloPeriodo,idacred,mallaModuloPeriodoId,tipo, idsip){
 
             Swal.fire({
                 title: 'Verificando...',
@@ -420,9 +420,9 @@
                     Swal.close();
                     if( res.data ){
                         if( tipo == 'edit' ){
-                            editarModulo(idmodulo,idspm,modulo,horas,idesp,totalhoras,mallaModuloPeriodo,mallaModuloPeriodoId,idacred);
+                            editarModulo(idmodulo,idspm,modulo,horas,idesp,totalhoras,mallaModuloPeriodo,mallaModuloPeriodoId,idacred,idsip);
                         }else{
-                            eliminarModuloCL(idmodulo,idspm,modulo,horas,idesp);
+                            eliminarModuloCL(idmodulo,idspm,modulo,horas,idesp,idsip);
                         }
                     }else{
                         Swal.fire('Atención','No puede realizar esta accion porque el modulo se encuentra consolidado','info');
@@ -431,7 +431,7 @@
             })
         };
 
-        var editarModulo= function (idmodulo,idspm,modulo,horas,idesp,totalhoras,mallaModuloPeriodo,mallaModuloPeriodoId,idacred) {
+        var editarModulo= function (idmodulo,idspm,modulo,horas,idesp,totalhoras,mallaModuloPeriodo,mallaModuloPeriodoId,idacred,idsip) {
 
             Swal.fire({
                 title: 'Obteniendo información...',
@@ -458,7 +458,8 @@
                     totalhoras:totalhoras,
                     periodoTecnicoMedio:mallaModuloPeriodo,
                     mallaModuloPeriodoId: mallaModuloPeriodoId,
-                    idacred:idacred
+                    idacred:idacred,
+                    idsip: idsip
                 }),
                 beforeSend: function () {
                     $('#modal').empty();
@@ -479,7 +480,7 @@
             });
         };
 
-        var eliminarModuloCL= function (idmodulo,idspm,modulo,horas,idesp) {
+        var eliminarModuloCL= function (idmodulo,idspm,modulo,horas,idesp,idsip) {
 
             Swal.fire({
                 title: '¿Esta seguro?',

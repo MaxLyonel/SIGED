@@ -12,7 +12,7 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-                {% if ( idacreditacion == 32 and modules >= 0 ) %}
+                {% if ( idacreditacion == 32 and selectOld == false ) %}
                     <div class="row">
                         <div class="form-body col-lg-4 col-md-4">
                             <label> Nombre del Modulo</label>
@@ -57,13 +57,13 @@
 
 <script>
  
-    var guardarModulo= function () {
-
+    var guardarModulo= function ( selectOld ) {
+        //alert(selectOld);
         var moduleMalla = $('#form_modulo').val();
         var horas = $("#form_horas option:selected").html();
 
         if( !moduleMalla || !horas ){
-            Swal.fire('Atención', 'Todos los campos son requeridos', 'warning');
+            Swal.fire('Atención', 'Todos los campos son requeridos 111', 'warning');
             return;
         }
     
@@ -126,9 +126,9 @@
         }else {
 
             var periodo = $("#form_periodoTecnicoMedio option:selected").html();
-            if( !periodo || periodo == 'Seleccione' ){
+            if( (!periodo || periodo == 'Seleccione') && !selectOld ){
                 Swal.close();
-                Swal.fire('Atención', 'Todos los campos son requeridos', 'warning');
+                Swal.fire('Atención', 'Todos los campos son requeridos 222', 'warning');
                 return;
             }
 
@@ -150,7 +150,7 @@
                 $.ajax({
                     type: 'post',
                     url: "{{ path('herramienta_create_modulo_nuevo') }}",
-                    data:formData,
+                    data: formData,
                     beforeSend: function () {
                         //$("#listamodulos").empty();
                         //$("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
@@ -176,7 +176,7 @@
 
                     },
                     error: function(data){
-                        Swal.fire("oppps", "asdasdas", "error");
+                        Swal.fire("Atención", "Ocurrio un error, vuelva a intentarlo", "warning");
                     }
 
                 });
