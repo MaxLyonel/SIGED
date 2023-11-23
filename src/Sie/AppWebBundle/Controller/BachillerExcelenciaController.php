@@ -491,7 +491,7 @@ class BachillerExcelenciaController extends Controller {
      * Muestra el resultado de la búsqueda de Institución Educativa
      */
 
-    public function resultSearchIeAction(Request $request) {
+     public function resultSearchIeAction(Request $request) {
         //aqui prcesa el form de busqueda por UE
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
@@ -510,10 +510,16 @@ class BachillerExcelenciaController extends Controller {
 
         $form = $this->createSearchIeForm();
         $form->handleRequest($request);
-
+       
         if ($form->isValid()) {
 
             $formulario = $form->getData();
+            $institucioneducativa = $formulario['institucioneducativa'];
+
+            //dump($institucioneducativa);die;
+
+
+
 
             /*
             dcastillo: si la UE esta en la tabla ues_sin_reporte2022, se retorna a la vista principal
@@ -576,7 +582,7 @@ class BachillerExcelenciaController extends Controller {
                 $gestion = $formulario['gestion'];
             } else {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
-            // return $this->redirect($this->generateUrl('bach_exc'));
+                 return $this->redirect($this->generateUrl('bach_exc'));
             }
 
             /*
@@ -716,13 +722,15 @@ class BachillerExcelenciaController extends Controller {
             $estudiantesM = $query->getResult();*/
 
             // SI PASA TODS LAS VALIDACIONES MANDA A LA VISTA
+            //dump($institucioneducativa); die;
 
             $em = $this->getDoctrine()->getManager();
             $db = $em->getConnection();
             $query = 'select * from public.sp_genera_regular_bachiller_destacado_vista(?,?);';
             $stmt = $db->prepare($query);
-            //$params = array($gestion,$sie);
-            $params = array('2023','80730425');
+            //$params = array('2023',$formulario['institucioneducativa']);
+            $params = array('2023',$institucioneducativa);
+            //$params = array('2023','80730425');
             $stmt->execute($params);
 
             $estudiantes = $stmt->fetchAll();
@@ -758,8 +766,22 @@ class BachillerExcelenciaController extends Controller {
         if ($form->isValid()) {
 
             $formulario = $form->getData();
-
             $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection(); 
+
+            //solo 1 vez
+            $sie = $formulario['institucioneducativa'];
+            $query ="select count(*) as existe from maestro_cuentabancaria
+            where 
+            institucioneducativa_id = " . $sie ." and gestion_tipo_id = 2023 and esactivo = false and esoficial = false";
+            $stmt = $db->prepare($query);       
+            $stmt->execute(); 
+            $result = $stmt->fetchAll();            
+            $datos = $result;          
+            if($datos[0]['existe'] != 0){
+                $this->get('session')->getFlashBag()->add('searchIe', 'Ya se ha realizado el reseteo !!');
+                return $this->redirect($this->generateUrl('bach_exc_rst'));
+            }   
 
             /*
             * verificamos si tiene tuicion
@@ -818,7 +840,73 @@ class BachillerExcelenciaController extends Controller {
         }
     }
 
+    public function dirCtaRst2023Action(Request $request) {
+
+        $id_usuario = $this->session->get('userId');
+        
+        // del form
+        $sie = $request->get('sie');
+        //TODO: validar si hay sie
+        if(!isset($sie) or $sie = '') {
+            $this->get('session')->getFlashBag()->add('searchIe', 'Cierre sesion e intente nuevamente !');
+            return $this->redirect($this->generateUrl('bach_exc_rst'));
+        }
+      
+        $gestion = 2023;
+
+        $id_sistema = $request->get('id_sistema');
+        $nromemo = $request->get('nromemo');
+        $justificacion = $request->get('justificacion');
+        
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        
+        $usuario_resetea = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+
+        $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
+
+        //update al registro, solo se cambia cantidad
+        //$query ="update univ_universidad_carrera_estudiante_estado set cantidad = ? where id = ?";
+
+        try {    
+
+            /*$query ="update maestro_cuentabancaria set 
+            esactivo = false, 
+            esoficial =  false,
+            nromemo = ?,
+            justificacion = ?, 
+            usuario_id = ?
+            where 
+            institucioneducativa_id = ? and gestion_tipo_id = ?";*/
+            $sie = $request->get('sie');
+            $query ="update maestro_cuentabancaria set 
+            esactivo = false, 
+            esoficial =  false,
+            nromemo = '" . $nromemo ."',
+            justificacion = '" . $justificacion . "', 
+            usuario_id = " . $id_usuario ."
+            where 
+            institucioneducativa_id = " . $sie ." and gestion_tipo_id = 2023";
+
+            $stmt = $db->prepare($query);
+            //$params = array($nromemo, $justificacion, $id_usuario , $sie, $gestion);
+            //$stmt->execute($params);    
+            $stmt->execute();    
+
+
+            $response = new JsonResponse();
+            return $response->setData(array('mensaje' => 'el registro ha sido habilitado !', 'estado' => 1));
+
+        } catch (\Doctrine\ORM\NoResultException $ex) {           
+            $msg  = 'Error al realizar el registro, intente nuevamente';
+            return $response->setData(array('estado' => 0, 'msg' => $msg));
+        } 
+
+
+    }
+
     public function dirCtaRstAction($ie) {
+
         $id_usuario = $this->session->get('userId');
 
         if (!isset($id_usuario)) {
@@ -854,7 +942,8 @@ class BachillerExcelenciaController extends Controller {
         }
 
         // dcastillo - reseteo de los alumnos
-        $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
+        // TODO: NO EXISTE PARA LA GESTION 2023
+        /*$repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
         $query = $repository->createQueryBuilder('ed')
                 ->where('ed.institucioneducativa = :institucion')
@@ -871,7 +960,7 @@ class BachillerExcelenciaController extends Controller {
             $value->setUsuario($usuario_resetea);   //dcastillo
             $em->persist($value);
             $em->flush();
-        }
+        }*/
 
 
 
@@ -1081,6 +1170,52 @@ class BachillerExcelenciaController extends Controller {
                     'posiblesEstudiantes' => $posiblesEstudiantes,
 
         ));
+    }
+
+    public function createEstudianteDestacado2023Action(Request $request) {
+        $id_usuario = $this->session->get('userId');
+        $sie = $this->session->get('ie_id');
+        $gestion = 2023;
+
+        //TODO: validar si hay el sie en la sesion
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }       
+        //las variables
+
+        //begin transaction
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $db = $em->getConnection();
+
+        //la funcion con parametro 1
+       
+        $query = 'select * from public.sp_genera_regular_bachiller_destacado(?,?,?,?);';
+        $stmt = $db->prepare($query);
+        $params = array($gestion,$sie, $id_usuario, 1);
+        //$params = array('2023','80730425', '13851863', '1');
+        $stmt->execute($params);
+
+        $estudiantes = $stmt->fetchAll();
+
+        //end transaction
+        $em->getConnection()->commit();
+        //dump($estudiantes[0]['obs']); die;
+        if(count($estudiantes) === 0)
+        {
+            // no hay mensajes se ha grabado correctamente
+            $response = new JsonResponse();
+            return $response->setData(array('mensaje' => 'La informacion ha sido registrada !! Proceda a IMPRIMIR LA DDJJ haciendo click en el boton "Paso 4"', 'estado' => 1));
+        }else{
+            // hay mensajes, NO se ha grabado correctamente
+            $response = new JsonResponse();
+            $mensaje = "ERROR : " . $estudiantes[0]['obs'];
+            //$mensaje = $estudiantes[0]['obs'];
+            //dump($mensaje); die;
+            return $response->setData(array('mensaje' => $mensaje, 'estado' => 0));
+        }
+
     }
 
     /**

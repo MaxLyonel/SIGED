@@ -1,0 +1,222 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+    <div class="body-content animated fadeIn">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p><h3><i class="fa fa-info-circle fa-fw"></i> BACHILLER DESTACADO 2023 </p></h3>                
+                <p class="label label-danger"><h4><strong>Nota.- Tenga en cuenta que la información registrada se constituye en declaración jurada, por tanto debe verificar minuciosamente los datos ingresados, ya que no se podrá realizar cambios posteriores.
+                Lea las indicaciones: </strong></h4></p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p><h5><strong>PASOS A SEGUIR: </strong> </p></h5>
+                <p><h4><strong>PASO 1:</strong> El listado muestra a los alumnos candidatos, cuyo promedio se ha calculado de forma automatica</h4></p>                
+                <p><h4><strong>PASO 2:</strong> Como Director de la U.E., DEBE revisar estas notas usando para ello el reporte  </h4></p>                
+                <p><h4><strong>PASO 3:</strong> Si esta conforme con la seleccion de estos estudiantes como Bachilleres Destacados Gestion 2023
+                debe marcar la casilla de conformidad indicando que ha revisado y esta de acuerdo con la seleccion de estos estudantes</h4></p>          
+                <p><h4><strong>PASO 4:</strong> Hacer click en el boton "Registrar Estudiantes e Imprimir DDJJ"</h4></p>                      
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-teal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4><i class="fa fa-users"></i> Lista de Estudiantes Candidatos(as) a Bachiller de Excelencia GESTION 2023</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive"  id="bachFem">
+                        <table class="table table-bordered table-striped table-hover cf dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Género</th>
+                                    <th>Código RUDE</th>
+                                    <th>C.I.</th>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
+                                    <th>Nombre(s)</th>
+                                    <th>Turno</th>
+                                    <th>Paralelo</th>
+                                    <th class="text-center">Promedio Calculado</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for estudiante in estudiantes %}
+                                    <tr>                                    
+                                        <td style="width: .1em">{{ loop.index }}</td>
+                                        <td> {{ estudiante.genero }} </td>
+                                        <td> {{ estudiante.codigo_rude }} </td>
+                                        <td> {{ estudiante.carnet_identidad }}</td>
+                                        <td> {{ estudiante.paterno }}</td>
+                                        <td> {{ estudiante.materno }}</td>
+                                        <td> {{ estudiante.nombre }}</td>
+                                        <td> {{ estudiante.turno }}</td>
+                                        <td> {{ estudiante.paralelo }}</td>
+                                        <td class="text-center">                                            
+                                           <h4><strong> {{ estudiante.nota_cuant_prom }} </strong></h4>
+                                        </td>
+                                        <td><button type="button" class="btn btn-default" data-dismiss="modal">Revisar Cálculo</button></td>
+                                    </tr>                                    
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel -->
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <table width="100%" border="0">
+                            <tr>
+                                <td widht="80%">
+                                    <div class="ckbox ckbox-info">
+                                        <input id="checkbox-accept" type="checkbox">
+                                        <label for="checkbox-accept"><h5><strong>HE REVISADO/VALIDADO EL CALCULO DE NOTAS, Y DOY MI APROBACION PARA EL REGISTRO DE LOS ESTUDIANTES CANDIDATOS(AS)</strong></h5></label>
+                                    </div>        
+                                </td>
+                                <td widht="20%" align="center">
+                                    <button type="button" onclick="openRegistroBachiller()" class="btn btn-success" data-dismiss="modal">Registrar Estudiantes e Imprimir DDJJ</button>                                
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                
+            </div>
+            <!-- /.panel -->
+        </div>
+
+    </div>
+
+   
+    <div id="idBachiller"></div>
+    <div  id="btnpaso4" class="btnpaso4" hidden>
+        <div class="col-lg-6 col-lg-offset-3">
+            <p><a href="{{ path('bach_exc_ddjj') }}" class="btn btn-block btn-success">Ir a: "Paso 4.- Declaración Jurada (Bachilleres)"</a></p>
+        </div>
+    </div>
+   
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">                
+                <p> - LA CONFORMIDAD ES RESPONSABILIDAD UNICA Y EXCLUSIVA DEL DIRECTOR DE LA U.E.</p></h3>                
+                <p> - SI NO ESTA DE ACUERDO CON LOS CANDIDATOS, PUEDE SI AUN ES POSIBLE MODIFICAR ALGUNA NOTA QUE HAYA SIDO TRANSCRITA DE MANERA ERRONEA, Y VOLVER A ESTA PANTALLA</p></h3>                
+                <p> - SI NO ESTA DE ACUERDO CON LOS CANDIDATOS, Y YA NO ES POSIBLE MODIFICAR NOTAS, DEBERA HACER LLEGAR AL MINISTERIO UNA NOTA CON LOS ANTECEDENTES DEL CASO.</p></h3>                
+
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+
+    
+{% endblock %}
+
+{%block javascripts %}    
+    {{ parent() }}
+    <script>
+        
+        var openRegistroBachiller = function () { 
+
+            if(!document.getElementById('checkbox-accept').checked){
+                //alert('Checkbox not checked');
+                swal({
+                text: 'No ha marcado la casilla de aprobacion ! ',
+                icon: "warning",
+                dangerMode: true,
+                })
+                return false;
+            }
+
+            swal({
+                title: "¿ Registrar Estudiantes ?",
+                text: " IMPORTANTE: Al realizar esta accion se establece a ambos estudiantes como bachilleres destacados 2023",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Registrar"],
+            })
+            .then(function(respuesta)  {
+                if (respuesta) {   
+                    var imagen = '{{ asset("img/loading.gif") }}'; 
+                    $.ajax({
+                    type: 'post',
+                    url: Routing.generate('test_bachiller'),      
+                    data: { id_sistema: 1 },          
+                    beforeSend: function () {
+                        $("#idBachiller").empty();
+                        //$("#idBachiller").append('<div class="text-center"><img src="{{ asset('img/loading.gif') }}" class="loading" /></div>');
+                        swal({
+                            title: "Registrando la informacion...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                        if (data.estado == 1)
+                        {
+                            $("#idBachiller").empty();
+                            $("#idBachiller").html('<div class="alert alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <i class="fa fa-info-circle fa-fw"></i> ' + data.mensaje + '</div>');                            
+                            $(".btnpaso4").show();
+                            document.getElementById("btnpaso4").style.display = 'inline';
+
+                        }else{
+                            $("#idBachiller").empty();                            
+                            $("#idBachiller").html('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <i class="fa fa-info-circle fa-fw"></i> ' + data.mensaje + '</div>');
+                        }
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();                       
+                    },
+                    statusCode: {
+                        500: function () {
+                            $("#idBachiller").empty();
+                        },
+                        404: function () {
+                            $("#idBachiller").empty();
+                        }
+                    }
+                });
+                    
+                 }
+    
+            });
+
+           
+           
+        };
+
+    </script>
+{% endblock %}
