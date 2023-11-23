@@ -85,12 +85,17 @@ class AreasController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
+        // dump($dataUE['ueducativaInfoId']['iecId']);
         // dump($this->session->get('ie_id'));
         // dump($dataUE['ueducativaInfo']['superiorAcreditacionTipoId']);
         // dump($dataUE['ueducativaInfoId']['setId']);
         // dump($dataUE['ueducativaInfoId']['periodoId']);
         // die;
-        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.es_oficial 
+        $querySearchSIP = $db->prepare("select ic.superior_institucioneducativa_periodo_id as sipid from institucioneducativa_curso ic where ic.id=".$dataUE['ueducativaInfoId']['iecId']."");
+        $querySearchSIP->execute();
+        $resultSearchSIP = $querySearchSIP->fetch(); 
+
+        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.id, set2.es_oficial 
                                 from superior_acreditacion_especialidad sae 
                                 inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
                                 inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
@@ -106,13 +111,14 @@ class AreasController extends Controller {
                                 and sat.id=".$dataUE['ueducativaInfo']['superiorAcreditacionTipoId']."
                                 and set2.id=".$dataUE['ueducativaInfoId']['setId']."
                                 and is2.periodo_tipo_id=".$dataUE['ueducativaInfoId']['periodoId']."
+                                and sip.id=".$resultSearchSIP['sipid']."
                                 and smt.esvigente=true
                                 and set2.es_vigente=true
                                 order by smt.id asc
                                 ");
         $query->execute();
         $modules = $query->fetchAll();
-        
+
         return $modules;
 
     }
@@ -176,7 +182,7 @@ class AreasController extends Controller {
     
             // $gestion = $this->session->get('ie_gestion');
             $aInfoUeducativa = unserialize($infoUe);
-    
+
             $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
 
             $em = $this->getDoctrine()->getManager();
@@ -194,7 +200,6 @@ class AreasController extends Controller {
     
             // $asignaturas = $this->getAreas($infoUe);
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
-
 
             //  VERIFICAR SI CUMPLE CON EL SIP DE LA MALLA
             $queryCurso = $db->prepare("select * from institucioneducativa_curso ic where ic.id=".$idCurso."");
@@ -823,13 +828,13 @@ class AreasController extends Controller {
 //                ->setParameter('idAsignaturas', $codAsignaturas)
 //                ->getQuery()
 //                ->getResult();
-        
+
         $sest_esoficial = true;
         $contAsg = count($curso);
         if( $this->session->get('ie_gestion') >= 2023 && ( $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 1 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 20 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 32 )  ){
             $curso = $this->getAreasCajon( $aInfoUeducativa );
             $contAsg = count($curso) - count($cursoOferta);
-            $sest_esoficial = $curso[0]['es_oficial'];
+            $sest_esoficial = ( count($curso) == 0 ) ? true : $curso[0]['es_oficial'];
         }
         
         $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
@@ -843,10 +848,6 @@ class AreasController extends Controller {
         $ieco = $request->get('idco');
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-
-        // dump($ieco);
-        // dump($infoUe);
-        // die;
 
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
