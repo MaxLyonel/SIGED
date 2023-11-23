@@ -14,6 +14,8 @@ use Sie\AppWebBundle\Entity\SuperiorInstitucioneducativaPeriodo;
 use Sie\AppWebBundle\Entity\SuperiorInstitucioneducativaAcreditacion;
 use Sie\AppWebBundle\Entity\SuperiorModuloPeriodo;
 use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
+use Sie\AppWebBundle\Entity\NotaTipo;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -660,4 +662,73 @@ class CursoAlternativaController extends Controller {
         $this->addFlash('messagecurdup', $message);
         return $this->render($this->session->get('pathSystem') . ':CursoAlternativa:respuestacursoduplicados.html.twig');
     }
+
+    public function cerrarAprendizajesAction(Request $request){
+
+        $this->session = $request->getSession();
+        $response = new JsonResponse();
+        // get the send values
+        $sie     = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $em = $this->getDoctrine()->getManager();
+        $swObservations = false;
+
+        try {
+            // check if the UE has observation in level 13 and grado 6(igestion_id character varying, icod_ue character varying, isub_cea character varying, iperiodo_id character varying
+            $query = $em->getConnection()->prepare("select * from sp_validacion_alternativa_especializados_web('". $gestion."','".$sie."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');");
+            $query->execute();
+            $responseOpe = $query->fetchAll();//function db
+            $arrResponse = array();
+            $message = '';
+            if(sizeof($responseOpe)>0){
+            //if(false){ // ya no validamos las observaciones, preguntar
+            
+                // error; send the errors to show on the view
+                $swObservations = true;
+                $message = 'presenta observacion';
+                $arrResponse = $responseOpe;                
+            }else{
+                $registroConsol = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array('institucioneducativa' => $sie, 'gestionTipoId' => $gestion, 'institucioneducativaOperativoLogTipo' => 10));
+                if (!$registroConsol){
+                    $swObservations = false;
+                    $em->getConnection()->beginTransaction();
+                    // no error save the success validation
+                    $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+                    $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(10));
+                    $institucioneducativaOperativoLog->setGestionTipoId($gestion);
+                    $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(2));
+                    $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+                    $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
+                    $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(7));
+                    $institucioneducativaOperativoLog->setDescripcion('...');
+                    $institucioneducativaOperativoLog->setEsexitoso('t');
+                    $institucioneducativaOperativoLog->setEsonline('t');
+                    $institucioneducativaOperativoLog->setUsuario($this->session->get('userId'));
+                    $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
+                    $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+                    $em->persist($institucioneducativaOperativoLog);
+                    $em->flush();
+                
+                    $em->getConnection()->commit();
+                    $message = '¡Proceso realizado exitosamente!';
+                } else {
+                    // $em->getConnection()->rollback();   
+                    $swObservations = true;
+                    $message = '¡Ya cerror Operativo Aprendizajes Especializados!';
+                }
+
+            }
+        }catch (Exception $ex) {
+            $em->getConnection()->rollback();   
+            $swObservations = true;
+            $message = "Error al cerrar el Operativo";
+        }
+
+        return new JsonResponse(array(
+            'observacion' => $arrResponse,
+            'estado' => $message,
+            'sw_obs' => $swObservations,
+        ));
+    }
+
 }
