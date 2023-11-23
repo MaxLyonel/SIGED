@@ -33,11 +33,18 @@ bach_exc_ie_rst_search:
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resultSearchIeRst" }
     methods:  POST      
 
+test_bachiller:
+    path:     /be-create2023
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:createEstudianteDestacado2023" }    
+    options:
+         expose: true
+
 bach_exc_create:
     path:     /be-create
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:beCreate" }
     options:
          expose: true
+
 
 bach_exc_student_info:
     path:     /be-student/{estId}/{estinsId}/{instId}/{genId}
@@ -62,6 +69,12 @@ bach_exc_imprime:
 bach_exc_imprime_dir:
     path:     /imprime-ddj-dir
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:impresionDDJJDir" }    
+
+cta_banc_dir_rst2023:
+    path:     /estado-dir2023
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:dirCtaRst2023" }  
+    options:
+        expose: true        
 
 cta_banc_dir_rst:
     path:     /{ie}/estado-dir
