@@ -45,6 +45,12 @@ herramienta_curso_alternativa_maestros_asignar:
     defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:maestrosAsignar"}
     options:
          expose: true
+
+herramienta_curso_alternativa_cerrar_aprendizajes:
+    path:     /cerrarAprendizajes
+    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:cerrarAprendizajes"}
+    options:
+         expose: true
          
 herramientalt_ceducativa_duplicados_paralelos:
     path:     /cursosduplicados
@@ -56,4 +62,4 @@ herramientalt_ceducativa_periododistinto:
     
 herramientalt_ceducativa_aux:
     path:     /auxuno
-    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:auxuno"}        
+    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:auxuno"} 
