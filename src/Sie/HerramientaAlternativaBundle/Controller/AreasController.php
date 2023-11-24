@@ -85,16 +85,18 @@ class AreasController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
+        // dump($this->session->get('ie_subcea'));
         // dump($dataUE['ueducativaInfoId']['iecId']);
         // dump($this->session->get('ie_id'));
         // dump($dataUE['ueducativaInfo']['superiorAcreditacionTipoId']);
         // dump($dataUE['ueducativaInfoId']['setId']);
         // dump($dataUE['ueducativaInfoId']['periodoId']);
+        // dump($dataUE);
         // die;
         $querySearchSIP = $db->prepare("select ic.superior_institucioneducativa_periodo_id as sipid from institucioneducativa_curso ic where ic.id=".$dataUE['ueducativaInfoId']['iecId']."");
         $querySearchSIP->execute();
         $resultSearchSIP = $querySearchSIP->fetch();
-        
+
         $querySecond = $db->prepare("select * from institucioneducativa_curso ic 
                                         inner join superior_institucioneducativa_periodo sip on sip.id=ic.superior_institucioneducativa_periodo_id 
                                         inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
@@ -160,7 +162,9 @@ class AreasController extends Controller {
 
         }
 
-        $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.id, set2.es_oficial 
+        if( $resultOficial['es_oficial'] ){
+
+            $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.id, set2.es_oficial 
                                 from superior_acreditacion_especialidad sae 
                                 inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
                                 inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
@@ -177,10 +181,38 @@ class AreasController extends Controller {
                                 and set2.id=".$dataUE['ueducativaInfoId']['setId']."
                                 and is2.periodo_tipo_id=".$dataUE['ueducativaInfoId']['periodoId']."
                                 and sip.id=".$resultSearchSIP['sipid']."
+                                and is2.sucursal_tipo_id=".$this->session->get('ie_subcea')."
                                 and smt.esvigente=true
                                 and set2.es_vigente=true
                                 order by smt.id asc
                                 ");
+
+        }else{
+
+            $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.id, set2.es_oficial 
+                                from superior_acreditacion_especialidad sae 
+                                inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
+                                inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
+                                inner join superior_institucioneducativa_acreditacion sia on sae.id=sia.acreditacion_especialidad_id 
+                                inner join institucioneducativa_sucursal is2 on sia.institucioneducativa_sucursal_id=is2.id 
+                                inner join superior_institucioneducativa_periodo sip on sia.id=sip.superior_institucioneducativa_acreditacion_id 
+                                inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
+                                inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id=smt.id 
+                                left join superior_malla_modulo_periodo smmp on smmp.superior_modulo_periodo_id=smp.id
+                                where
+                                is2.gestion_tipo_id=".$this->session->get('ie_gestion')."
+                                and is2.institucioneducativa_id=".$this->session->get('ie_id')."
+                                and sat.id=".$dataUE['ueducativaInfo']['superiorAcreditacionTipoId']."
+                                and set2.id=".$dataUE['ueducativaInfoId']['setId']."
+                                and is2.periodo_tipo_id=".$dataUE['ueducativaInfoId']['periodoId']."
+                                and is2.sucursal_tipo_id=".$this->session->get('ie_subcea')."
+                                and smt.esvigente=true
+                                and set2.es_vigente=true
+                                order by smt.id asc
+                                ");
+                                
+        }
+        
         $query->execute();
         $modules = $query->fetchAll();
 
