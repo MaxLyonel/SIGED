@@ -661,8 +661,8 @@ class BachillerExcelenciaController extends Controller {
                     ->getQuery();
 
             $registro = $query->getResult();
-
-            if ($registro[0][1] > 1) {
+            
+            if ($registro[0][1] >= 1) {
                 $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
                 $query = $repository->createQueryBuilder('ed')
