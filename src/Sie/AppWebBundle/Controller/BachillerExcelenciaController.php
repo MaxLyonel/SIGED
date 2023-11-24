@@ -522,7 +522,7 @@ class BachillerExcelenciaController extends Controller {
             $sie = $formulario['institucioneducativa'];
 
             //grabar en institucioneducativa_operativo_log
-            /*$institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+            $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
             $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(14));
             $institucioneducativaOperativoLog->setGestionTipoId($gestion);
             $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(2));
@@ -536,7 +536,7 @@ class BachillerExcelenciaController extends Controller {
             $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
             $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
             $em->persist($institucioneducativaOperativoLog);
-            $em->flush();*/
+            $em->flush();
 
             /*
             dcastillo: si la UE esta en la tabla ues_sin_reporte2022, se retorna a la vista principal
