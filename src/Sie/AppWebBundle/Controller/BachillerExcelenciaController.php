@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\MaestroCuentabancaria;
 use Sie\AppWebBundle\Entity\EntidadfinancieraTipo;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog; 
 
 /**
  * Bachiller de Excelencia Controller.
@@ -507,6 +508,8 @@ class BachillerExcelenciaController extends Controller {
         //     return $this->redirect($this->generateUrl('principal_web'));
         // }
 
+        //TODO: sino hay datos del director se sale
+
 
         $form = $this->createSearchIeForm();
         $form->handleRequest($request);
@@ -515,16 +518,30 @@ class BachillerExcelenciaController extends Controller {
 
             $formulario = $form->getData();
             $institucioneducativa = $formulario['institucioneducativa'];
+            $gestion = 2023;
+            $sie = $formulario['institucioneducativa'];
 
-            //dump($institucioneducativa);die;
-
-
-
+            //grabar en institucioneducativa_operativo_log
+            $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+            $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(14));
+            $institucioneducativaOperativoLog->setGestionTipoId($gestion);
+            $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+            $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+            $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
+            $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(3));
+            $institucioneducativaOperativoLog->setDescripcion('...');
+            $institucioneducativaOperativoLog->setEsexitoso('t');
+            $institucioneducativaOperativoLog->setEsonline('t');
+            $institucioneducativaOperativoLog->setUsuario($this->session->get('userId'));
+            $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
+            $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+            $em->persist($institucioneducativaOperativoLog);
+            $em->flush();
 
             /*
             dcastillo: si la UE esta en la tabla ues_sin_reporte2022, se retorna a la vista principal
             */
-            $sql= "
+            /*$sql= "
             SELECT COUNT
                 ( * ) as existe
             FROM
@@ -539,7 +556,14 @@ class BachillerExcelenciaController extends Controller {
             $ue_no_reporta = $po[0]['existe'];
             if($ue_no_reporta > 0) {
                 return $this->redirect($this->generateUrl('principal_web'));
-            }            
+            }*/
+
+            /*$validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
+            if($validacionSexto == false){
+                $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa no ha cerrado operativo !!');
+                return $this->redirect($this->generateUrl('bach_exc'));
+            }*/
+
 
             /*
             dcastillo: si la UE tiene efectivos no ha cerrado, se retorna a la vista principal
@@ -560,12 +584,13 @@ class BachillerExcelenciaController extends Controller {
             $stmt = $db->prepare($sql);
             $params = array();
             $stmt->execute($params);
-            $po = $stmt->fetchAll();
-            //dump($po); die;
+            $po = $stmt->fetchAll();            
             $existe_efectivos = $po[0]['existe'];
-            /*if($existe_efectivos > 0) {
-                return $this->redirect($this->generateUrl('principal_web'));
-            }*/
+            if($existe_efectivos > 0) {
+                //return $this->redirect($this->generateUrl('principal_web'));
+                $this->get('session')->getFlashBag()->add('searchIe', 'Existen estudiantes EFECTIVOS en 6to de Secundaria !!');
+                return $this->redirect($this->generateUrl('bach_exc'));
+            }
 
             /*
             * verificamos si tiene tuicion
@@ -599,6 +624,7 @@ class BachillerExcelenciaController extends Controller {
               "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = $this->gestionOperativo and "public".institucioneducativa_curso.grado_tipo_id = 6
              */
 
+           
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 
             $query = $repository->createQueryBuilder('i')
@@ -726,6 +752,7 @@ class BachillerExcelenciaController extends Controller {
 
             $em = $this->getDoctrine()->getManager();
             $db = $em->getConnection();
+            //$query = 'select * from public.sp_genera_regular_bachiller_destacado_vista_4dig(?,?);';
             $query = 'select * from public.sp_genera_regular_bachiller_destacado_vista(?,?);';
             $stmt = $db->prepare($query);
             //$params = array('2023',$formulario['institucioneducativa']);
@@ -1191,6 +1218,7 @@ class BachillerExcelenciaController extends Controller {
 
         //la funcion con parametro 1
        
+        //$query = 'select * from public.sp_genera_regular_bachiller_destacado_4dig(?,?,?,?);';
         $query = 'select * from public.sp_genera_regular_bachiller_destacado(?,?,?,?);';
         $stmt = $db->prepare($query);
         $params = array($gestion,$sie, $id_usuario, 1);
@@ -1468,6 +1496,44 @@ class BachillerExcelenciaController extends Controller {
         return $this->render('SieAppWebBundle:BachillerExcelencia:resultDDJJDir.html.twig', array(
                     'datadirector' => $director,
         ));
+    }
+
+    public function impresionConsulta2023Action() {
+
+        $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
+        $gestion = $this->gestionOperativo;
+
+        $arch = 'DECLARACION_JURADA_DIRECTOR_' . $arrSieInfo['id'] . '_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_CalculoAutomaticoEstudianteExcelencia_unidadeducativa_regular_mas4dig_v3_ejea.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_CalculoAutomaticoEstudianteExcelencia_unidadeducativa_regular_mas_v3_ejea.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
+
+    public function impresionConsulta2023FemAction() {
+
+        $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
+        $gestion = $this->gestionOperativo;
+
+        $arch = 'DECLARACION_JURADA_DIRECTOR_' . $arrSieInfo['id'] . '_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_CalculoAutomaticoEstudianteExcelencia_unidadeducativa_regular_fem4dig_v3_ejea.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_CalculoAutomaticoEstudianteExcelencia_unidadeducativa_regular_fem_v3_ejea.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
     }
 
     public function impresionDDJJDirAction() {

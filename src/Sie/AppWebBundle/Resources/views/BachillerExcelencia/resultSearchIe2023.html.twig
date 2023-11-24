@@ -71,7 +71,16 @@
                                         <td class="text-center">                                            
                                            <h4><strong> {{ estudiante.nota_cuant_prom }} </strong></h4>
                                         </td>
-                                        <td><button type="button" class="btn btn-default" data-dismiss="modal">Revisar Cálculo</button></td>
+                                        <td>
+                                            {#<button type="button" class="btn btn-default" data-dismiss="modal">Revisar Cálculo</button>#}
+                                            {% if estudiante.genero == 'MASCULINO' %}
+                                                <a href="{{ path('bach_exc_imprime_consulta2023') }}" class="btn btn-block btn-success">Revisar Cálculo</a>                                                
+                                            {% endif %}
+
+                                            {% if estudiante.genero == 'FEMENINO' %}
+                                                <a href="{{ path('bach_exc_imprime_consulta2023_fem') }}" class="btn btn-block btn-success">Revisar Cálculo</a>                                                
+                                            {% endif %}
+                                        </td>
                                     </tr>                                    
                                 {% endfor %}
                             </tbody>
@@ -84,12 +93,13 @@
 
     </div>
 
-    <div class="row">
+    <div class="row" id="divregistro">
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel panel-yellow">
                 <div class="panel-heading">
                     <div class="panel-title">
+                        MARCAR ESTA CASILLA
                         <table width="100%" border="0">
                             <tr>
                                 <td widht="80%">
@@ -99,7 +109,7 @@
                                     </div>        
                                 </td>
                                 <td widht="20%" align="center">
-                                    <button type="button" onclick="openRegistroBachiller()" class="btn btn-success" data-dismiss="modal">Registrar Estudiantes e Imprimir DDJJ</button>                                
+                                    <button type="button" onclick="openRegistroBachiller()" class="btn btn-success" data-dismiss="modal">Consolidar Estudiantes e Imprimir DDJJ</button>                                
                                     
                                 </td>
                             </tr>
@@ -128,8 +138,8 @@
         <div class="col-md-12">
             <div class="alert alert-danger" role="alert">                
                 <p> - LA CONFORMIDAD ES RESPONSABILIDAD UNICA Y EXCLUSIVA DEL DIRECTOR DE LA U.E.</p></h3>                
-                <p> - SI NO ESTA DE ACUERDO CON LOS CANDIDATOS, PUEDE SI AUN ES POSIBLE MODIFICAR ALGUNA NOTA QUE HAYA SIDO TRANSCRITA DE MANERA ERRONEA, Y VOLVER A ESTA PANTALLA</p></h3>                
-                <p> - SI NO ESTA DE ACUERDO CON LOS CANDIDATOS, Y YA NO ES POSIBLE MODIFICAR NOTAS, DEBERA HACER LLEGAR AL MINISTERIO UNA NOTA CON LOS ANTECEDENTES DEL CASO.</p></h3>                
+                {#<p> - SI NO ESTA DE ACUERDO CON LOS CANDIDATOS, PUEDE SI AUN ES POSIBLE MODIFICAR ALGUNA NOTA QUE HAYA SIDO TRANSCRITA DE MANERA ERRONEA, Y VOLVER A ESTA PANTALLA</p></h3>  #}              
+                <p> - SI NO ESTA DE ACUERDO CON LOS CANDIDATOS, DEBERÁ HACER LLEGAR AL MINISTERIO UNA NOTA CON LOS ANTECEDENTES DEL CASO.</p></h3>                
 
             </div>
         </div>
@@ -190,6 +200,7 @@
                             $("#idBachiller").html('<div class="alert alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <i class="fa fa-info-circle fa-fw"></i> ' + data.mensaje + '</div>');                            
                             $(".btnpaso4").show();
                             document.getElementById("btnpaso4").style.display = 'inline';
+                            document.getElementById("divregistro").style.display = "none";
 
                         }else{
                             $("#idBachiller").empty();                            

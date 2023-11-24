@@ -1,5 +1,5 @@
 {% extends 'layoutHerramienta.html.twig' %}
-{% set gestionOperativo = 2022 %}
+{% set gestionOperativo = 2023 %}
 
 {% block contentoption %}
 
@@ -68,7 +68,7 @@
                             <i class="fa fa-search"></i> Ingresar el código SIE de la Institución Educativa para realizar la búsqueda
                         </div>
                         <div class="panel-body">
-                                {{form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal'} } )}}
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal', 'onsubmit': 'showAlert(); return false;',  'id': 'frmconsolida'} } )}}
                                 <div class="form-group">
                                     <label for="form_institucioneducativa" class="col-sm-2 control-label">{{ form_label(form.institucioneducativa) }}</label>
                                     <div class="col-sm-10">
@@ -83,11 +83,13 @@
                                         <div class="help-block with-errors">{{ form_errors(form.gestion) }}</div>
                                     </div>
                                 </div>
+                                
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         {{ form_widget(form.submit, { 'attr': {'class': 'btn btn-primary' } } ) }}
                                     </div>
                                 </div>
+                                
                                 {{form_end(form)}}
                             </div>
                         </div>
@@ -96,4 +98,53 @@
             </div>
         </div>  
     </div>                    
+
+<script>
+
+    function showAlert() {
+        
+        
+
+        var msj = '';       
+        //var msj = '\n- ATENCION ';       
+        //msj += '\n\nTenga en cuenta que no podrá realizar cambios posteriores. Verifique la información introducida.';
+        //msj += '\n\nNota.- Para confirmar los datos ingresados presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".';
+
+        msj += '\n\n¿Está seguro de consolidar la información del BACHILLER DE EXCELENCIA?';
+        msj += '\n\n¿Ha verificado que la información de registro de calificaciones en el sistema SIE reportada es correcta? En caso afirmativo, continúe con la consolidación de los datos del BACHILLER DESTACADO - EXCELENCIA EN EL BACHILLERATO';
+
+        if (confirm('ATENCIÓN !! ' + msj)) {
+
+            var formData = $('#frmconsolida').serialize();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('bach_exc_ie_search'),
+                data: formData,
+                beforeSend: function () {
+                    $("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#divAlert").empty();
+                    $("#formbachex").empty();
+                    $("#formbachex").append('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                    if (data.genero == '2') {
+                        $("#bachFem").empty();
+                        $("#bachFem").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                    }
+                    if (data.genero == '1') {
+                        $("#bachMas").empty();
+                        $("#bachMas").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                    }
+                    $("#botonesAcc").show();
+                },
+                error: function () {
+                    $("#divAlert").empty();
+                    $("#divAlert").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos Incorrectos</div>');
+                }
+            });
+        }
+        return false;
+    }
+
+</script>
 {% endblock %}
