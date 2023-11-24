@@ -93,7 +93,72 @@ class AreasController extends Controller {
         // die;
         $querySearchSIP = $db->prepare("select ic.superior_institucioneducativa_periodo_id as sipid from institucioneducativa_curso ic where ic.id=".$dataUE['ueducativaInfoId']['iecId']."");
         $querySearchSIP->execute();
-        $resultSearchSIP = $querySearchSIP->fetch(); 
+        $resultSearchSIP = $querySearchSIP->fetch();
+        
+        $querySecond = $db->prepare("select * from institucioneducativa_curso ic 
+                                        inner join superior_institucioneducativa_periodo sip on sip.id=ic.superior_institucioneducativa_periodo_id 
+                                        inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
+                                        inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id=smt.id
+                                        where ic.superior_institucioneducativa_periodo_id=".$resultSearchSIP['sipid']."
+                                        ");
+        $querySecond->execute();
+        $resultSecond = $querySecond->fetchAll();
+
+        $queryCheckOficial = $db->prepare("select set2.id, set2.especialidad, set2.es_oficial from superior_institucioneducativa_periodo sip 
+                                            inner join superior_institucioneducativa_acreditacion sia on sip.superior_institucioneducativa_acreditacion_id=sia.id 
+                                            inner join superior_acreditacion_especialidad sae on sia.acreditacion_especialidad_id=sae.id
+                                            inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id
+                                            where sip.id=".$resultSearchSIP['sipid']."
+                                            ");
+        $queryCheckOficial->execute();
+        $resultOficial = $queryCheckOficial->fetch();
+
+        if( count($resultSecond) == 0 && $resultOficial['es_oficial'] ){
+            // EXTRAER MODULOS DE LA TABLA ctr_altenativa_planes
+            $queryThird = $db->prepare("select * from ctr_altenativa_planes cap 
+                                            where cap.superior_acreditacion_tipo=".$dataUE['ueducativaInfo']['superiorAcreditacionTipoId']."
+                                            and cap.superior_especialidad_tipo_id=".$dataUE['ueducativaInfoId']['setId']."
+                                            order by cap.id asc");
+            $queryThird->execute();
+            $resultThird = $queryThird->fetchAll();
+
+            foreach ($resultThird as $value) {
+
+                $modulo = $value['modulo'];
+
+                $querySeven = $db->prepare("select * from superior_modulo_tipo smt where 
+                                                smt.superior_especialidad_tipo_id=".$dataUE['ueducativaInfoId']['setId']." 
+                                                and smt.modulo like '".$modulo."'");
+                $querySeven->execute();
+                $superiorModuloTipo = $querySeven->fetch();
+
+                if(!$superiorModuloTipo){
+
+                    $smtipo = new SuperiorModuloTipo();
+                    $smtipo -> setModulo($modulo);
+                    $smtipo -> setEsvigente(true);
+                    $smtipo -> setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
+                    $smtipo -> setSuperiorEspecialidadTipo($em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($dataUE['ueducativaInfoId']['setId']));
+
+                    $em->persist($smtipo);
+                    $em->flush();
+
+                    $smtipo = $smtipo->getId();
+                }else{
+                    $smtipo = $superiorModuloTipo['id'];
+                }
+
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                $smperiodo = new SuperiorModuloPeriodo();
+                $smperiodo ->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtipo));
+                $smperiodo ->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($resultSearchSIP['sipid']));
+                $smperiodo ->setHorasModulo('100');
+                $em->persist($smperiodo);
+                $em->flush($smperiodo);
+
+            } 
+
+        }
 
         $query = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.id, set2.es_oficial 
                                 from superior_acreditacion_especialidad sae 
