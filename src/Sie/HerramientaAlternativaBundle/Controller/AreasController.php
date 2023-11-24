@@ -104,7 +104,16 @@ class AreasController extends Controller {
         $querySecond->execute();
         $resultSecond = $querySecond->fetchAll();
 
-        if( count($resultSecond) == 0 ){
+        $queryCheckOficial = $db->prepare("select set2.id, set2.especialidad, set2.es_oficial from superior_institucioneducativa_periodo sip 
+                                            inner join superior_institucioneducativa_acreditacion sia on sip.superior_institucioneducativa_acreditacion_id=sia.id 
+                                            inner join superior_acreditacion_especialidad sae on sia.acreditacion_especialidad_id=sae.id
+                                            inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id
+                                            where sip.id=".$resultSearchSIP['sipid']."
+                                            ");
+        $queryCheckOficial->execute();
+        $resultOficial = $queryCheckOficial->fetch();
+
+        if( count($resultSecond) == 0 && $resultOficial['es_oficial'] ){
             // EXTRAER MODULOS DE LA TABLA ctr_altenativa_planes
             $queryThird = $db->prepare("select * from ctr_altenativa_planes cap 
                                             where cap.superior_acreditacion_tipo=".$dataUE['ueducativaInfo']['superiorAcreditacionTipoId']."
