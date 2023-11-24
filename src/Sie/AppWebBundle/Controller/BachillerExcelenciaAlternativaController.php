@@ -13,6 +13,8 @@ use Sie\AppWebBundle\Entity\EstudianteDestacado;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\MaestroCuentabancaria;
 use Sie\AppWebBundle\Entity\EntidadfinancieraTipo;
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
+use Sie\AppWebBundle\Entity\NotaTipo;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 
@@ -67,7 +69,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Buscar'));
+        $form->add('submit', 'submit', array('label' => 'Consolidar IBD'));
 
         return $form;
     }
@@ -115,6 +117,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
     public function resultSearchIeDirAction(Request $request) {
         //verificacion registro alternativa
+        
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
@@ -156,7 +159,6 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
             return $this->redirect($this->generateUrl('bach_exc_alt_dir'));
             }
-
             /* Verificar si la UE ya ha registrado al director */
             $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
@@ -444,7 +446,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
      */
 
     public function resultSearchIeAction(Request $request) {
-       
+        
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
@@ -458,6 +460,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         /*if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }*/
+       
 
         $form = $this->createSearchIeForm();
         $form->handleRequest($request);
@@ -465,25 +468,6 @@ class BachillerExcelenciaAlternativaController extends Controller {
         if ($form->isValid()) {
 
             $formulario = $form->getData();
-
-            /*
-            dcastillo: si la UE esta en la tabla ues_sin_reporte2022, se retorna a la vista principal
-            */
-            /*$sql= "
-            SELECT COUNT
-                ( * ) as existe
-            FROM
-                ues_sin_reporte2022                
-            WHERE ues_sin_reporte2022.id =  " .$formulario['institucioneducativa'];
-            
-            $stmt = $db->prepare($sql);
-            $params = array();
-            $stmt->execute($params);
-            $po = $stmt->fetchAll();
-            $ue_no_reporta = $po[0]['existe'];
-            if($ue_no_reporta > 0) {
-                return $this->redirect($this->generateUrl('principal_web'));
-            }*/
 
             /*
             * verificamos si tiene tuicion
@@ -502,11 +486,33 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
             return $this->redirect($this->generateUrl('bach_exc_alt'));
             }
+            // $gestion = 2022;
+
+            /*
+            * Registra acceso para declaración jurada
+            */
+            $em->getConnection()->beginTransaction();
+            $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+            $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(14));
+            $institucioneducativaOperativoLog->setGestionTipoId($gestion);
+            $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(3));
+            $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion));
+            $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
+            $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(54));
+            $institucioneducativaOperativoLog->setDescripcion('IBD Preliminar');
+            $institucioneducativaOperativoLog->setEsexitoso('t');
+            $institucioneducativaOperativoLog->setEsonline('t');
+            $institucioneducativaOperativoLog->setUsuario($this->session->get('userId'));
+            $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
+            $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+            $em->persist($institucioneducativaOperativoLog);
+            $em->flush();
+            $em->getConnection()->commit();
+
 
             /*
             * Verificar si la UE cuenta con aprendizajes especializados
             */
-
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 
             $query = $repository->createQueryBuilder('i')
@@ -515,20 +521,26 @@ class BachillerExcelenciaAlternativaController extends Controller {
                     ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'sae', 'WITH', 'sia.acreditacionEspecialidad = sae.id')
                     ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'sat', 'WITH', 'sae.superiorAcreditacionTipo = sat.id')
                     ->where('i.id = :institucion')
-                    ->andWhere('sat.codigo = :codigo')
+                    ->andWhere('sat.id = :codigo')
                     ->andWhere('sia.gestionTipo = :gestion')
-                    ->setParameter('institucion', $formulario['institucioneducativa'])
-                    ->setParameter('codigo', 3)
-                    ->setParameter('gestion', $formulario['gestion'])
+                    ->setParameter('institucion', $institucion )
+                    ->setParameter('codigo', 52)
+                    ->setParameter('gestion',$gestion)
                     ->getQuery();
 
             $quinto = $query->getResult();
 
             if ($quinto[0][1] == 0) {
                 $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa ' . $formulario['institucioneducativa'] . ' no cuenta con aprendizajes especializados.');
-                return $this->redirect($this->generateUrl('bach_exc_alt_dir'));
+                return $this->redirect($this->generateUrl('bach_exc_alt'));
             }
 
+            $closeopequinto = $this->get('funciones')->verificarSextoSecundariaCerrado($institucion,$gestion);
+            // dump($closeopequinto);die;
+            if ($closeopequinto==false){
+                $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa ' . $formulario['institucioneducativa'] . ' no cerro el operativo de aprendizajes especializados.');
+                return $this->redirect($this->generateUrl('bach_exc_alt'));
+            }
             /* Verificar si la UE ya ha registrado al bachiller destacado */
             $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
@@ -537,13 +549,12 @@ class BachillerExcelenciaAlternativaController extends Controller {
                     ->where('e.institucioneducativa = :institucion')
                     ->andWhere('e.gestionTipo = :gestion')
                     ->andWhere('e.esoficial = :esoficial')
-                    ->setParameter('institucion', $formulario['institucioneducativa'])
-                    ->setParameter('gestion', $formulario['gestion'])
+                    ->setParameter('institucion', $institucion)
+                    ->setParameter('gestion', $gestion)
                     ->setParameter('esoficial', 't')
                     ->getQuery();
 
             $registro = $query->getResult();
-
             if ($registro[0][1] > 1) {
                 $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
@@ -554,13 +565,12 @@ class BachillerExcelenciaAlternativaController extends Controller {
                         ->where('ed.institucioneducativa = :institucion')
                         ->andWhere('ed.gestionTipo = :gestion')
                         ->andWhere('ed.esoficial = :esoficial')
-                        ->setParameter('institucion', $formulario['institucioneducativa'])
-                        ->setParameter('gestion', $formulario['gestion'])
+                        ->setParameter('institucion', $institucion)
+                        ->setParameter('gestion', $gestion)
                         ->setParameter('esoficial', 't')
                         ->getQuery();
 
                 $bachilleres = $query->getResult();
-
                 return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultBachilleres.html.twig', array(
                             'bachilleres' => $bachilleres,
                 ));
@@ -569,93 +579,30 @@ class BachillerExcelenciaAlternativaController extends Controller {
             /*
              * Lista de estudiantes de aprendizajes especializados
              */
-            // $repository = $em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo');
 
-            // $query = $repository->createQueryBuilder('a')
-            //         ->select('j.id estId, j.codigoRude, j.carnetIdentidad, j.paterno, j.materno, j.nombre, i.id estinsId, ie.id instId, gn.id genId, gn.genero, pt.paralelo, nt.nivel, ct.ciclo, gt.grado')
-            //         //->select('emt.estadomatricula, emt.id as estadomatriculaId, j.id, j.carnetIdentidad, j.codigoRude, j.paterno, j.materno, j.nombre, j.fechaNacimiento, i.id as eInsId, a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId')
-            //         ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
-            //         ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
-            //         ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo=d.id')
-            //         ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad=c.id')
-            //         ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
-            //         ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion=e.id')
-            //         ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo=g.id')
-            //         ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'i', 'WITH', 'h.id=i.institucioneducativaCurso')
-            //         ->innerJoin('SieAppWebBundle:Estudiante', 'j', 'WITH', 'i.estudiante=j.id')
-            //         ->innerJoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'i.estadomatriculaTipo = emt.id')
-            //         ->innerJoin('SieAppWebBundle:GeneroTipo', 'gn', 'WITH', 'j.generoTipo = gn.id')
-            //         ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'h.nivelTipo = nt.id')
-            //         ->innerJoin('SieAppWebBundle:CicloTipo', 'ct', 'WITH', 'h.cicloTipo = ct.id')
-            //         ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'h.gradoTipo = gt.id')
-            //         ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'h.paraleloTipo = pt.id')
-            //         ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'h.institucioneducativa = ie.id')
+            $query = $em->getConnection()->prepare("SELECT * from sp_genera_alternativa_bachiller_destacado_vista('".$gestion."', '".$institucion."')");
+            $query->execute();
+            $estudiantes = $query->fetchAll();
+            // dump($estudiantes);die;
+            $est_oficial = [];
+            $est_duplicadosM = [];
+            $est_duplicadosF = [];
 
-            //         ->where('h.institucioneducativa = :sie')
-            //         ->andwhere('h.gestionTipo = :gestion')
-            //         //->andwhere('f.periodoTipoId = :periodo')
-            //         ->andwhere('d.codigo = :satCodigo')
-            //         ->andWhere('j.generoTipo = :genero')
-            //         ->andWhere('emt.id = :matricula')
-
-
-            //         ->setParameter('sie', $formulario['institucioneducativa'])
-            //         ->setParameter('gestion', $formulario['gestion'])
-            //         //->setParameter('periodo', 3)
-            //         ->setParameter('satCodigo', 3)
-            //         ->setParameter('genero', 2)
-            //         ->setParameter('matricula', 4)
-
-
-            //         ->orderBy('j.paterno, j.materno, j.nombre')
-            //         ->getQuery();
-
-            $estudiantesF = $this->get('sie_app_web.funciones')->getEstudianteBachillerHumanisticoAlternativa($formulario['institucioneducativa'], $formulario['gestion'], 2);
-
-            // $query = $repository->createQueryBuilder('a')
-            //         ->select('j.id estId, j.codigoRude, j.carnetIdentidad, j.paterno, j.materno, j.nombre, i.id estinsId, ie.id instId, gn.id genId, gn.genero, pt.paralelo, nt.nivel, ct.ciclo, gt.grado')
-            //         //->select('emt.estadomatricula, emt.id as estadomatriculaId, j.id, j.carnetIdentidad, j.codigoRude, j.paterno, j.materno, j.nombre, j.fechaNacimiento, i.id as eInsId, a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId')
-            //         ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
-            //         ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
-            //         ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo=d.id')
-            //         ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad=c.id')
-            //         ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
-            //         ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion=e.id')
-            //         ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo=g.id')
-            //         ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'i', 'WITH', 'h.id=i.institucioneducativaCurso')
-            //         ->innerJoin('SieAppWebBundle:Estudiante', 'j', 'WITH', 'i.estudiante=j.id')
-            //         ->innerJoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'i.estadomatriculaTipo = emt.id')
-            //         ->innerJoin('SieAppWebBundle:GeneroTipo', 'gn', 'WITH', 'j.generoTipo = gn.id')
-            //         ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'h.nivelTipo = nt.id')
-            //         ->innerJoin('SieAppWebBundle:CicloTipo', 'ct', 'WITH', 'h.cicloTipo = ct.id')
-            //         ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'h.gradoTipo = gt.id')
-            //         ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'h.paraleloTipo = pt.id')
-            //         ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'h.institucioneducativa = ie.id')
-
-            //         ->where('h.institucioneducativa = :sie')
-            //         ->andwhere('h.gestionTipo = :gestion')
-            //         //->andwhere('g.superiorPeriodoTipo = :periodo')
-            //         ->andwhere('d.codigo = :satCodigo')
-            //         ->andWhere('j.generoTipo = :genero')
-            //         ->andWhere('emt.id = :matricula')
-
-
-            //         ->setParameter('sie', $formulario['institucioneducativa'])
-            //         ->setParameter('gestion', $formulario['gestion'])
-            //         //->setParameter('periodo', 3)
-            //         ->setParameter('satCodigo', 3)
-            //         ->setParameter('genero', 1)
-            //         ->setParameter('matricula', 4)
-
-
-            //         ->orderBy('j.paterno, j.materno, j.nombre')
-            //         ->getQuery();
-
-            $estudiantesM = $this->get('sie_app_web.funciones')->getEstudianteBachillerHumanisticoAlternativa($formulario['institucioneducativa'], $formulario['gestion'], 1);
+            foreach ($estudiantes as $estudiante) {
+                if ($estudiante['ban_manual'] == 1 || $estudiante['ban_manual'] == 3) {
+                    $est_oficial[] = $estudiante;
+                    // $est_duplicadosF[] = $estudiante;
+                } elseif ($estudiante['ban_manual'] == 2){
+                    $est_duplicadosM[] = $estudiante;
+                } elseif ($estudiante['ban_manual'] == 4) {
+                    $est_duplicadosF[] = $estudiante;
+                }
+            }
 
             return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultSearchIe.html.twig', array(
-                        'estudiantesF' => $estudiantesF,
-                        'estudiantesM' => $estudiantesM,
+                'estoficial' => $est_oficial,
+                'estduplicadoM' => $est_duplicadosM,
+                'estduplicadoF' => $est_duplicadosF,
             ));
         }
     }
@@ -986,9 +933,11 @@ class BachillerExcelenciaAlternativaController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-
+        $seleccion_f = $request->request->get('seleccionf');
+        $seleccion_m = $request->request->get('seleccionm');
         $institucion = $this->session->get('ie_id');
-        $gestion = $this->session->get('ie_gestion');
+        $gestion = $this->session->get('currentyear');
+        // $gestion = 2022;
         $sucursal = $this->session->get('ie_suc_id');
         $periodo = $this->session->get('ie_per_cod');
 
@@ -1006,22 +955,28 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'sae', 'WITH', 'sia.acreditacionEspecialidad = sae.id')
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'sat', 'WITH', 'sae.superiorAcreditacionTipo = sat.id')
                 ->where('i.id = :institucion')
-                ->andWhere('sat.codigo = :codigo')
+                ->andWhere('sat.id = :codigo')
                 ->andWhere('sia.gestionTipo = :gestion')
                 ->setParameter('institucion', $institucion)
-                ->setParameter('codigo', 3)
+                ->setParameter('codigo', 52)
                 ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $quinto = $query->getResult();
-
-        if ($quinto[0][1] == 0) {
-            $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa ' . $institucion . ' no cuenta con aprendizajes especializados.');
-            return $this->redirect($this->generateUrl('bach_exc_alt'));
+        
+        $msj = '';
+        $status = 200;
+        if (count($quinto) == 0) {
+            $msj = 'La Institución Educativa ' . $institucion . ' no cuenta con aprendizajes especializados.';
+            $status = 400;
+            return  new JsonResponse(array(
+                'msj' => $msj,
+                'status' => $status,
+            ));
         }
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
-
+        
         $query = $repository->createQueryBuilder('m')
                 ->select('m.carnet, m.complemento, m.paterno, m.materno, m.nombre, ef.entidadfinanciera, m.cuentabancaria, m.fechaNacimiento, m.apellidoEsposo')
                 ->innerJoin('SieAppWebBundle:EntidadfinancieraTipo', 'ef', 'WITH', 'ef.id = m.entidadfinancieraTipo')
@@ -1029,12 +984,83 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->andWhere('m.esoficial = :esoficial')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $institucion)
-                ->setParameter('gestion', $this->gestionOperativo)
+                ->setParameter('gestion', $gestion)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
         $director = $query->getOneOrNullResult();
+        if (count($director)==0) {
+            $msj = 'La Institución Educativa ' . $institucion . ' no cuenta con declaración Juradad de cuenta Director';
+            $status = 400;
+            return  new JsonResponse(array(
+                'msj' => $msj,
+                'status' => $status,
+            ));
+        }
 
+        $query = $em->getConnection()->prepare("SELECT * from sp_genera_alternativa_bachiller_destacado_vista('".$gestion."', '".$institucion."')");
+        $query->execute();
+        $estudiantes = $query->fetchAll();
+        // dump($estudiantes);die;
+        $est_oficialM = [];
+        $est_oficialF = [];
+
+        foreach ($estudiantes as $estudiante) {
+            if ($estudiante['ban_manual'] == 1) {
+                $est_oficialM[] = $estudiante;
+            } elseif ($estudiante['ban_manual'] == 3) {
+                $est_oficialF[] = $estudiante;
+            }
+        }
+        if (count($est_oficialM) == 0 and $seleccion_m != null){
+            foreach ($estudiantes as $estudiante) {
+                if ($estudiante['ban_manual'] == 2 and $estudiante['estudiante_inscripcion_id']== $seleccion_m) {
+                    $est_oficialM[] = $estudiante;
+                } 
+            }
+        }
+
+        if (count($est_oficialF) == 0 and $seleccion_f != null){
+            foreach ($estudiantes as $estudiante) {
+                if ($estudiante['ban_manual'] == 4 and $estudiante['estudiante_inscripcion_id']== $seleccion_f) {
+                    $est_oficialF[] = $estudiante;
+                } 
+            }
+        }
+
+        $bachilleres=$this->listaregistoest($institucion, $gestion);
+        
+        if (count($est_oficialF) > 0 and count($bachilleres)== 0){
+            $query = $em->getConnection()->prepare("SELECT * from sp_genera_alternativa_bachiller_destacado_guarda('".$est_oficialF[0]['estudiante_inscripcion_id']."','".$est_oficialF[0]['nota_cuant_prom']."', '".$id_usuario."')");
+            $query->execute();
+        }
+        if (count($est_oficialM) > 0 and count($bachilleres)== 0){
+            $query = $em->getConnection()->prepare("SELECT * from sp_genera_alternativa_bachiller_destacado_guarda('".$est_oficialM[0]['estudiante_inscripcion_id']."','".$est_oficialM[0]['nota_cuant_prom']."', '".$id_usuario."')");
+            $query->execute();
+        }
+        $ruta ='';
+        if (count($bachilleres) == 0){ 
+            $ruta = 'resultDDJJest.html.twig';
+            $bachilleres=$this->listaregistoest($institucion, $gestion);
+            return new JsonResponse([
+                'status' => 200, // or any other appropriate success code
+                'view' => $this->renderView('SieAppWebBundle:BachillerExcelenciaAlternativa:'.$ruta, [
+                    'datadirector' => $director,
+                    'bachilleres' => $bachilleres,
+                ]),
+            ]);
+        } else {
+            $ruta = 'resultDDJJ.html.twig';
+            return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:'.$ruta, array(
+                    'datadirector' => $director,
+                    'bachilleres' => $bachilleres
+            ));
+        } 
+
+    }
+
+    public function listaregistoest($institucion, $gestion){
+        $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
         $query = $repository->createQueryBuilder('ed')
@@ -1045,16 +1071,12 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.esoficial = :esoficial')
                 ->setParameter('institucion', $institucion)
-                ->setParameter('gestion', $this->gestionOperativo)
+                ->setParameter('gestion', $gestion)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
         $bachilleres = $query->getResult();
-
-        return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultDDJJ.html.twig', array(
-                    'datadirector' => $director,
-                    'bachilleres' => $bachilleres
-        ));
+        return $bachilleres;
     }
 
     public function impresionDDJJAction() {
@@ -1082,12 +1104,40 @@ class BachillerExcelenciaAlternativaController extends Controller {
         $em->flush();
 
         $gestion_reporte = $this->gestionOperativo;
+        // $gestion_reporte = 2022;
+        // dump($gestion_reporte);die;
 
         $arch = 'DECLARACION_JURADA_BACHILLER_' . $institucion . '_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_regular_v2_afv.rptdesign&__format=pdf&&codue=' . $institucion . '&gestion='.$gestion_reporte.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_alternativa_v3_igg.rptdesign&__format=pdf&&codue=' . $institucion . '&gestion='.$gestion_reporte.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function impresionHistorialEstAction($gen, Request $request){
+        $institucion = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        // $gestion = 2022;
+        $gen = strtoupper($gen);
+        if ($gen !== "FEMENINO" && $gen !== "MASCULINO") {
+           return $this->redirect($this->generateUrl('bach_exc_alt'));
+        } 
+        $arch = 'IBD_HISTORIAL_ESTUDIANTES_' . $gen . '_'. $institucion  . '_' . date('Ymd') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        if($gen=='FEMENINO'){
+            $archivo = 'reg_dj_CalculoAutomaticoEstudianteExcelencia_unidadeducativa_alter_fem_v3_ejea.rptdesign';
+        } elseif ($gen=='MASCULINO'){
+            $archivo = 'reg_dj_CalculoAutomaticoEstudianteExcelencia_unidadeducativa_alter_mas_v3_ejea.rptdesign';
+        }
+        // dump($this->container->getParameter('urlreportweb')); die;
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$archivo.'&__format=pdf&&codue=' . $institucion . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

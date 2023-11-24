@@ -25,7 +25,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="flexModalLabel">Registro Bachiller de Excelencia</h4>
+                    <h4 class="modal-title" id="flexModalLabel">Consolidación Bachiller de Excelencia</h4>
                 </div>
                 <div class="modal-body">
                     <div id="idBachiller"></div>
@@ -38,10 +38,10 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
+    <div id="registroddjj">
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Paso 3.- Registrar Bachiller de Excelencia <span>Bachiller de Excelencia</span></h2>
+        <h2><i class="fa fa-table"></i> Paso 3.- Consolidación de Bachiller de Excelencia <span>Bachiller de Excelencia</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
@@ -53,7 +53,7 @@
                     <i class="fa fa-angle-right"></i>
                 </li>
 
-                <li class="active">Registrar Bachiller de Excelencia</li>
+                <li class="active">Consolidación Bachiller de Excelencia</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
@@ -65,10 +65,10 @@
         <div class="col-md-12">
             <div class="alert alert-danger" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <p><i class="fa fa-info-circle fa-fw"></i> En la parte inferior se tiene dos recuadros con el listado de bachilleres candidatas y candidatos a la obtención del incentivo y certificado de reconocimiento a "Bachiller destacado - Excelencia en el bachillerato".</p>
-                <p>Una vez que se identifique a la y el Bachiller Destacado, presione sobre el botón "Registrar calificación", a continuación se despliega el formulario donde debe registrar el <strong>Promedio Anual</strong> obtenido por la/el estudiante. Presione sobre el botón "Guardar".</p>
-                <p>Posteriormente, a través de una ventana emergente se pide la confirmación de los datos ingresados. Para confirmar presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".</p>
-                <p class="label label-danger"><strong>Nota.- Tenga en cuenta que la información registrada se constituye en declaración jurada, por tanto debe verificar minuciosamente los datos ingresados, ya que no se podrá realizar cambios posteriores.</strong></p>
+                <p><i class="fa fa-info-circle fa-fw"></i> En la parte inferior se tiene la informacion de bachilleres para la obtención del incentivo y certificado de reconocimiento a "Bachiller destacado - Excelencia en el bachillerato".</p>
+                <p>De acuerdo a procedimientos establecidos, existe la posiblidad que en caso de empate el sistema le mostrara las opciones para seleccionar, para lo cual debera seleccionar una opcióno.</p>
+                <p>Posteriormente, para confirmar presione sobre el botón "IR A PASO 4", o "Cancelar".</p>
+                <p class="label label-danger"><strong>Nota.- Tenga en cuenta que la información registrada se constituye en declaración jurada, por tanto debe verificar minuciosamente los datos a consolidar, ya que no se podrá realizar cambios posteriores.</strong></p>
             </div>
         </div>
     </div>
@@ -79,48 +79,43 @@
             <div class="panel panel-teal">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        <h4><i class="fa fa-users"></i> Lista de Estudiantes Candidatas a Bachiller de Excelencia (Género: Femenino)</h4>
+                        <h4><i class="fa fa-users"></i> Lista de Estudiantes Candidatos a Bachiller de Excelencia</h4>
                     </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive"  id="bachFem">
-                        <table class="table table-bordered table-striped table-hover cf dataTable">
+                        <table class="table">
                             <thead>
                                 <tr>
-                                    <th style="width: .1em">#</th>
+                                    <th>Nº</th>
+                                    <th>Género</th>
                                     <th>Código RUDE</th>
                                     <th>C.I.</th>
                                     <th>Apellido Paterno</th>
                                     <th>Apellido Materno</th>
                                     <th>Nombre(s)</th>
-                                    <th>Periodo</th>
+                                    <th>Turno</th>
                                     <th>Paralelo</th>
                                     <th class="text-center">Calificación Final</th>
+                                    <th>Ver Respaldo</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for estudiante in estudiantesF %}
+                                {% for estudiante in estoficial %}
                                     <tr>
-                                        <td style="width: .1em">{{ loop.index }}</td>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ estudiante.genero }}</td>
                                         <td>{{ estudiante.codigo_rude }}</td>
-                                        <td>{{ estudiante.carnet_identidad }}</td>
+                                        <td>{{ estudiante.carnet_identidad }} {{estudiante.complemento}}</td>
                                         <td>{{ estudiante.paterno }}</td>
                                         <td>{{ estudiante.materno }}</td>
                                         <td>{{ estudiante.nombre }}</td>
-                                        <td>{{ estudiante.periodo }}</td>
+                                        <td>{{ estudiante.turno }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
+                                        <td class="text-center">{{ estudiante.nota_cuant_prom }}</td>
                                         <td class="text-center">
-                                            {% if estudiante.segip_id == 1 %}
-                                                <a href="#" onclick="openRegistroBachiller({{estudiante.estudiante_id}}, {{estudiante.estudiante_inscripcion_id}}, {{estudiante.institucioneducativa_id}}, {{estudiante.genero_tipo_id}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>
-                                            {% else %}
-                                                <span class="text-danger">Estudiante con observación</span>
-                                                <form action="{{path('bach_exc_alt_validar_estudiante_segip')}}" method="post">
-                                                    <input type="hidden" id="form_idEstudiante" name="form[idEstudiante]" value="{{estudiante.estudiante_id}}">
-                                                    <input type="hidden" id="form_subsistema" name="form[subsistema]" value="2">
-                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
-                                                </form>
-                                            {% endif %}
+                                            <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('bach_exc_alt_imprime_historial', { 'gen': estudiante.genero}) }}" title="Ver"> Calificaciónes</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -138,48 +133,61 @@
             <div class="panel panel-teal">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        <h4><i class="fa fa-users"></i> Lista de Estudiantes Candidatos a Bachiller de Excelencia (Género: Masculino)</h4>
+                        <h4><i class="fa fa-users"></i> Lista de Estudiantes Candidatos a Bachiller Empatados en Calificaciones</h4>
                     </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive" id="bachMas">
-                        <table class="table table-bordered table-striped table-hover cf dataTable">
+                        <table class="table">
                             <thead>
                                 <tr>
-                                    <th style="width: .1em">#</th>
+                                    <th>Nº</th>
+                                    <th>Género</th>
                                     <th>Código RUDE</th>
                                     <th>C.I.</th>
                                     <th>Apellido Paterno</th>
                                     <th>Apellido Materno</th>
                                     <th>Nombre(s)</th>
-                                    <th>Periodo</th>
+                                    {# <th>Periodo</th> #}
+                                    <th>Turno</th>
                                     <th>Paralelo</th>
                                     <th class="text-center">Calificación Final</th>
+                                    <th>Seleccionar</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for estudiante in estudiantesM %}
+                                {% for estudiante in estduplicadoF %}
                                     <tr>
-                                        <td style="width: .1em">{{ loop.index }}</td>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ estudiante.genero }}</td>
                                         <td>{{ estudiante.codigo_rude }}</td>
-                                        <td>{{ estudiante.carnet_identidad }}</td>
+                                        <td>{{ estudiante.carnet_identidad }} {{estudiante.complemento}}</td>
                                         <td>{{ estudiante.paterno }}</td>
                                         <td>{{ estudiante.materno }}</td>
                                         <td>{{ estudiante.nombre }}</td>
-                                        <td>{{ estudiante.periodo }}</td>
+                                        <td>{{ estudiante.turno }}</td>
                                         <td>{{ estudiante.paralelo }}</td>
+                                        <td class="text-center">{{ estudiante.nota_cuant_prom }}</td>
                                         <td class="text-center">
-                                            {% if estudiante.segip_id == 1 %}
-                                                <a href="#" onclick="openRegistroBachiller({{estudiante.estudiante_id}}, {{estudiante.estudiante_inscripcion_id}}, {{estudiante.institucioneducativa_id}}, {{estudiante.genero_tipo_id}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a>
-                                            {% else %}
-                                                <span class="text-danger">Estudiante con observación</span>
-                                                <form action="{{path('bach_exc_alt_validar_estudiante_segip')}}" method="post">
-                                                    <input type="hidden" id="form_idEstudiante" name="form[idEstudiante]" value="{{estudiante.estudiante_id}}">
-                                                    <input type="hidden" id="form_subsistema" name="form[subsistema]" value="2">
-                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
-                                                </form>
-                                            {% endif %}
+                                            <input type="checkbox" class="seleccionF" name="seleccionF" value="{{ estudiante.estudiante_inscripcion_id }}" >
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {% for estudiante in estduplicadoM %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ estudiante.genero }}</td>
+                                        <td>{{ estudiante.codigo_rude }}</td>
+                                        <td>{{ estudiante.carnet_identidad }} {{estudiante.complemento}}</td>
+                                        <td>{{ estudiante.paterno }}</td>
+                                        <td>{{ estudiante.materno }}</td>
+                                        <td>{{ estudiante.nombre }}</td>
+                                        <td>{{ estudiante.turno }}</td>
+                                        <td>{{ estudiante.paralelo }}</td>
+                                        <td class="text-center">{{ estudiante.nota_cuant_prom }}</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="seleccionM" name="seleccionM" value="{{ estudiante.estudiante_inscripcion_id }}" >
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -191,22 +199,166 @@
             <!-- /.panel -->
         </div>
         <!-- /.col-lg-12 -->
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Verificación de Proceso de selección IBD</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="vec_calificaciones" name="vec_calificaciones"> Si, He verificado las calificaciónes.
+                        </label>
+                    </div>
+                    
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="si_acuerdo" name="si_acuerdo"> Si, Estoy de acuerdo con la selección.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <div class="row" id="botonesAcc">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a href="{{ path('bach_exc_alt_ddjj') }}" class="btn btn-block btn-success">Ir a: "Paso 4.- Declaración Jurada (Bachilleres)"</a>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a href="{{ path('bach_exc_alt') }}" class="btn btn-block btn-default">Salir</a>
+        <div class="form-group text-center">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <button type="button" class="btn btn-success btn-lg btn-block" id="guardarddjj" onclick="guardarddjj();">
+                    <i class="glyphicon glyphicon-send"></i> Ir a: "Paso 4.- DDJJ (Bachilleres)"
+                </button>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <a href="{{ path('bach_exc_alt') }}" class="btn btn-danger btn-lg btn-block">Salir</a>
+            </div>
         </div>
     </div>
+    
     </div>
+</div>
+<div id="resultadoddjj"></div>
 {% endblock %}
 
 {%block javascripts %}    
     {{ parent() }}
+    <!-- Agrega esto en el <head> de tu documento -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+<link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+<script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+
     <script>
-        $("#botonesAcc").hide();
+
+        document.addEventListener('DOMContentLoaded', function () {
+        function handleCheckboxChange(checkboxes) {
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.addEventListener('change', function () {
+                        checkboxes.forEach(function (otherCheckbox) {
+                            if (otherCheckbox !== checkbox) {
+                                otherCheckbox.checked = false;
+                            }
+                        });
+                    });
+                });
+            }
+
+            var checkboxesF = document.querySelectorAll('.seleccionF');
+            handleCheckboxChange(checkboxesF);
+
+            var checkboxesM = document.querySelectorAll('.seleccionM');
+            handleCheckboxChange(checkboxesM);
+        });
+
+        function guardarddjj() {
+            // Obtener referencias a los elementos de los checkboxes
+            var checkboxVecCalificaciones = document.getElementById('vec_calificaciones');
+            var checkboxSiAcuerdo = document.getElementById('si_acuerdo');
+            
+            // Validar que vec_calificaciones y si_acuerdo estén seleccionados
+            if (!checkboxVecCalificaciones.checked || !checkboxSiAcuerdo.checked) {
+                alert('Por favor, marque la opcion Si verificó las calificaciones de los estudiatnes, y marque la opcion si esta de acuerdo con la selección de los estudiantes.');
+                return;
+            }
+            
+            // Verificar selección de estudiantes F y M
+            if (!validarSeleccion(document.querySelectorAll('.seleccionF'), 'Femenino')) {
+                return;
+            }
+
+            if (!validarSeleccion(document.querySelectorAll('.seleccionM'), 'Masculino')) {
+                return;
+            }
+            
+            
+            // Llamada a la función para obtener los valores seleccionados
+            var valores = obtenerValoresSeleccion();
+            console.log('Seleccion F:', valores.seleccionF);
+            console.log('Seleccion M:', valores.seleccionM);
+
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('bach_exc_alt_ddjj'),
+                data: { seleccionf: valores.seleccionF,
+                        seleccionm: valores.seleccionM
+                        },
+                success: function (data) {
+                    console.log(data);
+                    if (data.status == 200){
+                        document.getElementById('registroddjj').style.display = 'none';
+                        $("#resultadoddjj").append(data.view); 
+                    } else {
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: data.msj,
+                                    showConfirmButton: true,
+                                    // timer: 1500
+                                    })
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                    
+                }
+            });
+            
+        }
+
+        // Función para verificar la selección de al menos un estudiante
+        function validarSeleccion(checkboxes, mensaje) {
+                if (checkboxes.length > 0) {
+                    var seleccionado = Array.from(checkboxes).some(function (checkbox) {
+                        return checkbox.checked;
+                    });
+
+                    if (!seleccionado) {
+                        alert('Por favor, seleccione al menos un estudiante "' + mensaje + '" antes de continuar.');
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function obtenerValoresSeleccion() {
+                var valoresSeleccionF;
+                var checkboxesSeleccionF = document.querySelectorAll('.seleccionF:checked');
+                checkboxesSeleccionF.forEach(function (checkbox) {
+                    valoresSeleccionF= checkbox.value;
+                });
+
+                var valoresSeleccionM;
+                var checkboxesSeleccionM = document.querySelectorAll('.seleccionM:checked');
+                checkboxesSeleccionM.forEach(function (checkbox) {
+                    valoresSeleccionM=checkbox.value;
+                });
+
+                return {
+                    seleccionF: valoresSeleccionF,
+                    seleccionM: valoresSeleccionM
+                };
+            }
 
         var openHistoryInsc = function (idStudent) {
             $('#historyInscriptions').modal('show');

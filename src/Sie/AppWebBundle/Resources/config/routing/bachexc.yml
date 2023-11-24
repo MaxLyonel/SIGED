@@ -70,6 +70,14 @@ bach_exc_imprime_dir:
     path:     /imprime-ddj-dir
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:impresionDDJJDir" }    
 
+bach_exc_imprime_consulta2023:
+    path:     /imprime-consulta2023
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:impresionConsulta2023" }
+
+bach_exc_imprime_consulta2023_fem:
+    path:     /imprime-consulta2023-fem
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:impresionConsulta2023Fem" }
+
 cta_banc_dir_rst2023:
     path:     /estado-dir2023
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:dirCtaRst2023" }  

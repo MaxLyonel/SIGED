@@ -27,12 +27,19 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-warning" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <i class="fa fa-info-circle fa-fw"></i> Ha registrado.
+                    <button type="button" class="close" data-dismiss="success" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-info-circle fa-fw"></i> Se ha registrado exitosamente.
                 </div>
             </div>
         </div>
-
+        <div class="panel panel-teal">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4> Estudiantes Registrados como Bachiller de Excelencia</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
         <div class="row">
             {% for datastudent in bachilleres%}
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -67,13 +74,13 @@
                                             <th><strong>Género</strong></th><td>{{datastudent.genero}}</td>
                                         </tr>
                                         <tr>
-                                            <th><strong>Promedio Semestre 1</strong></th><td>{{datastudent.promedioSem1}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th><strong>Promedio Semestre 2</strong></th><td>{{datastudent.promedioSem2}}</td>
-                                        </tr>
-                                        <tr>
                                             <th><strong>Promedio Final</strong></th><td>{{datastudent.promedioFinal}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Ver Respaldo</strong></th>
+                                            <td>
+                                                <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('bach_exc_alt_imprime_historial', { 'gen': datastudent.genero}) }}" title="Ver"> Calificaciónes</a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -93,7 +100,7 @@
         </div>
         <div class="row">
             <div class="col-lg-6 col-lg-offset-3">
-                <p><a href="{{ path('bach_exc_alt') }}" class="btn btn-block btn-default">Salir</a></p>
+                <p><a href="{{ path('bach_exc_alt') }}" class="btn btn-block btn-danger">Salir</a></p>
             </div>
         </div>
     </div>

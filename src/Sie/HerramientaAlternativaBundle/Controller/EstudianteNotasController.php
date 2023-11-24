@@ -36,6 +36,7 @@ class EstudianteNotasController extends Controller {
     }
 
     public function indexAction(Request $request){
+        return $this->redirect($this->generateUrl('principal_web'));
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
         $data = $this->getNotas($infoUe, $infoStudent);
@@ -67,6 +68,7 @@ class EstudianteNotasController extends Controller {
      * @return View table areas
      */
     public function getNotas($infoUe, $infoStudent){
+        return $this->redirect($this->generateUrl('principal_web'));
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         // datos ue

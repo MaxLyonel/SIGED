@@ -13,6 +13,9 @@ bach_exc_alt_rst:
 bach_exc_alt_ddjj:
     path:     /index-ddjj
     defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:declaracionJurada" }
+    options:
+        expose: true
+        
 
 bach_exc_alt_ddjj_dir:
     path:     /index-ddjj-dir
@@ -58,7 +61,16 @@ alt_cta_banc_dir_create:
 bach_exc_alt_imprime:
     path:     /imprime-ddj
     defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:impresionDDJJ" }
-    
+
+bach_exc_alt_imprime_historial:
+    path:     /imprimirhistorial/{gen}
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:impresionHistorialEst" }
+    options:
+         expose: true
+
+    path:     /imprime-historial
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:impresionHistorialEst" }
+
 bach_exc_alt_imprime_dir:
     path:     /imprime-ddj-dir
     defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:impresionDDJJDir" }    
