@@ -446,7 +446,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
      */
 
     public function resultSearchIeAction(Request $request) {
-        
+        // dump('ok');die;
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
@@ -487,7 +487,12 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('bach_exc_alt'));
             }
             // $gestion = 2022;
-
+            $bachilleres=$this->listaregistoest($institucion, $gestion);
+            if (count($bachilleres) > 0){ 
+                return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultBachilleres.html.twig', array(
+                    'bachilleres' => $bachilleres,
+                ));
+            } 
             /*
             * Registra acceso para declaración jurada
             */
@@ -542,39 +547,39 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 return $this->redirect($this->generateUrl('bach_exc_alt'));
             }
             /* Verificar si la UE ya ha registrado al bachiller destacado */
-            $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
+            // $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
-            $query = $repository->createQueryBuilder('e')
-                    ->select('count(e.id)')
-                    ->where('e.institucioneducativa = :institucion')
-                    ->andWhere('e.gestionTipo = :gestion')
-                    ->andWhere('e.esoficial = :esoficial')
-                    ->setParameter('institucion', $institucion)
-                    ->setParameter('gestion', $gestion)
-                    ->setParameter('esoficial', 't')
-                    ->getQuery();
+            // $query = $repository->createQueryBuilder('e')
+            //         ->select('count(e.id)')
+            //         ->where('e.institucioneducativa = :institucion')
+            //         ->andWhere('e.gestionTipo = :gestion')
+            //         ->andWhere('e.esoficial = :esoficial')
+            //         ->setParameter('institucion', $institucion)
+            //         ->setParameter('gestion', $gestion)
+            //         ->setParameter('esoficial', 't')
+            //         ->getQuery();
 
-            $registro = $query->getResult();
-            if ($registro[0][1] > 1) {
-                $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
+            // $registro = $query->getResult();
+            // if ($registro[0][1] > 1) {
+            //     $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
-                $query = $repository->createQueryBuilder('ed')
-                        ->select('e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, g.genero, ed.promedioFinal, ed.promedioSem1, ed.promedioSem2')
-                        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudiante = e.id')
-                        ->innerJoin('SieAppWebBundle:GeneroTipo', 'g', 'WITH', 'e.generoTipo = g.id')
-                        ->where('ed.institucioneducativa = :institucion')
-                        ->andWhere('ed.gestionTipo = :gestion')
-                        ->andWhere('ed.esoficial = :esoficial')
-                        ->setParameter('institucion', $institucion)
-                        ->setParameter('gestion', $gestion)
-                        ->setParameter('esoficial', 't')
-                        ->getQuery();
+            //     $query = $repository->createQueryBuilder('ed')
+            //             ->select('e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, g.genero, ed.promedioFinal, ed.promedioSem1, ed.promedioSem2')
+            //             ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudiante = e.id')
+            //             ->innerJoin('SieAppWebBundle:GeneroTipo', 'g', 'WITH', 'e.generoTipo = g.id')
+            //             ->where('ed.institucioneducativa = :institucion')
+            //             ->andWhere('ed.gestionTipo = :gestion')
+            //             ->andWhere('ed.esoficial = :esoficial')
+            //             ->setParameter('institucion', $institucion)
+            //             ->setParameter('gestion', $gestion)
+            //             ->setParameter('esoficial', 't')
+            //             ->getQuery();
 
-                $bachilleres = $query->getResult();
-                return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultBachilleres.html.twig', array(
-                            'bachilleres' => $bachilleres,
-                ));
-            }
+            //     $bachilleres = $query->getResult();
+            //     return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultBachilleres.html.twig', array(
+            //                 'bachilleres' => $bachilleres,
+            //     ));
+            // }
 
             /*
              * Lista de estudiantes de aprendizajes especializados
@@ -940,13 +945,12 @@ class BachillerExcelenciaAlternativaController extends Controller {
         // $gestion = 2022;
         $sucursal = $this->session->get('ie_suc_id');
         $periodo = $this->session->get('ie_per_cod');
-
         $em = $this->getDoctrine()->getManager();
 
         /*
         * Verificar si la UE cuenta con aprendizajes especializados
         */
-
+        
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 
         $query = $repository->createQueryBuilder('i')
@@ -1029,7 +1033,6 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $bachilleres=$this->listaregistoest($institucion, $gestion);
-        
         if (count($est_oficialF) > 0 and count($bachilleres)== 0){
             $query = $em->getConnection()->prepare("SELECT * from sp_genera_alternativa_bachiller_destacado_guarda('".$est_oficialF[0]['estudiante_inscripcion_id']."','".$est_oficialF[0]['nota_cuant_prom']."', '".$id_usuario."')");
             $query->execute();
