@@ -24,7 +24,7 @@
 
     <div class="body-content animated fadeIn">
     
-        {% if(datadirector and bachilleres) %}
+        {# {% if(datadirector and bachilleres) %} #}
             <div class="row">
                 <div class="col-md-12">
                     <div class="alert alert-warning" role="alert">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-        {% else %}
+        {# {% else %}
             <div class="row">
                 <div class="col-md-12">
                     <div class="alert alert-danger" role="alert">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        {% endif %} #}
 
         {% if(datadirector) %}
             <div class="row">
@@ -131,13 +131,12 @@
                                                 <th><strong>Género</strong></th><td>{{datastudent.genero}}</td>
                                             </tr>
                                             <tr>
-                                                <th><strong>Promedio Semestre 1</strong></th><td>{{datastudent.promedioSem1}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th><strong>Promedio Semestre 2</strong></th><td>{{datastudent.promedioSem2}}</td>
-                                            </tr>
-                                            <tr>
                                                 <th><strong>Promedio Final</strong></th><td>{{datastudent.promedioFinal}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>Ver Respaldo</strong></th><td>
+                                                    <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('bach_exc_alt_imprime_historial', { 'gen': datastudent.genero}) }}" title="Ver"> Calificaciónes</a>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -157,7 +156,7 @@
                     <a href="{{ path('bach_exc_alt_imprime') }}" class="btn btn-block btn-success">Imprimir Declaración Jurada</a>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                    <a href="{{ path('principal_web') }}" class="btn btn-block btn-default">Salir</a>
+                    <a href="{{ path('principal_web') }}" class="btn btn-block btn-danger">Salir</a>
                 </div>
             </div>
         {% endif %}
