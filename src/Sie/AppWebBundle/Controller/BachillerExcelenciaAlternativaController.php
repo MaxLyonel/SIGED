@@ -1124,7 +1124,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
     public function impresionHistorialEstAction($gen, Request $request){
         $institucion = $this->session->get('ie_id');
-        $gestion = $this->session->get('ie_gestion');
+        $gestion = $this->session->get('currentyear');
         // $gestion = 2022;
         $gen = strtoupper($gen);
         if ($gen !== "FEMENINO" && $gen !== "MASCULINO") {
@@ -1139,7 +1139,6 @@ class BachillerExcelenciaAlternativaController extends Controller {
         } elseif ($gen=='MASCULINO'){
             $archivo = 'reg_dj_CalculoAutomaticoEstudianteExcelencia_unidadeducativa_alter_mas_v3_ejea.rptdesign';
         }
-        // dump($this->container->getParameter('urlreportweb')); die;
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$archivo.'&__format=pdf&&codue=' . $institucion . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
