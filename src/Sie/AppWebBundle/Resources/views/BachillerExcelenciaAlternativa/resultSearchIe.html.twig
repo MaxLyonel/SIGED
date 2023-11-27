@@ -305,6 +305,7 @@
                         },
                 success: function (data) {
                     console.log(data);
+                    // actualiza vista
                     if (data.status == 200){
                         document.getElementById('registroddjj').style.display = 'none';
                         $("#resultadoddjj").append(data.view); 
