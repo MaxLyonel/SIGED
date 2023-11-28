@@ -826,7 +826,7 @@
                         </li>
                     {% endif %}
                     {# Preinscripciones #}
-                    {# {% if app.session.get('roluser') in [9,10,8,7] %}
+                    {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -839,11 +839,11 @@
                             <ul>
                                 <li><a href="{{ path('preinscripcion_sorteo_index')}}">Fecha de sorteo</a></li>
                             </ul>
-                            <ul>
+                            {# <ul>
                                 <li><a href="{{path('uealtademanda')}}">Modificar cupo</a></li>
-                            </ul>
+                            </ul> #}
                         </li>
-                    {% endif %} #}
+                    {% endif %}
 
                     {# Cambio de tutor BJP 2021  #}
                     
