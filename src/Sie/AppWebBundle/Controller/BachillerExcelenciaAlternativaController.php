@@ -1044,7 +1044,6 @@ class BachillerExcelenciaAlternativaController extends Controller {
         $ruta ='';
         if (count($bachilleres) == 0){ 
             $ruta = 'resultDDJJest.html.twig';
-            $bachilleres=$this->listaregistoest($institucion, $gestion);
             return new JsonResponse([
                 'status' => 200, // or any other appropriate success code
                 'view' => $this->renderView('SieAppWebBundle:BachillerExcelenciaAlternativa:'.$ruta, [

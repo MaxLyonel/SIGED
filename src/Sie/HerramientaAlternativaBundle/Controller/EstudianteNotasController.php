@@ -36,12 +36,17 @@ class EstudianteNotasController extends Controller {
     }
 
     public function indexAction(Request $request){
-        return $this->redirect($this->generateUrl('principal_web'));
+         /*********TEMPORAL IBD****/
+        //  $arrayue = array(81981321);
+        //  $institucion = $this->session->get('ie_id');
+        //  if (!(in_array($institucion, $arrayue))){
+             return $this->redirect($this->generateUrl('principal_web'));
+        //  }
+         /*********TEMPORAL IBD****/
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
         $data = $this->getNotas($infoUe, $infoStudent);
-        //dump($this->session->get('ie_per_estado'));
-        //die;
+       
         if($data['gestion'] >= 2016){
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestreActual.html.twig',$data);
         }else{
@@ -68,12 +73,18 @@ class EstudianteNotasController extends Controller {
      * @return View table areas
      */
     public function getNotas($infoUe, $infoStudent){
-        return $this->redirect($this->generateUrl('principal_web'));
+        /*********TEMPORAL IBD****/
+        // $arrayue = array(81981321);
+        // $institucion = $this->session->get('ie_id');
+        // if (!(in_array($institucion, $arrayue))){
+            return $this->redirect($this->generateUrl('principal_web'));
+        // }
+        /*********TEMPORAL IBD****/
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         // datos ue
         $aInfoUeducativa = unserialize($infoUe);
-        //dump($aInfoUeducativa);die;
+        // dump($aInfoUeducativa);die;
         //$sie = $aInfoUeducativa['requestUser']['sie'];
         //$gestion = $aInfoUeducativa['requestUser']['gestion'];
         //$nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];

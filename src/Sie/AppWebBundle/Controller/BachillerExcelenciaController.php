@@ -461,6 +461,10 @@ class BachillerExcelenciaController extends Controller {
     public function indexRstAction() {
         $id_usuario = $this->session->get('userId');
 
+        //if($this->fechaActual > $this->fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        //}
+
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
@@ -558,11 +562,11 @@ class BachillerExcelenciaController extends Controller {
                 return $this->redirect($this->generateUrl('principal_web'));
             }*/
 
-            /*$validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
+            $validacionSexto = $this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion);
             if($validacionSexto == false){
                 $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa no ha cerrado operativo !!');
                 return $this->redirect($this->generateUrl('bach_exc'));
-            }*/
+            }
 
 
             /*
