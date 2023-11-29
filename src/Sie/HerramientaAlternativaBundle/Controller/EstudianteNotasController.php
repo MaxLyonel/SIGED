@@ -37,11 +37,11 @@ class EstudianteNotasController extends Controller {
 
     public function indexAction(Request $request){
          /*********TEMPORAL IBD****/
-        //  $arrayue = array(30710001,20680003,40730705);
-        //  $institucion = $this->session->get('ie_id');
-        //  if (!(in_array($institucion, $arrayue))){
+         $arrayue = array(81981321);
+         $institucion = $this->session->get('ie_id');
+         if (!(in_array($institucion, $arrayue))){
              return $this->redirect($this->generateUrl('principal_web'));
-        //  }
+         }
          /*********TEMPORAL IBD****/
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
@@ -74,11 +74,11 @@ class EstudianteNotasController extends Controller {
      */
     public function getNotas($infoUe, $infoStudent){
         /*********TEMPORAL IBD****/
-        // $arrayue = array(30710001,20680003,40730705);
-        // $institucion = $this->session->get('ie_id');
-        // if (!(in_array($institucion, $arrayue))){
+        $arrayue = array(81981321);
+        $institucion = $this->session->get('ie_id');
+        if (!(in_array($institucion, $arrayue))){
             return $this->redirect($this->generateUrl('principal_web'));
-        // }
+        }
         /*********TEMPORAL IBD****/
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
