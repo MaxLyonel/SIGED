@@ -461,6 +461,10 @@ class BachillerExcelenciaController extends Controller {
     public function indexRstAction() {
         $id_usuario = $this->session->get('userId');
 
+        //if($this->fechaActual > $this->fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        //}
+
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
