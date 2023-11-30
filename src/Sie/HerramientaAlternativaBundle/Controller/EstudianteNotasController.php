@@ -36,17 +36,23 @@ class EstudianteNotasController extends Controller {
     }
 
     public function indexAction(Request $request){
-         /*********TEMPORAL IBD****/
-        //  $arrayue = array(81981321);
-        //  $institucion = $this->session->get('ie_id');
-        //  if (!(in_array($institucion, $arrayue))){
-             return $this->redirect($this->generateUrl('principal_web'));
-        //  }
-         /*********TEMPORAL IBD****/
+       
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
         $data = $this->getNotas($infoUe, $infoStudent);
-       
+        
+        $institucion = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $periodo = $this->session->get('ie_per_cod');
+        
+        $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
+        $aInfoUeducativa = unserialize($infoUe);
+
+        /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
+        if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+        /**************************************************/
         if($data['gestion'] >= 2016){
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestreActual.html.twig',$data);
         }else{
@@ -77,13 +83,24 @@ class EstudianteNotasController extends Controller {
         // $arrayue = array(81981321);
         // $institucion = $this->session->get('ie_id');
         // if (!(in_array($institucion, $arrayue))){
-            return $this->redirect($this->generateUrl('principal_web'));
+            //return $this->redirect($this->generateUrl('principal_web'));
         // }
         /*********TEMPORAL IBD****/
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         // datos ue
         $aInfoUeducativa = unserialize($infoUe);
+
+        $institucion = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $periodo = $this->session->get('ie_per_cod');
+        $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
+
+        /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
+        if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+        /**************************************************//*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // dump($aInfoUeducativa);die;
         //$sie = $aInfoUeducativa['requestUser']['sie'];
         //$gestion = $aInfoUeducativa['requestUser']['gestion'];
