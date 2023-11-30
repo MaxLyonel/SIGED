@@ -2110,6 +2110,28 @@ class Funciones {
         return $sextoCerrado;
     }
 
+    public function verificarApEspecializadosCerrado($sie, $gestion, $periodo){
+        $registro = $this->em->createQueryBuilder()
+                            ->select('ieol')
+                            ->from('SieAppWebBundle:InstitucioneducativaOperativoLog','ieol')
+                            ->where('ieol.institucioneducativa = :sie')
+                            ->andWhere('ieol.gestionTipoId = :gestion')
+                            ->andWhere('ieol.periodoTipo = :periodo')
+                            ->andWhere('ieol.institucioneducativaOperativoLogTipo = 10')
+                            ->setParameter('sie', $sie)
+                            ->setParameter('gestion', $gestion)
+                            ->setParameter('periodo', $periodo)
+                            ->getQuery()
+                            ->getResult();
+
+        $sextoCerrado = false;
+        if ($registro) {
+            $sextoCerrado = true;
+        }
+
+        return $sextoCerrado;
+    }
+
     public function lookforRudesbyDataStudent($data){
 
         
