@@ -1798,114 +1798,148 @@ class MallaTecnicaController extends Controller {
         try {
 
             $smpId = $request->get('smpid');
-            $sestId = $request->get('sestId'); 
-    
+            $sestId = $request->get('sestId');
+            $sipId = $request->get('sipId'); 
+            $satId = $request->get('satId');
+
             $em = $this->getDoctrine()->getManager();
             $db = $em->getConnection();
 
-            // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_asignatura
-            $queryAsignatura = $db->prepare("select * from superior_modulo_periodo smp 
-                                    inner join institucioneducativa_curso_oferta ico on ico.superior_modulo_periodo_id=smp.id
-                                    inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id 
-                                    where smp.id=".$smpId."");
-            $queryAsignatura->execute();
-            $resultAsignatura = $queryAsignatura->fetchAll();
-            if( count($resultAsignatura) > 0 ){
+            $response = new JsonResponse();
 
-                $response = new JsonResponse();
-    
-                return $response->setData(array(
-                    'statusCode' => 401,
-                    'message'    => "Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado"
-                ));
+            // VERIFICAR QUE NO SE PUEDA ELIMINAR < 500
+            $gestion = $this->session->get('ie_gestion');
+            if( $gestion >= 2023 ){
 
-            }
-
-            // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_nota
-            $queryNota = $db->prepare("select * from superior_modulo_periodo smp 
-                                    inner join institucioneducativa_curso_oferta ico on ico.superior_modulo_periodo_id=smp.id
-                                    inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
-                                    inner join estudiante_nota en on en.estudiante_asignatura_id=ea.id 
-                                    where smp.id=".$smpId."");
-            $queryNota->execute();
-            $resultNota = $queryNota->fetchAll();
-            if( count($resultNota) > 0 ){
-
-                $response = new JsonResponse();
-    
-                return $response->setData(array(
-                    'statusCode' => 401,
-                    'message'    => "Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado"
-                ));
-
-            }
-    
-            $samp = $em->getRepository('SieAppWebBundle:SuperiorMallaModuloPeriodo')->findOneBy(array('superiorModuloPeriodo' => $smpId));
-            if( $samp ){
-
-                $superiorMallaModuloPeriodo = (object) [
-                    'id' => $samp->getId(), 
-                    'superiorPeriodoTipoId' => $samp->getSuperiorPeriodoTipo()->getId(), 
-                    'superiorModuloPeriodo' => $samp->getSuperiorModuloPeriodo()->getId(),
-                    'observacion'=> $samp->getObservacion(),
-                    'fechaRegistro'=> $samp->getFechaRegistro()->format('d-m-Y H:i:s'),
-                    'fechaModificacion'=>$samp->getFechaModificacion()->format('d-m-Y H:i:s')
-                ];
+                // ENCONTRAR MODULOS BY SIP
+                $queryOne = $db->prepare("select * from superior_modulo_periodo smp 
+                                            inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id=smt.id 
+                                            where smp.institucioneducativa_periodo_id=".$sipId."");
+                $queryOne->execute();
+                $resultOne = $queryOne->fetchAll();
                 
-                $this->get('funciones')->setLogTransaccion(
-                    $samp->getId(),
-                    'SuperiorMallaModuloPeriodo',
-                    'D',
-                    '',
-                    '',
-                    $superiorMallaModuloPeriodo,
-                    'ALTERNATIVA',
-                    ''
-                );
+                // VERIFICAR CANTIDAD DE MODULOS ANTES DE ELIMINAR
+                if( count($resultOne) == 5 && $satId != 32 ){
 
-                $em->remove($samp);
+                    return $response->setData(array(
+                        'statusCode' => 401,
+                        'message'    => "No puede eliminar mas modulos"
+                    ));
+
+                }
+
+                if( count($resultOne) == 10 && $satId == 32 ){
+                        
+                    return $response->setData(array(
+                        'statusCode' => 401,
+                        'message'    => "No puede eliminar mas modulos"
+                    )); 
+
+                }
+
+                // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_asignatura
+                $queryAsignatura = $db->prepare("select * from superior_modulo_periodo smp 
+                                        inner join institucioneducativa_curso_oferta ico on ico.superior_modulo_periodo_id=smp.id
+                                        inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id 
+                                        where smp.id=".$smpId."");
+                $queryAsignatura->execute();
+                $resultAsignatura = $queryAsignatura->fetchAll();
+                if( count($resultAsignatura) > 0 ){
+        
+                    return $response->setData(array(
+                        'statusCode' => 401,
+                        'message'    => "Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado"
+                    ));
+    
+                }
+    
+                // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_nota
+                $queryNota = $db->prepare("select * from superior_modulo_periodo smp 
+                                        inner join institucioneducativa_curso_oferta ico on ico.superior_modulo_periodo_id=smp.id
+                                        inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
+                                        inner join estudiante_nota en on en.estudiante_asignatura_id=ea.id 
+                                        where smp.id=".$smpId."");
+                $queryNota->execute();
+                $resultNota = $queryNota->fetchAll();
+                if( count($resultNota) > 0 ){
+    
+                    $response = new JsonResponse();
+        
+                    return $response->setData(array(
+                        'statusCode' => 401,
+                        'message'    => "Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado"
+                    ));
+    
+                }
+        
+                $samp = $em->getRepository('SieAppWebBundle:SuperiorMallaModuloPeriodo')->findOneBy(array('superiorModuloPeriodo' => $smpId));
+                if( $samp ){
+    
+                    $superiorMallaModuloPeriodo = (object) [
+                        'id' => $samp->getId(), 
+                        'superiorPeriodoTipoId' => $samp->getSuperiorPeriodoTipo()->getId(), 
+                        'superiorModuloPeriodo' => $samp->getSuperiorModuloPeriodo()->getId(),
+                        'observacion'=> $samp->getObservacion(),
+                        'fechaRegistro'=> $samp->getFechaRegistro()->format('d-m-Y H:i:s'),
+                        'fechaModificacion'=>$samp->getFechaModificacion()->format('d-m-Y H:i:s')
+                    ];
+                    
+                    $this->get('funciones')->setLogTransaccion(
+                        $samp->getId(),
+                        'SuperiorMallaModuloPeriodo',
+                        'D',
+                        '',
+                        '',
+                        $superiorMallaModuloPeriodo,
+                        'ALTERNATIVA',
+                        ''
+                    );
+    
+                    $em->remove($samp);
+                }
+        
+                $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' => $smpId));
+                if( $smp ){
+    
+                    $superiorModuloPeriodo = (object) [
+                        'id' => $smp->getId(),
+                        'superiorModuloTipoId' => $smp->getSuperiorModuloTipo()->getId(), 
+                        'institucioneducativaPeriodoId'=>$smp->getInstitucioneducativaPeriodo()->getId(),
+                        'obs' => $smp->getObs(), 
+                        'horasModulo'=>$smp->getHorasModulo()
+                    ];
+                                    
+                    $this->get('funciones')->setLogTransaccion(
+                        $smp->getId(),
+                        'SuperiorModuloPeriodo',
+                        'D',
+                        '',
+                        '',
+                        $superiorModuloPeriodo,
+                        'ALTERNATIVA',
+                        ''
+                    );
+    
+                    $em->remove($smp);
+                }
+    
+                $em->flush();
+                $em->clear();
+        
+                $modules = $this->findModulesBySest( $sestId );
+        
+                $superiorMallaModuloPeriodo = $this->checkIsNewMallaModuloPeriodo( $modules );
+        
+                return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:listModulos.html.twig', array(
+                    'exist'     => $modules['exist'],
+                    'malla'     => $modules['po'],
+                    'mallafin'  => $modules['mallafinal'],
+                    'mallaniv'  => $modules['mallaniv'],
+                    'sw_esoficial'  => $modules['mallafinal'][0]['sw_esoficial'],
+                    'isSuperiorMallaModuloPeriodo'=>$superiorMallaModuloPeriodo
+                ));
+
             }
-    
-            $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' => $smpId));
-            if( $smp ){
-
-                $superiorModuloPeriodo = (object) [
-                    'id' => $smp->getId(),
-                    'superiorModuloTipoId' => $smp->getSuperiorModuloTipo()->getId(), 
-                    'institucioneducativaPeriodoId'=>$smp->getInstitucioneducativaPeriodo()->getId(),
-                    'obs' => $smp->getObs(), 
-                    'horasModulo'=>$smp->getHorasModulo()
-                ];
-                                
-                $this->get('funciones')->setLogTransaccion(
-                    $smp->getId(),
-                    'SuperiorModuloPeriodo',
-                    'D',
-                    '',
-                    '',
-                    $superiorModuloPeriodo,
-                    'ALTERNATIVA',
-                    ''
-                );
-
-                $em->remove($smp);
-            }
-
-            $em->flush();
-            $em->clear();
-    
-            $modules = $this->findModulesBySest( $sestId );
-    
-            $superiorMallaModuloPeriodo = $this->checkIsNewMallaModuloPeriodo( $modules );
-    
-            return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:listModulos.html.twig', array(
-                'exist'     => $modules['exist'],
-                'malla'     => $modules['po'],
-                'mallafin'  => $modules['mallafinal'],
-                'mallaniv'  => $modules['mallaniv'],
-                'sw_esoficial'  => $modules['mallafinal'][0]['sw_esoficial'],
-                'isSuperiorMallaModuloPeriodo'=>$superiorMallaModuloPeriodo
-            ));
 
         }catch(\Exception $ex){
             // $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron eliminados, asegurese de que el modulo no esta siendo utilizado');
@@ -2249,7 +2283,6 @@ select idsae,idacr
             $superiorInstitucioneducativaPeriodo = $queryThree->fetch();
 
             if( !$superiorInstitucioneducativaPeriodo ){
-                dump("into");die;
                 if( $nivelId == 1 ){
                     $superiorPeriodoTipo = 2;
                 }else if( $nivelId == 20 ){
@@ -2257,7 +2290,7 @@ select idsae,idacr
                 }else{
                     $superiorPeriodoTipo = 4;
                 }
-                // dump("here 3");die;
+
                 $siea = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($superiorInstitucioneducativaAcreditacion);
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_institucioneducativa_periodo');")->execute();
                 $siep = new SuperiorInstitucioneducativaPeriodo();                
@@ -2271,7 +2304,6 @@ select idsae,idacr
             }else{
                 $superiorPeriodoTipo = $superiorInstitucioneducativaPeriodo['superior_periodo_tipo_id'];
                 $superiorInstitucioneducativaPeriodo = $superiorInstitucioneducativaPeriodo['id'];
-                dump($superiorInstitucioneducativaPeriodo);die;
             }
 
             $queryFour = $db->prepare("select * from superior_modulo_periodo smp where smp.institucioneducativa_periodo_id=".$superiorInstitucioneducativaPeriodo."");
@@ -2299,7 +2331,6 @@ select idsae,idacr
                     $superiorModuloTipo = $querySeven->fetch();
 
                     if(!$superiorModuloTipo){
-                        // dump("into");die;
                         $smtipo = new SuperiorModuloTipo();
                         $smtipo -> setModulo($modulo);
                         $smtipo -> setEsvigente(true);
@@ -2321,7 +2352,6 @@ select idsae,idacr
                     $superiorModuloPeriodo = $queryEight->fetch();
 
                     if( !$superiorModuloPeriodo ){
-                        // dump("into");
                         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                         $smperiodo = new SuperiorModuloPeriodo();
                         $smperiodo ->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtipo));
@@ -2368,9 +2398,8 @@ select idsae,idacr
                     $queryLast = $db->prepare("select * from superior_malla_modulo_periodo smmp where smmp.superior_modulo_periodo_id=".$smperiodo."");
                     $queryLast->execute();
                     $superiorMallaModuloPeriodo = $queryLast->fetch();
-                    dump($superiorMallaModuloPeriodo);
+
                     if( !$superiorMallaModuloPeriodo ){
-                        dump("into");
                         $superiorPeriodoTipo = $em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find( $superiorPeriodoTipoId );
                         $smmp = new SuperiorMallaModuloPeriodo();
                         $smmp->setSuperiorPeriodoTipo( $superiorPeriodoTipo );
@@ -2380,10 +2409,8 @@ select idsae,idacr
                         $em->persist($smmp);
                         $em->flush($smmp);
                     }
-                    die;
 
                 }
-                // die;
     
             // }
     
@@ -2401,7 +2428,7 @@ select idsae,idacr
             ));
 
         } catch (\Throwable $th) {
-            dump($th);die;
+            
         }
 
 
