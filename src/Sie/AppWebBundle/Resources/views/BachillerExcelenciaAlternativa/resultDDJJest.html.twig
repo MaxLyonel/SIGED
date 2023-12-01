@@ -1,0 +1,160 @@
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Paso 4.- Generar Declaración Jurada (Bachilleres) <span>Bachiller de Excelencia</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Bachiller de Excelencia
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Generar Declaración Jurada (Bachilleres)</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    
+        {# {% if(datadirector and bachilleres) %} #}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-info-circle fa-fw"></i> Ha registrado.
+                    </div>
+                </div>
+            </div>
+        {# {% else %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-info-circle fa-fw"></i> No ha concluido con el registro, verifique: <a href="{{ path('bach_exc_alt_dir') }}" class="btn btn-link">Ir a: Paso 1.- Actualizar Datos Directora/Director</a> | <a href="{{ path('bach_exc_alt') }}" class="btn btn-link">Ir a: Paso 3.- Registrar Bachiller de Excelencia</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %} #}
+
+        {% if(datadirector) %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <h4><i class="fa fa-users"></i> Información actualizada de la Directora o del Director de la Unidad Educativa</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <th><strong>CI</strong></th><td>{{datadirector.carnet}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Complemento</strong></th><td>{{datadirector.complemento}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Paterno</strong></th><td>{{datadirector.paterno}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Materno</strong></th><td>{{datadirector.materno}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Nombre</strong></th><td>{{datadirector.nombre}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Apellido de Esposo</strong></th><td>{{datadirector.apellidoEsposo}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Fecha de Nacimiento</strong></th><td>{{datadirector.fechaNacimiento|date('d-m-Y')}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Entidad Financiera</strong></th><td>{{datadirector.entidadfinanciera}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Nro. Cta. Bancaria</strong></th><td>{{datadirector.cuentabancaria}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>   
+                        </div>
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+        {% endif %}
+
+        {% if(bachilleres) %}
+            <div class="row">
+                {% for datastudent in bachilleres%}
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="panel panel-teal">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4><i class="fa fa-users"></i> Bachiller de Excelencia (Género: {{datastudent.genero}})</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <th><strong>Rude</strong></th><td>{{datastudent.codigoRude}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>CI</strong></th><td>{{datastudent.carnetIdentidad}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>Paterno</strong></th><td>{{datastudent.paterno}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>Materno</strong></th><td>{{datastudent.materno}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>Nombre</strong></th><td>{{datastudent.nombre}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>Género</strong></th><td>{{datastudent.genero}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>Promedio Final</strong></th><td>{{datastudent.promedioFinal}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th><strong>Ver Respaldo</strong></th><td>
+                                                    <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('bach_exc_alt_imprime_historial', { 'gen': datastudent.genero}) }}" title="Ver"> Calificaciónes</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel -->
+                    </div>
+                    <!-- /.col-lg-12 -->
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if(datadirector and bachilleres) %}
+            <div class="row">
+                <div class="col-lg-3 col-lg-offset-3 col-md-3 col-md-offset-3 col-sm-12 col-xs-12">
+                    <a href="{{ path('bach_exc_alt_imprime') }}" class="btn btn-block btn-success">Imprimir Declaración Jurada</a>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <a href="{{ path('principal_web') }}" class="btn btn-block btn-danger">Salir</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+

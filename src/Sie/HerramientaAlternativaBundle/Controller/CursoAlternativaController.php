@@ -671,6 +671,7 @@ class CursoAlternativaController extends Controller {
         $sie     = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $em = $this->getDoctrine()->getManager();
+        $periodo = $this->session->get('ie_per_cod');
         $swObservations = false;
 
         try {
@@ -689,6 +690,12 @@ class CursoAlternativaController extends Controller {
                 $arrResponse = $responseOpe;                
             }else{
                 $registroConsol = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array('institucioneducativa' => $sie, 'gestionTipoId' => $gestion, 'institucioneducativaOperativoLogTipo' => 10));
+                if ($periodo == 2) {
+                    $notatipo = 53;
+                } else {
+                    $notatipo = 54;
+                }
+
                 if (!$registroConsol){
                     $swObservations = false;
                     $em->getConnection()->beginTransaction();
@@ -696,10 +703,10 @@ class CursoAlternativaController extends Controller {
                     $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
                     $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(10));
                     $institucioneducativaOperativoLog->setGestionTipoId($gestion);
-                    $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(2));
+                    $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($periodo));
                     $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
                     $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
-                    $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(7));
+                    $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($notatipo));
                     $institucioneducativaOperativoLog->setDescripcion('...');
                     $institucioneducativaOperativoLog->setEsexitoso('t');
                     $institucioneducativaOperativoLog->setEsonline('t');
