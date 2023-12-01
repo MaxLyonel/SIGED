@@ -70,8 +70,8 @@
                                 </button>
                             </div>
                             {# {% endif %} #}
-                        
-                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%} 
+                            
+                            {% if ( app.session.get('roluser') == 8 ) %} 
                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
                                     <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
                                         <i class="fa fa-cubes"></i> Nuevo Curso
@@ -142,8 +142,9 @@
             <!--/div-->
             <!--/ End mail page -->
         </div>
-    {% else %}                        
-        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%} 
+    {% else %}
+        {% if ( app.session.get('roluser') == 8 ) %}
+        {# {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}  #}
             <div class="body-content animated fadeIn">
                 <div class="row">
                     <div  class="col-md-12">                    
@@ -153,8 +154,9 @@
                     </div>                
                 </div>
             </div> 
-        {% endif %}                    
-    {% endif%} 
+        {# {% endif %} #}
+        {% endif %}
+    {% endif %} 
     
     <!-- Start body content -->
     <!--/ End body content -->

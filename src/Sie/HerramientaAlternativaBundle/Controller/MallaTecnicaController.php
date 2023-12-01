@@ -314,13 +314,9 @@ class MallaTecnicaController extends Controller {
             ->add('guardar', 'button', array('label' => 'Agregar', 'attr' => array('class' => 'btn btn-primary m-t-25', 'enabled' => true, 'onclick'=>'addNivel();')))
             ->getForm();
         
-        // dump($aInfoUeducativa);
-        // dump($aInfoUeducativa['ueducativaInfoId']['especialidad_id']);
         $modules = $this->findModulesBySest( $aInfoUeducativa['ueducativaInfoId']['especialidad_id'] );
-        // dump($modules);
-        // die;
+        
         $superiorMallaModuloPeriodo = $this->checkIsNewMallaModuloPeriodo( $modules );
-        // dump($superiorMallaModuloPeriodo);die;
 
         // dump($modules['mallafinal']);die;
         return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:seemodulosnew.html.twig', array(
@@ -2090,7 +2086,8 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
         // }else{
         //     $exist = false;
         // }
-
+        // dump($this->session->get('ie_subcea'));
+        // die;
         $db = $em->getConnection();
         $query = "select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.periodo_medio, v.malla_modulo_periodo_id, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad 
                     from (

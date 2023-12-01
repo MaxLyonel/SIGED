@@ -111,9 +111,9 @@
                                                 <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button> #}
 
                                                 {# PARA ELIMINAR DOBLES MODULOS #}
-                                                {# {% if ( sw_esoficial == 1 ) %}
+                                                {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
                                                     <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
-                                                {% endif %} #}
+                                                {% endif %}
                                                 
                                                 {% if ( malla.sw_esoficial != 1) %} 
                                                     <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},{{periodo_medio[i]}},{{ malla.idacreditacion }}, {{mallaModuloPeriodoId[i]}},'edit');"><i class="fa fa-pencil"></i></button>
@@ -160,9 +160,9 @@
                                                 <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button> #}
                                                 
                                                 {# PARA ELIMINAR DOBLES MODULOS #}
-                                                {# {% if ( sw_esoficial == 1 ) %}
+                                                {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
                                                     <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
-                                                {% endif %} #}
+                                                {% endif %}
 
                                                 {# {{malla.sw_esoficial}} #}
                                                 {% if ( malla.sw_esoficial != 1) %} 
