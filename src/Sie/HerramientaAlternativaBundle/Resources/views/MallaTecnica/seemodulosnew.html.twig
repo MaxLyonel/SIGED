@@ -194,7 +194,7 @@
                                                             {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
                                                             
                                                             {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
-                                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
+                                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad}}, {{malla.idsip}}, {{malla.idacreditacion}} )"><i class="fa fa-trash"></i></a>
                                                             {% endif %}
 
                                                             {% if (app.session.get('ie_per_estado') != '0') %}
@@ -241,7 +241,7 @@
                                                                 {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
                                                                 
                                                                 {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
-                                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
+                                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad}}, {{malla.idsip}}, {{malla.idacreditacion}} )"><i class="fa fa-trash"></i></a>
                                                                 {% endif %}
 
                                                                 {% if (app.session.get('ie_per_estado') != '0') %}
@@ -555,7 +555,7 @@
 
         };
 
-        var deleteModuleTecnico = function( smpid, sestId ){
+        var deleteModuleTecnico = function( smpid, sestId, sipId, satId ){
 
             Swal.fire({
                 title: '¿Esta seguro?',
@@ -583,7 +583,7 @@
                     $.ajax({
                         type: 'post',
                         url: "{{ path('herramienta_delete_module_tecnico') }}",
-                        data: ({ smpid: smpid, sestId: sestId }),
+                        data: ({ smpid: smpid, sestId: sestId, sipId: sipId, satId: satId }),
                         success: function (res) {
 
                             if( res.statusCode == 401 ){

@@ -112,7 +112,7 @@
 
                                                 {# PARA ELIMINAR DOBLES MODULOS #}
                                                 {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
-                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
+                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad}}, {{malla.idsip}}, {{malla.idacreditacion}} )"><i class="fa fa-trash"></i></a>
                                                 {% endif %}
                                                 
                                                 {% if ( malla.sw_esoficial != 1) %} 
@@ -161,7 +161,7 @@
                                                 
                                                 {# PARA ELIMINAR DOBLES MODULOS #}
                                                 {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
-                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
+                                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad}}, {{malla.idsip}}, {{malla.idacreditacion}} )"><i class="fa fa-trash"></i></a>
                                                 {% endif %}
 
                                                 {# {{malla.sw_esoficial}} #}
