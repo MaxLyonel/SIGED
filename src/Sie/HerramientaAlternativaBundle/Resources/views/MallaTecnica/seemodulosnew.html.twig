@@ -96,6 +96,12 @@
             {% endif %}
             <div id="listamodulos">
                 {% if mallafin is not empty %}
+                    {% if ( isSuperiorMallaModuloPeriodo == 1 ) %}
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>Recuerde actualizar el nivel Tecnico Medio con el periodo Medio 1 y Medio 2</strong>
+                        </div>
+                    {% endif %}
 
                     {% for malla in mallafin %}
                         <div class="panel panel-teal">
@@ -144,7 +150,8 @@
                                 {# {% endif %} #}
                                 <br>
                                 {% if (malla.modulo!='') %}
-
+                                    {# {{malla.idacreditacion}}
+                                    {{isSuperiorMallaModuloPeriodo}} #}
                                     {% if ( malla.idacreditacion == '32' and isSuperiorMallaModuloPeriodo ) %}
                                         <div class="table-responsive col-md-12">
                                             <table class="table table-bordered table-striped" id="listaEsp">
@@ -181,9 +188,10 @@
                                                         <td data-title="Acciones" class="text-center">
                                                             {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
                                                             {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
-                                                            {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
+                                                            
+                                                            {# {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
                                                                 <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
-                                                            {% endif %}
+                                                            {% endif %} #}
 
                                                             {% if (app.session.get('ie_per_estado') != '0') %}
                                                                 {% if malla.sw_esoficial == 0 %}
@@ -227,9 +235,10 @@
                                                             <td data-title="Acciones" class="text-center">
                                                                 {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
                                                                 {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
-                                                                {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
+                                                                
+                                                                {# {% if ( sw_esoficial == 1 and app.session.get('ie_gestion') >= 2023 ) %}
                                                                     <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteModuleTecnico( {{idspm[i]}}, {{malla.idespecialidad }} )"><i class="fa fa-trash"></i></a>
-                                                                {% endif %}
+                                                                {% endif %} #}
 
                                                                 {% if (app.session.get('ie_per_estado') != '0') %}
                                                                     {% if malla.sw_esoficial == 0 %}
