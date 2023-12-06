@@ -1394,7 +1394,7 @@ class MallaTecnicaController extends Controller {
 
     public function showModuloEditAction(Request $request)
     {  
-        // $horas= [80,100,120]; // BY LUIS NOW CAN'T CHANGE ONLY SCHEDULE 100
+        // $horas= [80,100,120]; // SE ESTABLECIO 100 HORAS SEGUN DGEA
         $idmodulo = $request->get('idmodulo');
         $idspm = $request->get('idspm');
         $modulo = $request->get('modulo');
@@ -1406,39 +1406,73 @@ class MallaTecnicaController extends Controller {
         $mallaModuloPeriodoId = $request->get('mallaModuloPeriodoId');
         $sipId = $request->get('idsip');
         // dump($request->get('selectOld'));die;
+        $horas = 1;
         $arrayPeriodoTM = ['Medio 1','Medio 2'];    
-        
         $periodoTecnicoMedio = $periodoTecnicoMedio == 4 ? 'Medio 1' : 'Medio 2';
         
+        $existMallaModuloPeriodo = false;
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
         for($i=0;$i<=1;$i++){
             if($arrayPeriodoTM[$i]==$periodoTecnicoMedio){
                 $periodosid = $i;
             }
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-        $queryMallaModuloPeriodo = $db->prepare("select * from superior_modulo_periodo smp 
-                                                    inner join superior_malla_modulo_periodo smmp on smp.id=smmp.superior_modulo_periodo_id 
-                                                    where smp.id=".$idspm."");
-        $queryMallaModuloPeriodo->execute();
-        $existMallaModuloPeriodo = ($queryMallaModuloPeriodo->fetch()) ? true : false; 
+        // VERIFICAR SI ESTA CONSOLIDADO EL MODULO
+        $queryAsg = $db->prepare("select * from institucioneducativa_curso_oferta ico 
+                                        inner join superior_modulo_periodo smp on ico.superior_modulo_periodo_id=smp.id
+                                        where smp.id=".$idspm."
+                                        ");
+        $queryAsg->execute();
+        $isEnable = ($queryAsg->fetch()) ? true : false;
 
-        // $queryCheckEmpty = $db->prepare("select * from superior_institucioneducativa_periodo sip 
-        //                                     inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
-        //                                     inner join superior_modulo_tipo smt on smt.id=smp.superior_modulo_tipo_id 
-        //                                     where sip.id=".$sipId."");
-        // $queryCheckEmpty->execute();
-        // $resultCheckEmpty = $queryCheckEmpty->fetchAll();
+        // VERIFICAR LAS HORAS QUE LLEGAN
+        if( $horasmodulo != 100 ){
 
+            $horasSelect = array();
+
+            array_push( $horasSelect, $horasmodulo );
+            array_push( $horasSelect, '100' );
+            
+            for($j=0;$j<=1;$j++){
+                if($horasSelect[$j]==$horasmodulo){
+                    $horas = $j;
+                }
+            }
+
+        }else{
+            $horasSelect = [100];
+        }
+
+        // VERIFICAR SI TIENE MEDIO 1 O MEDIO 2
+        if( $idacreditacion == 32 ){
+            $horasSelect = $request->get('horas');
+            
+            $queryMallaModuloPeriodo = $db->prepare("select * from superior_modulo_periodo smp 
+                                                        inner join superior_malla_modulo_periodo smmp on smp.id=smmp.superior_modulo_periodo_id 
+                                                        where smp.id=".$idspm."");
+            $queryMallaModuloPeriodo->execute();
+            $existMallaModuloPeriodo = ($queryMallaModuloPeriodo->fetch()) ? true : false;
+        }
+        
+
+        // $response = new JsonResponse();
+        //     return $response->setData(array(
+        //         'statusCode' => 401,
+        //         'message'    => 'No puede realizar esta accion porque el modulo se encuentra consolidado'
+        //     ));
+        // dump($horasSelect);die;
 
         if( $idacreditacion == 32 && $existMallaModuloPeriodo ){
-            // dump(" in 32");die;
+
             $form = $this->createFormBuilder()
                 // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
                 ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-                ->add('horas', 'choice', array('choices'=> [$horasmodulo],'data' => 1, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
-                
+                // ->add('horas', 'choice', array('choices'=> [$horasmodulo],'data' => 1, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('horas', 'choice', array('choices'=> $horasSelect,'data' => $horas, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
                 // ->add('horas', 'choice', array('choices'=> $horas,'data' => $arrayPeriodoTM, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
 
                 ->add('periodoTecnicoMedio', 'choice', array('choices'=> $arrayPeriodoTM, 'data'=> $periodosid, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
@@ -1452,11 +1486,12 @@ class MallaTecnicaController extends Controller {
                 ->getForm();
 
         }else{
-            // dump("no 32");die;
+
             $form = $this->createFormBuilder()
                 // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
-                ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-                ->add('horas', 'choice', array('choices'=> [$horasmodulo],'data' => 1, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true, 'disabled'=> $isEnable, 'style' => 'text-transform:uppercase')))
+                ->add('modulo', 'text', array('data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true, 'hidden'=> $isEnable, 'style' => 'text-transform:uppercase')))
+                ->add('horas', 'choice', array('choices'=> $horasSelect,'data' => $horas, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
                 ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'updateModulo();')))
                 ->add('idmodulo', 'hidden', array('data' => $idmodulo))
                 ->add('idspm', 'hidden', array('data' => $idspm))
@@ -1493,17 +1528,17 @@ class MallaTecnicaController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-
+       
         // $query = "select ic.id, sia.institucioneducativa_id,sia.acreditacion_especialidad_id, smp.superior_modulo_tipo_id,smp.institucioneducativa_periodo_id, smp.horas_modulo 
-        // from institucioneducativa_curso ic
-        // inner join superior_institucioneducativa_periodo sip on ic.superior_institucioneducativa_periodo_id=sip.id
-        // inner join superior_institucioneducativa_acreditacion sia on ic.superior_institucioneducativa_periodo_id=sia.id
-        // inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id
-        // where smp.id=".$request->get('idspm')."";
-        // dump($request->get('idspm'));die;
+        //             from institucioneducativa_curso ic
+        //             inner join superior_institucioneducativa_periodo sip on ic.superior_institucioneducativa_periodo_id=sip.id
+        //             inner join superior_institucioneducativa_acreditacion sia on ic.superior_institucioneducativa_periodo_id=sia.id
+        //             inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id
+        //             where smp.id=".$request->get('idspm')."";
+        
         $query = $db->prepare("select * from superior_modulo_periodo smp 
-                    inner join institucioneducativa_curso_oferta ico on smp.id=ico.superior_modulo_periodo_id 
-                    where smp.id=".$request->get('idspm')."");
+                                inner join institucioneducativa_curso_oferta ico on smp.id=ico.superior_modulo_periodo_id 
+                                where smp.id=".$request->get('idspm')."");
         $query->execute();
         $result = $query->fetch();
 
@@ -1513,14 +1548,15 @@ class MallaTecnicaController extends Controller {
         }
 
         $response = new JsonResponse();
-        return $response->setData(array('data'=>$edit));
+        return $response->setData(array('data' => $edit));
     }
 
     public function updateModuloNuevoAction(Request $request){
-
-        $form = $request->get('form');
         
+        $form = $request->get('form');
+        // dump($form);die;
         $modulo = strtoupper($form['modulo']);
+
         $idspm = $form['idspm'];
         $idesp = $form['idesp'];
         $mallaModuloPeriodoId = $form['mallaModuloPeriodoId'];
@@ -1528,12 +1564,28 @@ class MallaTecnicaController extends Controller {
         $horas= [100];
         $horasid = ($form['horas']);
         $acreditacionId = $form['idacreditacion'];
+        
+        $horasmodulo = $horas[0];
 
-        $horasmodulo = $horas[$horasid];
         try{
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $db = $em->getConnection();
+
+            // VERIFICAR SI ESTA CONSOLIDADO EL MODULO
+            // $query = $db->prepare("select * from superior_modulo_periodo smp 
+            //                     inner join institucioneducativa_curso_oferta ico on smp.id=ico.superior_modulo_periodo_id 
+            //                     where smp.id=".$idspm."");
+            // $query->execute();
+            // $result = $query->fetch();
+
+            // if( $result ){
+            //     $response = new JsonResponse();
+            //     return $response->setData(array(
+            //         'statusCode' => 401,
+            //         'message'    => 'No puede realizar esta accion porque el modulo se encuentra consolidado'
+            //     ));
+            // }
 
             $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->findOneBy(array('id' => $form['idmodulo']));
             $supmodtipo -> setModulo($modulo);
