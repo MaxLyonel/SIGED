@@ -154,8 +154,7 @@
                                 {# {% endif %} #}
                                 <br>
                                 {% if (malla.modulo!='') %}
-                                    {# {{malla.idacreditacion}}
-                                    {{isSuperiorMallaModuloPeriodo}} #}
+                                    
                                     {% if ( malla.idacreditacion == '32' and isSuperiorMallaModuloPeriodo ) %}
                                         <div class="table-responsive col-md-12">
                                             <table class="table table-bordered table-striped" id="listaEsp">
@@ -246,7 +245,7 @@
 
                                                                 {% if (app.session.get('ie_per_estado') != '0') %}
                                                                     {% if malla.sw_esoficial == 0 %}
-                                                                        <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},'',{{ malla.idacreditacion }},'','edit', {{malla.idsip}});"><i class="fa fa-pencil"></i></a>
+                                                                        <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},{{ malla.tothoras }},'','',{{ malla.idacreditacion }}, {{malla.idsip}});"><i class="fa fa-pencil"></i></a>
                                                                         <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="checkConsolidate({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }},'','','','','delete', {{malla.idsip}});"><i class="fa fa-times"></i></button>
                                                                     {% endif %}
                                                                 {% endif %}
@@ -343,7 +342,7 @@
 
                         },
                         error: function(data){
-                            Swal.fire("Opps", "Ocurrio un error, vuelva a intentarlo", "error");
+                            Swal.fire("Atención", "Ocurrio un error, vuelva a intentarlo", "error");
                         }
                     });
                 
@@ -378,7 +377,8 @@
                         }
                     });
                 }else{
-                    alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs, por lo que antes de proceder y añadir uno Nuevo, debera editar y cambiar las horas de los modulos anteriormente guardados...');
+                    Swal.fire('Atención', 'Las horas de los Modulos Ingresados no deben Exceder las 500 hrs', 'warning');
+                    //alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs');
                 }
             }else {
                 if(totalhoras<=920){
@@ -405,7 +405,8 @@
                         }
                     });
                 }else{
-                    alert('Las horas de los Modulos Ingresados no deben Exceder las 1000 hrs, por lo que antes de proceder y añadir uno Nuevo, debera editar y cambiar las horas de los modulos anteriormente guardados...');
+                    Swal.fire('Atención', 'Las horas de los Modulos Ingresados no deben Exceder las 500 hrs', 'warning');
+                    //alert('Las horas de los Modulos Ingresados no deben Exceder las 1000 hrs');
                 }
             }
 
@@ -445,7 +446,7 @@
         };
 
         var editarModulo= function (idmodulo,idspm,modulo,horas,idesp,totalhoras,mallaModuloPeriodo,mallaModuloPeriodoId,idacred,idsip) {
-
+            console.log('estoy aqui', idacred);
             Swal.fire({
                 title: 'Obteniendo información...',
                 html: 'Espere un momento porfavor',
@@ -455,7 +456,7 @@
                 allowEnterKey: false,
                 didOpen: () => {
                     Swal.showLoading()
-                },
+                }
             });
 
             $.ajax({
@@ -477,13 +478,18 @@
                 beforeSend: function () {
                     $('#modal').empty();
                 },
-                success: function (data) {
+                success: function (res) {
+                    
                     Swal.close();
-                    $('#modal').empty();
-                    $('#modal').modal('show');
-                    $('#modal').append(data);
-                },
+                    if( res.statusCode && res.statusCode == 401 ){
+                        Swal.fire('Atención', res.message, 'warning');
+                    }else{
+                        $('#modal').modal('show');
+                        $('#modal').empty();
+                        $('#modal').append(res);
+                    }
 
+                },
                 statusCode: {
                     500: function () {
                     },

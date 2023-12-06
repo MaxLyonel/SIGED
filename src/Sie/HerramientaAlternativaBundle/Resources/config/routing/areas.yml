@@ -22,6 +22,12 @@ herramienta_alter_add_areas_all:
     options:
          expose: true
 
+herramienta_alter_check_ismedio:
+    path:     /checkMedio
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:checkIsMedio }
+    options:
+         expose: true
+
 herramienta_alter_add_medio:
     path:     /addMedio
     defaults: { _controller: SieHerramientaAlternativaBundle:Areas:addMedio }

@@ -76,6 +76,19 @@
         var horavalida= ( parseFloat(totalhoras)  -  parseFloat(horasmodulo) ) +parseFloat(horas) ;
        var formData = $('#formModulo').serialize();
        // alert(horavalida);
+
+        Swal.fire({
+            title: 'Actualizando...',
+            html: 'Espere un momento porfavor',
+            timerProgressBar: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+            }
+        });
+
         if((idacreditacion==1)||(idacreditacion==20)){
             if(horavalida<=500){
                 $('#modal').modal('hide');
@@ -91,13 +104,26 @@
 //                    icon: imagen,
 //                    buttons: false
 //                });
-                        $("#listamodulos").empty();
-                        $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        //$("#listamodulos").empty();
+                        //$("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
                     },
-                    success: function (data) {
-                        $('#listamodulos').empty();
-                        $('#listamodulos').html(data);
+                    success: function (res) {
+                        Swal.close();
+                        if( res.statusCode && res.statusCode == 401 ){
+                            Swal.fire('Atención', res.message, 'warning');
+                        }else{
 
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto',
+                                text: 'Se actualizó correctamente',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                            $('#listamodulos').empty();
+                            $('#listamodulos').html(res);
+                        }
                     },
                     complete: function () {
 //                swal.stopLoading();
@@ -110,7 +136,7 @@
 
                 });
             }else{
-                alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs, por lo que antes de proceder y editar un modulo, debera cambiar las horas ingresadas...');
+                alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs');
             }
         }else {
             if(horavalida<=1000){
@@ -131,9 +157,22 @@
                         $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
                     },
                     success: function (data) {
-                        $('#listamodulos').empty();
-                        $('#listamodulos').html(data);
+                        Swal.close();
+                        if( res.statusCode && res.statusCode == 401 ){
+                            Swal.fire('Atención', res.message, 'warning');
+                        }else{
 
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto',
+                                text: 'Se actualizó correctamente',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                            $('#listamodulos').empty();
+                            $('#listamodulos').html(res);
+                        }
                     },
                     complete: function () {
 //                swal.stopLoading();
@@ -146,7 +185,7 @@
 
                 });
             }else{
-                alert('Las horas de los Modulos Ingresados no deben Exceder las 1000 hrs, por lo que antes de proceder y editar un modulo, debera cambiar las horas ingresadas...');
+                alert('Las horas de los Modulos Ingresados no deben Exceder las 1000 hrs');
             }
         }
 
