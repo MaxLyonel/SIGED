@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\AltModuloemergente;
 use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
 use Sie\AppWebBundle\Entity\SuperiorMallaModuloPeriodo;
 use Sie\AppWebBundle\Entity\Mensaje;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * EstudianteInscripcion controller.
@@ -73,7 +74,8 @@ class AreasController extends Controller {
         // $data['arrInfoUe'] = $arrInfoUe; 
         // dump("in modal");
         // unset($this->session['arrInfoUe']);
-        // dump($data);die;
+
+        // dump($data['asignaturas']);die;
 
         // $this->session->set('arrInfoUe', $arrInfoUe);
         // $this->session->set('arrInfoUe', $arrInfoUe);
@@ -447,10 +449,38 @@ class AreasController extends Controller {
             return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $asignaturas);
             
         } catch (\Exception $ex) {
-            dump($ex);die;
             $em->getConnection()->rollback();
             return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!' . $ex));
         }
+    }
+
+    public function checkIsMedioAction( Request $request ){
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $asignaturas = unserialize($request->get('asignaturas'));
+        
+        $cont = 0;
+        foreach ($asignaturas as $value) {
+
+            $query = $db->prepare("select * from superior_malla_modulo_periodo smmp 
+                                    inner join superior_modulo_periodo smp on smmp.superior_modulo_periodo_id=smp.id
+                                    where smp.id=".$value['smpid']."");
+            $query->execute();
+            $result = $query->fetch();
+
+            if( $result ) $cont = $cont + 1;
+
+        }
+
+        $response = new JsonResponse();
+
+        return $response->setData(array(
+            'statusCode' => 200,
+            'data'    => $cont == 10 ? true : false,
+        )); 
+        
     }
 
     public function addMedioAction( Request $request ){
@@ -462,208 +492,238 @@ class AreasController extends Controller {
         $instucioneducativaCursoId = $unidad['ueducativaInfoId']['iecId'];
         $typeMedio = ($request->get('type') == 1) ? 4 : 5;
 
+        $esOficial = $asignaturas[0]['es_oficial'];
+
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
-        // VERIFICAR SI TIENE REGISTROS DEL MEDIO 1 Y MEDIO 2
-        $queryFirst = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.id, set2.es_oficial, 
-                                        smmp.superior_periodo_tipo_id 
-                                        from superior_acreditacion_especialidad sae 
-                                        inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
-                                        inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
-                                        inner join superior_institucioneducativa_acreditacion sia on sae.id=sia.acreditacion_especialidad_id 
-                                        inner join institucioneducativa_sucursal is2 on sia.institucioneducativa_sucursal_id=is2.id 
-                                        inner join superior_institucioneducativa_periodo sip on sia.id=sip.superior_institucioneducativa_acreditacion_id
-                                        inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
-                                        inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id=smt.id 
-                                        inner join superior_malla_modulo_periodo smmp on smmp.superior_modulo_periodo_id=smp.id
-                                        where
-                                        is2.gestion_tipo_id=".$this->session->get('ie_gestion')."
-                                        and is2.institucioneducativa_id=".$this->session->get('ie_id')."
-                                        and sat.id=".$unidad['ueducativaInfo']['superiorAcreditacionTipoId']."
-                                        and set2.id=".$unidad['ueducativaInfoId']['setId']."
-                                        and is2.periodo_tipo_id=".$unidad['ueducativaInfoId']['periodoId']."
-                                        and is2.sucursal_tipo_id=".$this->session->get('ie_subcea')."
-                                        and smmp.superior_periodo_tipo_id=".$typeMedio."
-                                        and smt.esvigente=true
-                                        and set2.es_vigente=true
-                                    ");
-        $queryFirst->execute();
-        $resultFirst = $queryFirst->fetchAll();
-
-        if( count($resultFirst) == 0 ){
-            $response = new JsonResponse();
-    
-            return $response->setData(array(
-                'statusCode' => 401,
-                'message'    => "No puede agregar modulos, primero tiene que agregar el Medio 1 y Medio 2 de la malla"
-            ));
-        }
-
-        // VERIFICAR MODULOS REGISTRADOS EN OFERTA
-        $querySeven = $db->prepare("select ico.id from institucioneducativa_curso ic 
-                                        inner join institucioneducativa_curso_oferta ico ON ic.id=ico.insitucioneducativa_curso_id 
-                                        where ic.id=".$instucioneducativaCursoId."");
-        $querySeven->execute();
-        $resultSeven = $querySeven->fetchAll();
-        // if( count($resultSeven) > 5 ){
-            // VERIFICAR SI TIENE ESTUDIANTE ASIGNATURA O NOTAS
-            foreach ($resultSeven as $value) {
-                // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_asignatura
-                $queryAsignatura = $db->prepare("select * from institucioneducativa_curso_oferta ico 
-                                                    inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
-                                                    where ico.id=".$value['id']."");
-                $queryAsignatura->execute();
-                $resultAsignatura = $queryAsignatura->fetchAll();
-                if( count($resultAsignatura) > 0 ){
-    
-                    $response = new JsonResponse();
-        
-                    return $response->setData(array(
-                        'statusCode' => 401,
-                        'message'    => "Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas"
-                    ));
-    
-                }
-    
-                // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_nota
-                $queryNota = $db->prepare("select * from institucioneducativa_curso_oferta ico 
-                                            inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
-                                            inner join estudiante_nota en on en.estudiante_asignatura_id=ea.id
-                                            where ico.id=".$value['id']."");
-                $queryNota->execute();
-                $resultNota = $queryNota->fetchAll();
-                if( count($resultNota) > 0 ){
-    
-                    $response = new JsonResponse();
-        
-                    return $response->setData(array(
-                        'statusCode' => 401,
-                        'message'    => "Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas"
-                    ));
-    
-                }
-
-            }
-
-            foreach ($resultSeven as $value) {
-            
-                $ico = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findOneBy(array('id' => $value['id']));
-                if( $ico ){
-    
-                    $institucioneducativaCursoOferta = (object) [
-                        'id' => $ico->getId(), 
-                        'asignaturaTipo' => $ico->getAsignaturaTipo()->getId(), 
-                        'horasmes' => $ico->getHorasmes(),
-                        'insitucioneducativa_curso_id'=> $ico->getInsitucioneducativaCurso()->getId(),
-                        'superiorModuloPeriodoId'=> $ico->getSuperiorModuloPeriodo()->getId()
-                    ];
-                    
-                    $this->get('funciones')->setLogTransaccion(
-                        $ico->getId(),
-                        'InstitucioneducativaCursoOferta',
-                        'D',
-                        '',
-                        '',
-                        $institucioneducativaCursoOferta,
-                        'ALTERNATIVA',
-                        ''
-                    );
-    
-                    $em->remove($ico);
-    
-                    $em->flush();
-                    $em->clear();
-                }
-
-            }
-
-        // }
-
-        // VERIFICAR SI TIENE MODULOS REGISTRADOS A ESTE CURSO
-        $querySecond = $db->prepare("select * from institucioneducativa_curso ic 
-                                        inner join superior_institucioneducativa_periodo sip on ic.superior_institucioneducativa_periodo_id=sip.id
-                                        inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id=smp.id 
-                                        where 
-                                        ic.id=".$instucioneducativaCursoId."
+        // VERIFICAR SI ES UNA CARRERA UNIFICADA
+        if( $esOficial ){
+            // VERIFICAR SI TIENE REGISTROS DEL MEDIO 1 Y MEDIO 2
+            $queryFirst = $db->prepare("select smt.id as smtid, smp.id as smpid, sia.id as siaid, smt.modulo, smt.codigo, smt.esvigente, sip.id as sipid, smmp.superior_periodo_tipo_id as superiorPeriodoTipoId, set2.id, set2.es_oficial, 
+                                            smmp.superior_periodo_tipo_id 
+                                            from superior_acreditacion_especialidad sae 
+                                            inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
+                                            inner join superior_especialidad_tipo set2 on sae.superior_especialidad_tipo_id=set2.id 
+                                            inner join superior_institucioneducativa_acreditacion sia on sae.id=sia.acreditacion_especialidad_id 
+                                            inner join institucioneducativa_sucursal is2 on sia.institucioneducativa_sucursal_id=is2.id 
+                                            inner join superior_institucioneducativa_periodo sip on sia.id=sip.superior_institucioneducativa_acreditacion_id
+                                            inner join superior_modulo_periodo smp on sip.id=smp.institucioneducativa_periodo_id 
+                                            inner join superior_modulo_tipo smt on smp.superior_modulo_tipo_id=smt.id 
+                                            inner join superior_malla_modulo_periodo smmp on smmp.superior_modulo_periodo_id=smp.id
+                                            where
+                                            is2.gestion_tipo_id=".$this->session->get('ie_gestion')."
+                                            and is2.institucioneducativa_id=".$this->session->get('ie_id')."
+                                            and sat.id=".$unidad['ueducativaInfo']['superiorAcreditacionTipoId']."
+                                            and set2.id=".$unidad['ueducativaInfoId']['setId']."
+                                            and is2.periodo_tipo_id=".$unidad['ueducativaInfoId']['periodoId']."
+                                            and is2.sucursal_tipo_id=".$this->session->get('ie_subcea')."
+                                            and smmp.superior_periodo_tipo_id=".$typeMedio."
+                                            and smt.esvigente=true
+                                            and set2.es_vigente=true
                                         ");
-        $querySecond->execute();
-        $resultSecond = $querySecond->fetch();
+            $queryFirst->execute();
+            $resultFirst = $queryFirst->fetchAll();
+    
+            if( count($resultFirst) == 0 ){
+                $response = new JsonResponse();
+        
+                return $response->setData(array(
+                    'statusCode' => 401,
+                    'message'    => "No puede agregar modulos, primero tiene que agregar el Medio 1 y Medio 2 de la malla"
+                ));
+            }
 
-        if( !$resultSecond ){
-
-            $queryFour = $db->prepare("select * from institucioneducativa_curso ic 
-                                        where ic.id=".$instucioneducativaCursoId."");
-            $queryFour->execute();
-            $resultFour = $queryFour->fetch();
-
-            $superiorInstitucioneducativaPeriodo = $resultFour['superior_institucioneducativa_periodo_id'];
+            // VERIFICAR MODULOS REGISTRADOS EN OFERTA
+            $querySeven = $db->prepare("select ico.id from institucioneducativa_curso ic 
+                                            inner join institucioneducativa_curso_oferta ico ON ic.id=ico.insitucioneducativa_curso_id 
+                                            where ic.id=".$instucioneducativaCursoId."");
+            $querySeven->execute();
+            $resultSeven = $querySeven->fetchAll();
+            // if( count($resultSeven) > 5 ){
+                // VERIFICAR SI TIENE ESTUDIANTE ASIGNATURA O NOTAS
+                foreach ($resultSeven as $value) {
+                    // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_asignatura
+                    $queryAsignatura = $db->prepare("select * from institucioneducativa_curso_oferta ico 
+                                                        inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
+                                                        where ico.id=".$value['id']."");
+                    $queryAsignatura->execute();
+                    $resultAsignatura = $queryAsignatura->fetchAll();
+                    if( count($resultAsignatura) > 0 ){
+        
+                        $response = new JsonResponse();
             
-            foreach ($resultFirst as $value) {
-
-                $modulo = $value['modulo'];
-
-                $queryThird = $db->prepare("select * from superior_modulo_tipo smt where 
-                                                smt.superior_especialidad_tipo_id=".$unidad['ueducativaInfoId']['setId']." 
-                                                and smt.modulo like '".$modulo."'");
-                $queryThird->execute();
-                $superiorModuloTipo = $queryThird->fetch();
-
-                if(!$superiorModuloTipo){
-                    $smtipo = new SuperiorModuloTipo();
-                    $smtipo -> setModulo($modulo);
-                    $smtipo -> setEsvigente(true);
-                    $smtipo -> setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
-                    $smtipo -> setSuperiorEspecialidadTipo($em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($unidad['ueducativaInfoId']['setId']));
-                    $em->persist($smtipo);
-                    $em->flush();
-
-                    $smtipo = $smtipo->getId();
-                }else{
-                    $smtipo = $superiorModuloTipo['id'];
+                        return $response->setData(array(
+                            'statusCode' => 401,
+                            'message'    => "Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas"
+                        ));
+        
+                    }
+        
+                    // VERIFICAR SI EL MODULO TIENE RELACION CON estudiante_nota
+                    $queryNota = $db->prepare("select * from institucioneducativa_curso_oferta ico 
+                                                inner join estudiante_asignatura ea on ea.institucioneducativa_curso_oferta_id=ico.id
+                                                inner join estudiante_nota en on en.estudiante_asignatura_id=ea.id
+                                                where ico.id=".$value['id']."");
+                    $queryNota->execute();
+                    $resultNota = $queryNota->fetchAll();
+                    if( count($resultNota) > 0 ){
+        
+                        $response = new JsonResponse();
+            
+                        return $response->setData(array(
+                            'statusCode' => 401,
+                            'message'    => "Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas"
+                        ));
+        
+                    }
+    
                 }
-
-                $queryFour = $db->prepare("select * from superior_modulo_periodo smp2 where 
-                                                    smp2.superior_modulo_tipo_id=".$smtipo."
-                                                    and smp2.institucioneducativa_periodo_id=".$superiorInstitucioneducativaPeriodo."");
+    
+                //  ELIMINAR DESPUES DE VERIFICAR
+                foreach ($resultSeven as $value) {
+                
+                    $ico = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findOneBy(array('id' => $value['id']));
+                    if( $ico ){
+        
+                        $institucioneducativaCursoOferta = (object) [
+                            'id' => $ico->getId(), 
+                            'asignaturaTipo' => $ico->getAsignaturaTipo()->getId(), 
+                            'horasmes' => $ico->getHorasmes(),
+                            'insitucioneducativa_curso_id'=> $ico->getInsitucioneducativaCurso()->getId(),
+                            'superiorModuloPeriodoId'=> $ico->getSuperiorModuloPeriodo()->getId()
+                        ];
+                        
+                        $this->get('funciones')->setLogTransaccion(
+                            $ico->getId(),
+                            'InstitucioneducativaCursoOferta',
+                            'D',
+                            '',
+                            '',
+                            $institucioneducativaCursoOferta,
+                            'ALTERNATIVA',
+                            ''
+                        );
+        
+                        $em->remove($ico);
+        
+                        $em->flush();
+                        $em->clear();
+                    }
+    
+                }
+    
+            // }
+    
+            // VERIFICAR SI TIENE MODULOS REGISTRADOS A ESTE CURSO
+            $querySecond = $db->prepare("select * from institucioneducativa_curso ic 
+                                            inner join superior_institucioneducativa_periodo sip on ic.superior_institucioneducativa_periodo_id=sip.id
+                                            inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id=smp.id 
+                                            where 
+                                            ic.id=".$instucioneducativaCursoId."
+                                            ");
+            $querySecond->execute();
+            $resultSecond = $querySecond->fetch();
+    
+            if( !$resultSecond ){
+    
+                $queryFour = $db->prepare("select * from institucioneducativa_curso ic 
+                                            where ic.id=".$instucioneducativaCursoId."");
                 $queryFour->execute();
-                $superiorModuloPeriodo = $queryFour->fetch();
-
-                if( !$superiorModuloPeriodo ){
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smperiodo = new SuperiorModuloPeriodo();
-                    $smperiodo ->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtipo));
-                    $smperiodo ->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($superiorInstitucioneducativaPeriodo));
-                    $smperiodo ->setHorasModulo('100');
-                    $em->persist($smperiodo);
-                    $em->flush($smperiodo);
-
-                    $smperiodo = $smperiodo->getId();
-                }else{
-                    $smperiodo = $superiorModuloPeriodo['id'];
-                }
-
-                // VERIFICAR SI ESTA REGISTRADO EN InstitucioneducativaCursoOferta
-                $queryFive = $db->prepare("select * from institucioneducativa_curso_oferta ico 
-                                                where 
-                                                ico.superior_modulo_periodo_id=".$smperiodo."
-                                                and ico.insitucioneducativa_curso_id=".$instucioneducativaCursoId."");
-                $queryFive->execute();
-                $resultCheck = $queryFive->fetch(); 
-
-                if(!$resultCheck){
-                    $ieco = new InstitucioneducativaCursoOferta();
-                    $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
-                    $ieco->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($instucioneducativaCursoId));
-                    $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
-                    $ieco->setHorasmes(0);
-                    $em->persist($ieco);
-                    $em->flush();
+                $resultFour = $queryFour->fetch();
+    
+                $superiorInstitucioneducativaPeriodo = $resultFour['superior_institucioneducativa_periodo_id'];
+                
+                foreach ($resultFirst as $value) {
+    
+                    $modulo = $value['modulo'];
+    
+                    $queryThird = $db->prepare("select * from superior_modulo_tipo smt where 
+                                                    smt.superior_especialidad_tipo_id=".$unidad['ueducativaInfoId']['setId']." 
+                                                    and smt.modulo like '".$modulo."'");
+                    $queryThird->execute();
+                    $superiorModuloTipo = $queryThird->fetch();
+    
+                    if(!$superiorModuloTipo){
+                        $smtipo = new SuperiorModuloTipo();
+                        $smtipo -> setModulo($modulo);
+                        $smtipo -> setEsvigente(true);
+                        $smtipo -> setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
+                        $smtipo -> setSuperiorEspecialidadTipo($em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($unidad['ueducativaInfoId']['setId']));
+                        $em->persist($smtipo);
+                        $em->flush();
+    
+                        $smtipo = $smtipo->getId();
+                    }else{
+                        $smtipo = $superiorModuloTipo['id'];
+                    }
+    
+                    $queryFour = $db->prepare("select * from superior_modulo_periodo smp2 where 
+                                                        smp2.superior_modulo_tipo_id=".$smtipo."
+                                                        and smp2.institucioneducativa_periodo_id=".$superiorInstitucioneducativaPeriodo."");
+                    $queryFour->execute();
+                    $superiorModuloPeriodo = $queryFour->fetch();
+    
+                    if( !$superiorModuloPeriodo ){
+                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                        $smperiodo = new SuperiorModuloPeriodo();
+                        $smperiodo ->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtipo));
+                        $smperiodo ->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($superiorInstitucioneducativaPeriodo));
+                        $smperiodo ->setHorasModulo('100');
+                        $em->persist($smperiodo);
+                        $em->flush($smperiodo);
+    
+                        $smperiodo = $smperiodo->getId();
+                    }else{
+                        $smperiodo = $superiorModuloPeriodo['id'];
+                    }
+    
+                    // VERIFICAR SI ESTA REGISTRADO EN InstitucioneducativaCursoOferta
+                    $queryFive = $db->prepare("select * from institucioneducativa_curso_oferta ico 
+                                                    where 
+                                                    ico.superior_modulo_periodo_id=".$smperiodo."
+                                                    and ico.insitucioneducativa_curso_id=".$instucioneducativaCursoId."");
+                    $queryFive->execute();
+                    $resultCheck = $queryFive->fetch(); 
+    
+                    if(!$resultCheck){
+                        $ieco = new InstitucioneducativaCursoOferta();
+                        $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
+                        $ieco->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($instucioneducativaCursoId));
+                        $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
+                        $ieco->setHorasmes(0);
+                        $em->persist($ieco);
+                        $em->flush();
+                    }
+        
                 }
     
             }
+        
+        }else{
+
+            dump($asignaturas);die;
+
+            // // VERIFICAR SI ESTA REGISTRADO EN InstitucioneducativaCursoOferta
+            // $queryFive = $db->prepare("select * from institucioneducativa_curso_oferta ico 
+            //                             where 
+            //                             ico.superior_modulo_periodo_id=".$smperiodo."
+            //                             and ico.insitucioneducativa_curso_id=".$instucioneducativaCursoId."");
+            // $queryFive->execute();
+            // $resultCheck = $queryFive->fetch(); 
+
+            // if(!$resultCheck){
+            //     $ieco = new InstitucioneducativaCursoOferta();
+            //     $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
+            //     $ieco->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($instucioneducativaCursoId));
+            //     $ieco->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($value['smpid']));
+            //     $ieco->setHorasmes(0);
+            //     $em->persist($ieco);
+            //     $em->flush();
+            // }
 
         }
+
 
         if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$unidadS) ){
             $primaria = true;
@@ -767,6 +827,7 @@ class AreasController extends Controller {
     }
 
     public function areasdeleteAction(Request $request) {
+
         $em = $this->getDoctrine()->getManager();
         $infoUe = $request->get('infoUe');
         $coid = $request->get('idco');
@@ -774,7 +835,32 @@ class AreasController extends Controller {
         $aInfoUeducativa = unserialize($infoUe);
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
+        $satId = $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'];
         $mallaActual = $curso->getModalidadTipoId();
+
+        $db = $em->getConnection();
+        // VERIFICAR QUE NO SE PUEDA ELIMINAR < 500
+        $gestion = $this->session->get('ie_gestion');
+        if( $gestion >= 2023 && $satId == 32 ){
+
+            // ENCONTRAR MODULOS BY SIP
+            $queryOne = $db->prepare("select ico.id from institucioneducativa_curso_oferta ico 
+                                        where ico.insitucioneducativa_curso_id=".$idCurso."");
+            $queryOne->execute();
+            $resultOne = $queryOne->fetchAll();
+            
+            // VERIFICAR CANTIDAD DE MODULOS ANTES DE ELIMINAR
+            if( count($resultOne) == 5 ){
+                
+                $response = new JsonResponse();
+
+                return $response->setData(array(
+                    'statusCode' => 401,
+                    'message'    => "No puede eliminar mas modulos"
+                )); 
+
+            }
+        }
 
         // eliminamos el area del curso
         $em->getConnection()->beginTransaction();
@@ -1225,9 +1311,8 @@ class AreasController extends Controller {
         $sest_esoficial = true;
         $contAsg = count($curso);
         $resultSMMP = [];
-
+        
         if( $this->session->get('ie_gestion') >= 2023 && ( $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 1 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 20 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 32 )  ){
-            // dump($aInfoUeducativa);die;
             $curso = $this->getAreasCajon( $aInfoUeducativa );
             $contAsg = count($curso) - count($cursoOferta);
             $sest_esoficial = ( count($curso) == 0 ) ? true : $curso[0]['es_oficial'];
@@ -1247,7 +1332,8 @@ class AreasController extends Controller {
         $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
         $gradoParaleloCurso = $aInfoUeducativa['ueducativaInfo']['grado'] . " - " . $aInfoUeducativa['ueducativaInfo']['paralelo'];
 
-        return array('tieneCursoOferta' => $tieneCursoOferta, 'cursoOferta' => $cursoOferta, 'asignaturas' => serialize($curso), 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso, 'count' => $contAsg, 'sest_esoficial' => $sest_esoficial, 'countPeriodo'=>count($resultSMMP) );
+        $cursoS = serialize($curso);
+        return array('tieneCursoOferta' => $tieneCursoOferta, 'cursoOferta' => $cursoOferta, 'asignaturas' => $cursoS, 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso, 'count' => $contAsg, 'sest_esoficial' => $sest_esoficial, 'countPeriodo'=>count($resultSMMP) );
     }
 
     public function areamaestroAction(Request $request) {
