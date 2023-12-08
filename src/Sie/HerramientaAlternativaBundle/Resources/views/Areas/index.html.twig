@@ -794,7 +794,7 @@
     };
 
     var deleteArea = function(idco, infoUe, asignatura, smpId){
-        if(confirm('¿Está segura(o) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que también se eliminarán las calificaciones de los estudiantes.')){
+        if(confirm('¿Está segura(o) de eliminar el área de '+ asignatura +'?')){
             $.ajax({
                 type: 'post',
                 data: ({idco:idco, infoUe: infoUe, smpId: smpId}),
