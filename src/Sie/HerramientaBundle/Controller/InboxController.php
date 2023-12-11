@@ -1347,12 +1347,12 @@ class InboxController extends Controller {
 
 
       $form['reglas'] = $this->reglasQA;
-      $objObsQA = $this->getObservationQA($form);
-      if( $inconsistencia || $objObsQA ){
-        if($operativo >= 3){
-          $observation = true;
-        }
-      }
+      // $objObsQA = $this->getObservationQA($form);
+      // if( $inconsistencia || $objObsQA ){
+      //   if($operativo >= 3){
+      //     $observation = true;
+      //   }
+      // }
       $valPersonalAdm = false;
       
       if($observation)
@@ -1387,9 +1387,9 @@ class InboxController extends Controller {
                 if($form['gestion']==2022) { 
                   $queryCheckCal = 'select * from sp_validacion_regular_web2022_fg(:gestion,:sie,:ope)';
                 }
-                // if($form['gestion']==2023) { 
-                //   $queryCheckCal = 'select * from sp_validacion_regular_web2023_fg(:gestion,:sie,:ope)';
-                // }
+                if($form['gestion']==2023) { 
+                  $queryCheckCal = 'select * from sp_validacion_regular_web2023_fg(:gestion,:sie,:ope)';
+                }
                 $query = $em->getConnection()->prepare($queryCheckCal);
                 $query->bindValue(':gestion', $form['gestion']);
                 $query->bindValue(':sie', $form['sie']);
