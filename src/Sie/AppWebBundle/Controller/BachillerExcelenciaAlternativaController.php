@@ -38,7 +38,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
      */
 
     public function indexAction() {
-
+        return $this->redirect($this->generateUrl('login'));
        
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
@@ -80,7 +80,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
      */
 
     public function indexDirAction() {
-       
+        return $this->redirect($this->generateUrl('login'));
+        
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
