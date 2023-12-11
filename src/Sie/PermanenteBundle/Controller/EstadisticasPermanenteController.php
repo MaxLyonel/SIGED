@@ -18,6 +18,8 @@ class EstadisticasPermanenteController extends Controller
     }
     
     public function indexAction(){
+        return $this->redirect($this->generateUrl('login'));
+
         $id_usuario = $this->session->get('userId');
        
         if (!isset($id_usuario)) {
@@ -163,6 +165,7 @@ class EstadisticasPermanenteController extends Controller
 
     public function permanenteIndexAction(Request $request) {
 //dump($request);die;
+        return $this->redirect($this->generateUrl('login'));
         $form = $request->get('form');
        // $fechaini = $form['gestion'] ;
       //  die;
