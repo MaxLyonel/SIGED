@@ -350,6 +350,8 @@ class InboxController extends Controller {
             
         $entities = $query->getResult();
 
+        // dump($arrSieInfo[0]);die;
+
         $this->session->set('ue_sol_regularizar',false);
         //dump($this->session->get('pathSystem'));die;
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
@@ -777,11 +779,11 @@ class InboxController extends Controller {
       $form['gestion'] = $data['gestion'];
       $form['sie'] = $data['id'];
 
-      if ($data['gestion'] == $this->session->get('currentyear')) {
-        $objObsQA = $this->getObservationQA($form);
-      } else {
+      // if ($data['gestion'] == $this->session->get('currentyear')) {
+      //   $objObsQA = $this->getObservationQA($form);
+      // } else {
         $objObsQA = null;
-      }
+      // }
       //$this->session->set('donwloadLibreta', false);
       /*if($objObsQA){
         return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
