@@ -237,7 +237,8 @@ class EstadisticasPermanenteController extends Controller
 
     //   dump($subEntidades);die;
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area
-       $entityEstadistica = $this->buscaEstadisticaPermanenteAreaRol($codigo,$rol,$gestion,$periodo);
+    //    $entityEstadistica = $this->buscaEstadisticaPermanenteAreaRol($codigo,$rol,$gestion,$periodo); temporal fuera de servicio
+
 
 //dump($entityEstadistica);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
@@ -316,6 +317,8 @@ class EstadisticasPermanenteController extends Controller
         /*
          * Define la zona horaria y halla la fecha actual
          */
+
+        
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $gestion;
