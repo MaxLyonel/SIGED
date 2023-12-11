@@ -18,7 +18,6 @@ class EstadisticasPermanenteController extends Controller
     }
     
     public function indexAction(){
-        return $this->redirect($this->generateUrl('login'));
 
         $id_usuario = $this->session->get('userId');
        
@@ -165,7 +164,6 @@ class EstadisticasPermanenteController extends Controller
 
     public function permanenteIndexAction(Request $request) {
 //dump($request);die;
-        return $this->redirect($this->generateUrl('login'));
         $form = $request->get('form');
        // $fechaini = $form['gestion'] ;
       //  die;
@@ -237,7 +235,7 @@ class EstadisticasPermanenteController extends Controller
 
     //   dump($subEntidades);die;
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area
-    //    $entityEstadistica = $this->buscaEstadisticaPermanenteAreaRol($codigo,$rol,$gestion,$periodo); temporal fuera de servicio
+       $entityEstadistica = $this->buscaEstadisticaPermanenteAreaRol($codigo,$rol,$gestion,$periodo); 
 
 
 //dump($entityEstadistica);die;
