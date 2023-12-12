@@ -553,8 +553,15 @@ class PrincipalController extends Controller {
      */
     public function nroinstitutosDepartamento($departamento, $dependencia){
         $em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();        
-        $query = 'SELECT
+        $db = $em->getConnection();    
+        
+        //por bloqueo de base de datos
+        //12/12/2023
+        
+        // $query = 'SELECT
+        //     cast(0 as int) AS cantidad';
+
+        /*$query = 'SELECT
                     COUNT(inst.id) AS cantidad 
                     FROM
                     public.institucioneducativa AS inst
@@ -570,12 +577,13 @@ class PrincipalController extends Controller {
                     WHERE lt4.id = '.$departamento.' AND inst.institucioneducativa_tipo_id IN (7,8,9) 
                     AND estinst.id IN (10) 
                     AND inst.institucioneducativa_acreditacion_tipo_id = 2
-                    AND dept.id = '.$dependencia;
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po=$stmt->fetchAll();
-        return $po[0]['cantidad'];                  
+                    AND dept.id = '.$dependencia;*/
+        // $stmt = $db->prepare($query);
+        /*$params = array();
+        $stmt->execute($params);*/
+        // $po=$stmt->fetchAll();
+        // return $po[0]['cantidad'];
+        return 0;                  
     }
 
 
