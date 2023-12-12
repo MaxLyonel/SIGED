@@ -71,7 +71,7 @@
                 </fieldset>
                 #}
 
-                <fieldset class="form-group">
+                {# <fieldset class="form-group">
                     <div class="row">
                         <legend class="col-md-3 col-form-label pt-0">Información de la U.E.</legend>
                         <div class="col-md-9">
@@ -108,7 +108,7 @@
 
                         </div>
                     </div>
-                </fieldset>
+                </fieldset> #}
             
               </div>
               <div class="modal-body text-danger div-errors"></div>
@@ -190,7 +190,7 @@
                             <div class="clearfix"></div>
                         </div><!-- /.panel-heading -->
                         <div class="panel-body">
-                            {{ render(controller('SieHerramientaBundle:TransferStudents:index')) }}
+                            {# {{ render(controller('SieHerramientaBundle:TransferStudents:index')) }} #}
                         </div>
                     </div>
                 </div>
@@ -304,7 +304,7 @@
         </div>
 
         <div class="row">
-            {% if app.session.get('ie_id') > 0 %}
+            {# {% if app.session.get('ie_id') > 0 %}
                 <div class="col-md-6">
                     <!-- Start input fields - basic form -->
                     <div class="panel rounded shadow">
@@ -351,7 +351,7 @@
                         </div>
                     </div>
                 </div>
-            {% endif %}
+            {% endif %} #}
             {#
             <div class="col-md-6">
                 <div class="panel panel-danger shadow">
@@ -565,7 +565,7 @@
          #}
         <!--Detalle si la U.E.continuo con las actividades-->
             {% if app.session.get('roluser') == 9 %}
-                {% if fecha >= fechaInicioReporte and fecha <= fechaFinReporte %}
+                {# {% if fecha >= fechaInicioReporte and fecha <= fechaFinReporte %}
                     <div class="col-md-3">
                         <!-- Start input fields - basic form -->
                         <div class="panel rounded shadow">
@@ -593,9 +593,9 @@
                             </div>
                         </div>
                     </div>
-                {% endif %}
+                {% endif %} #}
                 <!--Muestra en un historia de reporte de actividades -->
-                <div class="col-md-9">
+                {# <div class="col-md-9">
                     <div class="panel rounded shadow">
                         <div class="panel panel-lilac shadow">
                             <div class="panel-heading">
@@ -645,7 +645,7 @@
                             </div><!-- /.panel-body --> 
                         </div>
                     </div>
-                </div>
+                </div> #}
 
 
             {% endif %}
