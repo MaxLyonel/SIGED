@@ -3271,19 +3271,22 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
         $rol=$rol->getRolTipo()->getId();
         /////SACAMOS LA GESTION INICIAL Y FINAL
-        $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
-                        max((extract(year from ic.fecha_fin))) as gestion_fin 
-                        FROM institucioneducativa_curso ic
-                        join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
+        // $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
+        //                 max((extract(year from ic.fecha_fin))) as gestion_fin 
+        //                 FROM institucioneducativa_curso ic
+        //                 join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
+        // $stmt = $db->prepare($query);
+        // $params = array();
+        // $stmt->execute($params);
+        // $po = $stmt->fetchAll();
         $filas = array();
-        foreach ($po as $p) {
-            $gestion_ini_t = $p["gestion_ini"];
-            $gestion_fin_t = $p["gestion_fin"];
-        } 
+        // foreach ($po as $p) {
+        //     $gestion_ini_t = $p["gestion_ini"];
+        //     $gestion_fin_t = $p["gestion_fin"];
+        // } 
+
+        $gestion_ini_t = 2009;
+        $gestion_fin_t = 2023; 
              
         ///////MODOFICAR FECHA //
         $userId = $this->session->get('userId');

@@ -42,20 +42,21 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
     $em = $this->getDoctrine()->getManager();
     $db = $em->getConnection();
 
-    $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
-                        max((extract(year from ic.fecha_fin))) as gestion_fin 
-                        FROM institucioneducativa_curso ic
-                        join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
+    // $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
+    //                     max((extract(year from ic.fecha_fin))) as gestion_fin 
+    //                     FROM institucioneducativa_curso ic
+    //                     join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
+    //     $stmt = $db->prepare($query);
+    //     $params = array();
+    //     $stmt->execute($params);
+    //     $po = $stmt->fetchAll();
         $filas = array();
-        foreach ($po as $p) {
-            $gestion_ini_t = $p["gestion_ini"];
-            $gestion_fin_t = $p["gestion_fin"];
-        } 
-
+        // foreach ($po as $p) {
+        //     $gestion_ini_t = $p["gestion_ini"];
+        //     $gestion_fin_t = $p["gestion_fin"];
+        // } 
+        $gestion_ini_t = 2009;
+        $gestion_fin_t = 2023;
     $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lugar);
     $lugar_nombre=$result->getLugar();
     $plan=3;
@@ -79,19 +80,21 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
         $graduado="AND estadomatricula_tipo_id=62";
         $m_option=2;
         ///// sacar gestion_ini y gestion_fin por defecto y el id_lugar bolivia id=1
-        $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
-                        max((extract(year from ic.fecha_fin))) as gestion_fin 
-                        FROM institucioneducativa_curso ic
-                        join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
+        // $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
+        //                 max((extract(year from ic.fecha_fin))) as gestion_fin 
+        //                 FROM institucioneducativa_curso ic
+        //                 join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
+        // $stmt = $db->prepare($query);
+        // $params = array();
+        // $stmt->execute($params);
+        // $po = $stmt->fetchAll();
         $filas = array();
-        foreach ($po as $p) {
-            $gestion_ini = $p["gestion_ini"];
-            $gestion_fin = $p["gestion_fin"];
-        } 
+        // foreach ($po as $p) {
+            // $gestion_ini = $p["gestion_ini"];
+            // $gestion_fin = $p["gestion_fin"];
+        // } 
+            $gestion_ini = 2009;
+            $gestion_fin = 2023;
     }
     /////////////// REVISAR DE DONDE ESTA VINVIENDO Y QUE QUIERE VER
     $select1=$where=$select2_groupby=$groupby2="";
@@ -300,19 +303,21 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
     $em = $this->getDoctrine()->getManager();
     $db = $em->getConnection();
 
-    $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
-                        max((extract(year from ic.fecha_fin))) as gestion_fin 
-                        FROM institucioneducativa_curso ic
-                        join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
+    // $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
+    //                     max((extract(year from ic.fecha_fin))) as gestion_fin 
+    //                     FROM institucioneducativa_curso ic
+    //                     join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
+    //     $stmt = $db->prepare($query);
+    //     $params = array();
+    //     $stmt->execute($params);
+    //     $po = $stmt->fetchAll();
         $filas = array();
-        foreach ($po as $p) {
-            $gestion_ini_t = $p["gestion_ini"];
-            $gestion_fin_t = $p["gestion_fin"];
-        } 
+        // foreach ($po as $p) {
+        //     $gestion_ini_t = $p["gestion_ini"];
+        //     $gestion_fin_t = $p["gestion_fin"];
+        // } 
+    $gestion_ini_t = 2009;
+    $gestion_fin_t = 2023;
 
     $plan=3;
     $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lugar);
@@ -337,19 +342,21 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
         $graduado="AND estadomatricula_tipo_id=62";
         $m_option=2;
         ///// sacar gestion_ini y gestion_fin por defecto y el id_lugar bolivia id=1
-        $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
-                        max((extract(year from ic.fecha_fin))) as gestion_fin 
-                        FROM institucioneducativa_curso ic
-                        join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
+        // $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
+        //                 max((extract(year from ic.fecha_fin))) as gestion_fin 
+        //                 FROM institucioneducativa_curso ic
+        //                 join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id";
+        // $stmt = $db->prepare($query);
+        // $params = array();
+        // $stmt->execute($params);
+        // $po = $stmt->fetchAll();
         $filas = array();
-        foreach ($po as $p) {
-            $gestion_ini = $p["gestion_ini"];
-            $gestion_fin = $p["gestion_fin"];
-        } 
+        // foreach ($po as $p) {
+        //     $gestion_ini = $p["gestion_ini"];
+        //     $gestion_fin = $p["gestion_fin"];
+        // }
+            $gestion_ini = 2009;
+            $gestion_fin = 2023;
     }
     /////////////// REVISAR DE DONDE ESTA VINVIENDO Y QUE QUIERE VER
     if($nivel_ini==1 and $nivel_fin==1){//inicio-Departamentos
