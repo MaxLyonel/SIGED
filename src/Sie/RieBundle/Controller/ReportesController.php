@@ -255,8 +255,8 @@ class ReportesController extends Controller {
         //por bloqueo de base de datos
         //12/12/2023
 
-        $query = 'SELECT
-        0 AS cantidad';
+        // $query = 'SELECT
+        // 0 AS cantidad';
 
 
         /*$query = 'SELECT
@@ -276,11 +276,12 @@ class ReportesController extends Controller {
                     AND estinst.id IN (10) 
                     AND institucioneducativa_acreditacion_tipo_id = 2
                     AND dept.id = '.$dependencia;*/
-        $stmt = $db->prepare($query);
+        // $stmt = $db->prepare($query);
         /*$params = array();
         $stmt->execute($params);*/
-        $po=$stmt->fetchAll();
-        return $po[0]['cantidad'];                  
+        // $po=$stmt->fetchAll();
+        // return $po[0]['cantidad']; 
+        return 0;                 
     }
 
     /**
