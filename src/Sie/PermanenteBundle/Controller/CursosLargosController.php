@@ -349,7 +349,7 @@ class CursosLargosController extends Controller {
         $horasSol = $form['horas'];
         $horasSolicitado= (int)$form['horas'];        
         if($horasSolicitado == $horasTotal ){ //dump("siii");die;//si el nivel seleccionado cumple con el total de horas
-            $query = $em->getConnection()->prepare('
+            $query = $em->getConnection()->prepare("
             select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditacionid,d.acreditacion as acreditacion,c.id espacredid,e.id as supinsacredid, g.id  as supinstperiodoid
                 from superior_facultad_area_tipo a  
                 inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
@@ -358,16 +358,10 @@ class CursosLargosController extends Controller {
                 inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
                 inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id
                 inner join superior_institucioneducativa_periodo g on e.id = g.superior_institucioneducativa_acreditacion_id
-                where e.institucioneducativa_id =:sie and f.sucursal_tipo_id=:suc
-                and d.id= :niv and b.id=:esp and f.gestion_tipo_id =:gestion
-            ');
-            $query->bindValue(':suc', $sucursal);
-            $query->bindValue(':esp', $form['especialidad']);
-            $query->bindValue(':sie', $institucion);
-            $query->bindValue(':niv', $form['nivel']);
-            $query->bindValue(':gestion', $gestion);
+                where e.institucioneducativa_id =".$institucion." and f.sucursal_tipo_id=".$sucursal."
+                and d.id= ".$form['nivel']." and b.id=".$form['especialidad']." and f.gestion_tipo_id =".$gestion."::double precision ");
             $query->execute();
-            $idpersup= $query->fetch();
+            $idpersup= $query->fetchAll();
             $em->getConnection()->beginTransaction();
              //dump($idpersup);
             //Invoca a una funcion de Base de Datos Necesaria para cualquier INSERT, para que se reinicie la secuencia de ingreso de datos
