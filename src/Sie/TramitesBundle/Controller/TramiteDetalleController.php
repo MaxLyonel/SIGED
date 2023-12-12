@@ -751,6 +751,7 @@ class TramiteDetalleController extends Controller {
             left JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo pt on pt.id = e.pais_tipo_id
             inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
+            /*
             inner join (
                 select * from tramite_detalle where id in (
                 select max(trad.id) from tramite_detalle as trad
@@ -758,6 +759,8 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId." group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 17 limit 1)
             ) as td on td.tramite_id = t.id
+            */
+            inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 3 and td.flujo_proceso_id = 16 and t.flujo_tipo_id = 4 
             where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) -- and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
@@ -1079,6 +1082,7 @@ class TramiteDetalleController extends Controller {
             left JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo pt on pt.id = e.pais_tipo_id
             inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
+            /*
             inner join (
                 select * from tramite_detalle where id in (
                 select max(trad.id) from tramite_detalle as trad
@@ -1086,6 +1090,8 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId."::double precision group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 18 limit 1)
             ) as td on td.tramite_id = t.id
+            */            
+            inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 3 and td.flujo_proceso_id = 16 and t.flujo_tipo_id = 4
             where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) -- and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
@@ -1745,6 +1751,7 @@ class TramiteDetalleController extends Controller {
             left JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo pt on pt.id = e.pais_tipo_id
             inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
+            /*
             inner join (
                 select * from tramite_detalle where id in (
                 select max(trad.id) from tramite_detalle as trad
@@ -1752,6 +1759,8 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId."::double precision group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 19 limit 1)
             ) as td on td.tramite_id = t.id
+            */
+            inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 3 and td.flujo_proceso_id = 18 and t.flujo_tipo_id = 4
             where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) -- and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
@@ -2235,6 +2244,7 @@ class TramiteDetalleController extends Controller {
             left JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo pt on pt.id = e.pais_tipo_id
             inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
+            /*
             inner join (
                 select * from tramite_detalle where id in (
                 select max(trad.id) from tramite_detalle as trad
@@ -2242,6 +2252,8 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId."::double precision group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 20 limit 1)
             ) as td on td.tramite_id = t.id
+            */
+            inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 3 and td.flujo_proceso_id = 19 and t.flujo_tipo_id = 4
             inner join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
             where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) -- and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
@@ -2574,6 +2586,7 @@ class TramiteDetalleController extends Controller {
             left JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo pt on pt.id = e.pais_tipo_id
             inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
+            /*
             inner join (
                 select * from tramite_detalle where id in (
                 select max(trad.id) from tramite_detalle as trad
@@ -2581,6 +2594,8 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId."::double precision group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 21 limit 1)
             ) as td on td.tramite_id = t.id
+            */
+            inner join tramite_detalle as td on td.tramite_id = t.id and td.tramite_estado_id = 3 and td.flujo_proceso_id = 19 and t.flujo_tipo_id = 4
             left join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
             where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) -- and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
@@ -5390,7 +5405,7 @@ class TramiteDetalleController extends Controller {
                     $response->setStatusCode(201);
                     return $response->setData(array('estado'=>false, 'msg'=>$messageError)); 
                 }
-                // if($messageError!=""){
+                // if($messageError!=""){bachTecHum
                 //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
                 // }
                 
