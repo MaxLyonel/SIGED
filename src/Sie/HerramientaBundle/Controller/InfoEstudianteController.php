@@ -78,7 +78,8 @@ class InfoEstudianteController extends Controller {
         $form['gestion'] = hex2bin($formResponse['gestion']);                    
         
         if ($form['gestion'] == $this->session->get('currentyear')) {
-            $objObsQA = $this->getObservationQA($form);        
+            // $objObsQA = $this->getObservationQA($form);        temporalmente solo 3er trimestre
+            $objObsQA = null;
         } else {
             $objObsQA = null;
         }       
@@ -94,7 +95,8 @@ class InfoEstudianteController extends Controller {
         $form['gestion'] = $form['gestion'];
         $form['sie'] = $form['sie'];
         if ($form['gestion'] == $this->session->get('currentyear')) {
-            $objObsQAbjp = $this->getObservationQA($form);     
+            // $objObsQAbjp = $this->getObservationQA($form);     
+            $objObsQAbjp = null;
         } else {
             $objObsQAbjp = null;
         }       

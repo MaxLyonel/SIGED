@@ -45,11 +45,12 @@ class EstudianteNotasController extends Controller {
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
         
-        $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
+        // $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
         $aInfoUeducativa = unserialize($infoUe);
 
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
-        if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+        // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
             return $this->redirect($this->generateUrl('principal_web'));
         }
         /**************************************************/
@@ -94,10 +95,11 @@ class EstudianteNotasController extends Controller {
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
-        $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
+        // $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
 
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
-        if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+        // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
             return $this->redirect($this->generateUrl('principal_web'));
         }
         /**************************************************//*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
