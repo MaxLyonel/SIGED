@@ -29,6 +29,7 @@ class PrincipalController extends Controller {
      */
     public function indexAction(Request $request) {
 
+        
         $user = $this->container->get('security.context')->getToken()->getUser();
         //$this->sesion->set('userId',$user->getId());
         //$this->sesion->set('roluser',8);
@@ -46,7 +47,6 @@ class PrincipalController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('SieAppWebBundle:Notificacion');
-
         $hoy = new \DateTime('now');
 
         $query = $repository->createQueryBuilder('n')
@@ -62,7 +62,7 @@ class PrincipalController extends Controller {
                 ->setParameter('rol', $rol_usuario)
                 ->setParameter('estado', 't')
                 ->getQuery();
-
+        
         $entities = $query->getResult();
 
         //Consulta Mensajes nuevos recibidos
@@ -154,18 +154,18 @@ class PrincipalController extends Controller {
             $sieaux = -1;
         }*/
         //Lista de observados consolidacion inscripcion
-        if ($rol_usuario == 9){
-            $query = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->createQueryBuilder('eio')
-                ->where('eio.gestionTipo = :gestion')
-                ->andWhere('eio.institucioneducativa = :ie')
-                ->setParameter('gestion', $this->sesion->get('currentyear'))
-                ->setParameter('ie', $this->sesion->get('ie_id'))
-                ->getQuery();
+        // if ($rol_usuario == 9){
+        //     $query = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->createQueryBuilder('eio')
+        //         ->where('eio.gestionTipo = :gestion')
+        //         ->andWhere('eio.institucioneducativa = :ie')
+        //         ->setParameter('gestion', $this->sesion->get('currentyear'))
+        //         ->setParameter('ie', $this->sesion->get('ie_id'))
+        //         ->getQuery();
             
-            $observacion = $query->getResult();
-        }else{
-            $observacion = array();
-        }
+        //     $observacion = $query->getResult();
+        // }else{
+        //     $observacion = array();
+        // }
         
 
         //$objObservactionSie = $em->getRepository('SieAppWebBundle:ValidacionProceso')->getObservationPerSie(array('sie'=> $sieaux, 'gestion'=>2016));
@@ -174,24 +174,24 @@ class PrincipalController extends Controller {
             return $this->redirectToRoute('sie_gis_homepage');
         }
 
-                $query = $em->getConnection()->prepare('select lt4.lugar as departamento,initcap(lt5.lugar) as distrito,initcap(lt3.lugar) as provincia,lt2.lugar as municipio,ie.id as sie,ie.institucioneducativa as ue
-                from institucioneducativa_encuesta iee
-                inner join institucioneducativa ie on ie.id = iee.institucioneducativa_id
-                inner join jurisdiccion_geografica jg on jg.id = ie.le_juridicciongeografica_id
-                left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
-                left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
-                left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
-                left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
-                left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-                left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito');
-            $query->execute();
-            $dataEncuesta= $query->fetchAll();
-        if (count($dataEncuesta) > 0){
-            $existe = true;
-        }
-        else {
-            $existe = false;
-        }
+        //         $query = $em->getConnection()->prepare('select lt4.lugar as departamento,initcap(lt5.lugar) as distrito,initcap(lt3.lugar) as provincia,lt2.lugar as municipio,ie.id as sie,ie.institucioneducativa as ue
+        //         from institucioneducativa_encuesta iee
+        //         inner join institucioneducativa ie on ie.id = iee.institucioneducativa_id
+        //         inner join jurisdiccion_geografica jg on jg.id = ie.le_juridicciongeografica_id
+        //         left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+        //         left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+        //         left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+        //         left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+        //         left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+        //         left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito');
+        //     $query->execute();
+        //     $dataEncuesta= $query->fetchAll();
+        // if (count($dataEncuesta) > 0){
+        //     $existe = true;
+        // }
+        // else {
+        //     $existe = false;
+        // }
          $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
             $query = $em->createQuery(
                 'SELECT lt
@@ -222,13 +222,13 @@ class PrincipalController extends Controller {
         }
 
         //Obtenemos los datos de la tabla riesgo_unidadeducativa_riesgo
-        $unidadEducativaTipo =  $em->getRepository('SieAppWebBundle:RiesgoUnidadeducativaTipo')->findAll();
+        // $unidadEducativaTipo =  $em->getRepository('SieAppWebBundle:RiesgoUnidadeducativaTipo')->findAll();
 
         //Aqui obtenemos un historial de los ultimos 3 meses del incio de actividades
         $historialInicioActividadesData=array();
         if ($rol_usuario==9)
             $historialInicioActividadesData=$this->getHistorialInicioDeActividades();
-
+        // dump($historialInicioActividadesData);die;
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
           'entities' => $entities,
@@ -241,15 +241,15 @@ class PrincipalController extends Controller {
           'instalador'=>$instalador,
           //'objObservactionSie' => $objObservactionSie
           'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$this->sesion->get('currentyear'))),array())->createView(),
-          'observacion' => $observacion,
-          'dataEncuesta' => $dataEncuesta,
-          'existe' => $existe,
-          'depto' => $dptoNacArray,
+        //   'observacion' => $observacion,
+        //   'dataEncuesta' => $dataEncuesta,
+        //   'existe' => $existe,
+        //   'depto' => $dptoNacArray,
           'registroInicioDeClases'=>count($registroInicioDeClases),
 
-          'unidadEducativaTipoData'=>$unidadEducativaTipo,
+        //   'unidadEducativaTipoData'=>$unidadEducativaTipo,
 
-          'historialInicioActividadesData'=>$historialInicioActividadesData,
+        //   'historialInicioActividadesData'=>$historialInicioActividadesData,
         ));
     }
 
