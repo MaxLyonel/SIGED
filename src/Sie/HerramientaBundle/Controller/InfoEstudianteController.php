@@ -710,11 +710,10 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
-        // dump('here'); die;
         //get the info ue
         $infoUe = $request->get('infoUe'); 
-      //  dump($infoUe);die;
         $aInfoUeducativa = unserialize($infoUe);
+        // dump($aInfoUeducativa);die;
 
         /*
             para seleccion de idioma
@@ -747,12 +746,13 @@ class InfoEstudianteController extends Controller {
         $arrAllowInscription=array(1,2,3,4,5);
         $objTypeOfUEId = (sizeof($objTypeOfUE))>0?$objTypeOfUE[0]->getInstitucioneducativaHumanisticoTecnicoTipo()->getId():100;
         if(in_array((sizeof($objTypeOfUE))>0?$objTypeOfUE[0]->getInstitucioneducativaHumanisticoTecnicoTipo()->getId():100,$arrAllowInscription)){
-          $this->session->set('allowInscription',true);
+            $this->session->set('allowInscription',true);
         }else{
-          $this->session->set('allowInscription',false);
+            $this->session->set('allowInscription',false);
         }
-
+        
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        // dump($operativo);die;
         
         /*if($operativo > 1){
             $this->session->set('donwloadLibreta', true);
@@ -778,7 +778,7 @@ class InfoEstudianteController extends Controller {
         // $positionCurso = $this->getCourse($nivel, $ciclo, $grado, '5');
         $posicionCurso = ($aInfoUeducativa['requestUser']['gestion'] > 2010) ? $this->getCourse($nivel, $ciclo, $grado, '5') : $this->getCourseOld($nivel, $ciclo, $grado, '5');
         //$dataNextLevel = explode('-', $this->aCursos[$positionCurso]);
-
+        
         //get next level data
         $objNextCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
             'institucioneducativa' => $sie,
@@ -789,15 +789,17 @@ class InfoEstudianteController extends Controller {
             'turnoTipo' => $turno,
             'gestionTipo' => $gestion
         ));
-
+        
         $exist = true;
         $objStudents = array();
         $aData = array();
         //check if the data exist
+
+        
         if ($objNextCurso) {
             //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($objNextCurso->getId(), '5');
             //get students list
-
+            
             $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
             $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
 
@@ -815,49 +817,53 @@ class InfoEstudianteController extends Controller {
 
 
         //to add the especialidad
-        $UePlenasAddSpeciality=false;
-        $arrUePlenasAddSpeciality = array(
-          '81410160',
-          '81410080',
-          '40730250',
-          '81410037',
-          '81410134',
-          '82220009',
-          '80480060',
-          '81981445',
-          '80660080',
-          '81340038',
-          '81340065',
-          '80730395',
-          '80730391',
-          '71170009',
-          '60730046',
-          '71170010',
-          '81410157',
+        // $UePlenasAddSpeciality=false;
+        // $arrUePlenasAddSpeciality = array(
+        //   '81410160',
+        //   '81410080',
+        //   '40730250',
+        //   '81410037',
+        //   '81410134',
+        //   '82220009',
+        //   '80480060',
+        //   '81981445',
+        //   '80660080',
+        //   '81340038',
+        //   '81340065',
+        //   '80730395',
+        //   '80730391',
+        //   '71170009',
+        //   '60730046',
+        //   '71170010',
+        //   '81410157',
 
-          '60900064',
-          '81981463',
-          '81480060',
-          '80630028',
-          '81470005',
-          '81470069',
-          '80980556',
-          '80920034',
-          '80980514',
-          '71480114',
-          '40730531',
-          '82220001',
-          '81170016',
-          '80480163'
-        );
-        $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
+        //   '60900064',
+        //   '81981463',
+        //   '81480060',
+        //   '80630028',
+        //   '81470005',
+        //   '81470069',
+        //   '80980556',
+        //   '80920034',
+        //   '80980514',
+        //   '71480114',
+        //   '40730531',
+        //   '82220001',
+        //   '81170016',
+        //   '80480163'
+        // );
+        // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
         // Impresion de libretas
         $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-
+        // dump($tipoUE);die;
         $imprimirLibreta = false;
-        $estadosPermitidosImprimir = array(4,5,11,55,28);
+        if($operativo == 3){
+            $estadosPermitidosImprimir = array(5,11,55,28);
+        } else {
+            $estadosPermitidosImprimir = array(4);
+        }
 
         if($gestion == 2020){
             $estadosPermitidosImprimir = array(5,55);
@@ -874,7 +880,6 @@ class InfoEstudianteController extends Controller {
                 if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo > 3 ) { ///////>=
                     $imprimirLibreta = true;
                 }
-                // dump($imprimirLibreta);exit();
                 // Unidades educativas tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $operativo >= 4){
                     $imprimirLibreta = true; 
@@ -954,10 +959,10 @@ class InfoEstudianteController extends Controller {
         }
     }
     /**se habilito para validar que registren notas todas excepto de la lista UesSinRepoete2022 */
-    $mostrarUeSinReporte2022 = false;
-    $uESinReporte = $em->getRepository('SieAppWebBundle:UesSinReporte2022')->findOneById($sie);
-    if($uESinReporte)
-        $mostrarUeSinReporte2022 = true;
+    // $mostrarUeSinReporte2022 = false;
+    // $uESinReporte = $em->getRepository('SieAppWebBundle:UesSinReporte2022')->findOneById($sie);
+    // if($uESinReporte)
+    //     $mostrarUeSinReporte2022 = true;
 
     $this->session->set('optionFormRude', false);
     $this->session->set('optionReporteRude', false);
@@ -968,6 +973,7 @@ class InfoEstudianteController extends Controller {
     }
     // if the rude operative was closed, so hidden the form rude option
     $registroConsolRude = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion, 'rude' => 1));
+    // dump($registroConsolRude);die;
     if($registroConsolRude){
         $this->session->set('optionFormRude', false);
         $this->session->set('optionReporteRude', true);
@@ -1019,18 +1025,21 @@ class InfoEstudianteController extends Controller {
 
 
         /* Operativo de sexto 2021 */
-        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
+        $query = $em->getConnection()->prepare("select id from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
         $query->execute();
         $objDataOperativo = $query->fetchAll();
         $haslevel = false;
         $hasgrado = false;
+        $closeopesextosecc = false;
         if(sizeof($objDataOperativo)>0)
         {
             $haslevel = 13;
             $hasgrado = 6;
+            $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
         }
-        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
         
+        
+        // dump($closeopesextosecc);die;
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         
         if ($closeopesextosecc == true and $nivel == 13 and $grado == 6){
@@ -1038,10 +1047,11 @@ class InfoEstudianteController extends Controller {
         } 
 
         // to enable 1er Trim 
-        $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
-        if(sizeof($objUe1erTrin)>0){
-            $this->session->set('unablePrimerTrim',true);
-        }
+        // $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+        // if(sizeof($objUe1erTrin)>0){
+        //     $this->session->set('unablePrimerTrim',true);
+        // }
+        // dump($closeopesextosecc);die;
 //dump($operativo);die;
     // end add validation to show califications option
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
@@ -1065,12 +1075,12 @@ class InfoEstudianteController extends Controller {
                     'itemsUe'=>$itemsUe,
                     'ciclo'=>$ciclo,
                     'operativo'=>$operativo,
-                    'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
+                    // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
                     'imprimirLibreta'=>$imprimirLibreta,
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
-                    'mostrarUeSinReporte2022'=>$mostrarUeSinReporte2022,
-                    'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion),
+                    // 'mostrarUeSinReporte2022'=>$mostrarUeSinReporte2022,
+                    'sextoCerrado'=>$closeopesextosecc,
                     'wenakeyBono'=>$wenayekBono,
                     'dependencia'=>$dependencia,
                     'cerrarOperativoSexto' => $closeopesextosecc,
