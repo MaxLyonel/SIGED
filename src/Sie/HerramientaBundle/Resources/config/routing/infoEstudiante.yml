@@ -24,11 +24,11 @@ herramienta_info_estudiante_get_students:
     options:
          expose: true
 
-herramienta_info_estudiante_see_students:
-    path:     /sie/getstudents/
-    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:seeStudents }
-    options:
-         expose: true
+# herramienta_info_estudiante_see_students:
+#     path:     /sie/getstudents/
+#     defaults: { _controller: SieHerramientaBundle:InfoEstudiante:seeStudents }
+#     options:
+#          expose: true
 
 herramienta_info_estudiante_third:
     path:     /sie/third
