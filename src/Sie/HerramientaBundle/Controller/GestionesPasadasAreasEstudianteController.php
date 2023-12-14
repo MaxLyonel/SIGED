@@ -41,16 +41,17 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
-    
+        
         if ($request->get('op')) {
             $esGestionVigente = 1;
         }
-
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->institucioneducativaId);
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($this->institucioneducativaId,$this->session->get('currentyear'));
         $operativo = $this->get('funciones')->obtenerOperativo($this->institucioneducativaId,$this->session->get('currentyear'));
         // no permite que se registre area tt posterior a la consolidacion 6to u fin operativo año
-        if ($closeopesextosecc ==true or $operativo >3){
+        // if ($closeopesextosecc ==true or $operativo >3){
+        // dump($operativo);die;
+        if ($operativo >3){
             return $this->redirect($this->generateUrl('herramienta_inbox_index'));
         }
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:index.html.twig', array(

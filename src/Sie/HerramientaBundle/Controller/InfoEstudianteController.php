@@ -857,14 +857,14 @@ class InfoEstudianteController extends Controller {
         // Impresion de libretas
         $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-        // dump($tipoUE);die;
+        
         $imprimirLibreta = false;
-        if($operativo == 3){
+        if($operativo > 3){
             $estadosPermitidosImprimir = array(5,11,55,28);
         } else {
             $estadosPermitidosImprimir = array(4);
         }
-
+        
         if($gestion == 2020){
             $estadosPermitidosImprimir = array(5,55);
         }
