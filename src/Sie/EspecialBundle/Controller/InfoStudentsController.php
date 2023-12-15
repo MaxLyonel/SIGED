@@ -46,6 +46,7 @@ class InfoStudentsController extends Controller {
 //        return $this->render($this->session->get('pathSystem') . ':InfoStudents:index.html.twig', array());
       //get the value to send
       $form = $request->get('form');
+      //dump($form); die;
 
       $em = $this->getDoctrine()->getManager();
       //find the levels from UE
@@ -432,10 +433,10 @@ class InfoStudentsController extends Controller {
         }
       }
       else { /*191123 esto comentar cuando sea etapa de inscripcuibm, solo se habilito para TALENTO por HR 54332/2023 */ 
-       $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
+       /*$this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
           return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
               'exist'=>false
-        ));
+        ));*/
       }
 
       $listaprogramas = array(7,8,9,10,11,14,15,16);
