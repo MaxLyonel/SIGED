@@ -245,8 +245,14 @@
                  $("#idcambioparalelo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
              },
              success: function (data) {
-                 $("#idcambioparalelo").empty();
-                 $("#idcambioparalelo").append(data);
+                if(data.status == 200 ){
+                    $("#idcambioparalelo").empty();
+                    $("#idcambioparalelo").append(data.view);
+                } else {
+                    $("#idcambioparalelo").empty();
+                    $("#idcambioparalelo").append('<h3>La unidad educativa ha cerrado el operativo del tercer trimestre, no es posible realizar modificaciones de estado para el estudiante.</h3>');
+                }
+                 
              },
              statusCode: {
                  500: function () {

@@ -45,6 +45,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
         $this->session->set('removeinscription', false);
+        
         // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
@@ -136,7 +137,6 @@ class RemoveInscriptionStudentFreeController extends Controller {
             //get the inscription info about student getnumberInscription
             //$objNumberInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getnumberInscription($objStudent->getId(), $this->session->get('currentyear'));
             $objInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsEfectivos($objStudent->getId(), $form['gestion']);
-            //check it the current inscription exists
             if (sizeof($objInscription) > 0) {
                 //$objInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsEfectivos($objStudent->getId(), $this->session->get('currentyear'));
                 //if the student has current inscription with matricula 4, so build the student form
@@ -166,6 +166,13 @@ class RemoveInscriptionStudentFreeController extends Controller {
       //get the send dataInfo
       $dataInfo = $request->get('dataInfo');
       $arrDataInfo = json_decode($dataInfo,true);
+      $operativo = $this->get('funciones')->obtenerOperativo($arrDataInfo['sie'],$arrDataInfo['gestion']);
+      if($operativo >= 3){
+        return new JsonResponse([
+          'status' => 400, // or any other appropriate success code
+          'view' => '',
+        ]);
+      }     
 
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($arrDataInfo['estId']);
       //get the student's inscription
@@ -188,11 +195,19 @@ class RemoveInscriptionStudentFreeController extends Controller {
 
       }
 
-      return $this->render($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:maincambioestado.html.twig', array(
-                  'form' => $this->mainChangeStadoForm($dataInfo,$this->session->get('roluser'))->createView(),
-                  'datastudent' => $objStudent,
-                  'dataInscription' => $objEstudiantInscripcion
-                ));
+      return new JsonResponse([
+          'status' => 200, // or any other appropriate success code
+          'view' => $this->renderView($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:maincambioestado.html.twig', array(
+                        'form' => $this->mainChangeStadoForm($dataInfo,$this->session->get('roluser'))->createView(),
+                        'datastudent' => $objStudent,
+                        'dataInscription' => $objEstudiantInscripcion
+          )),
+        ]);
+      // return $this->render($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:maincambioestado.html.twig', array(
+      //             'form' => $this->mainChangeStadoForm($dataInfo,$this->session->get('roluser'))->createView(),
+      //             'datastudent' => $objStudent,
+      //             'dataInscription' => $objEstudiantInscripcion
+      //           ));
 
     }
     /**
