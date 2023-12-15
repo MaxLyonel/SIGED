@@ -433,10 +433,10 @@ class InfoStudentsController extends Controller {
         }
       }
       else { /*191123 esto comentar cuando sea etapa de inscripcuibm, solo se habilito para TALENTO por HR 54332/2023 */ 
-       /*$this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
+       $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
           return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
               'exist'=>false
-        ));*/
+        ));
       }
 
       $listaprogramas = array(7,8,9,10,11,14,15,16);
