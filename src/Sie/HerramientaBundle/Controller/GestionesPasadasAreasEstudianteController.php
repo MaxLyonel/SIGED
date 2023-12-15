@@ -51,7 +51,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         // no permite que se registre area tt posterior a la consolidacion 6to u fin operativo año
         // if ($closeopesextosecc ==true or $operativo >3){
         // dump($operativo);die;
-        if ($operativo >3){
+        if ($operativo >= 3){
             return $this->redirect($this->generateUrl('herramienta_inbox_index'));
         }
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:index.html.twig', array(
