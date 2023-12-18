@@ -39,7 +39,7 @@
 		{% else %}
 			<div class="alert alert-success alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <strong>¡Bien!</strong> No se han encontrado inconsistencias, la información se ha consolidado exitosamente para la Unidad Educativa: {{ institucion }}; Gestión: {{ gestion }}; {% if periodo == 0 %}Inicio de Gestión{% elseif periodo == 5 %}Fin de Gestión{% else %}Trimestre: {{ periodo }}{% endif %}.
+                <strong>¡Bien!</strong> La información se ha consolidado exitosamente para la Unidad Educativa: {{ institucion }}; Gestión: {{ gestion }}; {% if periodo == 0 %}Inicio de Gestión{% elseif periodo == 5 %}Fin de Gestión{% else %}Trimestre: {{ periodo }}{% endif %}.
             </div>
 		{% endif %}
 	</div>
