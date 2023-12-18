@@ -1793,7 +1793,6 @@ class InboxController extends Controller {
 
     public function closeOperativoInscriptionAction (Request $request)
     { 
-      //dump("cierre Inscr");die; 
       //crete conexion DB
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
@@ -1849,20 +1848,22 @@ class InboxController extends Controller {
       if($inconsistencia){
         $observation = true;
       }
-     
       // if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
            
       if($observation){ 
-        $this->session->set('donwloadLibreta', false);              
-        return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
-          'inconsistencia' => $inconsistencia,
-          'objObsQA' => $objObsQA,
-          'validacionPersonal' => $valPersonalAdm,
-          'observation' => $observation,
-          'norow' => false,
-          'institucion' =>  $form['sie'],
-          'gestion' => $form['gestion'],
-          'periodo' => $periodo));
+        $this->session->set('donwloadLibreta', false);
+        return new JsonResponse([
+          'countinco' =>count($inconsistencia),
+          'view' => $this->renderView($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+            'inconsistencia' => $inconsistencia,
+            'objObsQA' => $objObsQA,
+            'validacionPersonal' => $valPersonalAdm,
+            'observation' => $observation,
+            'norow' => false,
+            'institucion' =>  $form['sie'],
+            'gestion' => $form['gestion'],
+            'periodo' => $periodo)),
+        ]);
       }else{
         if(!$registroConsol){
             $registroConsol = new RegistroConsolidacion();
@@ -1913,13 +1914,113 @@ class InboxController extends Controller {
             else
               $this->session->set('donwloadLibreta', false);              
 
+          return new JsonResponse([
+                'countinco' =>0,
+                'view' => $this->renderView($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+                  'observation' => false,
+                  'norow' => false,
+                  'institucion' =>  $form['sie'],
+                  'gestion' => $form['gestion'],
+                  'periodo' => 0)),
+          ]);
+          // return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+          //   'observation' => false,
+          //   'norow' => false,
+          //   'institucion' =>  $form['sie'],
+          //   'gestion' => $form['gestion'],
+          //   'periodo' => 0));
+      }
+
+    }
+
+    public function closeOperativoForzadoAction (Request $request)
+    { 
+      //crete conexion DB
+      $em = $this->getDoctrine()->getManager();
+      $em->getConnection()->beginTransaction();
+      //get the values
+      $form = $request->get('form');
+      $form['sie'] = hex2bin($form['sie']) ;
+      $form['gestion'] = hex2bin($form['gestion']) ;      
+      //ini var to validate info
+      $observation = false;
+      $inconsistencia = false;
+      $objObsQA = false;
+      $valPersonalAdm = false;
+      $periodo = 0;
+
+      $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
+      //get the operativo number
+      $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+      // dump($operativo);die;
+      // check the operative to find the correct vars
+      switch ($operativo) {
+        case 1:
+        case 2:
+        
+          $opeTrim = $operativo + 5;
+          break;
+        case 3: 
+          $opeTrim = $operativo + 5;
+          break;
+        case 4: 
+          $opeTrim = ($operativo-1) + 5;
+          break;
+        
+        default:
+          $opeTrim = 0;
+          break;
+      }
+
+      // dump($dbFunction);die;
+      
+      // $operativo = ($operativo < 1)?1:$operativo;
+      $query = $em->getConnection()->prepare('select * from sp_registra_consolidacion_inconsistente (:gestion, :sie, :trimestre, :usuario)');
+      $query->bindValue(':gestion', $form['gestion']);
+      $query->bindValue(':sie', $form['sie']);      
+      $query->bindValue(':trimestre',$opeTrim);      
+      $query->bindValue(':usuario',$this->session->get('userId'));      
+      $query->execute();
+      $inconsistencia = $query->fetchAll();
+     
+      if($inconsistencia){
+        $observation = true;
+      }
+     
+      // if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
+           
+      if($operativo <= 3 ){
+              $fieldOpe = 'setBim' .$operativo;
+              $registroConsol->$fieldOpe(2);
+
+              $data = array(
+                  'operativoTipo' => 3,
+                  'gestion' => $form['gestion'],
+                  'id' => $form['sie'],
+                  'operativo' => $operativo,
+              );   
+              $this->saveLog($data);
+
+              
+            }
+
+            $em->persist($registroConsol);
+            $em->flush();
+            $em->getConnection()->commit();
+
+            // get the flag to show the donwload libreta option
+            if($operativo+1 == $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']))
+              $this->session->set('donwloadLibreta', true);
+            else
+              $this->session->set('donwloadLibreta', false);              
+
           return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
             'observation' => false,
             'norow' => false,
             'institucion' =>  $form['sie'],
             'gestion' => $form['gestion'],
             'periodo' => 0));
-      }
+      
 
     }
 
