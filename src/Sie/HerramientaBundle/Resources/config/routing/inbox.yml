@@ -50,3 +50,9 @@ herramienta_inbox_close_operativo_inscription:
     defaults: { _controller: "SieHerramientaBundle:Inbox:closeOperativoInscription"}
     options:
          expose: true
+
+herramienta_inbox_close_operativo_forzar:
+    path:     /closeoperativo-forzar
+    defaults: { _controller: "SieHerramientaBundle:Inbox:closeOperativoForzado"}
+    options:
+         expose: true
