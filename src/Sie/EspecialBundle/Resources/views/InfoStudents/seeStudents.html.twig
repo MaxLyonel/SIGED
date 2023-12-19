@@ -149,13 +149,15 @@
                                             </a>
                                         </div>
                                      
-                                         {% if arrDataLibreta.bono %}  {#Solo hasta el 24 de enero 2022 #}
+                                    {#
+                                        {% if arrDataLibreta.bono %}  Solo hasta el 24 de enero 2022 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
                                                     <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
                                                         <i class="fa fa-user"></i>
                                                     </button>
                                                 </div>    
                                         {% endif  %}  
+                                    #}
                                     {% if onlyview == false and (gestion == app.session.get('currentyear') ) %}  {#Solo hasta el 24 de enero 2022 #}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
