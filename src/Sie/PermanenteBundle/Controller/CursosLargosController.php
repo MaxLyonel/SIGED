@@ -445,7 +445,8 @@ class CursosLargosController extends Controller {
                         //$em->flush($institucioncursoferta);
                         $i++;
                     } 
-                    $em->flush($institucioncursoferta);
+                    $em->flush();
+                    //$em->flush($institucioncursoferta);
                     $em->getConnection()->commit();
                     $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
                     return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
