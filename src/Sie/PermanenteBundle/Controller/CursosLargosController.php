@@ -384,6 +384,7 @@ class CursosLargosController extends Controller {
                 $institucioncurso ->setFechaInicio(new \DateTime($form['fechaInicio']));
                 $institucioncurso ->setFechaFin(new \DateTime($form['fechaFin']));
                 $em->persist($institucioncurso); 
+                $em->flush(); 
             // $em->flush($institucioncurso);
 
             /*  if($form['programa']==40)
@@ -411,7 +412,7 @@ class CursosLargosController extends Controller {
                 $institucioncursocorto  ->setLugarTipoMunicipio($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['municipio'])));
                 $institucioncursocorto  ->setLugarDetalle($form['lugar']);
                 $em->persist($institucioncursocorto);
-            // $em->flush();              
+                $em->flush();              
             
                 $query = $em->getConnection()->prepare('
                     select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
