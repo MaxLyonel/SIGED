@@ -132,6 +132,20 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
         }
 
         $query = $em->getConnection()->prepare("
+            select bcte.id, bcte.estudiante_inscripcion_id 
+            from bth_cut_ttm_estudiante bcte 
+            inner join estudiante_inscripcion ei on bcte.estudiante_inscripcion_id = ei.id 
+            inner join estudiante e on ei.estudiante_id = e.id 
+            where e.codigo_rude = '".$rude."';");
+        $query->execute();
+        $estudiantebthcutttm = $query->fetchAll();
+
+        if (count($estudiantebthcutttm)>0){
+            $msj = 'El estudiante con rude '.$rude.' ya cuenta con Certificado Único de Trámite - Título de Técnico Medio.';
+            return  array($data,$msj,$carreras_disp);
+        }
+        
+        $query = $em->getConnection()->prepare("
             select e.codigo_rude, e.nombre, e.paterno, e.materno,
             e.fecha_nacimiento, e.carnet_identidad, e.complemento, e.id as estId,
             ic.gestion_tipo_id, ic.institucioneducativa_id, ic.nivel_tipo_id, nt.nivel, ic.grado_tipo_id, gt.grado,
@@ -151,12 +165,14 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
             and ic.institucioneducativa_id = ".$sie."
             and ic.gestion_tipo_id = ".$gestion."
             and ico.asignatura_tipo_id in (1039)
-            and ei.estadomatricula_tipo_id in (4);");
+            and ei.estadomatricula_tipo_id in (4,5,55,11);");
+            // and ei.estadomatricula_tipo_id in (4);");
         $query->execute();
-        $estudiantebth = $query->fetchAll();	
+        $estudiantebth = $query->fetchAll();
         
         if (count($estudiantebth)==0){
-            $msj = 'El estudiante con rude '.$rude.' no cuenta con el área TTE, ni Carrrera seleccionada en la presente gestión o ya no esta como efectivo en la gestión.';
+            // $msj = 'El estudiante con rude '.$rude.' no cuenta con el área TTE, ni Carrrera seleccionada en la presente gestión o ya no esta como efectivo en la gestión.';
+            $msj = 'El estudiante con rude '.$rude.' no cuenta con el área TTE, ni Carrrera seleccionada en la presente gestión.';
             return  array($data,$msj,$carreras_disp);
         }
 
