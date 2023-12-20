@@ -75,7 +75,7 @@ class InfoNotasController extends Controller {
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
-                            //dump($programa);dump($servicio); dump($progserv);dump($nivel); die;
+                           // dump($programa);dump($servicio); dump($progserv);dump($nivel); 
                         if($nivel == 403 or $nivel == 404 ){//Verificar el seguimiento para 19
                             //dump("1");die;
                             if($progserv == 19) { 
@@ -131,7 +131,8 @@ class InfoNotasController extends Controller {
                             }
                         }
                         
-                        if( $gestion > 2022 and (($progserv==22 and $nivel==411 ) or ($servicio==40 and $nivel==410 ))){ //para los modulares de auditiva
+                        if( $gestion > 2022 and (($programa==22 and $nivel==411 ) or ($servicio==40 and $nivel==410 ))){ //para los modulares de auditiva
+                           // dump('especialModular');die;    
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                             //dump($notas);die;
                             $template = 'especialModular';
@@ -297,11 +298,11 @@ class InfoNotasController extends Controller {
             }
             
             //dump($template); 
-            //dump($notas);
+          //dump($notas);
             //dump($progserv);
             //dump($desc_programa);
            //
-              //die;
+           //   die;
            //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
