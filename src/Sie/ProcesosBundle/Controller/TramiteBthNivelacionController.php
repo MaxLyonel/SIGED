@@ -161,11 +161,10 @@ class TramiteBthNivelacionController extends Controller {
         }
 
         $hbthDatos = $historialbth[0];
-        if (!($hbthDatos['gestion_tipo_id'] == $gestion and $hbthDatos['institucioneducativa_id'] == $sie and $hbthDatos['estadomatricula_tipo_id']==4))
-        {
-            $msj = 'El estudiante no es efectivo, o no pertence a la la Unidad Educativa solicitante o no cuenta con el area TTG o TTE en la presente gestiÓn';
-            return  array($data,$msj,$gradoNivelar);
-        }
+        if ($this->session->get('roluser') == 9 && !($hbthDatos['gestion_tipo_id'] == $gestion && $hbthDatos['institucioneducativa_id'] == $sie && $hbthDatos['estadomatricula_tipo_id'] == 4)) {
+            $msj = 'El estudiante no es efectivo, o no pertenece a la Unidad Educativa solicitante o no cuenta con el área TTG o TTE en la presente gestión';
+            return array($data, $msj, $gradoNivelar);
+        } 
                 
         $grados = array_column($historialbth, 'grado_tipo_id');
         $gradoCounts = array_count_values($grados);
