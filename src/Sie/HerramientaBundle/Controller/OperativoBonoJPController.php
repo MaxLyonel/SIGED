@@ -322,6 +322,7 @@ class OperativoBonoJPController extends Controller
 	public function buscarInscripcionesAction(Request $request)
 	{
 
+
 		$em = $this->getDoctrine()->getManager();
 		$db = $em->getConnection();
 
@@ -1218,6 +1219,24 @@ class OperativoBonoJPController extends Controller
 
 		//$ue = 80640033;
 		//dump($ue); die; 
+
+		//valida si existe en la tabla bjp_titular_cobro_validacion_cierre
+		$sql = "
+		SELECT count(*) as existe
+		FROM
+			bjp_titular_cobro_validacion_cierre bjp 
+		WHERE
+			institucioneducativa_id = ".$ue; 			
+		
+		$stmt = $db->prepare($sql);
+		$params = array();
+		$stmt->execute($params);
+		$validados = $stmt->fetchAll();
+		$existe = $validados[0]['existe'];		
+		if($existe == 0){
+			//no existe se va al home
+			return $this->redirectToRoute('principal_web');
+		}
 		
 		$sql = "
 		SELECT
@@ -1234,6 +1253,8 @@ class OperativoBonoJPController extends Controller
 		$stmt->execute($params);
 		$apoderados = $stmt->fetchAll();
 
+		//dump($apoderados); die;
+
 		$total_estudiantes = 0;
 		for($i = 0; $i < sizeof($apoderados); $i++ ){
 			$total_estudiantes += $apoderados[$i]['estudiantes_cobrados'];
@@ -1247,7 +1268,7 @@ class OperativoBonoJPController extends Controller
 			bjp_titular_cobro_beneficiarios_validacion bjp 
 		WHERE
 			bjp_titular_cobro_validacion_id IN ( SELECT bjp.ID FROM bjp_titular_cobro_validacion bjp WHERE institucioneducativa_id = ".$ue." ) 
-			AND es_pagado = TRUE
+			AND es_pagado in (TRUE, FALSE) 
 		";
 
 		//dump($sql);die;
@@ -1269,7 +1290,7 @@ class OperativoBonoJPController extends Controller
 		$params = array();
 		$stmt->execute($params);
 		$validados = $stmt->fetchAll();
-		$operation_status = $validados[0]['es_concluido'];
+		$operation_status = $validados[0]['es_concluido'];		
 	
 		return $this->render($this->session->get('pathSystem') .':BonoJP:index_valida_no_pagados.html.twig', array(
             'apoderados' => $apoderados,
@@ -1386,6 +1407,11 @@ class OperativoBonoJPController extends Controller
 					$query ="update bjp_titular_cobro_beneficiarios_validacion set es_pagado = ? where id = ?";
 					$stmt = $db->prepare($query);
 					$params = array($pagado, $id);
+					$stmt->execute($params);
+				}else{
+					$query ="update bjp_titular_cobro_beneficiarios_validacion set es_pagado = NULL where id = ?";
+					$stmt = $db->prepare($query);
+					$params = array($id);
 					$stmt->execute($params);
 				}
 			}
@@ -1800,7 +1826,7 @@ class OperativoBonoJPController extends Controller
 			bjp_titular_cobro_beneficiarios_validacion bjp 
 		WHERE
 			bjp_titular_cobro_validacion_id IN ( SELECT bjp.ID FROM bjp_titular_cobro_validacion bjp WHERE institucioneducativa_id = ".$codigo_sie." ) 
-			AND es_pagado = TRUE
+			AND es_pagado in (TRUE,FALSE) 
 		";
 
 		//dump($sql);die;
@@ -1809,7 +1835,7 @@ class OperativoBonoJPController extends Controller
 		$stmt->execute($params);
 		$validados = $stmt->fetchAll();
 		$total_estudiantes_validados = $validados[0]['total'];
-
+		
 
 
 		$msg = 'La U.E. se ha aperturado correctamente !';
