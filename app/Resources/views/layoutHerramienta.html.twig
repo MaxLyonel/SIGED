@@ -288,7 +288,7 @@
                             <span class="selected"></span>
                         </a>
                     </li> -->
-                    {# {% if app.session.get('roluser') in [7,8,9,10] %}
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>
@@ -300,7 +300,7 @@
 
                             </ul>
                         </li>
-                    {% endif %} #}
+                    {% endif %}
                     {% if app.session.get('roluser') in [7,8,9,10] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -450,7 +450,7 @@
                         </a>
                         <ul>
                             {#<li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>#}
-                            {# <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li> #}
+                            <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
                             {#<li><a href="{{ path('download_file_sie_index')}}">Generar Archivo IGM</a></li>
                             <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>#}
                         </ul>
@@ -830,7 +830,7 @@
                         </li>
                     {% endif %}
                     {# Preinscripciones #}
-                    {# {% if app.session.get('roluser') in [9,10,8,7] %}
+                    {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -842,12 +842,12 @@
                             </ul>
                             <ul>
                                 <li><a href="{{ path('preinscripcion_sorteo_index')}}">Fecha de sorteo</a></li>
-                            </ul> #}
+                            </ul>
                             {# <ul>
                                 <li><a href="{{path('uealtademanda')}}">Modificar cupo</a></li>
                             </ul> #}
-                        {# </li>
-                    {% endif %} #}
+                        </li>
+                    {% endif %}
 
                     {# Cambio de tutor BJP 2021  #}
                     
@@ -884,17 +884,19 @@
 
                                 {# se inhabilita a peticion de Bruno en fecha 03032023 antes era 7 y 8#}
                                 
+                                
                                 {#
                                 {% if app.session.get('roluser') in [7,8] %}
                                   <li><a href="{{ path('operativo_bono_jp_ValidaNoPagadosSeguimiento')}}">Seguimiento BJP</a></li>
                                 {% endif %}
+                                #}
                                
                                 
                                
                                 {% if app.session.get('roluser') in [9] %}
                                   <li><a href="{{ path('operativo_bono_jp_ValidaNoPagados')}}">Valida No Pagados</a></li>
                                 {% endif %}
-                                #}
+                                
                                 
 
                             </ul>
