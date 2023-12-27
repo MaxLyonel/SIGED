@@ -190,14 +190,13 @@
                                 <td>{{data.nombre}}</td>
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
-                                    {% if (gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [4] and sie == '81981543' and gestion == 2022) %} {#es temporal#}
+                                    {% if (gestion == app.session.get('currentyear')) %} {#es temporal#}
                                         {# {% if data.cambioEstadoMatricula == true and 1 == 0 %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 {{data.estadomatricula}}
                                             </button>
                                         {% else %} #}
-
-                                            {% if data.estadomatriculaId in [4,6,101,5] %}
+                                            {% if (data.estadomatriculaId in [4,6,11,5] and operativo <= 3) %}
                                                 <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                     <div id="{{data.eInsId}}">{{data.estadomatricula}}</div>
                                                 </button>
