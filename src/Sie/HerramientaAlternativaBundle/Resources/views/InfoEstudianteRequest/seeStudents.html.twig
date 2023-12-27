@@ -238,7 +238,7 @@
                                                                         <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
                                                                     </a>
                                                                 </li> #}
-                                                        {% if ( app.session.get('ie_per_estado') == '2' ) %}
+                                                        {% if ( app.session.get('ie_per_estado') == '2' ) or ((app.session.get('ie_id') == 80730796) and (app.session.get('ie_per_estado') == '3')) %}
                                                             {# {% if primariaNuevo %}
                                                             {{dump('ok')}}
                                                             {% else %} #}
