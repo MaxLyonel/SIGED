@@ -174,15 +174,19 @@ class ChangeMatriculaController extends Controller {
         return $ind;
     }
     public function updateMatriculaAction(Request $request) {
-
         //get the info ue
         $form = $request->get('form');
 
         $infoUe = $form['infoUe'];
         $infoStudent = json_decode($form['infoStudent'],true) ;
-        
         $aInfoUeducativa = unserialize($infoUe);
 
+        $operativo = $this->get('funciones')->obtenerOperativo($aInfoUeducativa['requestUser']['sie'],$aInfoUeducativa['requestUser']['gestion']);
+        
+        if ($operativo > 3 ){
+          $response = new JsonResponse();
+          return $response->setData(array('status'=>'error', 'msg'=>'No puede modificar el estado, concluyo la gestión'));
+        }
         //get db connexion
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
