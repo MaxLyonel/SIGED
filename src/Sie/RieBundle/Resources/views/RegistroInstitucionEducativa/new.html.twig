@@ -68,6 +68,12 @@
 								{{form_widget(form.fechaResolucion) }}                               
                             </div>
 
+                            <div data-bind="if: is_visible ">
+                            <label class="form-label">{{form_label(form.fechaResolucionFin)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.fechaResolucionFin) }}                               
+                            </div>
+                            </div>
                             <label class="form-label">{{form_label(form.dependenciaTipo)}}</label>
                             <div class="form-line">
 								{{form_widget(form.dependenciaTipo) }}                               
@@ -199,7 +205,29 @@
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
+    <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.5.0.js"></script>
     <script>
+    function viewModel() {
+        this.dependencia = ko.observable()
+        this.sede = ko.observable('{{datoSede.titulo}}')
+        this.is_visible = ko.computed(function() {
+                let sw = false
+                if(this.dependencia())
+                {
+                    console.log('dependencia value',this.dependencia()[0]) //this value return string 
+                    console.log('sede value',this.sede())
+                  
+                    if(this.dependencia()[0] === '3' && this.sede().trim() === 'SUBSEDE')
+                    {
+                        sw = true
+                    }
+                }
+                return sw ;    
+            }, this);
+    }
+
+    ko.applyBindings(new viewModel());
+
     function buscarEdificioEscolar(idLe) {
             $.ajax({
                     type: 'get',

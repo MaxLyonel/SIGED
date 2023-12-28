@@ -53,6 +53,11 @@ Sie\AppWebBundle\Entity\Institucioneducativa:
             nullable: true
             comment: ''
             column: fecha_resolucion
+        fechaResolucionFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_resolucion_fin
         nroResolucion:
             type: string
             nullable: true
