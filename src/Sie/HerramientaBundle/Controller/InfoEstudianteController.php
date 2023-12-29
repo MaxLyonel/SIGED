@@ -808,7 +808,7 @@ class InfoEstudianteController extends Controller {
             $this->addFlash('warninsueall', $message);
             $exist = false;
         }
-
+        // dump($objStudents);die;
         // Para el centralizador
         $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
 
@@ -1854,10 +1854,6 @@ class InfoEstudianteController extends Controller {
         return $arrStudents;
     }    
 
-
-
-
-
     public function addupStudentbthAction(Request $request){
         // get the send values
         $eInsId = $request->get('eInsId');
@@ -2249,5 +2245,39 @@ class InfoEstudianteController extends Controller {
         $valor= $query->fetch();
         return $this->render($this->session->get('pathSystem').':InfoEstudiante:descripcionTrasladoUEst.html.twig',array('valor'=>$valor));
 
+    }
+
+    public function consolidarCutttmBthAction(Request $request){
+        
+        $response = new JsonResponse();
+        // get the send values
+        $sie     = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $level = 13;
+        $grado = 6;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->getConnection()->prepare("SELECT * 
+            from institucioneducativa_humanistico_tecnico 
+            WHERE institucioneducativa_id = $sie and gestion_tipo_id = $gestion
+            and institucioneducativa_humanistico_tecnico_tipo_id = 1 and grado_tipo_id in (5,6)");
+            $query->execute();
+            $entity_validacion = $query->fetchAll();
+            // dump($entity_validacion);die;
+
+        $ue_plena =($entity_validacion)?true:false;
+        // dump($ue_plena);die;
+            
+        $operativo = $this->get('funciones')->obtenerOperativo($this->session->get('ie_id'), $this->session->get('currentyear'));
+        
+        if ($operativo > 3 AND $ue_plena){
+            $query = $em->getConnection()->prepare("select * from sp_bth_institucioneducativa_cutttm ('" . $sie . "','" . $gestion . "','" . $this->session->get('userId') . "');");
+            $query->execute();
+            return new JsonResponse(array('status' => 200, 'mensaje' => 'Se reconsolido el CUT-TTM, verifique y descargue el certificado'));
+        } 
+        else {
+            return new JsonResponse(array('status' => 400, 'mensaje' => 'No se genera la consolidación CUT-TTM, aun no concluyo con sus operativo de gestión'));
+        }
     }
 }

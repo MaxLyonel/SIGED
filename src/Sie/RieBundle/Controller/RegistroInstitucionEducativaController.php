@@ -318,8 +318,9 @@ class RegistroInstitucionEducativaController extends Controller {
         ->add('idRieSede', 'hidden', array('data' => $datoSede['codSede']))
         ->add('institucionEducativa', 'text', array('label' => 'Denominación del Instituto','required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '150', 'style' => 'text-transform:uppercase')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
+        ->add('fechaResolucionFin', 'text', array('label' => 'Fecha de resolución Fin', 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
         ->add('nroResolucion', 'text', array('label' => 'Resolución Ministerial Vigente','required' => true,'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => '44', 'style' => 'text-transform:uppercase')))
-        ->add('dependenciaTipo', 'choice', array('label' => 'Carácter Jurídico', 'disabled' => false,'choices' => $dependenciasArray, 'attr' => array('class' => 'form-control')))
+        ->add('dependenciaTipo', 'choice', array('label' => 'Carácter Jurídico', 'disabled' => false,'choices' => $dependenciasArray, 'attr' => array('class' => 'form-control','data-bind'=>'selectedOptions: dependencia')))
         ->add('institucionEducativaTipo', 'choice', array('label' => 'Tipo de Institución', 'disabled' => false,'choices' => $tiposArray, 'attr' => array('class' => 'form-control')))
         ->add('obsRue', 'text', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control', 'maxlength'=>'190')))
         ->add('leJuridicciongeograficaId', 'text', array('label' => 'Código LE','required' => true, 'attr' => array('listactplaceholder'=>'########', 'class' => 'form-control', 'pattern' => '[0-9]{8,17}', 'maxlength' => '8')))
@@ -372,6 +373,10 @@ class RegistroInstitucionEducativaController extends Controller {
             //datos del instituto tecnico/tecnologico
     		$entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
     		$entity->setFechaResolucion(new \DateTime($form['fechaResolucion']));
+            if(array_key_exists('fechaResolucionFin',$form))
+            {
+                $entity->setFechaResolucionFin(new \DateTime($form['fechaResolucionFin']));
+            }
     		$entity->setFechaCreacion(new \DateTime('now'));
             $entity->setFechaRegistro(new \DateTime('now'));
     		$entity->setNroResolucion(mb_strtoupper($form['nroResolucion'], 'utf-8'));
