@@ -976,7 +976,7 @@ class CursosLargosController extends Controller {
                 inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
                 inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
                 left JOIN institucioneducativa_curso_oferta ieco on  smp.id = ieco.superior_modulo_periodo_id
-                left JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
+                inner JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
                 left JOIN institucioneducativa_curso iec on  ieco.insitucioneducativa_curso_id = iec.id
                 where sat.id =:idacreditacion and sfat.id=40 and sest.id=:idespecialidad and sia.institucioneducativa_id=:sie and iec.paralelo_tipo_id=:paraleloId
                 ORDER BY smp.id ');
