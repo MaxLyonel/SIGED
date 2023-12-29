@@ -30,6 +30,11 @@ class Institucioneducativa
     private $fechaResolucion;
 
     /**
+     * @var \DateTime
+     */
+    private $fechaResolucionFin;
+
+    /**
      * @var string
      */
     private $nroResolucion;
@@ -198,6 +203,29 @@ class Institucioneducativa
     public function getFechaResolucion()
     {
         return $this->fechaResolucion;
+    }
+
+     /**
+     * Set fechaResolucionFin
+     *
+     * @param \DateTime $fechaResolucionFin
+     * @return Institucioneducativa
+     */
+    public function setFechaResolucionFin($fechaResolucionFin)
+    {
+        $this->fechaResolucionFin = $fechaResolucionFin;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaResolucionFin
+     *
+     * @return \DateTime 
+     */
+    public function getFechaResolucionFin()
+    {
+        return $this->fechaResolucionFin;
     }
 
     /**
