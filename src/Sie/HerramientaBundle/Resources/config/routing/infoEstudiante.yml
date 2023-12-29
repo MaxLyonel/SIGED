@@ -163,3 +163,9 @@ visualizar_contenido:
     defaults: { _controller: "SieHerramientaBundle:InfoEstudiante:visualizarContenido" }
     options:
         expose: true
+
+herramienta_info_estudiante_consolidarCUTTTM:
+    path:     /sie/consolidarCut_ttm/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:consolidarCutttmBth }
+    options:
+         expose: true
