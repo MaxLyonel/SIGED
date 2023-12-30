@@ -50,16 +50,18 @@ class EstudianteNotasController extends Controller {
 
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
-        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $institucion != 80730796){
             return $this->redirect($this->generateUrl('principal_web'));
-        }
+         }
         /**************************************************/
         if($data['gestion'] >= 2016){
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestreActual.html.twig',$data);
         }else{
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestre.html.twig',$data);
         }
+        
     }
+    
 
     public function newAction(Request $request){
 
@@ -99,7 +101,7 @@ class EstudianteNotasController extends Controller {
 
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
-        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $institucion != 80730796){
             return $this->redirect($this->generateUrl('principal_web'));
         }
         /**************************************************//*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
