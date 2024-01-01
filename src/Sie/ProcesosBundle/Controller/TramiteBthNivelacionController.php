@@ -518,6 +518,17 @@ class TramiteBthNivelacionController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $datos = $this->datosFormulario($idTramite);
+            if ($datos['gestion_tipo_id'] != date('Y') && $si_procede == 'true'){
+                $msj = 'El trámite procede de gestión diferente, solo puede finalizar ';
+                $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$msj,
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                return $response; 
+            }
+
             $sie = $datos['institucioneducativa_id'];
             $codigoRude = $datos['codigo_rude'];
             $flujo_tipo = $datos['flujoTipo'];
@@ -736,6 +747,16 @@ class TramiteBthNivelacionController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $datos = $this->datosFormulario($idTramite);
+            if ($datos['gestion_tipo_id'] != date('Y') && $si_procede == 'true'){
+                $msj = 'El trámite procede de gestión diferente, solo puede finalizar ';
+                $response->setStatusCode(200);
+                        $response->setData(array(
+                            'msg'=>$msj,
+                            'idTramite'=>"",
+                            'urlreporte'=>""
+                        ));
+                return $response; 
+            }
             $sie = $datos['institucioneducativa_id'];
             $codigoRude = $datos['codigo_rude'];
             $flujo_tipo = $datos['flujoTipo'];
