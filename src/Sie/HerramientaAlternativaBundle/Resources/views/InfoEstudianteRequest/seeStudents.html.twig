@@ -106,9 +106,10 @@
                 </button>
             </div-->
         {% endif %}
-        {% if app.session.get('ie_id') == 80730796 or (app.session.get('ie_gestion') == app.session.get('currentyear') ) %}
+        {# {{dump(app.session.get('userId'))}} #}
+        {% if app.session.get('ie_id') == 80730796 or (app.session.get('ie_gestion') == app.session.get('currentyear') or app.session.get('userId') == 94161725) %}
         {# {% if app.session.get('ie_id') == 80730796 or app.session.get('roluser') == 7 or (app.session.get('ie_gestion') == app.session.get('currentyear') ) %} #}
-            {% if ( ((app.session.get('ie_per_estado') == '0') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')) and app.session.get('roluser') == 9 ) %}
+            {% if ( ((app.session.get('ie_per_estado') == '0') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')) and (app.session.get('roluser') == 9 or (app.session.get('userId') == 94161725))) %}
                 <div class="col-md-3">
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                         <i class="fa fa-user"></i> Inscripción con CI
@@ -237,7 +238,7 @@
                                                                         <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
                                                                     </a>
                                                                 </li> #}
-                                                        {% if ( app.session.get('ie_per_estado') == '2' ) or ((app.session.get('ie_id') == 80730796) and (app.session.get('ie_per_estado') == '3')) %}
+                                                        {% if ( app.session.get('ie_per_estado') == '2' ) or ((app.session.get('ie_id') == 80730796) and (app.session.get('ie_per_estado') == '3') or (app.session.get('userId') == 94161725)) %}
                                                             {# {% if primariaNuevo %}
                                                             {{dump('ok')}}
                                                             {% else %} #}
