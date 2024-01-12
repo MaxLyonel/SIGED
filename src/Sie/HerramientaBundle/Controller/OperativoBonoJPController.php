@@ -1632,7 +1632,7 @@ class OperativoBonoJPController extends Controller
 						inner join convenio_tipo f on f.id=a.cod_convenio_id) u on u.cod_ue_id = bjp.institucioneducativa_id 
 				WHERE
 					id_departamento = '". $codigo_depto ."' AND 
-					bjp.gestion_tipo_id = 2022 AND
+					bjp.gestion_tipo_id = 2023 AND
 					es_concluido is null
 					order by desc_departamento, desc_provincia, distrito
 		";
@@ -1709,7 +1709,7 @@ class OperativoBonoJPController extends Controller
 						inner join convenio_tipo f on f.id=a.cod_convenio_id) u on u.cod_ue_id = bjp.institucioneducativa_id 
 				WHERE
 					id_departamento = '". $codigo_depto ."' AND 
-					bjp.gestion_tipo_id = 2022 AND
+					bjp.gestion_tipo_id = 2023 AND
 					es_concluido = true
 				order by desc_departamento, desc_provincia, distrito
 		";
