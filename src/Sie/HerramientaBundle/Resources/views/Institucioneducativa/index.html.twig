@@ -451,7 +451,9 @@
                                 <form action="{{path('herramienta_creacioncursos_new')}}" style="display: inline-block" method="post">
                                     <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                     <input type="hidden" name="idGestion" value="{{gestion}}">
-                                    <button type="submit" class="btn btn-sm btn-facebook"><i class="fa fa-plus-square"></i> Nuevo Curso</button>
+                                    {% if ieducativa[0].dependenciaTipo.id == 3 %}
+                                        <button type="submit" class="btn btn-sm btn-facebook"><i class="fa fa-plus-square"></i> Nuevo Curso</button>
+                                    {% endif %}
                                 </form>
                             </div>
                           {% endif %}
@@ -491,10 +493,13 @@
                                                     </div>
                                                     {% else %}
                                                         <div class="alert alert-info">
-                                                            No hay cursos registrados
+                                                            No hay cursos registrados.
+                                                            {% if ieducativa[0].dependenciaTipo.id != 3 %}
+                                                                Comuniquese con su tecnico DISTRITAL para iniciar trámite de creación de Curso.
+                                                            {% endif %}
                                                         </div>
-                                                        {% endif %}
-                                                        </div>
+                                                    {% endif %}
+                                                    </div>
                                                     </div>
                                                 </div>
                                                 
