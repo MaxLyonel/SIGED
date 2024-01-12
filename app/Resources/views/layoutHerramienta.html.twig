@@ -489,8 +489,8 @@
                         <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>                        
                         {% if app.session.get('roluser') == 9 %}
                             <li><a href="{{ path('maestroAsignacion_index')}}">Asignación Docente</a></li>
-                            <li><a href="{{ path('adm_pla_index')}}">Gestión Administrativo-Planilla</a></li>
-                            <li><a href="{{ path('herramienta_info_maestro_planilla_index')}}">Gestión Maestro-Planilla</a></li>
+                            {# <li><a href="{{ path('adm_pla_index')}}">Gestión Administrativo-Planilla</a></li>
+                            <li><a href="{{ path('herramienta_info_maestro_planilla_index')}}">Gestión Maestro-Planilla</a></li> #}
                         {% endif %}
                       </ul>
                     </li>
@@ -567,7 +567,6 @@
                             </ul>
                         </li>#}
                     {% endif %}
-
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
                     <li class="submenu">
                       <a href="javascript:void(0);">
@@ -687,7 +686,7 @@
                         </li> #}
                         <!--FIN sub menu inscripciones UE -->
                     {% endif %}
-                    {% if app.session.get('roluser') in [7,8,9,10,20] %}
+                    {# {% if app.session.get('roluser') in [7,8,9,10,20] %}
                         <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -695,9 +694,9 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                {% if app.session.get('roluser') in [7,8] %}
+                                {% if app.session.get('roluser') in [7,8] %} #}
                                 {# <li><a href="{{ path('cheesevent_index')}}">Registro Evento Ajedrez</a></li> #}
-                                {% endif %}
+                                {# {% endif %}
 
                                 {% if app.session.get('roluser') in [7,8,10,20] %}
                                     <li><a href="{{ path('cheeseventadm_index')}}">Clasificado Evento Ajedrez</a></li>
@@ -705,9 +704,9 @@
                                 {% endif %}
                             </ul>
                         </li>  
-                    {% endif %}
+                    {% endif %} #}
                     
-                    {% if app.session.get('roluser') in [7,8,9,10,20] %}
+                    {# {% if app.session.get('roluser') in [7,8,9,10,20] %}
                         <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -719,13 +718,13 @@
                                 {% if app.session.get('roluser') in [7,8,10,20] %}
                                     <li><a href="{{ path('adminscriptalento_index')}}">Seguimiento 2do Encuentro</a></li>
                                 {% endif %}     
-                                {% if app.session.get('userId') in [95011904,13833122] %}
+                                {% if app.session.get('userId') in [95011904,13833122] %} #}
                                 {# {% if app.session.get('roluser') in [7,8] %} #}
-                                    <li><a href="{{ path('managerinstalento_index')}}">Registro Depto</a></li>
+                                    {# <li><a href="{{ path('managerinstalento_index')}}">Registro Depto</a></li>
                                 {% endif %}                                
                             </ul>
                         </li>  
-                    {% endif %}
+                    {% endif %} #}
                                         
                     {% if app.session.get('roluser') in [7,8,9,10,20] %}
                         <li class="submenu">    
@@ -741,7 +740,7 @@
                         </li>  
                     {% endif %}
 
-                    {% if app.session.get('userId') in [92506087] %}
+                    {# {% if app.session.get('userId') in [92506087] %}
                         <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -753,7 +752,7 @@
                                                             
                             </ul>
                         </li>  
-                    {% endif %}
+                    {% endif %} #}
                     
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
