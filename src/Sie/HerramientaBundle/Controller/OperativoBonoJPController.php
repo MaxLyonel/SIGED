@@ -1633,7 +1633,7 @@ class OperativoBonoJPController extends Controller
 				WHERE
 					id_departamento = '". $codigo_depto ."' AND 
 					bjp.gestion_tipo_id = 2023 AND
-					es_concluido is null
+					es_concluido = false
 					order by desc_departamento, desc_provincia, distrito
 		";
 
