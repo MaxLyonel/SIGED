@@ -485,8 +485,8 @@
                         <span class="arrow"></span>
                       </a>
                       <ul>
-                        <li><a href="{{ path('herramienta_info_personal_adm_migrar_index')}}">Personal Administrativo</a></li>
-                        <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>                        
+                        {# <li><a href="{{ path('herramienta_info_personal_adm_migrar_index')}}">Personal Administrativo</a></li>
+                        <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>                         #}
                         {% if app.session.get('roluser') == 9 %}
                             <li><a href="{{ path('maestroAsignacion_index')}}">Asignación Docente</a></li>
                             {# <li><a href="{{ path('adm_pla_index')}}">Gestión Administrativo-Planilla</a></li>
@@ -576,8 +576,8 @@
                       </a>
                       <ul>
 
-                        <li><a href="{{ path('herramienta_info_personal_adm_tsie_index')}}">Personal Administrativo</a></li>
-                        <li><a href="{{ path('herramienta_info_maestro_tsie_index')}}">Personal Docente</a></li>
+                        {# <li><a href="{{ path('herramienta_info_personal_adm_tsie_index')}}">Personal Administrativo</a></li>
+                        <li><a href="{{ path('herramienta_info_maestro_tsie_index')}}">Personal Docente</a></li> #}
                       </ul>
                     </li>
 
