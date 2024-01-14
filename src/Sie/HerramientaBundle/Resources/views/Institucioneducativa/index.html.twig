@@ -468,6 +468,9 @@
                                                 <h4>Cursos</h4>
                                             </div>
                                         </div>
+                                        <div class="alert alert-danger">
+                                            NOTA: Los datos de los cursos han sido migrados. Por lo tanto, se solicita la corroboración de esta información. La verificación y ratificación de estos datos son responsabilidad del Director.Podra editar la información, si corresponde.
+                                        </div>
                                         <div class="panel-body">
                                             <div id="no-more-tables">
                                                 <table class="table table bordered cf dataTable">
@@ -531,9 +534,9 @@
                                                                         <button class="btn btn-xs btn-warning" onclick="editarTurno('{{c.id}}');">
                                                                             <i class="fa fa-edit"></i> Editar turno
                                                                         </button>
-                                                                        <button class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{c.id}}');">
+                                                                        {# <button class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{c.id}}');">
                                                                             <i class="fa fa-list"></i> Áreas
-                                                                        </button>
+                                                                        </button> #}
                                                                         <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
                                                                             <input type="hidden" name="idCurso" value="{{c.id}}">
                                                                             <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser"></i> Eliminar</button>
