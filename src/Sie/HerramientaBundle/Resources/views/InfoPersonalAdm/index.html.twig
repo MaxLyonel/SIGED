@@ -108,10 +108,10 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
-                                {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
-                                    {# {% if app.session.get('roluser') != 20 %}
+                                {% if activar_acciones and (app.session.get('lastOperativo') != 5) and (app.session.get('idDependencia') == 3) %}
+                                    {% if app.session.get('roluser') != 20 %}
                                         <a href="{{path('herramienta_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-primary btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
-                                    {% endif %} #}
+                                    {% endif %}
                                 {% endif %}
                                 {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 1 and personal is not empty and app.session.get('roluser') == 9 %}
                                     <form method ="POST" action="{{path('herramienta_info_personal_adm_ddjj')}}" name="form" id="form" style="display:inline-block" onsubmit="return validaDatos()">
