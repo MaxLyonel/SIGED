@@ -73,6 +73,7 @@ class InfoMaestroController extends Controller {
                 return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
             }
 
+            $dependencia =  $institucioneducativa->getdependenciaTipo()->getId();
             /*
              * verificamos si tiene tuicion
              */
@@ -89,6 +90,7 @@ class InfoMaestroController extends Controller {
                 // creamos variables de sesion de la institucion educativa y gestion
                 $request->getSession()->set('idInstitucion', $institucion);
                 $request->getSession()->set('idGestion', $gestion);
+                $request->getSession()->set('idDependencia',$dependencia);
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
                 if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){

@@ -89,10 +89,10 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
-                                {% if maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5)) %}
-                                    {# {% if app.session.get('roluser') != 20 %}
+                                {% if (maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5))) and (app.session.get('idDependencia') == 3) %}
+                                    {% if app.session.get('roluser') != 20 %}
                                         <a href="{{path('herramienta_info_maestro_find')}}" class="btn btn-primary btn-md" style="display:inline-block" id="nuevoA" name="nuevoA"><i class="fa fa-user"></i> Nueva/o Maestra/o</a>
-                                    {% endif %} #}
+                                    {% endif %}
                                 {% endif %}
                                 {% if maestro_no_idioma is empty and maestro_no_genero is empty and maestro is not empty and app.session.get('roluser') == 9 %}
                                     <div class="pull-right">
