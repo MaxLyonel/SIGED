@@ -109,9 +109,9 @@
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
                                 {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
-                                    {% if app.session.get('roluser') != 20 %}
+                                    {# {% if app.session.get('roluser') != 20 %}
                                         <a href="{{path('herramienta_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-primary btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
-                                    {% endif %}
+                                    {% endif %} #}
                                 {% endif %}
                                 {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 1 and personal is not empty and app.session.get('roluser') == 9 %}
                                     <form method ="POST" action="{{path('herramienta_info_personal_adm_ddjj')}}" name="form" id="form" style="display:inline-block" onsubmit="return validaDatos()">
@@ -140,12 +140,10 @@
                                 {% endif %}
                             </div>
                             <div class="callout callout-warning">
-                                <strong>Recuerde que:</strong><br />
-                                - Es obligatorio el registro de un Director Titular o Director Encargado.<br />
-                                - La información que ingrese a través de este módulo, se reflejará en el archivo .igm cargado en la herramienta de escritorio SIGED.<br />
-                                - Es obligatorio que cada administrativo cuente con al menos un idioma registrado.<br />
-                                - Es obligatorio que cada administrativo se encuentre registrado con el género correcto.<br />
-                                - Una vez finalizado el registro y validación, se debe generar el reporte de declaración jurada, tome en cuenta que posteriormente no podrá realizar ningun cambio.
+                                <strong>NOTA:</strong><br />
+                                - Los datos de los Maestros han sido migrados. Por lo tanto, se solicita la corroboración de esta información.<br>
+                                - La verificación y ratificación de estos datos son responsabilidad del director.<br>
+                                - Podra editar la información, si corresponde.
                             </div>
                             {% if personal_no_idioma %}
                                 <div class="callout callout-danger">

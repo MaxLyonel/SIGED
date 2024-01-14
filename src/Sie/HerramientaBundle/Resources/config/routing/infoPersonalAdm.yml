@@ -16,9 +16,9 @@ herramienta_info_personal_adm_third:
     options:
          expose: true
          
-herramienta_info_personal_adm_index:
-    path:     /
-    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:index }
+# herramienta_info_personal_adm_index:
+#     path:     /
+#     defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:index }
 
 herramienta_info_personal_adm_show:
     path:     /{id}/show
