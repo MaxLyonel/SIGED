@@ -62,7 +62,7 @@ class InfoPersonalAdmController extends Controller {
             }           
 
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
-            
+                
             if (!$institucioneducativa) {
                 $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
                 if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
@@ -70,6 +70,15 @@ class InfoPersonalAdmController extends Controller {
                 }
                 return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
             }
+            
+            $dependencia =  $institucioneducativa->getdependenciaTipo()->getId();
+            // if($institucioneducativa->getdependenciaTipo()->getId() != 3){
+            //     $this->get('session')->getFlashBag()->add('noTuicion', 'La Solo puede registrar U.E. Privadas.');
+            //     if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
+            //         return $this->redirect($this->generateUrl('herramienta_info_personal_adm_tsie_index'));
+            //     }
+            //     return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+            // }
             /*
              * verificamos si tiene tuicion
              */
@@ -86,6 +95,7 @@ class InfoPersonalAdmController extends Controller {
                 // creamos variables de sesion de la institucion educativa y gestion
                 $request->getSession()->set('idInstitucion', $institucion);
                 $request->getSession()->set('idGestion', $gestion);
+                $request->getSession()->set('idDependencia',$dependencia);
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
                 if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
