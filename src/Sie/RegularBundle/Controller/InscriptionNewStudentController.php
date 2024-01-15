@@ -554,6 +554,8 @@ class InscriptionNewStudentController extends Controller {
            $query->execute();
            $ue_procedencia = $query->fetch();
 
+           $id_usuario = $this->session->get('userId');
+
           // $obsId=($em->getRepository('SieAppWebBundle:ObservacionInscripcionTipo')->find(6))->getId();
          //inscriptions
          $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
@@ -571,6 +573,7 @@ class InscriptionNewStudentController extends Controller {
          $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));
          $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
          $studentInscription->setNumMatricula(0);
+         $studentInscription->setUsuarioId($id_usuario);
          $em->persist($studentInscription);
          $em->flush();
 
@@ -983,6 +986,7 @@ class InscriptionNewStudentController extends Controller {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
             $query->execute();
 
+            $id_usuario = $this->session->get('userId');
             //insert a new record with the new selected variables and put matriculaFinID like 5
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
             $query->execute();
@@ -997,6 +1001,7 @@ class InscriptionNewStudentController extends Controller {
             $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
             $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(19));
             $studentInscription->setCodUeProcedenciaId(0);
+            $studentInscription->setUsuarioId($id_usuario);
             $em->persist($studentInscription);
             $em->flush();
 
@@ -1105,6 +1110,8 @@ class InscriptionNewStudentController extends Controller {
                 'gestionTipo' => $form['gestionIns']
             ));
             //put the id seq with the current data
+            $id_usuario = $this->session->get('userId');
+
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
             $query->execute();
             //insert a new record with the new selected variables and put matriculaFinID like 5
@@ -1113,12 +1120,13 @@ class InscriptionNewStudentController extends Controller {
             $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($form['gestionIns']));
             $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
             $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
-            $studentInscription->setObservacion(1);
+            $studentInscription->setObservacion(11);
             $studentInscription->setFechaInscripcion(new \DateTime('now'));
             $studentInscription->setFechaRegistro(new \DateTime('now'));
             $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));
             $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-            //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
+            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));
+            $studentInscription->setUsuarioId($id_usuario);
             $em->persist($studentInscription);
             $em->flush();
             

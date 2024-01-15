@@ -1001,7 +1001,7 @@ class NewInscriptionExtranjeroController extends Controller{
 					}
 
 
-
+              $id_usuario = $this->session->get('userId');
 
 	            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
 	            $query->execute();
@@ -1016,6 +1016,7 @@ class NewInscriptionExtranjeroController extends Controller{
 	            $studentInscription->setFechaRegistro(new \DateTime('now'));
 	            $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
 	            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(19));
+              $studentInscription->setUsuarioId($id_usuario);
 
 	            $arrStudent = array(
 	            	'rude'=>$foreignCodigoRude,
