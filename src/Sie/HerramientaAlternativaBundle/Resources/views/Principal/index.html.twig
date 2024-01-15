@@ -67,7 +67,9 @@
                 </div><!-- /.panel-heading -->
                 <div class="panel-body no-padding">
                     
+                    
                     <ul class="list-group">
+                    {#
                                 <ul class="list-group">
                                     {% for entity in entities|slice(0, 5) %}
                                         {% if entity.rolTipo.id == app.session.get('roluser') %}
@@ -83,13 +85,14 @@
                                             </li>
                                         {% endif %}
                                     {% else %}
-                                        {#
+                                        { comentar esto
                                         <div class="alert alert-info" role="alert">
                                             <i class="fa fa-fw fa-info-circle"></i> Sin notificaciones
                                         </div>
-                                        #}
+                                        }
                                     {% endfor %}
                                 </ul>
+                        #}
                     
                         <li class="list-group-item">
                             <span class="badge badge-danger">Urgente</span>
