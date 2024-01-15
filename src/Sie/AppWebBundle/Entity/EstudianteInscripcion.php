@@ -1060,4 +1060,33 @@ class EstudianteInscripcion
     {
         return $this->estadomatriculaInicioTipo;
     }
+
+    /**
+     * @var integer
+     */
+    private $usuarioId;
+
+
+    /**
+     * Set usuarioId
+     *
+     * @param integer $usuarioId
+     * @return EstudianteInscripcion
+     */
+    public function setUsuarioId($usuarioId)
+    {
+        $this->usuarioId = $usuarioId;
+    
+        return $this;
+    }
+
+    /**
+     * Get usuarioId
+     *
+     * @return integer 
+     */
+    public function getUsuarioId()
+    {
+        return $this->usuarioId;
+    }
 }

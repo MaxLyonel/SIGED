@@ -656,7 +656,7 @@
                             </ul>                            
                         </li>
                         <!--sub menu inscripciones UE -->
-                        {# <li class="submenu">    
+                        <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Inscripciones</span>
@@ -665,7 +665,7 @@
                             <ul>
                                 <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('newForeign_index')}}">Extranjeros</a></li>
-                                <li><a href="{{ path('inscription_new_student_index')}}">Nuevo Estudiante en la UE</a></li> #}
+                                <li><a href="{{ path('inscription_new_student_index')}}">Nuevo Estudiante en la UE</a></li>
                                 <!--li><a href="{{ path('inscription_ini_pri_rue_index')}}"> Gestión</a></li -->
                                 {# {% if app.session.get('roluser') in [7,8,10] %} #}
                                 <!-- li><a href="{{ path('remove_inscription_sie_index')}}">Eliminar Inscripción</a></li-->
@@ -677,12 +677,12 @@
                                 <!--li><a href="{{ path('rudeunificationinscription_index')}}">Unificar Rudes de Inscripción</a></li-->
                                 <!--li><a href="{{ path('unificacion_inscription_index')}}">Corrección doble inscripción en la UE</a></li-->
                                
-                                {#
-                                <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
+                                
+                                {# <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li> #}
                                 
                                
                             </ul>
-                        </li> #}
+                        </li>
                         <!--FIN sub menu inscripciones UE -->
                     {% endif %}
                     {# {% if app.session.get('roluser') in [7,8,9,10,20] %}
