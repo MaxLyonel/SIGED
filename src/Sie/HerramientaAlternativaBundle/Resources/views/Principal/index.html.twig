@@ -3,7 +3,7 @@
 {% block contentoption %}
 <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido/a <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
+    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido/avv <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
@@ -67,7 +67,9 @@
                 </div><!-- /.panel-heading -->
                 <div class="panel-body no-padding">
                     
+                    
                     <ul class="list-group">
+                    {#
                                 <ul class="list-group">
                                     {% for entity in entities|slice(0, 5) %}
                                         {% if entity.rolTipo.id == app.session.get('roluser') %}
@@ -83,13 +85,14 @@
                                             </li>
                                         {% endif %}
                                     {% else %}
-                                        {#
+                                        { comentar esto
                                         <div class="alert alert-info" role="alert">
                                             <i class="fa fa-fw fa-info-circle"></i> Sin notificaciones
                                         </div>
-                                        #}
+                                        }
                                     {% endfor %}
                                 </ul>
+                        #}
                     
                         <li class="list-group-item">
                             <span class="badge badge-danger">Urgente</span>
