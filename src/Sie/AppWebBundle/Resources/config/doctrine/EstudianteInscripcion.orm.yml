@@ -136,6 +136,12 @@ Sie\AppWebBundle\Entity\EstudianteInscripcion:
             unsigned: false
             comment: ''
             column: cod_ue_procedencia_id
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
     manyToOne:
         acreditacionnivelTipo:
             targetEntity: AcreditacionnivelTipo

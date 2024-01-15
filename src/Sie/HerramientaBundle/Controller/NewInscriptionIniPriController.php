@@ -1114,7 +1114,7 @@ class NewInscriptionIniPriController extends Controller
 						$oldstudentCodigoRude = $arrDatos['rude'];
 					}
 
-
+						$id_usuario = $this->session->get('userId');
 
 			            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
 			            $query->execute();
@@ -1127,7 +1127,7 @@ class NewInscriptionIniPriController extends Controller
 			            $studentInscription->setFechaRegistro(new \DateTime('now'));
 			            $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
 			            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
-
+						$studentInscription->setUsuarioId($id_usuario);
 
 
 			            $arrStudent = array(
