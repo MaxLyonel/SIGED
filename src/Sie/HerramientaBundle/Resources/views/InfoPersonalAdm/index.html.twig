@@ -108,7 +108,8 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
-                                {% if activar_acciones and (app.session.get('lastOperativo') != 5) and (app.session.get('idDependencia') == 3) %}
+                                {# {% if activar_acciones and (app.session.get('lastOperativo') != 5) and (app.session.get('idDependencia') == 3) %} #}
+                                {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
                                     {% if app.session.get('roluser') != 20 %}
                                         <a href="{{path('herramienta_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-primary btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
                                     {% endif %}
@@ -143,7 +144,7 @@
                                 <strong>NOTA:</strong><br />
                                 - Los datos de los Maestros han sido migrados. Por lo tanto, se solicita la corroboración de esta información.<br>
                                 - La verificación y ratificación de estos datos son responsabilidad del director.<br>
-                                - Podra editar la información, si corresponde.
+                                <span style="color: red;">- La información registrada posteriormente será contrastada con el SICH, por lo que se pide registrar con responsabilidad la información de ADMINISTRATIVO.</span>
                             </div>
                             {% if personal_no_idioma %}
                                 <div class="callout callout-danger">
