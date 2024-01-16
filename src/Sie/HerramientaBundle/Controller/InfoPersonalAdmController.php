@@ -889,10 +889,10 @@ class InfoPersonalAdmController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
         
         $dependencia =  $institucion->getdependenciaTipo()->getId();
-        if ($dependencia != 3) {
-            $this->get('session')->getFlashBag()->add('eliminarError', 'Todos registro de administrativos debe realizarse a traves de la UGPSEP para U.E. públicas');
-            return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
-        }
+        // if ($dependencia != 3) {
+        //     $this->get('session')->getFlashBag()->add('eliminarError', 'Todos registro de administrativos debe realizarse a traves de la UGPSEP para U.E. públicas');
+        //     return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+        // }
         // herramienta_info_personal_adm_index
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:search.html.twig', array(
                     'form' => $this->searchForm($request->getSession()->get('idInstitucion'), $request->getSession()->get('idGestion'))->createView(),
