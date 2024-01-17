@@ -32,9 +32,9 @@ class TramiteCursosController extends Controller
     public function indexAction(Request $request, $op)
     {
         // Verificacmos si existe la session de usuario
-        // if (!$this->session->get('userId')) {
+        if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
-        // }
+        }
 
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -88,6 +88,8 @@ class TramiteCursosController extends Controller
                 break;
         }
 
+        $gestion = date('Y');
+
         if( $depto !== ''){
        
             $query = $em->getConnection()->prepare("
@@ -106,16 +108,16 @@ class TramiteCursosController extends Controller
                 c.cod_dis,c.des_dis 
                 from
                 (
-                select  
-                institucioneducativa_id,
-                fecha_solicitud,		
-                institucioneducativa,
-                le_juridicciongeografica_id,
-                count(*) as nrosol
-                from tramite_crea_curso 
-                inner join 
-                institucioneducativa on institucioneducativa.id = institucioneducativa_id
-                group by institucioneducativa_id,fecha_solicitud,institucioneducativa,le_juridicciongeografica_id
+                    select  
+                    tcc.institucioneducativa_id,
+                    tcc.fecha_solicitud,		
+                    i.institucioneducativa,
+                    i.le_juridicciongeografica_id,
+                    count(*) as nrosol
+                    from tramite_crea_curso tcc
+                    inner join institucioneducativa i on i.id = tcc.institucioneducativa_id
+                    where tcc.gestion_tipo_id = ". $gestion ."
+                    group by tcc.institucioneducativa_id, tcc.fecha_solicitud, i.institucioneducativa, i.le_juridicciongeografica_id
                 ) as data
                 inner join jurisdiccion_geografica b on data.le_juridicciongeografica_id=b.id
                         inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo
@@ -142,16 +144,16 @@ class TramiteCursosController extends Controller
                 c.cod_dis,c.des_dis 
                 from
                 (
-                select  
-                institucioneducativa_id,
-                fecha_solicitud,		
-                institucioneducativa,
-                le_juridicciongeografica_id,
-                count(*) as nrosol
-                from tramite_crea_curso 
-                inner join 
-                institucioneducativa on institucioneducativa.id = institucioneducativa_id
-                group by institucioneducativa_id,fecha_solicitud,institucioneducativa,le_juridicciongeografica_id
+                    select  
+                    tcc.institucioneducativa_id,
+                    tcc.fecha_solicitud,		
+                    i.institucioneducativa,
+                    i.le_juridicciongeografica_id,
+                    count(*) as nrosol
+                    from tramite_crea_curso tcc
+                    inner join institucioneducativa i on i.id = tcc.institucioneducativa_id
+                    where tcc.gestion_tipo_id = ". $gestion ."
+                    group by tcc.institucioneducativa_id, tcc.fecha_solicitud, i.institucioneducativa, i.le_juridicciongeografica_id
                 ) as data
                 inner join jurisdiccion_geografica b on data.le_juridicciongeografica_id=b.id
                         inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo
@@ -1674,7 +1676,8 @@ class TramiteCursosController extends Controller
         $query->execute();
         $data = $query->fetchAll();
 
-        $gestion_id = 2023;
+        // $gestion_id = 2023;
+        $gestion_id = date('Y');
         $institucion_id = $data[0]['institucioneducativa_id'];
         $turno_id = $data[0]['turno_tipo_id'];
         $nivel_id = $data[0]['nivel_tipo_id'];
@@ -1729,7 +1732,6 @@ class TramiteCursosController extends Controller
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($ue);
-        
         $data = [];
 
         $em = $this->getDoctrine()->getManager();
@@ -1749,6 +1751,7 @@ class TramiteCursosController extends Controller
                 tramite_crea_curso.aprobado,
                 tramite_crea_curso.ancho,
                 tramite_crea_curso.largo,
+                tramite_crea_curso.estudiantes,
                 CASE 
                     WHEN aprobado = false THEN 2
                     WHEN aprobado = true THEN 1      
@@ -1756,31 +1759,16 @@ class TramiteCursosController extends Controller
                 END as aprobadoestado
             FROM
                 tramite_crea_curso
-                INNER JOIN
-                institucioneducativa
-                ON 
-                    tramite_crea_curso.institucioneducativa_id = institucioneducativa.id
-                INNER JOIN
-                nivel_tipo
-                ON 
-                    tramite_crea_curso.nivel_tipo_id = nivel_tipo.id
-                INNER JOIN
-                grado_tipo
-                ON 
-                    tramite_crea_curso.grado_tipo_id = grado_tipo.id
-                INNER JOIN
-                turno_tipo
-                ON 
-                    tramite_crea_curso.turno_tipo_id = turno_tipo.id
-                INNER JOIN
-                paralelo_tipo
-                ON 
-                    tramite_crea_curso.paralelo_tipo_id = paralelo_tipo.id
+                INNER JOIN institucioneducativa ON tramite_crea_curso.institucioneducativa_id = institucioneducativa.id
+                INNER JOIN nivel_tipo ON tramite_crea_curso.nivel_tipo_id = nivel_tipo.id
+                INNER JOIN grado_tipo ON tramite_crea_curso.grado_tipo_id = grado_tipo.id
+                INNER JOIN turno_tipo ON tramite_crea_curso.turno_tipo_id = turno_tipo.id
+                INNER JOIN paralelo_tipo ON tramite_crea_curso.paralelo_tipo_id = paralelo_tipo.id
                 where  tramite_crea_curso.institucioneducativa_id = ". $ue ." and fecha_solicitud = '" . $fechasol ."'");
         $query->execute();
         $data = $query->fetchAll();
 
-        $gestion = 2023;
+        $gestion = date('Y');
         $fechasol = str_replace("-","",$fechasol);
 
 
@@ -1793,7 +1781,8 @@ class TramiteCursosController extends Controller
     {
         //dump($fechasol); die;
         $sie = $sie;
-        $gestion = 2023;
+        // $gestion = 2023;
+        $gestion = date('Y');
         $fecha = $fechasol; //'20230201';
         $pdf = $this->container->getParameter('urlreportweb') . 'reg_dj_nuevo_paralelo_unidadeducativa_v1_rcm.rptdesign&__format=pdf' . '&gestion=' . $gestion . '&sie=' . $sie . '&fecha=' . $fecha;
         //$pdf='http://127.0.0.1:63170/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;

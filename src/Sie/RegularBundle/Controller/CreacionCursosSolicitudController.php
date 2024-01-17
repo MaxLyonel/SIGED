@@ -31,41 +31,21 @@ class CreacionCursosSolicitudController extends Controller {
      *
      */
     public function indexAction(Request $request, $op) {
-
         // Verificacmos si existe la session de usuario
-        // if (!$this->session->get('userId')) {
+        if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
-        // }
+        }
 
-       
-       
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             // generar los titulos para los diferentes sistemas
 
             $this->session = new Session();
-            $tipoSistema = $request->getSession()->get('sysname');
-            switch ($tipoSistema) {
-                case 'REGULAR':
-                    if($this->session->get('roluser') == 9){
-                        $this->session->set('tituloTipo','Asignación de Maestros');
-                    }else{
-                        $this->session->set('tituloTipo', 'Adición/Eliminación de Áreas');
-                    }
-                    $this->session->set('layout', 'layoutRegular.html.twig');
-                    break;
-                case 'ALTERNATIVA': $this->session->set('tituloTipo', 'Adición de Áreas y Asignacion de Docentes');
-                    $this->session->set('layout', 'layoutAlternativa.html.twig');
-                    break;
-                default: $this->session->set('tituloTipo', 'Creación de Cursos');
-                    $this->session->set('layout', 'layoutRegular.html.twig');
-                    break;
-            }
-
+            $this->session->set('tituloTipo', 'Solicitud para la creación de nuevos cursos/paralelos');
+            $this->session->set('layout', 'layoutRegular.html.twig');
             if ($request->getMethod() == 'POST') { // si los valores fueron enviados desde el formulario
                 $form = $request->get('form');
-                 
                 /*
                  * verificamos si existe la unidad educativa
                  */
@@ -80,7 +60,6 @@ class CreacionCursosSolicitudController extends Controller {
                     $this->get('session')->getFlashBag()->add('noSearch', 'No puede crear cursos, la Unidad Educativa se encuentra cerrada');
                     return $this->render('SieRegularBundle:CreacionCursosSolicitud:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
-                // dump($institucioneducativa->getDependenciaTipo()->getId());die;
                 if (!in_array($institucioneducativa->getDependenciaTipo()->getId(),array(1,2))) {
                     $this->get('session')->getFlashBag()->add('noSearch', 'No puede crear cursos, la Unidad Educativa no es pública');
                     return $this->render('SieRegularBundle:CreacionCursosSolicitud:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
@@ -103,133 +82,96 @@ class CreacionCursosSolicitudController extends Controller {
                     return $this->render('SieRegularBundle:CreacionCursosSolicitud:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
             } else {
-               
-                $nivelUsuario = $request->getSession()->get('roluser');
-                if ($nivelUsuario != 1) { // si no es estudiante
-                    // formulario de busqueda de institucion educativa
-                    $sesinst = $request->getSession()->get('idInstitucion');
-
-                    if ($sesinst) {
-                        $institucion = $sesinst;
-                        $gestion = $request->getSession()->get('idGestion');
-                        if ($op == 'search') {
-                            return $this->render('SieRegularBundle:CreacionCursosSolicitud:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
-                        }
-                    } else {
-                       //dcastillo
-                        return $this->render('SieRegularBundle:CreacionCursosSolicitud:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
-                    }
-                } else { // si es institucion educativa
-                    $sesinst = $request->getSession()->get('idInstitucion');
-                    if ($sesinst) {
-                        $institucion = $sesinst;
-                        $gestion = date('Y') - 1;
-                    } else {
-                      
-                        $funcion = new \Sie\AppWebBundle\Controller\FuncionesController();
-                        $institucion = $funcion->ObtenerUnidadEducativaAction($request->getSession()->get('userId'), $request->getSession()->get('currentyear')); 
-                        $gestion = date('Y') - 1;
-                        //echo $institucion;die;
-                    }
-                }
+                return $this->render('SieRegularBundle:CreacionCursosSolicitud:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));             
             }
-
+            
             // creamos variables de sesion de la institucion educativa y gestion
             $request->getSession()->set('idInstitucion', $institucion);
             $request->getSession()->set('idGestion', $gestion);
 
+            // // Lista de turnos validos para la unidad educativa
+            // $query = $em->createQuery(
+            //         'SELECT DISTINCT tt.id,tt.turno
+            //         FROM SieAppWebBundle:InstitucioneducativaCurso iec
+            //         JOIN iec.institucioneducativa ie
+            //         JOIN iec.turnoTipo tt
+            //         WHERE ie.id = :id
+            //         AND iec.gestionTipo = :gestion
+            //         ORDER BY tt.id')
+            //         ->setParameter('id', $institucion)
+            //         ->setParameter('gestion', $gestion);
+            // $turnos = $query->getResult();
+            // $turnosArray = array();
+            // for ($i = 0; $i < count($turnos); $i++) {
+            //     $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+            // }
+
+            
             // Lista de turnos validos para la unidad educativa
-            $query = $em->createQuery(
-                            'SELECT DISTINCT tt.id,tt.turno
-                    FROM SieAppWebBundle:InstitucioneducativaCurso iec
-                    JOIN iec.institucioneducativa ie
-                    JOIN iec.turnoTipo tt
-                    WHERE ie.id = :id
-                    AND iec.gestionTipo = :gestion
-                    ORDER BY tt.id')
-                    ->setParameter('id', $institucion)
-                    ->setParameter('gestion', $gestion);
-            $turnos = $query->getResult();
-            $turnosArray = array();
-            for ($i = 0; $i < count($turnos); $i++) {
-                $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
-            }
+            // $query = $em->createQuery(
+            //     'SELECT DISTINCT tt.id,tt.turno
+            //         FROM SieAppWebBundle:InstitucioneducativaCurso iec
+            //         JOIN iec.institucioneducativa ie
+            //         JOIN iec.turnoTipo tt
+            //         WHERE ie.id = :id
+            //         AND iec.gestionTipo = :gestion
+            //         ORDER BY tt.id'
+            // )
+            // ->setParameter('id', $institucion)
+            //     ->setParameter('gestion', $gestion );
+            // $turnos = $query->getResult();
+            // $turnosArray = array();
+            // for ($i = 0; $i < count($turnos); $i++) {
+            //     $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+            // }    
+            
+            // /**
+            //  * dcastillo 2202: 
+            //  * si no hay turnos, ver gestion anterior, si no hay habilitar todos
+            //  */
 
+            //  if(sizeof($turnosArray) == 0){
 
-            /**
+            //     // vemos si hay la gestion anterior
+            //     $query = $em->createQuery(
+            //         'SELECT DISTINCT tt.id,tt.turno
+            //             FROM SieAppWebBundle:InstitucioneducativaCurso iec
+            //             JOIN iec.institucioneducativa ie
+            //             JOIN iec.turnoTipo tt
+            //             WHERE ie.id = :id
+            //             AND iec.gestionTipo = :gestion
+            //             ORDER BY tt.id'
+            //     )
+            //     ->setParameter('id', $institucion)
+            //         ->setParameter('gestion', $gestion - 1);
+            //     $turnos = $query->getResult();
+            //     $turnosArray = array();
+            //     for ($i = 0; $i < count($turnos); $i++) {
+            //         $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+            //     }    
+
+            //     if(sizeof($turnosArray) == 0){
+            //         // no hay en la gestion anterior, entonces se muestran todos
+
+            //         $RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+            //         $statement = $em->getConnection()->prepare($RAW_QUERY);
+            //         $statement->execute();
+            //         $result = $statement->fetchAll();                  
+            //         $turnos = $result;
+            //         $turnosArray = array();
+            //         for ($i = 0; $i < count($turnos); $i++) {
+            //             $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+            //         }
+
+            //     }
+
+            //  }
+
+             /**
              * Creamos el formulario de busqueda de turno nivel grado y paralelo
              */
-            $form = $this->createFormBuilder()
-                    ->add('idInstitucion', 'hidden', array('data' => $institucion))
-                    ->add('idGestion', 'hidden', array('data' => $gestion))
-                    ->add('turno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarNiveles()')))
-                    ->add('nivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados()')))
-                    ->add('grado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))
-                    ->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
-                    ->add('buscar', 'submit', array('label' => 'Buscar Curso', 'attr' => array('class' => 'btn btn-info btn-block')))
-                    ->getForm();
-
-            // Lista de turnos validos para la unidad educativa
-            $query = $em->createQuery(
-                'SELECT DISTINCT tt.id,tt.turno
-                    FROM SieAppWebBundle:InstitucioneducativaCurso iec
-                    JOIN iec.institucioneducativa ie
-                    JOIN iec.turnoTipo tt
-                    WHERE ie.id = :id
-                    AND iec.gestionTipo = :gestion
-                    ORDER BY tt.id'
-            )
-            ->setParameter('id', $institucion)
-                ->setParameter('gestion', $gestion );
-            $turnos = $query->getResult();
-            $turnosArray = array();
-            for ($i = 0; $i < count($turnos); $i++) {
-                $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
-            }    
             
-            //dump($turnosArray); die;
-            /**
-             * dcastillo 2202: 
-             * si no hay turnos, ver gestion anterior, si no hay habilitar todos
-             */
-
-             if(sizeof($turnosArray) == 0){
-
-                // vemos si hay la gestion anterior
-                $query = $em->createQuery(
-                    'SELECT DISTINCT tt.id,tt.turno
-                        FROM SieAppWebBundle:InstitucioneducativaCurso iec
-                        JOIN iec.institucioneducativa ie
-                        JOIN iec.turnoTipo tt
-                        WHERE ie.id = :id
-                        AND iec.gestionTipo = :gestion
-                        ORDER BY tt.id'
-                )
-                ->setParameter('id', $institucion)
-                    ->setParameter('gestion', $gestion - 1);
-                $turnos = $query->getResult();
-                $turnosArray = array();
-                for ($i = 0; $i < count($turnos); $i++) {
-                    $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
-                }    
-
-                if(sizeof($turnosArray) == 0){
-                    // no hay en la gestion anterior, entonces se muestran todos
-
-                    $RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
-                    $statement = $em->getConnection()->prepare($RAW_QUERY);
-                    $statement->execute();
-                    $result = $statement->fetchAll();                  
-                    $turnos = $result;
-                    $turnosArray = array();
-                    for ($i = 0; $i < count($turnos); $i++) {
-                        $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
-                    }
-
-                }
-
-             }
-
+            // dump($turnosArray);die;
             //2023 esto para mostrar todos, para el rol de departamento siged
             //TODO: ver otros casos y en que circunstancias se habilitan los demas turnos
             $RAW_QUERY = 'SELECT * FROM turno_tipo where id  in (1,2,4,8);';            
@@ -241,6 +183,17 @@ class CreacionCursosSolicitudController extends Controller {
             for ($i = 0; $i < count($turnos); $i++) {
                 $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
             }
+
+            $form = $this->createFormBuilder()
+            ->add('idInstitucion', 'hidden', array('data' => $institucion))
+            ->add('idGestion', 'hidden', array('data' => $gestion))
+            ->add('turno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarNiveles()')))
+            ->add('nivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados()')))
+            ->add('grado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))
+            ->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
+            // ->add('cantidad', 'text', array('required' => true, 'attr' => array('class' => 'form-control','pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '2', 'autocomplete' => 'off')))
+            ->add('buscar', 'submit', array('label' => 'Buscar Curso', 'attr' => array('class' => 'btn btn-info btn-block')))
+            ->getForm();
 
             //dump($turnosArray); die; 
 
@@ -278,7 +231,6 @@ class CreacionCursosSolicitudController extends Controller {
             $result = $statement->fetchAll();
             $niveles = $result;
 
-            //dump($niveles); die; 
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
                 $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
@@ -309,12 +261,11 @@ class CreacionCursosSolicitudController extends Controller {
 
             $es_modular = false;
             $paralelosArray = array();           
-          
             //no tiene  habilitado secundaria, vemos si es modular
             $sql = "select count(*) as es_modular
             from institucioneducativa_humanistico_tecnico iht 
             where iht.institucioneducativa_humanistico_tecnico_tipo_id = 3
-            and gestion_tipo_id = 2021
+            and gestion_tipo_id = ".$gestion."
             and institucioneducativa_id = '" . $institucion . "'";
             
             $statement = $em->getConnection()->prepare($sql);
@@ -360,45 +311,45 @@ class CreacionCursosSolicitudController extends Controller {
             //TODOS
 
             //dump(sizeof($paralelosArray)); die;
-            if(sizeof($paralelosArray) == 0)
-            {
+            // if(sizeof($paralelosArray) == 0)
+            // {
                       
-            if( $sw_habilita_multigrado == false){
+            // if( $sw_habilita_multigrado == false){
                 // como estaba incialmente antes de multigrado
                
-                if($dependencia_tipo_id != 3 ){
+                // if($dependencia_tipo_id != 3 ){
 
-                    if($this->session->get('roluser') == 9 )
-                    {
-                        //es director?
-                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
-                        $statement = $em->getConnection()->prepare($RAW_QUERY);
-                        $statement->execute();
-                        $result = $statement->fetchAll();
-                        $paralelos = $result;
-                        $paralelosArray = array();
-                        for ($i = 0; $i < count($paralelos); $i++) {
-                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-                        }
+                //     if($this->session->get('roluser') == 9 )
+                //     {
+                //         //es director?
+                //         $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                //         $statement = $em->getConnection()->prepare($RAW_QUERY);
+                //         $statement->execute();
+                //         $result = $statement->fetchAll();
+                //         $paralelos = $result;
+                //         $paralelosArray = array();
+                //         for ($i = 0; $i < count($paralelos); $i++) {
+                //             $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                //         }
 
-                    }else{
-                        // es distrital o departamental o nacional
-                        if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 11 or $this->session->get('roluser') == 8 ){
+                //     }else{
+                //         // es distrital o departamental o nacional
+                //         if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 11 or $this->session->get('roluser') == 8 ){
 
-                            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
-                            $statement = $em->getConnection()->prepare($RAW_QUERY);
-                            $statement->execute();
-                            $result = $statement->fetchAll();
-                            $paralelos = $result;
-                            $paralelosArray = array();
-                            for ($i = 0; $i < count($paralelos); $i++) {
-                                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-                            }
+                //             $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                //             $statement = $em->getConnection()->prepare($RAW_QUERY);
+                //             $statement->execute();
+                //             $result = $statement->fetchAll();
+                //             $paralelos = $result;
+                //             $paralelosArray = array();
+                //             for ($i = 0; $i < count($paralelos); $i++) {
+                //                 $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                //             }
 
-                        }
-                    }
+                //         }
+                //     }
 
-                }else{
+                // }else{
 
                     $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
                     $statement = $em->getConnection()->prepare($RAW_QUERY);
@@ -410,58 +361,40 @@ class CreacionCursosSolicitudController extends Controller {
                         $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
                     }
 
-                }
-            }else{
-                
-
-                if($this->session->get('roluser') == 9 ) // es director
-                {
-                    if($dependencia_tipo_id != 3 ){
-                        // es fiscal y similares y ademas
-                        //es un caso multigrado, solos e habilita el paralelo A
-                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
-                        $statement = $em->getConnection()->prepare($RAW_QUERY);
-                        $statement->execute();
-                        $result = $statement->fetchAll();
-                        $paralelos = $result;
-                        $paralelosArray = array();
-                        for ($i = 0; $i < count($paralelos); $i++) {
-                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-                        }
-                    }
-                }
-                
-                if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 10)
-                {
+                // }
+            // }else{
+               
+            //     if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 10)
+            //     {
                     
-                    if($es_modular == true){
-                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
-                        $statement = $em->getConnection()->prepare($RAW_QUERY);
-                        $statement->execute();
-                        $result = $statement->fetchAll();
-                        $paralelos = $result;
-                        $paralelosArray = array();
-                        for ($i = 0; $i < count($paralelos); $i++) {
-                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-                        }
-                    }else{
+            //         if($es_modular == true){
+            //             $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+            //             $statement = $em->getConnection()->prepare($RAW_QUERY);
+            //             $statement->execute();
+            //             $result = $statement->fetchAll();
+            //             $paralelos = $result;
+            //             $paralelosArray = array();
+            //             for ($i = 0; $i < count($paralelos); $i++) {
+            //                 $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+            //             }
+            //         }else{
 
-                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
-                        $statement = $em->getConnection()->prepare($RAW_QUERY);
-                        $statement->execute();
-                        $result = $statement->fetchAll();
-                        $paralelos = $result;
-                        $paralelosArray = array();
-                        for ($i = 0; $i < count($paralelos); $i++) {
-                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-                        }
-                    }
+            //             $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+            //             $statement = $em->getConnection()->prepare($RAW_QUERY);
+            //             $statement->execute();
+            //             $result = $statement->fetchAll();
+            //             $paralelos = $result;
+            //             $paralelosArray = array();
+            //             for ($i = 0; $i < count($paralelos); $i++) {
+            //                 $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+            //             }
+            //         }
 
-                }
+            //     }
 
-            }
+            // }
 
-            }
+            // }
             
 
             $formNuevo = $this->createFormBuilder()
@@ -476,6 +409,7 @@ class CreacionCursosSolicitudController extends Controller {
             // ->add('nuevoAncho', 'number', array('label' => 'Ancho', 'required' => true,'rounding_mode' => 0, 'precision' => 2, 'attr' => array('autocomplete' => 'off','class' => 'form-control', 'min'=> 0, 'max' => 100)))//'pattern' => '[.0-9]{5,10}', 'maxlength' => '6')))            
             // ->add('nuevoLargo', 'number', array('label' => 'Largo', 'required' => true,'rounding_mode' => 0, 'precision' => 2, 'attr' => array('autocomplete' => 'off','class' => 'form-control', 'min'=> 0, 'max' => 100))) //'pattern' => '[.0-9]{5,10}', 'maxlength' => '6')))            
             //->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
+            ->add('estudiantes', 'number', array('label' => 'Proyeccion Est.', 'required' => true,'rounding_mode' => 0, 'precision' => 2, 'attr' => array('autocomplete' => 'off','class' => 'form-control', 'min'=> 0, 'max' => 99))) //'pattern' => '[.0-9]{5,10}', 'maxlength' => '6')))            
             ->add('crear', 'submit', array('label' => 'Solicitar Crear Curso', 'attr' => array('class' => 'btn btn-success btn-block')))
             ->getForm();
             
@@ -488,7 +422,6 @@ class CreacionCursosSolicitudController extends Controller {
              * Listasmos los maestros inscritos en la unidad educativa
              */
             $tipoUE = $this->get('funciones')->getTipoUE($institucion,$gestion);
-
             $em->getConnection()->commit();
 
            
@@ -721,13 +654,13 @@ class CreacionCursosSolicitudController extends Controller {
         $curYear = date('Y');
         $form = $request->get('form');
         
-        $sql = "select ic.id icid, ic.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo, COALESCE(tcci.ancho,'0') ancho, COALESCE( tcci.largo,'0') largo 
+        $sql = "select ic.id icid, ic.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo--, COALESCE(tcci.ancho,'0') ancho, COALESCE( tcci.largo,'0') largo 
                 from institucioneducativa_curso ic 
                 inner join turno_tipo tt on ic.turno_tipo_id = tt.id
                 inner join nivel_tipo nt on ic.nivel_tipo_id = nt.id
                 inner join grado_tipo gt on ic.grado_tipo_id = gt.id
                 inner join paralelo_tipo pt on ic.paralelo_tipo_id = pt.id
-                left join tramite_crea_curso_infra tcci on tcci.institucioneducativa_curso_id = ic.id
+                --left join tramite_crea_curso_infra tcci on tcci.institucioneducativa_curso_id = ic.id
                 where ic.gestion_tipo_id = ".$curYear."
                 and ic.institucioneducativa_id = ".$form['idInstitucion']."
                 and ic.nivel_tipo_id = " . $form['nuevoNivel']."
@@ -750,7 +683,6 @@ class CreacionCursosSolicitudController extends Controller {
         ));
         
 
-
         if ($curso) {
             $idCurso = $curso->getId();
             $mensaje = '';
@@ -759,23 +691,23 @@ class CreacionCursosSolicitudController extends Controller {
             //return $mensaje;
         }
 
-        $areasCurso = $this->get('areas')->getAreas($idCurso);
+        // $areasCurso = $this->get('areas')->getAreas($idCurso);
         $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
 
         
-        $existenOfertas = sizeof($areasCurso['cursoOferta']);
+        // $existenOfertas = sizeof($areasCurso['cursoOferta']);
         
         return $this->render('SieRegularBundle:CreacionCursosSolicitud:listaAreasCurso.html.twig', array(
             'areas' => $result,
-            'curso' => $curso,
+            // 'curso' => $curso,
             'mensaje' => $mensaje,
-            'operativo'=>$operativo,
-            'institucioneducativa' => $form['idInstitucion'],
-            'gestionTipo' => $form['idGestion'],
-            'turnoTipo' => $form['nuevoTurno'],
-            'nivelTipo' => $form['nuevoNivel'],
-            'gradoTipo' => $form['nuevoGrado'],
-            'paraleloTipo' => $form['nuevoParalelo'],            
+            // 'operativo'=>$operativo,
+            // 'institucioneducativa' => $form['idInstitucion'],
+            // 'gestionTipo' => $form['idGestion'],
+            // 'turnoTipo' => $form['nuevoTurno'],
+            // 'nivelTipo' => $form['nuevoNivel'],
+            // 'gradoTipo' => $form['nuevoGrado'],
+            // 'paraleloTipo' => $form['nuevoParalelo'],            
         ));
     }
 
@@ -784,7 +716,7 @@ class CreacionCursosSolicitudController extends Controller {
         $curYear = date('Y');
         $form = $request->get('form');
         
-        $sql = "select tcc.id as tccid, tcc.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo,tcc.fecha_creacion, tcc.fecha_solicitud, tcc.aprobado
+        $sql = "select tcc.id as tccid, tcc.institucioneducativa_id, tt.turno, nt.nivel, gt.grado, pt.paralelo,tcc.estudiantes, tcc.fecha_creacion, tcc.fecha_solicitud, tcc.aprobado
         from tramite_crea_curso tcc  
         inner join turno_tipo tt on tcc.turno_tipo_id = tt.id
         inner join nivel_tipo nt on tcc.nivel_tipo_id = nt.id
@@ -807,7 +739,7 @@ class CreacionCursosSolicitudController extends Controller {
         }
 
         // $areasCurso = $this->get('areas')->getAreas($idCurso);
-        $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
+        // $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
 
         
         // $existenOfertas = sizeof($areasCurso['cursoOferta']);
@@ -1149,6 +1081,7 @@ class CreacionCursosSolicitudController extends Controller {
         $nivel_id = $form['nuevoNivel'];
         $grado_id = $form['nuevoGrado'];
         $paralelo_id = $form['nuevoParalelo'];
+        $estudiantes = $form['estudiantes'];
         // $ancho_id = $form['nuevoAncho'];
         // $largo_id = $form['nuevoLargo'];
         
@@ -1240,7 +1173,7 @@ class CreacionCursosSolicitudController extends Controller {
         }
 
         $usuario_id = $this->session->get('userId');
-        $query = $em->getConnection()->prepare("select * FROM sp_crea_nueva_solicitud_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id','0','0','$usuario_id') ");
+        $query = $em->getConnection()->prepare("select * FROM sp_crea_nueva_solicitud_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id','0','0','$estudiantes','$usuario_id') ");
       
         $query->execute();
         $valor= $query->fetchAll();
