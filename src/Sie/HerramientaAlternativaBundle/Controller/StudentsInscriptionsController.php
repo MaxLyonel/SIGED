@@ -1201,7 +1201,7 @@ class StudentsInscriptionsController extends Controller {
                         inner join institucioneducativa i on ic.institucioneducativa_id=i.id 
                         where i.institucioneducativa_tipo_id=1
                         and ei.estudiante_id=".$studentId."
-                        and ic.gestion_tipo_id=2023
+                        and ic.gestion_tipo_id=2024
                         order by ic.gestion_tipo_id desc
                         limit 1
                         ";
