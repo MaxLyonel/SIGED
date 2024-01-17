@@ -69,7 +69,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $aGestion = array();
         $currentYear = date('Y');
         if($this->session->get('roluser') == 8){
-            for ($i = 1; $i <= 15; $i++) {
+            for ($i = 1; $i <= 16; $i++) {
                 $aGestion[$currentYear] = $currentYear;
                 $currentYear--;
             }
