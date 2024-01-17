@@ -44,7 +44,7 @@
                 </h1>
                 <ol class="breadcrumb">
                     <li><i class="fa fa-search"></i>  <a href="{{path('creacion_cursos_solicitud')}}">Buscar</a></li>
-                    <li><i class="fa fa-list"></i>  <a href="{{path('areas',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a>
+                    <li><i class="fa fa-list"></i>  {{ app.session.get('tituloTipo') }}
                     </li>
                 </ol>
             </div>
@@ -116,11 +116,11 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Institución Educativa - <small style="color:#C3FDEA;">{{tipoUE.tipo}}</small> </h4>
+                        <h4>Institución Educativa - {{tipoUE.tipo}} </h4>
                     </div>
-                    <div class="portlet-widgets">
+                    {# <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
-                    </div>
+                    </div> #}
                     <div class="clearfix"></div>
                 </div>
                 <div id="panelinstitucion" class="panel-collapse collapse in">
@@ -149,10 +149,7 @@
             </div>
         </div>
     </div>
-
-    
-   
-
+ 
     <div class="row">
         <div class="col-lg-12">
             <div class="portlet portlet-blue">
@@ -160,9 +157,9 @@
                     <div class="portlet-title">
                         <h4>Cursos Existentes</h4>
                     </div>
-                    <div class="portlet-widgets">
+                    {# <div class="portlet-widgets">
                         <a data-toggle="collapse" href="basic-form-elements.html#panelAreas"><i class="fa fa-chevron-down"></i></a>
-                    </div>
+                    </div> #}
                     <div class="clearfix"></div>
                 </div>
                 <div id="panelAreas" class="panel-collapse collapse in">
@@ -184,9 +181,9 @@
                     <div class="portlet-title">
                         <h4>CREAR NUEVO CURSO</h4>
                     </div>
-                    <div class="portlet-widgets">
+                    {# <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
-                    </div>
+                    </div> #}
                     <div class="clearfix"></div>
                 </div>
                 <div id="panelinstitucion2" class="panel-collapse collapse in">
@@ -196,7 +193,7 @@
                             <div style="background: #EEE; padding:3px 10px 10px 10px">                               
                                 {{form_start(formNuevo,{'attr':{'id':'formCursos','onsubmit':'return validateFormNuevoCurso()'} })}}
                                 <div class="row">
-                                    <div class="col-lg-3 col-md-6">
+                                    <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoTurno)}}
                                         {{form_widget(formNuevo.nuevoTurno)}}
                                     </div>
@@ -208,9 +205,13 @@
                                         {{form_label(formNuevo.nuevoGrado)}}
                                         {{form_widget(formNuevo.nuevoGrado)}}
                                     </div>
-                                    <div class="col-lg-3 col-md-6">
+                                    <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoParalelo)}}
                                         {{form_widget(formNuevo.nuevoParalelo)}}
+                                    </div>
+                                    <div class="col-lg-2 col-md-6">
+                                        {{form_label(formNuevo.estudiantes)}}
+                                        {{form_widget(formNuevo.estudiantes)}}
                                     </div>
                                     {# <div class="col-lg-2 col-md-6">
                                         {{form_label(formNuevo.nuevoAncho)}}
@@ -245,9 +246,9 @@
                     <div class="portlet-title">
                         <h4>Cursos Nuevos Solicitado</h4>
                     </div>
-                    <div class="portlet-widgets">
+                    {# <div class="portlet-widgets">
                         <a data-toggle="collapse" href="basic-form-elements.html#panelNewCurso"><i class="fa fa-chevron-down"></i></a>
-                    </div>
+                    </div> #}
                     <div class="clearfix"></div>
                 </div>
                 <div id="panelNewCursos" class="panel-collapse collapse in">
@@ -530,6 +531,7 @@
                         var nivel = $('#form_nuevoNivel').val();
                         var grado = $('#form_nuevoGrado').val();
                         var paralelo = $('#form_nuevoParalelo').val();
+                        var estudiantes = $('#form_estudiantes').val();
                         // var ancho = $('#form_nuevoAncho').val();
                         // var largo = $('#form_nuevoLargo').val();
                         if (turno == '') {
@@ -546,6 +548,10 @@
                         }
                         if (paralelo == '') {
                             alert('Debe seleccionar un paralelo');
+                            return false;
+                        }
+                        if (estudiantes == '') {
+                            alert('Debe registrar la proyeccion de estudiantes');
                             return false;
                         }
                         // if (ancho == '') {
