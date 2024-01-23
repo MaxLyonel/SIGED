@@ -308,10 +308,11 @@ class CreacionCursosEspecialController extends Controller {
                             /*
                              * Listamos los servicios tecnicos validos
                              */
+                            //!= :id   ->setParameter('id',100)
             $query = $em->createQuery(
                                     'SELECT at FROM SieAppWebBundle:EspecialTecnicaEspecialidadTipo at
-                                    WHERE at.id != :id ORDER BY at.especialidad'
-                                    )->setParameter('id',100);
+                                    WHERE at.id not in (0,99,32,100) ORDER BY at.especialidad'
+                                    );
                                     $tecnicas_result = $query->getResult();
                                     $tecnicas = array();
                                     foreach ($tecnicas_result as $at){
@@ -330,7 +331,7 @@ class CreacionCursosEspecialController extends Controller {
             $nivelTecnico = 99;
             $momento = 99;
 
-            
+           // dump ($tecnicas);die;
 
             $form = $this->createFormBuilder()
                     ->setAction($this->generateUrl('creacioncursos_especial_create'))
@@ -605,9 +606,12 @@ class CreacionCursosEspecialController extends Controller {
         $this->session = new Session();
         $em = $this->getDoctrine()->getManager();
 
-        if ($area == "1" ) {
+        if ($area == "1" ) { //AUDITIVA
             if($modalidad == 1){
                 $nivelesArray = array(403,404,405,410,411);
+                if ($this->session->get('idGestion') > 2023) {
+                    $nivelesArray =  array(403,404,405,411);
+                }
             }else{
                 $nivelesArray = array(410);
             }
@@ -631,6 +635,12 @@ class CreacionCursosEspecialController extends Controller {
                 if ($this->session->get('idGestion') >= 2023) { //nuevo plan
                     $nivelesArray = array(409,401,405,412,410,411);
                 }
+                if ($this->session->get('idGestion') > 2023 AND  $area == "12" ) { //nuevo plan
+                    $nivelesArray = array(409,401,412,411);
+                }
+                if ($this->session->get('idGestion') > 2023 AND $area == "3") { //nuevo plan
+                    $nivelesArray = array(409,401,405,412,411);
+                }
                 
             }else{
                 $nivelesArray = array(410);
@@ -651,7 +661,7 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif ($area == "6" ) {    //DIFICULTADES EN EL APRENDIZAJE
             if($modalidad == 1){
-                $nivelesArray = array(410,411);
+                $nivelesArray = array(411);
             }else{
                 $nivelesArray = array(410);
             }
@@ -680,7 +690,7 @@ class CreacionCursosEspecialController extends Controller {
         }*/
         elseif ($area == "7") {    //TALENTO EXTRAORDINARIO
             if($modalidad == 1){
-                $nivelesArray = array(410,411);
+                $nivelesArray = array(411);
             }else{
                 $nivelesArray = array(410);
             }
@@ -706,7 +716,7 @@ class CreacionCursosEspecialController extends Controller {
         return $response->setData(array('niveles' => $nivelesArray));
     }
 
-    public function listarGradosAction($nivel, $area) {//  dump($nivel, $area);die;
+    public function listarGradosAction($nivel, $area) { //dump($nivel, $area);die;
 
         $this->session = new Session();
 
@@ -806,6 +816,9 @@ class CreacionCursosEspecialController extends Controller {
         if($area==2 && $this->session->get('idGestion')>=2023) //visual
             $ids = array(1,2,3);
         
+        if( $this->session->get('idGestion')>2023) // para todas las areas 
+            $ids = array(1,2,3);
+
         if($area==10) //mental-psiquica
             $ids = array(1);
 
@@ -837,6 +850,9 @@ class CreacionCursosEspecialController extends Controller {
             }else{
                 $servicios = array(20);
             }//array(6,7,20)
+            if($modalidad == 3 AND $area == "6" ){
+                $servicios = array(1,2,3,4,5);
+            }
         }
         elseif ($area == "7" and $nivel == "410" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
@@ -851,6 +867,10 @@ class CreacionCursosEspecialController extends Controller {
                     //$servicios = array(20);//8,9
                     $servicios = array(8,9,30,31);//8,9
                 }
+                if($modalidad == 3){
+                    $servicios = array(1,2,25,4,29);
+                }
+
             }//array(8,9,10,11,12,14,15)
         }
         elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9"  or $area == "12")  and $nivel == "410" and  $grado == "99" ) {
@@ -867,6 +887,17 @@ class CreacionCursosEspecialController extends Controller {
                 }else{
                     $servicios = array(20);
                 }
+
+                if($modalidad == 3  AND $area == "1"){
+                    $servicios = array(1,2,3,4,25,27,40);
+                }
+                if($modalidad == 3 AND ($area == "3" OR $area == "12" ) ){
+                    $servicios = array(5,1,2,3,4,25,27,26,28);
+                }
+                if($modalidad == 3 AND $area == "4" ){
+                    $servicios = array(3, 27,2,25,1,4,5);
+                }
+               
                
             }
             //array(1,2,3,4,5,20)
@@ -876,6 +907,9 @@ class CreacionCursosEspecialController extends Controller {
                 $servicios = array(1,2,3,4,5,28);
             }else{
                 $servicios = array(21);
+                if($this->session->get('idGestion') > 2023){
+                    $servicios = array(20);
+                }
             }//array(1,2,3,4,5,21)
             if($modalidad == 3){
                 $servicios = array(1,2,3,4,5,28,35,36,37,38);
@@ -915,8 +949,11 @@ class CreacionCursosEspecialController extends Controller {
                 
                 $programas = array(19, 20, 21, 22);
             }
-            if ($this->session->get('idGestion') >= 2023) {
+            if ($this->session->get('idGestion') == 2023) {
                 $programas = array(39,19,22,41,42,43,44,45,46);
+            }
+            if ($this->session->get('idGestion') > 2023) {
+                $programas = array(39,19,22,41,42,43,44,45);
             }
             
         }
@@ -958,8 +995,11 @@ class CreacionCursosEspecialController extends Controller {
         elseif (( $area == "12") and ($nivel == "411" or $nivel == "409" ) and  $grado == "99" ) { //Programas
                 $programas = array(99);
     
-                if ($this->session->get('idGestion') >=2023 && $nivel=="411") {
+                if ($this->session->get('idGestion') ==2023 && $nivel=="411") {
                     $programas = array(38);   //--- 
+                }
+                if ($this->session->get('idGestion') >2023 && $nivel=="411") {
+                    $programas = array(37,38);   //--- 
                 }
                 if ($this->session->get('idGestion') >=2023 && $nivel=="409") {
                     $programas = array(28);   //--- 
