@@ -916,6 +916,8 @@ class StudentsInscriptionsController extends Controller {
       // get the send values 
       $iecId = $request->get('iecId');
       $studentId = $request->get('studentId');
+      $periodo = $this->session->get('ie_per_cod');
+      $gestion = $this->session->get('ie_gestion');
       $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
@@ -951,7 +953,7 @@ class StudentsInscriptionsController extends Controller {
             $aproved = true; 
             $message = '';
 
-            $resultsRegular = $this->checkIfRegularStudentNowGestion( $studentId );
+            $resultsRegular = $this->checkIfRegularStudentNowGestion( $studentId, $gestion );
 
             $epaIds = '35, 34';
             $courseEPA = $this->checkCeaStudyType( $iecId, $epaIds );
@@ -982,12 +984,11 @@ class StudentsInscriptionsController extends Controller {
               if( $resultsRegular[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
                 $aproved = true;
               } 
-
             }
 
             // 2 -  DE EPA A ETA, DIFERENTES HORARIOS SI ES DIFERENTE CEA
             $etaIds = '34, 35';
-            $existStudentEPA = $this->checkCeaOfStudent( $studentId, $etaIds );
+            $existStudentEPA = $this->checkCeaOfStudent( $studentId, $etaIds, $periodo, $gestion);
 
             if( $existStudentEPA && $resultsEta ){
               $aproved = false;
@@ -996,12 +997,14 @@ class StudentsInscriptionsController extends Controller {
                 if( $existStudentEPA[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
                   $aproved = true;
                 }
+              } else {
+                $aproved = true;
               }
 
             }
             // 3 - DE ESA A ETA, DIFERENTES HORARIOS SI ES DIFERENTE CEA
             $etaIds = '45, 49, 52';
-            $existStudentESA = $this->checkCeaOfStudent( $studentId, $etaIds );
+            $existStudentESA = $this->checkCeaOfStudent( $studentId, $etaIds, $periodo, $gestion);
 
             if( $existStudentESA && $resultsEta ){
               $aproved = false;
@@ -1010,6 +1013,8 @@ class StudentsInscriptionsController extends Controller {
                 if( $existStudentESA[0]['turno_tipo_id'] != $resultsEta[0]['turno_tipo_id'] ){
                   $aproved = true;
                 }
+              } else {
+                $aproved = true;
               }
 
             }
@@ -1164,44 +1169,44 @@ class StudentsInscriptionsController extends Controller {
 
     }
 
-    public function checkCeaOfStudent( $estudianteId, $acreditacionTipoIds ){
+    public function checkCeaOfStudent( $estudianteId, $acreditacionTipoIds, $periodo, $gestion ){
 
       $em = $this->getDoctrine()->getManager();
       $db = $em->getConnection();
-
       $query = "select sae.superior_acreditacion_tipo_id, ic.id,ic.turno_tipo_id, ic.institucioneducativa_id 
-                    from superior_facultad_area_tipo sfat 
-                    inner join superior_especialidad_tipo set2 on sfat.id=set2.superior_facultad_area_tipo_id 
-                    inner join superior_acreditacion_especialidad sae on set2.id=sae.superior_especialidad_tipo_id 
-                    inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
-                    inner join superior_institucioneducativa_acreditacion sia on sia.acreditacion_especialidad_id=sae.id
-                    inner join superior_institucioneducativa_periodo sip on sip.superior_institucioneducativa_acreditacion_id=sia.id
-                    inner join institucioneducativa_curso ic on ic.superior_institucioneducativa_periodo_id=sip.id 
-                    inner join estudiante_inscripcion ei on ic.id=ei.institucioneducativa_curso_id 
-                    where sae.superior_acreditacion_tipo_id in (".$acreditacionTipoIds.")
-                    and ei.estudiante_id=".$estudianteId."
-                    order by ic.gestion_tipo_id desc
-                    ";
+                from superior_facultad_area_tipo sfat 
+                inner join superior_especialidad_tipo set2 on sfat.id=set2.superior_facultad_area_tipo_id 
+                inner join superior_acreditacion_especialidad sae on set2.id=sae.superior_especialidad_tipo_id 
+                inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id=sat.id
+                inner join superior_institucioneducativa_acreditacion sia on sia.acreditacion_especialidad_id=sae.id
+                inner join superior_institucioneducativa_periodo sip on sip.superior_institucioneducativa_acreditacion_id=sia.id
+                inner join institucioneducativa_curso ic on ic.superior_institucioneducativa_periodo_id=sip.id 
+                inner join estudiante_inscripcion ei on ic.id=ei.institucioneducativa_curso_id 
+                inner join institucioneducativa_sucursal is2 on sia.institucioneducativa_sucursal_id = is2.id
+                where sae.superior_acreditacion_tipo_id in (". $acreditacionTipoIds .")
+                and ei.estudiante_id= ". $estudianteId ."
+                and ic.gestion_tipo_id = ". $gestion ."
+                and is2.periodo_tipo_id = ". $periodo ."
+                order by ic.gestion_tipo_id desc";
       $stmt = $db->prepare($query);
       $params = array();
       $stmt->execute($params);
       $results = $stmt->fetchAll();
-
       return $results;
 
     }
 
-    public function checkIfRegularStudentNowGestion( $studentId ){
+    public function checkIfRegularStudentNowGestion( $studentId, $gestion ){
 
       $em = $this->getDoctrine()->getManager();
       $db = $em->getConnection();
-
       $query = "select ic.id, ei.estudiante_id, ic.gestion_tipo_id, ic.turno_tipo_id from estudiante_inscripcion ei 
                         inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id=ic.id 
                         inner join institucioneducativa i on ic.institucioneducativa_id=i.id 
                         where i.institucioneducativa_tipo_id=1
                         and ei.estudiante_id=".$studentId."
-                        and ic.gestion_tipo_id=2024
+                        and ic.gestion_tipo_id=".$gestion."
+                        and ei.estadomatricula_tipo_id in (4,5,55,11,10,28)
                         order by ic.gestion_tipo_id desc
                         limit 1
                         ";
@@ -1209,7 +1214,6 @@ class StudentsInscriptionsController extends Controller {
       $params = array();
       $stmt->execute($params);
       $results = $stmt->fetchAll();
-
       return $results;
 
     }
