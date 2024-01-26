@@ -606,6 +606,8 @@ class StudentsInscriptionsController extends Controller {
       $folio = mb_strtoupper($request->get('folio'), 'utf-8');
 
       $fecNac = $request->get('fecNac');
+      $fecNac = \DateTime::createFromFormat('d-m-Y', $fecNac);
+      $fecNac = $fecNac->format('d-m-Y');
       $generoId = $request->get('generoId');
       $carnet = $request->get('carnet');
       $complemento = mb_strtoupper($request->get('complementoval'), 'utf-8');
