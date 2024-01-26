@@ -2176,8 +2176,8 @@ class Funciones {
         // dump($oficialia);
         // dump($libro);
         // dump($partida);
-        // dump($folio);
-        // die;
+        //  dump(new \DateTime($data['fechaNacimiento']));
+        //  die;
         $query = $this->em->createQueryBuilder('e')
                 ->select('e')
                 ->from('SieAppWebBundle:Estudiante','e')
@@ -2192,7 +2192,7 @@ class Funciones {
                 ->setParameter('paterno', '%' . mb_strtoupper($data['paterno'], 'utf8') . '%')
                 ->setParameter('materno', '%' . mb_strtoupper($data['materno'], 'utf8') . '%')
                 ->setParameter('nombre', '%' . mb_strtoupper($data['nombre'], 'utf8') . '%')
-                ->setParameter('fechaNacimiento', $data['fechaNacimiento'])
+                ->setParameter('fechaNacimiento', new \DateTime($data['fechaNacimiento']))
                 ->setParameter('oficialia', mb_strtoupper($oficialia, 'utf8'))
                 ->setParameter('libro', mb_strtoupper($libro, 'utf8'))
                 ->setParameter('partida', mb_strtoupper($partida, 'utf8'))
