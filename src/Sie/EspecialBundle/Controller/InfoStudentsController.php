@@ -432,13 +432,14 @@ class InfoStudentsController extends Controller {
             ));
         }
       }
-      else { /*191123 esto comentar cuando sea etapa de inscripcuibm, solo se habilito para TALENTO por HR 54332/2023 */ 
+      /*
+      else { //191123 esto comentar cuando sea etapa de inscripcuibm, solo se habilito para TALENTO por HR 54332/2023 
        $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
           return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
               'exist'=>false
         ));
       }
-
+     */
       $listaprogramas = array(7,8,9,10,11,14,15,16);
       if($dataUe['requestUser']['gestion'] >= 2022){
         $listaprogramas = array(7,8,25,29,26,12);
@@ -554,8 +555,7 @@ class InfoStudentsController extends Controller {
   /**
   * methdo to save the new inscription
   **/
-  public function saveInscriptionAction(Request $request){
-    //create the conexion DB
+  public function saveInscriptionAction(Request $request){ 
     $em = $this->getDoctrine()->getManager();
     $em->getConnection()->beginTransaction();
     //get the send values
@@ -576,7 +576,10 @@ class InfoStudentsController extends Controller {
     $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
     $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
   //set the validate year
-
+  $id_usuario = $this->session->get('userId');
+ 
+ // die;
+    //create the conexion DB
     try {
       //restart the id on estudiante_inscripcion table
       $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
@@ -591,6 +594,7 @@ class InfoStudentsController extends Controller {
       $studentInscription->setObservacion(1);
       $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
       $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
+      $studentInscription->setUsuarioId($id_usuario);
       $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($aInfoUeducativa['ueducativaInfoId']['iecId']));
       //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
       $studentInscription->setCodUeProcedenciaId(0);
