@@ -363,10 +363,15 @@ class CursosLargosController extends Controller {
             $query->execute();
             $idpersup= $query->fetchAll();
             $em->getConnection()->beginTransaction();
-             //dump($idpersup);
+            
             //Invoca a una funcion de Base de Datos Necesaria para cualquier INSERT, para que se reinicie la secuencia de ingreso de datos
             //  $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
             // Realiza un INSERT para la creacion de un curso nuevo con los datos extraidos de la vista
+            if (count($idpersup)>1){ 
+                $this->get('session')->getFlashBag()->add('advertencia', 'Inconsistencia en la especialidad, se sugiere verificar la malla curricular.');
+                return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
+            }
+
             try{
                 
                 $institucioncurso = new  InstitucioneducativaCurso();
@@ -380,7 +385,7 @@ class CursosLargosController extends Controller {
                 $institucioncurso ->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($this->session->get('ie_per_cod')));
                 $institucioncurso ->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneBy(array('id' => $form['turno'])));
                 $institucioncurso ->setDuracionhoras($form['horas']);
-                $institucioncurso ->setSuperiorInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->findOneBy(array('id' => $idpersup['supinstperiodoid'])));
+                $institucioncurso ->setSuperiorInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->findOneBy(array('id' => $idpersup[0]['supinstperiodoid'])));
                 $institucioncurso ->setFechaInicio(new \DateTime($form['fechaInicio']));
                 $institucioncurso ->setFechaFin(new \DateTime($form['fechaFin']));
                 $em->persist($institucioncurso); 
