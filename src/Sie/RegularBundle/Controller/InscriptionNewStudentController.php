@@ -181,7 +181,7 @@ class InscriptionNewStudentController extends Controller {
                     $infoInscription = $inscription;
                     $sw = false;
                 }else{
-                    if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
+                    if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='55' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
                       $infoInscription = $inscription;
                       $sw=false;
                     }
@@ -745,6 +745,7 @@ class InscriptionNewStudentController extends Controller {
             $levelStudent = -1;
             break;
           case 5:
+          case 55:
           case 56:
           case 57:
           case 58:
