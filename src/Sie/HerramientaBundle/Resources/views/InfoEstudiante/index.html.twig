@@ -152,7 +152,6 @@ line-height: 1.83333em;}
 
                 <small>
                     <div class="tree well">
-
                         {%for turnoKey, dataTurno in aInfoUnidadEductiva%}
                             <ul>
                                 <li>
@@ -166,7 +165,7 @@ line-height: 1.83333em;}
 
                                                         <li style="display:none">
                                                             <span><i class="icon-minus-sign"></i> {{gradoKey}}</span>
-
+                                                            
                                                             <ul>
                                                                 {% for paraleloKey, dataParalelo in dataGrado %}
                                                                     <li style="display:none">
@@ -177,11 +176,13 @@ line-height: 1.83333em;}
                                                                             </span>
                                                                         </div>
                                                                       </a>
-                                                                      {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Ratificación de inscripción automática">
+                                                                      {% if arrLevelandGrado.operativo == 0 %}
+                                                                      <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Ratificación de inscripción automática">
                                                                          <button class="btn btn-circle btn-success btn-stroke " onclick="asignarParalelo('{{dataParalelo.infoUe}}');">
                                                                             <i class="fa fa-check-square-o"></i>
                                                                          </button>
-                                                                      </div> #}
+                                                                      </div>
+                                                                      {% endif %}
                                                                       {#
                                                                       {% if ( dataGrado[paraleloKey].nivelId in [11] and dataGrado[paraleloKey].gradoId in [2]) or   ( dataGrado[paraleloKey].nivelId in [12] and dataGrado[paraleloKey].gradoId in [1,2,3,4,5,6]) or ( dataGrado[paraleloKey].nivelId in [13] and dataGrado[paraleloKey].gradoId in [1,2,3,4,5,6])%}
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
