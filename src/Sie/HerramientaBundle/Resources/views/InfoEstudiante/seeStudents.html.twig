@@ -81,9 +81,12 @@
                       </div>
                     {% endif %}
                     #}
+                    {# boletin centralizador 2024 #}
+                    {# {% if operativo > 1 %}
                         <a class="btn btn-menu tooltips" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Boletín centralizador preliminar">
                             <i class="fa fa-file-text-o" ></i>
                         </a>
+                    {% endif %} #}
                     {# by krlos inscription #}
                     {% if (gestion == 2021) and (app.session.get('esGuanawek') and app.session.get('esGuanawek')==1) %}
                         {% if ( nivel in [11] and grado in [2]) or( nivel in [12] and grado in [1,2,3,4,5,6]) or ( nivel in [13] and grado in [1,2,3,4,5,6])%}
@@ -283,13 +286,13 @@
                                     #}
                                     {# HABILITA FORMULARIO RUDE #}
 
-                                    {% if  gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                    {# {% if  gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %} #}
+                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
-                                        </div>
-                                    {% endif %}
+                                        </div> #}
+                                    {# {% endif %} #}
                                     {#
                                     {% if swRegisterCalifications %}
                                         {% if gestion >= 2021 and data.estadomatriculaId in [4] %}
@@ -313,11 +316,11 @@
                                     {#Sea añadio el boton de reporte formulario RUDE#}
                                     {# if true #}
                                     {% if app.session.get('roluser') in [9] and app.session.get('optionReporteRude') %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Rude ">
+                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Rude ">
                                            <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('download_formulario_rude', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                            </a>
-                                        </div>
+                                        </div> #}
                                     {% endif %}
 
                                     {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
@@ -446,12 +449,12 @@
                                                         {% else %}
                                                         
                                                             {% if gestion >= 2021 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') %} 
-                                                                {% if gestion <= 2022 and nivel == 13 and grado == 4 %} 
-                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                {% if gestion <= 2023 and nivel == 13 and grado == 4 %} 
+                                                                    {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                             <i class="fa fa-list"></i>
                                                                         </button>
-                                                                    </div>
+                                                                    </div> #}
                                                                 {% else %}          
                                                                     {# ojo aqui 81981543#}
                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
@@ -461,12 +464,14 @@
                                                                     </div>
                                                                 {% endif %}
                                                             {% else %}                                          
-                                                                    {# ojo aqui 81981543#}
-                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                    {# ojo aqui #}
+                                                                {% if operativo > 0 %}    
+                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div>
+                                                                </div> #}
+                                                                {% endif %}
                                                             {% endif %}
                                                             
                                                         {% endif %}
