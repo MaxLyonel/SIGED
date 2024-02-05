@@ -198,7 +198,7 @@ class InboxController extends Controller {
 
         //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
         $this->unidadEducativa = $this->session->get('ie_id');
-        //dump( $this->unidadEducativa);die;
+        //  dump( $this->unidadEducativa);die;
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -795,7 +795,6 @@ class InboxController extends Controller {
       } else {*/
 
         $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $ieducativa, 'gestion' => $data['gestion']));
-        // dump($registroConsol); exit();
         if ($registroConsol) {
           if ($ieducativa) {
             if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) && (($registroConsol->getBim3()==2) || ($registroConsol->getBim4()==2)) ) {
@@ -822,26 +821,33 @@ class InboxController extends Controller {
         }
 
         //dump($this->session->get('pathSystem')); die; sieHerramientaBundle
-        if(in_array($data['gestion'], array(2023,2022,2021) )){
-            $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'3er. Trim.');
+        if(in_array($data['gestion'], array(2024,2023,2022,2021) )){
+            $arrLabelToClose = array('0'=>'Inscripciones','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'3er. Trim.');
         }else{
             $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'4to. Trim.');
         }
         
-        $dataInfo['messageope']='Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
-        // dump($trimestre);die;
+        if ($trimestre == 0){
+          $dataInfo['messageope']='Cerrar '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
+          $nextButton = 'Cerrar '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
+        } else {
+          $dataInfo['messageope']='Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
+          $nextButton = 'Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
+        }
+        
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
           'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
           'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Personal Docente',$data)->createView(),
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
-          'closeOperativoInscriptionform' => $this->CloseOperativoInscriptionForm('herramienta_inbox_close_operativo_inscription', 'Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])],$data)->createView(),
+          'closeOperativoInscriptionform' => $this->CloseOperativoInscriptionForm('herramienta_inbox_close_operativo_inscription',$nextButton,$data)->createView(),
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
           'tuicion'=>$tuicion,
           'bimestre'=>$trimestre,
-          'objObsQA' => $objObsQA,          
+          'objObsQA' => $objObsQA,
+          'operativo' => $operativo,          
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
           'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
           'operativoBonoJPform' => $this->InfoStudentForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP...',$data)->createView(),
@@ -1848,8 +1854,8 @@ class InboxController extends Controller {
       if($inconsistencia){
         $observation = true;
       }
+      
       // if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
-           
       if($observation){ 
         $this->session->set('donwloadLibreta', false);
         return new JsonResponse([
@@ -1886,7 +1892,13 @@ class InboxController extends Controller {
             $registroConsol->setBan(1);
             $registroConsol->setEsonline('t');
             $registroConsol->setInstitucioneducativaTipoId(1);
-
+            $data = array(
+              'operativoTipo' => 3,
+              'gestion' => $form['gestion'],
+              'id' => $form['sie'],
+              'operativo' => $operativo,
+            );   
+            $this->saveLog($data);
           }else{
             if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
@@ -2030,12 +2042,16 @@ class InboxController extends Controller {
         $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
         
         //save the log data
+        if ($data['operativo'] > 0) 
+          $operativo = $data['operativo']+5;
+        else 
+          $operativo = $data['operativo'];
         $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($data['operativoTipo']));
         $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
         $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
         $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['id']));
         $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
-        $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['operativo']+5));
+        $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($operativo));
         $objDownloadFilenewOpe->setDescripcion('...');
         $objDownloadFilenewOpe->setEsexitoso('t');
         $objDownloadFilenewOpe->setEsonline('t');

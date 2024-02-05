@@ -785,6 +785,7 @@ class TextoEducativoController extends Controller
         $id_inst_curso = $request->get('id_inst_curso');
         $gestion = $request->get('gestion');
         $estudiante_id = $request->get('estudiante_id');
+        $id_usuario = $this->session->get('userId');
 
         // dump("-----------------------"); 
         if(is_array($estudiante_id)){
@@ -846,6 +847,9 @@ class TextoEducativoController extends Controller
 	              $estInscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudiante_id[$i]));
 	              $estInscripcion->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($id_inst_curso));
 	              $estInscripcion->setFechaRegistro(new \DateTime('now'));
+                $estInscripcion->setCodUeProcedenciaId($sie);
+                $estInscripcion->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));
+                $estInscripcion->setUsuarioId($id_usuario);
 	              $em->persist($estInscripcion);
                 $em->flush();
                 
