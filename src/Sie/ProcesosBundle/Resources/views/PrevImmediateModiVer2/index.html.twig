@@ -157,7 +157,6 @@
     <div id="app">
     <div v-cloak>
         <div class="body-content animated fadeIn">
-
             <div class="panel panel-primary" v-if="urlreporte == ''">
                 <div class="panel-heading yearOld">
                     <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario </h3>
@@ -492,7 +491,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="datos.gestion >= 2022 && datos.cualitativas.length > 0 && datos.nivel != 11 && datos.nivel != 13 && datos.tipoSubsistema != 4">
+                                <tr v-if="datos.gestion >= gestant && datos.cualitativas.length > 0 && datos.nivel != 11 && datos.nivel != 13 && datos.tipoSubsistema != 4">
                                     <td align="center" colspan="4">PROMEDIO ANUAL</td>
                                     <td v-for="c in datos.cualitativas" align="center">
                                         {# <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" v-bind:value="c.notaCuantitativa" v-bind:class="['form-control','input-sm', 'p'+c.idNotaTipo]" v-model="promedioGeneral"> #}
@@ -803,7 +802,7 @@
                 agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura, gestion){
                     //console.log(nota);return false;
                     if(nota == ''){alert('No permitido');return false;}
-                    if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion == 2022) {
+                    if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion == '{{ gestant }}') {
 
                         var index = this.filas.indexOf(idFila);
                         
@@ -868,7 +867,7 @@
                                     }
 
                                     // NOTAS trimestrales - 2022
-                                    if ( gestion == 2022 && ((idNotaTipo == 6 || idNotaTipo == 7 || idNotaTipo == 8 ) && value > 100) ){
+                                    if ( gestion == '{{ gestant }}' && ((idNotaTipo == 6 || idNotaTipo == 7 || idNotaTipo == 8 ) && value > 100) ){
                                         return 'La calificación no puede ser mayor a 100!'
                                     }                                    
 
@@ -994,7 +993,7 @@
                             if(nota.notaNueva > 100){ nota.notaNueva = 100; }                            
                             console.log('notaaaaaa22'+nota.notaNueva);
                         }else{
-                            if(nota.gestion == 2022){
+                            if(nota.gestion == '{{ gestant }}'){
                                 if(nota.notaNueva < 0){ nota.notaNueva = 0; }
                                 if(nota.notaNueva > 100){ nota.notaNueva = 100; }
                             }else{
@@ -1048,7 +1047,7 @@
                     var cantidadPromedios = 0;
                     var arrayPromedios = [];
                     //to year 2020 and avg trim
-                    if(this.gestion == 2022){
+                    if(this.gestion == '{{ gestant }}'){
                         $.each(this.datos.cuantitativas, function(index, val) {
                             nulos = 0;
                             suma = 0;
