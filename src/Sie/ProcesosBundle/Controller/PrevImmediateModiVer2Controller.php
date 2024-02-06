@@ -49,6 +49,7 @@ class PrevImmediateModiVer2Controller extends Controller{
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
         $ie_id = $this->session->get('ie_id');
+        $gestionAnterior = $this->session->get('currentyear')-1;
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -80,7 +81,8 @@ class PrevImmediateModiVer2Controller extends Controller{
             'flujoTipo'=>$flujoTipo,
             'historial'=>$historial,
             'idTramite'=>$idTramite,
-            'sieActual'=>$ie_id
+            'sieActual'=>$ie_id,
+            'gestant'=>$gestionAnterior
         ));
     }
 
