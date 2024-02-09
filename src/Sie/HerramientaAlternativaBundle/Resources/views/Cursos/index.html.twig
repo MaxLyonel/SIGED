@@ -70,8 +70,8 @@
                                 </button>
                             </div>
                             {# {% endif %} #}
-                            
-                            {% if ( app.session.get('roluser') == 8 ) %} 
+                            {% if app.session.get('roluser') == 8 or (app.session.get('roluser') == 9 and app.session.get('ie_gestion') == app.session.get('currentyear')) %}
+
                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
                                     <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
                                         <i class="fa fa-cubes"></i> Nuevo Curso
