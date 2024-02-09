@@ -59,10 +59,9 @@ class CursoAlternativaController extends Controller {
         $query = "  select b.id as id, b.especialidad as especialidad
                         from superior_facultad_area_tipo a
                         inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
-
                         where 
                         a.codigo = '".$areacod."'
-                        and b.id not in ('312','313','238','224','210','315')
+                        and b.id not in ('312','313','238','224','210','315','133','150','112')
                         order by a.codigo, b.codigo";
         
         $niveles= $db->prepare($query);
