@@ -157,7 +157,7 @@ class InfoEspecialController extends Controller{
                 'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Cursos',$data)->createView(),
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
                 'data'=>$dataInfo,
-               // 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
+                'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
                 //'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
                 'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
@@ -346,6 +346,8 @@ class InfoEspecialController extends Controller{
   }
 /** INSCRIPCION */
   public function closeOperativoAction (Request $request){ 
+
+      
       //crete conexion DB
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
@@ -356,11 +358,14 @@ class InfoEspecialController extends Controller{
       $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
 
       //update the close operativo to registro consolido table
+      //dump($form['gestion']); die; 
      
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
           'unidadEducativa' => $form['sie'], 
           'gestion' => $form['gestion']
         ));
+
+      //dump( $registroConsol); die;
       
       $periodo = 0; //para inscripcion
 
@@ -369,6 +374,7 @@ class InfoEspecialController extends Controller{
       if($registroConsol){
         $estado = 'CON_INSC';
       }
+      //dump($estado); die;
       if($estado==''){
         $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
         $query->bindValue(':igestion_id', $form['gestion']);
@@ -515,7 +521,7 @@ class InfoEspecialController extends Controller{
      //dump($registroConsol);die;
      // $periodo = $this->operativo($form['sie'], $form['gestion']);
      $periodo = $this->operativo($cod_sie, $gestion);
-     // dump($periodo);die;
+     //dump($periodo);die;
       $estado = '';
       if(!$registroConsol){
         $estado = 'SIN_INSC';
