@@ -423,6 +423,11 @@ class InfoStudentsController extends Controller {
     $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rudeal']));
     //check if the student exist
     if($objStudent){
+      ///// descomentar estas dd\os lineas para que nadie se inscriba
+       //  $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
+        // return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
+    ///////fin de validacion de inscripcion
+      
       if($dataUe['ueducativaInfoId']['areaEspecialId']==7) {
         $estudianteTalento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $objStudent->getId()));
         if (empty($estudianteTalento)) {
@@ -440,6 +445,7 @@ class InfoStudentsController extends Controller {
         ));
       }
      */
+ 
       $listaprogramas = array(7,8,9,10,11,14,15,16);
       if($dataUe['requestUser']['gestion'] >= 2022){
         $listaprogramas = array(7,8,25,29,26,12);
