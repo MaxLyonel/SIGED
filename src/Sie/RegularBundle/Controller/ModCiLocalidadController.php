@@ -390,12 +390,14 @@ class ModCiLocalidadController extends Controller {
                 } else {
                     $fechaNacimiento =  $student->getFechaNacimiento()->format('d-m-Y'); 
                 }
+
                 if(isset($form['cedulatipo'])){
                     $cedulaTipo = $form['cedulatipo'];
                 } else {
                     $cedulaTipo =  $student->getCedulaTipo(); 
                 }
-
+                
+                // dump($student->getCedulaTipo());die;
                 //$fechaNacimiento = date('dd-MM-yyyy',$student->getFechaNacimiento()); 
 
                 if(isset($form['localidad'])){
@@ -410,7 +412,7 @@ class ModCiLocalidadController extends Controller {
                     'segundo_apellido' => $materno,
                     'nombre' => $nombre,
                     'fecha_nacimiento' => $fechaNacimiento,
-                    'tipo_persona' => $cedulaTipo == null ? 1 : $cedulaTipo->getId()
+                    'tipo_persona' => $cedulaTipo == null ? 1 : (is_object($cedulaTipo) ? $cedulaTipo->getId() : 1)
                 ];
                 
                 $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad, $data, 'prod', 'academico');
