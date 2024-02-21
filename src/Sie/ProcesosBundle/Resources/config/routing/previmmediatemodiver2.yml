@@ -98,4 +98,8 @@ tramite_modificacion_calificaciones_acta_imprimir:
 
 previmmediatemodiver2_download_inscriptionScore_yearOld:
     path:     /ficgp/{{idTramite}
-    defaults: { _controller: SieProcesosBundle:PrevImmediateModiVer2:requestInsCalYearOld }  
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModiVer2:requestInsCalYearOld } 
+
+previmmediatemodiver2_download_solicitud_mod_cal_ant:
+    path:     /ficgp/
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModiVer2:formularioVistaImprimirSolModAnt }   
