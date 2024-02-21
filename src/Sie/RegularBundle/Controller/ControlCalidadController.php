@@ -27,7 +27,6 @@ class ControlCalidadController extends Controller {
 
     // Para Distrito
     public function indexAction(Request $request) {
-        dump('ok');die;
         $id_usuario = $this->session->get('userId');
 
         if (!isset($id_usuario)) {
