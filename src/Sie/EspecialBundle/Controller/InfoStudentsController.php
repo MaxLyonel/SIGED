@@ -424,8 +424,8 @@ class InfoStudentsController extends Controller {
     //check if the student exist
     if($objStudent){
       ///// descomentar estas dd\os lineas para que nadie se inscriba
-      //$this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
-      //return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
+      $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
+      return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
     ///////fin de validacion de inscripcion
       
       if($dataUe['ueducativaInfoId']['areaEspecialId']==7) {
