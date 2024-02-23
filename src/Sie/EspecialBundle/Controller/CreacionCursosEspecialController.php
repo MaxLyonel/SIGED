@@ -785,9 +785,9 @@ class CreacionCursosEspecialController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $niveltecnico = '';
         if ($nivel == "404" or $nivel == "405" ) { //TECNICA
-            $niveltecnico = array(1,2,3,4);
-            if($area==1 or $area==2 or $area==4){
-                $niveltecnico = array(1,2,3);
+            $niveltecnico = array(1,2,3,4,5,6);
+            if($area==1){
+                $niveltecnico = array(1,2,3,4);
             }
         }
         $nivelestecnicosArray = array();
