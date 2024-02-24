@@ -529,7 +529,7 @@ class InfoCentroController extends Controller {
          $em = $this->getDoctrine()->getManager();      
          //$query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
          //$query = $em->getConnection()->prepare("select * from public.sp_alerta_materia_sin_maestro('2022', '80730274')");
-         $query = $em->getConnection()->prepare("select * from sp_validacion_regular_inscripcion_ig_web('2022','$ueid','0');");
+         $query = $em->getConnection()->prepare("select * from sp_validacion_regular_inscripcion_ig_web('2024','$ueid','0');");
          $query->execute();
          $valor= $query->fetchAll();
         // dump($valor); die;
