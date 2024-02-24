@@ -62,7 +62,10 @@ class NewInscriptionExtranjeroController extends Controller{
     public function indexAction(Request $request){
       //disabled option by krlos
       //return $this->redirect($this->generateUrl('login'));
-     if (in_array($this->session->get('roluser'), array(8,7,10,9))){
+      if (in_array($this->session->get('roluser'), array(9))){
+          return $this->redirect($this->generateUrl('login'));
+      }
+     if (in_array($this->session->get('roluser'), array(8,7,10))){
 
      }else{
       //to do the ue cal diff
