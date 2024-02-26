@@ -594,7 +594,8 @@ class InfoStudentsController extends Controller {
       $studentInscription = new EstudianteInscripcion();
       $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($aInfoUeducativa['requestUser']['sie']));
       $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($aInfoUeducativa['requestUser']['gestion']));
-      $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+      //extemporaneos especial
+      $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7));
       $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['studentId']));
       $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
       $studentInscription->setObservacion(1);
