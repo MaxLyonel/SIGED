@@ -109,19 +109,25 @@
             
              {% if data.gestion == 2024 %} 
            
-                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                    <div class="thumbnail">
-                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Inscripción">
-                        <div class="caption text-center">
-                            <h4>Cerrar Operativo Inscripción Extemporáneo</h4>
-                            <div class="thumbnail-action">
-                                {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
-                                    {{form_widget(closeOperativoform.next)}}
-                                {{form_end(closeOperativoform)}}
+               
+
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="thumbnail">
+                            <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Inscripción">
+                            <div class="caption text-center">
+                                <h4>Cerrar Operativo Inscripción </h4>
+                                <div class="thumbnail-action">
+                                    {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                        {{form_widget(closeOperativoform.next)}}
+                                    {{form_end(closeOperativoform)}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+
+               
+
            
                {#
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
