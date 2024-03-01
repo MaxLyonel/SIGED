@@ -1593,7 +1593,7 @@ class PrevImmediateModiVer2Controller extends Controller{
                 /*----------  MODIFICAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
 
                 $this->modificarCalificacionesSIE($idTramite);
-
+                die;
                 /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/                
                 
 
@@ -2332,32 +2332,32 @@ class PrevImmediateModiVer2Controller extends Controller{
                 }
 
                 // CALCULAMOS LOS PROMEDIOS
-                switch ($gestionInscripcion) {
-                    case 2008:
-                    case 2009:
-                    case 2010:
-                    case 2011:
-                    case 2012:  // Notas trimestrales
-                                $this->get('notas')->calcularPromediosTrimestrales($datoNota->getEstudianteAsignatura()->getId());
-                                break;
-                    case 2013:
-                                if($insGrado != 1){
-                                    $this->get('notas')->calcularPromediosTrimestrales($datoNota->getEstudianteAsignatura()->getId());
-                                }else{
-                                    $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
-                                }
-                                break;
-                    case 2020:
-                                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
-                                break;                                
-                    case 2021:
-                    case 2022:
-                                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
-                                break;                                                                
-                    default:
-                                $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
-                                break;
-                }
+                // switch ($gestionInscripcion) {
+                //     case 2008:
+                //     case 2009:
+                //     case 2010:
+                //     case 2011:
+                //     case 2012:  // Notas trimestrales
+                //                 $this->get('notas')->calcularPromediosTrimestrales($datoNota->getEstudianteAsignatura()->getId());
+                //                 break;
+                //     case 2013:
+                //                 if($insGrado != 1){
+                //                     $this->get('notas')->calcularPromediosTrimestrales($datoNota->getEstudianteAsignatura()->getId());
+                //                 }else{
+                //                     $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
+                //                 }
+                //                 break;
+                //     case 2020:
+                //                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
+                //                 break;                                
+                //     case 2021:
+                //     case 2022:
+                //                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                              
+                //                 break;                                                                
+                //     default:
+                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId()); 
+                //                 break;
+                // }
             }
         }
 
