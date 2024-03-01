@@ -1593,7 +1593,6 @@ class PrevImmediateModiVer2Controller extends Controller{
                 /*----------  MODIFICAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
 
                 $this->modificarCalificacionesSIE($idTramite);
-                die;
                 /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/                
                 
 
