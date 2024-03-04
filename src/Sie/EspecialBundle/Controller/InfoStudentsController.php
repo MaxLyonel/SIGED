@@ -423,10 +423,43 @@ class InfoStudentsController extends Controller {
     $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rudeal']));
     //check if the student exist
     if($objStudent){
+      
+      //////////////////////////ajuste temporal para casos incompletos /////////////////////////////////
+      $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+      $query = $inscription2->createQueryBuilder('ei')
+        ->select('ei.id as id, iec.id as iecStudentId')
+        ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+        ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+        ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+        ->where('ei.estudiante = :id')
+        ->andwhere('iec.gestionTipo = :gestion')
+        // ->andwhere('it.id = :ietipo')
+        ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+        ->setParameter('id', $objStudent->getId())
+        ->setParameter('gestion', $dataUe['requestUser']['gestion'])
+        ->setParameter('mat', array(4,5,7,79,78,28))
+        ->getQuery();
+        $selectedInscriptionStudent = $query->getResult();
+        $objInscriptionSpecialNew = $em->getRepository('SieAppWebBundle:EstudianteInscripcionEspecial')->findOneBy(array(
+        'estudianteInscripcion'=>$selectedInscriptionStudent[0]['id']
+    ));
+   
+      if (empty($objInscriptionSpecialNew) && $selectedInscriptionStudent[0]['id'] ) {
+          $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array(
+          'institucioneducativaCurso'=>$selectedInscriptionStudent[0]['iecStudentId']));
+          $studentInscriptionEspecial = new EstudianteInscripcionEspecial();
+          $studentInscriptionEspecial->setInstitucioneducativaCursoEspecial($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->find($curso->getId()));
+          $studentInscriptionEspecial->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($curso->getEspecialAreaTipo()->getId()));
+          $studentInscriptionEspecial->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($selectedInscriptionStudent[0]['id']));
+          $em->persist($studentInscriptionEspecial);
+          $em->flush();
+      }
+      /////////////////////////////////////////////////////////////////////////////////////////////////
+
       ///// descomentar estas dos lineas para que nadie se inscriba
       $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
       return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
-    ///////fin de validacion de inscripcion
+      ///////fin de validacion de inscripcion
       
       if($dataUe['ueducativaInfoId']['areaEspecialId']==7) {
         $estudianteTalento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $objStudent->getId()));
