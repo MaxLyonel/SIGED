@@ -376,7 +376,7 @@ class CreacionCursosEspecialController extends Controller {
         try{
            
             $form = $request->get('form');
-           // dump($form);die;
+            //dump($form);die;
             $nivelTecnico = 99;
             if(isset($form['nivelTecnico'])){
                 $nivelTecnico = $form['nivelTecnico']?$form['nivelTecnico']:99;
@@ -384,6 +384,11 @@ class CreacionCursosEspecialController extends Controller {
             $momento = 99;
             if(isset($form['momento']) && $form['programa']==26){
                 $momento = $form['momento']?$form['momento']:99;
+            }
+
+            $especialidad = 99;
+            if(isset($form['nivel']) && $form['nivel']==405){ // si es tecnica
+                $especialidad = $form['tecnica']?$form['tecnica']:99;
             }
             //dump($nivelTecnico);die;
             $em = $this->getDoctrine()->getManager();
@@ -422,7 +427,7 @@ class CreacionCursosEspecialController extends Controller {
                                 ->setParameter('programa', $form['programa'])
                                 ->setParameter('servicio', $form['servicio'])
                                 ->setParameter('niveltecnico', $nivelTecnico)
-                                ->setParameter('tecnica', $form['tecnica'])
+                                ->setParameter('tecnica', $especialidad)
                                 ->setParameter('momento', $form['momento']);
                                 $curso = $query->getResult(); 
 
@@ -486,7 +491,7 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($form['area']));
                 $nuevo_curso->setEspecialProgramaTipo($em->getRepository('SieAppWebBundle:EspecialProgramaTipo')->find($form['programa']));
                 $nuevo_curso->setEspecialServicioTipo($em->getRepository('SieAppWebBundle:EspecialServicioTipo')->find($form['servicio']));
-                $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($form['tecnica']));
+                $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($especialidad));
                 $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($nivelTecnico));
                 $nuevo_curso->setEspecialModalidadTipo($em->getRepository('SieAppWebBundle:EspecialModalidadTipo')->find($form['modalidad']));
                 $nuevo_curso->setEspecialMomentoTipo($em->getRepository('SieAppWebBundle:EspecialMomentoTipo')->find($momento));
