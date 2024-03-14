@@ -7509,7 +7509,7 @@ die;/*
                 //$estadosPermitidos = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(28,37));
                 $idNotaTipo = 'Modular';
                 $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaTipo')->findBy(array('obs'=>'Modular'));
-                
+       //         dump($tiposNotas);die;
                 foreach ($tiposNotas as $tn) {
                     $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$tn->getId()));
                     $cultura = '';
