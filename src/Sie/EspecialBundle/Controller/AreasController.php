@@ -567,7 +567,17 @@ class AreasController extends Controller {
                             ORDER BY at.id ASC'
                             )->setParameter('ids',$asignaturas)
                             ->getResult();
-                  break;
+                break;
+                case 4099999: 
+                    $asignaturas = array(996,997,998);
+                        $asignaturas = $em->createQuery( //Atención temprana
+                            'SELECT at
+                            FROM SieAppWebBundle:AsignaturaTipo at
+                            WHERE at.id IN (:ids)
+                            ORDER BY at.id ASC'
+                            )->setParameter('ids',$asignaturas)
+                            ->getResult();
+                break;
                 case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId(); //programas
                             //dump($programa);die;
                             switch($programa){
@@ -744,7 +754,7 @@ class AreasController extends Controller {
                                         ->getResult();
                                         
                                     }
-                                        
+                                       
 
                                  break;
                                 case 28: //---atención temprana
@@ -919,7 +929,7 @@ class AreasController extends Controller {
                             }
                             break;
             }
-           ;
+           
            //dump($asignaturas);
 //dump($programaServicio);die;
             $areasNivel = $asignaturas;
