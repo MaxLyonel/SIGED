@@ -2,15 +2,15 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
     type: entity
     table: apoderado_inscripcion_datos
     indexes:
-        idx_apoderado_inscripcion_datos_instruccion_tipo_id:
-            columns:
-                - instruccion_tipo_id
-        idx_apoderado_inscripcion_datos_idioma_materno_id:
-            columns:
-                - idioma_materno_id
         idx_empleo2:
             columns:
                 - empleo
+        idx_apoderado_inscripcion_datos_idioma_materno_id:
+            columns:
+                - idioma_materno_id
+        idx_apoderado_inscripcion_datos_instruccion_tipo_id:
+            columns:
+                - instruccion_tipo_id
         IDX_52D41EC34B8E64C7:
             columns:
                 - actividad_tipo_id
@@ -53,6 +53,13 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
             type: boolean
             nullable: true
             comment: ''
+        institucionTrabaja:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: institucion_trabaja
     manyToOne:
         actividadTipo:
             targetEntity: ApoderadoActividadTipo
@@ -72,6 +79,15 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
                 apoderado_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
+        idiomaMaterno:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         instruccionTipo:
             targetEntity: InstruccionTipo
             cascade: {  }
@@ -88,15 +104,6 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
             inversedBy: null
             joinColumns:
                 ocupacion_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idiomaMaterno:
-            targetEntity: IdiomaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idioma_materno_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
