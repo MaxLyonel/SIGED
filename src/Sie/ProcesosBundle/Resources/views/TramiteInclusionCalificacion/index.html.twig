@@ -437,7 +437,8 @@
                                         <td>${ins.paralelo}</td>
                                         <td>${ins.estadomatricula} </td>
                                         <td>
-                                             <a v-if="(ins.estadomatriculaId == 6 || ins.estadomatriculaId == 5 || ins.estadomatriculaId == 10 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.gestion <2023)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                             <a v-if="(ins.estadomatriculaId == 6 || ins.estadomatriculaId == 5 || ins.estadomatriculaId == 10 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.gestion <2022)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                             <!-- 130324 I Guaygua solicita quitar la gestion 2022 , este ramite aplica a gestiones menores a 2022 por lo que se puso la restriccion-->
                                         </td>
                                     </tr>
                                 </tbody>
