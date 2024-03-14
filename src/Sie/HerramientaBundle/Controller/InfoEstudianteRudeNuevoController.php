@@ -2,6 +2,9 @@
 
 
 namespace Sie\HerramientaBundle\Controller;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\File;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,6 +32,7 @@ use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EstadoCivilTipo;
 use Sie\AppWebBundle\Entity\ObservacionExtranjeroTipo;
 use Sie\AppWebBundle\Entity\RudeObservacionExtranjero;
+use Sie\AppWebBundle\Entity\RudeExtranjero;
 
 use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
 
@@ -75,6 +79,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array(
             'estudianteInscripcion'=>$inscripcion->getId()
         ));
+        // dump($estudiante);
+        // dump($idInscripcion);
+        // dump($rude);die;
         //obtenemos los datos de la tabla estado civil tipo
         $estadoCivilData = $em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findAll();
         if(!is_object($rude)){
@@ -102,6 +109,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $em->flush();
 
             }else{
+                
                 $jg = $em->createQueryBuilder()
                             ->select('jg')
                             ->from('SieAppWebBundle:JurisdiccionGeografica','jg')
@@ -123,36 +131,47 @@ class InfoEstudianteRudeNuevoController extends Controller {
             }
             
         }
+        $rude_ext = $em->getRepository('SieAppWebBundle:RudeExtranjero')->findOneBy(array('rude'=>$rude->getId()));
         
         // OBTENER APODERADOS DEL ESTUDIANTE
         // PADRE
         $padre = $this->obtenerApoderado($idInscripcion,array(1));
         $formPadre = $this->createFormApoderado($rude, $idInscripcion, $padre[0]); 
+        
         // MADRE
         //dump($formPadre);die;
         $madre = $this->obtenerApoderado($idInscripcion,array(2));
         $formMadre = $this->createFormApoderado($rude, $idInscripcion, $madre[0]);
+        
         // TUTOR
         $tutor = $this->obtenerApoderado($idInscripcion,$this->obtenerCatalogo($rude, 'apoderado_tipo'));
         $formTutor = $this->createFormApoderado($rude, $idInscripcion, $tutor[0]);
-
+                
+        // TUTOR EXTRAORDINARIO
+        $tutorExt = $this->obtenerApoderado($idInscripcion,array(14));
+        $formTutorExt = $this->createFormApoderado($rude, $idInscripcion, $tutorExt[0]);
         $ayudaComplemento = ["Complementito","Contenido del complemento, no se refiere al lugar de expedición del documento."];
         $swextranjero = $estudiante->getPaisTipo()->getId();
+        // dump($ayudaComplemento);
+        // dump($formTutor);
+        // dump($formTutorExt);die;
         $obsexttipo = $em->getRepository('SieAppWebBundle:ObservacionExtranjeroTipo')->findAll();
         $rudeObs = $em->getRepository('SieAppWebBundle:RudeObservacionExtranjero')->findBy(['rude' => $rude->getId(),]);
         return $this->render('SieHerramientaBundle:InfoEstudianteRudeNuevo:index.html.twig', [
             'sie'=>$sie,
             'estudiante'=>$estudiante,
-            'formEstudiante'=>$this->createFormEstudiante($rude, $estudiante)->createView(),
+            'formEstudiante'=>$this->createFormEstudiante($rude, $estudiante, $rude_ext)->createView(),
             'formDireccion'=>$this->createFormDireccion($rude)->createView(),
             'formSocioeconomico'=>$this->createFormSocioeconomico($rude)->createView(),
-            'formConQuienVive'=>$this->createFormConQuienVive($rude)->createView(),
+            'formConQuienVive'=>$this->createFormConQuienVive($rude, $rude_ext)->createView(),
             'formPadre'=>$formPadre->createView(),
             'formMadre'=>$formMadre->createView(),
             'formTutor'=>$formTutor->createView(),
+            'formTutorExt'=>$formTutorExt->createView(),
             'padre'=>$padre[0],
             'madre'=>$madre[0],
             'tutor'=>$tutor[0],
+            'te_tutor'=>$tutorExt[0],
             'ayudaComplemento'=>$ayudaComplemento,
             'formLugar'=>$this->createFormLugar($rude)->createView(),
             'inscripcion'=>$inscripcion,
@@ -167,7 +186,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
     /**
      * DATOS DE LA O EL ESTUDIANTE
      */
-    private function createFormEstudiante($rude, $e){
+    private function createFormEstudiante($rude, $e, $rude_ext){
+        // dump($rude_ext->getCiExtranjero());die;
         $em = $this->getDoctrine()->getManager();
         $pais = $e->getPaisTipo()->getId();
         if($pais == 1){
@@ -218,7 +238,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
         // LUGAR DE NACIMIENTO
         $departamentoNacimiento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento);
         $provinciaNacimiento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($provincia);
-
+        // dump($rude_ext->getCodigoDocumento());
+        // dump($rude_ext);
+        // die;
         $form = $this->createFormBuilder()
                     // ->setAction($this->generateUrl('info_estudiante_rude_save_form2'))
                     ->add('rudeId', 'hidden', array('data' => $rude->getId(),'mapped'=>false))
@@ -258,6 +280,34 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     ->add('libro', 'text', array('required' => false, 'data'=>$e->getLibro()))
                     ->add('partida', 'text', array('required' => false, 'data'=>$e->getPartida()))
                     ->add('folio', 'text', array('required' => false, 'data'=>$e->getFolio()))
+
+                    ->add('extCi', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked' => $rude_ext ? $rude_ext->getCiExtranjero() : false)))
+                    ->add('extCiDip', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getCiDiplomatico() : false)))
+                    ->add('extCn', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getCnExtranjero() : false)))
+                    ->add('extDni', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getDni() : false)))
+                    ->add('extPas', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getPasaporte() : false)))
+                    ->add('extDecJur', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getDeclaracion() : false)))
+                    ->add('extCodDoc', 'text', array('required' => false, 'data'=>$rude_ext ? $rude_ext->getCodigoDocumento() : ''))
+                    ->add('extArchDecJur', FileType::class, [
+                        'label' => false,
+                        'required' => false,
+                        'constraints' => [
+                            new File([
+                                'maxSize' => '2M',
+                                'mimeTypes' => [
+                                    'application/pdf',
+                                    'image/jpeg',
+                                    'image/jpg',
+                                    'image/png',
+                                ],
+                                'mimeTypesMessage' => 'Por favor, sube un archivo PDF, JPEG o PNG.',
+                            ]),
+                        ],
+                        'attr' => [
+                            'accept' => '.pdf,.jpeg,.jpg,.png',
+                            'id' => 'extArchDecJur',
+                        ],
+                    ])
                     
                     ->add('tieneDiscapacidad', 'choice', array(
                             'choices'=>array(true=>'Si', false=>'No'),
@@ -334,10 +384,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
     public function saveFormEstudianteAction(Request $request){
 
-        $form = $request->get('form');
-
-        // dump($form);die;
-
+        $data = $request->request->all();
+        $form = $data['form'];
+        $files = $request->files->all();
+        $archivo = $files['form']['extArchDecJur'];
+        $sie = $this->session->get('ie_id');
+        $gestion = $this->session->get('currentyear');
+        // dump($this->session->all());
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);
@@ -379,6 +432,58 @@ class InfoEstudianteRudeNuevoController extends Controller {
         // $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneBy(array('id' => $form['sexo'])));
            $em->persist($estudiante);
            $em->flush();
+        
+        //EXTRANJEROS
+        $rudeext = $em->getRepository('SieAppWebBundle:RudeExtranjero')->findBy(array('rude' => $form['rudeId']));
+        
+        // dump($rudeext);
+        
+        if ( count($rudeext) == 0 and (isset($form['extCi']) or isset($form['extCiDip']) or  isset($form['extCn']) or  isset($form['extDni']) or  isset($form['extPas']) or  isset($form['extDecJur']) or  isset($form['extCodDoc']))){
+            
+            $rudeext = new RudeExtranjero();
+            $rudeext->setRude($em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']));
+            $rudeext->setCiExtranjero(isset($form['extCi']) ? 1:0);
+            $rudeext->setCiDiplomatico(isset($form['extCiDip']) ? 1:0);
+            $rudeext->setCnExtranjero(isset($form['extCn']) ? 1:0);
+            $rudeext->setDni(isset($form['extDni']) ? 1:0);
+            $rudeext->setPasaporte(isset($form['extPas']) ? 1:0);
+            $rudeext->setDeclaracion(isset($form['extDecJur']) ? 1:0);
+            
+            if ($archivo !== null) {
+                $nArcMemo = $this->guardarArch($sie, $form['rudeId'], $gestion, 'RUDE_EXT', $archivo);
+                $rudeext->setArchivo($nArcMemo);
+            } else {
+                $rudeext->setArchivo('');
+            }
+            $rudeext->setCodigoDocumento($form['extCodDoc']);
+            // $rudeext->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
+            // $rudeext->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
+            // $rudeext->setFechaRegistro(new \DateTime('now'));
+            $em->persist($rudeext);
+            $em->flush();
+        } else {
+            $rudeext = reset($rudeext);
+
+            // Configuración común
+            $rudeext->setCiExtranjero(isset($form['extCi']) ? 1 : 0);
+            $rudeext->setCiDiplomatico(isset($form['extCiDip']) ? 1 : 0);
+            $rudeext->setCnExtranjero(isset($form['extCn']) ? 1 : 0);
+            $rudeext->setDni(isset($form['extDni']) ? 1 : 0);
+            $rudeext->setPasaporte(isset($form['extPas']) ? 1 : 0);
+            $rudeext->setDeclaracion(isset($form['extDecJur']) ? 1:0);
+            
+            if ($archivo !== null) {
+                $nArcMemo = $this->guardarArch($sie, $form['rudeId'], $gestion, 'RUDE_EXT', $archivo);
+                $rudeext->setArchivo($nArcMemo);
+            } else {
+                $rudeext->setArchivo('');
+            }
+            $rudeext->setCodigoDocumento($form['extCodDoc']);
+        
+            // Persistir y flush
+            $em->persist($rudeext);
+            $em->flush();
+        }
 
         // DISCAPACIDADES
         if($form['tieneDiscapacidad'] == true){
@@ -430,6 +535,81 @@ class InfoEstudianteRudeNuevoController extends Controller {
         return $response->setData(['msg'=>true]);
     }
 
+     /**
+     * GUARDA ARCHIVO A SUBIR
+     */
+    // private function guardarArch($sie, $codigoRude, $gestion, $prefijo, $file)
+    // {
+    //     if (isset($file)) {
+    //         $type = $file['type'];
+    //         $size = $file['size'];
+    //         $tmp_name = $file['tmp_name'];
+    //         $name = $file['name'];
+    //         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    //         $new_name = $prefijo.date('YmdHis') . '.' . $extension;
+    
+    //         // GUARDAR EL ARCHIVO
+    //         $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/rude/decjurada/'.$gestion.'/'. $sie . '/' . $codigoRude;
+    //         if (!file_exists($directorio)) {
+    //             mkdir($directorio, 0777, true);
+    //         }
+    
+    //         $archivador = $directorio . '/' . $new_name;
+    
+    //         if (!move_uploaded_file($tmp_name, $archivador)) {
+    //             return null;
+    //         }
+    
+    //         // CREAR DATOS DEL ARCHIVO
+    //         $informe = array(
+    //             'name' => $name,
+    //             'type' => $type,
+    //             'tmp_name' => 'nueva_ruta',
+    //             'size' => $size,
+    //             'new_name' => $new_name
+    //         );
+    
+    //         return $new_name;
+    //     } else {
+    //         return null;
+    //     }
+    // }
+
+    private function guardarArch($sie, $codigoRude, $gestion, $prefijo, $file )
+    {
+        if ($file !== null) {
+            $type = $file->getMimeType();
+            $size = $file->getSize();
+            $name = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $new_name = $prefijo . date('YmdHis') .$codigoRude. '.' . $extension;
+
+            // GUARDAR EL ARCHIVO
+            $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/rude_decjurada/' . $gestion . '/' . $sie . '/' . $codigoRude;
+            if (!file_exists($directorio)) {
+                mkdir($directorio, 0777, true);
+            }
+
+            $archivador = $directorio . '/' . $new_name;
+
+            if (!$file->move($directorio, $new_name)) {
+                return null;
+            }
+
+            // CREAR DATOS DEL ARCHIVO
+            $informe = array(
+                'name' => $name,
+                'type' => $type,
+                'tmp_name' => 'nueva_ruta',
+                'size' => $size,
+                'new_name' => $new_name
+            );
+
+            return $new_name;
+        } else {
+            return null;
+        }
+    }
     /**
      * CREAR FORMULARIO DE DIRECCION
      */
@@ -1514,10 +1694,11 @@ class InfoEstudianteRudeNuevoController extends Controller {
     /**
      * FORMULARIO CON QUIEN VIVE EL ESTUDAINTE
      */
-    public function createFormConQuienVive($rude){
+    public function createFormConQuienVive($rude , $rude_ext){
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createFormBuilder($rude)
-                ->add('id', 'hidden')
+        // $form = $this->createFormBuilder($rude)
+        $form = $this->createFormBuilder()
+                ->add('id', 'hidden',  array('data' => $rude->getId(),'mapped'=>false))
                 ->add('viveHabitualmenteTipo', 'entity', array(
                         'class' => 'SieAppWebBundle:ViveHabitualmenteTipo',
                         'query_builder' => function (EntityRepository $e) {
@@ -1531,6 +1712,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'data'=> ($rude->getViveHabitualmenteTipo())?$em->getReference('SieAppWebBundle:ViveHabitualmenteTipo', $rude->getViveHabitualmenteTipo()->getId()):'',
                         'mapped'=>false
                     ))
+                ->add('centroAcogida', 'text', array('required' => false, 'data'=>$rude_ext ? $rude_ext->getCentroAcogida() : ''))
                 ->getForm();
         return $form;
     }
@@ -1579,7 +1761,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         aid.empleo, 
                         aid.telefono,
                         aot.id as ocupacion,
-                        aid.obs')
+                        aid.obs,
+                        aid.institucionTrabaja')
                     ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
                     ->innerJoin('SieAppWebBundle:GeneroTipo','gt','with','p.generoTipo = gt.id')
                     ->innerJoin('SieAppWebBundle:ApoderadoTipo','at','with','ai.apoderadoTipo = at.id')
@@ -1625,6 +1808,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 'obs'=>null,
                 'foto'=>null,
                 'corregirFecha'=>false,
+                'institucionTrabaja'=>null,
                 'tipoApoderado'=>$tipoApoderado
             );
         }else{
@@ -1678,8 +1862,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
         // $idInscripcion = $inscripcion->getId();
 
         // $padreTutor = $this->obtenerApoderado($idInscripcion,array(1,3,4,5,6,7,8,9,10,11,12,13))[0];
-
-        // dump($datos['tipoApoderado']);die;
+        // dump($datos); 
+        // dump($datos['apoderadoTipo']);die;
         $tipoApoderado = $datos['tipoApoderado'];
 
         $em = $this->getDoctrine()->getManager();
@@ -1694,6 +1878,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $generos = [1,2];
             }            
         }
+        
         
 
         $form = $this->createFormBuilder($datos)
@@ -1790,8 +1975,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'data'=>($datos['instruccionTipo'] != null)?$em->getReference('SieAppWebBundle:InstruccionTipo', $datos['instruccionTipo']):''
                         ))
                     ->add('cedulaTipoId', 'hidden', array('required' => true))
+                    ->add('institucionTrabaja', 'text', array('required' => false))
                     ->getForm();
-
+                    
         return $form;
     }
 
@@ -2584,7 +2770,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
     public function obtenerCatalogo($rude, $tabla){
         $em = $this->getDoctrine()->getManager();
         $gestion = $rude->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-        $gestion = 2019;
+        //dump($gestion);die;
+        // $gestion = 2019;
         /**
          * OBTENER CATALOGO
          */
