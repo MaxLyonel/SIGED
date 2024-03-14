@@ -276,32 +276,4 @@ class ApoderadoInscripcionDatos
     {
         return $this->idiomaMaterno;
     }
-    /**
-     * @var string
-     */
-    private $institucionTrabaja;
-
-
-    /**
-     * Set institucionTrabaja
-     *
-     * @param string $institucionTrabaja
-     * @return ApoderadoInscripcionDatos
-     */
-    public function setInstitucionTrabaja($institucionTrabaja)
-    {
-        $this->institucionTrabaja = $institucionTrabaja;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucionTrabaja
-     *
-     * @return string 
-     */
-    public function getInstitucionTrabaja()
-    {
-        return $this->institucionTrabaja;
-    }
 }
