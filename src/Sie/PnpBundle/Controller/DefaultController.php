@@ -3286,7 +3286,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         // } 
 
         $gestion_ini_t = 2009;
-        $gestion_fin_t = 2023; 
+        $gestion_fin_t = 2024; 
              
         ///////MODOFICAR FECHA //
         $userId = $this->session->get('userId');
