@@ -37,7 +37,7 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function indexAction(Request $request){
-      //return $this->redirect($this->generateUrl('principal_web'));
+      return $this->redirect($this->generateUrl('principal_web'));
         //get the send values
         $infoUe = $request->get('infoUe');
         $etapaespecialidad = $request->get('etapaespecialidad');
