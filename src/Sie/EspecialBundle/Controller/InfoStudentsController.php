@@ -440,11 +440,13 @@ class InfoStudentsController extends Controller {
         ->setParameter('mat', array(4,5,7,79,78,28))
         ->getQuery();
         $selectedInscriptionStudent = $query->getResult();
+        //dump($selectedInscriptionStudent);die;
+        if(count($selectedInscriptionStudent)>0){
         $objInscriptionSpecialNew = $em->getRepository('SieAppWebBundle:EstudianteInscripcionEspecial')->findOneBy(array(
-        'estudianteInscripcion'=>$selectedInscriptionStudent[0]['id']
-    ));
+        'estudianteInscripcion'=>$selectedInscriptionStudent[0]['id']));
+        }
    
-      if (empty($objInscriptionSpecialNew) && $selectedInscriptionStudent[0]['id'] ) {
+      if (empty($objInscriptionSpecialNew) && count($selectedInscriptionStudent)>0) {
           $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array(
           'institucioneducativaCurso'=>$selectedInscriptionStudent[0]['iecStudentId']));
           $studentInscriptionEspecial = new EstudianteInscripcionEspecial();
@@ -457,8 +459,8 @@ class InfoStudentsController extends Controller {
       /////////////////////////////////////////////////////////////////////////////////////////////////
 
       ///// descomentar estas dos lineas para que nadie se inscriba
-      $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
-      return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
+      //$this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
+      //return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
       ///////fin de validacion de inscripcion
       
       if($dataUe['ueducativaInfoId']['areaEspecialId']==7) {
