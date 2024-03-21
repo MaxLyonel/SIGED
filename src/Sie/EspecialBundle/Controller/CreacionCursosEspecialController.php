@@ -228,7 +228,7 @@ class CreacionCursosEspecialController extends Controller {
                     
 
             /*
-             * Listamos las areas validas
+             * Listamos las areas validas, se cerro para ajustar con 
              */
             $query = $em->createQuery(
                     'SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
@@ -608,8 +608,11 @@ class CreacionCursosEspecialController extends Controller {
 
     public function listarNivelesAction($area,$modalidad) {
         
-        $this->session = new Session();
+        $this->session = new Session(); 
+        //dump($this->session->get('idInstitucion'));die;
         $em = $this->getDoctrine()->getManager();
+        //datos de carrera
+        //$objInfoAutorizadaUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->getInfoAutorizadaUe($form['sie'], $form['gestion']);die('krlossdfdfdfs');
 
         if ($area == "1" ) { //AUDITIVA
             if($modalidad == 1){
@@ -954,11 +957,8 @@ class CreacionCursosEspecialController extends Controller {
                 
                 $programas = array(19, 20, 21, 22);
             }
-            if ($this->session->get('idGestion') == 2023) {
+            if ($this->session->get('idGestion') >= 2023) {
                 $programas = array(39,19,22,41,42,43,44,45,46);
-            }
-            if ($this->session->get('idGestion') > 2023) {
-                $programas = array(39,19,22,41,42,43,44,45);
             }
             
         }
