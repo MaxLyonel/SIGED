@@ -433,11 +433,12 @@ class InfoStudentsController extends Controller {
         ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
         ->where('ei.estudiante = :id')
         ->andwhere('iec.gestionTipo = :gestion')
-        // ->andwhere('it.id = :ietipo')
+        ->andwhere('it.id = :ietipo')
         ->andwhere('ei.estadomatriculaTipo IN (:mat)')
         ->setParameter('id', $objStudent->getId())
         ->setParameter('gestion', $dataUe['requestUser']['gestion'])
         ->setParameter('mat', array(4,5,7,79,78,28))
+        ->setParameter('ietipo', 4)
         ->getQuery();
         $selectedInscriptionStudent = $query->getResult();
         //dump($selectedInscriptionStudent);die;
@@ -447,8 +448,12 @@ class InfoStudentsController extends Controller {
         }
    
       if (empty($objInscriptionSpecialNew) && count($selectedInscriptionStudent)>0) {
+        //dump($selectedInscriptionStudent[0]['iecStudentId']);
           $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array(
           'institucioneducativaCurso'=>$selectedInscriptionStudent[0]['iecStudentId']));
+
+          //dump($curso);
+         // dump($curso->getId());die;
           $studentInscriptionEspecial = new EstudianteInscripcionEspecial();
           $studentInscriptionEspecial->setInstitucioneducativaCursoEspecial($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->find($curso->getId()));
           $studentInscriptionEspecial->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($curso->getEspecialAreaTipo()->getId()));
