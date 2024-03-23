@@ -45,6 +45,7 @@ class InfoStudentsController extends Controller {
 //        }
 //        return $this->render($this->session->get('pathSystem') . ':InfoStudents:index.html.twig', array());
       //get the value to send
+      return $this->redirect($this->generateUrl('login'));
       $form = $request->get('form');
       //dump($form); die;
 
