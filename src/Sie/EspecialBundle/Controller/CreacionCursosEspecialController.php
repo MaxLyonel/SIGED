@@ -920,7 +920,7 @@ class CreacionCursosEspecialController extends Controller {
                 }
             }//array(1,2,3,4,5,21)
             if($modalidad == 3){
-                $servicios = array(1,2,3,4,5,28,35,36,37,38);
+                $servicios = array(1,2,3,4,5,28,35,36,37,38,41);
             }
             
         }
