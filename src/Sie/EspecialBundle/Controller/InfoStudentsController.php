@@ -45,7 +45,7 @@ class InfoStudentsController extends Controller {
 //        }
 //        return $this->render($this->session->get('pathSystem') . ':InfoStudents:index.html.twig', array());
       //get the value to send
-      return $this->redirect($this->generateUrl('login'));
+     // return $this->redirect($this->generateUrl('login'));
       $form = $request->get('form');
       //dump($form); die;
 
@@ -465,8 +465,8 @@ class InfoStudentsController extends Controller {
       /////////////////////////////////////////////////////////////////////////////////////////////////
 
       ///// descomentar estas dos lineas para que nadie se inscriba
-      //$this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
-      //return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
+      $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
+      return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
       ///////fin de validacion de inscripcion
       
       if($dataUe['ueducativaInfoId']['areaEspecialId']==7) {
