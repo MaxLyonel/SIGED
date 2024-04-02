@@ -175,7 +175,7 @@ class RegistroInstitucionEducativaController extends Controller {
     		$query = $em->createQuery(
     				'SELECT DISTINCT tn.id,tn.nivel
                         FROM SieAppWebBundle:NivelTipo tn
-						WHERE tn.id between 200 and 299
+						WHERE tn.id between 200 and 299 or tn.id = 413 
 						ORDER BY tn.id ASC'
                 );
     				$niveles = $query->getResult();
