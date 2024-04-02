@@ -2121,22 +2121,23 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
     public function saveFormApoderadoAction(Request $request)
     { 
-        //dump("aaaaa");die;
         /*
-         //////////////////////////////////////////////////////////////////////////
-         /////////////////// Registro de apoderado PADRE, MADRE Y TUTOR  /////////////////
-         //////////////////////////////////////////////////////////////////////////
+         ////////////////////////////////////////////////////////////////////
+         ///////////// Registro de apoderado PADRE, MADRE Y TUTOR  /////////////////
+         ////////////////////////////////////////////////////////////////////
         */
         $form = $request->get('form');
-        
         $idApoderadoInscripcion = $form['id'];
         $idPersona = $form['idPersona'];
-
+        
+        
         $em = $this->getDoctrine()->getManager();
 
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);
 
         $tipo = $request->get('tipo');
+
+       
         if($tipo == 'padre'){
             $parentesco = array(1);
             $tiene = $request->get('p_tienePadre');
@@ -2150,6 +2151,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $tiene = $request->get('t_tieneTutor');
         }
 
+        if($tipo == 'te_tutor'){
+            $parentesco = array(14);
+            $tiene = $request->get('te_tieneTutor');
+        }
+
+        
         // expedido
         if (empty($form['expedido']) && strlen($form['expedido'])==0) {
             $expedido = 0;
@@ -2157,14 +2164,14 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $expedido = $form['expedido'];
         }
 
-        // VERIFICAMOS SI EL ESTUDIANTE TIENE // PADRE // MADRE // O TUTOR
+        // VERIFICAMOS SI EL ESTUDIANTE TIENE // PADRE // MADRE // O TUTOR // O EXTRAORDINARIO
         if($tiene == 1)
         {
             // VERIFICAMOS SI LA PERSONA ES NUEVA SIN CARNET
             // O ES NUEVO PERO VALIDADO POR EL SEGIP
             
             if($form['idPersona'] == 'nuevo' or $form['idPersona'] == 'segip' or $form['idPersona'] == 'extranjero')
-            {
+            {   
                 // PREGUNTAMOS SI EL CARNET NO ESTA VACIO
                 // ENTONCES EL DATO VIENE DEL SERVICIO SEGIP
                 if($form['carnet'] != "")
@@ -2268,7 +2275,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
                        */
                       //persona con segip 1
                       //$persona = $this->buscarPersona($form,true,1);//busqueda de persona con carnet y segip =1
+                      
                       $persona = $this->get('buscarpersonautils')->buscarPersona($form,$conCI=true, $segipId=1);
+                      
                     }
                 }
                 else
@@ -2300,9 +2309,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
                    //$persona = $this->buscarPersona($form,false,1);//busqueda de persona sin carnet y segip =1
                    $persona = $this->get('buscarpersonautils')->buscarPersona($form,$conCI=false, $segipId=1);
                 }
+
+                
                 // VERIFICAMOS SI LA PERSONA EXISTE
                 if($persona)
-                {
+                {   
+                    
                     // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS:
                     // FECHA DE NACIMIENTO
                     // CELULAR
@@ -2456,6 +2468,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     if(isset($form['extranjero']))
                         $arrayDatosPersona['extranjero'] = 'extranjero';
                     
+                    
                     /*$personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
 
                     if($personaValida)//verificamos que se persona valida por segip
@@ -2567,19 +2580,20 @@ class InfoEstudianteRudeNuevoController extends Controller {
             //     $idApoderadoInscripcion = $actualizarApoderado->getId();
             // }
 
-
-
+            
             // VERFICAMOS SI EL REGISTRO DE APODERADO ES NUEVO LO REGISTRAMOS
             if($form['id'] == 'nuevo'){
-                $nuevoApoderado = new ApoderadoInscripcion();
-                $nuevoApoderado->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($form['apoderadoTipo']));
-                $nuevoApoderado->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($idPersona));
-                $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idInscripcion']));
-                $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
-                $em->persist($nuevoApoderado);
-                $em->flush();
+                
+                    $nuevoApoderado = new ApoderadoInscripcion();
+                    $nuevoApoderado->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($form['apoderadoTipo']));
+                    $nuevoApoderado->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($idPersona));
+                    $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idInscripcion']));
+                    $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
+                    $em->persist($nuevoApoderado);
+                    $em->flush();
 
-                $idApoderadoInscripcion = $nuevoApoderado->getId();
+                    $idApoderadoInscripcion = $nuevoApoderado->getId();
+                
             }else{
                 // ACTUALIZAMOS EL DATO DE INSCRIPCION DEL APODERADO
                 $actualizarApoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($form['id']);
@@ -2591,31 +2605,54 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $idApoderadoInscripcion = $actualizarApoderado->getId();
             }
 
+            
             // VERIFICAMOS SI EL REGISTRO DE DATOS DE APODERADO ES NUEVO
-
+            
             if($form['idDatos'] == 'nuevo'){
-                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('apoderado_inscripcion_datos');")->execute();
-                $nuevoApoderadoDatos = new ApoderadoInscripcionDatos();
-                $nuevoApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idiomaMaterno']));
-                $nuevoApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($form['instruccionTipo']));
-                $nuevoApoderadoDatos->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderadoInscripcion));
-                $nuevoApoderadoDatos->setTelefono($form['telefono']);
-                $nuevoApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($form['ocupacion']));
-                $nuevoApoderadoDatos->setEmpleo(mb_strtoupper($form['empleo'],'utf-8'));
-                // $nuevoApoderadoDatos->setObs(mb_strtoupper($form['obs'],'utf-8'));
-                $em->persist($nuevoApoderadoDatos);
-                $em->flush();
+                
+                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('apoderado_inscripcion_datos');")->execute();
+                    $nuevoApoderadoDatos = new ApoderadoInscripcionDatos();
+                    $nuevoApoderadoDatos->setApoderadoInscripcion($em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderadoInscripcion));
+                    $nuevoApoderadoDatos->setTelefono($form['telefono']);
+                    $nuevoApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($form['ocupacion']));
+                    $nuevoApoderadoDatos->setEmpleo(mb_strtoupper($form['empleo'],'utf-8'));
+                    
+                    if ($form['apoderadoTipo'] == 14){
+                        $nuevoApoderadoDatos->setInstitucionTrabaja(mb_strtoupper($form['institucionTrabaja'],'utf-8'));
+                        $nuevoApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(0));
+                        $nuevoApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find(0));
+                    } else {
+                        $nuevoApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idiomaMaterno']));
+                        $nuevoApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($form['instruccionTipo']));
+                    }
+                    // $nuevoApoderadoDatos->setObs(mb_strtoupper($form['obs'],'utf-8'));
+                    $em->persist($nuevoApoderadoDatos);
+                    $em->flush();
 
-                $idApoderadoInscripcionDatos = $nuevoApoderadoDatos->getId();
+                    $idApoderadoInscripcionDatos = $nuevoApoderadoDatos->getId();
+               
             }else{
                 // ACTUALIZAMOS EL REGISTRO DE DATOS DEL APODERADO
                 $actualizarApoderadoDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->find($form['idDatos']);
                 if($actualizarApoderadoDatos){
-                    $actualizarApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idiomaMaterno']));
-                    $actualizarApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($form['instruccionTipo']));
+                    // $actualizarApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idiomaMaterno']));
+                    // $actualizarApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($form['instruccionTipo']));
                     $actualizarApoderadoDatos->setTelefono($form['telefono']);
                     $actualizarApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($form['ocupacion']));
                     $actualizarApoderadoDatos->setEmpleo(mb_strtoupper($form['empleo'],'utf-8'));
+
+                    if ($form['apoderadoTipo'] == 14){
+                        $actualizarApoderadoDatos->setInstitucionTrabaja(mb_strtoupper($form['institucionTrabaja'],'utf-8'));
+                        $actualizarApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(0));
+                        $actualizarApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find(0));
+                    } else {
+                        $actualizarApoderadoDatos->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idiomaMaterno']));
+                        $actualizarApoderadoDatos->setInstruccionTipo($em->getRepository('SieAppWebBundle:InstruccionTipo')->find($form['instruccionTipo']));
+                    }
+
+                    // if ($form['apoderadoTipo'] == 14) 
+                    
+                    // $actualizarApoderadoDatos->setInstitucionTrabaja(mb_strtoupper($form['institucionTrabaja'],'utf-8'));
                     // $actualizarApoderadoDatos->setObs(mb_strtoupper($form['obs'],'utf-8'));
                     $em->flush();
 
@@ -2654,7 +2691,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
         // PARA QUE SE VALIDE QUE SE REGISTREN LOS DATOS DEL PADRE, MADRE O TUTOR
         // SEGUN LO QUE SE INDICO EN EL APARTADO - CON QUIEN VIVE
 
-        if($tipo == 'tutor'){
+
+        if($tipo == 'tutor' or $tipo == 'te_tutor' ){
             // APODERADOS QUE TIENE ACTUALMENTE REGISTRADOS EL ESTUDIANTE
             $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
                 'estudianteInscripcion'=>$form['idInscripcion']
@@ -2704,6 +2742,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             $status = 500;
                         }
                         break;
+                    case 6: // TUTOR EXTRAORDINARIO
+                        if(!in_array(14, $tiposApoderados) ){
+                            $msg = "Debe registrar los datos del tutor extraordinario";
+                            $status = 500;
+                        }
+                        break;
                 }
             }else{
                 $status = 500;
@@ -2735,6 +2779,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
         ]);
     }
 
+   
     public function createFormLugar($rude){
         if($rude->getFechaRegistroRude()){
             $fecha = $rude->getFechaRegistroRude()->format('d-m-Y');
