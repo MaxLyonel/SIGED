@@ -24,8 +24,8 @@ $('#pb_fechaNacimiento').on('change', function(){
 // $('#p_idioma').select2({width: "100%"});
 // $('#p_ocupacion').select2({width: "100%"});
 
-$('#p_idioma').chosen({width: "100%"}); 
-$('#p_ocupacion').chosen({width: "100%"}); 
+// $('#p_idioma').chosen({width: "100%"}); 
+// $('#p_ocupacion').chosen({width: "100%"}); 
 
 // funcion para validar si tiene o no padre
 var p_validarTienePadre = function(){    

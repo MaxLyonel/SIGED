@@ -19,8 +19,8 @@ $('#mb_complemento').on('keyup',function(){
 
 // $('#m_idioma').select2({width: "100%"});
 // $('#m_ocupacion').select2({width: "100%"});
-$('#m_idioma').chosen({width: "100%"}); 
-$('#m_ocupacion').chosen({width: "100%"}); 
+// $('#m_idioma').chosen({width: "100%"}); 
+// $('#m_ocupacion').chosen({width: "100%"}); 
 
 // funcion para validar si tiene o no madre
 var m_validarTieneMadre = function(){    
