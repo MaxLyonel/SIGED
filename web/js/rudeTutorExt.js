@@ -19,8 +19,8 @@ $('#teb_complemento').on('keyup',function(){
 
 // $('#tb_idioma').select2({width: "100%"});
 // $('#te_ocupacion').select2({width: "100%"});
-$('#te_idioma').chosen({width: "100%"}); 
-$('#te_ocupacion').chosen({width: "100%"}); 
+// $('#te_idioma').chosen({width: "100%"}); 
+// $('#te_ocupacion').chosen({width: "100%"}); 
 
 // funcion para validar si tiene o no tutor
 var te_validarTieneTutor = function(){
@@ -35,9 +35,10 @@ var te_validarTieneTutor = function(){
         $('#te_nombre').attr('required','required');
         $('#te_fechaNacimiento').attr('required','required');
         $('#te_genero').attr('required','required');
-        $('#te_idioma').attr('required','required');
+        // $('#te_idioma').attr('required','required');
         $('#te_ocupacion').attr('required','required');
-        $('#te_instruccion').attr('required','required');
+        // $('#te_instruccion').attr('required','required');
+        $('#te_institucionTrabaja').attr('required','required');
         $('#te_parentesco').attr('required','required');
 
         // Validamos si el usuario tiene carnet
@@ -58,6 +59,7 @@ var te_validarTieneTutor = function(){
         $('#te_idioma').removeAttr('required');
         $('#te_ocupacion').removeAttr('required');
         $('#te_instruccion').removeAttr('required');
+        $('#te_institucionTrabaja').removeAttr('required');
         $('#te_parentesco').removeAttr('required');
 
         te_borrarDatos();
@@ -379,19 +381,20 @@ function te_limpiarBuscador(){
 function te_saveFormTutor(){
     var data = $('#formTutorExt').serialize();
     var subsistema = $('#te_subsistema').val();
-    // data['actualizar'] = recargar;
+    
+    
     $.ajax({
         //ojo revisar esto
         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
         type: 'post',
         data: data,
         beforeSend: function(){
-            console.log('enviando')
             $('#cortina').css('display','block');
             te_limpiarBuscador();
         },
         success: function(data){
             $('#cortina').css('display','none');
+                          
 
             if(data.status == 200){
                 $('#te_id').val(data.id);

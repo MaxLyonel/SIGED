@@ -19,8 +19,8 @@ $('#tb_complemento').on('keyup',function(){
 
 // $('#t_idioma').select2({width: "100%"});
 // $('#t_ocupacion').select2({width: "100%"});
-$('#t_idioma').chosen({width: "100%"}); 
-$('#t_ocupacion').chosen({width: "100%"}); 
+// $('#t_idioma').chosen({width: "100%"}); 
+// $('#t_ocupacion').chosen({width: "100%"}); 
 
 // funcion para validar si tiene o no tutor
 var t_validarTieneTutor = function(){
@@ -393,17 +393,20 @@ function saveFormTutor(){
                 $('#t_id').val(data.id);
                 $('#t_idDatos').val(data.idDatos);
                 $('#t_idPersona').val(data.idPersona);
+
+                $('#tabTutorExt').click();
                 if(subsistema=='especial'){
                     $('#cortina').css('display','none');
                     $('#paso7').parent('li').removeClass('disabled');
                     $('#paso7').attr('data-toggle','tab');
                     $('#paso7').click();
                     $('#tabPadre').click();
-                }else{
-                    $('#paso5').parent('li').removeClass('disabled');
-                    $('#paso5').attr('data-toggle','tab');
-                    $('#paso5').click();
                 }
+                // else{
+                //     $('#paso5').parent('li').removeClass('disabled');
+                //     $('#paso5').attr('data-toggle','tab');
+                //     $('#paso5').click();
+                // }
 
             }else{
                 alert(data.msg);
