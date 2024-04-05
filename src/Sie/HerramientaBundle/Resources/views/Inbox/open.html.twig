@@ -159,7 +159,7 @@
                 {% endif %}
                 
             {% endif %}
-            {# {% if data.gestion == app.session.get('currentyear')  %} <!--Se deshabilito hasta nueva instruccion 240123-->
+            {% if data.gestion == app.session.get('currentyear')  %} <!--Se deshabilito hasta nueva instruccion 240123-->
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rude">
@@ -173,7 +173,7 @@
                         </div>
                     </div>
                 </div>
-            {% endif %} #}
+            {% endif %}
            {# inhabilitado en fecha 05/10 #}
            {% if data.gestion ==2029 %} <!--Se deshabilito hasta nueva instruccion 240123-->
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
