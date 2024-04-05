@@ -196,11 +196,15 @@
                                     </td>
                                     {# {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')%} #}
                                         <td class="text-center">
-                                            {% if (primaria == true and co.codigo == '408') or primaria == false %}
+                                            {% if (app.session.get('ie_gestion') >= 2023) and (app.session.get('userId') == 94161725) %}
+                                                <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                            {% endif %}
+                                            {% if ((primaria == true and co.codigo == '408') or primaria == false) and (app.session.get('userId') != 94161725) %}
                                                 {% if ( superiorAcreditacionTipoId != 1 and superiorAcreditacionTipoId != 20 ) %}
                                                     <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
                                                 {% endif %}
-                                            {% elseif ( superiorAcreditacionTipoId == 32 ) %}
+                                            {# {% elseif ( superiorAcreditacionTipoId == 32 ) %} #}
+                                            {% else %}
                                                 <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
                                             {% endif %}
                                         </td>
@@ -426,7 +430,7 @@
                     },
                     statusCode: {
                         500: function () {
-                            Swal.fire('Atención', 'Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas', 'warning');
+                            Swal.fire('Atención', 'Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas22', 'warning');
                             $('#mensajeModal').empty();
                             //$('#mensajeModal').append("<div class='alert alert-danger'>Ocurrió un error al agregar el área.</div>");
                         },
@@ -530,7 +534,7 @@
                                             },
                                             statusCode: {
                                                 500: function () {
-                                                    Swal.fire('Atención', 'Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas', 'warning');
+                                                    Swal.fire('Atención', 'Uno o mas modulos no fueron actualizados, verifique que ningun modulo este asignado al participante o se encuentre con registro de notas2', 'warning');
                                                     $('#mensajeModal').empty();
                                                     //$('#mensajeModal').append("<div class='alert alert-danger'>Ocurrió un error al agregar el área.</div>");
                                                 },
