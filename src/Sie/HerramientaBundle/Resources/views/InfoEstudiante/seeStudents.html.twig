@@ -47,7 +47,6 @@
                 </ol>
             </div><!-- /.breadcrumb-wrapper -->
         </div>
-
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
@@ -287,7 +286,7 @@
                                     {# HABILITA FORMULARIO RUDE #}
 
                                     {# {% if  gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %} #}
-                                    {% if  gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] %}
+                                    {% if  gestion == app.session.get('currentyear') and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
@@ -316,12 +315,12 @@
 
                                     {#Sea añadio el boton de reporte formulario RUDE#}
                                     {# if true #}
-                                    {% if app.session.get('roluser') in [9] and app.session.get('optionReporteRude') %}
-                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Rude ">
+                                    {% if app.session.get('roluser') in [9] and gestion == app.session.get('currentyear') and app.session.get('optionReporteRude') %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Rude ">
                                            <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('download_formulario_rude', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                            </a>
-                                        </div> #}
+                                        </div>
                                     {% endif %}
 
                                     {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
