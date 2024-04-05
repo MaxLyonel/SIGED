@@ -1612,11 +1612,12 @@ class InboxController extends Controller {
           }
           //dump($form);die; 
           // exute validation
-          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_RUDE(:gestion, :sie)');
+          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_rude(:gestion, :sie)');
           $query->bindValue(':gestion', $form['gestion']);
           $query->bindValue(':sie', $form['sie']);      
           $query->execute();
           $inconsistencia = $query->fetchAll();
+
 
           /***********************************\
           * *
