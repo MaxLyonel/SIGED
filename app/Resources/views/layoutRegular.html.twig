@@ -274,7 +274,7 @@
                         {# SOLO GESTION 2023 AREAS: PD-VER#}
                         {# {% if app.session.get('userId') == '13816503' or app.session.get('userId') == '95011409' or app.session.get('userId') == '13820702' or app.session.get('userId') == '92522549'%} #}
                         {# habilita cursos DDD Y DDE #}
-                        {% if ((app.session.get('roluser') in [37,38]) or (app.session.get('userId') == '94268906')) %}
+                        {# {% if ((app.session.get('roluser') in [37,38]) or (app.session.get('userId') == '94268906')) %}
                         <li class="panel">
                             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas">
                                 <i class="fa fa-bar-chart-o"></i> Creación Nuevos Cursos <i class="fa fa-caret-down"></i>
@@ -297,7 +297,7 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        {% endif %}
+                        {% endif %} #}
 
                         {% if false and app.session.get('roluser') in [7,8,9,10] %}
                         <li class="panel">
