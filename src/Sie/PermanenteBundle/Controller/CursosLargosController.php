@@ -968,7 +968,10 @@ class CursosLargosController extends Controller {
                 $query->execute();
                 $listamodcurso= $query->fetchAll();//dump($listamodcurso); die; 
             }  */
-            
+            // dump($idacreditacion);
+            // dump($idespecialidad);
+            // dump($paraleloId);
+            // die;
 
             $query = $em->getConnection()->prepare('select  smp.id as idsmp, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip,smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo,
                 ieco.id as idieco,iecom.id as idiecom
@@ -981,7 +984,7 @@ class CursosLargosController extends Controller {
                 inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
                 inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
                 left JOIN institucioneducativa_curso_oferta ieco on  smp.id = ieco.superior_modulo_periodo_id
-                inner JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
+                left JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
                 left JOIN institucioneducativa_curso iec on  ieco.insitucioneducativa_curso_id = iec.id
                 where sat.id =:idacreditacion and sfat.id=40 and sest.id=:idespecialidad and sia.institucioneducativa_id=:sie and iec.paralelo_tipo_id=:paraleloId
                 ORDER BY smp.id ');
