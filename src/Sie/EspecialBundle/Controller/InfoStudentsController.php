@@ -419,12 +419,16 @@ class InfoStudentsController extends Controller {
     $em = $this->getDoctrine()->getManager();
     $form =  $request->get('form');
     $dataUe = unserialize($form['data']);
+    //solo para casos de inscripciones por excepcion se valida que sea la departamental o distrital
+    if($this->session->get('roluser')==9){ 
+        $this->session->getFlashBag()->add('notalento', 'La Inscripción Excepcional solo esta habilitado al técnico de la Departamental o Distrital');
+        return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
+      }
 
     //get the student info by rudeal
     $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rudeal']));
     //check if the student exist
     if($objStudent){
-      
       //////////////////////////ajuste temporal para casos incompletos /////////////////////////////////
       $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
       $query = $inscription2->createQueryBuilder('ei')
@@ -438,7 +442,7 @@ class InfoStudentsController extends Controller {
         ->andwhere('ei.estadomatriculaTipo IN (:mat)')
         ->setParameter('id', $objStudent->getId())
         ->setParameter('gestion', $dataUe['requestUser']['gestion'])
-        ->setParameter('mat', array(4,5,7,79,78,28))
+        ->setParameter('mat', array(4,5,7,68,79,78,28))
         ->setParameter('ietipo', 4)
         ->getQuery();
         $selectedInscriptionStudent = $query->getResult();
@@ -465,8 +469,8 @@ class InfoStudentsController extends Controller {
       /////////////////////////////////////////////////////////////////////////////////////////////////
 
       ///// descomentar estas dos lineas para que nadie se inscriba
-      $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
-      return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
+      // $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción esta cerrado');
+      // return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
       ///////fin de validacion de inscripcion
       
       if($dataUe['ueducativaInfoId']['areaEspecialId']==7) {
@@ -505,7 +509,7 @@ class InfoStudentsController extends Controller {
           ->andwhere('iece.especialProgramaTipo IN (:prog) or iec.nivelTipo = :nivel')
           ->setParameter('id', $objStudent->getId())
           ->setParameter('gestion', $dataUe['requestUser']['gestion'])
-          ->setParameter('mat', array(4,79,80))
+          ->setParameter('mat', array(4,79,68,7,80))
           ->setParameter('prog', $listaprogramas)
           ->setParameter('nivel', 405)
           ->getQuery();
@@ -532,7 +536,7 @@ class InfoStudentsController extends Controller {
         ->andwhere('ei.estadomatriculaTipo IN (:mat)')
         ->setParameter('id', $objStudent->getId())
         ->setParameter('gestion', $dataUe['requestUser']['gestion'])
-        ->setParameter('mat', array(4,5,79,78,28))
+        ->setParameter('mat', array(4,5,68,79,78,28))
         //->setParameter('mat2', '5')
         // ->setParameter('ietipo', 1)
         ->getQuery();
@@ -606,7 +610,7 @@ class InfoStudentsController extends Controller {
     $em = $this->getDoctrine()->getManager();
     $em->getConnection()->beginTransaction();
     //get the send values
-    $form= $request->get('form');
+    $form = $request->get('form');
     $aInfoUeducativa = unserialize($form['data']);
 
     $sie = $aInfoUeducativa['requestUser']['sie'];
@@ -623,7 +627,7 @@ class InfoStudentsController extends Controller {
     $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
     $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
   //set the validate year
-  $id_usuario = $this->session->get('userId');
+    $id_usuario = $this->session->get('userId');
  
  // die;
     //create the conexion DB
@@ -636,7 +640,8 @@ class InfoStudentsController extends Controller {
       $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($aInfoUeducativa['requestUser']['sie']));
       $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($aInfoUeducativa['requestUser']['gestion']));
       //extemporaneos especial
-      $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7));
+      //$studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7)); extemporaneo
+      $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(68));
       $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['studentId']));
       $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
       $studentInscription->setObservacion(1);

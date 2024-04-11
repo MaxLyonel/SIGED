@@ -38,7 +38,7 @@
             {% set cupos = funciones.getCantidadEstudiantes(infoUe,objStudents) %}
             {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
               <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}','{{cupos.cupo}}','{{cupos.msg}}');" >
-                  <i class="fa fa-user"></i> Inscripción Extemporáneos
+                  <i class="fa fa-user"></i> Inscripción Excepcional
               </button>
             {% endif %}
             
@@ -107,7 +107,7 @@
                                 {% endif %}
                                 <td>
                                 
-                                    {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones #}
+                                    {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones 
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo >= 0  %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}},'{{infoUe}}');" >
@@ -116,7 +116,7 @@
                                     </div>
                                     {% else %}.
                                     {% endif %}
-
+                                            #}
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo >= 0 and arrDataLibreta.libreta == true %}
                                     {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION #}
                                          
@@ -148,7 +148,7 @@
                                                 <i class="fa fa-file" style="color:#FFFFFF"></i>
                                             </a>
                                         </div>
-                                     #} 
+                                   #}  
                                     {#
                                         {% if arrDataLibreta.bono %}  Solo hasta el 24 de enero 2022 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
