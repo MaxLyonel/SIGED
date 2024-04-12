@@ -94,7 +94,7 @@
                                 <td>{{loop.index}}</td>
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
-                                {% if data.estadomatriculaId == 4 and gestion > 2019 %}
+                                {% if (data.estadomatriculaId == 4 or data.estadomatriculaId == 7 or data.estadomatriculaId == 68) and gestion > 2019 %}
                                     <td>
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Cambiar estado">
                                             <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getEstadosMatricula('{{infoUe}}',{{data.estInsId}},{{arrDataLibreta.libreta}});">
@@ -116,9 +116,9 @@
                                     </div>
                                     {% else %}.
                                     {% endif %}
-                                            #}
+                                             #}
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo >= 0 and arrDataLibreta.libreta == true %}
-                                    {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION #}
+                                    {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION 
                                          
                                         {% if arrDataLibreta.areaEspecialId == 2 %}
                                         
@@ -134,7 +134,7 @@
                                                 </button>
                                             </form>
                                         {% endif %}    
-                                        
+                                        #}
                                     {% endif %}
                                     {# termino operativo 2023 se desactiva 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
@@ -142,13 +142,13 @@
                                                 <i class="fa fa-user"></i>
                                             </button>
                                         </div> 
-                                         
+                                        
                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Ver Formulario Rude ">
                                             <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('downloadRudeEspecial', {'rude': data.codigoRude, 'codue':sie, 'gestion': gestion, 'eins':data.eInsId} )}}">
                                                 <i class="fa fa-file" style="color:#FFFFFF"></i>
                                             </a>
                                         </div>
-                                   #}  
+                                     #} 
                                     {#
                                         {% if arrDataLibreta.bono %}  Solo hasta el 24 de enero 2022 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
