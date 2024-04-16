@@ -393,20 +393,19 @@ function saveFormTutor(){
                 $('#t_id').val(data.id);
                 $('#t_idDatos').val(data.idDatos);
                 $('#t_idPersona').val(data.idPersona);
-
-                $('#tabTutorExt').click();
+                
                 if(subsistema=='especial'){
                     $('#cortina').css('display','none');
                     $('#paso7').parent('li').removeClass('disabled');
                     $('#paso7').attr('data-toggle','tab');
                     $('#paso7').click();
                     $('#tabPadre').click();
-                }
-                // else{
+                } else{
+                    $('#tabTutorExt').click();
                 //     $('#paso5').parent('li').removeClass('disabled');
                 //     $('#paso5').attr('data-toggle','tab');
                 //     $('#paso5').click();
-                // }
+                }
 
             }else{
                 alert(data.msg);
