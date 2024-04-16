@@ -380,7 +380,7 @@ function te_limpiarBuscador(){
 
 function te_saveFormTutor(){
     var data = $('#formTutorExt').serialize();
-    var subsistema = $('#te_subsistema').val();
+    var subsistema = $('#subsistema').val();
     
     
     $.ajax({
