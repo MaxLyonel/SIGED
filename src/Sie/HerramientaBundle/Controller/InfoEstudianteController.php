@@ -198,7 +198,10 @@ class InfoEstudianteController extends Controller {
 
 
         //get variables to show and hidde the close sexto secc operativo
-        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
+        $gestioncurso = $this->session->get('esGuanawek') == 1 ? $this->session->get('currentyear') - 1 : $this->session->get('currentyear');
+
+
+        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $gestioncurso . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
         $query->execute();
         $objDataOperativo = $query->fetchAll();
         $haslevel = false;
