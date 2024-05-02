@@ -412,6 +412,7 @@
                                                     {{dump(nivelGradoSexto.operativo) #}
                                                     
                                                     
+                                                    
                                                     {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %} {# OJO CON ESTE CASO se elimina #}
                                                                                                       
                                                         {% if nivelGradoSexto.closeopesextosecc == true and data.estadomatriculaId in [5,11,55] and nivel == 13 and  grado == 6  and  gestion == 2022 %}
@@ -513,14 +514,24 @@
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}
 
                                     {# {{ app.session.get('esGuanawek') }} #}
+                                    {# {{dump(nivelGradoSexto.closeopesextosecc)}} #}
                                     {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
                                         {% if gestion == 2023 and nivel == 13 and grado >= 6 %}
-
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 5-..">
-                                                <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table"  onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                    <i class="fa fa-list"></i>
-                                                </button>
-                                            </div>
+                                            {% if nivelGradoSexto.closeopesextosecc == false %}
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 5-..">
+                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table"  onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                        <i class="fa fa-list"></i>
+                                                    </button>
+                                                </div>
+                                            {% else %}
+                                                {% if  data.estadomatriculaId in [5,26,55,56,57,58,100,102,11] %}
+                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
+                                                        <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
+                                                        <i class="fa fa-print" style="color:#FFFFFF"></i>
+                                                        </a>
+                                                    </div>
+                                                {% endif %} 
+                                            {% endif %}
                                         {% else %}
                                             {# {% if gestion == 2023 %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 6.-.">
