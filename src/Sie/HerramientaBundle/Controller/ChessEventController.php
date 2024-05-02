@@ -20,7 +20,7 @@ class ChessEventController extends Controller{
     public $limitDay;
     public function __construct() {
         $this->session = new Session();
-        $this->limitDay = '30-08-2023';
+        $this->limitDay = '07-05-2024';
     }       
     public function index1Action(){
 
@@ -80,8 +80,8 @@ class ChessEventController extends Controller{
         $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);          
         // end this secction validate the last day to report the inscription INFO                     
 
-        // if ($aTuicion[0]['get_ue_tuicion'] == true){
-        if (1){
+        if ($aTuicion[0]['get_ue_tuicion'] == true){
+        //if (1){
             $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
             
             if(sizeof($objUE)>0){
@@ -260,6 +260,7 @@ class ChessEventController extends Controller{
         $gradeId = $request->get('gradeId');
         $genderRequest = $request->get('genderRequest');
         $year = $this->session->get('currentyear');
+        //$year = 2023;
 
         // create db conexion
         $em=$this->getDoctrine()->getManager();
@@ -305,6 +306,7 @@ class ChessEventController extends Controller{
         $parallelId = $request->get('parallelId');
         $genderRequest = $request->get('genderRequest');
         $year = $this->session->get('currentyear');
+        //$year = 2023;
 
         // create db conexion
         $em=$this->getDoctrine()->getManager();
