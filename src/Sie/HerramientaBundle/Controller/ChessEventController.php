@@ -86,7 +86,8 @@ class ChessEventController extends Controller{
             
             if(sizeof($objUE)>0){
                 $existUE = 1;
-                $objModalidades = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->findAll();
+                // $objModalidades = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->findAll();
+                $objModalidades = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->findById(1);
                 if(sizeof($objModalidades) > 0 ){
                     foreach ($objModalidades as $value) {
                         $arrModalidades[]=array('id'=>$value->getId(), 'modalidad'=>$value->getDescripcion() );
