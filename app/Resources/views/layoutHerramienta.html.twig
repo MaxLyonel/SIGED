@@ -685,7 +685,7 @@
                         </li> #}
                         <!--FIN sub menu inscripciones UE -->
                     {% endif %}
-                    {# {% if app.session.get('roluser') in [7,8,9,10,20] %}
+                    {% if app.session.get('roluser') in [7,8,9,10,20] %}
                         <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -693,9 +693,9 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                {% if app.session.get('roluser') in [7,8] %} #}
-                                {# <li><a href="{{ path('cheesevent_index')}}">Registro Evento Ajedrez</a></li> #}
-                                {# {% endif %}
+                                {% if app.session.get('roluser') in [7,8,9] %}
+                                <li><a href="{{ path('cheesevent_index')}}">Registro Evento Ajedrez</a></li>
+                                {% endif %}
 
                                 {% if app.session.get('roluser') in [7,8,10,20] %}
                                     <li><a href="{{ path('cheeseventadm_index')}}">Clasificado Evento Ajedrez</a></li>
@@ -703,7 +703,7 @@
                                 {% endif %}
                             </ul>
                         </li>  
-                    {% endif %} #}
+                    {% endif %}
                     
                     {# {% if app.session.get('roluser') in [7,8,9,10,20] %}
                         <li class="submenu">    
