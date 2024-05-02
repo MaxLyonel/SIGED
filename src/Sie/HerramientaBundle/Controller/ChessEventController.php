@@ -225,6 +225,7 @@ class ChessEventController extends Controller{
     }
 
     private function getAllRegisteredInscription($categorieId,$faseId,$modalidadId,$sie){
+        $year = $this->session->get('currentyear');
         $em = $this->getDoctrine()->getManager();
         $query = "SELECT e.codigo_rude,e.paterno,e.materno,e.nombre,e.carnet_identidad,e.complemento,nt.nivel,gt.grado,pt.paralelo, eeie.id as eveinscriptionid 
                 FROM eve_estudiante_inscripcion_evento eeie
@@ -235,6 +236,7 @@ class ChessEventController extends Controller{
                 inner join grado_tipo gt on (iec.grado_tipo_id=gt.id)
                 inner join paralelo_tipo pt on (iec.paralelo_tipo_id=pt.id)
                 where 
+                iec.gestion_tipo_id = $year and  
                 eeie.eve_categorias_tipo_id = $categorieId and  
                 eeie.eve_fase_tipo_id = $faseId and  
                 eeie.eve_modalidades_tipo_id = $modalidadId and  
