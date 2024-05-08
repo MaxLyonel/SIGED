@@ -514,7 +514,6 @@
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}
 
                                     {# {{ app.session.get('esGuanawek') }} #}
-                                    {# {{dump(nivelGradoSexto.closeopesextosecc)}} #}
                                     {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
                                         {% if gestion == 2023 and nivel == 13 and grado >= 6 %}
                                             {% if nivelGradoSexto.closeopesextosecc == false %}
@@ -533,13 +532,21 @@
                                                 {% endif %} 
                                             {% endif %}
                                         {% else %}
-                                            {# {% if gestion == 2023 %}
+                                            {% if gestion == 2023 and data.estadomatriculaId in [4,5,11] and operativo < 4 %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 6.-.">
                                                 <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table"  onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                     <i class="fa fa-list"></i>
                                                 </button>
                                             </div>
-                                            {% endif %} #}
+                                            {% else %}
+                                                {% if  data.estadomatriculaId in [5,11] and operativo >= 4%}
+                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
+                                                        <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
+                                                        <i class="fa fa-print" style="color:#FFFFFF"></i>
+                                                        </a>
+                                                    </div>
+                                                {% endif %} 
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
 
