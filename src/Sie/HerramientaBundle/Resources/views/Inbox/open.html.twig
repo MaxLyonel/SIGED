@@ -141,22 +141,22 @@
                     </div>
                 </div> #}
                 {% endif %}
-                
-                 {# {% if bimestre < '3' and data.gestion!=app.session.get('currentyear') %}
+                {# {% if bimestre < '3' and data.gestion!=app.session.get('currentyear') %} #}
+                {% if bimestre < '3' and data.gestion!=app.session.get('currentyear') and app.session.get('esGuanawek') == 1 %}
                     <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                         <div class="thumbnail">
                             <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
                             <div class="caption text-center">
                                 <h4>Cerrar Operativo</h4>
                                 <div class="thumbnail-action">
-                                    {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo11' }} )}}
+                                    {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
                                         {{form_widget(closeOperativoform.next)}}
                                     {{form_end(closeOperativoform)}}
                                 </div>
                             </div>
                         </div>
                     </div>
-                {% endif %} #}
+                {% endif %}
                 
             {% endif %}
             {% if data.gestion == app.session.get('currentyear')  %} <!--Se deshabilito hasta nueva instruccion 240123-->
