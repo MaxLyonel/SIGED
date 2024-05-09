@@ -116,7 +116,7 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="form-group  col-md-12 obs" style="display:none">
-                                                <div class="col-md-4"><strong>FINALIZAR TRÁMITE:</strong></div>
+                                                <div class="col-md-4"><strong>FINALIZAR TRÁMITE++++:</strong></div>
                                                 <div class="col-md-8">
                                                     {% for b in form.varevaluacion2 %}
                                                         <div class="col-md-3 rdio rdio-primary circle">
@@ -244,7 +244,6 @@
         });
         //$("#form_fechainformesubdireccion").datepicker();
         $('#form_varevaluacion1_0').click(function(){
-            //alert('entra');
             if ($("#form_varevaluacion1_0").is(':checked')){
                 $('#informe').show();
                 $('.obs').hide();
@@ -259,6 +258,8 @@
                 $("#form_adjuntoinforme").attr('required',true);
                 $("#form_actaconformidad").attr('required',true);
                 $("#form_bidistrital").attr('required',true);
+                $("#form_actaconformidad").attr('disabled',false);
+                $("#form_bidistrital").attr('disabled',false);
                 limpiarInforme();
                 limpiarObs();
             }
@@ -279,6 +280,8 @@
                 $("#form_adjuntoinforme").attr('required',false);
                 $("#form_actaconformidad").attr('required',false);
                 $("#form_bidistrital").attr('required',false);
+                $("#form_actaconformidad").attr('disabled',true);
+                $("#form_bidistrital").attr('disabled',true);
                 limpiarInforme();
                 limpiarObs();
             }
@@ -295,6 +298,8 @@
                 $("#form_adjuntoinforme").attr('required',true);
                 $("#form_actaconformidad").attr('required',true);
                 $("#form_bidistrital").attr('required',true);
+                $("#form_actaconformidad").attr('disabled',true);
+                $("#form_bidistrital").attr('disabled',true);
                 limpiarInforme();
             }
         });
@@ -309,6 +314,8 @@
                 $("#form_adjuntoinforme").attr('required',false);
                 $("#form_actaconformidad").attr('required',false);
                 $("#form_bidistrital").attr('required',false);
+                $("#form_actaconformidad").attr('disabled',true);
+                $("#form_bidistrital").attr('disabled',true);
                limpiarInforme();
             }
         });
