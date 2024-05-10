@@ -40,7 +40,7 @@ class StudentsInscriptionsController extends Controller {
 
       $gestion = $this->session->get('ie_gestion');
       // dump($this->session->All());die;
-      if ($this->session->get('userId') != 94161725)   return $this->redirect($this->generateUrl('principal_web'));
+      // if ($this->session->get('userId') != 94161725)   return $this->redirect($this->generateUrl('principal_web'));
         //get the send values
         $infoUe = $request->get('infoUe');
         $etapaespecialidad = $request->get('etapaespecialidad');
