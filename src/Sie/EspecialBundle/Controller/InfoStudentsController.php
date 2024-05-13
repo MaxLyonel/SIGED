@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
+use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEspecial;
 use Sie\AppWebBundle\Entity\EstadomatriculaTipo;
 use Doctrine\ORM\EntityRepository;
@@ -206,7 +207,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(400,401,402,408,403,404,412);
-      $programasLibreta = array(7,8,9,12,14,25,15); //
+      $programasLibreta = array(8,9,12,14,25,15); //
      //dump($aInfoUeducativa['ueducativaInfoId']['programaId']);die; //escuelas mentoras = 32, areas transversales = 17
      //dump($nivel);die;
       if($gestion >2019 and $nivel <> 405){
@@ -218,8 +219,6 @@ class InfoStudentsController extends Controller {
       }
        $programasSinNotas = array(19, 26,27,29); //No esta definido la forma de registro de las notas por tanto calificaciones=0
 
-      
-
       if(in_array($aInfoUeducativa['ueducativaInfoId']['programaId'], $programasSinNotas)  and $gestion>2020){
           $arrDataLibreta['calificaciones'] = false;
       }
@@ -228,13 +227,12 @@ class InfoStudentsController extends Controller {
       if(($nivel==410 or $nivel==411) and $gestion>2020 and $objArea->getId()==3){
           $arrDataLibreta['calificaciones'] = false;
       }
-     
       //dump($nivel);die;
-      //2023 llenado de calificaciones trimestrales
+      //2023 llenado de calificaciones TRIMESTRAL
        $nivelesConNotas = array(401,412,403,404);
        $programasConNotas = array(25,8); 
        
-      if($gestion == 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+      if($gestion >= 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
        
         $arrDataLibreta['calificaciones'] = true;
       }
@@ -249,36 +247,37 @@ class InfoStudentsController extends Controller {
       }else{
         $arrDataLibreta['libreta'] = false;
       }    
-     
-      //para talento y dificultades en general  
+     //dump($arrDataLibreta);die;
+      //para talento y dificultades en general  - SEMESTRAL
       if(($nivel==410 or $nivel==411) and $gestion>2021 and ($objArea->getId()==7 or $objArea->getId()==6)){
+        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['libreta'] = false;
+      }
+      
+      //auditiva- lengua de señas, modulo o servicio lbs y programas - SEMESTRAL
+      if($gestion>2022 and $objArea->getId()==1 and (($nivel==411 and in_array($programa,[19,22,41,43,44,46])) or ($nivel==410 and $servicio==40))){
+        $arrDataLibreta['calificaciones'] = false;
+      }
+      //visual- servicios complementarios - SEMESTRAL
+      if($gestion>2022 and $objArea->getId()==2 and ($nivel==410 and in_array($servicio,[35,36,37,38]))){
+        $arrDataLibreta['calificaciones'] = false;
+      }
+      //visual- programa multiple - SEMESTRAL
+      if($gestion>2022 and $objArea->getId()==2 and ($nivel==411 and in_array($programa,[26, 47,48]))){
+        $arrDataLibreta['calificaciones'] = false;
+      }
+      //intelectual- atención temprana - SEMESTRAL
+      if($gestion>2022 and $objArea->getId()==3 and ($nivel==409 and in_array($programa,[28])) ){
+        $arrDataLibreta['calificaciones'] = false;
+      }
+      //intelectual- programa multilple y/o itinerarios educativos - TRIMESTRAL
+      if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37])) ){
         $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
-      
-      //auditiva- lengua de señas, modulo o servicio lbs y programas
-      if($gestion>2022 and $objArea->getId()==1 and (($nivel==411 and in_array($programa,[19,22,41,43,44,46])) or ($nivel==410 and $servicio==40))){
-        $arrDataLibreta['calificaciones'] = true;
-      }
-      //visual- servicios complementarios
-      if($gestion>2022 and $objArea->getId()==2 and ($nivel==410 and in_array($servicio,[35,36,37,38]))){
-        $arrDataLibreta['calificaciones'] = true;
-      }
-      //visual- programa multiple
-      if($gestion>2022 and $objArea->getId()==2 and ($nivel==411 and in_array($programa,[26, 47,48]))){
-        $arrDataLibreta['calificaciones'] = true;
-      }
-      //intelectual- atención temprana
-      if($gestion>2022 and $objArea->getId()==3 and ($nivel==409 and in_array($programa,[28])) ){
-        $arrDataLibreta['calificaciones'] = true;
-      }
-      //intelectual- programa multilple
-      if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37])) ){
-        $arrDataLibreta['calificaciones'] = true;
-      }
-      //metal-psiquica
+      //metal-psiquica - SEMESTRAL
       if($gestion>2022 and $objArea->getId()==10  ){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
       }
       //para bono
       //dump($objArea->getId());die;
@@ -317,9 +316,7 @@ class InfoStudentsController extends Controller {
         }
       }
       //dump($arrDataLibreta['calificaciones']);die;
-      //dump($arrDataLibreta['bono']);die;
-      
-     
+      //dump($arrDataLibreta);die;
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
         'objStudents' => $objStudents,
@@ -662,7 +659,34 @@ class InfoStudentsController extends Controller {
       $em->flush();
       //to do the submit data into DB
       //do the commit in DB
-      $em->getConnection()->commit();
+      //$em->getConnection()->commit();
+      //verificamos asignaturas
+      
+      //if doesnt have areas we'll fill these
+     
+          $objAreas = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array(
+              'insitucioneducativaCurso' => $aInfoUeducativa['ueducativaInfoId']['iecId']
+          ));
+         
+        if(count($objAreas)>0){// dump($studentInscription->getId());die;
+          foreach ($objAreas as $areas) {
+              //print_r($areas->getAsignaturaTipo()->getId());
+              $estInscripcion = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$studentInscription->getId(),'institucioneducativaCursoOferta'=>$areas->getId()));
+              if(!$estInscripcion){
+                $studentAsignatura = new EstudianteAsignatura();
+                $studentAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+                $studentAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
+                $studentAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($areas->getId()));
+                $studentAsignatura->setFechaRegistro(new \DateTime('now'));
+                $em->persist($studentAsignatura);
+                $em->flush();
+                
+              }
+          }
+        }
+        $em->getConnection()->commit();
+      
+      
       $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito');
       // Para el centralizador
       $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
@@ -720,7 +744,7 @@ class InfoStudentsController extends Controller {
           }
         }
       }
-
+ 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
         'objStudents' => $objStudents,

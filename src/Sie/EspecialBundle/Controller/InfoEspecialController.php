@@ -15,7 +15,7 @@ class InfoEspecialController extends Controller{
   public function __construct(){
     $this->session = new Session();
   }
-  public function indexAction(Request $request){
+  public function indexAction(Request $request){ 
     // get the data conexion
     $em = $this->getDoctrine()->getManager();
     
@@ -348,7 +348,7 @@ class InfoEspecialController extends Controller{
   public function closeOperativoAction (Request $request){ 
 
       
-      //crete conexion DB
+      //crete conexion 
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
       //get the values
