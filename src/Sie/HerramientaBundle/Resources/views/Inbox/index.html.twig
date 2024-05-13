@@ -56,10 +56,10 @@
                                             {% if objEspecial=='' and (objValidateUePlena or app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('ue_humanistica')) %}
                                               {{form(form)}} 
                                             {% endif %}
-                                            {# {% if objValidateUePlena %}
+                                            {% if objValidateUePlena %}
                                                 <br /> 
-                                                <a href="{{ path('gp_areas_estudiante_index', {'op': 1})}}" class="btn btn-block btn-facebook">Adición/Eliminación de áreas11</a>
-                                            {% endif %} #}
+                                                <a href="{{ path('gp_areas_estudiante_index', {'op': 1})}}" class="btn btn-block btn-facebook">Adición/Eliminación de áreas BTH a Estudiante</a>
+                                            {% endif %}
                                         </li>
                                         <li><br/></li>
                                         <li>
