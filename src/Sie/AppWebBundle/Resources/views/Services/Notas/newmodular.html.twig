@@ -5,7 +5,12 @@
 	vista = 1  // Se podran modificar las notas dirferentes a cero y vacio
 	vista = 2  // Se podra modificar todo
 #}
-
+<div class="col-lg-12">
+    <div class="alert alert-warning">
+        (U.E. MODULAR) Verifique bien las calificaciones antes de guardarlas, posteriormente no se podran modificar !<br>
+        Solo debe seleccionar las áreas que el estudiante esta cursando. Ir a adición/eliminación de areas para Estudiantes.
+    </div>
+</div>
 <input type="hidden" name="tipoNota" value="{{notas.tipoNota}}">
 <input type="hidden" name="nivel" value="{{notas.nivel}}">
 <input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
@@ -20,12 +25,12 @@
     <thead class="cf">
         <tr>
             <th>
-                Asignatura
+                Áreas
             </th>
             {% if notas.operativo > 0 %}
                 {% for i in 1..notas.operativo %}
                     {% if i < 4  %}
-                        <th>{{ i }} Bimestre</th>
+                        <th>{{ i }} Trimestre</th>
                     {% else %}
                         {% if notas.nivel != 11 %}
                             <th>Promedio</th>
@@ -129,11 +134,12 @@
     {% endif %}
 </table>
 </div> #}
-<div class="col-lg-12">
+{# <div class="col-lg-12">
     <div class="alert alert-warning">
-        (MODULAR) Verifique bien las notas antes de guardarlas, porque una vez guardadas estas no se podran modificar ! 
+        (U.E. MODULAR) Verifique bien las calificaciones antes de guardarlas, posteriormente no se podran modificar !<br>
+        Solo debe seleccionar las áreas que el estudiante esta cursando. Ir a adicion y eliminarcion de ares para Estudiantes.
     </div>
-</div>
+</div> #}
 </div>
 
 <script>

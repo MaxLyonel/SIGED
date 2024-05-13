@@ -1808,7 +1808,7 @@ class Notas{
                     if($this->session->get('ue_modular') == true and $nivel == 13){
                         $operativo = 3;
                         $fin = 3;
-                        if( in_array($gestion, array(2020,2021,2022,2023)) ){
+                        if( in_array($gestion, array(2020,2021,2022,2023,2024)) ){
                             $inicio = 6;
                             $fin = 8;
                         }                        

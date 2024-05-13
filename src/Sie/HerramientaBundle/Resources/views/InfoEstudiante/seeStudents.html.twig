@@ -81,11 +81,11 @@
                     {% endif %}
                     #}
                     {# boletin centralizador 2024 #}
-                    {# {% if operativo > 1 %}
+                    {% if operativo >= 1 %}
                         <a class="btn btn-menu tooltips" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Boletín centralizador preliminar">
                             <i class="fa fa-file-text-o" ></i>
                         </a>
-                    {% endif %} #}
+                    {% endif %}
                     {# by krlos inscription #}
                     {# {% if (gestion == 2021) and (app.session.get('esGuanawek') and app.session.get('esGuanawek')==1) %}
                         {% if ( nivel in [11] and grado in [2]) or( nivel in [12] and grado in [1,2,3,4,5,6]) or ( nivel in [13] and grado in [1,2,3,4,5,6])%}
