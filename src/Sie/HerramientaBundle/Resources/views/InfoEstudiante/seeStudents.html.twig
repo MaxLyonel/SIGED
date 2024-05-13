@@ -451,6 +451,7 @@
                                                         {% else %}
                                                             {# {% if gestion >= 2024 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 %}  #}
                                                             {% if gestion >= 2024 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 and operativo == 1 %} 
+                                                            
                                                                 {# {% if gestion <= 2023 and nivel == 13 and grado == 4 %}  #}
                                                                 {% if gestion >= 2024 and nivel == 13 and grado >= 4 %} 
                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
@@ -468,12 +469,12 @@
                                                                 {% endif %}
                                                             {% else %}                                          
                                                                     {# ojo aqui #}
-                                                                {% if operativo > 0 %}    
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                {% if gestion >= 2024 and app.session.get('esGuanawek')==0 and operativo == 1 %}    
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div> #}
+                                                                </div>
                                                                 {% endif %}
                                                             {% endif %}
                                                             
