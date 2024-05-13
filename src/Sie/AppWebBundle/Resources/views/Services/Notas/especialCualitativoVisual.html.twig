@@ -30,7 +30,7 @@
                 <tbody>
                     <tr>
                         <td></td>
-                            {% if notas.operativo > 0 %}
+                            {% if notas.operativo >= 0 %}
                                 {% for e in notas.etapas %}
                                     {% if e.fechaEtapa %}
                                         <td>
@@ -51,7 +51,7 @@
                             {% else %}
                                 <td></td>
                             {% endif %}
-                        </tr>
+                    </tr>
                     {% set cont = 0 %}
                     {% for a in notas.cuantitativas %}
                         <tr>
@@ -60,7 +60,7 @@
                             </td>
                             {% if a.notas is defined and a.notas|length > 0 %}
                                 {% for n in a.notas %}
-                                    {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                    {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %} 
                                         {% if n.nota == "" or n.nota.idIndicador not in [1,2,3,5] or vista == 2 %}
                                                 <td>
                                                 <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
