@@ -107,7 +107,7 @@
                                 {% endif %}
                                 <td>
                                 
-                                    {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones 
+                                    {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones  #}
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo >= 0  %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}},'{{infoUe}}');" >
@@ -116,9 +116,9 @@
                                     </div>
                                     {% else %}.
                                     {% endif %}
-                                             #}
+                                            
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo >= 0 and arrDataLibreta.libreta == true %}
-                                    {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION 
+                                    {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION #}
                                          
                                         {% if arrDataLibreta.areaEspecialId == 2 %}
                                         
@@ -134,7 +134,7 @@
                                                 </button>
                                             </form>
                                         {% endif %}    
-                                        #}
+                                        
                                     {% endif %}
                                     {# termino operativo 2023 se desactiva 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">

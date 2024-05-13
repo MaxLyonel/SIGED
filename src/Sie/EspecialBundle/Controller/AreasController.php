@@ -578,8 +578,8 @@ class AreasController extends Controller {
                             )->setParameter('ids',$asignaturas)
                             ->getResult();
                 break;
-                case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId(); //programas
-                            //dump($programa);die;
+                case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId(); //PROGRAMAS
+                           // dump($programa);die;
                             switch($programa){
                                 case 7:
                                     $asignaturas = $em->createQuery(
@@ -775,6 +775,16 @@ class AreasController extends Controller {
                                 )->setParameter('ids',array(479,492))
                                 ->getResult();
                              break;
+                                 case 37: //---
+                                    $todasLasAsignaturas = 'NO';
+                                    $asignaturas = $em->createQuery(
+                                        'SELECT at
+                                        FROM SieAppWebBundle:AsignaturaTipo at
+                                        WHERE at.id IN (:ids)
+                                        ORDER BY at.id ASC'
+                                )->setParameter('ids',array(415,464,416,417,418,2010,469,615,1003,497,498,499))
+                                ->getResult();
+                             break;
                                 default:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at
@@ -930,7 +940,7 @@ class AreasController extends Controller {
                             break;
             }
            
-           //dump($asignaturas);
+         //  dump($asignaturas);
 //dump($programaServicio);die;
             $areasNivel = $asignaturas;
             
@@ -954,7 +964,7 @@ class AreasController extends Controller {
                 if ($check != 'checked') { 
                     //dump($idmomento);die;
                     
-                    if($idmomento==1){
+                    if($idmomento<4){
                         $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'campo' => ($areasNivel[$i]->getAreaTipo()) ? $areasNivel[$i]->getAreaTipo()->getArea() : "", 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura(),'programaServicio'=>'');
                     }else{
                         $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'campo' => ($areasNivel[$i]->getAreaTipo()) ? $areasNivel[$i]->getAreaTipo()->getArea() : "", 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura(),'programaServicio'=>$programaServicio);
@@ -1179,6 +1189,7 @@ class AreasController extends Controller {
                         $existe = 'si';
                     }
                 }
+                
                 if($this->session->get('idGestion') == 2016 and $areas[$i] == 1039){
                     $existe = 'si';
                 }
@@ -1208,7 +1219,7 @@ class AreasController extends Controller {
 
                     // Listamos los estudinates inscritos
                     // para registrar el curso a los estudiantes
-                    $inscritos = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso' => $idCurso, 'estadomatriculaTipo'=>array(4,5,11)));
+                    $inscritos = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso' => $idCurso, 'estadomatriculaTipo'=>array(4,5,11,68,7)));
                     foreach ($inscritos as $ins) {
                         // Verificamos si el estudiante ya tiene la asignatura
                         $estInscripcion = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$ins->getId(),'institucioneducativaCursoOferta'=>$newArea->getId()));
