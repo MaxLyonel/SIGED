@@ -4982,7 +4982,7 @@ die;/*
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
         
-        if($operativo==3 && ($igestion == 2021 || $igestion == 2022 || $igestion == 2023)){
+        if($operativo==3 && ($igestion == 2021 || $igestion == 2022 || $igestion == 2023 || $igestion == 2024)){
             switch ($inivel_tipo_id) {
                 case '13':
                     $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
@@ -5014,7 +5014,7 @@ die;/*
                     break;
             }
         }else{
-            if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023){
+            if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023 and $igestion != 2024){
                 $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
                 $query->execute();        
                 $resultado = $query->fetchAll();              
@@ -5054,7 +5054,7 @@ die;/*
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
         
-        if($operativo==3 && (in_array($igestion, array(2022,2023) ) ) ){
+        if($operativo==3 && (in_array($igestion, array(2022,2023,2024) ) ) ){
             switch ($inivel_tipo_id) {
                 case '12':
                 case '13':
@@ -5076,7 +5076,7 @@ die;/*
                     break;
             }
         }else{
-            if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023){
+            if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023 and $igestion != 2024){
                 $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
                 $query->execute();        
                 $resultado = $query->fetchAll();              
