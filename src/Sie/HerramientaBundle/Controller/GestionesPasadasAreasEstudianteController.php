@@ -715,6 +715,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
         } else if($igestion == 2023) {            
             $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
+        } else if($igestion == 2024) {            
+            $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
         }
 
         $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
