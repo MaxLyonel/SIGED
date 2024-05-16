@@ -715,7 +715,7 @@ class DownloadController extends Controller {
             if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
                 $operativo = $operativo - 1;
             }
-            if($gestion == 2021 or $gestion == 2022 or $gestion == 2023){
+            if($gestion == 2021 or $gestion == 2022 or $gestion == 2023 or $gestion == 2024){
                 if($idiomaId == 48)
                 {
                     if($gestion >= 2022){
@@ -826,7 +826,7 @@ class DownloadController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
         
-        if($gestion == 2021 or $gestion == 2022 or $gestion == 2023){
+        if($gestion == 2021 or $gestion == 2022 or $gestion == 2023 or $gestion == 2024){
             // dump($idiomaId);
             // dump($reporte);
             // dump($idInscripcion); die;
