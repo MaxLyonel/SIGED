@@ -757,21 +757,21 @@ class InfoEstudianteController extends Controller {
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
         // dump($operativo);die;
         
-        // if($operativo > 1){
-        //     $this->session->set('donwloadLibreta', true);
-        // }else{
-        //     $this->session->set('donwloadLibreta', false);
-        // }
+        if($operativo > 1){
+            $this->session->set('donwloadLibreta', true);
+        }else{
+            $this->session->set('donwloadLibreta', false);
+        }
         
         //dcastillo para notas
-        if($operativo == 2){
-            //los que aun no hah registrado 2 trmestre
-            $this->session->set('donwloadLibreta', false);
-        }
-        if($operativo == 3){
-            //los que ya cerraron operativo
-            $this->session->set('donwloadLibreta', false);
-        }
+        // if($operativo == 2){
+        //     //los que aun no hah registrado 2 trmestre
+        //     $this->session->set('donwloadLibreta', false);
+        // }
+        // if($operativo == 3){
+        //     //los que ya cerraron operativo
+        //     $this->session->set('donwloadLibreta', false);
+        // }
 
 
         //get turnos
