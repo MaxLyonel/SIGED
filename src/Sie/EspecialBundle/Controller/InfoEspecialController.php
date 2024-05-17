@@ -507,7 +507,7 @@ class InfoEspecialController extends Controller{
       $form = $request->get('form');
       //dump($form);die;
       $cod_sie = (int)$this->session->get('ie_id');
-      $gestion = 2023;
+      $gestion = 2024;
 
       //get the current operativo
      // $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
