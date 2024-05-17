@@ -159,7 +159,7 @@ class InfoEspecialController extends Controller{
                 'data'=>$dataInfo,
                 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
                 //'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
-                'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
+                'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo 1er Trimestre',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
                 'operativo'=>$periodo,
