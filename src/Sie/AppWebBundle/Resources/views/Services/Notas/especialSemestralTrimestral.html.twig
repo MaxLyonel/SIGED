@@ -1,0 +1,153 @@
+{#
+	variable vista
+	vista = 0  // La vista estara totalmente bloqueada
+	vista = 1  // Se podran modificar las notas dirferentes a cero y vacio
+	vista = 2  // Se podra modificar todo
+#}
+
+<input type="hidden" name="tipoNota" value="{{notas.tipoNota}}">
+<input type="hidden" name="nivel" value="{{notas.nivel}}">
+<input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
+
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-bordered" id="tbl_nota">
+              <thead>
+                <tr>
+                    {% for tn in notas.tiposNotasArray %}
+                        <th colspan="1" align="center">{{tn.titulo}}</th>
+                    {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                    <tr>
+                     {% for tn in notas.tiposNotasArray %}
+                        <input type="hidden" name="id_nota[]" class="form-control jnumbersletters noresize ids" value="{{tn.id}}">
+                        <input type="hidden" name="tipo{{tn.id}}" id="tipo{{tn.id}}"  value="{{tn.id}}">
+                        <td>
+                        <B>ACCIONES DESARROLLADAS:</B>
+                           <textarea class="form-control jnumbersletters noresize logros" name="contenido{{tn.id}}" id="contenido{{tn.id}}" maxlength="90" >{{tn.contenido}}</textarea>
+                        <B>RESULTADOS ALCANZADOS:</B>
+                        <textarea class="form-control jnumbersletters noresize logros" name="resultado{{tn.id}}" id="contenido{{tn.id}}" maxlength="90" >{{tn.resultado}}</textarea>
+                        <B>RECOMENDACIONES:</B>
+                         <textarea class="form-control jnumbersletters noresize logros" name="recomendacion{{tn.id}}" id="contenido{{tn.id}}" maxlength="90" >{{tn.recomendacion}}</textarea>
+                        Estado Final:
+                        <select class="form-control" name="estado{{tn.id}}" id="valoracion{{tn.id}}" >
+                            <option value="">Seleccionar....</option>
+                            {% for valor in notas.estadosFinales %}
+                            <option value="{{valor.id}}" {% if valor.id == tn.estado %} selected {% endif %}  >{{valor.estadomatricula}}</option>
+                            {% endfor %}
+                        </select>
+                        </td>
+                    {% endfor %}
+                    </tr>
+                
+
+                   
+              </tbody>
+            </table>
+           
+       
+    </div>
+    <br/>
+    
+   
+</div>
+<script>
+    var indexg = 2;
+    $('#brow').click(function(){
+        $('#tbl_nota tbody').append('<tr><td><textarea class="form-control noresize pi" name="int'+indexg+'" required></textarea></td><td><textarea class="form-control noresize dc" name="des'+indexg+'" required></textarea></td><td><button type="button" class="btn btn-danger btn-xs drow"><i class="fa fa-minus"></i></button></td></tr>');
+        indexg++;
+    });
+    $(document).on('click', '.drow', function(event) {
+        $(this).parent().parent().remove();
+    });
+     var validarEnvioNotas = function(){
+        return true;
+    }
+    var validarEnvioNotas2222 = function(){
+        var enviar = true;
+        var error1 = false;
+        var error2 = false;
+        var cont = 0;
+        var tipo = '';
+        var mensaje = "";
+
+         $(".ids").each(function (index) {
+             
+              //tipo =  $("#tipo"+$(this).val()).val();
+             if( $("#actividad"+$(this).val()).val().length>0 ){
+                               
+                if( $("#actividad"+$(this).val()).val().length<16){
+                    var error1 = true;
+                }
+                else{
+                    cont++;
+                }
+                if( $("#valoracion"+$(this).val()).val()==''){
+                    var error2 = true;
+                }
+             }
+              //if( $("#actividad"+$(this).val()).val().length==0){
+                //  var error1 = true;
+              //}
+            if(error1){
+                mensaje = 'Las Actividades o Contenidos desarrollados deben tener al menos 16 dígitos ';
+                enviar = false;
+            }
+            if(error2){
+                mensaje = 'Debe seleccionar una valoración de nivel de Desempeño';
+                enviar = false;
+            }
+
+        });
+
+        $(".notaCualitativa").each(function (index) {
+            if($(this).val().length < 16){
+                mensaje = 'Las notas cualitativas deben tener al menos 16 dígitos';
+                enviar = false;
+            }
+        });
+
+        if(enviar == false){
+            alert(mensaje);
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+    $(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+</script>
+<style>
+.noresize {
+    resize: none;
+}
+</style>

@@ -8,7 +8,7 @@
 <input type="hidden" name="tipoNota" value="{{notas.tipoNota}}">
 <input type="hidden" name="nivel" value="{{notas.nivel}}">
 <input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
-
+{% if notas.cuantitativas|length > 0 %}
 <div class="row">
     <div class="col-lg-12">
 
@@ -80,6 +80,11 @@
     <br/>
 
 </div>
+{% else %}
+    <div class="alert alert-warning">
+        <i class="fa fa-warning"></i> El curso no tiene areas registradas, debe registrar las areas del curso para poder realizar el registro de notas.
+    </div>
+{% endif %}
 <script>
     var indexg = 2;
     $('#brow').click(function(){

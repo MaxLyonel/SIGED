@@ -168,7 +168,7 @@ class InfoStudentsController extends Controller {
      // dump($nivel);
      // dump($programa);
      // dump($servicio);die;
-      //dump($momentoId);die;
+     // dump($momentoId);die;
       //get db connexion
       $em = $this->getDoctrine()->getManager();
       $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
@@ -224,9 +224,8 @@ class InfoStudentsController extends Controller {
       }
     //para visual y programas
      //dump($nivel); dump($objArea->getId()); die;
-      if(($nivel==410 or $nivel==411) and $gestion>2020 and $objArea->getId()==3){
-          $arrDataLibreta['calificaciones'] = false;
-      }
+      //para ahbilitar servicios
+     
       //dump($nivel);die;
       //2023 llenado de calificaciones TRIMESTRAL
        $nivelesConNotas = array(401,412,403,404);
@@ -279,6 +278,10 @@ class InfoStudentsController extends Controller {
       if($gestion>2022 and $objArea->getId()==10  ){
         $arrDataLibreta['calificaciones'] = false;
       }
+
+      if($nivel==410 and $gestion>2023 and $servicio==20){
+        $arrDataLibreta['calificaciones'] = false;
+        }
       //para bono
       //dump($objArea->getId());die;
       //dump($modalidad);die;
@@ -316,7 +319,7 @@ class InfoStudentsController extends Controller {
         }
       }
       //dump($arrDataLibreta['calificaciones']);die;
-      //dump($arrDataLibreta);die;
+    //  dump($arrDataLibreta);die;
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
         'objStudents' => $objStudents,
