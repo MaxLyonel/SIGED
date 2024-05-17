@@ -67,7 +67,7 @@ class InfoNotasController extends Controller {
             $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
             $progserv = $cursoEspecial->getEspecialServicioTipo()->getId();
             $seguimiento = false;
-
+            $actualizarMatricula = false;
             $estadosMatricula = null;
           //  dump($discapacidad);
            // dump($nivel);die;
@@ -145,8 +145,8 @@ class InfoNotasController extends Controller {
                 case 2: // Visual
                         // dump($nivel); 
                         //dump($programa);
-                       // dump($progserv);
-                          //die;
+                        //dump($progserv);
+                        // die;
                         if($nivel == 411 and in_array($programa, array(7,8,9,10,11,12,14,15,16,25))){ 
                             if($gestion < 2020){
                                 if($notas['tipoNota'] == 'Trimestre'){
@@ -166,7 +166,7 @@ class InfoNotasController extends Controller {
                                 
                                 $template = 'especialCualitativoVisual';
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(78,79)));
-                              //  dump($notas);die;
+                                //dump($notas);die;
                             }
                         }
                         if($nivel <> 405 and $gestion >2019 and $gestion < 2023){   
@@ -179,7 +179,8 @@ class InfoNotasController extends Controller {
 
                         if($gestion > 2022 && ($nivel == 411 and in_array($programa, array(47,48,26))) or ($nivel == 410 and in_array($progserv, array(35,36,37,38))) ){ // programas visual y notas semestrales   
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
-                            $template = 'especialProgramaVisual'; //prog/ser con contenidos-resultados-recomendaciones
+                            ///////////////$template = 'especialProgramaVisual'; //prog/ser con contenidos-resultados-recomendaciones
+                            $template = 'especialSemestralTrimestral'; //prog/ser con contenidos-resultados-recomendaciones
                            // dump($notas);die;
                             if($momento<3)
                                 $template = 'especialProgramaVisualAsignatura'; //formato con asignaturas
@@ -297,13 +298,20 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            
-         // dump($template); 
-         // dump($notas);
+            //APOYO TECNICO PEDAGOGICO PARA TODAS LAS DISCAPACIDADES
+            if($nivel==410 and $gestion>2023 and $servicio==20){
+                $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);            
+                $template = 'especialSemestralTrimestral'; //prog/ser con contenidos-resultados-recomendaciones
+            }
+
+            //$notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+            //dump($notas);die;
+          //dump($template); 
+          //dump($notas);
             //dump($progserv);
             //dump($desc_programa);
            //dump($vista);
-          // die;
+          //die;
            //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
