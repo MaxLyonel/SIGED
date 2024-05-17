@@ -7421,7 +7421,8 @@ die;/*
                      ORDER BY at.id ASC')
                     ->setParameter('ids',$idInscripcion)
                     ->getResult();
-                    $estado = $request->get('estado');
+                    //$estado = $request->get('estado');
+                    
                 for($x=0; $x<count($tipos_notas_array); $x++){
                   
                     
@@ -7442,7 +7443,7 @@ die;/*
                                 }
                                 $newNota->setNotaCualitativa($nota);
                                 $newNota->setRecomendacion($recomendacion);
-                                $newNota->setObs(json_encode($estado_dato));
+                                //$newNota->setObs(json_encode($estado_dato));
                                 $newNota->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($newNota);
                                 $this->em->flush();
