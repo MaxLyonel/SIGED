@@ -211,9 +211,9 @@ class InfoStudentsController extends Controller {
      //dump($aInfoUeducativa['ueducativaInfoId']['programaId']);die; //escuelas mentoras = 32, areas transversales = 17
      //dump($nivel);die;
       if($gestion >2019 and $nivel <> 405){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }else{
         $arrDataLibreta['calificaciones'] = false;
       }
@@ -233,7 +233,7 @@ class InfoStudentsController extends Controller {
        
       if($gestion >= 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
        
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }
       else{ 
         $arrDataLibreta['calificaciones'] = false;
@@ -271,7 +271,7 @@ class InfoStudentsController extends Controller {
       }
       //intelectual- programa multilple y/o itinerarios educativos - TRIMESTRAL
       if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37])) ){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
       //metal-psiquica - SEMESTRAL
