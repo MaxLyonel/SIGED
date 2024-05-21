@@ -211,9 +211,9 @@ class InfoStudentsController extends Controller {
      //dump($aInfoUeducativa['ueducativaInfoId']['programaId']);die; //escuelas mentoras = 32, areas transversales = 17
      //dump($nivel);die;
       if($gestion >2019 and $nivel <> 405){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
       }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
       }else{
         $arrDataLibreta['calificaciones'] = false;
       }
@@ -233,7 +233,7 @@ class InfoStudentsController extends Controller {
        
       if($gestion >= 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
        
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
       }
       else{ 
         $arrDataLibreta['calificaciones'] = false;
@@ -242,7 +242,7 @@ class InfoStudentsController extends Controller {
       //$arrDataLibreta['calificaciones'] = true; 
 
       if( (in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
-        $arrDataLibreta['libreta'] = true;
+        $arrDataLibreta['libreta'] = false;
       }else{
         $arrDataLibreta['libreta'] = false;
       }    
