@@ -79,9 +79,7 @@ class InfoNotasController extends Controller {
                         if($nivel == 403 or $nivel == 404 ){//Verificar el seguimiento para 19
                             //dump("1");die;
                             if($progserv == 19) { 
-
                                 $notas = $this->get('notas')->especial_auditiva($idInscripcion,$operativo);
-
                                 $template = 'especialAuditiva';
                                 $actualizarMatricula = false;
                                 $seguimiento = true;
@@ -305,7 +303,7 @@ class InfoNotasController extends Controller {
             }
 
             //$notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
-            //dump($notas);die;
+           //dump($notas);die;
           //dump($template); 
           //dump($notas);
             //dump($progserv);
@@ -602,7 +600,7 @@ class InfoNotasController extends Controller {
             case 5:
             case 12:
                 //dump($arrInfoStudent['estInsId']);die;
-                if ($prgorama == 37) {
+                if ($programa == 37) {
                     $archivo = "libreta_intelectual_itinerarios_cvm.rptdesign";
                 }else{
                     $archivo = "esp_est_LibretaEscolar_Intelectual_Multiple_v1_pvc.rptdesign";
