@@ -1825,7 +1825,7 @@ class InboxController extends Controller {
         case 2:
         
           $opeTrim = $operativo + 5;
-          $dbFunction = 'sp_validacion_regular_web2023_mg';
+          $dbFunction = 'sp_validacion_regular_web2024_mg';
           break;
         case 3: 
           $opeTrim = $operativo + 5;

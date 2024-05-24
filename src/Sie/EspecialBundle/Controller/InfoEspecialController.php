@@ -15,7 +15,7 @@ class InfoEspecialController extends Controller{
   public function __construct(){
     $this->session = new Session();
   }
-  public function indexAction(Request $request){
+  public function indexAction(Request $request){ 
     // get the data conexion
     $em = $this->getDoctrine()->getManager();
     
@@ -159,7 +159,7 @@ class InfoEspecialController extends Controller{
                 'data'=>$dataInfo,
                 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
                 //'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
-                'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Trimestre',$data, $periodo)->createView(),
+                'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo 1er Trimestre',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
                 'operativo'=>$periodo,
@@ -348,7 +348,7 @@ class InfoEspecialController extends Controller{
   public function closeOperativoAction (Request $request){ 
 
       
-      //crete conexion DB
+      //crete conexion 
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
       //get the values
@@ -507,7 +507,7 @@ class InfoEspecialController extends Controller{
       $form = $request->get('form');
       //dump($form);die;
       $cod_sie = (int)$this->session->get('ie_id');
-      $gestion = 2023;
+      $gestion = 2024;
 
       //get the current operativo
      // $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);

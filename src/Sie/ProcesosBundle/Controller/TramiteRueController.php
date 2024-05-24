@@ -2018,6 +2018,9 @@ class TramiteRueController extends Controller
             $idrue = null;
             $mapa = false;
         }
+        // if ($usuario != 92490026 and $tramite == null) {
+        //     return $this->redirect($this->generateUrl('login'));
+        // }
         //dump($tarea);die;
         $distritoAperturaForm = $this->createDistritoAperturaForm($flujotipo,$tarea,$tramite,$idrue);
         return $this->render('SieProcesosBundle:TramiteRue:recepcionDistritoApertura.html.twig', array(

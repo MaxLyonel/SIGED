@@ -6,13 +6,13 @@
         <div class="panel panel-danger">        
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Notas del Estudiante</h3>
+                    <h3 class="panel-title">Calificaciones del Estudiante</h3>
                 </div>
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body no-padding" id="modal-body">
             {% include 'SieHerramientaBundle:InfoEstudianteNotas:encabezadoNotas.html.twig' %}
-            <h5 class="text-success" style="margin-left:10px">Notas <span style="float:right; margin-right:10px; font-size:0.9em;">Gestion: {{inscripcion.institucioneducativaCurso.gestionTipo.gestion}} | <span style="color:#2D839A; font-size: 1em"> {% if app.session.get('roluser') in [7,8,10]  %} C{{notas.operativo }} {% else %} A{{notas.operativo}} {% endif %} </span> </span></h5>
+            <h5 class="text-success" style="margin-left:10px">Calificaciones <span style="float:right; margin-right:10px; font-size:0.9em;">Gestion: {{inscripcion.institucioneducativaCurso.gestionTipo.gestion}} | <span style="color:#2D839A; font-size: 1em"> {% if app.session.get('roluser') in [7,8,10]  %} C{{notas.operativo }} {% else %} A{{notas.operativo}} {% endif %} </span> </span></h5>
             <div style="padding:0px 10px 0px 10px">
             {% include 'SieAppWebBundle:Services/Notas:'~ plantilla ~'.html.twig' with {'notas':notas, 'vista':vista} %}
             </div>

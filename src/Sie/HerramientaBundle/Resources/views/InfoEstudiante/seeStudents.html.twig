@@ -81,11 +81,11 @@
                     {% endif %}
                     #}
                     {# boletin centralizador 2024 #}
-                    {# {% if operativo > 1 %}
+                    {% if operativo >= 1 %}
                         <a class="btn btn-menu tooltips" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}" data-toggle="tooltip" data-container="body" title="" data-original-title="Boletín centralizador preliminar">
                             <i class="fa fa-file-text-o" ></i>
                         </a>
-                    {% endif %} #}
+                    {% endif %}
                     {# by krlos inscription #}
                     {# {% if (gestion == 2021) and (app.session.get('esGuanawek') and app.session.get('esGuanawek')==1) %}
                         {% if ( nivel in [11] and grado in [2]) or( nivel in [12] and grado in [1,2,3,4,5,6]) or ( nivel in [13] and grado in [1,2,3,4,5,6])%}
@@ -368,7 +368,7 @@
                                         
                                             {% if   imprimirLibreta == false %}{##}  
                                                                           
-                                                {% if gestion >= 2021 and data.estadomatriculaId in [4,5,11,55,58] %} 
+                                                {% if gestion >= 2021 and data.estadomatriculaId in [4,5,11,55] %} 
                                                     
                                                        
                                                     {# {% if gestion == 2022 and nivel == 13 and grado == 6 and app.session.get('acceso_total')  and mostrarUeSinReporte2022 == false and  cerrarOperativoSexto == false  %}  #}
@@ -412,15 +412,15 @@
                                                     {{dump(nivelGradoSexto.operativo) #}
                                                     
                                                     
-                                                    
-                                                    {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %} {# OJO CON ESTE CASO se elimina #}
+                                                    {# OJO CON ESTE CASO se elimina #}
+                                                    {# {% if  nivel == 13 and  grado == 6  and  gestion == 2022 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %} 
                                                                                                       
                                                         {% if nivelGradoSexto.closeopesextosecc == true and data.estadomatriculaId in [5,11,55] and nivel == 13 and  grado == 6  and  gestion == 2022 %}
                                                               <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
                                                                   <i class="fa fa-print" style="color:#FFFFFF"></i> 1
                                                                 </a>
-                                                               </div>
+                                                               </div> #}
 
                                                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones...">
                                                                 <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
@@ -428,7 +428,7 @@
                                                                 </button>
                                                             </div> #}
 
-                                                        {% else %}
+                                                        {# {% else %} #}
                                                         {#
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
@@ -436,8 +436,8 @@
                                                                 </a>
                                                             </div>
                                                         #}
-                                                        {% endif %}
-                                                    {% else %}
+                                                        {# {% endif %}
+                                                    {% else %} #}
                                                     
                                                         {% if app.session.get('donwloadLibreta') == true %}
                                                             {# ojo aqui en la impresion#}
@@ -449,35 +449,37 @@
                                                                 </div>
                                                             {% endif %}
                                                         {% else %}
-                                                        
-                                                            {% if gestion >= 2021 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 %} 
-                                                                {% if gestion <= 2023 and nivel == 13 and grado == 4 %} 
-                                                                    {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
-                                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                                            <i class="fa fa-list"></i>
-                                                                        </button>
-                                                                    </div> #}
-                                                                {% else %}          
-                                                                    {# ojo aqui 81981543#}
-                                                                    {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
+                                                            {# {% if gestion >= 2024 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 %}  #}
+                                                            {% if gestion >= 2024 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 and operativo == 1 %} 
+                                                            
+                                                                {# {% if gestion <= 2023 and nivel == 13 and grado == 4 %}  #}
+                                                                {% if gestion >= 2024 and nivel == 13 and grado >= 4 %} 
+                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                             <i class="fa fa-list"></i>
                                                                         </button>
-                                                                    </div> #}
+                                                                    </div>
+                                                                {% else %}          
+                                                                    {# ojo aqui 81981543#}
+                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.._">
+                                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                            <i class="fa fa-list"></i>
+                                                                        </button>
+                                                                    </div>
                                                                 {% endif %}
                                                             {% else %}                                          
                                                                     {# ojo aqui #}
-                                                                {% if operativo > 0 %}    
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                {% if gestion >= 2024 and app.session.get('esGuanawek')==0 and operativo == 1 %}    
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div> #}
+                                                                </div>
                                                                 {% endif %}
                                                             {% endif %}
                                                             
                                                         {% endif %}
-                                                    {% endif %}
+                                                    {# {% endif %} #}
                                                 
 
                                                 {% endif %}
