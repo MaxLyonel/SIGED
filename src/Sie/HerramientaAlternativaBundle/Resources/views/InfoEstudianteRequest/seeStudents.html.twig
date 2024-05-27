@@ -339,7 +339,7 @@
                                                     {% endif %}
 
                                                     {#ACTIVO TOMA DE AREAS SOLO EN NOTAS Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') )) %}      
+                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '0') )) %}      
                                                     {# commented by krlos 07.07.2020 #}                                                     
                                                         <li>
                                                           <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
