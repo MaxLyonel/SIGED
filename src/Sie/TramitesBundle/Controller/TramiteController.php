@@ -3536,6 +3536,10 @@ class TramiteController extends Controller {
             if($esValidoUsuarioRol and $rolOpcionTramite == 0){
                 $rolOpcionTramite = 9;
             }
+            $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($usuarioId,10);
+            if($esValidoUsuarioRol and $rolOpcionTramite == 0){
+                $rolOpcionTramite = 10;
+            }
             $query->bindValue(':roluser', $rolOpcionTramite);
         } else {
             $query->bindValue(':roluser', $rol);
