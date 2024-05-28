@@ -233,7 +233,7 @@ class InfoStudentsController extends Controller {
        
       if($gestion >= 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
        
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
       }
       else{ 
         $arrDataLibreta['calificaciones'] = false;
@@ -267,11 +267,11 @@ class InfoStudentsController extends Controller {
       }
       //intelectual- atención temprana - SEMESTRAL
       if($gestion>2022 and $objArea->getId()==3 and ($nivel==409 and in_array($programa,[28])) ){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
       }
       //intelectual- programa multilple y/o itinerarios educativos - TRIMESTRAL
       if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37])) ){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
       //metal-psiquica - SEMESTRAL
