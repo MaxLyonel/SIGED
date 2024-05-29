@@ -513,7 +513,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			$nivel = '-1';
 		}
 
-		if( in_array($request_gestion,range(2009,2023)) )
+		if( in_array($request_gestion,range(2009,2024)) )
 		{
 			$niveles_por_gestion=array();
 			
@@ -525,7 +525,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 				//con esto nos aseguramos que solo sea de secundaria
 				$niveles_por_gestion=[3];
 			}
-			else if( in_array($request_gestion,range(2011,2023)) )
+			else if( in_array($request_gestion,range(2011,2024)) )
 			{
 				//lo haces de esta manera por que no este momento del trámite no tenemos mas datos
 				//$niveles_por_gestion=[11,12,13];
@@ -646,7 +646,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			$grado = '-1';
 		}
 
-		if( in_array($request_gestion,range(2009,2023)) )
+		if( in_array($request_gestion,range(2009,2024)) )
 		{
 			$grados_por_nivel=array();
 
@@ -3993,7 +3993,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		            $complementario = "'(6,7)','(6,7,8)','(9)','51'";
 		        }
 		    }
-		} else if($igestion == 2023) {
+		} else if($igestion == 2024) {
 		    $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
 		}
 
@@ -4237,7 +4237,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 						}
 					}
 			}
-			else if($gestion == 2023)
+			else if($gestion == 2024)
 			{
 				//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
 				$notaAprobacion = 51;
