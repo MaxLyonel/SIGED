@@ -340,14 +340,16 @@
                                                     {% endif %}
 
                                                     {#ACTIVO TOMA DE AREAS SOLO EN NOTAS Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '0') )) %}      
-                                                    {# commented by krlos 07.07.2020 #}                                                     
-                                                        <li>
-                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-lilac"><i class="fa fa-file-text"></i> Toma de Áreas/Módulo</span>
-                                                          </a>
-                                                        </li>  
+                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') )) %}      
+                                                    {# commented by krlos 07.07.2020 #}      
+                                                         {% if app.session.get('userId') == 94161725 %}    {# solo para raul#}                                           
+                                                            <li>
+                                                            <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                <span class="label label-lilac"><i class="fa fa-file-text"></i> Toma de Áreas/Módulo</span>
+                                                            </a>
+                                                            </li>  
                                                                                                          
+                                                        {% endif %}
                                                     {% endif %}
                                                     <li class="divider"></li>
 
