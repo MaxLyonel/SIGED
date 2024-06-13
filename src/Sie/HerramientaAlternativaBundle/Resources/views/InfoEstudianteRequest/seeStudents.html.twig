@@ -129,7 +129,8 @@
         {# {% endif %} #}
         {# temporal para CEA 2  #}
         {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %#}
-        {% if app.session.get('ie_gestion') >= 2009 and (app.session.get('ie_id') == 80730610 ) %}  {# POR HR 25684, TEMPORAL DESDE HOY MARTES HASTA EL VIERNES 14/06/2024 POR SOLICITUD DE RAUL #} 
+        {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('ie_id') == 80730610 ) %}  {# POR HR 25684, TEMPORAL DESDE HOY MARTES HASTA EL VIERNES 14/06/2024 POR SOLICITUD DE RAUL #} 
+        {% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %}
                 <div class="col-md-3">
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                         <i class="fa fa-user"></i> Inscripción con CI
@@ -330,8 +331,8 @@
                                                     {% endif %} 
                                                     
                                                     {#ACTIVO ELIMINACION SOLO EN INSCRIPCIONES Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_gestion') >= '2022') and (app.session.get('userId') == 94161725) %} 
                                                     {# {% if (app.session.get('ie_per_estado') == '1')  or ((app.session.get('ie_gestion') >= '2024') and (app.session.get('ie_per_estado') == '3') and ((app.session.get('userId') == 94161725))) %}  #}
+                                                    {% if (app.session.get('userId') == 94161725) %}  {# POR hr 27078 Y SIMILARES Y POR SOLICIYTUD DE RAUL CONTRERAS#}
                                                         <li>
                                                             <a href="#" type="link"  class="" onclick="removeInscriptionStudent('{{infoUe}}', '{{ jsnInfoStudent }}');" >
                                                               <span class="label label-danger"><i class="fa fa-remove"></i>Eliminar Inscripción</span>
