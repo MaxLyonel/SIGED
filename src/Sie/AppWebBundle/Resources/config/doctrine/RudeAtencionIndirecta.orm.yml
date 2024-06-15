@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\RudeAtencionIndirecta:
+    type: entity
+    table: rude_atencion_indirecta
+    indexes:
+        IDX_1AA089B5443E4890:
+            columns:
+                - rude_id
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivel:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        grado:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        institucion:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
