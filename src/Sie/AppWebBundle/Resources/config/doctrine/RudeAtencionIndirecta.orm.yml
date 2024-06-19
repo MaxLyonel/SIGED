@@ -20,7 +20,7 @@ Sie\AppWebBundle\Entity\RudeAtencionIndirecta:
             nullable: true
             length: null
             fixed: false
-            comment: ''
+            comment: 'desc nivel'
         grado:
             type: string
             nullable: true
