@@ -50,6 +50,13 @@ info_estudiante_rudees_nuevo_cargar_grado_discapacidad:
     options:
          expose: true
 #
+##TALENTO
+info_estudiante_rudees_nuevo_cargar_estrategias:
+    path:     /cargarEstrategias
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:cargarEstrategias" }
+    options:
+         expose: true
+#
 info_estudiante_rudees_nuevo_save_formDireccion:
     path:     /saveFormDireccion
     defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormDireccion" }
