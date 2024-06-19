@@ -3,8 +3,8 @@
 namespace Sie\AppWebBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-/**
+//RUDE 2024
+/** 
  * RudeAtencionIndirecta
  */
 class RudeAtencionIndirecta
