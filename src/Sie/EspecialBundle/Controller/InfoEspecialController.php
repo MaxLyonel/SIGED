@@ -158,7 +158,7 @@ class InfoEspecialController extends Controller{
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
                 'data'=>$dataInfo,
                 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
-                //'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
+                'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
                 'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo 1er Trimestre',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
@@ -449,7 +449,7 @@ class InfoEspecialController extends Controller{
       $form = $request->get('form');
      
      $cod_sie = (int)$this->session->get('ie_id');
-     $gestion = 2023;
+     $gestion = 2024;
       //update the close operativo to registro consolido table
      /*
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
@@ -508,6 +508,7 @@ class InfoEspecialController extends Controller{
       //dump($form);die;
       $cod_sie = (int)$this->session->get('ie_id');
       $gestion = 2024;
+      //$gestion = $form['gestion'];
 
       //get the current operativo
      // $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
