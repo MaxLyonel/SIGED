@@ -54,6 +54,11 @@ class EstudianteNotasController extends Controller {
         if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $this->session->get('userId')!=94161725){
             return $this->redirect($this->generateUrl('principal_web'));
          }
+
+         /********* temporal notas****/
+        if ($gestion == 2024 && $this->session->get('userId')!=94161725){
+            return $this->redirect($this->generateUrl('principal_web'));
+         }
         /**************************************************/
         if($data['gestion'] >= 2016){
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestreActual.html.twig',$data);
