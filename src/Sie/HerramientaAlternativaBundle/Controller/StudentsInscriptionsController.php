@@ -43,9 +43,9 @@ class StudentsInscriptionsController extends Controller {
       //if ($this->session->get('userId') != 94161725)   return $this->redirect($this->generateUrl('principal_web'));
       if ($this->session->get('userId') != 94161725){
         
-        if ($this->session->get('ie_id') != 82230127){
+        // if ($this->session->get('ie_id') != 82230127){
           return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // }
       }    
         
 
