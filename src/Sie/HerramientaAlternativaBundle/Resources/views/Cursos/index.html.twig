@@ -63,13 +63,13 @@
                     <small>
                         <div class="tree well">
 
-                            {# {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}  #}
+                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%} 
                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Cerrar Operativo Aprendizajes Especializados">
                                 <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="cerrarOperativoQuinto();">
                                     <i class="fa fa-unlock-alt"></i> Cerrar Operativo Aprendizajes Especializados
                                 </button>
                             </div>
-                            {# {% endif %} #}
+                            {% endif %}
                             {% if app.session.get('roluser') == 8 or (app.session.get('roluser') == 9 and app.session.get('ie_gestion') == app.session.get('currentyear')) %}
 
                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
