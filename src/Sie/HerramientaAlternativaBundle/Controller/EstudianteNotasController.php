@@ -44,14 +44,14 @@ class EstudianteNotasController extends Controller {
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
-        
+        // dump($data);die;
         // $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
         $aInfoUeducativa = unserialize($infoUe);
 
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
         // if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $institucion != 80730796 && $this->session->get('userId')!=94161725){
-        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $this->session->get('userId')!=94161725){
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $periodo == 3 && $this->session->get('userId')!=94161725){
             return $this->redirect($this->generateUrl('principal_web'));
          }
 
@@ -60,6 +60,7 @@ class EstudianteNotasController extends Controller {
         //     return $this->redirect($this->generateUrl('principal_web'));
         //  }
         /**************************************************/
+        
         if($data['gestion'] >= 2016){
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestreActual.html.twig',$data);
         }else{
@@ -108,7 +109,7 @@ class EstudianteNotasController extends Controller {
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
         // if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $institucion != 80730796 && $this->session->get('userId')!=94161725){
-        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $this->session->get('userId')!=94161725){
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $periodo == 3 && $this->session->get('userId')!=94161725){
             return $this->redirect($this->generateUrl('principal_web'));
         }
         /**************************************************//*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
