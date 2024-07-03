@@ -1222,9 +1222,10 @@
                                             </div>
                                         </div>
                                         {% endif %}
+                                        
                                         <div class="row form-group">
                                             <div class="col-md-12 col-sm-12">
-                                                <p><strong>5.6 ATENCIÓN EN MODALIDAD INDIRECTA SERVICIO DE EDUCACIÓN INCLUSIVA PARA EL APOYO EDUCATIVO DE:</strong> </p>
+                                                <p><strong>5.6 ATENCIÓN EN MODALIDAD INDIRECTA  DE EDUCACIÓN INCLUSIVA PARA EL APOYO EDUCATIVO DE:</strong> </p>
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -1268,7 +1269,10 @@
                                                 <p><strong>5.7 SERVICIOS MULTIDISCIPLINARIOS QUE RECIBE LA O EL ESTUDIANTE</strong> (Puede marcar más de una opción)</p>
                                             </div>
                                             <div class="col-md-6 col-sm-6">
-                                                Servicioss
+                                                {% for item in serviciosArray %}
+                                                    {{ item.servicio }}
+                                                {% endfor %}
+                                                                            
                                             </div>
                                         </div>
 
