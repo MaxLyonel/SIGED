@@ -171,19 +171,47 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		//Buscamos los servicios a los que se encuentre inscrito el estudiante
 		
 		$query2 = $em->getConnection()->prepare('select * FROM especial_servicio_tipo WHERE id in(
-							SELECT especial_servicio_tipo_id from institucioneducativa_curso_especial WHERE institucioneducativa_curso_id in (
-								SELECT id FROM institucioneducativa_curso WHERE id  in( SELECT institucioneducativa_curso_id from estudiante_inscripcion WHERE estudiante_id = '.$estudiante->getId().' and estadomatricula_tipo_id = 4 ) and nivel_tipo_id = 410  )) 
+							SELECT especial_servicio_tipo_id from institucioneducativa_curso_especial WHERE especial_modalidad_tipo_id=3  AND institucioneducativa_curso_id in (
+								SELECT id FROM institucioneducativa_curso WHERE gestion_tipo_id = '.$gestion.' and id in( SELECT institucioneducativa_curso_id from estudiante_inscripcion WHERE estudiante_id = '.$estudiante->getId().' ) and nivel_tipo_id = 410  )) 
 								');
         $query2->execute();
-        $queryEspecialidades = $query2->fetchAll();
+        $serviciosArray = $query2->fetchAll();
+
+		$query3 = $em->getConnection()->prepare('
+		select a.area_especial , ce.especial_programa_tipo_id  as programa_id, t.programa , ce.especial_servicio_tipo_id  as servicio_id, s.servicio , ei.estudiante_id , ntt.nivel_tecnico, n.nivel, pt.paralelo, emt.modalidad, etet.especialidad , mo.momento, gt.grado,  tt.turno
+		,ntt.nivel_tecnico, n.id, n.nivel, pt.paralelo, etet.especialidad ,gt.grado, gt.grado,  tt.turno 
+                        from estudiante e,  estudiante_inscripcion ei, institucioneducativa_curso c , institucioneducativa_curso_especial ce, 
+                        especial_area_tipo a, especial_programa_tipo t, especial_servicio_tipo s, nivel_tipo n, especial_nivel_tecnico_tipo ntt, paralelo_tipo pt, 
+                        especial_tecnica_especialidad_tipo etet, especial_modalidad_tipo emt, especial_momento_tipo mo, grado_tipo gt, turno_tipo tt
+                        where e.id=ei.estudiante_id and c.id=ei.institucioneducativa_curso_id and c.gestion_tipo_id = 2024
+                        and c.id=ce.institucioneducativa_curso_id 
+                       and a.id=ce.especial_area_tipo_id 
+                       and t.id=ce.especial_programa_tipo_id 
+                       and s.id=ce.especial_servicio_tipo_id 
+                       and n.id=c.nivel_tipo_id
+                       and ce.especial_nivel_tecnico_tipo_id = ntt.id
+                       and pt.id=c.paralelo_tipo_id
+                       and ntt.id=ce.especial_nivel_tecnico_tipo_id 
+                       and etet.id=ce.especial_tecnica_especialidad_tipo_id 
+                       and emt.id=ce.especial_modalidad_tipo_id 
+                       and mo.id = ce.especial_momento_tipo_id 
+                       and c.grado_tipo_id=gt.id
+                       and c.turno_tipo_id=tt.id
+                       and e.id ='.$estudiante->getId().' 
+                       and c.gestion_tipo_id = '.$gestion.'
+                       and ce.especial_modalidad_tipo_id<3 
+					   and ei.id<>'.$idInscripcion.'
+				');
+		$query3->execute();
+		$inscripcionesArray = $query3->fetchAll();
+
 		//dump($queryEspecialidades);die;
-		$serviciosArray = array();
+		/*$serviciosArray = array();
 		foreach ($queryEspecialidades as $gd) {
 			$serviciosArray[] = $gd['servicio'];
 		}
+		dump($serviciosArray);die;*/
 		 //inscripciones -directas-indirectas
-	
-
 		 //inscripciones indirectas
 		
 		return $this->render( $vista , [
@@ -215,8 +243,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			'programa'=>$programa,
 			'servicio'=>$servicio,
 			'especialidad'=>$especialidad,
-
-			'serviciosArray'=>$serviciosArray
+			'serviciosArray'=>$serviciosArray,
+			'inscripcionesArray'=>$inscripcionesArray
 
 		]);
 	}
@@ -1362,7 +1390,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		else if($idDiscapacidad == 4) //multiple
 		{
 			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')
-			->findBy(array('id'=>array(41,35,36,37,38,39,99)));
+			->findBy(array('id'=>array(41,35,36,37,38,39)));
 			foreach ($gradoDiscapacidad as $gd)
 			{
 				$gradosArray[$gd->getId()] = $gd->getOrigendiscapacidad();
@@ -1665,7 +1693,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		if($discapacidadTipoGradoPorcentaje_rude){ 
 			if($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==2||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==5||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==4){
 				$gradosArray = array();
-				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(2,7,9,99,32,33,34,8,35,36,37,38,39)));
+				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(2,7,9))); //array(2,7,9,99,32,33,34,8,35,36,37,38,39)
 				foreach ($gradoDiscapacidad as $gd)
 					{
 						$gradosArray[] = $gd->getId();
@@ -1696,7 +1724,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			}
 		}else{ 
 			$gradosArray = array();
-			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(2,7,9,99,32,33,34,8,35,36,37,38,39)));
+			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(999)));
 			foreach ($gradoDiscapacidad as $gd)
 					{
 						$gradosArray[] = $gd->getId();
@@ -1704,6 +1732,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$dataGrado=0;
 			$entity='DiscapacidadTipo';
 		}
+		//dump($gradosArray);die;
 		//dump($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadOtroGrado()->getId());die;
 			
 		$form = $this->createFormBuilder($rude)
