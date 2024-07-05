@@ -319,7 +319,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		// LUGAR DE NACIMIENTO
 		$departamentoNacimiento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento);
 		$provinciaNacimiento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($provincia);
-
+//dump($gradosArray);
+//dump($discapacidadEstudiante);die;
 		$form = $this->createFormBuilder()
 					// ->setAction($this->generateUrl('info_estudiante_rude_save_form2'))
 					->add('rudeId', 'hidden', array('data' => $rude->getId(),'mapped'=>false))
@@ -443,7 +444,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		
 		$em = $this->getDoctrine()->getManager();
 		$form = $request->get('form');// dump($form['tieneDiscapacidad']);die;
-		
+		//dump($form);die;
 		$estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);		
 		$rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);
 		if($form['discapacidadId']=='nuevo'){
@@ -2061,17 +2062,18 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		// CREAMOS LOS DATOS DEL GRADO DE LA DISCAPACIDAD 
 		//dump($form);die;
 		if(isset($form['discapacidad'])){
-			if($form['discapacidad']!=""){
+			if($form['discapacidad']!=""){ //dump($form);die;
 				$discapacidadGrado_new = new RudeDiscapacidadGrado();
 				$discapacidadGrado_new->setRude($rude);
 				$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
-				if($form['discapacidad']==2||$form['discapacidad']==5||$form['discapacidad']==4){//INTELECTUAL FISICO/MOTORA MULTIPLE
+				if($form['discapacidad']==4){//INTELECTUAL FISICO/MOTORA MULTIPLE
 					$discapacidadGrado_new->setDiscapacidadOtroGrado($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['gradoDiscapacidad']));
 					$discapacidadGrado_new->setGradoOtro($form['otroGrado']?$form['otroGrado']:'');
 
 				}else{
 					$discapacidadGrado_new->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
 				}		
+				
 				if($form['porcentaje']!="")
 					$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
 				$discapacidadGrado_new->setFechaRegistro(new \DateTime('now'));
