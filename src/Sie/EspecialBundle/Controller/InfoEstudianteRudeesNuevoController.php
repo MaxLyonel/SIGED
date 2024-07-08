@@ -1690,11 +1690,11 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		{
 			$arrayAccesoInternet[] = $aie->getAccesoInternetTipo()->getId();
 		}
-		//dump($discapacidadEstudiante);die;
+		//dump($discapacidadTipoGradoPorcentaje_rude);die;
 		if($discapacidadTipoGradoPorcentaje_rude){ 
-			if($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==2||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==5||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==4){
+			if($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==4){
 				$gradosArray = array();
-				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(2,7,9))); //array(2,7,9,99,32,33,34,8,35,36,37,38,39)
+				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(41,35,36,37,38,39))); //array(2,7,9,99,32,33,34,8,35,36,37,38,39)
 				foreach ($gradoDiscapacidad as $gd)
 					{
 						$gradosArray[] = $gd->getId();
@@ -1719,6 +1719,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 					{
 						$gradosArray[] = $gd->getId();
 					}
+					//dump($gradosArray);die;
 				}
 				$dataGrado = $discapacidadTipoGradoPorcentaje_rude->getGradoDiscapacidadTipo();
 				$entity='GradoDiscapacidadTipo';
@@ -1733,7 +1734,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$dataGrado=0;
 			$entity='DiscapacidadTipo';
 		}
-		//dump($gradosArray);die;
+		
 		//dump($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadOtroGrado()->getId());die;
 			
 		$form = $this->createFormBuilder($rude)
