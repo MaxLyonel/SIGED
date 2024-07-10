@@ -611,7 +611,8 @@ class CursosController extends Controller {
             $objTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('estudianteInscripcion'=>$arrInfoStudent['eInsId']));
             if($objTramite){
 
-                $objDocumento = $em->getRepository('SieAppWebBundle:Documento')->find($objTramite->getId());
+              //  $objDocumento = $em->getRepository('SieAppWebBundle:Documento')->find($objTramite->getId()); //mala validacion
+                $objDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tramite'=>$objTramite->getId()));
 
                 if(is_object($objDocumento)){
                     $removeit = false;
