@@ -46,3 +46,9 @@ siged_exportar_excel_resultados_reporte_modalidad_atencion:
     defaults: { _controller: SieAppWebBundle:Principal:mostrarResultadosReporteModalidadAtencionExcel }
     options:
          expose: true
+
+siged_descargar_SPN:
+    path:    /siged_descargar_SPN/
+    defaults: { _controller: SieAppWebBundle:Principal:descargarSPN }
+    options:
+         expose: true
