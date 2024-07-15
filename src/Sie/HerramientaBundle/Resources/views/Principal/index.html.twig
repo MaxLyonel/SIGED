@@ -139,6 +139,99 @@
     <!--/ End page header -->
 
     <div class="body-content animated fadeIn">
+        {% if (app.session.get('roluser') == 9) and ( verSPN == true) %}
+        <div class="row">
+            <div class="col-md-12">
+
+                <!-- Start input fields - basic form -->
+                <div class="panel rounded shadow">
+                    <div class="panel panel-warning shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">OCEPB OLIMPIADAS</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="alert alert-success">
+                                    Sistema de Toma de Prueba
+                                </div>
+                                <div class="col-md-12">
+                                    <ul>
+                                        <li><strong>Institución Educativa</strong> </li>
+                                            {{app.session.get('ie_nombre')}} - sie: {{app.session.get('ie_id')}}
+                                        <li><strong>Nombre Completo</strong> </li>
+                                            {{app.session.get('name')}} {{app.session.get('lastname')}} {{app.session.get('lastname2')}}
+                                        <li><strong> Centro de Contacto </strong></li> 
+                                            Ante cualquier consulta favor comunicarse al número celular: <strong>71530671</strong>.
+                                        <div id="conteoDescargas"><li><strong>Descargas: </strong> {{descargasSPN}}/3 </li></div>
+                                        
+                                            
+                                            {# 
+                                        <li><strong>Especilidad</strong> </li>
+                                            Las y los estudiantes del 6to año de escolaridad que no hayan cambiado su especialidad, que tengan su formación Técnica Tecnológica Especializada de 5to año de escolaridad en diferente especialidad y hayan sido aporbados por homologaciones, no tendrán ninguna dificultad en la impresion CUT.
+                                        <li><strong>Validación SEGIP</strong> </li>
+                                            El sistema valida la información del estudiante con el SEGIP, los datos validados son paterno, materno, nombres y Fecha de Nacimiento. #}
+                                    </ul>
+                                
+                                </div>
+                                
+                                <div class="row justify-content-center">
+                                    <div class="text-center">
+                                        <a class="btn btn-xs col-md-5 m-2" href="{{ asset('manuales_ocepb/Manual_de_Estudiante.pdf') }}" target="_blank" download="Manual_de_Estudiante.pdf">
+                                            <i class="fa fa-file-pdf-o fa-2x" aria-hidden="true"></i> Manual de Estudiante
+                                        </a>    
+                                        <a class="btn btn-xs col-md-5 m-2" href="{{ asset('manuales_ocepb/Manual_Tecnico_2024.pdf') }}" target="_blank" download="Manual_Tecnico_2024.pdf">
+                                            <i class="fa fa-file-pdf-o fa-2x" aria-hidden="true"></i> Manual de Técnico
+                                        </a>    
+                                    </div>
+                                </div>
+
+<br>
+                            {% if habilitadoSPN == true %}
+                                <div class="row">
+                                    <div class="text-center">
+                                        <input type="hidden" name="descargas" id="descargas" value="{{ descargasSPN }}" />
+                                        {% if descargasSPN <= 2 %}
+                                        {# <input type="hidden" name="departamento" id="departamento" value="{{ ubicacionUE.codigo_departamento }}" /> #}
+                                        {# <a class="btn btn-lilac btn-xs btn-twitter" href="{{ asset('uploads/instaladores/Sistema_de_Prueba_Nacional.zip') }}" id='btnDescargarSPN' target="_blank" download> #}
+                                        <a class="btn btn-lilac btn-xs btn-twitter" href="#" id='btnDescargarSPN' target="_blank" download>
+                                            <i class="fa fa-download fa-2x"></i> Descargar Sistema de Toma de Prueba
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row" id="descargaSPNmax" style="display: none">
+                                    <div class="text-center">
+                                        <div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Ya descargó el Sistema de Toma de Prueba</div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-md-12" id="verfecha" >
+                                    <div class="text-center">
+                                        <div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Su Unidad Educativa puede descargar el Sistema de Toma de Prueba en fecha : {{fechaDescargaSPN}} </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {# <div class="row">
+                                <div class="col-md-6 col-md-offset-3"> #}
+                                    {# <input type="hidden" name="sie" id="sie" value="{{ubicacionUE.id}}"/>
+                                    <input type="hidden" name="gestion" id="gestion" value="{{ubicacionUE.gestion}}"/> #}
+                                    
+                                  {# <button type="button" class="btn btn-twitter btn-md" data-toggle="tooltip" data-placemente="top" data-original-title="Descargar Sistema de Prueba Nacional" id='btnDescargarSPN' >
+                                            <i class="fa fa-download" ></i>  Descargar Aplicación Sistema de Prueba Nacional 
+                                  </button>
+                                </div>#}
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
         <div class="row">
             <div class="col-md-6">
                     <!-- Start input fields - basic form -->
@@ -222,7 +315,7 @@
                             </div>
                             <div class="row">
                                 <div class="text-center">
-                                <a class="btn btn-lilac btn-xs btn-facebook" href="{{asset('uploads/archivos/Consideraciones_CUT.pdf' )}}" target="_blank" download>
+                                <a class="btn btn-lilac btn-xs btn-facebook" href="{{asset('uploads/instaladores/Sistema_de_Prueba_Nacional.zip' )}}" target="_blank" download>
                                   <i class="fa fa-file-pdf-o fa-2x" ></i> Descargar consideraciones para el Certificado Único de Trámites CUT-TTM
                                  </a>
                              </div>#}
@@ -358,7 +451,6 @@
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h3 class="panel-title">Encuesta Internet - pisos tecnológicos</h3>
-                        </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
@@ -663,9 +755,10 @@
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+    <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
 <script>
-    
    $(document).ready(function()
    {
         cargatablas();
@@ -674,6 +767,12 @@
         {
             //abrirModalInicioClases();
             //getInicioClases();
+            var descargas =  $("#descargas").val(); 
+            console.log(descargas);
+            if(descargas > 2){
+                $("#descargaSPNmax").show();
+            }
+
         }
 
         $('#form-actualizar-tipo').on('submit', function (event)
@@ -687,6 +786,11 @@
             //getInicioClases();
         });
 
+        $('#btnDescargarSPN').on('click',function (event) {
+            event.preventDefault();
+            descargarSPN();
+        });
+        
         //muestra el checkbox 'porque no incio clases' si responde No
         $('.radio-inicio-clases').on('change',function(){
             if (this.checked)
@@ -735,8 +839,7 @@
 
         //temp user apisy
         var user = JSON.parse(localStorage.getItem('user'));
-        console.log(user.password);
-
+        
         const url = 'https://api.itt.sie.gob.bo/user/changePasswordCI';
         const piload = {
          ci: user.username,
@@ -793,6 +896,63 @@
         {
             $('#modalInicioClases').modal('show');
         }
+    };
+
+    var descargarSPN = function(){
+        Swal.fire({
+                        title: '¿Está seguro de descargar la Aplicación de Sistema de Toma de Prueba???' ,
+                        text: "Tome en cuenta que solo se puede descargar una sola vez",
+                        type: 'question',
+                        html:
+                            '<h4>¿Está seguro de descargar el sistema?<h4>',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            type: 'GET',
+                            url: Routing.generate('siged_descargar_SPN'),
+                            beforeSend: function () {
+                                console.log('Enviando solicitud...');
+                            },
+                            success: function(data) {
+                                console.log(data.archivo);
+                                if (data.mensaje === 'error') {
+                                    Swal.fire('Error', 'Supero los intentos de descargas del archivo.', 'error');
+                                } else {
+                                    
+                                    fetch(data.archivo)
+                                        .then(response => response.blob())
+                                        .then(blob => {
+                                            const url = window.URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.style.display = 'none';
+                                            a.href = url;
+                                            a.download = 'Sistema_de_Toma_de_Prueba.zip';
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            window.URL.revokeObjectURL(url);
+                                        })
+                                        .catch(() => Swal.fire('Error', 'Error al intentar descargar el archivo.', 'error'));
+                                    if(data.conteo >= 2){
+                                        $("#descargaSPNmax").show();
+                                        $('#btnDescargarSPN').hide(); 
+                                    }
+                                    $("#conteoDescargas").empty();
+                                    $("#conteoDescargas").html("<div id='conteoDescargas'><li><strong>Descargas: </strong> "+ (data.conteo+1) +"/3 </li></div>");
+                                }
+                            },
+                            error: function() {
+                                Swal.fire('Error', 'Supero los intentos de descargas del archivo.', 'error');
+                                $("#descargaSPNmax").show();
+                                $('#btnDescargarSPN').hide();                               
+                            }
+                        });
+                    }        
+                })
     };
     {#
     var actualizar7TipoEducacion7=function ()

@@ -2,6 +2,8 @@
 
 namespace Sie\AppWebBundle\Controller;
 
+
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
@@ -10,8 +12,12 @@ use \Sie\AppWebBundle\Entity\Usuario;
 use \Sie\AppWebBundle\Entity\InstitucioneducativaSucursalModalidadAtencion;
 use \Sie\AppWebBundle\Entity\InstitucioneducativaSucursalRiesgoMes;
 use \Sie\AppWebBundle\Entity\ValidacionProceso;
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
+use Sie\AppWebBundle\Entity\NotaTipo;
 use \Sie\AppWebBundle\Form\UsuarioType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 
 class PrincipalController extends Controller {
 
@@ -226,9 +232,109 @@ class PrincipalController extends Controller {
 
         //Aqui obtenemos un historial de los ultimos 3 meses del incio de actividades
         $historialInicioActividadesData=array();
-        if ($rol_usuario==9)
+        if ($rol_usuario==9){
             $historialInicioActividadesData=$this->getHistorialInicioDeActividades();
         // dump($historialInicioActividadesData);die;
+            $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
+
+            $query = $repository->createQueryBuilder('jg')
+                ->select('lt4.codigo AS codigo_departamento,
+                        lt4.lugar AS departamento,
+                        lt3.codigo AS codigo_provincia,
+                        lt3.lugar AS provincia,
+                        lt2.codigo AS codigo_seccion,
+                        lt2.lugar AS seccion,
+                        lt1.codigo AS codigo_canton,
+                        lt1.lugar AS canton,
+                        lt.codigo AS codigo_localidad,
+                        lt.lugar AS localidad,
+                        orgt.orgcurricula,
+                        dept.dependencia,
+                        jg.id AS codigo_le,
+                        inst.id,
+                        inst.institucioneducativa,
+                        lt.area2001,
+                        estt.estadoinstitucion,
+                        inss.direccion')
+                ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
+                ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
+                ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
+                ->join('SieAppWebBundle:DependenciaTipo', 'dept', 'WITH', 'inst.dependenciaTipo = dept.id')
+                ->where('inst.id = :idInstitucion')
+                ->andWhere('inss.gestionTipo in (:gestion)')
+                ->setParameter('idInstitucion', $this->sesion->get('ie_id'))
+                ->setParameter('gestion', $this->sesion->get('currentyear'))
+                ->getQuery();
+
+            $ubicacionUe = $query->getResult();
+
+            $ubicacion = (isset($ubicacionUe) && !empty($ubicacionUe) && isset($ubicacionUe[0])) ? $ubicacionUe[0] : '';
+                
+            $descargaspn = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(
+                    'institucioneducativa' => $this->sesion->get('ie_id'),
+                    'gestionTipoId'  => $this->sesion->get('currentyear'),
+                    'institucioneducativaOperativoLogTipo' => 15
+            ));
+            $descarga = count($descargaspn);
+            $verSPN = false;
+            $nivelAutorizado = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id'), 'nivelTipo'=>13));
+
+            if (count($nivelAutorizado) > 0){
+                $verSPN = true;
+            }
+            // dump( $ubicacion);
+            // dump(count($nivelAutorizado)); die;
+
+            // Obtener la fecha actual
+            $fechaActual = new \DateTime();
+            $codigoDepartamento = $ubicacion['codigo_departamento'];
+            $fechaFormato = $fechaActual->format('d/m/Y');
+            $fechaDescargaSPN = '';
+
+            // Array de fechas habilitadas por código de departamento
+            $fechasHabilitadas = [
+                "7" => "16/07/2024", //Santa Cruz
+                "8" => "16/07/2024", //Beni
+                "2" => "17/07/2024", //La Paz
+                "4" => "17/07/2024", //Oruro
+                "3" => "18/07/2024", //Cochabamba
+                "6" => "18/07/2024", //Tarija
+                "1" => "19/07/2024", //Chuquisaca
+                "5" => "19/07/2024", //Potosi                      
+                "9" => "19/07/2024"  //Pando
+            ];
+
+            // Variable para controlar si la acción está habilitada
+            $habilitado = false;
+            // dump( $fechasHabilitadas[$codigoDepartamento]);die;
+
+            if (array_key_exists($codigoDepartamento, $fechasHabilitadas)) {
+                if ($fechaFormato == $fechasHabilitadas[$codigoDepartamento]) {
+                    $habilitado = true;
+                }
+                if ($fechaFormato == '20/07/2024' || $fechaFormato == '21/07/2024') {
+                    $habilitado = true;
+                }
+            }
+            $fechaDescargaSPN = $fechasHabilitadas[$codigoDepartamento];
+
+
+        } else {
+            $verSPN = false;
+            $habilitado = false;
+            $descarga = 0;
+            $fechaDescargaSPN = '';
+        }
+       
+        
+        // dump($fechaDescargaSPN);die;
+
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
           'entities' => $entities,
@@ -239,6 +345,10 @@ class PrincipalController extends Controller {
           'form2' => $this->searchForm2()->createView(),
           'rie' => $this->obtieneDatosPrincipal(), //Datos para la pantalla principal de RIE
           'instalador'=>$instalador,
+          'habilitadoSPN'=>$habilitado,
+          'verSPN'=>$verSPN,
+          'descargasSPN'=>$descarga,
+          'fechaDescargaSPN' => $fechaDescargaSPN,
           //'objObservactionSie' => $objObservactionSie
           'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$this->sesion->get('currentyear'))),array())->createView(),
         //   'observacion' => $observacion,
@@ -892,5 +1002,66 @@ LIMIT ?';
         $response->headers->set('Content-Type', 'application/json');
         return $response;
 
+    }
+
+    public function descargarSPNAction(Request $request)
+    {
+        // $departamentoId = $request->get('departamentoId');
+
+        $archivo = '/siged/web/uploads/instaladores/Sistema_de_Toma_de_Prueba.zip';
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();  
+        $institucion = $this->sesion->get('ie_id');
+        $gestion = $this->sesion->get('currentyear');
+        
+        $descargaspn = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(
+              'institucioneducativa' =>$institucion,
+              'gestionTipoId'  => $gestion,
+              'institucioneducativaOperativoLogTipo' => 15
+            ));
+            if (empty($descargaspn) || count($descargaspn) < 3) {
+                
+                $em->getConnection()->beginTransaction();
+                try {
+                
+                    $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+                    $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(15));
+                    $institucioneducativaOperativoLog->setGestionTipoId($gestion);
+                    $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+                    $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion));
+                    $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
+                    $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
+                    $institucioneducativaOperativoLog->setDescripcion('Olimpiada SPN');
+                    $institucioneducativaOperativoLog->setEsexitoso('t');
+                    $institucioneducativaOperativoLog->setEsonline('t');
+                    $institucioneducativaOperativoLog->setUsuario($this->sesion->get('userId'));
+                    $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
+                    $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+                    $em->persist($institucioneducativaOperativoLog);
+                    $em->flush();
+                    $em->getConnection()->commit();
+
+                    $response = new JsonResponse();
+                    $response->setData([
+                        'mensaje' => 'descargado',
+                        'archivo' => $archivo,
+                        'conteo' => count($descargaspn)
+                    ]);
+   
+    
+    
+    
+                } catch (\Exception $e) {
+                    $em->getConnection()->rollBack();
+                    $response->setData(['mensaje' => $e
+                        ,'conteo' => count($descargaspn)
+                    ]);
+                }
+            } else {
+                $response->setData(['mensaje' => 'error',
+                    'conteo' => count($descargaspn)
+                ]);
+            }
+        return $response;
     }
 }
