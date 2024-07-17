@@ -332,7 +332,7 @@ class PrincipalController extends Controller {
             $fechaDescargaSPN = '';
         }
        
-        
+        $verSPN = false;
         // dump($fechaDescargaSPN);die;
 
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
@@ -1007,7 +1007,7 @@ LIMIT ?';
     public function descargarSPNAction(Request $request)
     {
         // $departamentoId = $request->get('departamentoId');
-
+        return $this->redirect($this->generateUrl('login'));
         $archivo = '/siged/web/uploads/instaladores/Sistema_de_Toma_de_Prueba.zip';
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();  
