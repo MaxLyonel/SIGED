@@ -1008,7 +1008,8 @@ LIMIT ?';
     {
         // $departamentoId = $request->get('departamentoId');
         // return $this->redirect($this->generateUrl('login'));
-        $archivo = '/siged/web/uploads/instaladores/Sistema_de_Toma_de_Prueba.zip';
+        //$archivo = '/siged/web/uploads/instaladores/Sistema_de_Toma_de_Prueba.zip';
+        $archivo = '/uploads/instaladores/Sistema_de_Toma_de_Prueba.zip';
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();  
         $institucion = $this->sesion->get('ie_id');
