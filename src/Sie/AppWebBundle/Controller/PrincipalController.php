@@ -299,15 +299,15 @@ class PrincipalController extends Controller {
 
             // Array de fechas habilitadas por código de departamento
             $fechasHabilitadas = [
-                "7" => "16/07/2024", //Santa Cruz
-                "8" => "16/07/2024", //Beni
-                "2" => "17/07/2024", //La Paz
-                "4" => "17/07/2024", //Oruro
-                "3" => "18/07/2024", //Cochabamba
-                "6" => "18/07/2024", //Tarija
-                "1" => "19/07/2024", //Chuquisaca
-                "5" => "19/07/2024", //Potosi                      
-                "9" => "19/07/2024"  //Pando
+                "7" => "23/07/2024", //Santa Cruz
+                "8" => "23/07/2024", //Beni
+                "2" => "24/07/2024", //La Paz
+                "4" => "24/07/2024", //Oruro
+                "3" => "25/07/2024", //Cochabamba
+                "6" => "25/07/2024", //Tarija
+                "1" => "26/07/2024", //Chuquisaca
+                "5" => "26/07/2024", //Potosi                      
+                "9" => "26/07/2024"  //Pando
             ];
 
             // Variable para controlar si la acción está habilitada
@@ -318,7 +318,7 @@ class PrincipalController extends Controller {
                 if ($fechaFormato == $fechasHabilitadas[$codigoDepartamento]) {
                     $habilitado = true;
                 }
-                if ($fechaFormato == '20/07/2024' || $fechaFormato == '21/07/2024') {
+                if ($fechaFormato == '27/07/2024' || $fechaFormato == '28/07/2024') {
                     $habilitado = true;
                 }
             }
@@ -332,7 +332,7 @@ class PrincipalController extends Controller {
             $fechaDescargaSPN = '';
         }
        
-        $verSPN = false;
+        // $verSPN = false;
         // dump($fechaDescargaSPN);die;
 
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
@@ -1007,7 +1007,7 @@ LIMIT ?';
     public function descargarSPNAction(Request $request)
     {
         // $departamentoId = $request->get('departamentoId');
-        return $this->redirect($this->generateUrl('login'));
+        // return $this->redirect($this->generateUrl('login'));
         $archivo = '/siged/web/uploads/instaladores/Sistema_de_Toma_de_Prueba.zip';
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();  
