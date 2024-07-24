@@ -496,6 +496,7 @@ class AreasController extends Controller {
              */
             $institucionCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             $institucionCursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso' => $institucionCurso));
+            
             $idarea = $institucionCursoEspecial->getEspecialAreaTipo()->getId();
             $idmomento = $institucionCursoEspecial->getEspecialMomentoTipo()->getId();
             if($idarea == 2 or $idarea == 4){
@@ -568,8 +569,8 @@ class AreasController extends Controller {
                             )->setParameter('ids',$asignaturas)
                             ->getResult();
                 break;
-                case 4099999: 
-                    $asignaturas = array(996,997,998);
+                case 409: 
+                    $asignaturas = array(32851, 32852, 32853);
                         $asignaturas = $em->createQuery( //Atención temprana
                             'SELECT at
                             FROM SieAppWebBundle:AsignaturaTipo at
@@ -691,7 +692,7 @@ class AreasController extends Controller {
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(32836, 32837, 32838, 1018, 1016)) //32832
+                                    )->setParameter('ids',array(464, 32836, 1018, 1016)) //32832
                                     ->getResult();
                                     break;
                                 case 23: //---
@@ -754,7 +755,16 @@ class AreasController extends Controller {
                                         ->getResult();
                                         
                                     }
-                                       
+                                    if ($idmomento==3) {
+                                        $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                        )->setParameter('ids',array(32867,32868))
+                                        ->getResult();
+                                        
+                                    }
 
                                  break;
                                 case 28: //---atención temprana
@@ -765,6 +775,15 @@ class AreasController extends Controller {
                                             ORDER BY at.id ASC'
                                     )->setParameter('ids',array(993,994,995))
                                     ->getResult();
+                                    if ($this->session->get('idGestion') > 2023) {
+                                        $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(482,32862,32863,32864,32865,32866))
+                                    ->getResult();
+                                    }
                                  break;
                                  case 29: //---
                                     $asignaturas = $em->createQuery(
@@ -775,7 +794,7 @@ class AreasController extends Controller {
                                 )->setParameter('ids',array(479,492))
                                 ->getResult();
                              break;
-                                 case 37: //---
+                                case 37: //---
                                     $todasLasAsignaturas = 'NO';
                                     $asignaturas = $em->createQuery(
                                         'SELECT at
@@ -784,6 +803,55 @@ class AreasController extends Controller {
                                         ORDER BY at.id ASC'
                                 )->setParameter('ids',array(415,464,416,417,418,2010,469,615,1003,497,498,499))
                                 ->getResult();
+                                break;
+                                case 39: //---´prog atencion multiple auditiva
+                                    $asignaturas = $em->createQuery(
+                                        'SELECT at
+                                        FROM SieAppWebBundle:AsignaturaTipo at
+                                        WHERE at.id IN (:ids)
+                                        ORDER BY at.id ASC'
+                                )->setParameter('ids',array(32854,32855,32856))
+                                ->getResult();
+                                break;
+                                case 41: //---´prog atencion multiple auditiva
+                                    
+                                    $asignaturas = $em->createQuery(
+                                        'SELECT at
+                                        FROM SieAppWebBundle:AsignaturaTipo at
+                                        WHERE at.id IN (:ids)
+                                        ORDER BY at.id ASC'
+                                )->setParameter('ids',array(32857,32858))
+                                ->getResult();
+                                break;
+                                case 43: //---´prog atencion multiple auditiva
+                                    
+                                    $asignaturas = $em->createQuery(
+                                        'SELECT at
+                                        FROM SieAppWebBundle:AsignaturaTipo at
+                                        WHERE at.id IN (:ids)
+                                        ORDER BY at.id ASC'
+                                )->setParameter('ids',array(1035,525,1018,1044))
+                                ->getResult();
+                                break;
+                                case 644: //---
+                                    $todasLasAsignaturas = 'NO';
+                                    $asignaturas = $em->createQuery(
+                                        'SELECT at
+                                        FROM SieAppWebBundle:AsignaturaTipo at
+                                        WHERE at.id IN (:ids)
+                                        ORDER BY at.id ASC'
+                                )->setParameter('ids',array(32841,32842,32843,32844,32845,32846,32847,32848,32849,32850,))
+                                ->getResult();
+                             break;
+                             case 22:
+                                $asignaturas = $em->createQuery(
+                                    'SELECT at
+                                    FROM SieAppWebBundle:AsignaturaTipo at
+                                    WHERE at.id IN (:ids)
+                                    ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(32859,32860,32861)) //especial
+                                    ->getResult();
+
                              break;
                                 default:
                                     $asignaturas = $em->createQuery(
@@ -800,6 +868,7 @@ class AreasController extends Controller {
                             }
                             break;
                 case 410:   //servicio
+                    
                             /*if($idarea==7){
                                 $asignaturas = $em->createQuery(
                                     'SELECT at
@@ -821,6 +890,16 @@ class AreasController extends Controller {
                                 $progSer = "Servicio";
 
                             }*/
+                            if($institucionCursoEspecial->getEspecialServicioTipo()->getId()==40){
+                                
+                                $asignaturas = $em->createQuery(
+                                    'SELECT at
+                                    FROM SieAppWebBundle:AsignaturaTipo at
+                                    WHERE at.id IN (:ids)
+                                    ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(32859,32860,32861)) //especial
+                                    ->getResult();
+                            }else{
                             $asignaturas = $em->createQuery(
                                 'SELECT at
                                 FROM SieAppWebBundle:AsignaturaTipo at
@@ -828,9 +907,13 @@ class AreasController extends Controller {
                                 ORDER BY at.id ASC'
                                 )->setParameter('ids',array(4)) //especial
                                 ->getResult();
-                            $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
-                            $esvisual = true;
+                                $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
+                                $esvisual = true;
                             $progSer = "Servicio";
+                            }
+                            
+                            
+
                             break;                            
                 case 11:   //Inicial
                      $asignaturas = $em->createQuery(
@@ -940,7 +1023,7 @@ class AreasController extends Controller {
                             break;
             }
            
-         //  dump($asignaturas);
+  //         dump($asignaturas);
 //dump($programaServicio);die;
             $areasNivel = $asignaturas;
             
@@ -1000,7 +1083,7 @@ class AreasController extends Controller {
                            ->getQuery()
                            ->getResult();
             $em->getConnection()->commit();
-          // dump($areasArray);die;
+          //dump($areasArray);die;
             return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual,'progSer'=>$progSer, 'todasLasAsignaturas'=>$todasLasAsignaturas));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();

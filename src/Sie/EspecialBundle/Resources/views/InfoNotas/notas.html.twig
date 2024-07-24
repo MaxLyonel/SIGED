@@ -11,7 +11,8 @@
 	        <div class="panel panel-danger">
 	            <div class="modal-header" style="background:#ff8a80">
 	                <div class="pull-left">
-	                    <h3 class="panel-title" style="color:#FFFFFF;text-shadow: 1px 2px #212121">{% if (notas.gestion > 2018 and seguimiento == true) %} Seguimiento {% else %} Notas {% endif %} del Estudiante</h3>
+	                    <h3 class="panel-title" style="color:#FFFFFF;text-shadow: 1px 2px #212121">{% if (notas.gestion > 2018 and seguimiento == true) %} Seguimiento  {% else %} Notas {% endif %} del Estudiante</h3>
+
 	                </div>
 	                <div class="clearfix"></div>
 	            </div>
@@ -42,7 +43,7 @@
 					        </tr>
 					    </table>
 						{% if (notas.gestion > 2019 and seguimiento == true) %}
-						<h5 style="color:#0086DD">Seguimiento</h5>
+						<h5 style="color:#0086DD">Seguimiento - {{descNota.notaTipo}} </h5>
 						{% else %}					    
 						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
 						{% endif %}
@@ -163,11 +164,11 @@
 			var notas = [];
 			$("#tbl_nota_existe tbody tr").each(function() {
 				$this = $(this);
-				notas.push({"inter": $this.find("textarea.pie").val(), "desc": $this.find("textarea.dce").val()});
+				notas.push({"con": $this.find("textarea.pie").val(), "res": $this.find("textarea.dce").val(), "rec": $this.find("textarea.ree").val()});
 			});
 			$("#tbl_nota tbody tr").each(function() {
 				$this = $(this);
-				notas.push({"inter": $this.find("textarea.pi").val(), "desc": $this.find("textarea.dc").val()});
+				notas.push({"con": $this.find("textarea.pi").val(), "res": $this.find("textarea.dc").val(), "rec": $this.find("textarea.re").val()});
 			});
 			
 			if(notas.length > 0) {

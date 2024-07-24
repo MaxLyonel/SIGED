@@ -19,7 +19,8 @@
                         <th colspan="4" align="center">Valoración Cualitativa</th>
                     </tr>
                     <tr>
-                      {% if notas.operativo >=1 %}
+                    <th>{{descNota.notaTipo}}</th>
+                     {#} {% if notas.operativo >=1 %}
                         <th width="30%">1er Trimestre</th>
                        {% endif %}
                        {% if notas.operativo >=2 %}
@@ -28,6 +29,7 @@
                         {% if notas.operativo >=3 %}
                         <th>3er Trimestre</th>
                         {% endif %}
+                        #}
                     </tr>
                 </thead>
                 <tbody>
@@ -40,18 +42,18 @@
                                     <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
                                     <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                                     <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
-                                    <b>Objetivo:</b>
-                                    {% if notas.operativo + 5 == n.idNotaTipo %}
+                                    <b>Contenidos:</b>
+                                    
+                                    {% if (notas.operativo + 5 == n.idNotaTipo) or notas.operativo + 52 == n.idNotaTipo or notas.operativo + 54 == n.idNotaTipo %}
                                         <textarea name="nota{{n.idEstudianteAsignatura}}{{n.idNotaTipo}}" class="form-control input-sm jnumbersletters" cols="30" rows="3" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="300">{{n.notaCualitativaNueva}}</textarea>
                                     {% else %}  
                                         {{n.notaCualitativaNueva}}
                                     {% endif %}  
                                      <br>
-                                    <b>Aprendizajes evaluados:</b>
-                                     {% if notas.operativo + 5 == n.idNotaTipo %}
+                                    <b>Resultados alcanzados:</b>
+                                     {% if notas.operativo + 5 == n.idNotaTipo or notas.operativo + 52 == n.idNotaTipo or notas.operativo + 54 == n.idNotaTipo %}
                                         <textarea name="recomendacion{{n.idEstudianteAsignatura}}{{n.idNotaTipo}}" class="form-control input-sm jnumbersletters" cols="30" rows="3" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="250">{{n.recomendacionNueva}}</textarea>
                                     {% else %}  
-                                   
                                         {{n.recomendacionNueva}}
                                     {% endif %}  
                                 </td>
@@ -73,6 +75,33 @@
                             </td>
                         </tr>  
                      {% endif %}
+
+                     {% if (descNota.id  == 52 or descNota.id  == 53) %}{#si son notas semestrales #}
+                      <tr>
+                            <td>INFORME PROCESO EDUCATIVO:
+                            </td>
+                            <td>
+                               <textarea name="informeSemestral{{descNota.id}}" class="form-control input-sm jnumbersletters" cols="30" rows="3" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="250" >{% if  notas.cualitativas|length>0 %}{{notas.cualitativas.notaCualitativa}}{% endif %}</textarea>
+                            </td>
+                        </tr>  
+                     
+                     {% endif %}
+                        <tr>
+                            <td>ESTADO FINAL:
+                            </td>
+                            <td>
+                            <select class="form-control" name="nuevoEstadomatricula{{descNota.id}}" >
+                                <option value="">Seleccionar....</option>
+                                {% for valor in notas.estadosFinales %}
+                                {% if  notas.cualitativas|length>0 %}
+                                    <option value="{{valor.id}}" {% if  valor.id == notas.cualitativas.idEstado %} selected {% endif %} >{{valor.estadomatricula}}</option>
+                                {% else %}
+                                    <option value="{{valor.id}}" >{{valor.estadomatricula}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                            </td>
+                        </tr>  
                 </tbody>
             </table>
 

@@ -207,7 +207,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(400,401,402,408,403,404,412);
-      $programasLibreta = array(8,9,12,14,25,15); //
+      $programasLibreta = array(7,8,25,26); //
      //dump($aInfoUeducativa['ueducativaInfoId']['programaId']);die; //escuelas mentoras = 32, areas transversales = 17
      //dump($nivel);die;
       if($gestion >2019 and $nivel <> 405){
@@ -220,7 +220,7 @@ class InfoStudentsController extends Controller {
        $programasSinNotas = array(19, 26,27,29); //No esta definido la forma de registro de las notas por tanto calificaciones=0
 
       if(in_array($aInfoUeducativa['ueducativaInfoId']['programaId'], $programasSinNotas)  and $gestion>2020){
-          $arrDataLibreta['calificaciones'] = false;
+          $arrDataLibreta['calificaciones'] = true;
       }
     //para visual y programas
      //dump($nivel); dump($objArea->getId()); die;
@@ -233,7 +233,7 @@ class InfoStudentsController extends Controller {
        
       if($gestion >= 2023 and in_array($nivel,$nivelesConNotas) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
        
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }
       else{ 
         $arrDataLibreta['calificaciones'] = false;
@@ -249,29 +249,33 @@ class InfoStudentsController extends Controller {
      //dump($arrDataLibreta);die;
       //para talento y dificultades en general  - SEMESTRAL
       if(($nivel==410 or $nivel==411) and $gestion>2021 and ($objArea->getId()==7 or $objArea->getId()==6)){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = false;
       }
       
       //auditiva- lengua de señas, modulo o servicio lbs y programas - SEMESTRAL
       if($gestion>2022 and $objArea->getId()==1 and (($nivel==411 and in_array($programa,[19,22,41,43,44,46])) or ($nivel==410 and $servicio==40))){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }
       //visual- servicios complementarios - SEMESTRAL
       if($gestion>2022 and $objArea->getId()==2 and ($nivel==410 and in_array($servicio,[35,36,37,38]))){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }
       //visual- programa multiple - SEMESTRAL
       if($gestion>2022 and $objArea->getId()==2 and ($nivel==411 and in_array($programa,[26, 47,48]))){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }
       //intelectual- atención temprana - SEMESTRAL
       if($gestion>2022 and $objArea->getId()==3 and ($nivel==409 and in_array($programa,[28])) ){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }
       //intelectual- programa multilple y/o itinerarios educativos - TRIMESTRAL
-      if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37])) ){
-        $arrDataLibreta['calificaciones'] = false;
+      if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37,38])) ){
+        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['libreta'] = true;
+      }
+      if($gestion>2023 and $objArea->getId()==4 and ($nivel==411 and in_array($programa,[28])) ){
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
       //metal-psiquica - SEMESTRAL
@@ -280,7 +284,7 @@ class InfoStudentsController extends Controller {
       }
 
       if($nivel==410 and $gestion>2023 and $servicio==20){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
         }
       //para bono
       //dump($objArea->getId());die;
