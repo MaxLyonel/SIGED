@@ -15,12 +15,18 @@
             <table class="table table-bordered" id="tbl_nota_existe">
             <thead>
                 <tr>
-                    <th><b>Contenidos Programados y Desarrollados (max 200)</b></th>
+                    <th>
+                     {% if servicio == 20 %}
+                     <b>Actividades Desarrolladas</b>
+                     {% else %}
+                     <b>Contenidos Programados y Desarrollados (max 200)</b>
+                     {% endif %}
+                     </th>
                     <th><b>Resultados Alcanzados (max 200)</b></th>
                     <th><b>Recomendaciones (max 200)</b></th>
                     <th><button type="button" class="btn btn-success btn-sm" id="brow" {% if notas.enota == 1 %} disabled {% endif %}><i class="fa fa-plus"></i></button></th>
                 </tr>
-            </thead            
+            </thead>            
             {#% if notas.enota == 1 %#}
           
              <tbody>
