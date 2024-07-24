@@ -2218,6 +2218,7 @@ class Notas{
     $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
     $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
     $programa =  $discapacidad->getEspecialProgramaTipo()->getId();
+    $servicio =  $discapacidad->getEspecialServicioTipo()->getId();
     // Cantidad de notas faltantes
     $cantidadFaltantes = 0;
     $cantidadRegistrados = 0;
@@ -2277,9 +2278,14 @@ class Notas{
             $inicio = 53;
             $fin = 53;
         }
-        if($discapacidad->getEspecialServicioTipo()->getId() == 40){ //LSB
+        if(in_array($servicio, array(40)) or in_array($programa, array(22))){ //LSB
             $inicio = 55;
             $fin = 55;
+        }
+      
+        if(in_array($programa, array(19,41,39,28))){
+            $inicio = 53;
+            $fin = 53;
         }
         
         foreach ($asignaturas as $a) {
@@ -2388,7 +2394,7 @@ class Notas{
     $estadosPermitidos = array(0);
 
     $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(5,28));
-    if($nivel==409 or in_array($programa, array(41,43,19)))
+    if($nivel==409 or in_array($programa, array(41,43,19,28,39)))
         $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47,78));
 
     $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion,'notaTipo'=>$inicio));
@@ -6656,7 +6662,7 @@ die;/*
             $nivel = $request->get('nivel');
             $idInscripcion = $request->get('idInscripcion');
             $nivelesCualitativos = array(1,11,400,401,408,402,403,411, 412);
-            
+            //dump($tipo);die;
             if( in_array($tipo, array('newTemplateDB','Bimestre' )) ){
                
                 // Registro y/o modificacion de notas
@@ -7580,7 +7586,7 @@ die;/*
             }
 
             if($tipo == 'semestralTrimestralSeguimiento'){  //TODO se mezclo con el nuevo seguimiento, corregir
-                //dump($request);die;
+                
                 //$estadoFinalNota = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($request->get('nuevoEstadomatricula'));
                 $estadoFinalNota = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($request->get('nuevoEstadomatricula'));
                 $detalleEstado = array('id'=>$estadoFinalNota->getId(), 'estado'=>$estadoFinalNota->getEstadomatricula());
@@ -7916,7 +7922,7 @@ die;/*
                 
             }
 
-            if ( $subarea == 1   and $gestion > 2022 and in_array($programa,array(19,41,43,44,46)) ){ 
+            if ( $subarea == 1   and $gestion > 2022222 and in_array($programa,array(19,41,43,44,46)) ){ 
                 //Nueva evaluacion de programa de auditiva con diferentes asignaturas
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47,78));
                 if(in_array($programa, array(44,46,19)))
@@ -7964,7 +7970,7 @@ die;/*
                 
             }
 
-            if ($subarea == 2 and $gestion > 2022 and $programa == 26 and $momento<3){ 
+            if ($subarea == 2 and $gestion > 20222222 and $programa == 26 and $momento<3){ 
                 //Nueva evaluacion de programa de visual con diferentes asignaturas
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80));
                 $idNotaTipo = 'SemestralAsignatura';
@@ -8012,7 +8018,7 @@ die;/*
             } 
          
 
-            if ( $subarea == 2222 and $gestion > 2022 and ($nivel==411 or $nivel==410) and $momento>2 ){ 
+            if ( $subarea == 222222 and $gestion > 2022 and ($nivel==411 or $nivel==410) and $momento>2 ){ 
                 //Visual - Programa Semestral Contenido-resultado y recomendacion
                 // dump("visual..........OK");
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80));
@@ -8038,10 +8044,16 @@ die;/*
 
                // dump($tiposNotasArray);die;
             }
-             //cualitativo sin areas CONTENIDOS-RESULTADOS-RECOMENDACIONES SEMESTRAL
-             if ( $subarea == 2 and $gestion > 2023 and ($nivel==411 or $nivel==410) and ($momento>2 or $servicio==20)){  
-               
-                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80)); //PROSIGUE-CONCLUIDO-CONTINUA
+           
+             //cualitativo sin areas CONTENIDOS(ACTIVIDADES)-RESULTADOS-RECOMENDACIONES SEMESTRAL
+             //if (($subarea == 3 or $subarea == 2) and $gestion > 2023 and ($nivel==411 or $nivel==410) and ($momento>2 or $servicio==20)){  
+              if ($gestion > 2023 and (($subarea == 3 or $subarea == 2) and ($nivel==411 or $nivel==410)) or ($nivel==410 and $servicio==20)  ){  
+                
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,47)); //PROSIGUE-CONCLUIDO-CONTINUA
+                if($programa == 38)
+                    $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80)); //PROSIGUE-CONCLUIDO-CONTINUA
+                if($servicio == 20)
+                    $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,10,6)); //PROSIGUE-CONCLUIDO-retiro.abandono, no incorporado
                 $idNotaTipo = 'semestralTrimestralSeguimiento';
                 $notaCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion, 'notaTipo'=>$idNota));
                 if($notaCualitativa){
@@ -8145,7 +8157,7 @@ die;/*
                 }
                 //dump( $tiposNotasArray);die;
             }
-            if ( $subarea == 10 and $gestion > 2022 and $nivel==411){ //Mental Psiquica
+            if ( $subarea == 10 and $gestion > 2023 and $nivel==411){ //Mental Psiquica
                 
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47, 5));
                 $idNotaTipo = 'Semestral';
@@ -8163,8 +8175,8 @@ die;/*
                 }
             }
            // dump($nivel);
-            //cualitativo sin areas ACCIONES-RESULTADOS-RECOMENDACIONES sea TRIMESTRAL/SEMESTRAL
-            if ($gestion > 2023 and ($nivel==411 or $nivel==410) and $servicio==20){ 
+            //cualitativo sin areas ACCIONES-RESULTADOS-RECOMENDACIONES sea TRIMESTRAL/SEMESTRAL - ATENCION TEMPRANA
+            if ($gestion > 20233333 and ($nivel==411 or $nivel==410) and $servicio==20){ 
                 //General - Programa Semestral Contenido-resultado y recomendacion
                 $estadosMatriculas = array(78,79,80);
                 $notasTipos = array(53); //1er-2do semestre
@@ -8211,7 +8223,8 @@ die;/*
                  }
  
              }
-           //  dump($idNotaTipo);die;
+            // dump($idNotaTipo);
+            // dump($arrayCualitativas);die;
             return array(
                 'cuantitativas'     =>array(),
                 'cualitativas'      =>$arrayCualitativas,

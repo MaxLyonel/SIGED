@@ -37,23 +37,27 @@
                         <tr>
                             <td>{{asig.asignatura}}</td>
                             {% for n in asig.notas %}
-                               {% if n.idNotaTipo == descNota.id %}
+                              
                                 <td>
                                     <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
                                     <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                                     <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
                                     <b>Contenidos:</b>
-                                    
+                                    {{notas.operativo}}-{{n.idNotaTipo}}
+                                    {% if (notas.operativo + 5 == n.idNotaTipo) or notas.operativo + 52 == n.idNotaTipo or notas.operativo + 54 == n.idNotaTipo %}
                                         <textarea name="nota{{n.idEstudianteAsignatura}}{{n.idNotaTipo}}" class="form-control input-sm jnumbersletters" cols="30" rows="3" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="300">{{n.notaCualitativaNueva}}</textarea>
-                                    
+                                    {% else %}  
+                                        {{n.notaCualitativaNueva}}
+                                    {% endif %}  
                                      <br>
                                     <b>Resultados alcanzados:</b>
-                                    
+                                     {% if notas.operativo + 5 == n.idNotaTipo or notas.operativo + 52 == n.idNotaTipo or notas.operativo + 54 == n.idNotaTipo %}
                                         <textarea name="recomendacion{{n.idEstudianteAsignatura}}{{n.idNotaTipo}}" class="form-control input-sm jnumbersletters" cols="30" rows="3" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="250">{{n.recomendacionNueva}}</textarea>
-                                    
+                                    {% else %}  
+                                        {{n.recomendacionNueva}}
+                                    {% endif %}  
                                 </td>
                                 
-                            {% endif %}
                             {% endfor %}
                         </tr>
                     {% endfor %}
