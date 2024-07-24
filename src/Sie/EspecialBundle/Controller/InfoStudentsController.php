@@ -254,7 +254,7 @@ class InfoStudentsController extends Controller {
       }
       
       //auditiva- lengua de señas, modulo o servicio lbs y programas - SEMESTRAL
-      if($gestion>2022 and $objArea->getId()==1 and (($nivel==411 and in_array($programa,[19,22,41,43,44,46])) or ($nivel==410 and $servicio==40))){
+      if($gestion>2022 and $objArea->getId()==1 and (($nivel==411 and in_array($programa,[19,22,41,43,44,46,39])) or ($nivel==410 and $servicio==40))){
         $arrDataLibreta['calificaciones'] = true;
       }
       //visual- servicios complementarios - SEMESTRAL
