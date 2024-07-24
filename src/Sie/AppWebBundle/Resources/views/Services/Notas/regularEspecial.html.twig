@@ -245,7 +245,7 @@
                             {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) or (notas.operativo == 4 and notas.nivel in [1,11,403]) %}
                                 <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                 <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                                <p><b>{{c.notaTipo}}</b></p>
+                                <p><b>--{{c.notaTipo}}</b></p>
                                 <p class="text-justify">
                                     <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="16">{{c.notaCualitativa}}</textarea>
                                 </p>
