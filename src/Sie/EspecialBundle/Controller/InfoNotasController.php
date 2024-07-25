@@ -187,7 +187,7 @@ class InfoNotasController extends Controller {
                                 //dump($notas);die;
                             } 
                         }
-                        if($gestion > 2023 && ($nivel == 411 and in_array($programa, array(47,48))) or ($nivel == 410 and in_array($progserv, array(35,36,37,38))) ){ // programas visual y notas semestrales   
+                        if($gestion > 2023 and ($nivel == 411 and in_array($programa, array(47,48))) or ($nivel == 410 and in_array($progserv, array(35,36,37,38))) ){ // programas visual y notas semestrales   
                             //semestralTrimestralSeguimiento
                             //CONTENIDO-RESULTADO-RECOMENDACION
                             $idNota = 53; // Primer Semestre
@@ -196,8 +196,9 @@ class InfoNotasController extends Controller {
                             $actualizarMatricula = false;
                             $seguimiento = true;
                         }
-
-                        if($gestion > 20222 && ($nivel == 411 and in_array($programa, array(47,48))) or ($nivel == 410 and in_array($progserv, array(35,36,37,38))) ){ // programas visual y notas semestrales   
+                        //dump($notas);die;
+                        if($gestion > 2022222 and ( ($nivel == 411 and in_array($programa, array(47,48))) or ($nivel == 410 and in_array($progserv, array(35,36,37,38))) ) ){ // programas visual y notas semestrales   
+                            dump("aaaa");die;
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                             ///////////////$template = 'especialProgramaVisual'; //prog/ser con contenidos-resultados-recomendaciones
                             $template = 'especialSemestralTrimestral'; //prog/ser con contenidos-resultados-recomendaciones
@@ -353,7 +354,7 @@ class InfoNotasController extends Controller {
                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(47,78)));
             }
             $descNota = $em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
-        // dump($notas);
+         //dump($notas);
          //  dump($notas["cualitativas"]);die;
          // dump($template); 
             //dump($progserv);
