@@ -280,7 +280,7 @@ class InfoStudentsController extends Controller {
       }
       //metal-psiquica - SEMESTRAL
       if($gestion>2022 and $objArea->getId()==10  ){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
       }
 
       if($nivel==410 and $gestion>2023 and $servicio==20){

@@ -2283,7 +2283,7 @@ class Notas{
             $fin = 55;
         }
       
-        if(in_array($programa, array(19,41,39,28))){
+        if(in_array($programa, array(19,41,39,28,50,51,52,53,54,55,56,57,58,59))){
             $inicio = 53;
             $fin = 53;
         }
@@ -2394,7 +2394,7 @@ class Notas{
     $estadosPermitidos = array(0);
 
     $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(5,28));
-    if($nivel==409 or in_array($programa, array(41,43,19,28,39)))
+    if($nivel==409 or in_array($programa, array(41,43,19,28,39,50,51,52,53,54,55,56,57,58,59)))
         $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47,78));
 
     $notaCualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion,'notaTipo'=>$inicio));
