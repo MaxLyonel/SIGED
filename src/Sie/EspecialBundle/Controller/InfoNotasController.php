@@ -345,10 +345,10 @@ class InfoNotasController extends Controller {
            
             //SERVICIOS - APOYO TECNICO PEDAGOGICO PARA TODAS LAS DISCAPACIDADES
             if($nivel==410 and $gestion>2023 and $servicio==20){
+                $idNota = 53;//prog/ser con contenidos-resultados-recomendaciones
                 $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);            
                 $template = 'especialSeguimientoSemestral'; 
                 //$template = 'especialSemestralTrimestral';  ELIMINAR
-                $idNota = 53;//prog/ser con contenidos-resultados-recomendaciones
                 $seguimiento = true;
                 $actualizarMatricula = true;
                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(47,78)));
@@ -360,7 +360,7 @@ class InfoNotasController extends Controller {
             //dump($progserv);
             //dump($desc_programa);
            //dump($vista);
-          //die;
+         // die;
            //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
