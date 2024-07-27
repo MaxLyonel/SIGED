@@ -35,7 +35,12 @@ class UsuariopasswdController extends Controller {
         ));
     }
 
-    public function userresetloginAction($usuarioid) {
+    public function userresetloginAction($usuarioid, Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         return $this->render('SieUsuariosBundle:Usuario:passresetlogin.html.twig', array(
                     'form' => $this->createViewForm($usuarioid)->createView(),
         ));
