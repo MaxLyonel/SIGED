@@ -104,7 +104,7 @@ class ControlCalidadController extends Controller {
         }
 
         $entidades = $query->getResult();
-
+        $antyear = $currentyear - 1;
         switch($rol_usuario){
             case 10://distrito
                 $query = $repository->createQueryBuilder('vret')
@@ -113,6 +113,8 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
                     ->where('vp.lugarTipoIdDistrito = :lugarDistrito')
+                    ->andWhere('gt.id >= :gestion')  
+                    ->setParameter('gestion', $antyear)
                     ->setParameter('lugarDistrito', $usuario_lugar)
                     ->addGroupBy('gt.id')
                     ->addOrderBy('gt.id', 'DESC')
@@ -125,6 +127,8 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
                     ->where('vp.institucionEducativaId = :sie')
+                    ->andWhere('gt.id >= :gestion')  
+                    ->setParameter('gestion', $antyear)
                     ->setParameter('sie', $this->session->get('ie_id'))
                     ->addGroupBy('gt.id')
                     ->addOrderBy('gt.id', 'DESC')
@@ -138,6 +142,8 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = vp.lugarTipoIdDistrito')
                     ->where('lt.lugarTipo = :lugarDepartamento')
+                    ->andWhere('gt.id >= :gestion')  
+                    ->setParameter('gestion', $antyear)
                     ->setParameter('lugarDepartamento', $usuario_lugar)
                     ->addGroupBy('gt.id')
                     ->addOrderBy('gt.id', 'DESC')
@@ -150,6 +156,8 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = vp.lugarTipoIdDistrito')
+                    ->where('gt.id >= :gestion')  
+                    ->setParameter('gestion', $antyear)
                     ->addGroupBy('gt.id')
                     ->addOrderBy('gt.id', 'DESC')
                     ->getQuery();
