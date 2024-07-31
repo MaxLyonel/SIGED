@@ -7620,10 +7620,10 @@ die;/*
                 $cualitativoDetalleNota->setFechaModificacion(new \DateTime('now'));
                 $this->em->persist($cualitativoDetalleNota);
                 $this->em->flush();
+               
             }
-            //dump($discapacidad); die;
             // Datos del siguimiento
-            if($gestion > 2023 and $discapacidad == 2 and in_array($request->get('progserv') , array('47','48' ))  ){
+            if($gestion > 20233333 and $discapacidad == 2 and in_array($request->get('progserv') , array('47','48' )) ){
                 dump("seguimiento");
                 dump($request);
                 die;
@@ -7643,7 +7643,11 @@ die;/*
                 $this->em->persist($seguimientoNota);
                 $this->em->flush();
             }
-            if($gestion > 2019 and $discapacidad != 7 and $discapacidad != 6 and ($discapacidad == 4 or ($discapacidad == 5 and ($nivel == 411 or $nivel==410)) or ($discapacidad == 1 and ($request->get('progserv') == 200 or $request->get('progserv') == 21 )))){
+            if($gestion > 2019999 and $discapacidad != 7 and $discapacidad != 6 and ($discapacidad == 4 or ($discapacidad != 5 and ($nivel == 411 or $nivel==410)) or ($discapacidad == 1 and ($request->get('progserv') == 200 or $request->get('progserv') == 21 )))){
+               
+                dump("seguimiento2");
+                dump($request);
+                die;
                
                 $seguimientoNota  = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion' => $request->get('idInscripcion'), 'notaTipo' => $request->get('tipoNota')));
                 if(!$seguimientoNota){
@@ -7662,7 +7666,9 @@ die;/*
                 $this->em->flush();
             }
             if(!empty($request->get('progserv')) and $gestion > 2018 and $gestion < 2023 and $discapacidad == 1 and $request->get('progserv') == 19){
-               
+                dump("seguimiento3");
+                dump($request);
+                die;
                 $seguimiento = array();
                 $seguimiento['anho'] = $request->get('anho');
                 $seguimiento['resumen'] = mb_strtoupper($request->get('resumen'), 'utf-8');
