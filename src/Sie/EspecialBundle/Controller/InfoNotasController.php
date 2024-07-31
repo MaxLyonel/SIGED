@@ -158,6 +158,15 @@ class InfoNotasController extends Controller {
                             $actualizarMatricula = false;
                             $seguimiento = true;
                         }
+                        if($gestion > 2023 and ($nivel == 411 and in_array($programa, array(44,46)))  ){ // programas y notas semestrales   
+                            //semestralTrimestralSeguimiento
+                            //CONTENIDO-RESULTADO-RECOMENDACION
+                            $idNota = 53; // Primer Semestre
+                            $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
+                            $template = 'especialSeguimientoSemestral';
+                            $actualizarMatricula = false;
+                            $seguimiento = true;
+                        }
                        //dump($notas);die;
                         
                         break;
@@ -360,7 +369,7 @@ class InfoNotasController extends Controller {
             //dump($progserv);
             //dump($desc_programa);
            //dump($vista);
-         // die;
+          //die;
            //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
