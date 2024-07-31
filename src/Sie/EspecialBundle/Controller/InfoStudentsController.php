@@ -266,11 +266,11 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = true;
       }
       //intelectual- atención temprana - SEMESTRAL
-      if($gestion>2022 and $objArea->getId()==3 and ($nivel==409 and in_array($programa,[28])) ){
+      if($gestion>2022 and ($objArea->getId()==3 or $objArea->getId()==12) and ($nivel==409 and in_array($programa,[28])) ){
         $arrDataLibreta['calificaciones'] = true;
       }
       //intelectual- programa multilple y/o itinerarios educativos - TRIMESTRAL
-      if($gestion>2022 and $objArea->getId()==3 and ($nivel==411 and in_array($programa,[37,38])) ){
+      if($gestion>2022 and ($objArea->getId()==3 or $objArea->getId()==12) and ($nivel==411 and in_array($programa,[37,38])) ){
         $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
@@ -279,12 +279,13 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['libreta'] = true;
       }
       //metal-psiquica - SEMESTRAL
-      if($gestion>2022 and $objArea->getId()==10  ){
+      if($gestion>2022 and $objArea->getId() == 10  ){
         $arrDataLibreta['calificaciones'] = true;
       }
 
       if($nivel==410 and $gestion>2023 and $servicio==20){
         $arrDataLibreta['calificaciones'] = true;
+
         }
       //para bono
       //dump($objArea->getId());die;
