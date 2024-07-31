@@ -7584,7 +7584,7 @@ die;/*
                 }
                 
             }
-
+//dump($request);die;
             if($tipo == 'semestralTrimestralSeguimiento'){  //TODO se mezclo con el nuevo seguimiento, corregir
                 
                 //$estadoFinalNota = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($request->get('nuevoEstadomatricula'));
@@ -8053,7 +8053,7 @@ die;/*
            
              //cualitativo sin areas CONTENIDOS(ACTIVIDADES)-RESULTADOS-RECOMENDACIONES SEMESTRAL
              //if (($subarea == 3 or $subarea == 2) and $gestion > 2023 and ($nivel==411 or $nivel==410) and ($momento>2 or $servicio==20)){  
-              if ($gestion > 2023 and (($subarea == 3 or $subarea == 2) and ($nivel==411 or $nivel==410)) or ($nivel==410 and $servicio==20)  ){  
+              if ($gestion > 2023 and (($subarea == 1 or$subarea == 3 or $subarea == 2) and ($nivel==411 or $nivel==410)) or ($nivel==410 and $servicio==20)  ){  
                 
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,47)); //PROSIGUE-CONCLUIDO-CONTINUA
                 if(in_array($programa, array(47,48)) or in_array($servicio, array(35,36,37,38)))
