@@ -318,6 +318,26 @@
                         </li>
                         {% endif %}                        
 
+                        {# habilita temproar whenayeck #}
+                        {% if (app.session.get('userId') == '13819350') %} 
+                        
+                        
+                        <li class="panel">
+                            <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas">
+                                <i class="fa fa-bar-chart-o"></i> Inscripciones WH<i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="collapse nav" id="menuAreas"> 
+                                 
+                                <li>
+                                    <a href="{{ path('inscription_reza_omi_exten_result') }}">
+                                        <i class="fa fa-edit"></i> Inscripcion Estudiante
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        {% endif %} 
 
 
 
