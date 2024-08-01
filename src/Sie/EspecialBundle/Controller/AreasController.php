@@ -977,7 +977,7 @@ class AreasController extends Controller {
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(32859,32860,32861)) //especial
+                                    )->setParameter('ids',array(32859,32860,32869)) //especial
                                     ->getResult();
                             }else{
                             $asignaturas = $em->createQuery(
