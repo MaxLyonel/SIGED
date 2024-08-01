@@ -6393,6 +6393,8 @@ die;/*
                                     ->where('ei.estudiante = '. $inscripcion->getEstudiante()->getId())
                                     ->andWhere('gt.id > 2020')
                                     ->andWhere('iece.especialProgramaTipo = '.$programa)
+                                    ->andWhere('enc.notaTipo <> 53')
+                                    ->andWhere('enc.notaTipo <> 54')
                                     ->orderBy('gt.id','DESC')
                                     ->addOrderBy('nt.id','DESC')
                                     ->setMaxResults(1)
