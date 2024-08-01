@@ -795,13 +795,14 @@ class AreasController extends Controller {
                                 ->getResult();
                              break;
                                 case 37: //---
+                                case 43: //---´prog atencion multiple auditiva
                                     $todasLasAsignaturas = 'NO';
                                     $asignaturas = $em->createQuery(
                                         'SELECT at
                                         FROM SieAppWebBundle:AsignaturaTipo at
                                         WHERE at.id IN (:ids)
                                         ORDER BY at.id ASC'
-                                )->setParameter('ids',array(415,464,416,417,418,2010,469,615,1003,497,498,499))
+                                )->setParameter('ids',array(415,464,416,417,418,2010,469,615,1003,497,498,499,1044))
                                 ->getResult();
                                 break;
                                 case 39: //---´prog atencion multiple auditiva
@@ -823,7 +824,7 @@ class AreasController extends Controller {
                                 )->setParameter('ids',array(32857,32858))
                                 ->getResult();
                                 break;
-                                case 43: //---´prog atencion multiple auditiva
+                                case 433333: //---´prog atencion multiple auditiva
                                     
                                     $asignaturas = $em->createQuery(
                                         'SELECT at
@@ -976,7 +977,7 @@ class AreasController extends Controller {
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(32859,32860,32861)) //especial
+                                    )->setParameter('ids',array(32859,32860,32869)) //especial
                                     ->getResult();
                             }else{
                             $asignaturas = $em->createQuery(
