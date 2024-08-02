@@ -136,12 +136,14 @@
                                         {% endif %}    
                                         
                                     {% endif %}
-                                    {#
+                                    
+                                     {% if sie == 50640088 or sie == 80730827 or sie == 40730602 or sie == 80720220 or sie == 72180071 or sie == 82480049 or sie == 82470070 or sie == 62470070 %} 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
-                                        </div> #} 
+                                        </div> 
+                                    {% endif %}
                                          <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Ver Formulario Rude ">
                                             <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('downloadRudeEspecial', {'rude': data.codigoRude, 'codue':sie, 'gestion': gestion, 'eins':data.eInsId} )}}">
                                                 <i class="fa fa-file" style="color:#FFFFFF"></i>
