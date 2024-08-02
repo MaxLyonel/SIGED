@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            
+           === {{data.id}}
             
              {% if data.gestion == 2024 %} 
            
@@ -140,22 +140,24 @@
                         </div>
                     </div>
                 </div> 
-             
-                
+             #}
+                {% if data.id == 50640088 or data.id == 80730827 or data.id == 40730602 or data.id == 80720220 or data.id == 72180071 or data.id == 82480049 or data.id == 82470070 or data.id == 62470070 %} 
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rudees">
                         <div class="caption text-center">
                             <h4>Cerrar Operativo Rudees</h4>
+                             
                             <div class="thumbnail-action">
                                 {{form_start(closeOperativoRudeesform, { 'attr':{'id':'formCloseOperativoRudees' }} )}}
                                     {{form_widget(closeOperativoRudeesform.next)}}
                                 {{form_end(closeOperativoRudeesform)}}
                             </div>
+                          
                         </div>
                     </div>
                 </div>
-                 #}
+              {% endif %} 
                 
                {% endif %} 
                 {% if onlyview == false %} 
