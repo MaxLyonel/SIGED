@@ -3541,6 +3541,10 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $gestionesArray = array();
         $subceasArray = array();
         //$provincia[-1] = '-Todos-';
+        usort($gestion, function($a, $b) {
+            return intval($b['gestion']) - intval($a['gestion']);
+        });
+
     	foreach ($gestion as $g) {
                 //dump($g);die;
                 $gestionesArray[$g['gestion']] = $g['gestion'];
