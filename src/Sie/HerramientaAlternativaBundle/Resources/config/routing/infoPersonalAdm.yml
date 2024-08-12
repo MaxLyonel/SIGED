@@ -12,9 +12,9 @@ herramientalt_info_personal_adm_third:
     options:
          expose: true
          
-herramientalt_info_personal_adm_index:
-    path:     /
-    defaults: { _controller: SieHerramientaAlternativaBundle:InfoPersonalAdm:index }
+# herramientalt_info_personal_adm_index:
+#     path:     /
+#     defaults: { _controller: SieHerramientaAlternativaBundle:InfoPersonalAdm:index }
 
 herramientalt_info_personal_adm_show:
     path:     /{id}/show
