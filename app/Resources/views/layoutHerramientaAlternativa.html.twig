@@ -655,10 +655,10 @@
                                         <span class="arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>
+                                        {# <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>  ------- TEMPORAL V1#}
+                                        {# <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> --------- TEMPORAL V1#}
                                         {# <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>  -----------------> SOLO A NACIONAL #}
-                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li>
+                                        {# <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> ---------- TEMPORAL V1#}
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
@@ -671,7 +671,7 @@
                                 {# <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>   --------------------> NO APLICA SEGUN DGEA #}
                                  {# <li><a href="{{ path('UpdatePlaceDataStudent_index')}}">Mod. Datos de Lugar</a></li> #}
 
-                                <li><a href="{{ path('printRecordCard_index')}}">Impresión de Libretas</a></li>
+                                {# <li><a href="{{ path('printRecordCard_index')}}">Impresión de Libretas</a></li> ------ TEMPORAL V1 #}
 
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
@@ -685,21 +685,32 @@
                                 {% endif %}
                                 {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>   ---------------------> NO APLICA SEGN DGEA #}
                                 {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                {# <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li> ----- TEMPORAL V1 #}
+                                {# <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li> ----- TEMPORAL V1 #}
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-bar-chart"></i></span>
+                                <span class="text">Reportes</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>
+                            <ul>  ----- TEMPORAL V1 #}
                                 {# <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li> #}
-                                <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
-                            </ul>
-                        </li>
+                                {# <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li> -------- TEMPORAL V1 #}
+                            {# </ul> ---- TEMPORAL V1 #}
+                        {# </li> ---- TEMPORAL V1 #}
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -721,14 +732,14 @@
                                         <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar SubCentro </a></li>
                                         {# <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> -------------------> SOLO A DEPARTAMENTAL #}
                                         {# <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>   ------------------> SOLO A NACIONAL #}
-                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li>
+                                        {# <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> ---- TEMPORAL V1 #}
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
                                 </li>
-                                {% if app.session.get('roluser') in [7,8,10]  %}
+                                {# {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
-                                {% endif %}
+                                {% endif %} #}
                                 <li><a href="{{path('herramienta_ceducativa_distrito_listaceas')}}">Listar mis CEAS</a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar SubCentro </a></li>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
@@ -750,21 +761,32 @@
                                 {% endif %}
                                 {# <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>   ----------> NO APLICA SEGU DGEA #}
                                 {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                {# <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li> #}
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-bar-chart"></i></span>
+                                <span class="text">Reportes</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>
+                            <ul> ---- TEMPORAL V1 #}
                                 {# <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li> #}
-                                <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
-                            </ul>
-                        </li>
+                                {# <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li> ---- TEMPORAL V1 #}
+                            {# </ul> ---- TEMPORAL V1 #}
+                        {# </li> ---- TEMPORAL V1 #}
                     {% endif %}
                     {% if app.session.get('roluser') == 9 %}{#DIRECTOR#}
                         <li class="submenu">
@@ -775,7 +797,7 @@
                             </a>
                             <ul>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Gestionar C.E.A.</a></li>
-                                <li><a href="{{path('recognitionknowledge_index')}}">Registro de Reconocimiento de Saberes</a></li>
+                                {# <li><a href="{{path('recognitionknowledge_index')}}">Registro de Reconocimiento de Saberes</a></li> ---- TEMPORAL V1 #}
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
                                 {# <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>    ----------------------> NO APLICA SEGUN DGEA #}
@@ -787,13 +809,13 @@
                                 {# <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>  --------------> NO APLICA SEGUN DGEA #}
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>
+                            <ul> ---- TEMPORAL V1 #}
                                 
                                 {# <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li> #}
                                 {# <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li> #}
@@ -801,8 +823,8 @@
                                 {# <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Consolidación Bachiller de Excelencia</a></li> #}
                                 {# <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li> #}
 
-                            </ul>
-                        </li>
+                            {# </ul> ---- TEMPORAL V1 #}
+                        {# </li> ---- TEMPORAL V1 #}
                     {% endif %}
                     <li class="">
                         <a href="{{path('wf_tramite_index')}}">

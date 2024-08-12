@@ -143,6 +143,8 @@ class MallaTecnicaController extends Controller {
     }
 
     public function mallaseemodulosAction(Request $request) {
+        // ---- TEMPORAL V1
+        die;
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
         $em = $this->getDoctrine()->getManager();

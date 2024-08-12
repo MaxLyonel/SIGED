@@ -218,9 +218,19 @@
                         $("#form_gestion").append('<option value="">Todos</option>');
                         $("#form_subcea").empty();
                         $("#form_subcea").append('<option value="">Todos</option>');
+                        var gestionesArray = [];
                         $.each(data.gestion, function (i, value) {
-                            $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
+                            gestionesArray.push({ key: i, value: value });
                         });
+                        gestionesArray.sort(function(a, b) {
+                            return b.key - a.key;// Asume que 'key' contiene valores numéricos
+                        });
+                        $.each(gestionesArray, function (index, item) {
+                            $("#form_gestion").append('<option value="' + item.key + '">' + item.value + '</option>');
+                        });
+                        // $.each(data.gestion, function (i, value) {
+                        //     $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
+                        // });
                         $.each(data.subcea, function (i, value) {
                             $("#form_subcea").append('<option value="' + i + '">' + value + '</option>');
                         });

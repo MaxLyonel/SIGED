@@ -34,6 +34,8 @@ class AreasController extends Controller {
 
     public function indexAction(Request $request) {
 
+        die; 
+        // ----- TEMP V1.
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $em = $this->getDoctrine()->getManager();
