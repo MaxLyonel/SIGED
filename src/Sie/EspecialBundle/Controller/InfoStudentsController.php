@@ -145,7 +145,7 @@ class InfoStudentsController extends Controller {
       //get the info ue
       $infoUe = $request->get('infoUe');
       $aInfoUeducativa = unserialize($infoUe);
-     //dump($aInfoUeducativa);die;
+     //dump($infoUe);die;
       //get the values throght the infoUe
       $sie = $aInfoUeducativa['requestUser']['sie'];
       $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
@@ -211,7 +211,7 @@ class InfoStudentsController extends Controller {
      //dump($aInfoUeducativa['ueducativaInfoId']['programaId']);die; //escuelas mentoras = 32, areas transversales = 17
      //dump($nivel);die;
       if($gestion >2019 and $nivel <> 405){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
       }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = false;
       }else{
@@ -272,7 +272,7 @@ class InfoStudentsController extends Controller {
       //intelectual- programa multilple y/o itinerarios educativos - TRIMESTRAL
       if($gestion>2022 and ($objArea->getId()==3 or $objArea->getId()==12) and ($nivel==411 and in_array($programa,[37,38])) ){
         $arrDataLibreta['calificaciones'] = false;
-        $arrDataLibreta['libreta'] = true;
+        $arrDataLibreta['libreta'] = false;
       }
       if($gestion>2023 and $objArea->getId()==4 and ($nivel==411 and in_array($programa,[28])) ){
         $arrDataLibreta['calificaciones'] = false;
@@ -348,7 +348,8 @@ class InfoStudentsController extends Controller {
         'arrDataLibreta'=> $arrDataLibreta,
         'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
         'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId'],        
-        'areaEspecial' => $objArea->getAreaEspecial()
+        'areaEspecial' => $objArea->getAreaEspecial(),
+        'areaEspecialId' => $objArea->getId()
       ));
   }
   /**
@@ -424,12 +425,18 @@ class InfoStudentsController extends Controller {
     $em = $this->getDoctrine()->getManager();
     $form =  $request->get('form');
     $dataUe = unserialize($form['data']);
-    //solo para casos de inscripciones por excepcion se valida que sea la departamental o distrital
-    if($this->session->get('roluser')==9){ 
+    
+    if(in_array($dataUe['ueducativaInfoId']['areaEspecialId'], array(6,7))){
+      
+    }
+    else{
+      //solo para casos de inscripciones por excepcion se valida que sea la departamental o distrital
+      if($this->session->get('roluser')==9){ 
         $this->session->getFlashBag()->add('notalento', 'La Inscripción Excepcional solo esta habilitado al técnico de la Departamental o Distrital');
         return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
       }
-
+    }
+    
     //get the student info by rudeal
     $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rudeal']));
     //check if the student exist
@@ -617,12 +624,12 @@ class InfoStudentsController extends Controller {
     //get the send values
     $form = $request->get('form');
     $aInfoUeducativa = unserialize($form['data']);
-
     $sie = $aInfoUeducativa['requestUser']['sie'];
     $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
     $ieceId = $aInfoUeducativa['ueducativaInfoId']['ieceId'];
     $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
     $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
+    $areaId = $aInfoUeducativa['ueducativaInfoId']['areaEspecialId'];
     $turno = $aInfoUeducativa['ueducativaInfoId']['turnoId'];
     $ciclo = $aInfoUeducativa['ueducativaInfoId']['cicloId'];
     $gestion = $aInfoUeducativa['requestUser']['gestion'];
@@ -633,8 +640,14 @@ class InfoStudentsController extends Controller {
     $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
   //set the validate year
     $id_usuario = $this->session->get('userId');
+    if(in_array($areaId, array(6,7))){
+      $estado = 4;
+      $obs = '2semestre';
+    }else{
+      $estado = 68;
+      $obs = '1';
+    }
  
- // die;
     //create the conexion DB
     try {
       //restart the id on estudiante_inscripcion table
@@ -646,10 +659,10 @@ class InfoStudentsController extends Controller {
       $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($aInfoUeducativa['requestUser']['gestion']));
       //extemporaneos especial
       //$studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7)); extemporaneo
-      $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(68));
+      $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estado));
       $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['studentId']));
       $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
-      $studentInscription->setObservacion(1);
+      $studentInscription->setObservacion($obs);
       $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
       $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
       $studentInscription->setUsuarioId($id_usuario);
