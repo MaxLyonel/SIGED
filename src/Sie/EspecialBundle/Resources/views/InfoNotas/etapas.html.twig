@@ -47,6 +47,7 @@
                     			</tr>
                 			</thead>
                 			<tbody>
+							{#
                     			{% for e in etapas %}
 		                        	<tr>
             	                		<td align="center">{{ e.etapa }}</td>
@@ -57,12 +58,41 @@
     	                            	<td align="center">
 											<form action="{{path('especialDownload_libreta', {'idNotaTipo': e.nota_tipo_id,'infoUe': infoUe, 'infoStudent':infoStudent } )}}" method="post" style="display:inline-block">
                                                 <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
-                                                    Imprimir{# <i class="fa fa-archive" style="color:#FFFFFF"></i> #}
+                                                    Imprimir
                                                 </button>
                                             </form>
 										</td>
         	                		</tr>
             	        		{% endfor %}
+								#}
+								<tr>
+            	                		<td align="center"></td>
+	                	            	<td></td>
+										<td>Informe Cualitativo 1</td>
+    	                            	<td align="center">
+											<form action="{{path('especialDownload_libreta', {'idNotaTipo': '','min': min,'max': 0,'infoUe': infoUe, 'infoStudent':infoStudent } )}}" method="post" style="display:inline-block">
+                                                <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
+                                                    Imprimir{# <i class="fa fa-archive" style="color:#FFFFFF"></i> #}
+                                                </button>
+                                            </form>
+										</td>
+        	                	</tr>
+								
+								{% if etapas|length > 4 and max > 0 %} 
+									<tr>
+											<td align="center"></td>
+											<td></td>
+											<td>Informe Cualitativo 2</td>
+											<td align="center">
+												<form action="{{path('especialDownload_libreta', {'idNotaTipo': '','min': min,'max': max,'infoUe': infoUe, 'infoStudent':infoStudent } )}}" method="post" style="display:inline-block">
+													<button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
+														Imprimir{# <i class="fa fa-archive" style="color:#FFFFFF"></i> #}
+													</button>
+												</form>
+											</td>
+									</tr>
+								{% endif %}
+								
                 			</tbody>
             			</table>
 					</div>
