@@ -41,7 +41,7 @@ class OperativoController extends Controller {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $gestion = date('Y');
-        //dump($gestion);die;
+        // dump($gestion);die;
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -344,7 +344,7 @@ class OperativoController extends Controller {
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
             return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 ");},'property'=>'operaTivo','empty_value' => 'Seleccione operativo','attr'=>array('class'=>'form-control')))
         ->add('fechainicio','text',array('label'=>'Fecha inicio: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
-        ->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+        ->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>'13-09-2024', 'attr'=>array('class'=>'form-control','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off', 'readonly'=>true)))
         ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
             return $g->createQueryBuilder('g')->where('g.id='.$this->gestion)->orderBy('g.id');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')));
         if($rolusuario == 8){
@@ -456,7 +456,7 @@ class OperativoController extends Controller {
 
     public function operativoGuardarAction(Request $request)
     {
-        //dump($request);die;
+        // dump($request);die;
         //get the session's values
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -491,6 +491,8 @@ class OperativoController extends Controller {
                         ->andWhere("oc.distritoTipo = " . $distrito) 
                         ->getQuery()
                         ->getResult();
+
+                    
                    if($oc){
                         //dump($op);die;
                         $datos=json_decode($oc[0]->getObs(),true);
