@@ -631,6 +631,7 @@ class InfoNotasController extends Controller {
         switch ($areaEspecialId){
             case 1: //AUDITIVA
                 $nivelId = $arrInfoUe['ueducativaInfoId']['nivelId'];
+               // dump($nivelId);
                 if ($nivelId == 403) {
                     $archivo = "libreta_auditiva_inicial_v1_amg.rptdesign";
                     $nombre = 'libreta_especial_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
@@ -655,8 +656,11 @@ class InfoNotasController extends Controller {
                     $archivo = "libreta_intelectual_itinerarios_cvm.rptdesign";
                     $nombre = 'esp_informe_trimestral_itinerarios_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 }
-              
-                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
+                if ($gestion >2023 and $servicio == 20) { //APOYO TECNICO PEDAGOGICO para todas las areas
+                    $archivo = "esp_est_Informe_semestral_atp.rptdesign";
+                    $nombre = 'esp_informe_semestral_atp_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                }
+                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
                 break;
             case 2: //VISUAL
                 
