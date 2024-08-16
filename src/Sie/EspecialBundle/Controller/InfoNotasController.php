@@ -576,12 +576,19 @@ class InfoNotasController extends Controller {
                                                 join estadomatricula_tipo emt on (enc.nota_cualitativa::json->>'estadoEtapa')::INTEGER=emt.id
                                                 WHERE estudiante_inscripcion_id=". $estInsId ."
                                                 ORDER BY nota_tipo_id");
+                                                
+       /* $query = $em->getConnection()->prepare("select nota_tipo_id  from estudiante_nota_cualitativa enc  
+                                                WHERE estudiante_inscripcion_id=". $estInsId ."
+                                                ORDER BY nota_tipo_id ASC");*/
         $query->execute();
         $etapas = $query->fetchAll();
-        
-        //dump($etapas);die;
+        $max  = 0;
+        $min = min(array_column($etapas, 'nota_tipo_id'));
+        if(count($etapas)>=5)
+            $max = $min + 4;
+
         if($inscripcion){
-            return $this->render('SieEspecialBundle:InfoNotas:etapas.html.twig',array('inscripcion'=>$inscripcion,'ueducativaInfo'=>$arrInfoUe['ueducativaInfo'],'etapas'=>$etapas,'infoUe'=>$request->get('infoUe'),'infoStudent'=>$request->get('infoStudent')));
+            return $this->render('SieEspecialBundle:InfoNotas:etapas.html.twig',array('inscripcion'=>$inscripcion,'ueducativaInfo'=>$arrInfoUe['ueducativaInfo'],'etapas'=>$etapas,'max'=>$max,'min'=>$min,'infoUe'=>$request->get('infoUe'),'infoStudent'=>$request->get('infoStudent')));
         }else{
             return $this->render('SieEspecialBundle:InfoNotas:etapas.html.twig',array('inscripcion'=>$inscripcion));
         }
@@ -612,51 +619,96 @@ class InfoNotasController extends Controller {
         $arrInfoUe = unserialize($request->get('infoUe'));
         $arrInfoStudent = json_decode($request->get('infoStudent'),true);
         //dump($arrInfoUe);die;
-       // dump($request);die;
+        //dump($request);die;
         $sie = $arrInfoUe['requestUser']['sie'];
+        $gestion = $arrInfoUe['requestUser']['gestion'];
         $estInsId = $arrInfoStudent['estInsId'];
         $areaEspecialId = $arrInfoUe['ueducativaInfoId']['areaEspecialId'];
         $programa = $arrInfoUe['ueducativaInfoId']['programaId'];
+        $servicio = $arrInfoUe['ueducativaInfoId']['servicioId'];
+        $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+        $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
         switch ($areaEspecialId){
-            case 1:
+            case 1: //AUDITIVA
                 $nivelId = $arrInfoUe['ueducativaInfoId']['nivelId'];
-                if ($arrInfoUe['ueducativaInfoId']['nivelId'] == 403) {
+                if ($nivelId == 403) {
                     $archivo = "libreta_auditiva_inicial_v1_amg.rptdesign";
                     $nombre = 'libreta_especial_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
-                    $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
-                    $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
-                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
-                } else {
+                } 
+                if ($nivelId == 404) {
                     $archivo = "libreta_auditiva_primaria_v1_amg.rptdesign";
                     $nombre = 'libreta_especial_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
-                    $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
-                    $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
-                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
                 }
+                if($gestion >2023 and in_array($programa, array(19,39,41))) {   //formato semestral con asignaturas
+                    $archivo = "esp_informe_semestral_asignaturas.rptdesign";
+                    $nombre = 'esp_informe_semestral_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                }
+                if($gestion >2023 and in_array($programa, array(22,40))) {   //formato modular con asignaturas
+                    $archivo = "esp_informe_modular_asignaturas.rptdesign";
+                    $nombre = 'esp_informe_modular_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                }
+                if($gestion >2023 and in_array($programa, array(44,46))) {   //formato semestral con contenidos
+                    $archivo = "esp_est_Informe_semestral_contenidos.rptdesign";
+                    $nombre = 'esp_informe_semestral_contenidos_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                }
+                if ($gestion >2023 and $programa == 43) {
+                    $archivo = "libreta_intelectual_itinerarios_cvm.rptdesign";
+                    $nombre = 'esp_informe_trimestral_itinerarios_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                }
+              
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
                 break;
-            case 2:
-                $idNotaTipo = $request->get('idNotaTipo');
-                //dump($arrInfoStudent['estInsId'],$idNotaTipo);die;
-                $archivo = "esp_est_LibretaEscolar_Visual_v2_pvc.rptdesign";
-                $nombre = 'libreta_especial_visual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
-                $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
-                $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
-                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&idnotatipo=' . $idNotaTipo .'&lk='. $link . '&&__format=pdf&';
+            case 2: //VISUAL
+                
+                if($gestion <2024) {   //formato por etapas
+                    $idNotaTipo = $request->get('idNotaTipo');
+                    $archivo = "esp_est_LibretaEscolar_Visual_v2_pvc.rptdesign";
+                    $nombre = 'libreta_especial_visual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                   // $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                   // $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&idnotatipo=' . $idNotaTipo .'&lk='. $link . '&&__format=pdf&';
+                }
+                if($gestion >2023 and (in_array($servicio, array(35,36,37,38)) or in_array($programa, array(47,48)))) {   //formato semestral con asignaturas
+                    $archivo = "esp_est_Informe_semestral_contenidos.rptdesign";
+                    $nombre = 'esp_informe_semestral_contenidos_visual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
+                }
+                if($gestion >2023 and  in_array($programa, array(7,8,25,26))) {   //formato por etapas
+                    $idNotaTipo = $request->get('idNotaTipo');
+                    $max = $request->get('max');
+                    $min = $request->get('min');
+                    $ind = $min;
+                    if($max>0){
+                        $ind = $max; 
+                    }
+                    $ind1 = $ind+1;
+                    $ind2 = $ind+2;
+                    $ind3 = $ind+3;
+                    $archivo = "esp_est_Informe_Visual_Multiple_etapas_cvm.rptdesign";
+                    $nombre = 'informe_especial_visual_etapas_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                   // $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                   // $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+                    $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&idnotatipo=' . $idNotaTipo .'&lk='. $link . '&codue=' . $sie.'&ind=' . $ind.'&ind1=' . $ind1.'&ind2=' . $ind2.'&ind3='.$ind3.'&&__format=pdf&';
+                }
                 break;
             case 3:
             case 5:
-            case 12:
+            case 12: //INTELCTUAL, TEA
                 //dump($arrInfoStudent['estInsId']);die;
                 if ($programa == 37) {
                     $archivo = "libreta_intelectual_itinerarios_cvm.rptdesign";
                 }else{
                     $archivo = "esp_est_LibretaEscolar_Intelectual_Multiple_v1_pvc.rptdesign";
                 }
-
-                
+                if ($programa == 28) {
+                    $archivo = "esp_informe_semestral_asignaturas.rptdesign";
+                }
+                if ($programa == 38) {
+                    $archivo = "esp_est_Informe_semestral_contenidos.rptdesign";
+                }
                 $nombre = 'libreta_especial_intelectual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
-                $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
-                $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+               // $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                //$link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
                 $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
                 break;
             case 7: //talento
@@ -664,10 +716,28 @@ class InfoNotasController extends Controller {
                 //dump($arrInfoStudent['estInsId']);die;
                 $archivo = "esp_est_LibretaEscolar_Talento.rptdesign";
                 $nombre = 'libreta_especial_talento_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
-                $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
-                $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+                //$data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                //$link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
                 $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&areaid=' . $areaEspecialId .'&lk='. $link . '&&__format=pdf&';
                 break;
+            case 4: //fisico-motora TEMPRANA      
+                if($gestion >2023 and in_array($programa, array(28))) {   //formato semestral con asignaturas
+                    $archivo = "esp_informe_semestral_asignaturas.rptdesign";
+                    $nombre = 'esp_informe_semestral_fisicomotora_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                } 
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
+            break;
+            case 10: //mental psiquica      
+                $archivo = "esp_informe_semestral_asignaturas.rptdesign";
+                $nombre = 'esp_informe_semestral_contenidos_mentalpsiquica_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';   
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
+            break;
+        }
+
+        if ($gestion >2023 and $servicio == 20) { //APOYO TECNICO PEDAGOGICO para todas las areas
+            $archivo = "esp_est_Informe_semestral_atp.rptdesign";
+            $nombre = 'esp_informe_semestral_atp_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+            $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&lk='. $link . '&&__format=pdf&';
         }
 
         $response = new Response();
