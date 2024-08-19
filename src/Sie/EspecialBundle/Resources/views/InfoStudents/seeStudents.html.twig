@@ -125,7 +125,7 @@
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo >= 0 and arrDataLibreta.libreta == true %}
                                     {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION #}
                                          
-                                        {% if arrDataLibreta.areaEspecialId == 2 %}
+                                        {% if arrDataLibreta.areaEspecialId == 2 and programa in [7,8,25,26] %}
                                         
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir Libreta">
                                                 <button type="button" class="btn btn-circle btn-lilac " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getLibretasVisual('{{infoUe}}', '{{data|json_encode()}}');" >
