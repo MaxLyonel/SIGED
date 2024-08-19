@@ -243,7 +243,10 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
-
+      if($nivel==409 and $gestion>2023 and in_array($programa,[28])){
+        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['libreta'] = true;
+      }
        //para talento y dificultades en general  - SEMESTRAL
        if(($nivel==410 or $nivel==411) and $gestion>2023 and ($objArea->getId()==7 or $objArea->getId()==6)){
         $arrDataLibreta['calificaciones'] = false;
@@ -289,7 +292,7 @@ class InfoStudentsController extends Controller {
         }
       }
       //dump($arrDataLibreta['calificaciones']);die;
-    //  dump($arrDataLibreta);die;
+     
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
         'objStudents' => $objStudents,
@@ -314,7 +317,8 @@ class InfoStudentsController extends Controller {
         'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
         'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId'],        
         'areaEspecial' => $objArea->getAreaEspecial(),
-        'areaEspecialId' => $objArea->getId()
+        'areaEspecialId' => $objArea->getId(),
+        'programa' => $programa
       ));
   }
   /**
