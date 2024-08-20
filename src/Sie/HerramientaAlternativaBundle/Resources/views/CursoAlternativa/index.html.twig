@@ -22,15 +22,9 @@
                                         <label class="control-label">Área</label>
                                         <select name="areacod" id="areacod" class="form-control input-sm mb-15">
                                                 <option value="-999">Elija un área/nivel</option>
-                                                <option value="15">EDUCACIÓN DE PERSONAS JOVENES Y ADULTAS</option>
-                                                <option value="18">AGROPECUARIA</option>
-                                                <option value="19">INDUSTRIAL</option>
-                                                <option value="20">ARTES</option>
-                                                <option value="21">TURISMO</option>
-                                                <option value="22">SERVICIO</option>
-                                                <option value="23">COMERCIAL</option>
-                                                <option value="24">DEPORTES</option>
-                                                <option value="25">SALUD</option>                                                    
+                                            {% for a in areas %}
+                                                <option value="{{a.codigo}}" >{{a.facultadArea}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -57,13 +51,9 @@
                                         <label class="control-label">Turno</label>
                                         <select name="turnocod" id="turnocod" class="form-control input-sm mb-15">
                                             <option value="-999">Elija un turno</option>                                            
-                                            <option value="1">MAÑANA</option>
-                                            <option value="2">TARDE</option>
-                                            <option value="4">NOCHE</option>
-                                            <option value="8">MAÑANA TARDE</option>
-                                            <option value="9">TARDE NOCHE</option>
-                                            <option value="10">MAÑANA, TARDE Y NOCHE</option>
-                                            <option value="11">MAÑANA, NOCHE</option>                                               
+                                            {% for t in turno %}
+                                            <option value="{{t.id}}" >{{t.turno}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>

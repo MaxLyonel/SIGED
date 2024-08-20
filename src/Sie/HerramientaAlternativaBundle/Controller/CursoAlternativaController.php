@@ -35,16 +35,24 @@ class CursoAlternativaController extends Controller {
     }
 
     public function indexAction(Request $request) {
-        die; 
+        // die; 
         //---- TEMP V1
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        $em = $this->getDoctrine()->getManager();
+        $area= $em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->findBy(['institucioneducativaTipo' => 2]);
+        $turnoId = [1, 2, 4, 8, 9, 10];
+        $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findBy(['id' => $turnoId], ['id' => 'ASC']);
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
         
-        return $this->render('SieHerramientaAlternativaBundle:CursoAlternativa:index.html.twig');        
+        return $this->render('SieHerramientaAlternativaBundle:CursoAlternativa:index.html.twig', array(
+            'areas' => $area,
+            'turno' => $turno
+            // 'inscripcion' => $inscripcion
+        ));        
     }
     
     public function areachangeAction(Request $request, $areacod) {
@@ -201,7 +209,6 @@ class CursoAlternativaController extends Controller {
         
         $primaria = ($saeid[0]['sfat'] == 15 and $saeid[0]['set'] == 1 and ($saeid[0]['sat'] == 1 or $saeid[0]['sat'] == 2)) ? true : false;
         $condicion = (($dat[1] == '-1' and !$primaria) or $primaria) ? true : false;
-        
         $em->getConnection()->beginTransaction();
         try {           
             if ($condicion){
