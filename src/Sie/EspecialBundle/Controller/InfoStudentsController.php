@@ -209,7 +209,7 @@ class InfoStudentsController extends Controller {
       $nivelesLibreta = array(400,401,402,408,403,404,412);
 
       $arrDataLibreta['calificaciones'] = false;
-      $arrDataLibreta['libreta'] = false;
+      $arrDataLibreta['libreta'] = true;
 
       if($gestion < 2024 and $nivel <> 405){
         $arrDataLibreta['libreta'] = true;
@@ -395,16 +395,13 @@ class InfoStudentsController extends Controller {
     $form =  $request->get('form');
     $dataUe = unserialize($form['data']);
     
-    if(in_array($dataUe['ueducativaInfoId']['areaEspecialId'], array(6,7))){
-      
-    }
-    else{
+   
       //solo para casos de inscripciones por excepcion se valida que sea la departamental o distrital
       if($this->session->get('roluser')==9){ 
         $this->session->getFlashBag()->add('notalento', 'La Inscripción Excepcional solo esta habilitado al técnico de la Departamental o Distrital');
         return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
       }
-    }
+    
     
     //get the student info by rudeal
     $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rudeal']));
@@ -609,13 +606,13 @@ class InfoStudentsController extends Controller {
     $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
   //set the validate year
     $id_usuario = $this->session->get('userId');
-    if(in_array($areaId, array(6,7))){
+    /*if(in_array($areaId, array(6,7))){
       $estado = 4;
       $obs = '2semestre';
-    }else{
+    }else{*/
       $estado = 68;
       $obs = '1';
-    }
+    //}
  
     //create the conexion DB
     try {
