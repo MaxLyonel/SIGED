@@ -156,7 +156,8 @@ class TramiteAceleracionController extends Controller
         $grados = array();
         $materiasnotas = array();
         if (!empty($estudiante_result)){
-            $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $estudiante_result));
+            //ajuste para q recupere ultimo registro en caso de varios tramites de talento
+            $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(['estudiante' => $estudiante_result], ['id' => 'DESC']);
             if(empty($estudiante_talento)){
                 return $response->setData(array('msg' => 'notalento'));
             }
