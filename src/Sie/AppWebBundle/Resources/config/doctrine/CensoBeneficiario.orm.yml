@@ -1,0 +1,111 @@
+Sie\AppWebBundle\Entity\CensoBeneficiario:
+    type: entity
+    table: censo_beneficiario
+    indexes:
+        IDX_844903E7A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_844903E73AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_844903E76DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_844903E7C6447610:
+            columns:
+                - grado_tipo_id
+    uniqueConstraints:
+        censo_beneficiarios_unique:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        censoTablaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: censo_tabla_id
+        archivo:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

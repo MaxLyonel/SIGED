@@ -1,0 +1,74 @@
+Sie\AppWebBundle\Entity\CensoBeneficiarioRegular:
+    type: entity
+    table: censo_beneficiario_regular
+    indexes:
+        IDX_EAF599BAEEC1A966:
+            columns:
+                - censo_beneficiario_id
+        IDX_EAF599BA585AE0D9:
+            columns:
+                - asignatura_tipo_id
+        IDX_EAF599BA756DFBFA:
+            columns:
+                - nota_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        notaCuantitava:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: nota_cuantitava
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaCreacion:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_creacion
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        censoBeneficiario:
+            targetEntity: CensoBeneficiario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                censo_beneficiario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        asignaturaTipo:
+            targetEntity: AsignaturaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                asignatura_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

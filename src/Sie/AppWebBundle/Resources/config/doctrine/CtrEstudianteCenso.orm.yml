@@ -1,0 +1,143 @@
+Sie\AppWebBundle\Entity\CtrEstudianteCenso:
+    type: entity
+    table: ctr_estudiante_censo
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nro:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        idMinedu:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: id_minedu
+        cedIdentidad:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: ced_identidad
+        nombres:
+            type: string
+            nullable: true
+            length: 120
+            fixed: false
+            comment: ''
+        primerAp:
+            type: string
+            nullable: true
+            length: 120
+            fixed: false
+            comment: ''
+            column: primer_ap
+        segundoAp:
+            type: string
+            nullable: true
+            length: 120
+            fixed: false
+            comment: ''
+            column: segundo_ap
+        categoria:
+            type: string
+            nullable: true
+            length: 120
+            fixed: false
+            comment: ''
+        subCategoria:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: sub_categoria
+        detalle:
+            type: string
+            nullable: true
+            length: 120
+            fixed: false
+            comment: ''
+        departamento:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        codigoCertificado:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: codigo_certificado
+        codigoRude:
+            type: string
+            nullable: true
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        paternoEst:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: paterno_est
+        maternoEst:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: materno_est
+        nombreEst:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: nombre_est
+        estudianteInscripcionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        estadomatriculaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estadomatricula_tipo_id
+        fechaProcesamiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_procesamiento
+        estudianteId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_id
+        observacion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
