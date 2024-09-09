@@ -1,0 +1,31 @@
+beneficiarios_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:Censo:index}
+
+beneficiarios_infoEstudianteNotas_index:
+    path:     /notas
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:getNotas"}
+    options:
+         expose: true
+
+beneficiarios_infoEstudianteNotas_getModulos:
+    path:     /modulos
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:getModulos"}
+    options:
+         expose: true
+
+beneficiarios_save_beneficio:
+    path:     /notas/save
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:saveNotas"}
+    options:
+         expose: true
+
+beneficiarios_save_beneficio2s:
+    path:     /notas/save2s
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:saveNotas2s"}
+    options:
+         expose: true
+
+beneficiarios_reporte_ddjj_censo:
+    path:     /ddjjcenso
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:ddjjPrint"}
