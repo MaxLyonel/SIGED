@@ -112,3 +112,7 @@ sie_herramienta_alternativa_print_record_card:
 sie_herramienta_alternativa_cepead:
     resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/cepead.yml"
     prefix:   /altsie/cepead/uno
+
+sie_herramienta_alternativa_censo:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/censoAlternativa.yml"
+    prefix:   /altsie/censo

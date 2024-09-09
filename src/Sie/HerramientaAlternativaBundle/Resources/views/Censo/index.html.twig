@@ -1,0 +1,883 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+	<div class="header-content">
+		<h2>
+			<i class="fa fa-user-secret"></i>
+			Beneficiarios CENSO 2024<span>Actualizacion/Regularizacion del Beneficio.</span>
+		</h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<i class="glyphicon glyphicon-leaf"></i>
+					<a href="{{path('principal_web')}}">Bienvenida/o</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<i class="fa fa-th-large"></i>
+					<a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<i class="fa fa-user-secret"></i>
+					Personal administrativo
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li></li>
+			</ol>
+		</div>
+		<!-- /.breadcrumb-wrapper -->
+	</div>
+	<!--/ End page header -->
+	<div class="body-content animated fadeIn">
+
+		<div class="row">
+			<div class="col-md-12">
+				{% for flashMessage in app.session.flashbag.get('noSearch') %}
+					<div class="alert alert-danger" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+				{% for flashMessage in app.session.flashbag.get('noTuicion') %}
+					<div class="alert alert-danger" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+				{% for flashMessage in app.session.flashbag.get('newOk') %}
+					<div class="alert alert-success" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<i class="glyphicon glyphicon-ok"></i>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+				{% for flashMessage in app.session.flashbag.get('newError') %}
+					<div class="alert alert-danger" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<i class="fa fa-warning"></i>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+				{% for flashMessage in app.session.flashbag.get('updateOk') %}
+					<div class="alert alert-success" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<i class="glyphicon glyphicon-ok"></i>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+				{% for flashMessage in app.session.flashbag.get('updateError') %}
+					<div class="alert alert-danger" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<i class="fa fa-warning"></i>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+				{% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+					<div class="alert alert-success" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<i class="glyphicon glyphicon-ok"></i>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+				{% for flashMessage in app.session.flashbag.get('eliminarError') %}
+					<div class="alert alert-danger" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<i class="fa fa-warning"></i>
+						{{ flashMessage }}
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<div class="pull-left">
+								<h3 class="panel-title">Registrar Beneficio Primer Semestre</h3>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="panel-body no-padding" id="modal-body">
+
+							<div class="alert " style="padding:10px">
+								<h5 class="text-lilac">Datos del Curso</h5>
+								
+                                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                    <tr>
+                                        <th>Nivel</th>
+                                        <td id="td_especialidad"></td>
+                                        <th>Turno</th>
+                                        <td id="td_turno"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Acreditación</th>
+                                        <td id="td_acreditacion"></td>
+                                        <th>Paralelo</th>
+                                        <td id="td_paralelo"></td>
+                                    </tr>
+                                </table>
+								
+								<h5 class="text-info">Datos del Participante</h5>
+								<table class="table table-condensed table-bordered" style="background:#EEEEEE">
+									<tr>
+										<th>Código Rudeal</th>
+										<td id="td_rudeal"></td>
+									</tr>
+									<tr>
+										<th>Participante</th>
+										<td id="td_participante"></td>
+									</tr>
+								</table>
+
+                                </br>
+
+                                <table  width="100%">
+                                    <th>
+                                        <td style="padding: 8px 10px">
+                                            <div class="alert alert-success" role="alert">                                        
+                                            <i class="fa fa-warning"></i>                                        
+                                            REGULARIZAR
+                                            </br>
+                                            SI LA NOTA FINAL DEL 1er. SEMESTRE <strong>YA CONTEMPLA</strong> EL BENEFICIO SOLICITADO POR EL ESTUDIANTE
+                                            </div>
+                                        </td>
+
+                                        <!--td style="padding: 8px 10px">
+                                            <div class="alert alert-danger" role="alert">                                        
+                                            <i class="fa fa-warning"></i>
+                                            ACTUALIZAR NOTA FINAL
+                                            </br>
+                                            SI LA NOTA FINAL DEL 1er. SEMESTRE <strong>NO CONTEMPLA</strong> EL BENEFICIO SOLICITADO POR EL ESTUDIANTE
+                                            </div>
+                                        </td-->
+                                        
+                                    </th>
+                                </table>
+
+                                <div id='showTable'></div>                             
+                                <a href="#" class="btn btn-success btn-block" id="form_save" style="display: none;">Grabar Asignación de Puntos</a>
+
+							</div>
+
+
+
+
+
+						</div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>                           
+                        </div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="modal fade bs-example-modal-table2"  role="dialog" aria-hidden="true" id="modal2">
+
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<div class="pull-left">
+								<h3 class="panel-title">Registrar Beneficio Segundo Semestre</h3>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="panel-body no-padding" id="modal-body">
+
+							<div class="alert " style="padding:10px">
+								<h5 class="text-lilac">Datos del Curso</h5>
+
+                                <input type="hidden" id="input_bid" name="input_bid" value="">
+								
+                                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                    <tr>
+                                        <th>Nivel</th>
+                                        <td>EDUCACIÓN SECUNDARIA DE PERSONAS JÓVENES Y ADULTAS</td>
+                                        <th>Turno</th>
+                                        <td>NOCHE</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Etapa</th>
+                                        <td>APRENDIZAJES APLICADOS (TERCER AÑO)</td>
+                                        <th>Paralelo</th>
+                                        <td>A</td>
+                                    </tr>
+                                </table>
+								
+								<h5 class="text-info">Datos del Participante</h5>
+								<table class="table table-condensed table-bordered" style="background:#EEEEEE">
+									<tr>
+										<th>Código Rudeal</th>
+										<td id="td_rudeal"></td>
+									</tr>
+									<tr>
+										<th>Participante</th>
+										<td id="td_participante"></td>
+									</tr>
+								</table>
+
+                                </br>
+
+                                <select class="js-example-basic-single" name="select_modulos" id="select_modulos">
+                                </select>
+                                <button type="button" class="btn btn-info" onclick="addtotable();">
+                                    <i class="fa fa-plus">
+                                        Seleccionar</i>
+                                </button>
+
+                             
+                             
+                                <table border="1" class="table table-bordered" id="tabla_modulos">
+                                    <tr>
+                                    <td width="85%">Modulo</td>                                    
+                                    <td width="15%">Beneficio</td>                                   
+                                    </tr>
+                                </table>
+                             
+
+                                <a href="#" class="btn btn-success btn-block" id="form_save2" style="display: none;">Grabar Asignación de Puntos</a>
+
+							</div>
+
+
+						</div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>                           
+                        </div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		{#grid beneficiarios#}
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel rounded shadow panel-teal">
+					<div class="panel-heading">
+						<div class="pull-left">
+							<h3 class="panel-title">Listado de Beneficiarios Censo 2024 reportados por el INE (Listado Oficial)</h3>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">
+						<div class="panel-body panel-primary">
+
+                            <div class="col-lg-3">                               
+
+                                <a href="{{path('beneficiarios_reporte_ddjj_censo')}}" onclick="cerrarOperativo(event)" class="btn btn-success" >
+                                   <i class="fa fa-print"></i>&nbsp; <b>Terminar Operativo y Descargar DDJJ </b>
+                                </a>
+
+                            </div>
+
+                            <div class="col-lg-9">
+                            <div class="alert alert-warning" role="alert">                               
+                                <h4>IMPORTANTE: EL BENEFICIO PARA ESTE PERIODO <strong><u>SOLO SE PUEDE ASIGNAR UNA VEZ</u></strong> </h4> NO HAY POSIBILIDAD DE MODIFICAR POR LO QUE
+                                SE DEBE TENER MUCHO CUIDADO EN LA ASIGNACION DEL MISMO. <strong> AL FINALIZAR EL REGISTRO DE TODOS LOS BENEFICIOS, DEBE GENERAR EL REPORTE DE ASIGNACION CON CARACTER DE DECLARACION JURADA <strong>
+                                LUEGO DE ELLO, NO SE PODRA REALIZAR NINGUNA MODIFICACION.
+                            </div>
+                            </div>
+                            
+
+							{% if beneficiarios is not empty %}
+								<div
+									id="no-more-tables">
+									<!--table class="table table-bordered table-hover cf dataTable" id="myTable"-->
+									<table class="table table-striped table-primary">
+										<thead>
+											<tr>
+												<th>No.</th>
+												<th>Carnet de Identidad</th>
+												<th>RUDEAL</th>
+												<th>Paterno</th>
+												<th>Materno</th>
+												<th>Nombre(s)</th>
+
+												{% if periodo == 2 %}   
+                                                <th>Total Asignado 1.Semestre</th>
+                                                {%else%}
+                                                <th>Total Asignado 2.Semestre</th>
+                                                {%endif%}
+
+												<th>Opciones</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											{% for row in beneficiarios %}
+                                            {% set data = row %}
+												<tr>
+													<td data-title="N°">{{ loop.index }}</td>
+													<td data-title="Carnet">{{ row.carnet }}</td>
+													<td data-title="RUDEAL">{{ row.rudeal }}</td>
+													<td data-title="Paterno">{{ row.paterno }}</td>
+													<td data-title="Materno">{{ row.materno }}</td>
+													<td data-title="Nombre(s)">{{ row.nombres }}</td>
+                                                    
+                                                    {% if periodo == 2 %}   
+													<td data-title="Asigando">{{ row.total_asignado_1s }}</td>
+                                                    {%else%}
+													<td data-title="Asigando">{{ row.total_asignado_2s }}</td>
+                                                    {%endif%}
+
+													<td>
+                                                        {% if periodo == 2 %}   
+                                                            {% if row.imprime_ddjj_s1 == false %}   
+                                                                {% if row.total_asignado_1s == 0 %}   
+                                                                <button type="button" class="btn btn-info " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data|json_encode}});">
+                                                                    <i class="fa fa-list">
+                                                                        Asignar Beneficio 1S</i>
+                                                                </button>
+                                                                {%else%}
+                                                                    <span class="badge badge-danger">Beneficio Asignado</span>
+                                                                {%endif%}
+                                                            {%else%}
+                                                                <span class="badge badge-danger">Operativo Finalizado</span>
+                                                            {%endif%}
+
+                                                        {%else%}
+                                                            {% if row.estudiante_inscripcion_s2 != NULL %}
+                                                                {% if row.total_asignado_2s == 0 %}   
+                                                                    <button type="button" class="btn btn-success " data-toggle="modal" data-target=".bs-example-modal-table2" onclick="getNotas2s({{data|json_encode}});">
+                                                                        <i class="fa fa-list">
+                                                                            Asignar Beneficio 2S</i>
+                                                                    </button>
+                                                                {%else%}
+                                                                    <span class="badge badge-danger">Beneficio Asignado</span>
+                                                                {%endif%}
+
+                                                             {%else%}
+                                                                    <span class="badge badge-danger">SIN INSCRIPCION EN EL SEGUNDO SEMESTRE</span>
+                                                            {%endif%}
+                                                        {%endif%}
+													</td>
+
+
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							{% else %}
+								No hay beneficiarios registrados para el CEA
+							{% endif %}
+
+
+						</div>
+					</div>
+					<!-- /.panel-body -->
+				</div>
+			</div>
+		</div>
+		{#grid beneficiarios#}
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{parent()}}
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+	<script>
+
+    $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
+    
+    var getNotas = function (row) {
+        console.log('row', row);
+
+        /*if(row.total_asignado_s1 != 0){
+            swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "Ya se ha realizado la asignacion para este periodo, no es posible modificar los datos !",   
+            });
+            return;
+        }*/
+
+        document.getElementById("form_save").style.display="none"
+        document.getElementById("td_rudeal").innerHTML = row.rudeal;
+        document.getElementById("td_participante").innerHTML = row.paterno + ' ' + row.materno + ' ' + row.nombres;
+
+        document.getElementById("td_especialidad").innerHTML = "";
+        document.getElementById("td_turno").innerHTML = "";
+        document.getElementById("td_paralelo").innerHTML = "";
+        document.getElementById("td_acreditacion").innerHTML = "";
+
+
+        var divContainer = document.getElementById("showTable");
+        divContainer.innerHTML = '';
+        divContainer.innerHTML = '<div style="text-align: center;"><strong>CARGANDO INFORMACION...</strong></div>';
+        
+        
+        $.ajax({
+            type: 'post',
+            data: ({rude: row.rudeal, row: row.id}),
+            url: "{{ path('beneficiarios_infoEstudianteNotas_index') }}",
+            beforeSend: function () {
+                //$('#modal').empty();
+            },
+            success: function (data) {
+                //$('#modal').empty();
+                //$('#modal').append(data);
+
+                if(data.habilitado == false){
+                     $("#modal").modal('hide');
+                     swal({
+                        icon: "error",
+                        title: "Atencion !",
+                        text: "El operativo ha sido cerrado !!",   
+                    });
+                    return;
+                }
+
+
+                console.log(data.notas);
+                console.log(data.bid);
+
+                document.getElementById("td_especialidad").innerHTML = data.notas[0].especialidad;
+                
+                if(data.notas[0].turno_tipo_id == 1){
+                    document.getElementById("td_turno").innerHTML = 'MAÑANA';
+                }
+                if(data.notas[0].turno_tipo_id == 2){
+                    document.getElementById("td_turno").innerHTML = 'TARDE';
+                }
+                if(data.notas[0].turno_tipo_id == 4){
+                    document.getElementById("td_turno").innerHTML = 'NOCHE';
+                }
+                
+
+                if(data.notas[0].paralelo_tipo_id == 1){
+                    document.getElementById("td_paralelo").innerHTML = 'A';
+                }
+                if(data.notas[0].paralelo_tipo_id == 2){
+                    document.getElementById("td_paralelo").innerHTML = 'B';
+                }
+                if(data.notas[0].paralelo_tipo_id == 3){
+                    document.getElementById("td_paralelo").innerHTML = 'C';
+                }
+                if(data.notas[0].paralelo_tipo_id == 4){
+                    document.getElementById("td_paralelo").innerHTML = 'D';
+                }
+
+                document.getElementById("td_acreditacion").innerHTML = data.notas[0].acreditacion;
+
+
+                createTableWithInnerHTML(data.notas, data.bid);
+                //document.getElementById("form_save").style.visibility = "visible";
+                document.getElementById("form_save").style.display="block"
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    var getNotas2s = function (row) {
+        console.log('row', row);
+
+        document.getElementById("form_save2").style.display="none"
+        document.getElementById("td_rudeal").innerHTML = row.rudeal;
+        document.getElementById("td_participante").innerHTML = row.paterno + ' ' + row.materno + ' ' + row.nombres;
+        document.getElementById("input_bid").value = row.id;
+        
+        var divContainer = document.getElementById("showTable");
+        divContainer.innerHTML = '';
+        divContainer.innerHTML = '<div style="text-align: center;"><strong>CARGANDO INFORMACION...</strong></div>';
+        
+               /*select = document.getElementById('select_modulos');
+
+        for (var i = min; i<=max; i++){
+            var opt = document.createElement('option');
+            opt.value = i;
+            opt.innerHTML = i;
+            select.appendChild(opt);
+        }*/
+       
+        
+        $.ajax({
+            type: 'post',
+            data: ({rude: row.rudeal, row: row.id}),
+            url: "{{ path('beneficiarios_infoEstudianteNotas_getModulos') }}",
+            beforeSend: function () {
+                
+                $("#select_modulos").empty();
+                $("#tabla_modulos tr").remove(); 
+            },
+            success: function (data) {
+                //$('#modal').empty();
+                //$('#modal').append(data);
+
+                if(data.habilitado == false){
+                     swal({
+                        icon: "error",
+                        title: "Atencion !",
+                        text: "El operativo ha sido cerrado !!",   
+                    });
+                    return;
+                }
+
+
+                console.log(data.modulos);
+                console.log(data.modulos[0]);
+                console.log(data.modulos[0].id);
+                console.log(data.modulos[0].modulo);
+
+                select = document.getElementById('select_modulos');
+
+                for (var i = 0; i< data.modulos.length; i++){
+                    var opt = document.createElement('option');
+                    opt.value = data.modulos[i].id;
+                    opt.innerHTML = data.modulos[i].modulo;
+                    select.appendChild(opt);
+                }
+
+                $('.js-example-basic-single').select2();                 
+                
+                document.getElementById("form_save2").style.display="block"
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    var createTableWithInnerHTML = function (notasArray, bid) {
+ 
+        //let opciones = '<div class="radio"><label><input type="radio" name="operacion" id="regulariza" value="1" > REGULARIZACION </label>&nbsp;&nbsp;&nbsp;<label><input type="radio" name="operacion" id="actualiza" value="2" >ACTUALIZACION</label></div>';
+        let opciones = '<div class="radio"></div>';
+
+        
+        let tableHTML = '<form name="formbeneficio" method="post" role="form" id="formbeneficio"> <input type="hidden" id="bid" name="bid" value="' + bid  +'">' + opciones ;
+        tableHTML += '<table border="1" class="table table-bordered"><th width="80%">Modulo</th><th width="10%">Nota</th><th width="10%">Beneficio</th>';
+
+        for (var i = 0; i < notasArray.length; i++) {
+            tableHTML += '<tr>';
+
+            let cols = "<td data-title='Modulo'>" + notasArray[i].modulo + "</td>"
+            cols += "<td data-title='Nota'>" + notasArray[i].nota_cuantitativa + "</td>"
+            cols += "<td data-title='Beneficio'><input type='number' size='6' class='input_beneficio' min='0' max='30' id='input_" + notasArray[i].enid + "' name='input_" + notasArray[i].enid + "' value='0'  onclick='this.select();' onclick='calculaTotales0()'  oninput='calculaTotales0()' onblur='datoVacio(this)' </td>"
+
+            tableHTML += cols;
+            tableHTML += '</tr>';
+        }
+
+        tableHTML += '<tr class="success"><td colspan="2"><strong>TOTAL BENEFICIO ASIGNADO PRIMER SEMESTRE</strong></td><td id="total_beneficio"></td></tr>';
+
+        tableHTML += '</table><form>';
+
+       
+        var divContainer = document.getElementById("showTable");
+        divContainer.innerHTML = '';
+        divContainer.innerHTML = tableHTML;
+        
+    }
+
+    function calculaTotales0() {
+
+            console.log('here');
+
+            var total_beneficio = 0;
+                       
+
+            var total_modulos_asignados = 0;
+            $('.input_beneficio').each(function (i, obj) {
+                total_beneficio = parseInt(total_beneficio) + parseInt(obj.value);
+                if ( parseInt(obj.value) != 0){
+                    total_modulos_asignados++;
+                }
+
+                /*if (total_modulos_asignados > 3) {
+                    alert('el maximo es de tres modulos !!');
+                    obj.value = 0;
+                    return;
+                }*/
+
+
+            });
+            
+            /*if (total_beneficio > 30) {
+                alert(' mayor a 30');
+            }*/
+
+            /*if (total_modulos_asignados > 3) {
+                alert('el maximo es de tres modulos !!');
+            }*/
+
+            $('#total_beneficio').html(total_beneficio);
+            
+            
+            //$('#total00').html(tm1);
+            //$('#total01').html(tf1);
+           
+           
+    }
+
+    var datoVacio = function (control) {
+        /*console.log('vacio?');
+        console.log(control.value);*/
+        if (control.value == "") { control.value = 0; }
+        //if (control.value >= 30) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
+        calculaTotales0();
+    }
+
+    $('#form_save').on("click", function () {
+        
+        var total_beneficio = 0;                      
+        var total_modulos_asignados = 0;
+
+        /*if (document.getElementById('regulariza').checked == false && document.getElementById('actualiza').checked == false){
+            //alert('Debe especificar el tipo de operacion !!');
+            swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "Debe especificar el tipo de operacion (actualizacion/regularizacion) !!",   
+            });
+
+            return;
+        }    */    
+
+        $('.input_beneficio').each(function (i, obj) {
+            total_beneficio = parseInt(total_beneficio) + parseInt(obj.value);
+            if ( parseInt(obj.value) != 0){
+                total_modulos_asignados++;
+            }
+        });
+        
+        if (total_beneficio == 0) {
+            //alert('No se ha registrado ningun beneficio !!');
+            swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "No se ha registrado ningún beneficio !!",   
+            });
+            return;
+        }
+
+        if (total_beneficio > 30) {
+            //alert('El beneficio no puede ser maypor a 30 !!');
+            swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "El beneficio no puede ser mayor a 30 puntos !!",   
+            });
+            return;
+        }
+
+        if (total_modulos_asignados > 3) {
+            //alert('el maximo es de tres modulos !!');
+            swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "El máximo es de tres modulos para la asiganción !!",   
+            });            
+            return;
+        }
+
+        
+        //console.log(document.getElementById('input_0').value);
+
+        var formulario = document.getElementById("formbeneficio"); //$('#formBecas');
+        var formData = new FormData(formulario);
+
+        //const formData = new FormData();
+        //formData.append('bid', 'value1');
+        //formData.append('key11', 'value11');
+        console.log(formData);
+
+        swal({
+            title: "¿Grabar Datos?",
+            text: "La informacion no podrá ser modificada",   
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function (respuesta) {
+            if (respuesta) {
+
+                $.ajax({
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: Routing.generate('beneficiarios_save_beneficio'),
+                beforeSend: function () {
+                    //$('#modal').empty();
+                },
+                success: function (data) {                
+
+                    $("#modal").modal('hide');
+
+                    console.log('sucess');
+                    swal({                        
+                        text: "El beneficio ha sido registrado !!",
+                        icon: "success"
+                    });
+                    window.location.reload();
+                    
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });      
+
+            }
+
+        })
+
+    });
+
+
+    function addtotable() {
+        console.log('add to table')
+
+        var e = document.getElementById("select_modulos");
+        var value = e.value;
+        var text = e.options[e.selectedIndex].text;
+
+        //y existe el modulo ?
+
+
+        input = "<input type='number' size='6' class='input_beneficio' min='0' max='30' id='input_" + value + "'";
+        $('#tabla_modulos').find('tbody').append("<tr><td>" + text + "</td><td>" +input+ "</td></tr>");
+     
+    }
+
+     $('#form_save2').on("click", function () {
+        
+        var total_beneficio = 0;                      
+        var total_modulos_asignados = 0;
+        console.log('save 2t')
+
+        swal({
+            title: "¿Grabar Datos?",
+            text: "La informacion no podrá ser modificada",   
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function (respuesta) {
+            if (respuesta) {
+
+                var formData = new FormData();
+                
+                var elements = document.getElementsByTagName("input")
+                for (var i = 0; i < elements.length; i++) {
+                    
+
+                    if(elements[i].id.substring(0,6) == 'input_'){
+
+                        console.log(elements[i].id)
+                        console.log(elements[i].value)
+
+                        formData.append(elements[i].id, elements[i].value);
+
+                    }
+
+                        
+                }
+           
+
+                $.ajax({
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: Routing.generate('beneficiarios_save_beneficio2s'),
+                beforeSend: function () {
+                    //$('#modal').empty();
+                },
+                success: function (data) {                
+
+                    $("#modal").modal('hide');
+
+                    console.log('sucess');
+                    swal({                        
+                        text: "El beneficio ha sido registrado !!",
+                        icon: "success"
+                    });
+                    //window.location.reload();
+                    
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });      
+
+            }
+
+        })
+
+    });
+
+    function cerrarOperativo(e) {
+        if(confirm('TERMINAR EL REGISTRO E IMPRIMIR REPORTE  ?')){
+            //window.location.reload();
+            return true;
+        }else{
+            e.preventDefault();
+        }
+    }
+
+
+   
+
+
+    </script>
+{% endblock %}

@@ -305,6 +305,33 @@
                   <div class="cbp-l-grid-masonry-projects-desc"></div>
               </div><br></div>
 
+               {% if (app.session.get('ie_gestion') == 2024 and app.session.get('ie_per_cod') == 2) %} 
+                <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                    <div class="cbp-caption">
+                        <div class="cbp-caption-defaultWrap">
+                            <div class="headerOptions" style="height:20px; background:#e4981d"></div>
+                            <img src="{{asset('img/logo_censo_bolivia_2024_50.jpg')}}" alt="...">
+                        </div>
+                        <div class="cbp-caption-activeWrap">
+                            <div class="cbp-l-caption-alignCenter">
+                                <div class="cbp-l-caption-body">
+                                    <br>
+                                        <form action="{{path('beneficiarios_index')}}" method="post" style="display:inline-block"> 
+                                            <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                        </form>
+                                        <br>
+                                    <span style="color:#FFFFFF">Asignacion y Regularizacion del Beneficio a los Estudiantes </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">OPERATIVO CENSO</div>
+                    <div class="cbp-l-grid-masonry-projects-desc"></div>
+                </div><br></div>
+
+               {% endif %}
+
+
 
             {# <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                 <div class="cbp-caption">
