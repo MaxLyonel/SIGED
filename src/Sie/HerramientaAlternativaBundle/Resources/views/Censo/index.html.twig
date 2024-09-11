@@ -277,6 +277,81 @@
 			</div>
 		</div>
 
+        <div class="modal fade bs-example-modal-table3"  role="dialog" aria-hidden="true" id="modal3">
+
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<div class="pull-left">
+								<h3 class="panel-title">Adicionar Participante</h3>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+
+
+						<div class="panel-body no-padding" id="modal-body">
+
+							<div class="alert " style="padding:10px">
+								<h5 class="text-lilac">Ingrese RUDEAL</h5>
+
+                                <input type="hidden" id="input_bid" name="input_bid" value="">
+								
+                                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+									<tr>
+										<th>Código Rudeal</th>
+										<td>                                         
+                                        <input type="text" id="input_rudeal" class="form-control" name="input_rudeal" value="">
+                                        </td>
+										<td> 
+                                        <button type="button" class="btn btn-success " onclick="getDatosByRude();">
+                                            <i class="fa fa-list">
+                                                Buscar Participante
+                                            </i>
+                                        </button>
+                                        </td>
+									</tr>
+									
+								</table>
+								
+								<h5 class="text-info">Datos del Participante</h5>
+								<table class="table table-condensed table-bordered" style="background:#EEEEEE">
+									<tr>
+										<th>Código Rudeal</th>
+										<td id="td_rudeal_al"></td>
+									</tr>
+									<tr>
+										<th>Participante</th>
+										<td id="td_participante_al"></td>
+									</tr>
+									<tr>
+										<th>Certificado CPV</th>
+										<td>
+                                        <input type="text" id="certificadocpv" class="form-control" name="certificadocpv">
+                                        </td>
+									</tr>
+								</table>
+
+                                </br>
+                             
+
+                                <a href="#" class="btn btn-success btn-block" id="form_save3" style="display: none;">Registrar Participante</a>
+
+							</div>
+
+
+						</div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>                           
+                        </div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+       
 
 		{#grid beneficiarios#}
 		<div class="row">
@@ -308,6 +383,11 @@
                             </div>
                             </div>
                             
+                             <button type="button" class="btn btn-info " data-toggle="modal" data-target=".bs-example-modal-table3">
+                                <i class="fa fa-list">
+                                    Adicionar Participante
+                                </i>
+                            </button>
 
 							{% if beneficiarios is not empty %}
 								<div
@@ -793,7 +873,7 @@
      
     }
 
-     $('#form_save2').on("click", function () {
+    $('#form_save2').on("click", function () {
         
         var total_beneficio = 0;                      
         var total_modulos_asignados = 0;
@@ -873,6 +953,131 @@
         }else{
             e.preventDefault();
         }
+    }
+
+    function getDatosByRude() {
+
+       const input = document.getElementById("input_rudeal");
+       const rudeal = input.value;
+
+       if(rudeal == ''){                     
+                swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "Debe introducir un codigo RUDE valido !!",   
+            });
+            return;
+        }
+
+       $.ajax({
+            type: 'post',
+            data: ({rude: rudeal}),
+            url: "{{ path('beneficiarios_infoEstudiante_by_rudeal') }}",
+            beforeSend: function () {
+                //$('#modal').empty();
+            },
+            success: function (data) {
+                //$('#modal').empty();
+                //$('#modal').append(data);
+
+                console.log(data);
+
+                if(data.encontrado == false){
+                     $("#modal").modal('hide');
+                     swal({
+                        icon: "error",
+                        title: "Atencion !",
+                        text: "El partcipante no ha sido encontrado en la base del SIE !!",   
+                    });
+                    return;
+                }
+
+                document.getElementById("td_rudeal_al").innerHTML = data.info[0]['codigo_rude'];
+                document.getElementById("td_participante_al").innerHTML = data.info[0]['paterno'] + ' ' + data.info[0]['materno'] + ' ' + data.info[0]['nombre'] ;
+                
+               
+                document.getElementById("form_save3").style.display="block"
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+
+
+        $('#form_save3').on("click", function () {
+        
+        var codigo_rudeal = document.getElementById('input_rudeal').value;                      
+        var certificadocpv = document.getElementById('certificadocpv').value;
+        console.log('save3')
+
+         if(certificadocpv == ''){                     
+                swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "Debe introducir el codigo del CERTIFICADO CPV valido !!",   
+            });
+            return;
+        }
+
+        swal({
+            title: "Adicionar Participante ?",
+            text: "La informacion no podrá ser modificada",   
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function (respuesta) {
+            if (respuesta) {
+
+                var formData = new FormData();
+                formData.append('rude', codigo_rudeal);
+                formData.append('certificadocpv', certificadocpv);
+
+                $.ajax({
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: Routing.generate('beneficiarios_save_participante'),
+                beforeSend: function () {
+                    //$('#modal').empty();
+                },
+                success: function (data) {                
+
+                    $("#modal3").modal('hide');
+
+                    console.log('sucess');
+                    swal({                        
+                        text: "El participante ha sido registrado !!",
+                        icon: "success"
+                    });
+                    window.location.reload();
+                    
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });      
+
+            }
+
+        })
+
+    });
+
+       
+        
     }
 
 
