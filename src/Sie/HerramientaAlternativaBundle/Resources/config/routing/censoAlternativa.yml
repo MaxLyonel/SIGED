@@ -26,6 +26,18 @@ beneficiarios_save_beneficio2s:
     options:
          expose: true
 
+beneficiarios_infoEstudiante_by_rudeal:
+    path:     /infoEstudiante
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:infoEstudiante"}
+    options:
+         expose: true
+
+beneficiarios_save_participante:
+    path:     /infoEstudianteSave
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:saveEstudiante"}
+    options:
+         expose: true
+
 beneficiarios_reporte_ddjj_censo:
     path:     /ddjjcenso
     defaults: { _controller: "SieHerramientaAlternativaBundle:Censo:ddjjPrint"}

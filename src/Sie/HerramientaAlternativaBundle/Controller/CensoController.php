@@ -643,4 +643,101 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
 
     }
 
+    public function infoEstudianteAction(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+        //$rude = $request->get('rude');
+        
+        $codigo_rude = $request->get('rude'); //"4073019620074741";
+        $query = $em->getConnection()->prepare("
+            select codigo_rude, carnet_identidad, complemento, paterno, materno, nombre
+            from estudiante 
+            WHERE	
+            codigo_rude = :codigo_rude
+        ");                
+        $query->bindValue(':codigo_rude', $codigo_rude);
+        $query->execute();
+        $datos = $query->fetchAll(); 
+
+        $encontrado = true;
+        if (count($datos) == 0){
+            $encontrado = false;
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('info' => $datos, 'encontrado' => $encontrado));
+
+    }
+
+    public function saveEstudianteAction(Request $request){
+
+        //dump($request); die; 
+        $rude = $request->get('rude');
+        
+        //dump($rude);die;
+        
+        $certificadocpv = $request->get('certificadocpv');
+        $cea = $request->getSession()->get('ie_id');
+
+        $response = new JsonResponse();
+        
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+
+        $query = $em->getConnection()->prepare("
+            select codigo_rude, carnet_identidad, complemento, paterno, materno, nombre
+            from estudiante 
+            WHERE	
+            codigo_rude = :rude
+        ");                
+        $query->bindValue(':rude', $rude);
+        $query->execute();
+        $datos = $query->fetchAll(); 
+
+        $carnet = $datos[0]['carnet_identidad'];
+        $paterno = $datos[0]['paterno'];
+        $materno = $datos[0]['materno'];
+        $nombre = $datos[0]['nombre'];
+
+
+        $query ="insert into censo_alternativa_beneficiarios (cea,rudeal, carnet, paterno, materno, nombres, certificado_cpv ) VALUES (?, ?, ?, ?, ?, ?, ?)";            
+    
+        $stmt = $db->prepare($query);
+        $params = array($cea, $rude, $carnet, $paterno, $materno, $nombre, $certificadocpv );
+        $stmt->execute($params);    
+
+
+        $query ="
+            update censo_alternativa_beneficiarios a
+set estudiante_inscripcion_s1=b.estudiante_inscripcion_id,institucioneducativa_curso_id_s1=b.institucioneducativa_curso_id
+from (
+WITH catalogo AS (select a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion,c.id as superior_acreditacion_especialidad_id
+from superior_facultad_area_tipo a
+	inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+		inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+			inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id)
+select l.id as censo_alternativa_beneficiarios_id,d.id as estudiante_inscripcion_id,c.id as institucioneducativa_curso_id
+from superior_institucioneducativa_acreditacion a
+	inner join superior_institucioneducativa_periodo b on b.superior_institucioneducativa_acreditacion_id=a.id
+		inner join institucioneducativa_curso c on c.superior_institucioneducativa_periodo_id=b.id
+			inner join estudiante_inscripcion d on c.id=d.institucioneducativa_curso_id
+				inner join estudiante h on d.estudiante_id=h.id
+					inner join institucioneducativa_sucursal i on a.institucioneducativa_sucursal_id=i.id
+						inner join catalogo k on a.acreditacion_especialidad_id=k.superior_acreditacion_especialidad_id
+							inner join public.censo_alternativa_beneficiarios l on h.id=l.estudiante_id
+where  i.gestion_tipo_id=2024::double precision and i.periodo_tipo_id=2
+and k.nivel_id in (15,18,19,20,21,22,23,24,25)) b where a.id=b.censo_alternativa_beneficiarios_id and a.estudiante_inscripcion_s1 = 0;
+
+        ";                
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params); 
+
+        $msg  = 'Datos registrados correctamente';
+        return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));
+        
+
+    }
+
 }
