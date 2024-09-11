@@ -709,7 +709,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
 
 
         $query ="
-            update censo_alternativa_beneficiarios_tmp a
+            update censo_alternativa_beneficiarios a
 set estudiante_inscripcion_s1=b.estudiante_inscripcion_id,institucioneducativa_curso_id_s1=b.institucioneducativa_curso_id
 from (
 WITH catalogo AS (select a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion,c.id as superior_acreditacion_especialidad_id
