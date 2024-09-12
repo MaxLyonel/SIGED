@@ -64,12 +64,13 @@
 
             <button type="button" class="btn btn-success" id="add-area-curricular" onclick="addAreaCurricular()">Agregar Área Curricular</button>
             <input type="hidden" name="inscripcion_id" id="inscripcion_id" value="{{ estudiante.ei_id }}">
+            
             <!-- Botones de acción -->
             <div class="text-right">
                 <button type="button" class="btn btn-primary" onclick="registrarBeneficio()" id="btn-registrar">Registrar</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
             </div>
-
+            <p class="text-danger"><strong>Nota: </strong> Debe registrar los puntajes según lo solicitado por el estudiante en el Formulario Anexo 1.</p>
         </div>
     </div>
 </div>
@@ -83,109 +84,8 @@
     // Las áreas son recibidas desde el controlador como un array de objetos
     let areasDisponibles = {{ areas|json_encode|raw }}; 
     let areasSeleccionadas = [];
-
-    // function addAreaCurricular() {
-    
-
-    //     if (areaCount < maxAreas && areasDisponibles.length > 0) {
-    //         areaCount++;
-
-    //         const tableBody = document.getElementById('area-curricular-table-body');
-    //         const newRow = document.createElement('tr');
-
-    //         const rowIndex = areaCount - 1;  // Index para identificar la fila
-    //         // Crear el combo box con las áreas curriculares disponibles
-    //         let selectHTML = `<select class="form-control area-select" name="areas[${rowIndex}][id]" required>`;
-    //         selectHTML += `<option value="" disabled selected>Selecciona un área</option>`;
-    //         areasDisponibles.forEach(area => {
-    //             selectHTML += `<option value="${area.id}">${area.asignatura}</option>`;
-    //         });
-    //         selectHTML += `</select>`;
-
-    //         // Agregar fila con el combo box, inputs y botón de eliminar
-    //         // newRow.innerHTML = `
-    //         //     <td>${selectHTML}</td>
-    //         //     <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" name="areas[${rowIndex}][trimestre_2]" required></td>
-    //         //     <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" name="areas[${rowIndex}][trimestre_3]" required></td>
-    //         //     <td><button type="button" class="btn btn-danger btn-remove"><i class="fa fa-trash"></i> </button></td>
-    //         // `;
-    //         newRow.innerHTML = `
-    //             <td>${selectHTML}</td>
-    //             <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" value="0" name="areas[${rowIndex}][trimestre_2]" required></td>
-    //             <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" value="0" name="areas[${rowIndex}][trimestre_3]" required></td>
-    //             <td><button type="button" class="btn btn-danger btn-remove"><i class="fa fa-trash"></i> </button></td>
-    //         `;
-
-    //         tableBody.appendChild(newRow);
-
-    //         const select = newRow.querySelector('select');
-    //         const removeButton = newRow.querySelector('.btn-remove');
-
-    //         select.addEventListener('change', function() {
-    //             const selectedAreaId = select.value;
-    //             const selectedAreaText = select.options[select.selectedIndex].text;
-
-    //             // Si el área no ha sido seleccionada, añadirla
-    //             if (selectedAreaId && !areasSeleccionadas.includes(selectedAreaId)) {
-    //                 areasSeleccionadas.push(selectedAreaId);
-
-    //                 // Remover el área seleccionada de las disponibles
-    //                 areasDisponibles = areasDisponibles.filter(area => area.id != selectedAreaId);
-
-    //                 // Deshabilitar el combo box después de la selección
-    //                 select.disabled = true;
-
-    //                 actualizarSelects(); // Actualizar las opciones del combo box para los demás selects
-    //             } else {
-    //                 alert('Esta área ya ha sido seleccionada.');
-    //             }
-    //         });
-
-    //         // Validar y actualizar suma de puntos en tiempo real
-    //         inputs.forEach(input => {
-    //             input.addEventListener('input', function() {
-    //                 let value = parseInt(input.value) || 0;
-
-    //                 if (value < 0 || value > 30) {
-    //                     alert('Los puntos deben estar entre 0 y 30.');
-    //                     input.value = ''; // Vaciar el valor no válido
-    //                     return;
-    //                 }
-
-    //                 calcularSumaTotal(); // Recalcular la suma total de puntos
-    //             });
-    //         });
-
-    //         // Función para eliminar una fila
-    //         removeButton.addEventListener('click', function() {
-    //             const selectedAreaId = select.value;
-
-    //             // Remover el área de las seleccionadas
-    //             areasSeleccionadas = areasSeleccionadas.filter(id => id != selectedAreaId);
-
-    //             // Volver a agregar el área a las disponibles
-    //             const removedArea = {{ areas|json_encode|raw }}.find(area => area.id == selectedAreaId);
-    //             areasDisponibles.push(removedArea);
-
-    //             // Eliminar la fila del DOM
-    //             tableBody.removeChild(newRow);
-
-    //             areaCount--;
-    //             calcularSumaTotal(); // Recalcular la suma total de puntos
-
-    //             // Volver a habilitar el botón de "Agregar área curricular" si se eliminan filas
-    //             document.getElementById('add-area-curricular').disabled = false;
-
-    //             actualizarSelects();
-    //         });
-
-    //         if (areaCount === maxAreas || areasDisponibles.length === 0) {
-    //             document.getElementById('add-area-curricular').disabled = true;
-    //         }
-    //     }
-    // }
-
-    
+    addAreaCurricular();
+        
     function addAreaCurricular() {
         const lastSelect = document.querySelector('#area-curricular-table-body tr:last-child select');
         if (lastSelect && lastSelect.value === "") {
@@ -267,6 +167,11 @@
             removeButton.addEventListener('click', function() {
                 const selectedAreaId = select.value;
 
+                // Verificar si hay un área seleccionada antes de eliminar
+                if (!selectedAreaId) {
+                    alert("Por favor selecciona un área antes de intentar eliminar.");
+                    return; // No continúa si no hay área seleccionada
+                }
                 // Remover el área de las seleccionadas
                 areasSeleccionadas = areasSeleccionadas.filter(id => id != selectedAreaId);
 
