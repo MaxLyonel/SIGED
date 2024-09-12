@@ -709,7 +709,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
 
 
         $query ="
-            update censo_alternativa_beneficiarios a
+           update censo_alternativa_beneficiarios a
 set estudiante_inscripcion_s1=b.estudiante_inscripcion_id,institucioneducativa_curso_id_s1=b.institucioneducativa_curso_id
 from (
 WITH catalogo AS (select a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion,c.id as superior_acreditacion_especialidad_id
@@ -727,12 +727,24 @@ from superior_institucioneducativa_acreditacion a
 						inner join catalogo k on a.acreditacion_especialidad_id=k.superior_acreditacion_especialidad_id
 							inner join public.censo_alternativa_beneficiarios l on h.id=l.estudiante_id
 where  i.gestion_tipo_id=2024::double precision and i.periodo_tipo_id=2
-and k.nivel_id in (15,18,19,20,21,22,23,24,25)) b where a.id=b.censo_alternativa_beneficiarios_id and a.estudiante_inscripcion_s1 = 0;
+and k.nivel_id in (15,18,19,20,21,22,23,24,25)) b where a.id=b.censo_alternativa_beneficiarios_id;
+
+
+UPDATE censo_alternativa_beneficiarios 
+SET estudiante_id 
+    = ( select id from estudiante where codigo_rude = censo_alternativa_beneficiarios.rudeal
+      )
+			where censo_alternativa_beneficiarios.id >= 9976;
+			
+
+
+UPDATE censo_alternativa_beneficiarios  set periodo = 'PRIMER SEMESTRE'
+where censo_alternativa_beneficiarios.id >= 9976
+
 
         ";                
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params); 
+        $stmt = $db->prepare($query);        
+        $stmt->execute(); 
 
         $msg  = 'Datos registrados correctamente';
         return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));
