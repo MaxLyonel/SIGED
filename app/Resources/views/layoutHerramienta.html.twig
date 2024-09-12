@@ -727,19 +727,23 @@
                         </li>  
                     {% endif %} #}
                                         
-                    {# {% if app.session.get('roluser') in [7,8,9,10,20] %}
+                    {% if app.session.get('roluser') in [7,8,9,10,20] %}
                         <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Censo</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>
+                            {# <ul>
                                 <li><a href="{{ path('censoinscription_index')}}">Registro Censo</a></li>
+                                                            
+                            </ul> #}
+                            <ul>
+                                <li><a href="{{ path('censobeneficio_index')}}">Registro Beneficio CPV</a></li>
                                                             
                             </ul>
                         </li>  
-                    {% endif %} #}
+                    {% endif %}
 
                     {# {% if app.session.get('userId') in [92506087] %}
                         <li class="submenu">    

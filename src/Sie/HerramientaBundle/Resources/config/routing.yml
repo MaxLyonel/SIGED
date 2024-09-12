@@ -363,6 +363,7 @@ sie_managerinstalento:
 sie_adm_pla:
      resource: "@SieHerramientaBundle/Resources/config/routing/admpla.yml"
      prefix:   /sie/admplan
+
 # sie_censoinscription:
 #      resource: "@SieHerramientaBundle/Resources/config/routing/censoinscription.yml"
 #      prefix:   /sie/censo
@@ -390,3 +391,7 @@ sie_adm_pla:
 sie_regularizacion_bth_ttg_tte:
      resource: "@SieHerramientaBundle/Resources/config/routing/bthregularizacionttgtte.yml"
      prefix:   /sie/rbtt
+
+sie_censo_beneficio:
+     resource: "@SieHerramientaBundle/Resources/config/routing/censobeneficio.yml"
+     prefix:   /sie/censobeneficio
