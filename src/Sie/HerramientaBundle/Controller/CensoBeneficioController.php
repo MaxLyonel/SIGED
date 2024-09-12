@@ -408,7 +408,7 @@ class CensoBeneficioController extends Controller
                     inner join paralelo_tipo pt on ic.paralelo_tipo_id = pt.id
                     inner join turno_tipo tt on ic.turno_tipo_id = tt.id
                     where ic.nivel_tipo_id = 13
-                    and ic.grado_tipo_id in (6) --(4,5,6)
+                    and ic.grado_tipo_id in (4,5,6)
                     and ei.estadomatricula_tipo_id = 4
                     and ic.gestion_tipo_id = 2024
                     and ic.institucioneducativa_id = $ie_id
