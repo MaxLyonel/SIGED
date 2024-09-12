@@ -87,6 +87,7 @@ class CensoController extends Controller {
         $rude = $request->get('rude');
         $beneficiario_id = $request->get('row');
         $institucion = $request->getSession()->get('ie_id');
+        $sucursal = $request->getSession()->get('ie_subcea');
 
         $habilitado = true;
 
@@ -125,11 +126,12 @@ from superior_institucioneducativa_acreditacion a
 									inner join superior_modulo_periodo m on l.superior_modulo_periodo_id=m.id
 										inner join superior_modulo_tipo n on m.superior_modulo_tipo_id=n.id
 											inner join estudiante_nota o on j.id=o.estudiante_asignatura_id
-where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:sie  and i.sucursal_tipo_id=0 and i.periodo_tipo_id=2  and codigo_rude = :rude
+where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:sie  and i.sucursal_tipo_id = :sucursal and i.periodo_tipo_id=2  and codigo_rude = :rude
 
         "); 
         $query->bindValue(':rude', $rude);
         $query->bindValue(':sie', $institucion);
+        $query->bindValue(':sucursal', $sucursal);
         $query->execute();
         $notas = $query->fetchAll(); 
 
