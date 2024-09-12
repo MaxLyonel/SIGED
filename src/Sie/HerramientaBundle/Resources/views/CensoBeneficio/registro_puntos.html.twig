@@ -1,0 +1,469 @@
+<form id="beneficio-form"  method="POST" enctype="multipart/form-data">
+<div class="panel panel-default">
+    <div class="panel-body no-padding" id="modal-body">
+        <div class="alert " style="padding:10px">
+            <h5 class="text-primary">Datos del Curso</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Nivel</th><td>{{estudiante.nivel|upper}}</td>
+                    <th>Turno</th><td>{{estudiante.turno|upper}}</td>
+                </tr>
+                <tr>
+                    <th>Grado</th><td>{{estudiante.grado|upper}}</td>
+                    <th>Paralelo</th><td>{{estudiante.paralelo|upper}}</td>
+                </tr>
+            </table>
+            <h5 class="text-primary">Datos de la/el Estudiante</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Codigo Rude</th><td><strong>{{estudiante.codigo_rude}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Estudiante</th><td><strong>{{estudiante.estudiante|upper}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Carnet de Identidad</th><td>{{estudiante.ci}}{% if estudiante.complemento %} - {{estudiante.complemento}}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Fecha de Nacimiento</th><td>{{estudiante.fecha_nacimiento|date('d-m-Y')}}</td>
+                </tr>
+                <tr>
+                    <th>Subir Formulario de Registro <br>de Beneficio del Estudiante (Anexo 1)</th>
+                    <td>
+                        <input type="file" class="form-control" accept="application/pdf, image/jpeg, image/jpg" required name="formulario_registro" id="formulario_registro">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Subir Certificado de Participación como <br>Agente Censal CPV-2024 (emitido por el INE)</th>
+                    <td>
+                        <input type="file" class="form-control" accept="application/pdf, image/jpeg, image/jpg" required name="certificado_cpv" id="certificado_cpv">
+                    </td>
+                </tr>
+            </table>
+            <!-- Tabla para agregar áreas curriculares -->
+            <h5 class="text-primary">Áreas Curriculares</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <thead>
+                    <tr>
+                        <th>Área de Saberes y Conocimientos Elegidas</th>
+                        <th>2do Tri</th>
+                        <th>3er Tri</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="area-curricular-table-body">
+                    <!-- Filas dinámicas se agregarán aquí -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2">Total de Puntos:</th>
+                        <td colspan="2"><span id="total-puntos">0</span></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <button type="button" class="btn btn-success" id="add-area-curricular" onclick="addAreaCurricular()">Agregar Área Curricular</button>
+            <input type="hidden" name="inscripcion_id" id="inscripcion_id" value="{{ estudiante.ei_id }}">
+            <!-- Botones de acción -->
+            <div class="text-right">
+                <button type="button" class="btn btn-primary" onclick="registrarBeneficio()" id="btn-registrar">Registrar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<!-- Script para manejar la tabla dinámica -->
+
+<script>
+    let areaCount = 0;
+    const maxAreas = 3;
+
+    // Las áreas son recibidas desde el controlador como un array de objetos
+    let areasDisponibles = {{ areas|json_encode|raw }}; 
+    let areasSeleccionadas = [];
+
+    // function addAreaCurricular() {
+    
+
+    //     if (areaCount < maxAreas && areasDisponibles.length > 0) {
+    //         areaCount++;
+
+    //         const tableBody = document.getElementById('area-curricular-table-body');
+    //         const newRow = document.createElement('tr');
+
+    //         const rowIndex = areaCount - 1;  // Index para identificar la fila
+    //         // Crear el combo box con las áreas curriculares disponibles
+    //         let selectHTML = `<select class="form-control area-select" name="areas[${rowIndex}][id]" required>`;
+    //         selectHTML += `<option value="" disabled selected>Selecciona un área</option>`;
+    //         areasDisponibles.forEach(area => {
+    //             selectHTML += `<option value="${area.id}">${area.asignatura}</option>`;
+    //         });
+    //         selectHTML += `</select>`;
+
+    //         // Agregar fila con el combo box, inputs y botón de eliminar
+    //         // newRow.innerHTML = `
+    //         //     <td>${selectHTML}</td>
+    //         //     <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" name="areas[${rowIndex}][trimestre_2]" required></td>
+    //         //     <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" name="areas[${rowIndex}][trimestre_3]" required></td>
+    //         //     <td><button type="button" class="btn btn-danger btn-remove"><i class="fa fa-trash"></i> </button></td>
+    //         // `;
+    //         newRow.innerHTML = `
+    //             <td>${selectHTML}</td>
+    //             <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" value="0" name="areas[${rowIndex}][trimestre_2]" required></td>
+    //             <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" value="0" name="areas[${rowIndex}][trimestre_3]" required></td>
+    //             <td><button type="button" class="btn btn-danger btn-remove"><i class="fa fa-trash"></i> </button></td>
+    //         `;
+
+    //         tableBody.appendChild(newRow);
+
+    //         const select = newRow.querySelector('select');
+    //         const removeButton = newRow.querySelector('.btn-remove');
+
+    //         select.addEventListener('change', function() {
+    //             const selectedAreaId = select.value;
+    //             const selectedAreaText = select.options[select.selectedIndex].text;
+
+    //             // Si el área no ha sido seleccionada, añadirla
+    //             if (selectedAreaId && !areasSeleccionadas.includes(selectedAreaId)) {
+    //                 areasSeleccionadas.push(selectedAreaId);
+
+    //                 // Remover el área seleccionada de las disponibles
+    //                 areasDisponibles = areasDisponibles.filter(area => area.id != selectedAreaId);
+
+    //                 // Deshabilitar el combo box después de la selección
+    //                 select.disabled = true;
+
+    //                 actualizarSelects(); // Actualizar las opciones del combo box para los demás selects
+    //             } else {
+    //                 alert('Esta área ya ha sido seleccionada.');
+    //             }
+    //         });
+
+    //         // Validar y actualizar suma de puntos en tiempo real
+    //         inputs.forEach(input => {
+    //             input.addEventListener('input', function() {
+    //                 let value = parseInt(input.value) || 0;
+
+    //                 if (value < 0 || value > 30) {
+    //                     alert('Los puntos deben estar entre 0 y 30.');
+    //                     input.value = ''; // Vaciar el valor no válido
+    //                     return;
+    //                 }
+
+    //                 calcularSumaTotal(); // Recalcular la suma total de puntos
+    //             });
+    //         });
+
+    //         // Función para eliminar una fila
+    //         removeButton.addEventListener('click', function() {
+    //             const selectedAreaId = select.value;
+
+    //             // Remover el área de las seleccionadas
+    //             areasSeleccionadas = areasSeleccionadas.filter(id => id != selectedAreaId);
+
+    //             // Volver a agregar el área a las disponibles
+    //             const removedArea = {{ areas|json_encode|raw }}.find(area => area.id == selectedAreaId);
+    //             areasDisponibles.push(removedArea);
+
+    //             // Eliminar la fila del DOM
+    //             tableBody.removeChild(newRow);
+
+    //             areaCount--;
+    //             calcularSumaTotal(); // Recalcular la suma total de puntos
+
+    //             // Volver a habilitar el botón de "Agregar área curricular" si se eliminan filas
+    //             document.getElementById('add-area-curricular').disabled = false;
+
+    //             actualizarSelects();
+    //         });
+
+    //         if (areaCount === maxAreas || areasDisponibles.length === 0) {
+    //             document.getElementById('add-area-curricular').disabled = true;
+    //         }
+    //     }
+    // }
+
+    
+    function addAreaCurricular() {
+        const lastSelect = document.querySelector('#area-curricular-table-body tr:last-child select');
+        if (lastSelect && lastSelect.value === "") {
+            alert("Debes seleccionar un área antes de agregar una nueva.");
+            return; // No agregar nueva fila si el anterior select no tiene valor
+        }
+
+        if (areaCount < maxAreas && areasDisponibles.length > 0) {
+            areaCount++;
+
+            const tableBody = document.getElementById('area-curricular-table-body');
+            const newRow = document.createElement('tr');
+
+            const rowIndex = areaCount - 1;  // Index para identificar la fila
+            // Crear el combo box con las áreas curriculares disponibles
+            let selectHTML = `<select class="form-control area-select" name="areas[${rowIndex}][id]" required>`;
+            selectHTML += `<option value="" disabled selected>Selecciona un área</option>`;
+            areasDisponibles.forEach(area => {
+                selectHTML += `<option value="${area.id}">${area.asignatura}</option>`;
+            });
+            selectHTML += `</select>`;
+
+            // Agregar fila con el combo box, inputs y botón de eliminar
+            newRow.innerHTML = `
+                <td>${selectHTML}</td>
+                <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" value="0" name="areas[${rowIndex}][trimestre_2]" required></td>
+                <td><input type="number" class="form-control trimestre-input" min="0" max="30" placeholder="Puntos" value="0" name="areas[${rowIndex}][trimestre_3]" required></td>
+                <td><button type="button" class="btn btn-danger btn-remove"><i class="fa fa-trash"></i> </button></td>
+            `;
+
+            tableBody.appendChild(newRow);
+
+            const select = newRow.querySelector('select');
+            const removeButton = newRow.querySelector('.btn-remove');
+            const inputs = newRow.querySelectorAll('.trimestre-input');
+
+            select.addEventListener('change', function() {
+                const selectedAreaId = select.value;
+
+                // Si el área no ha sido seleccionada, añadirla
+                if (selectedAreaId && !areasSeleccionadas.includes(selectedAreaId)) {
+                    areasSeleccionadas.push(selectedAreaId);
+
+                    // Remover el área seleccionada de las disponibles
+                    areasDisponibles = areasDisponibles.filter(area => area.id != selectedAreaId);
+
+                    // Deshabilitar el combo box después de la selección
+                    select.disabled = true;
+
+                    actualizarSelects(); // Actualizar las opciones del combo box para los demás selects
+                } else {
+                    alert('Esta área ya ha sido seleccionada.');
+                }
+            });
+
+            // Validar y actualizar suma de puntos en tiempo real y permitir solo números
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    let value = input.value;
+
+                    // Permitir solo números
+                    if (!/^\d*$/.test(value)) {
+                        alert('Solo se permiten números.');
+                        input.value = value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+                        return;
+                    }
+
+                    // Validar si es mayor a 30
+                    if (parseInt(value) > 30) {
+                        alert('Los puntos no pueden ser mayores a 30.');
+                        input.value = value; // Establecer el valor máximo permitido en 30
+                    }
+
+                    calcularSumaTotal(); // Recalcular la suma total de puntos
+                });
+            });
+
+            // Función para eliminar una fila
+            removeButton.addEventListener('click', function() {
+                const selectedAreaId = select.value;
+
+                // Remover el área de las seleccionadas
+                areasSeleccionadas = areasSeleccionadas.filter(id => id != selectedAreaId);
+
+                // Volver a agregar el área a las disponibles
+                const removedArea = {{ areas|json_encode|raw }}.find(area => area.id == selectedAreaId);
+                areasDisponibles.push(removedArea);
+
+                // Eliminar la fila del DOM
+                tableBody.removeChild(newRow);
+
+                areaCount--;
+                calcularSumaTotal(); // Recalcular la suma total de puntos
+
+                // Volver a habilitar el botón de "Agregar área curricular" si se eliminan filas
+                document.getElementById('add-area-curricular').disabled = false;
+
+                actualizarSelects();
+            });
+
+            // Si se alcanzó el número máximo de áreas o no hay más áreas disponibles, deshabilitar el botón
+            if (areaCount === maxAreas || areasDisponibles.length === 0) {
+                document.getElementById('add-area-curricular').disabled = true;
+            }
+        }
+    }
+
+    function calcularSumaTotal() {
+        let total = 0;
+        const inputs = document.querySelectorAll('.trimestre-input');
+        let excedeLimite = false; // Bandera para verificar si la suma excede 30
+
+        inputs.forEach(input => {
+            const value = parseInt(input.value) || 0; // Si no hay valor, contar como 0
+            total += value;
+
+            // Si la suma excede 30, activar la bandera
+            if (total > 30) {
+                excedeLimite = true;
+            }
+        });
+
+        // Validar si el total excede 30
+        if (excedeLimite) {
+            alert('La suma total de los puntos no puede exceder de 30.');
+            // Opcionalmente, puedes resetear la suma a un estado anterior si es necesario
+            // total = total - value; // Si quieres limitarlo a 30
+        }
+
+        // Mostrar el total (limitado a 30 si excede)
+        document.getElementById('total-puntos').textContent = total;
+    }
+
+
+    function actualizarSelects() {
+        const selects = document.querySelectorAll('.area-select');
+        selects.forEach(select => {
+            if (!select.disabled) { // Solo actualizar selects que no estén deshabilitados
+                const selectedValue = select.value;
+                const selectedText = select.options[select.selectedIndex]?.text;
+
+                select.innerHTML = `<option value="" disabled>Selecciona un área</option>`;
+                areasDisponibles.forEach(area => {
+                    select.innerHTML += `<option value="${area.id}">${area.asignatura}</option>`;
+                });
+
+                // Restaurar el valor y texto seleccionado si ya se eligió algo
+                if (selectedValue) {
+                    select.innerHTML += `<option value="${selectedValue}" selected>${selectedText}</option>`;
+                }
+            }
+        });
+    }
+
+    function registrarBeneficio() {
+        const tableBody = document.getElementById('area-curricular-table-body');
+        const filas = tableBody.querySelectorAll('tr'); // Seleccionar todas las filas de la tabla
+        const inscripcionId = document.getElementById('inscripcion_id').value;
+        let datos = []; // Array para almacenar los datos de cada fila
+
+        // Obtener los archivos del formulario
+        const formularioRegistroInput = document.getElementById('formulario_registro');
+        const certificadoCpvInput = document.getElementById('certificado_cpv');
+
+        if (formularioRegistroInput.files.length === 0 || !validarArchivo(formularioRegistroInput.files[0])) {
+            alert('El archivo de Registro no se subió o no es válido, por favor verifique.');
+            return false; // Detener el envío del formulario si el archivo no es válido
+        }
+        if (certificadoCpvInput.files.length === 0 || !validarArchivo(certificadoCpvInput.files[0])) {
+            alert('El archivo del Certificado CPV no se subió o no es válido, por favor verifique.');
+            return false; // Detener el envío del formulario si el archivo no es válido
+        }
+
+        Swal.fire({
+                    title: `¿Está seguro de registrar el Beneficio CPV 2024 para el estudiante?`,
+                    text: "¿Registro los puntajes y subio el/los archivos solicitados?",
+                    type: 'question',
+                    html:
+                           'Si acepta, se registrara el beneficio y no podra modificar... ',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, proceder',
+                    cancelButtonText: 'Cancelar'
+        }).then((result) => {
+        
+            const botonRegistrar = document.getElementById('btn-registrar');
+            botonRegistrar.disabled = true;
+            botonRegistrar.innerHTML = 'Registrando...';
+            filas.forEach((fila) => {
+                const areaSelect = fila.querySelector('select'); // Select del área curricular
+                const trimestre2Input = fila.querySelector('input[name^="areas"][name$="[trimestre_2]"]'); // Input del trimestre 2
+                const trimestre3Input = fila.querySelector('input[name^="areas"][name$="[trimestre_3]"]'); // Input del trimestre 3
+
+                // Obtener los valores del select y de los inputs
+                const areaSeleccionadaValor = areaSelect.value || 'Sin valor'; // Obtener el valor del select
+                const puntosTrimestre2 = trimestre2Input.value || 'Sin puntaje';
+                const puntosTrimestre3 = trimestre3Input.value || 'Sin puntaje';
+
+                // Crear un objeto con los datos de la fila
+                const filaDatos = {
+                    areaid: areaSeleccionadaValor,
+                    puntosT2: puntosTrimestre2,
+                    puntosT3: puntosTrimestre3
+                };
+
+                // Añadir el objeto al array
+                datos.push(filaDatos);
+            });
+
+            const formRegistro = formularioRegistroInput.files[0];
+            const certificadoCpv = certificadoCpvInput.files[0];
+
+            // Crear un FormData para enviar los archivos y los datos
+            const formData = new FormData();
+            formData.append('formulario_registro', formRegistro); // Agregar archivo de formulario
+            formData.append('certificado_cpv', certificadoCpv); // Agregar archivo del certificado
+            formData.append('inscripcion_id', inscripcionId); // Agregar el inscripcion_id
+            formData.append('areas', JSON.stringify(datos)); // Convertir datos a JSON y agregar
+
+            // Enviar la solicitud AJAX
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('censobeneficio_saveBeneficio'),
+                data: formData,
+                processData: false, // No procesar los datos de forma predeterminada
+                contentType: false, // No establecer el tipo de contenido
+                success: function (data) {
+                    console.log(data.error);
+                    // Actualizar la interfaz de usuario según sea necesario
+                    // actualizarFilaEnTabla(data);
+                    // $('#ratificarModal').modal('hide');
+                    if (data.error) {
+                        // Mostrar el mensaje de error
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.error,
+                            icon: 'error'
+                        });
+
+                        // Habilitar el botón nuevamente
+                        botonRegistrar.disabled = false;
+                        botonRegistrar.innerHTML = 'Registrar';
+                    }
+                    if (data.success) {
+                        location.reload(); 
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+        })
+    }
+
+    function validarArchivo(archivo) {
+        if (!archivo) {
+            return false; // Si no hay archivo, la validación falla
+        }
+
+        const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/jpg'];
+        const maxSize = 3 * 1024 * 1024; // 3MB
+
+        if (archivo.size > maxSize) {
+            alert(`El archivo ${archivo.name} supera el tamaño máximo permitido de 3MB.`);
+            return false;
+        }
+
+        if (!tiposPermitidos.includes(archivo.type)) {
+            alert(`El archivo ${archivo.name} no es un tipo permitido (solo JPG, JPEG, o PDF).`);
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
+
+
+

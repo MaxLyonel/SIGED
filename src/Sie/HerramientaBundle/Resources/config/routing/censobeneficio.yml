@@ -1,0 +1,22 @@
+censobeneficio_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:index }
+
+censobeneficio_registroPuntos:
+    path:    /formRegistro/{id}/
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:formRegistro }
+    options:
+        expose: true  
+
+censobeneficio_saveBeneficio:
+    path:     /saveBeneficio
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:saveBeneficio }
+    options:
+         expose: true 
+
+censobeneficio_findEstudiante:
+    path:     /findEstudiante/{id}/
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:findEstudiante }
+    options:
+         expose: true
+
