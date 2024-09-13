@@ -209,47 +209,61 @@ class InfoStudentsController extends Controller {
       $nivelesLibreta = array(400,401,402,408,403,404,412);
 
       $arrDataLibreta['calificaciones'] = false;
-      $arrDataLibreta['libreta'] = true;
+      $arrDataLibreta['libreta'] = false;
 
       if($gestion < 2024 and $nivel <> 405){
         $arrDataLibreta['libreta'] = true;
       }
 
       if( in_array($nivel,$nivelesLibreta ) and $gestion>2023){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }   
      
       //visual- programa y multiple - etapas
-      if($gestion>2023 and $objArea->getId()==2 and ($nivel==411 and in_array($programa,[7,8,25,26]))){
-        $arrDataLibreta['calificaciones'] = false;
+      if($gestion>2023 and $objArea->getId()==2 and $nivel==411 and in_array($programa,[7,8,25,26])){
+        
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
 
       //intelectual- multilple-TEA y/o itinerarios educativos - TRIMESTRAL
       //auditiva- programa multilple- TRIMESTRAL 1-43
       if($gestion>2023 and ($objArea->getId()==3 or $objArea->getId()==12 or $objArea->getId()==1) and ($nivel==411 and in_array($programa,[37,43])) ){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
 
       //para modalidad 3 y diferentes servicios  - SEMESTRAL
-      if($nivel==410 and $gestion>2023 and in_array($servicio,[20,35,36,37,38,40])){
+      if($nivel==410 and $gestion>2023 and in_array($servicio,[20,35,36,37,38])){
         $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
-      }
+      } 
+     
       //para modalidad 1 y diferentes programas  - SEMESTRAL
-      if($nivel==411 and $gestion>2023 and in_array($programa,[19,22,26,28,38,39,41,43,44,46,47,48])){
+      if($nivel==411 and $gestion>2023 and in_array($programa,[19,28,38,39,41,44,46,47,48])){
         $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
+       //para programa o servicio  - MODULOS
+       if( $gestion>2023 and (in_array($servicio,[40]) or in_array($programa,[22]) )){
+        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['libreta'] = true;
+      } 
+       //para modalidad 1 y diferentes programas  - TRIMESTRAL
+       if($nivel==411 and $gestion>2023 and in_array($programa,[43])){
+        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['libreta'] = true;
+      }
+      //Atención temprana semestral
       if($nivel==409 and $gestion>2023 and in_array($programa,[28])){
         $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
+      
        //para talento y dificultades en general  - SEMESTRAL
        if(($nivel==410 or $nivel==411) and $gestion>2023 and ($objArea->getId()==7 or $objArea->getId()==6)){
-        $arrDataLibreta['calificaciones'] = false;
+        $arrDataLibreta['calificaciones'] = true;
         $arrDataLibreta['libreta'] = true;
       }
       //metal-psiquica - SEMESTRAL
@@ -291,7 +305,7 @@ class InfoStudentsController extends Controller {
           }
         }
       }
-      //dump($arrDataLibreta['calificaciones']);die;
+     //dump($arrDataLibreta['calificaciones']);die;
      
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
@@ -753,6 +767,7 @@ class InfoStudentsController extends Controller {
         'ciclo'=>$ciclo,
         'operativo'=>$operativo,
         'areaEspecial' => $objArea->getAreaEspecial(),
+        'areaEspecialId' => $objArea->getId(),
         'arrDataLibreta'=> $arrDataLibreta,
         'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
         'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']        

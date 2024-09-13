@@ -11,118 +11,87 @@
 
 <div class="row">
     <div class="col-lg-12">
+
+
      <div id="panelinstitucion" class="panel-collapse collapse in">
                     <div class="portlet-body">
                         <div class="panel-body panel-primary">
                             <ul id="myTab" class="nav nav-tabs">
                             {% for tn in notas.tiposNotasArray %}
-                                <li {% if tn.id == tn.ultimo  %} class="active" {% endif %} ><a href="tabs-accordions.html#modulo{{tn.id}}" data-toggle="tab"> {{tn.nota}}</a>
+                                <li {% if tn.id == tn.ultimo  %} class="active" {% endif %} ><a href="tabs-accordions.html#modulo{{tn.id}}" data-toggle="tab"> {{tn.modulo}}</a>
                                 </li>
                             {% endfor %}    
                             </ul>
                             <div id="myTabContent" class="tab-content">                            
                               
                                {% for tn in notas.tiposNotasArray %}
-                                
-                                    <div {% if tn.id == tn.ultimo  %} class="tab-pane fade  in active " {% else %} class="tab-pane fade" {% endif %}  id="modulo{{tn.id}}">
-                                        {% if tn.id <= tn.ultimo+1  %} 
+                                    {% if tn.subnotas|length > 0 %}
+                                        <div {% if tn.id == tn.ultimo  %} class="tab-pane fade  in active " {% else %} class="tab-pane fade" {% endif %}  id="modulo{{tn.id}}">
                                             <table class="table table-bordered" id="tbl_nota">
                                                 <thead>
                                                     <tr>
-                                                        <th width="30%"><b>Resultados del Proceso de Atención</b></th>
-                                                        <th width="70%"><b>Informe Semestral</b></th>
+                                                        <th width="30%"><b>Componentes</b></th>
+                                                        <th width="35%"><b>Contenidos</b></th>
+                                                        <th width="35%"><b>Resultados alcanzados</b></th>
                                                     </tr>
                                                 </thead>
                                             
                                                 <tbody>
                                                     <input type="hidden" name="id_nota[]" class="form-control jnumbersletters noresize ids" value="{{tn.id}}">
-                                                    <input type="hidden" name="tipo{{tn.id}}" id="tipo{{tn.id}}"  value="{{tn.nota}}">
-                                                
+                                                    
+                                                    <input type="hidden" name="tipo{{tn.id}}" id="tipo{{tn.id}}"  value="{{tn.modulo}}">
+                                                 {% for nota in tn.subnotas %}
                                                     <tr>
                                                         <td width="30%">
-                                                            Cultura del Sordo
+                                                            {{nota.asignatura}}
                                                         </td>
-                                                        <td width="70%">
-                                                            <textarea class="form-control jnumbersletters noresize cultura" name="cultura{{tn.id}}" id="cultura{{tn.id}}" maxlength="180" >{{tn.cultura}}</textarea>
+                                                        <td width="35%">
+                                                            <textarea class="form-control jnumbersletters noresize cultura" name="contenido{{nota.idea}}{{tn.id}}" id="contenido{{nota.idea}}{{tn.id}}" maxlength="390" >{{nota.contenido}}</textarea>
+                                                        </td>
+                                                        <td width="35%">
+                                                            <textarea class="form-control jnumbersletters noresize cultura" name="resultado{{nota.idea}}{{tn.id}}" id="resultado{{nota.idea}}{{tn.id}}" maxlength="250" >{{nota.recomendacion}}</textarea>
                                                         </td>
                                                     </tr>
-                                                    {% if tn.identidad != 'noaplica' %}
+                                                    <input type="hidden" name="id_tipo_asignatura[]" class="form-control jnumbersletters noresize ids" value="{{nota.idea}}_{{tn.id}}">
+                                                   {% endfor %} 
+                                                   {% if tn.id == 53 or tn.id == 54 %} 
                                                         <tr>
-                                                            <td width="30%">
-                                                                Identidad del Sordo
-                                                            </td>
-                                                            <td width="70%">
-                                                                <textarea class="form-control jnumbersletters noresize identidad" name="identidad{{tn.id}}" id="identidad{{tn.id}}" maxlength="180" >{{tn.identidad}}</textarea>
-                                                            </td>
-                                                        </tr>
-                                                    {% else %}
-                                                        <input type="hidden" value="" name="identidad{{tn.id}}" id="identidad{{tn.id}}">
-                                                    {% endif %}
-                                                    <tr>
-                                                        <td width="30%">
-                                                        Lengua de Señas de Boliviana
-                                                        </td>
-                                                        <td width="70%">
-                                                            <textarea class="form-control jnumbersletters noresize lengua" name="lengua{{tn.id}}" id="lengua{{tn.id}}" maxlength="180" >{{tn.lengua}}</textarea>
-                                                        </td>
-                                                    </tr>
-                                                    {% if tn.dactilologia != 'noaplica' %}
-                                                    <tr>
-                                                        <td width="30%">
-                                                            Dactilologia
-                                                        </td>
-                                                        <td width="70%">
-                                                            <textarea class="form-control jnumbersletters noresize dactilologia" name="dactilologia{{tn.id}}" id="dactilologia{{tn.id}}" maxlength="180" >{{tn.dactilologia}}</textarea>
-                                                        </td>
-                                                    </tr>
-                                                      {% else %}
-                                                        <input type="hidden" value="" name="dactilologia{{tn.id}}" id="dactilologia{{tn.id}}">
-                                                    {% endif %}
-
-                                                    {% if tn.dialogo != 'noaplica' %}
-                                                    <tr>
-                                                        <td width="30%">
-                                                            Diálogo e interpretación en LSB
-                                                        </td>
-                                                        <td width="70%">
-                                                            <textarea class="form-control jnumbersletters noresize dialogo" name="dialogo{{tn.id}}" id="dialogo{{tn.id}}" maxlength="180" >{{tn.dialogo}}</textarea>
-                                                        </td>
-                                                    </tr>
-                                                        {% else %}
-                                                        <input type="hidden" value="" name="dialogo{{tn.id}}" id="dialogo{{tn.id}}">
-                                                    {% endif %}
-
-                                                    <tr>
-                                                        <td width="30%">
-                                                        Producción con uso de recursos tecnológicos en LSB
-                                                        </td>
-                                                        <td width="70%">
-                                                            <textarea class="form-control jnumbersletters noresize produccion" name="produccion{{tn.id}}" id="produccion{{tn.id}}" maxlength="180" >{{tn.produccion}}</textarea>
-                                                        </td>
-                                                    </tr>
-                                                  
+                                                                <td width="30%">INFORME PROCESO EDUCATIVO:
+                                                                </td>
+                                                                <td width="35%">
+                                                                <textarea name="informeSemestral{{tn.id}}" class="form-control input-sm jnumbersletters" cols="30" rows="3" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="250" >{% if  tn.final|length>0 %}{{tn.final}}{% endif %}</textarea>
+                                                                </td>
+                                                        </tr>  
+                                                    {% endif %} 
                                                      <tr>
                                                         <td width="30%">
                                                         Estado del módulo:
                                                         </td>
-                                                        <td width="70%">
+                                                        <td width="35%">
                                                             <select class="form-control" name="nuevoEstado{{tn.id}}" id="nuevoEstado{{tn.id}}" >
-                                                            <option value="">Seleccionar estado a registrar o actualizar</option>
+                                                            <option value="">Seleccionar estado </option>
                                                             {% for estadoF in notas.estadosFinales %}
-                                                            <option value="{{estadoF.id}}" {% if estadoF.estadomatricula == tn.recomendacion %} selected {% endif %} >{{estadoF.estadomatricula}}</option>
+                                                            <option value="{{estadoF.id}}" {% if estadoF.estadomatricula == tn.estado %} selected {% endif %} >{{estadoF.estadomatricula}}</option>
                                                             {% endfor %}
                                                         </select>
                                                         </td>
                                                     </tr>
+                                                   
+                                                        
+                                                    
                                                 </tbody>                                                
                                             </table>
-                                        {% else %} 
-                                        aun no completo calificaciones de su ultimo módulo
-                                        {% endif %} 
                                 </div> 
+                                {% else %}
+                                <div class="alert alert-warning">
+                                        <i class="fa fa-warning"></i> El curso no tiene areas registradas, debe registrar las areas del curso para poder realizar el registro de notas.
+                                    </div>
+                                {% endif %}
+
                               
                             {% endfor %}
-                                
+                                 {% for no in notas.tiposNotasArray %}
+                                 {% endfor %}
                            </div>
                         </div>
                     </div>
@@ -144,7 +113,10 @@
     $(document).on('click', '.drow', function(event) {
         $(this).parent().parent().remove();
     });
-    var validarEnvioNotas = function(){
+     var validarEnvioNotas = function(){ 
+         return true;
+     }
+    var validarEnvioNotas222 = function(){
         var ultimo = 0;
         var total = 0;
         var tc = 0;
