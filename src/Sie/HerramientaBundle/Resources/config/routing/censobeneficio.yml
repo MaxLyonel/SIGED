@@ -20,3 +20,9 @@ censobeneficio_findEstudiante:
     options:
          expose: true
 
+censobeneficio_reporteBeneficio:
+    path:     /reporteSeguimiento
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:reporteBeneficio }
+    options:
+         expose: true 
+
