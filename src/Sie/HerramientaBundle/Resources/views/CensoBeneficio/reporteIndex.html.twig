@@ -1,0 +1,245 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+	{{parent()}}
+{% endblock %}
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+	<h2><i class="fa fa-table"></i> Reporte Beneficio para Estudiantes Participantes CPV-2024 <span></span></h2>
+	<div class="breadcrumb-wrapper hidden-xs">
+		<span class="label">Usted esta aquí:</span>
+		<ol class="breadcrumb">
+			<li>
+				<i class="fa fa-home"></i>
+				<a href="#">Reporte Beneficio Censo</a>
+				<i class="fa fa-angle-right"></i>
+			</li>
+			<li class="active"></li>
+		</ol>
+	</div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+	<header class="navbar navbar-default" style="background-color: #00bbc8; padding: 20px; border-radius: 8px 8px 0 0; text: #969696">
+		<div class="navbar-header">
+			<h2 style="color: white; margin-top: 0;"><strong>Reporte de Beneficio para Estudiantes CPV 2024</strong></h2>
+		</div>
+	</header>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body NO-padding">
+					
+					{# <div id="no-more-tables"> #}
+					<div class="table-responsive" style="margin-top: -1px;">
+						
+							<table class="table table-primary " id="tabla-ue">
+								<thead>
+									<tr>
+										<th style="min-width: 5px;">N°</th>
+										<th>Departamento</th>
+										<th>Distrito</th>
+										<th>Sie</th>
+										<th>Unidad Educativa</th>
+										<th>Pendiente</th>
+										<th>Registrado</th>
+										<th>Nuevos</th>
+										<th>Total</th>
+										</tr>
+								</thead>
+								<tbody>
+								{% if ue is not empty %}
+								
+									{% for ue in ue %}
+										<tr data-estudiante-id="{{ue.institucioneducativa_id}}">
+											<td data-title="N°">{{ loop.index }}</td>
+											<td data-title="departamento">{{ ue.departamento }}</td>
+											<td data-title="distrito">{{ ue.distrito }}</td>
+											<td data-title="sie">{{ ue.institucioneducativa_id }}</td>
+											<td data-title="undadeducativa">{{ ue.institucioneducativa}}</td>
+											<td data-title="pendiente">{{ ue.pen }}</td>
+											<td data-title="registrado">{{ ue.reg }}</td>
+											<td data-title="nuevos">{{ ue.nuevo }}</td>
+											<td data-title="total">{{ ue.total }}</td>
+											
+											
+										</tr>
+									{% endfor %}
+								{% else %}
+										<tr>
+											<td colspan="10" class="text-center">No se encontraron estudiantes.</td>
+										</tr>
+									
+								{% endif %} 
+								</tbody>
+							</table>
+						{# </form> #}
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+</div>
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+    <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+	<script>
+
+	// function verRegistrarBeneficio(id) {
+    //     estudianteId = id;
+    //     $('#modalRegistroBeneficio').modal('show');
+	// 	$.ajax({
+    //             type: 'get',
+    //             url: Routing.generate('censobeneficio_registroPuntos', {'id': estudianteId }),
+	// 			beforeSend: function () {
+    //             	$('#resultado').empty(); 
+    //         	},
+    //             success: function (data) {
+    //                 $("#resultado").append(data);     
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 // Manejar el error si es necesario
+    //                 console.log('Error en la petición AJAX:', error);
+    //             }
+    //         });
+    // }
+	// function BucarBeneficiario() {
+	// 	const rude = document.getElementById('codigoRude').value;
+	// 	console.log(rude);
+		
+	// 	$.ajax({
+	// 		type: 'get',
+	// 		url: Routing.generate('censobeneficio_findEstudiante', { 'id': rude }),
+	// 		success: function (data) {
+	// 			if (data.error) {
+    //     		// Mostrar el mensaje de error y esperar a que el usuario haga clic en "Aceptar"
+	// 				Swal.fire({
+	// 					title: 'Error',
+	// 					text: data.error,
+	// 					icon: 'error'
+	// 				}).then((result) => {
+	// 					if (result.isConfirmed) {
+	// 						// Recargar la página después de que el usuario haya confirmado
+	// 						location.reload();
+	// 					}
+	// 				});
+	// 			} else {
+	// 				actualizarTablaEstudiantes(data.estudiantes);
+	// 			}
+	// 		},
+	// 		error: function (xhr, status, error) {
+	// 			// Manejar el error si es necesario
+	// 			console.log('Error en la petición AJAX:', error);
+	// 		}
+	// 	});
+	// }
+	// // function actualizarTablaEstudiantes(estudiantes) {
+	// // 	const tablaEstudiantes = $('#tabla-estudiantes');
+	// // 	tablaEstudiantes.find('tbody').empty(); // Limpiar el cuerpo de la tabla
+
+	// // 	estudiantes.forEach((estudiante, index) => {
+	// // 		if (estudiante.estado === 2) {
+	// // 			estadoBtn = `<button type="button" class="btn btn-sm btn-danger" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Nuevo Registro">
+	// // 							<i class="fa fa-check-circle"></i> Nuevo Reg.
+	// // 						</button>`;
+	// // 		} else if (estudiante.estado === 0) {
+	// // 			estadoBtn = `<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Pendiente de Registro">
+	// // 							<i class="fa fa-check"></i>
+	// // 						</button>`;
+	// // 		} else {
+	// // 			estadoBtn = `<button type="button" class="btn btn-sm btn-success">
+	// // 							<i class="fa fa-check-circle"></i> Registrado
+	// // 						</button>`;
+	// // 		}
+				
+
+	// // 		const fila = `
+	// // 			<tr data-estudiante-id="${estudiante.ei_id}">
+	// // 				<td data-title="N°">${index + 1}</td>
+	// // 				<td data-title="grado">${estudiante.grado}</td>
+	// // 				<td data-title="paralelo">${estudiante.paralelo}</td>
+	// // 				<td data-title="turno">${estudiante.turno}</td>
+	// // 				<td data-title="rude">${estudiante.codigo_rude}</td>
+	// // 				<td data-title="carnet">${estudiante.carnet_identidad}</td>
+	// // 				<td data-title="nombre">${estudiante.nombre}</td>
+	// // 				<td data-title="paterno">${estudiante.paterno}</td>
+	// // 				<td data-title="materno">${estudiante.materno}</td>
+	// // 				<td data-title="Acciones">
+	// // 					<div class="btn-group">
+	// // 						${estadoBtn}
+	// // 					</div>
+	// // 				</td>
+	// // 			</tr>
+	// // 		`;
+
+	// // 		tablaEstudiantes.find('tbody').append(fila);
+	// // 	});
+	// // }
+	// function actualizarTablaEstudiantes(estudiantes) {
+	// 	const tablaEstudiantes = $('#tabla-estudiantes');
+	// 	const tbody = tablaEstudiantes.find('tbody');
+	// 	tbody.empty(); // Limpiar el cuerpo de la tabla
+
+	// 	if (estudiantes.length === 0) {
+	// 		const fila = `
+	// 			<tr>
+	// 				<td colspan="10" class="text-center">No se encontraron estudiantes.</td>
+	// 			</tr>
+	// 		`;
+	// 		tbody.append(fila);
+	// 	} else {
+	// 		estudiantes.forEach((estudiante, index) => {
+	// 			let estadoBtn;
+	// 			if (estudiante.estado === 2) {
+	// 				estadoBtn = `<button type="button" class="btn btn-sm btn-danger" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Nuevo Registro">
+	// 								<i class="fa fa-check-circle"></i> Nuevo Reg.
+	// 							</button>`;
+	// 			} else if (estudiante.estado === 0) {
+	// 				estadoBtn = `<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Pendiente de Registro">
+	// 								<i class="fa fa-check"></i>
+	// 							</button>`;
+	// 			} else {
+	// 				estadoBtn = `<button type="button" class="btn btn-sm btn-success">
+	// 								<i class="fa fa-check-circle"></i> Registrado
+	// 							</button>`;
+	// 			}
+
+	// 			const fila = `
+	// 				<tr data-estudiante-id="${estudiante.ei_id}">
+	// 					<td data-title="N°">${index + 1}</td>
+	// 					<td data-title="grado">${estudiante.grado}</td>
+	// 					<td data-title="paralelo">${estudiante.paralelo}</td>
+	// 					<td data-title="turno">${estudiante.turno}</td>
+	// 					<td data-title="rude">${estudiante.codigo_rude}</td>
+	// 					<td data-title="carnet">${estudiante.carnet_identidad}</td>
+	// 					<td data-title="nombre">${estudiante.nombre}</td>
+	// 					<td data-title="paterno">${estudiante.paterno}</td>
+	// 					<td data-title="materno">${estudiante.materno}</td>
+	// 					<td data-title="Acciones">
+	// 						<div class="btn-group">
+	// 							${estadoBtn}
+	// 						</div>
+	// 					</td>
+	// 				</tr>
+	// 			`;
+
+	// 			tbody.append(fila);
+	// 		});
+	// 	}
+	// }
+
+	// function VerTodosBeneficiario(){
+	// 	location.reload();
+	// }
+	// </script>
+
+{% endblock %}

@@ -427,120 +427,7 @@ class CensoBeneficioController extends Controller
             $response->setData(['error' =>  'El estudiante no cumple con los requisitos']);
             return $response;
         }
-
-        // return $this->render('SieHerramientaBundle:CensoBeneficio:index.html.twig',array(
-        //     'institucion' => $institucion,
-        //     'estudiante' => $arrEstudiantesCenso
-        //     // 'codsie'=>$sie,
-        //     // 'disableElement'=>$disableElement
-        // )
-        // );        
-
-    //     $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
-    //     $query->bindValue(':user_id', $this->session->get('userId'));
-    //     $query->bindValue(':sie', $sie);
-    //     $query->bindValue(':roluser', $this->session->get('roluser'));
-    //     $query->execute();
-    //     $aTuicion = $query->fetchAll();
-
-    //     $existUE = 0;
-    //     $arrModalidades = array();        
-    //     // $arrLevel = array(
-    //     //     array('id'=>12,'level'=>'Educación Primaria Comunitaria Vocacional'),
-    //     //     array('id'=>13,'level'=>'Educación Secundaria Comunitaria Productiva'),
-    //     // ); 
-
-    //     $swcloseevent =  (is_object($this->checkOperativeChees($sie)))?1:0;   
-    //     // start this secction validate the last day to report the inscription INFO
-    //     $swcloseevent = ($swcloseevent)?1:$this->getLastDayRegistryOpeCheesEventStatus($this->limitDay);          
-    //     // end this secction validate the last day to report the inscription INFO                     
-
-    //     // start look for the level, grado, parallel & turno
-    //     $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
-    //     if($institucion){
-        	
-	//         $em = $this->getDoctrine()->getManager();
-	//         //get the Niveles
-
-	//         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-	//         $query = $entity->createQueryBuilder('iec')
-	//                 ->select('(iec.nivelTipo)')
-	//                 ->where('iec.institucioneducativa = :sie')
-	//                 ->andwhere('iec.gestionTipo = :gestion')
-	//                 ->andwhere('iec.nivelTipo = :nivel')
-	//                 ->setParameter('sie', $sie)
-	//                 ->setParameter('gestion', $this->session->get('currentyear') )
-	//                 // ->setParameter('gestion', 2020 )
-	//                 ->setParameter('nivel', '13')
-	//                 ->orderBy('iec.nivelTipo', 'ASC')
-	//                 ->distinct()
-	//                 ->getQuery();
-	//         $aNiveles = $query->getResult();
-
-    //         if(sizeof($aNiveles)>0){
-	// 	        $arrniveles = array();
-	// 	        foreach ($aNiveles as $nivel) {
-	// 	            $arrniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
-	// 	        }			
-	// 	    }else{
-    //             $response = new JsonResponse();
-    //             $response->setStatusCode(404);
-    //             return $response;
-    //         }
-
-	//     }        
-    //     // end   look for the level, grado, parallel & turno
-
-
-    //     // if ($aTuicion[0]['get_ue_tuicion'] == true){
-    //     if (1){
-    //         $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
-            
-    //         if(sizeof($objUE)>0){
-    //             $existUE = 1;
-    //             $objModalidades = $em->getRepository('SieAppWebBundle:EveModalidadesTipo')->findAll();
-    //             if(sizeof($objModalidades) > 0 ){
-    //                 foreach ($objModalidades as $value) {
-    //                     $arrModalidades[]=array('id'=>$value->getId(), 'modalidad'=>$value->getDescripcion() );
-    //                 }
-    //             }
-    //             $arrResponse = array(
-    //                 'sie'                 => $objUE->getId(),
-    //                 'institucioneducativa'=> $objUE->getInstitucioneducativa(),
-    //                 'existUE'         => $existUE,                
-    //                 'arrModalidades'  => $arrModalidades,                
-    //                 'arrLevel'         => $arrniveles,                
-    //                 'swcloseevent'         => $swcloseevent,
-    //                 'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
-    //             );               
-    //         }else{
-    //             $arrResponse = array(
-    //                 'sie'                 => '',
-    //                 'institucioneducativa'=> 'No tiene tuición sobre la institución educatia o no existe codigo SIE ',
-    //                 'existUE'             => $existUE,
-    //                 'arrModalidades'      => $arrModalidades,
-    //                 'arrLevel'            => $arrniveles,
-    //                 'swcloseevent'            => $swcloseevent,
-    //                 'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
-    //             );   
-    //         }            
-    //     }else{
-    //             $arrResponse = array(
-    //                 'sie'                 => '',
-    //                 'institucioneducativa'=> 'N',
-    //                 'existUE'         => $existUE,
-    //                 'arrModalidades'         => $arrModalidades,
-    //                 'arrLevel'         => $arrniveles,
-    //                 'swcloseevent'         => $swcloseevent,
-    //                 'urlreporte'=> ($swcloseevent)?$this->generateUrl('cheesevent_reportChessInscription', array('sie'=>$sie)):''
-    //             ); 
-    //     }
-        
-    //     $response = new JsonResponse();
-    //     $response->setStatusCode(200);
-    //     $response->setData($arrResponse);
-
-    //     return $response;        
+       
     }
 
     // /**
@@ -549,57 +436,90 @@ class CensoBeneficioController extends Controller
     //  * @param type $sie
     //  * return list of grados
     //  */
-    // public function getGradoAction(Request  $request) {
+    
+    public function reporteBeneficioAction(Request  $request) {
     	
-    // 	// ini vars
-    //     $em = $this->getDoctrine()->getManager();
-    //     $response = new JsonResponse();
-    //     // get the send values
-    //     $sie = $request->get('sie');
-    //     $idnivel = $request->get('levelId');
-    //     $gestionselected = $this->session->get('currentyear') ;
 
-	//     $agrados = array();
-
-    //     if($idnivel>0){
-	//         //get grado
-	//         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-	//         $query = $entity->createQueryBuilder('iec')
-	//                 ->select('(iec.gradoTipo)')
-	//                 //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
-	//                 ->where('iec.institucioneducativa = :sie')
-	//                 ->andWhere('iec.nivelTipo = :idnivel')
-	//                 ->andwhere('iec.gestionTipo = :gestion')
-	//                 ->andwhere('iec.gradoTipo IN (:agrados)')
-	//                 ->setParameter('sie', $sie)
-	//                 ->setParameter('idnivel', $idnivel)
-	//                 ->setParameter('gestion', $gestionselected)
-	//                 ->setParameter('agrados', array(3,4,5,6))
-	//                 ->distinct()
-	//                 ->orderBy('iec.gradoTipo', 'ASC')
-	//                 ->getQuery();
-	//         $aGrados = $query->getResult();
-
-	//         $agrados = array();
-	        
-	//         foreach ($aGrados as $grado) {
-	//         	$agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
-	//         }
-
-	//     }
-
-      
-    //   $arrResponse = array(
-    //   	'arrGrado' => $agrados,
-    //   	'existUE' => 1,
-
-    //   );
-    //   $response->setStatusCode(200);
-    //   $response->setData($arrResponse);
-
-    //   return $response;
+        // "roluser" => 7
+        // "roluserlugarid" => 31359
+        $em = $this->getDoctrine()->getManager();
+        $id_usuario = $this->session->get('userId');
         
-    // }
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+        $roluserlugarid = $this->session->get('roluserlugarid');
+
+        // $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrEstReg[0]['ei_id']))
+        // dump($roluserlugarid);die;
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+// dump($lugar);die;
+        if ($this->session->get('roluser') == 10) {
+            $wherenw = " where dt.id = '".$lugar->getCodigo()."' ";
+        }     
+        if ($this->session->get('roluser') == 7) {
+            $wherenw = " where lt4.codigo = '".$lugar->getCodigo()."' ";
+        }      
+        // dump($wherenw);die;
+              
+        $query = " select lt4.codigo as codigo_departamento,
+                                lt4.lugar as departamento,
+                                dt.id as codigo_distrito,
+                                dt.distrito as distrito,
+                                a.institucioneducativa_id,
+                                inst.institucioneducativa,
+                                a.pen, 
+                                a.reg,
+                                a.nuevo,
+                                (a.pen+a.reg+a.nuevo) total
+                    from (
+                    SELECT institucioneducativa_id, 
+                        SUM(pendiente) AS pen, 
+                        SUM(registrados) AS reg, 
+                        SUM(nuevo) AS nuevo 
+                    FROM (
+                        SELECT ic.institucioneducativa_id, 
+                            SUM(CASE WHEN cb.id IS NULL THEN 1 ELSE 0 END) AS pendiente, 
+                            SUM(CASE WHEN cb.id IS NOT NULL THEN 1 ELSE 0 END) AS registrados, 
+                            0 AS nuevo
+                        FROM ctr_estudiante_censo cec
+                        INNER JOIN estudiante_inscripcion ei ON cec.estudiante_inscripcion_id = ei.id
+                        INNER JOIN institucioneducativa_curso ic ON ei.institucioneducativa_curso_id = ic.id
+                        LEFT JOIN censo_beneficiario cb ON ei.id = cb.estudiante_inscripcion_id
+                        WHERE ic.nivel_tipo_id = 13
+                        AND ic.grado_tipo_id IN (4, 5, 6)
+                        GROUP BY ic.institucioneducativa_id
+                        UNION ALL
+                        SELECT cb.institucioneducativa_id, 
+                            0 AS pendiente, 
+                            0 AS registrados, 
+                            COUNT(0) AS nuevo
+                        FROM censo_beneficiario cb
+                        WHERE cb.nivel_tipo_id = 13
+                        AND cb.censo_tabla_id = 0
+                        GROUP BY cb.institucioneducativa_id
+                    ) AS c
+                    GROUP BY institucioneducativa_id) a
+                    INNER JOIN institucioneducativa inst ON a.institucioneducativa_id = inst.id
+                                INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+                                LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+                                LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+                                LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+                                LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+                                LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+                                INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id ".$wherenw." order by 1,3, 5";
+
+        $ueregCenso = $em->getConnection()->prepare($query);
+        $ueregCenso->execute();
+        $arrueregCenso = $ueregCenso->fetchAll();
+        // dump($arrueregCenso);die;
+        return $this->render('SieHerramientaBundle:CensoBeneficio:reporteIndex.html.twig',array(
+            'ue' => $arrueregCenso
+            // 'codsie'=>$sie,
+            // 'disableElement'=>$disableElement
+        )
+        );  
+     }
 
     // /**
     //  * get the paralelos

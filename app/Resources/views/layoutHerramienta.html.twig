@@ -738,10 +738,16 @@
                                 <li><a href="{{ path('censoinscription_index')}}">Registro Censo</a></li>
                                                             
                             </ul> #}
+                            {% if app.session.get('roluser') in [9] %}
                             <ul>
                                 <li><a href="{{ path('censobeneficio_index')}}">Registro Beneficio CPV</a></li>
                                                             
                             </ul>
+                            {% else %}
+                            <ul>
+                                <li><a href="{{ path('censobeneficio_reporteBeneficio')}}">Seguimiento Beneficio CPV</a></li>
+                            </ul>
+                            {% endif %}        
                         </li>  
                     {% endif %}
 
