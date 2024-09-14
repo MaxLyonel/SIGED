@@ -69,8 +69,9 @@
 										<th>Acciones</th>
 										</tr>
 								</thead>
-								{% if estudiante is not empty %}
 								<tbody>
+								{% if estudiante is not empty %}
+								
 									{% for estudiante in estudiante %}
 										<tr data-estudiante-id="{{estudiante.ei_id}}">
 											<td data-title="N°">{{ loop.index }}</td>
@@ -100,10 +101,13 @@
 											</td>
 										</tr>
 									{% endfor %}
-								</tbody>
-								{# {% else %}
-									No hay Maestros a ratificar #}
+								{% else %}
+										<tr>
+											<td colspan="10" class="text-center">No se encontraron estudiantes.</td>
+										</tr>
+									
 								{% endif %} 
+								</tbody>
 							</table>
 						{# </form> #}
 						</div>
@@ -190,48 +194,101 @@
 			}
 		});
 	}
-	function actualizarTablaEstudiantes(estudiantes) {
-		const tablaEstudiantes = $('#tabla-estudiantes');
-		tablaEstudiantes.find('tbody').empty(); // Limpiar el cuerpo de la tabla
+	// function actualizarTablaEstudiantes(estudiantes) {
+	// 	const tablaEstudiantes = $('#tabla-estudiantes');
+	// 	tablaEstudiantes.find('tbody').empty(); // Limpiar el cuerpo de la tabla
 
-		estudiantes.forEach((estudiante, index) => {
-			if (estudiante.estado === 2) {
-				estadoBtn = `<button type="button" class="btn btn-sm btn-danger" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Nuevo Registro">
-								<i class="fa fa-check-circle"></i> Nuevo Reg.
-							</button>`;
-			} else if (estudiante.estado === 0) {
-				estadoBtn = `<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Pendiente de Registro">
-								<i class="fa fa-check"></i>
-							</button>`;
-			} else {
-				estadoBtn = `<button type="button" class="btn btn-sm btn-success">
-								<i class="fa fa-check-circle"></i> Registrado
-							</button>`;
-			}
+	// 	estudiantes.forEach((estudiante, index) => {
+	// 		if (estudiante.estado === 2) {
+	// 			estadoBtn = `<button type="button" class="btn btn-sm btn-danger" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Nuevo Registro">
+	// 							<i class="fa fa-check-circle"></i> Nuevo Reg.
+	// 						</button>`;
+	// 		} else if (estudiante.estado === 0) {
+	// 			estadoBtn = `<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Pendiente de Registro">
+	// 							<i class="fa fa-check"></i>
+	// 						</button>`;
+	// 		} else {
+	// 			estadoBtn = `<button type="button" class="btn btn-sm btn-success">
+	// 							<i class="fa fa-check-circle"></i> Registrado
+	// 						</button>`;
+	// 		}
 				
 
+	// 		const fila = `
+	// 			<tr data-estudiante-id="${estudiante.ei_id}">
+	// 				<td data-title="N°">${index + 1}</td>
+	// 				<td data-title="grado">${estudiante.grado}</td>
+	// 				<td data-title="paralelo">${estudiante.paralelo}</td>
+	// 				<td data-title="turno">${estudiante.turno}</td>
+	// 				<td data-title="rude">${estudiante.codigo_rude}</td>
+	// 				<td data-title="carnet">${estudiante.carnet_identidad}</td>
+	// 				<td data-title="nombre">${estudiante.nombre}</td>
+	// 				<td data-title="paterno">${estudiante.paterno}</td>
+	// 				<td data-title="materno">${estudiante.materno}</td>
+	// 				<td data-title="Acciones">
+	// 					<div class="btn-group">
+	// 						${estadoBtn}
+	// 					</div>
+	// 				</td>
+	// 			</tr>
+	// 		`;
+
+	// 		tablaEstudiantes.find('tbody').append(fila);
+	// 	});
+	// }
+	function actualizarTablaEstudiantes(estudiantes) {
+		const tablaEstudiantes = $('#tabla-estudiantes');
+		const tbody = tablaEstudiantes.find('tbody');
+		tbody.empty(); // Limpiar el cuerpo de la tabla
+
+		if (estudiantes.length === 0) {
 			const fila = `
-				<tr data-estudiante-id="${estudiante.ei_id}">
-					<td data-title="N°">${index + 1}</td>
-					<td data-title="grado">${estudiante.grado}</td>
-					<td data-title="paralelo">${estudiante.paralelo}</td>
-					<td data-title="turno">${estudiante.turno}</td>
-					<td data-title="rude">${estudiante.codigo_rude}</td>
-					<td data-title="carnet">${estudiante.carnet_identidad}</td>
-					<td data-title="nombre">${estudiante.nombre}</td>
-					<td data-title="paterno">${estudiante.paterno}</td>
-					<td data-title="materno">${estudiante.materno}</td>
-					<td data-title="Acciones">
-						<div class="btn-group">
-							${estadoBtn}
-						</div>
-					</td>
+				<tr>
+					<td colspan="10" class="text-center">No se encontraron estudiantes.</td>
 				</tr>
 			`;
+			tbody.append(fila);
+		} else {
+			estudiantes.forEach((estudiante, index) => {
+				let estadoBtn;
+				if (estudiante.estado === 2) {
+					estadoBtn = `<button type="button" class="btn btn-sm btn-danger" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Nuevo Registro">
+									<i class="fa fa-check-circle"></i> Nuevo Reg.
+								</button>`;
+				} else if (estudiante.estado === 0) {
+					estadoBtn = `<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Pendiente de Registro">
+									<i class="fa fa-check"></i>
+								</button>`;
+				} else {
+					estadoBtn = `<button type="button" class="btn btn-sm btn-success">
+									<i class="fa fa-check-circle"></i> Registrado
+								</button>`;
+				}
 
-			tablaEstudiantes.find('tbody').append(fila);
-		});
+				const fila = `
+					<tr data-estudiante-id="${estudiante.ei_id}">
+						<td data-title="N°">${index + 1}</td>
+						<td data-title="grado">${estudiante.grado}</td>
+						<td data-title="paralelo">${estudiante.paralelo}</td>
+						<td data-title="turno">${estudiante.turno}</td>
+						<td data-title="rude">${estudiante.codigo_rude}</td>
+						<td data-title="carnet">${estudiante.carnet_identidad}</td>
+						<td data-title="nombre">${estudiante.nombre}</td>
+						<td data-title="paterno">${estudiante.paterno}</td>
+						<td data-title="materno">${estudiante.materno}</td>
+						<td data-title="Acciones">
+							<div class="btn-group">
+								${estadoBtn}
+							</div>
+						</td>
+					</tr>
+				`;
+
+				tbody.append(fila);
+			});
+		}
 	}
+
 	function VerTodosBeneficiario(){
 		location.reload();
 	}
