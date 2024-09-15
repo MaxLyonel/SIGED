@@ -125,6 +125,7 @@ class CensoBeneficioController extends Controller
 
     public function formRegistroAction(Request $request, $id){
        
+        return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $query="select nt.nivel, tt.turno, gt.grado, pt.paralelo,
                 e.id e_id, e.codigo_rude, (e.nombre ||' '|| e.paterno || ' '|| e.materno) estudiante, 
@@ -164,6 +165,7 @@ class CensoBeneficioController extends Controller
     }
 
     public function saveBeneficioAction(Request  $request){
+        return $this->redirect($this->generateUrl('login'));
         $response = new JsonResponse();
         try {
             $form = $request->request->all();
