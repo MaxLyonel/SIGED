@@ -33,7 +33,7 @@
 					<form style="margin-top: 15px;">
 						<div class="form-row">
 							<div class="form-group col-md-9">
-								<label class="col-md-4"><strong>Buscar por código RUDE:</strong></label>
+								{# <label class="col-md-4"><strong>Buscar por código RUDE:</strong></label>
 								<div class="input-group col-md-6">
 									<input type="text" class="form-control" placeholder="RUDE" id="codigoRude">
 									<span class="input-group-btn">
@@ -41,14 +41,15 @@
 											<i class="fa fa-search"></i> Buscar
 										</button>
 									</span>
-								</div>
+								</div> #}
 							</div>
 							<div class="form-group col-md-3 text-right"> <!-- Alinea el botón a la derecha -->
 								<button onclick="VerTodosBeneficiario()" type="button" class="btn btn-success">
 									<i class="fa fa-gears"></i> Ver todos
 								</button>
 							</div>
-							<p><strong>Nota: </strong> Para registrar más estudiantes, utilice la opción <strong>'Buscar'</strong>. Asegúrese de presentar la documentación correspondiente, que debe ser corroborada por la Dirección de la Unidad Educativa.</p>
+							{# <p><strong>Nota: </strong> Para registrar más estudiantes, utilice la opción <strong>'Buscar'</strong>. Asegúrese de presentar la documentación correspondiente, que debe ser corroborada por la Dirección de la Unidad Educativa.</p> #}
+							<p style="color: red;"><strong>Nota: </strong> Concluyo el registro de incentivo CPV 2024.</p>
 						</div>
 					</form>
 					
@@ -86,9 +87,9 @@
 											<td data-title="Acciones">
 												<div class="btn-group">
 													{% if estudiante.estado == 0 %}
-													<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio({{estudiante.ei_id}})" title="Pendiente de Registro">
+													{# <button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio({{estudiante.ei_id}})" title="Pendiente de Registro">
 														<i class="fa fa-check"></i>
-													</button>
+													</button> #}
 													{% endif %}
 													{% if estudiante.estado == 1 %}
 													<button type="button" class="btn btn-sm btn-success"> 
