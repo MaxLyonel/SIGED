@@ -306,8 +306,10 @@
               </div><br></div>
 
 
-            {% if (app.session.get('roluser') == 9 or app.session.get('roluser') == 8)   %} 
-               {% if (app.session.get('ie_gestion') == 2025 and app.session.get('ie_per_cod') == 22) %} 
+            {#% if (app.session.get('roluser') == 9 or app.session.get('roluser') == 8)   %#}  
+            {#% if (app.session.get('roluser') == 8)   %#} 
+             {% if (app.session.get('ie_id') == 82480031) or (app.session.get('ie_id') == 62460036)  %}
+               {% if (app.session.get('ie_gestion') == 2024 and app.session.get('ie_per_cod') == 2) %} 
                 <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                     <div class="cbp-caption">
                         <div class="cbp-caption-defaultWrap">
