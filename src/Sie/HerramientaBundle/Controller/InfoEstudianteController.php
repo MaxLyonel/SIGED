@@ -156,12 +156,12 @@ class InfoEstudianteController extends Controller {
         $gestion = $form['gestion'];
 
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        
         if($operativo >3){
             $this->session->set('donwloadLibreta', true);
         }else{
             $this->session->set('donwloadLibreta', false);
         }
-
         $mostrarSextoCerrado = false;
         if($tieneSextoSec and $gestion >= 2018 and $operativo == 4){
             $validacionSexto = $this->get('funciones')->verificarGradoCerrado($sie, $gestion);
@@ -716,7 +716,6 @@ class InfoEstudianteController extends Controller {
         //get the info ue
         $infoUe = $request->get('infoUe'); 
         $aInfoUeducativa = unserialize($infoUe);
-        // dump($aInfoUeducativa);die;
 
         /*
             para seleccion de idioma
@@ -757,7 +756,7 @@ class InfoEstudianteController extends Controller {
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
         // dump($operativo);die;
         
-        if($operativo > 1){
+        if($operativo > 2){
             $this->session->set('donwloadLibreta', true);
         }else{
             $this->session->set('donwloadLibreta', false);

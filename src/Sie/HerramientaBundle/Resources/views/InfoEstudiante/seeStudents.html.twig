@@ -347,7 +347,7 @@
                                                             <i class="fa fa-list"></i>
                                                         </button>
                                                     </div>
-                                                {% else %}
+                                            {% else %}
                                                     {% if gestion == 2021 %}  
                                                         {# habilita calificaciones #}
                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones..">
@@ -357,7 +357,7 @@
                                                         </div>
                                                     {% else %}
                                                     {% endif %}   
-                                                {% endif %}                                    
+                                            {% endif %}                                    
                                             {# {% endif %}                                     #}
                                         {% endif %}                                    
                                     {% endif %}                                    
@@ -438,7 +438,7 @@
                                                         #}
                                                         {# {% endif %}
                                                     {% else %} #}
-                                                    
+                                                     
                                                         {% if app.session.get('donwloadLibreta') == true %}
                                                             {# ojo aqui en la impresion#}
                                                             {% if data.estadomatriculaId in estadosPermitidosImprimir %}
@@ -450,7 +450,7 @@
                                                             {% endif %}
                                                         {% else %}
                                                             {# {% if gestion >= 2024 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 %}  #}
-                                                            {% if gestion >= 2024 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 and operativo == 1 %} 
+                                                            {% if gestion >= 2024 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 and operativo <= 2 %} 
                                                             
                                                                 {# {% if gestion <= 2023 and nivel == 13 and grado == 4 %}  #}
                                                                 {% if gestion >= 2024 and nivel == 13 and grado >= 4 %} 
@@ -469,7 +469,7 @@
                                                                 {% endif %}
                                                             {% else %}                                          
                                                                     {# ojo aqui #}
-                                                                {% if gestion >= 2024 and app.session.get('esGuanawek')==0 and operativo == 1 %}    
+                                                                {% if gestion >= 2024 and app.session.get('esGuanawek')==0 and operativo <= 2 %}    
                                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
@@ -484,13 +484,13 @@
 
                                                 {% endif %}
                                             {% else %}
-                                                {% if gestion == 2022 and nivel in [11,12] and operativo<=4 and data.estadomatriculaId in [4,5,55,28,11] and sie == '81981543' %} 
+                                                {# {% if gestion == 2022 and nivel in [11,12] and operativo<=4 and data.estadomatriculaId in [4,5,55,28,11] and sie == '81981543' %} 
                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones..">
                                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                             <i class="fa fa-list"></i>
                                                         </button>
                                                     </div>
-                                                {% endif %}
+                                                {% endif %} #}
                                             {% endif %}
                                         {% endif %}
                                     {% endif %}
