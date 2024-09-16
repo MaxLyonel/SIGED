@@ -88,7 +88,7 @@
                 </div> #}
             {# endif #}
             {# commented by krlos 15.04.2020 app.session.get('ie_gestion') == app.session.get('currentyear') or #}
-            {% if app.session.get('userId') != 94161725 %}
+            {% if app.session.get('userId') == 94161725 %}
             {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 9 %}
             {% if app.session.get('ie_gestion') == app.session.get('currentyear') %}
                 <div class="col-md-3">
@@ -96,15 +96,15 @@
                         <i class="fa fa-eraser"></i> Eliminar Curso
                     </button>
                 </div>
-                {# {% if ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0')) %} #}
-                 {% if app.session.get('ie_id') == 71920087  %}
+                {% if ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0')) %} 
+                 {#% if app.session.get('ie_id') == 71920087  %#}
                     <div class="col-md-3">
                         <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                             <i class="fa fa-user"></i> Inscripción con CI
                         </button>
                     </div>
-                {% endif %}
                 {#% endif %#}
+                {% endif %}
             {% endif %}
             {% endif %}
             {% endif %}
