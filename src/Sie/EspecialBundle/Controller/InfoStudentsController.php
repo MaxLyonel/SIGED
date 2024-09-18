@@ -223,7 +223,7 @@ class InfoStudentsController extends Controller {
       //visual- programa y multiple - etapas
       if($gestion>2023 and $objArea->getId()==2 and $nivel==411 and in_array($programa,[7,8,25,26])){
         
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
 
