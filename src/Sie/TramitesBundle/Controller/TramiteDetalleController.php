@@ -951,7 +951,7 @@ class TramiteDetalleController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Controlador que muestra el listado de participantes para la autorizacion en direccion departamental de su tramite
+    // 2 Controlador que muestra el listado de participantes para la autorizacion en direccion departamental de su tramite
     // PARAMETROS: institucionEducativaId, gestionId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
@@ -1102,7 +1102,7 @@ class TramiteDetalleController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Controlador que registra la autorización del trámite de los participantes selecionados
+    // 3 Controlador que registra la autorización del trámite de los participantes selecionados
     // PARAMETROS: estudiantes[], boton
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
@@ -1200,7 +1200,7 @@ class TramiteDetalleController extends Controller {
                     } else {
                         $msg = array('0'=>false, '1'=>'participante no encontrado');
                     }
-
+                    
                     if ($msg[0]) {
                         switch ($nivelId) {
                             case 1:
@@ -5587,7 +5587,8 @@ class TramiteDetalleController extends Controller {
             $context = stream_context_create($options);
 
             // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_bth_tituloEstudiante_unidadeducativa_'.$ges.'_v1.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
+            //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_bth_tituloEstudiante_unidadeducativa_'.$ges.'_v1.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_bth_tituloEstudiante_unidadeducativa_v1_cvm.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
