@@ -1630,6 +1630,7 @@ public function checksegipstudentAction(Request $request){
     }else{
       $emPermitidos = array(6,$estadomatriculaId);
     }
+    $emPermitidos = array(10,6,$estadomatriculaId);
     $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>$emPermitidos));
     $emArray = array();
     foreach($estadosMatricula as $em){
@@ -1684,11 +1685,12 @@ public function checksegipstudentAction(Request $request){
                     ->getResult();
   
   $sw = true;
-  if($form['estadomatriculaTipo'] == 6 and $notas){  //NO INCORPORADO
+  if($form['estadomatriculaTipo'] == 66 and $notas){  //NO INCORPORADO
     $sw = false;
     $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>NO INCORPORADO</strong>, pues el estudiante cuenta con calificaciones.');
   }
-  if($form['estadomatriculaTipo'] == 10 and !$notas) { //RETIRO ABANDONO
+  //if($form['estadomatriculaTipo'] == 10 and !$notas) { //RETIRO ABANDONO
+  if($form['estadomatriculaTipo'] == 100 and $notas) { //RETIRO ABANDONO
     $sw = false;
     $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>RETIRADO ABANDONO</strong>, pues el estudiante no cuenta con calificaciones.');
   }
@@ -1760,7 +1762,8 @@ public function checksegipstudentAction(Request $request){
                 'operativo'=>$operativo,
                 'arrDataLibreta'=> $arrDataLibreta,
                 'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
-                'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']
+                'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId'],
+                'areaEspecialId'=> $aInfoUeducativa['ueducativaInfoId']['areaEspecialId']
                 // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
     ));
 
