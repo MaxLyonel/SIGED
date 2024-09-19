@@ -99,7 +99,7 @@
                                 <td>{{loop.index}}</td>
                                 <td>{{data.codigoRude}}</td>
                                 <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
-                                {% if (data.estadomatriculaId == 4 or data.estadomatriculaId == 7 or data.estadomatriculaId == 68) and gestion > 2019 %}
+                                {#% if (data.estadomatriculaId == 4 or data.estadomatriculaId == 7 or data.estadomatriculaId == 68) and gestion > 2019 %#}
                                     <td>
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Cambiar estado">
                                             <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getEstadosMatricula('{{infoUe}}',{{data.estInsId}},{{arrDataLibreta.libreta}});">
@@ -107,9 +107,9 @@
                                             </button>
                                         </div>    
                                     </td>
-                                {% else %}
-                                    <td>{{data.estadomatricula}}</td>
-                                {% endif %}
+                                {# % else %#}
+                                  {#}  <td>{{data.estadomatricula}}</td>#}
+                                {#% endif % #}
                                 <td>
                                 
                                     {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones  #}
