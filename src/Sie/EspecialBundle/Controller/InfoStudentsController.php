@@ -263,7 +263,7 @@ class InfoStudentsController extends Controller {
       
        //para talento y dificultades en general  - SEMESTRAL
        if(($nivel==410 or $nivel==411) and $gestion>2023 and ($objArea->getId()==7 or $objArea->getId()==6)){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
       //metal-psiquica - SEMESTRAL
