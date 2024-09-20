@@ -55,6 +55,16 @@ class ChangeMatriculaController extends Controller {
         $infoStudent = $request->get('infoStudent');
         $arrInfoStudent = json_decode($infoStudent,true);
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($arrInfoStudent['id']);
+        $query  = $em->getConnection()->prepare("
+                  select count(*) conteonota
+                  from estudiante_asignatura ea 
+                  inner join estudiante_nota en on en.estudiante_asignatura_id = ea.id
+                  where ea.estudiante_inscripcion_id =".$arrInfoStudent['eInsId']." ;");
+        $query->execute();
+        $estNotas = $query->fetchAll();
+        if ($estNotas[0]['conteonota'] > 0){
+          unset($this->arrQuestion[1]);
+        }
         return $this->render('SieHerramientaBundle:ChangeMatricula:indexquestion.html.twig', array(
             'infoStudent'         => json_decode($infoStudent,true),
             'infoUnidadEducativa' => unserialize($infoUe),
