@@ -26,3 +26,9 @@ censobeneficio_reporteBeneficio:
     options:
          expose: true 
 
+censobeneficio_verRegistro:
+    path:    /verRegistro/{id}/
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:verRegistro }
+    options:
+        expose: true  
+

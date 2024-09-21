@@ -1,0 +1,99 @@
+<form id="beneficio-form"  method="POST" enctype="multipart/form-data">
+<div class="panel panel-default">
+    <div class="panel-body no-padding" id="modal-body">
+        <div class="alert " style="padding:10px">
+            <h5 class="text-primary">Datos del Curso</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Nivel</th><td>{{estudiante.nivel|upper}}</td>
+                    <th>Turno</th><td>{{estudiante.turno|upper}}</td>
+                </tr>
+                <tr>
+                    <th>Grado</th><td>{{estudiante.grado|upper}}</td>
+                    <th>Paralelo</th><td>{{estudiante.paralelo|upper}}</td>
+                </tr>
+            </table>
+            <h5 class="text-primary">Datos de la/el Estudiante</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Codigo Rude</th><td><strong>{{estudiante.codigo_rude}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Estudiante</th><td><strong>{{estudiante.estudiante|upper}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Carnet de Identidad</th><td>{{estudiante.ci}}{% if estudiante.complemento %} - {{estudiante.complemento}}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Fecha de Nacimiento</th><td>{{estudiante.fecha_nacimiento|date('d-m-Y')}}</td>
+                </tr>
+                <tr>
+                    <th>Formulario de Registro <br>de Beneficio del Estudiante (Anexo 1)</th>
+                    <td>
+                        
+                        {# <p>Adjunto: <a href="/uploads/archivos/cobertura/{{institucion.id}}/{{iai.planEmergenciaSanitaria}}" target="_blank"><i class="fa fa-fw fa-2x fa-file-pdf-o"></i></a></p> #}
+                            <a class="btn btn-success btn-xs" href="{{ asset('uploads/archivos/censo/2024/' ~ estudiante.sie ~ '/' ~ estudiante.codigo_rude ~ '/' ~ formulario) }}"   target="_blank"><i class="fa fa-fw fa-2x fa-file-pdf-o"></i>Ver Formulario</a>
+                        
+                        {# <input type="file" class="form-control" accept="application/pdf, image/jpeg, image/jpg" required name="formulario_registro" id="formulario_registro"> #}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Certificado de Participación como <br>Agente Censal CPV-2024 (emitido por el INE)</th>
+                    <td>
+                        
+                        <a class="btn btn-success btn-xs" href="{{ asset('uploads/archivos/censo/2024/' ~ estudiante.sie ~ '/' ~ estudiante.codigo_rude ~ '/' ~ certificado) }}"   target="_blank"><i class="fa fa-fw fa-2x fa-file-pdf-o"></i>Ver Certificado</a>
+                        
+                        {# <input type="file" class="form-control" accept="application/pdf, image/jpeg, image/jpg" required name="certificado_cpv" id="certificado_cpv"> #}
+                    </td>
+                </tr>
+            </table>
+            <!-- Tabla para agregar áreas curriculares -->
+            <h5 class="text-primary">Áreas Curriculares</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <thead>
+                    <tr>
+                        <th>Área de Saberes y Conocimientos Elegidas</th>
+                        <th style="text-align: center;">2do Tri</th>
+                        <th style="text-align: center;">3er Tri</th>
+                        {# <th>Acción</th> #}
+                    </tr>
+                </thead>
+                <tbody id="area-curricular-table-body">
+                    {% for areaNota in areasNotas %}
+                    <tr>
+                        <td>{{areaNota.asignatura}}</td>
+                        <td style="text-align: center;">{{areaNota.t2}}</td>
+                        <td style="text-align: center;">{{areaNota.t3}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2"><strong>Total de Puntos:</th>
+                        <td style="text-align: center;" colspan="2"><strong>{{sumaTotal}}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            {# <button type="button" class="btn btn-success" id="add-area-curricular" onclick="addAreaCurricular()">Agregar Área Curricular</button>
+            <input type="hidden" name="inscripcion_id" id="inscripcion_id" value="{{ estudiante.ei_id }}"> #}
+            
+            <!-- Botones de acción -->
+            <div class="text-right">
+                {# <button type="button" class="btn btn-primary" onclick="registrarBeneficio()" id="btn-registrar">Registrar</button> #}
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+            <p class="text-danger"><strong>Nota: </strong> Debe verificar los puntajes sean igual a lo solicitado por el estudiante en el Formulario Anexo 1.</p>
+        </div>
+    </div>
+</div>
+</form>
+<!-- Script para manejar la tabla dinámica -->
+
+<script>
+    
+
+</script>
+
+
+
