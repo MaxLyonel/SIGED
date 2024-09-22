@@ -24,14 +24,17 @@
     {% if objObsQA %}
         {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': data.ieducativa.id,'institucion': data.ieducativa.institucioneducativa, 'gestion': data.gestion} %}
     {% endif %}
-
     {% if operativo == 0 %}
         <h3 style="color:#ff0000;" align="center"> Inscripciones </h3>
     {% elseif bimestre == 0 %}
         <h3 style="color:#ff0000;" align="center"> Inscripciones Cerradas </h3>
     {% else %}
-        {# <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado </h3> #}
+        {# /***datos para el operativo**/ #}
+        {% if operativo == 3 and bimestre == 2 %} 
+        <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado </h3>
+        {% else %}
         <h3 style="color:#ff0000;" align="center"> Trimestre {{operativo}} </h3>
+        {% endif %}
     {% endif %}
     <input type="hidden" id="bimestre" value="{{bimestre}}">
 
