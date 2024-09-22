@@ -36,33 +36,50 @@ class CensoBeneficioController extends Controller
 
     public function indexAction(Request $request){
         
-        $ie_id=$this->session->get('ie_id');
+        
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         // dump($id_usuario);die;
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
-        }        
+        }
+        
+        $roluser = $this->session->get('roluser');
+
+        // Si el rol es 9, toma el 'ie_id' de la sesión
+        if ($roluser == 9) {
+            $ie_id = $this->session->get('ie_id');
+        } elseif (in_array($roluser, [8, 7, 10])) {
+            $sie = $request->get('sie');
+            // verificamos si tiene tuicion
+            if (!empty($sie)) {
+                $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie',  $sie );
+                $query->bindValue(':rolId', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+
+                if ($aTuicion[0]['get_ue_tuicion']) {
+                    $ie_id = $sie;
+                } else {
+                    $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
+                    return $this->render('SieHerramientaBundle:CensoBeneficio:findUe.html.twig');
+                }
+            }
+        } else {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // Si el 'ie_id' es null o -1, muestra un formulario para seleccionar la unidad educativa
+        if (empty($ie_id) || $ie_id == -1) {
+            return $this->render('SieHerramientaBundle:CensoBeneficio:findUe.html.twig');
+        }
         
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($ie_id);
 
         $gestion = $request->getSession()->get('currentyear');
-        // $query="select 
-        //         e.id e_id, e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento,
-        //         ei.id ei_id, ei.estadomatricula_tipo_id, ic.institucioneducativa_id, ic.nivel_tipo_id, nt.nivel, ic.grado_tipo_id, gt.grado, ic.paralelo_tipo_id, pt.paralelo, ic.turno_tipo_id, tt.turno,
-        //         cec.id cec_id, cec.ced_identidad, cec.nombres cnombres, cec.primer_ap cpaterno, cec.segundo_ap cmaterno, cec.departamento
-        //         from estudiante_inscripcion ei 
-        //         inner join estudiante e on ei.estudiante_id = e.id 
-        //         inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id  = ic.id
-        //         inner join ctr_estudiante_censo cec on cec.estudiante_inscripcion_id = ei.id
-        //         inner join nivel_tipo nt on ic.nivel_tipo_id = nt.id
-        //         inner join grado_tipo gt on ic.grado_tipo_id = gt.id
-        //         inner join paralelo_tipo pt on ic.paralelo_tipo_id = pt.id
-        //         inner join turno_tipo tt on ic.turno_tipo_id = tt.id
-        //         where ic.nivel_tipo_id = 13
-        //         and ic.gestion_tipo_id = 2024
-        //         and ic.institucioneducativa_id = $ie_id
-        //         order by ic.nivel_tipo_id, ic.grado_tipo_id desc, ic.paralelo_tipo_id, ic.turno_tipo_id, e.paterno, e.materno, e.nombre";
+      
         $query = " select a.e_id, a.codigo_rude, a.nombre, a.paterno, a.materno, a.carnet_identidad, a.complemento, a.fecha_nacimiento,
                     a.ei_id, a.estadomatricula_tipo_id, a.institucioneducativa_id, a.nivel_tipo_id, a.nivel, a.grado_tipo_id, a.grado, a.paralelo_tipo_id, a.paralelo, a.turno_tipo_id, a.turno,
                     a.cec_id, a.estado

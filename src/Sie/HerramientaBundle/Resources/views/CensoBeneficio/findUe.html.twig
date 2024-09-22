@@ -1,0 +1,70 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+	{{parent()}}
+{% endblock %}
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+	<h2><i class="fa fa-table"></i> Registro Beneficio para Estudiantes Participantes CPV-2024 <span></span></h2>
+	<div class="breadcrumb-wrapper hidden-xs">
+		<span class="label">Usted esta aquí:</span>
+		<ol class="breadcrumb">
+			<li>
+				<i class="fa fa-home"></i>
+				<a href="#">Registro Beneficio Censo</a>
+				<i class="fa fa-angle-right"></i>
+			</li>
+			<li class="active"></li>
+		</ol>
+	</div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+	<header class="navbar navbar-default" style="background-color: #00bbc8; padding: 20px; border-radius: 8px 8px 0 0; text: #969696">
+		<div class="navbar-header">
+			<h2 style="color: white; margin-top: 0;"><strong>Registro de Beneficio para Estudiantes CPV 2024</strong></h2>
+			<h5 style="color: white; margin-top: 0;"><strong>Buscar Unidad Educativa</strong></h5>
+		</div>
+	</header>
+	<div class="col-md-12">
+		{% for flashMessage in app.session.flashbag.get('searchIe') %}
+			<div class="alert alert-danger" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				{{ flashMessage }}
+			</div>
+		{% endfor %}
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form action="{{ path('censobeneficio_index') }}" method="get">
+						<div class="form-row">
+							<div class="form-group col-md-9">
+								<label  class="col-md-4" for="sie">Código SIE:</label>
+								<div class="input-group col-md-6">
+									<input type="text" class="form-control" placeholder="Código SIE" name="sie" id="sie" pattern="[0-9]+" title="Solo se permiten números" required>
+									<span class="input-group-btn">
+										<button type="submit" class="btn btn-primary">
+											<i class="fa fa-search"></i>Buscar
+										</button>
+									</span>
+								</div>
+							</div>
+						</div>
+					</form>
+
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+</div>
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+{% endblock %}
