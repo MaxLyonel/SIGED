@@ -216,7 +216,7 @@ class InfoStudentsController extends Controller {
       }
 
       if( in_array($nivel,$nivelesLibreta ) and $gestion>2023){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }   
      
@@ -230,7 +230,7 @@ class InfoStudentsController extends Controller {
       //intelectual- multilple-TEA y/o itinerarios educativos - TRIMESTRAL
       //auditiva- programa multilple- TRIMESTRAL 1-43
       if($gestion>2023 and ($objArea->getId()==3 or $objArea->getId()==12 or $objArea->getId()==1) and ($nivel==411 and in_array($programa,[37,43])) ){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
 
@@ -252,7 +252,7 @@ class InfoStudentsController extends Controller {
       } 
        //para modalidad 1 y diferentes programas  - TRIMESTRAL
        if($nivel==411 and $gestion>2023 and in_array($programa,[43])){
-        $arrDataLibreta['calificaciones'] = true;
+        $arrDataLibreta['calificaciones'] = false;
         $arrDataLibreta['libreta'] = true;
       }
       //Atención temprana semestral
