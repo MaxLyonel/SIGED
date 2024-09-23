@@ -642,7 +642,7 @@ class CensoBeneficioController extends Controller
     }
 
     public function editRegistroAction(Request $request, $id){
-        return $this->redirect($this->generateUrl('login'));
+        // return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $query="select cb.id cb_id, nt.nivel, tt.turno, gt.grado, pt.paralelo,
                 e.id e_id, e.codigo_rude, (e.nombre ||' '|| e.paterno || ' '|| e.materno) estudiante, 
@@ -716,5 +716,52 @@ class CensoBeneficioController extends Controller
             )
         );
     }
+
+    public function elimRegistroAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $regBeneficiario = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findOneBy(['estudianteInscripcion' => $id]);
+
+        if ($regBeneficiario) {
+            $id_usuario = $this->get('session')->get('userId');
+            $em->getConnection()->beginTransaction(); // Iniciar transacción
+
+            try {
+                // Actualizar campos de modificación en CensoBeneficiario
+                $regBeneficiario->setUsuarioId($id_usuario);
+                $regBeneficiario->setFechaModificacion(new \DateTime('now'));
+                $em->flush(); // Solo es necesario un flush después de la actualización
+
+                // Buscar y eliminar los registros relacionados en CensoBeneficiarioRegular
+                $regBeneficiarioRegular = $em->getRepository('SieAppWebBundle:CensoBeneficiarioRegular')
+                                            ->findBy(['censoBeneficiario' => $regBeneficiario]);
+
+                // Eliminar cada registro relacionado
+                foreach ($regBeneficiarioRegular as $registro) {
+                    $em->remove($registro); // No es necesario persistir antes de eliminar
+                }
+
+                $em->flush(); // Un solo flush es suficiente después de eliminar los registros
+
+                // Eliminar el registro principal de CensoBeneficiario
+                $em->remove($regBeneficiario);
+                $em->flush();
+
+                $em->getConnection()->commit(); // Confirmar transacción
+
+                $this->addFlash('success', 'El registro y sus relaciones fueron eliminados correctamente.');
+                return new JsonResponse(['success' => true]);
+            } catch (\Exception $e) {
+                $em->getConnection()->rollBack(); // Revertir transacción si hay un error
+                $this->addFlash('error', 'Ocurrió un error al eliminar el registro: ' . $e->getMessage());
+                return new JsonResponse(['success' => false, 'error' => $e->getMessage()]);
+            }
+        } else {
+            // Si no se encuentra el registro
+            $this->addFlash('error', 'No se encontró el registro de CensoBeneficiario.');
+            return new JsonResponse(['success' => false, 'error' => 'Registro no encontrado.']);
+        }
+    }
+
 
 }
