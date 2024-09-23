@@ -60,27 +60,32 @@
                     </tr>
                 </thead>
                 <tbody id="area-curricular-table-body">
+                    <!-- Las filas serán insertadas dinámicamente aquí -->
                     {% for areaNota in areasNotas %}
-                    <tr>
+                    <tr id="row-{{ loop.index }}">
                         <td>
                             <select class="form-control area-select" name="areas[{{ loop.index }}][id]" required>
                                 <option value="{{ areaNota.id }}">{{ areaNota.asignatura }}</option>
                             </select>
                         </td>
                         <td style="text-align: center;">
-                            <input type="number" name="t2_{{ loop.index }}" value="{{ areaNota.t2 }}" style="width: 50px; text-align: center;">
+                            <input class="form-control trimestre-input" min="0" max="30" type="number" name="t2_{{ loop.index }}" value="{{ areaNota.t2 }}" style="text-align: center;" min="0" max="30">
                         </td>
                         <td style="text-align: center;">
-                            <input type="number" name="t3_{{ loop.index }}" value="{{ areaNota.t3 }}" style="width: 50px; text-align: center;">
+                            <input class="form-control trimestre-input" min="0" max="30" type="number" name="t3_{{ loop.index }}" value="{{ areaNota.t3 }}" style="text-align: center;" min="0" max="30">
                         </td>
-                        <td><button type="button" class="btn btn-danger btn-remove"><i class="fa fa-trash"></i></button></td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-remove" data-row-id="row-{{ loop.index }}" data-select-id="{{ loop.index }}" onclick="eliminarFila('row-{{ loop.index }}', '{{ loop.index }}')">
+                            <i class="fa fa-trash"></i>
+                </button>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
                     <tr>
                         <th colspan="2">Total de Puntos:</th>
-                        <td style="text-align: center;" colspan="2"><strong>{{ sumaTotal }}</strong></td>
+                        <td style="text-align: center;" colspan="2" id="total-puntos"><strong>{{ sumaTotal }}</strong></td>
                     </tr>
                 </tfoot>
             </table>
@@ -101,27 +106,32 @@
 <!-- Script para manejar la tabla dinámica -->
 
 <script>
-    let areaCount = 0;
+    // let areaCount = 0;
+    let areaCount = document.querySelectorAll('#area-curricular-table-body tr').length;  // Cuenta inicial de áreas
     const maxAreas = 3;
 
     // Las áreas son recibidas desde el controlador como un array de objetos
     let areasDisponibles = {{ areas|json_encode|raw }};
     let areasSeleccionadas = [];
     
-
     function addAreaCurricular() {
         const lastSelect = document.querySelector('#area-curricular-table-body tr:last-child select');
+        
         if (lastSelect && lastSelect.value === "") {
             alert("Debes seleccionar un área antes de agregar una nueva.");
             return;
         }
 
-        if (areaCount < maxAreas && areasDisponibles.length > 0) {
-            areaCount++;
+        // Si el número de áreas es mayor o igual al máximo, no permite agregar más
+        if (areaCount >= maxAreas) {
+            alert("Solo puedes agregar un máximo de 3 áreas curriculares.");
+            return;
+        }
 
+        if (areasDisponibles.length > 0) {
             const tableBody = document.getElementById('area-curricular-table-body');
             const newRow = document.createElement('tr');
-            const rowIndex = areaCount - 1;
+            const rowIndex = areaCount;
 
             // Crear el select con las áreas curriculares disponibles
             let selectHTML = `
@@ -136,63 +146,78 @@
             // Agregar fila con select, inputs y botón de eliminar
             newRow.innerHTML = `
                 <td>${selectHTML}</td>
-                <td><input type="number" class="form-control trimestre-input" min="0" max="30" value="0" name="areas[${rowIndex}][trimestre_2]" required></td>
-                <td><input type="number" class="form-control trimestre-input" min="0" max="30" value="0" name="areas[${rowIndex}][trimestre_3]" required></td>
-                <td><button type="button" class="btn btn-danger btn-remove"><i class="fa fa-trash"></i></button></td>
+                <td><input type="number" class="form-control trimestre-input" min="0" max="30" value="0" name="areas[${rowIndex}][trimestre_2]" style="text-align: center;" required></td>
+                <td><input type="number" class="form-control trimestre-input" min="0" max="30" value="0" name="areas[${rowIndex}][trimestre_3]" style="text-align: center;" required></td>
+                <td><button type="button" class="btn btn-danger btn-remove" data-row-id="row-${rowIndex}" data-select-id="${rowIndex}" onclick="eliminarFila('row-${rowIndex}', '${rowIndex}')"><i class="fa fa-trash"></i></button></td>
             `;
 
             tableBody.appendChild(newRow);
+            areaCount++;
 
+            // Event listeners para el nuevo select y los inputs
             const select = newRow.querySelector('select');
-            const removeButton = newRow.querySelector('.btn-remove');
             const inputs = newRow.querySelectorAll('.trimestre-input');
 
-            select.addEventListener('change', function() {
-                const selectedAreaId = select.value;
+            // select.addEventListener('change', function () {
+            //     const selectedAreaId = select.value;
 
-                if (selectedAreaId && !areasSeleccionadas.includes(selectedAreaId)) {
-                    areasSeleccionadas.push(selectedAreaId);
-                    areasDisponibles = areasDisponibles.filter(area => area.id != selectedAreaId);
-                    select.disabled = true; // Deshabilitar después de seleccionar
-                    actualizarSelects();
-                } else {
-                    alert('Esta área ya ha sido seleccionada.');
-                }
-            });
+            //     if (selectedAreaId && !areasSeleccionadas.includes(selectedAreaId)) {
+            //         areasSeleccionadas.push(selectedAreaId);
+            //         areasDisponibles = areasDisponibles.filter(area => area.id != selectedAreaId);
+            //         // select.disabled = true;
+            //         actualizarSelects();
+            //     } else {
+            //         alert('Esta área ya ha sido seleccionada.');
+            //         select.value = ""; // Resetea el select si la opción ya estaba seleccionada
+            //     }
+            // });
 
             inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    validarPuntos(input);
+                input.addEventListener('input', function () {
                     calcularSumaTotal();
                 });
             });
 
-            removeButton.addEventListener('click', function() {
-                eliminarFila(newRow, select);
-            });
-
+            // Deshabilita el botón si se alcanzó el máximo
             if (areaCount === maxAreas || areasDisponibles.length === 0) {
                 document.getElementById('add-area-curricular').disabled = true;
             }
         }
     }
 
-    function actualizarSelects() {
-        const selects = document.querySelectorAll('.area-select:not([disabled])');
-        selects.forEach(select => {
-            const selectedValue = select.value;
-            const selectedText = select.options[select.selectedIndex]?.text;
+    function eliminarFila(rowId, selectId) {
+        // Eliminar la fila
+        const row = document.getElementById(rowId);
+        if (row) {
+            row.remove();
+            areaCount--;
 
-            select.innerHTML = `<option value="" disabled>Selecciona un área</option>`;
-            areasDisponibles.forEach(area => {
-                select.innerHTML += `<option value="${area.id}">${area.asignatura}</option>`;
-            });
+            // Reactivar el botón de agregar si no se ha alcanzado el máximo
+            document.getElementById('add-area-curricular').disabled = false;
 
-            if (selectedValue) {
-                select.innerHTML += `<option value="${selectedValue}" selected>${selectedText}</option>`;
+            // Remover el área seleccionada del array de seleccionadas
+            const select = document.querySelector(`select[name="areas[${selectId}][id]"]`);
+            if (select && select.value) {
+                areasSeleccionadas = areasSeleccionadas.filter(area => area !== select.value);
+                actualizarSelects(); // Actualizar las áreas disponibles
             }
-        });
+
+            calcularSumaTotal(); // Recalcular la suma
+        }
     }
+
+    function actualizarSelects() {
+    const selects = document.querySelectorAll('.area-select');
+    selects.forEach(select => {
+        const selectedValue = select.value;
+        select.innerHTML = '<option value="" disabled>Selecciona un área</option>';
+        areasDisponibles.forEach(area => {
+            select.innerHTML += `<option value="${area.id}">${area.asignatura}</option>`;
+        });
+        // Mantener la opción seleccionada si ya se seleccionó antes
+        select.value = selectedValue;
+    });
+}
 
     function validarPuntos(input) {
         const value = parseInt(input.value) || 0;
@@ -217,19 +242,6 @@
         document.getElementById('total-puntos').textContent = total;
     }
 
-    function eliminarFila(fila, select) {
-        const selectedAreaId = select.value;
-        areasSeleccionadas = areasSeleccionadas.filter(id => id != selectedAreaId);
-
-        const removedArea = {{ areas|json_encode|raw }}.find(area => area.id == selectedAreaId);
-        areasDisponibles.push(removedArea);
-
-        fila.remove();
-        areaCount--;
-        calcularSumaTotal();
-        document.getElementById('add-area-curricular').disabled = false;
-        actualizarSelects();
-    }
 
     function registrarBeneficio() {
         const inscripcionId = document.getElementById('inscripcion_id').value;
