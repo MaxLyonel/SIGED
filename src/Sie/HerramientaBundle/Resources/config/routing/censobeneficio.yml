@@ -38,3 +38,10 @@ censobeneficio_editRegistro:
     options:
         expose: true   
 
+censobeneficio_elimRegistro:
+    path:    /elimRegistro/{id}/
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:elimRegistro }
+    options:
+        expose: true   
+
+
