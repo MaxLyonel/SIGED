@@ -26,6 +26,16 @@
 			<h5 style="color: white; margin-top: 0;"><strong>Institución Educativa: {{ institucion.id }} - {{institucion.institucioneducativa }}</strong></h5>
 		</div>
 	</header>
+	{% if operativo >= 2 %}
+	<div class="col-md-12">
+		
+			<div class="alert alert-danger" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				La Unidad Educativa {{ institucion.id }} - {{institucion.institucioneducativa }} ya finalizo el operativo del {{ operativo }} trimestre.
+			</div>
+		
+	</div>
+	{% endif %}
 	<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-default">
@@ -33,15 +43,18 @@
 					<form style="margin-top: 15px;">
 						<div class="form-row">
 							<div class="form-group col-md-9">
-								{# <label class="col-md-4"><strong>Buscar por código RUDE:</strong></label>
+								{% if app.session.get('roluser') in [7] and  operativo < 2 %}
+								<label class="col-md-4"><strong>Buscar por código RUDE:</strong></label>
 								<div class="input-group col-md-6">
+									<input type="hidden" class="form-control" id="sie" name="sie" value="{{ institucion.id }}">
 									<input type="text" class="form-control" placeholder="RUDE" id="codigoRude">
 									<span class="input-group-btn">
 										<button onclick="BucarBeneficiario()" type="button" class="btn btn-primary">
 											<i class="fa fa-search"></i> Buscar
 										</button>
 									</span>
-								</div> #}
+								</div>
+								{% endif %}
 							</div>
 							<div class="form-group col-md-3 text-right"> <!-- Alinea el botón a la derecha -->
 								<button onclick="VerTodosBeneficiario()" type="button" class="btn btn-success">
@@ -49,7 +62,7 @@
 								</button>
 							</div>
 							{# <p><strong>Nota: </strong> Para registrar más estudiantes, utilice la opción <strong>'Buscar'</strong>. Asegúrese de presentar la documentación correspondiente, que debe ser corroborada por la Dirección de la Unidad Educativa.</p> #}
-							<p style="color: red;"><strong>Nota: </strong> Concluyo el registro de incentivo CPV 2024.</p>
+							{# <p style="color: red;"><strong>Nota: </strong> Concluyo el registro de incentivo CPV 2024.</p> #}
 						</div>
 					</form>
 					
@@ -86,15 +99,26 @@
 											<td data-title="materno">{{ estudiante.materno }}</td>
 											<td data-title="Acciones">
 												<div class="btn-group">
-													{% if estudiante.estado == 0 %}
-													{# <button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio({{estudiante.ei_id}})" title="Pendiente de Registro">
-														<i class="fa fa-check"></i>
+													{% if estudiante.estado == 0 and app.session.get('roluser') in [7] and operativo < 2 %}
+													<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio({{estudiante.ei_id}})" title="Pendiente de Registro">
+														<i class="fa fa-check"></i> Pendiente
+													</button>
+													{% endif %}
+													{% if estudiante.estado == 1 and app.session.get('roluser') in [7] %}
+													<button type="button" class="btn btn-sm btn-success" onclick="verBeneficio({{estudiante.ei_id}})" title="Ver de Registro">
+														<i class="fa fa-eye"></i> 
+													</button>
+													{% if operativo < 2 %}
+													{# <button type="button" class="btn btn-sm btn-primary" onclick="editBeneficio({{estudiante.ei_id}})" title="Editar Registro">
+														<i class="fa fa-pencil"></i> 
+													</button>
+													<button type="button" class="btn btn-sm btn-danger" onclick="elimBeneficio({{estudiante.ei_id}})" title="Eliminar Registro">
+														<i class="fa fa-trash"></i> 
 													</button> #}
 													{% endif %}
-													{% if estudiante.estado == 1 %}
-													<button type="button" class="btn btn-sm btn-success"> 
-														 {# onclick="areasMaestro({{estudiante.ei_id}})"> #}
-														{# <i class="fa fa-user"></i> #}
+													{% endif %}
+													{% if estudiante.estado == 1 and app.session.get('roluser') in [9]%}
+													<button type="button" class="btn btn-sm btn-success" onclick="verBeneficio({{estudiante.ei_id}})" title="Ver Registro"> 
 														<i class="fa fa-check-circle"></i> Registrado
 													</button>
 													{% endif %}
@@ -167,11 +191,12 @@
     }
 	function BucarBeneficiario() {
 		const rude = document.getElementById('codigoRude').value;
+		const sie = document.getElementById('sie').value;
 		console.log(rude);
 		
 		$.ajax({
 			type: 'get',
-			url: Routing.generate('censobeneficio_findEstudiante', { 'id': rude }),
+			url: Routing.generate('censobeneficio_findEstudiante', { 'id': rude, 'sie': sie }),
 			success: function (data) {
 				if (data.error) {
         		// Mostrar el mensaje de error y esperar a que el usuario haga clic en "Aceptar"
@@ -195,48 +220,7 @@
 			}
 		});
 	}
-	// function actualizarTablaEstudiantes(estudiantes) {
-	// 	const tablaEstudiantes = $('#tabla-estudiantes');
-	// 	tablaEstudiantes.find('tbody').empty(); // Limpiar el cuerpo de la tabla
-
-	// 	estudiantes.forEach((estudiante, index) => {
-	// 		if (estudiante.estado === 2) {
-	// 			estadoBtn = `<button type="button" class="btn btn-sm btn-danger" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Nuevo Registro">
-	// 							<i class="fa fa-check-circle"></i> Nuevo Reg.
-	// 						</button>`;
-	// 		} else if (estudiante.estado === 0) {
-	// 			estadoBtn = `<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio(${estudiante.ei_id})" title="Pendiente de Registro">
-	// 							<i class="fa fa-check"></i>
-	// 						</button>`;
-	// 		} else {
-	// 			estadoBtn = `<button type="button" class="btn btn-sm btn-success">
-	// 							<i class="fa fa-check-circle"></i> Registrado
-	// 						</button>`;
-	// 		}
-				
-
-	// 		const fila = `
-	// 			<tr data-estudiante-id="${estudiante.ei_id}">
-	// 				<td data-title="N°">${index + 1}</td>
-	// 				<td data-title="grado">${estudiante.grado}</td>
-	// 				<td data-title="paralelo">${estudiante.paralelo}</td>
-	// 				<td data-title="turno">${estudiante.turno}</td>
-	// 				<td data-title="rude">${estudiante.codigo_rude}</td>
-	// 				<td data-title="carnet">${estudiante.carnet_identidad}</td>
-	// 				<td data-title="nombre">${estudiante.nombre}</td>
-	// 				<td data-title="paterno">${estudiante.paterno}</td>
-	// 				<td data-title="materno">${estudiante.materno}</td>
-	// 				<td data-title="Acciones">
-	// 					<div class="btn-group">
-	// 						${estadoBtn}
-	// 					</div>
-	// 				</td>
-	// 			</tr>
-	// 		`;
-
-	// 		tablaEstudiantes.find('tbody').append(fila);
-	// 	});
-	// }
+	
 	function actualizarTablaEstudiantes(estudiantes) {
 		const tablaEstudiantes = $('#tabla-estudiantes');
 		const tbody = tablaEstudiantes.find('tbody');
@@ -293,6 +277,44 @@
 	function VerTodosBeneficiario(){
 		location.reload();
 	}
+
+	function verBeneficio(id) {
+        estudianteId = id;
+        $('#modalRegistroBeneficio').modal('show');
+		$.ajax({
+                type: 'get',
+                url: Routing.generate('censobeneficio_verRegistro', {'id': estudianteId }),
+				beforeSend: function () {
+                	$('#resultado').empty(); 
+            	},
+                success: function (data) {
+                    $("#resultado").append(data);     
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+    }
+
+	function editBeneficio(id) {
+        estudianteId = id;
+        $('#modalRegistroBeneficio').modal('show');
+		$.ajax({
+                type: 'get',
+                url: Routing.generate('censobeneficio_editRegistro', {'id': estudianteId }),
+				beforeSend: function () {
+                	$('#resultado').empty(); 
+            	},
+                success: function (data) {
+                    $("#resultado").append(data);     
+                },
+                error: function (xhr, status, error) {
+                    // Manejar el error si es necesario
+                    console.log('Error en la petición AJAX:', error);
+                }
+            });
+    }
 	</script>
 
 {% endblock %}
