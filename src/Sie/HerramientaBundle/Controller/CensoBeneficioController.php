@@ -192,6 +192,7 @@ class CensoBeneficioController extends Controller
         $response = new JsonResponse();
         try {
             $form = $request->request->all();
+            
             $em = $this->getDoctrine()->getManager();
             $id_usuario = $this->session->get('userId');
             $inscripcion = $form['inscripcion_id'];
@@ -233,8 +234,6 @@ class CensoBeneficioController extends Controller
                 return $response->setData(['error' => 'La suma de puntos no puede ser mayor a 30.']);
             }
             // return $response->setData(['suma' => $sumaPuntos]);
-            $sie=$this->session->get('ie_id');
-            $gestion=$this->session->get('currentyear');
             
             $query="select e.codigo_rude, ei.estudiante_id, ei.id ei_id, ic.institucioneducativa_id, ic.nivel_tipo_id, ic.grado_tipo_id, COALESCE(cec.id,0) cec_id
                     from estudiante_inscripcion ei 
@@ -248,10 +247,12 @@ class CensoBeneficioController extends Controller
             $estreg = $em->getConnection()->prepare($query);
             $estreg->execute();
             $arrEstReg = $estreg->fetchAll();
-
+            
             if (empty($arrEstReg)) {
                 return $response->setData(['error' => 'El estudiante no es efectivo o tiene observaciones en el año de escolaridad para aplicar el beneficio.']);
             }
+            $gestion=$this->session->get('currentyear');
+            $sie=$arrEstReg[0]['institucioneducativa_id'];
             $regestudiante = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findBy(['estudiante' => $arrEstReg[0]['estudiante_id']]);
                         
             if (count($regestudiante) > 0) {
