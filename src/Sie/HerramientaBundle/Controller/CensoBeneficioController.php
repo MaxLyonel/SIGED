@@ -130,11 +130,13 @@ class CensoBeneficioController extends Controller
         $estudiantesCenso = $em->getConnection()->prepare($query);
         $estudiantesCenso->execute();
         $arrEstudiantesCenso = $estudiantesCenso->fetchAll();
-        // dump($arrEstudiantesCenso);die;
+
+        $operativo = $this->get('funciones')->obtenerOperativo($ie_id,2024);
+        // dump($operativo);die;
         return $this->render('SieHerramientaBundle:CensoBeneficio:index.html.twig',array(
             'institucion' => $institucion,
-            'estudiante' => $arrEstudiantesCenso
-            // 'codsie'=>$sie,
+            'estudiante' => $arrEstudiantesCenso,
+            'operativo'=>$operativo
             // 'disableElement'=>$disableElement
         )
         );        
@@ -142,7 +144,12 @@ class CensoBeneficioController extends Controller
 
     public function formRegistroAction(Request $request, $id){
        
-        return $this->redirect($this->generateUrl('login'));
+        $roluser = $this->session->get('roluser');
+
+        // Si el rol es 9, toma el 'ie_id' de la sesión
+        if (!in_array($roluser, [7])) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $query="select nt.nivel, tt.turno, gt.grado, pt.paralelo,
                 e.id e_id, e.codigo_rude, (e.nombre ||' '|| e.paterno || ' '|| e.materno) estudiante, 
@@ -182,7 +189,6 @@ class CensoBeneficioController extends Controller
     }
 
     public function saveBeneficioAction(Request  $request){
-        return $this->redirect($this->generateUrl('login'));
         $response = new JsonResponse();
         try {
             $form = $request->request->all();
@@ -191,6 +197,8 @@ class CensoBeneficioController extends Controller
             $inscripcion = $form['inscripcion_id'];
             $areas = $form['areas'];
             $areas = json_decode($form['areas'], true); // Decodificar el JSON a un array
+
+            
             // dump(count($areas));
             // dump($areas);die;
             if (count($areas) == 0) {
@@ -259,6 +267,11 @@ class CensoBeneficioController extends Controller
             if (count($arrEstReg) == 0) {
                 return $response->setData(['error' => 'El estudiante no es efectivo o tiene observaciones en el año de escolaridad para aplicar el beneficio.']);
             }
+            
+            $operativo = $this->get('funciones')->obtenerOperativo($arrEstReg[0]['institucioneducativa_id'],2024);
+            if ($operativo >= 2) {
+                return $response->setData(['error' => 'La Unidad Educativa finalizo el operativo de calificaciones.']);
+            }
 
             $codigoRude = $arrEstReg[0]['codigo_rude'];
             $nArcFormReg = $this->guardarArch($sie, $codigoRude,$gestion,'CPV2024_FR', $_FILES['formulario_registro']);
@@ -301,9 +314,6 @@ class CensoBeneficioController extends Controller
             return $response->setData(['success' => true]);
 
             // return $this->redirect($this->generateUrl('censobeneficio_index'));
-            
-            
-          
 
         } catch (Exception $e) {
             
@@ -351,11 +361,43 @@ class CensoBeneficioController extends Controller
         }
     }
    
-    public function findEstudianteAction(Request $request, $id){
+    public function findEstudianteAction(Request $request, $id, $sie){
 
-    //     // get the vars send        
-    //     // create db conexion
-        $ie_id=$this->session->get('ie_id');
+        $id_usuario = $this->session->get('userId');
+        // dump($id_usuario);die;
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $roluser = $this->session->get('roluser');
+      
+        if ($roluser == 9) {
+            $ie_id = $sie;
+        } elseif (in_array($roluser, [7])) {
+            if (!empty($sie)) {
+                $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie',  $sie );
+                $query->bindValue(':rolId', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+
+                if ($aTuicion[0]['get_ue_tuicion']) {
+                    $ie_id = $sie;
+                } else {
+                    $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
+                    return $this->render('SieHerramientaBundle:CensoBeneficio:findUe.html.twig');
+                }
+            }
+        } else {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // Si el 'ie_id' es null o -1, muestra un formulario para seleccionar la unidad educativa
+        if (empty($ie_id) || $ie_id == -1) {
+            return $this->render('SieHerramientaBundle:CensoBeneficio:findUe.html.twig');
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $query = " select a.e_id, a.codigo_rude, a.nombre, a.paterno, a.materno, a.carnet_identidad, a.complemento, a.fecha_nacimiento,
                     a.ei_id, a.estadomatricula_tipo_id, a.institucioneducativa_id, a.nivel_tipo_id, a.nivel, a.grado_tipo_id, a.grado, a.paralelo_tipo_id, a.paralelo, a.turno_tipo_id, a.turno,
@@ -448,13 +490,6 @@ class CensoBeneficioController extends Controller
         }
        
     }
-
-    // /**
-    //  * get grado
-    //  * @param type $idnivel
-    //  * @param type $sie
-    //  * return list of grados
-    //  */
     
     public function reporteBeneficioAction(Request  $request) {
     	
@@ -599,6 +634,82 @@ class CensoBeneficioController extends Controller
         ,array(
             'estudiante' => $arrEstudiante[0],
             'areasNotas' => $arrAreasNotas,
+            'sumaTotal' => $sumatotal,
+            'formulario' => $formReg,
+            'certificado' => $certificadoCpv
+            )
+        );
+    }
+
+    public function editRegistroAction(Request $request, $id){
+        return $this->redirect($this->generateUrl('login'));
+        $em = $this->getDoctrine()->getManager();
+        $query="select cb.id cb_id, nt.nivel, tt.turno, gt.grado, pt.paralelo,
+                e.id e_id, e.codigo_rude, (e.nombre ||' '|| e.paterno || ' '|| e.materno) estudiante, 
+                case when e.segip_id = 1 then e.carnet_identidad else '' end ci, 
+                case when e.segip_id = 1 then e.complemento else '' end complemento,
+                e.fecha_nacimiento, cb.estudiante_inscripcion_id ei_id, cb.archivo, cb.institucioneducativa_id sie
+                from censo_beneficiario cb 
+                inner join estudiante_inscripcion ei on ei.id = cb.estudiante_inscripcion_id
+                inner join estudiante e on cb.estudiante_id = e.id 
+                inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id = ic.id
+                inner join nivel_tipo nt on ic.nivel_tipo_id = nt.id
+                inner join grado_tipo gt on ic.grado_tipo_id = gt.id
+                inner join turno_tipo tt on ic.turno_tipo_id = tt.id
+                inner join paralelo_tipo pt on ic.paralelo_tipo_id = pt.id
+                where cb.estudiante_inscripcion_id = $id ";
+        $estudiante = $em->getConnection()->prepare($query);
+        $estudiante->execute();
+        $arrEstudiante = $estudiante->fetchAll();
+
+        // Procesar los archivos almacenados en JSON
+        foreach ($arrEstudiante as &$fila) {
+            if (!empty($fila['archivo'])) {
+                // Decodificar el JSON almacenado en 'archivo'
+                $archivoData = json_decode($fila['archivo'], true);
+                
+                // Obtener los archivos individuales
+                $formReg = isset($archivoData['form_reg']) ? $archivoData['form_reg'] : null;
+                $certificadoCpv = isset($archivoData['certificado_cpv']) ? $archivoData['certificado_cpv'] : null;
+                
+            }
+        }
+
+        $query="select at2.id, at2.asignatura, 
+                sum(case when cbr.nota_tipo_id = 59 then cbr.nota_cuantitava else 0 end) t2,
+                sum(case when cbr.nota_tipo_id = 60 then cbr.nota_cuantitava else 0 end) t3
+                from censo_beneficiario cb 
+                inner join censo_beneficiario_regular cbr on cb.id = cbr.censo_beneficiario_id 
+                inner join asignatura_tipo at2 on cbr.asignatura_tipo_id = at2.id
+                where cb.estudiante_inscripcion_id = $id
+                group by at2.id, at2.asignatura 
+                order by at2.id; ";
+        $areasnotas = $em->getConnection()->prepare($query);
+        $areasnotas->execute();
+        $arrAreasNotas = $areasnotas->fetchAll();
+
+        $sumatotal = 0;
+
+        foreach ($arrAreasNotas as $nota) {
+            // Sumar los valores de t2 y t3
+            $sumatotal += $nota['t2'] + $nota['t3'];
+        }
+    
+        $query="select at2.id, at2.asignatura 
+                from estudiante_inscripcion ei
+                inner join estudiante_asignatura ea on ei.id = ea.estudiante_inscripcion_id 
+                inner join institucioneducativa_curso_oferta ico on ea.institucioneducativa_curso_oferta_id = ico.id
+                inner join asignatura_tipo at2 on at2.id = ico.asignatura_tipo_id 
+                where ei.id = $id ";
+        $areas = $em->getConnection()->prepare($query);
+        $areas->execute();
+        $arrAreasEst = $areas->fetchAll();
+       
+        return $this->render($this->session->get('pathSystem').':CensoBeneficio:edit_registro_puntos.html.twig'
+        ,array(
+            'estudiante' => $arrEstudiante[0],
+            'areasNotas' => $arrAreasNotas,
+            'areas' => $arrAreasEst,
             'sumaTotal' => $sumatotal,
             'formulario' => $formReg,
             'certificado' => $certificadoCpv
