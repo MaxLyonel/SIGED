@@ -15,7 +15,7 @@ censobeneficio_saveBeneficio:
          expose: true 
 
 censobeneficio_findEstudiante:
-    path:     /findEstudiante/{id}/
+    path:     /findEstudiante/{id}/{sie}
     defaults: { _controller: SieHerramientaBundle:CensoBeneficio:findEstudiante }
     options:
          expose: true
@@ -30,5 +30,11 @@ censobeneficio_verRegistro:
     path:    /verRegistro/{id}/
     defaults: { _controller: SieHerramientaBundle:CensoBeneficio:verRegistro }
     options:
-        expose: true  
+        expose: true 
+
+censobeneficio_editRegistro:
+    path:    /editRegistro/{id}/
+    defaults: { _controller: SieHerramientaBundle:CensoBeneficio:editRegistro }
+    options:
+        expose: true   
 
