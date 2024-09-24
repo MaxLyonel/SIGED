@@ -189,6 +189,8 @@ class CensoBeneficioController extends Controller
     }
 
     public function saveBeneficioAction(Request  $request){
+        return $this->redirect($this->generateUrl('login'));
+        die;
         $response = new JsonResponse();
         try {
             $form = $request->request->all();
@@ -363,7 +365,7 @@ class CensoBeneficioController extends Controller
     }
    
     public function findEstudianteAction(Request $request, $id, $sie){
-
+        return $this->redirect($this->generateUrl('login'));
         $id_usuario = $this->session->get('userId');
         // dump($id_usuario);die;
         if (!isset($id_usuario)) {
@@ -643,7 +645,7 @@ class CensoBeneficioController extends Controller
     }
 
     public function editRegistroAction(Request $request, $id){
-        // return $this->redirect($this->generateUrl('login'));
+        return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $query="select cb.id cb_id, nt.nivel, tt.turno, gt.grado, pt.paralelo,
                 e.id e_id, e.codigo_rude, (e.nombre ||' '|| e.paterno || ' '|| e.materno) estudiante, 
@@ -719,7 +721,7 @@ class CensoBeneficioController extends Controller
     }
 
     public function elimRegistroAction(Request $request, $id)
-    {
+    {   return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $regBeneficiario = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findOneBy(['estudianteInscripcion' => $id]);
 
