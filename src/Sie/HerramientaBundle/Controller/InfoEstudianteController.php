@@ -1007,6 +1007,14 @@ class InfoEstudianteController extends Controller {
             $this->session->set('donwloadLibreta', true);
         } 
 
+        // TEMPORAL PARA EL OPERATIVO CENSO
+        
+        $ieCenso = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findBy(array('institucioneducativa'=>$sie));;
+        
+        if (count($ieCenso) > 0 and $nivel == 13 and $grado >= 4) {
+            $this->session->set('donwloadLibreta', false);
+        }
+        
         // to enable 1er Trim 
         // $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
         // if(sizeof($objUe1erTrin)>0){
@@ -1015,6 +1023,7 @@ class InfoEstudianteController extends Controller {
         // dump($closeopesextosecc);die;
 //dump($operativo);die;
     // end add validation to show califications option
+    
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
@@ -1512,7 +1521,6 @@ class InfoEstudianteController extends Controller {
             }
         }
     }
-
     return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                 'objStudents' => $objStudents,
                 'sie' => $sie,
