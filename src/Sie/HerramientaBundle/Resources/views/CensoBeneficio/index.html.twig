@@ -43,7 +43,7 @@
 					<form style="margin-top: 15px;">
 						<div class="form-row">
 							<div class="form-group col-md-9">
-								{% if app.session.get('roluser') in [7] and  operativo < 2 %}
+								{# {% if app.session.get('roluser') in [7] and  operativo < 2 %}
 								<label class="col-md-4"><strong>Buscar por código RUDE:</strong></label>
 								<div class="input-group col-md-6">
 									<input type="hidden" class="form-control" id="sie" name="sie" value="{{ institucion.id }}">
@@ -54,7 +54,7 @@
 										</button>
 									</span>
 								</div>
-								{% endif %}
+								{% endif %} #}
 							</div>
 							<div class="form-group col-md-3 text-right"> <!-- Alinea el botón a la derecha -->
 								<button onclick="VerTodosBeneficiario()" type="button" class="btn btn-success">
@@ -99,11 +99,11 @@
 											<td data-title="materno">{{ estudiante.materno }}</td>
 											<td data-title="Acciones">
 												<div class="btn-group">
-													{% if estudiante.estado == 0 and app.session.get('roluser') in [7] and operativo < 2 %}
+													{# {% if estudiante.estado == 0 and app.session.get('roluser') in [7] and operativo < 2 %}
 													<button type="button" class="btn btn-sm btn-warning" onclick="verRegistrarBeneficio({{estudiante.ei_id}})" title="Pendiente de Registro">
 														<i class="fa fa-check"></i> Pendiente
 													</button>
-													{% endif %}
+													{% endif %} #}
 													{% if estudiante.estado == 1 and app.session.get('roluser') in [7] %}
 													<button type="button" class="btn btn-sm btn-success" onclick="verBeneficio({{estudiante.ei_id}})" title="Ver de Registro">
 														<i class="fa fa-eye"></i> 
@@ -111,13 +111,13 @@
 													{% if operativo < 2 %}
 													{# <button type="button" class="btn btn-sm btn-primary" onclick="editBeneficio({{estudiante.ei_id}})" title="Editar Registro">
 														<i class="fa fa-pencil"></i> 
-													</button>
-													<button type="button" class="btn btn-sm btn-danger" onclick="elimBeneficio({{estudiante.ei_id}})" title="Eliminar Registro">
+													</button> #}
+													{# <button type="button" class="btn btn-sm btn-danger" onclick="elimBeneficio({{estudiante.ei_id}})" title="Eliminar Registro">
 														<i class="fa fa-trash"></i> 
 													</button> #}
 													{% endif %}
 													{% endif %}
-													{% if estudiante.estado == 1 and app.session.get('roluser') in [9]%}
+													{% if estudiante.estado == 1 and app.session.get('roluser') in [9,10]%}
 													<button type="button" class="btn btn-sm btn-success" onclick="verBeneficio({{estudiante.ei_id}})" title="Ver Registro"> 
 														<i class="fa fa-check-circle"></i> Registrado
 													</button>
@@ -315,6 +315,41 @@
                 }
             });
     }
+
+	function elimBeneficio(id) {
+		estudianteId = id;
+		Swal.fire({
+			title: `¿Está seguro de eliminar el Registro del Beneficio CPV 2024 para el estudiante?`,
+			text: "¿Eliminar los puntajes y subió el/los archivos solicitados?",
+			icon: 'question', // Cambiado de 'type' a 'icon' (versión actual de SweetAlert2)
+			html: 'Si acepta, se eliminará el beneficio ...',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Si, proceder',
+			cancelButtonText: 'Cancelar'
+		}).then((result) => {
+			// Verifica si el usuario ha confirmado la acción
+			if (result.value) {
+				$.ajax({
+					type: 'get',
+					url: Routing.generate('censobeneficio_elimRegistro', {'id': estudianteId }),
+					beforeSend: function () {
+						$('#resultado').empty();
+					},
+					success: function (data) {
+						// Recargar la página o manejar el resultado
+						location.reload();
+					},
+					error: function (xhr, status, error) {
+						// Manejar el error si es necesario
+						console.log('Error en la petición AJAX:', error);
+					}
+				});
+			}
+		});
+	}
+
 	</script>
 
 {% endblock %}
