@@ -7251,7 +7251,7 @@ die;/*
 
             }
             $valoraciones = '';
-            if (($subarea == 4 or $subarea == 7 or $subarea == 2 or $subarea == 3 or $subarea == 5 or $subarea == 1 ) and $gestion > 2019){
+            if (($subarea == 4 or $subarea == 7 or $subarea == 2 or $subarea == 3 or $subarea == 5 or $subarea == 12 or $subarea == 1 ) and $gestion > 2019){
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78,79));
             }elseif ($subarea == 6 and $gestion > 2019){
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78,79));
@@ -7346,7 +7346,7 @@ die;/*
             } 
            
              //cualitativo sin areas CONTENIDOS(ACTIVIDADES)-RESULTADOS-RECOMENDACIONES SEMESTRAL
-            if ($gestion > 2023 and ($subarea == 1 or $subarea == 3 or $subarea == 2) and ($nivel==411 and in_array($programa,array(47,48,38,44,46))) or ($nivel==410 and in_array($servicio, array(20,35,36,37,38))) ){  
+            if ($gestion > 2023 and ($subarea == 1 or $subarea == 3 or $subarea == 12 or $subarea == 2) and ($nivel==411 and in_array($programa,array(47,48,38,44,46))) or ($nivel==410 and in_array($servicio, array(20,35,36,37,38))) ){  
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,47)); //PROSIGUE-CONCLUIDO-CONTINUA
                 if(in_array($programa, array(47,48)) or in_array($servicio, array(35,36,37,38)))
                     $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80)); //PROSIGUE-CONCLUIDO-EXTENDIDO
