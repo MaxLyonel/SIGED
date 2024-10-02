@@ -1,0 +1,62 @@
+{% if consol is not empty %}
+    <div class="table-responsive col-md-12">
+        <table class="table table-bordered table-striped" id="listaConsol">
+		
+            <thead>
+                <tr>
+                	<th style="min-width:15px">#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Centro de Educación</th>
+					<th>Fecha de Inscripcion</th>
+					<th>Estudiante</th>
+                    <th>Area/Discapacidad</th>
+                    <th>Programa</th>
+                    <th>Servicio</th>
+					<th>Modalidad</th>
+                    
+                </tr>
+            </thead>
+
+            <tfoot>
+                <tr>
+                	<th style="min-width:15px">#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Centro de Educación</th>
+					<th>Fecha de Inscripcion</th>
+					<th>Estudiante</th>
+                    <th>Area/Discapacidad</th>
+                    <th>Programa</th>
+                    <th>Servicio</th>
+					<th>Modalidad</th>
+                    
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for registro in consol %}
+                	<tr>
+                		<td class="text-center">{{loop.index}}</td>
+                		<td>{{registro.departamento}}</td>
+                		<td>{{registro.distrito}}</td>
+                		<td>{{registro.codigo_sie}}</td>
+                		<td>{{registro.institucioneducativa}}</td>
+						<td>{{registro.fecha_inscripcion}}</td>
+						<td>{{registro.estudiante}}</td>
+						<td>{{registro.area_especial}}</td>
+						<td>{{registro.programa}}</td>
+						<td>{{registro.servicio}}</td>
+						<td>{{registro.modalidad}}</td>
+                	</tr>
+                {% endfor %}
+            </tbody>
+		
+        </table>
+    </div>
+{% else %}
+    No se encontraron registros.
+{% endif %}
+
+

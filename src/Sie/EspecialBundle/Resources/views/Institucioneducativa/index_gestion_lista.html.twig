@@ -1,0 +1,59 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Lista Estudiantes sin calificaciones<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">
+                    Herramientas
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Lista</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+        <!-- Start default panel -->
+            <div class="panel panel-teal">
+            <!-- Start panel heading -->
+            <div class="panel-heading">
+                <h3 class="panel-title">Importante: Calificaciones faltantes, tomar en cuenta la fecha de inscripción de los estudiantes</h3>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <!--/ End panel heading -->
+            <!-- Start panel content -->
+            <div class="panel-body">
+               
+                
+                <div class="row">
+                    <div class="col-md-12" id="tableConsol">
+                        {% include 'SieEspecialBundle:Institucioneducativa:consol_especial_lista.html.twig' with {'consolEspecial': consol, 'label': label, 'label_distrito': label_distrito} %}
+                    </div>
+                </div>
+            </div><!-- /.panel-body -->
+            <!--/ End panel content -->
+        </div><!-- /.panel -->
+        <!--/ End default panel -->
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+
+    $(document).ready(function(){
+        cargatablas();
+    });
+    </script>
+{% endblock %}
