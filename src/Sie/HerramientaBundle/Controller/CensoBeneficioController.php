@@ -87,7 +87,7 @@ class CensoBeneficioController extends Controller
                     select 
                     e.id e_id, e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento,
                     ei.id ei_id, ei.estadomatricula_tipo_id, ic.institucioneducativa_id, ic.nivel_tipo_id, nt.nivel, ic.grado_tipo_id, gt.grado, ic.paralelo_tipo_id, pt.paralelo, ic.turno_tipo_id, tt.turno,
-                    cb.id cec_id, cast(1 as int) estado
+                    cb.id cec_id, case when cb.fecha_registro < '2024-09-23 00:00:00' then cast(1 as int) else cast(2 as int) end as estado
                     from estudiante_inscripcion ei 
                     inner join estudiante e on ei.estudiante_id = e.id 
                     inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id  = ic.id
@@ -189,8 +189,8 @@ class CensoBeneficioController extends Controller
     }
 
     public function saveBeneficioAction(Request  $request){
-        return $this->redirect($this->generateUrl('login'));
-        die;
+        // return $this->redirect($this->generateUrl('login'));
+        // die;
         $response = new JsonResponse();
         try {
             $form = $request->request->all();
@@ -272,7 +272,7 @@ class CensoBeneficioController extends Controller
             }
             
             $operativo = $this->get('funciones')->obtenerOperativo($arrEstReg[0]['institucioneducativa_id'],2024);
-            if ($operativo >= 2) {
+            if ($operativo > 2) {
                 return $response->setData(['error' => 'La Unidad Educativa finalizo el operativo de calificaciones.']);
             }
 
@@ -365,7 +365,7 @@ class CensoBeneficioController extends Controller
     }
    
     public function findEstudianteAction(Request $request, $id, $sie){
-        return $this->redirect($this->generateUrl('login'));
+        // return $this->redirect($this->generateUrl('login'));
         $id_usuario = $this->session->get('userId');
         // dump($id_usuario);die;
         if (!isset($id_usuario)) {
@@ -721,7 +721,8 @@ class CensoBeneficioController extends Controller
     }
 
     public function elimRegistroAction(Request $request, $id)
-    {   return $this->redirect($this->generateUrl('login'));
+    {   
+        // return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $regBeneficiario = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findOneBy(['estudianteInscripcion' => $id]);
 
