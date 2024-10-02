@@ -42,6 +42,10 @@ herramienta_especial_infoconsolidation_gestion_index:
     path:     /consolgestion
     defaults: { _controller: SieEspecialBundle:InfoCentro:consolidacionGestion }
 
+herramienta_especial_infoconsolidation_gestion_lista_sin_notas:
+    path:     /consolgestionsinnotas
+    defaults: { _controller: SieEspecialBundle:InfoCentro:listaSinNotasGestion }
+
 herramienta_infoconsolidation_inconsistencias_modal:
     path:     /{ueid}/consolgestionincosistenciasmodal/
     defaults: { _controller: SieEspecialBundle:InfoCentro:getInconsistencias }
