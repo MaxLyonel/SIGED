@@ -423,7 +423,7 @@ class InfoCentroController extends Controller {
             }
         }
         
-        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:index_gestion_lista.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:index_gestion.html.twig', array(
             'consol' => $consol,
             'gestiones' => $gestionesArray,
             'gestionactual' => $gestionactual,
@@ -443,9 +443,10 @@ class InfoCentroController extends Controller {
         $bundle = $this->session->get('pathSystem');
         $instipoid = 4;
         $mingestion = 2013;
-        $title = 'DetalleReporte de cierre de operativos por gestión y Centro de Educación Especial';
+        $title = 'Detalle de calificaciones pendientes de Educación Especial';
         $label = 'Cantidad de Centros que reportaron matrícula';
         $label_distrito = 'Cantidad de Centros que reportaron matrícula en el distrito';
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
      
         switch ($roluser) {
             case '7':
