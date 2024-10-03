@@ -545,6 +545,7 @@ class CensoBeneficioController extends Controller
                         LEFT JOIN censo_beneficiario cb ON ei.id = cb.estudiante_inscripcion_id
                         WHERE ic.nivel_tipo_id = 13
                         AND ic.grado_tipo_id IN (4, 5, 6)
+                        and ei.estadomatricula_tipo_id in (4,5,55,11)
                         GROUP BY ic.institucioneducativa_id
                         UNION ALL
                         SELECT cb.institucioneducativa_id, 
