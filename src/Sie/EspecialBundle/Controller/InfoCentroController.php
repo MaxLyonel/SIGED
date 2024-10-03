@@ -513,6 +513,7 @@ class InfoCentroController extends Controller {
         and t.id in (99,22,43,41,19,46,39,44,61,62,63,28,37,38,50,51,52,53,54,55,56,57,58,59,33,31,25,26,7,8,47,48)
         and s.id in (38,37,36,35,20,99,1,2,8,9,3,5,40,99) and ei.observacion<>'2semestre'
         and m.id<3
+        --and ei.fecha_inscripcion between '2024-01-01' and '2024-07-30' 
         and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
           and
          ((select  MAX  (nc.nota_tipo_id) from estudiante_nota nc, estudiante_asignatura ea where ea.estudiante_inscripcion_id=ei.id and ea.id=nc.estudiante_asignatura_id ) is null
