@@ -366,7 +366,7 @@ class InfoNotasController extends Controller {
             } 
            // dump($request);die;
            //dump($request->get('actualizar'));
-            //$this->get('notas')->especialRegistro($request, $discapacidad);
+            $this->get('notas')->especialRegistro($request, $discapacidad);
             // Verificamos si se actualizara el estado de matrícula
             if($request->get('actualizar') == true  or $request->get('actualizar') == 1 ){ 
                 $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
