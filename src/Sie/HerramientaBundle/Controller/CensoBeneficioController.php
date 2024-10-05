@@ -189,8 +189,8 @@ class CensoBeneficioController extends Controller
     }
 
     public function saveBeneficioAction(Request  $request){
-        // return $this->redirect($this->generateUrl('login'));
-        // die;
+        return $this->redirect($this->generateUrl('login'));
+        die;
         $response = new JsonResponse();
         try {
             $form = $request->request->all();
@@ -365,7 +365,7 @@ class CensoBeneficioController extends Controller
     }
    
     public function findEstudianteAction(Request $request, $id, $sie){
-        // return $this->redirect($this->generateUrl('login'));
+        return $this->redirect($this->generateUrl('login'));
         $id_usuario = $this->session->get('userId');
         // dump($id_usuario);die;
         if (!isset($id_usuario)) {
