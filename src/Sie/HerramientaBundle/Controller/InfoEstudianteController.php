@@ -1009,11 +1009,11 @@ class InfoEstudianteController extends Controller {
 
         // TEMPORAL PARA EL OPERATIVO CENSO
         
-        $ieCenso = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findBy(array('institucioneducativa'=>$sie));;
+        // $ieCenso = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findBy(array('institucioneducativa'=>$sie));;
         
-        if (count($ieCenso) > 0 and $nivel == 13 and $grado >= 4) {
-            $this->session->set('donwloadLibreta', false);
-        }
+        // if (count($ieCenso) > 0 and $nivel == 13 and $grado >= 4) {
+        //     $this->session->set('donwloadLibreta', false);
+        // }
         
         // to enable 1er Trim 
         // $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
