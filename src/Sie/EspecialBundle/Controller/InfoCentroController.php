@@ -472,26 +472,14 @@ class InfoCentroController extends Controller {
        
         $query = $em->getConnection()->prepare("
         SELECT
-        lt4.codigo AS codigo_departamento,
         lt4.lugar AS departamento,
-        dt.id codigo_distrito,
-        dt.distrito,
-        inst.id codigo_sie,
+        inst.id as codigo_sie,
         inst.institucioneducativa,
-        case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
-        case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
-        case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
-        case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
-        case when rc.rude = 1 then 'SI' else 'NO' end AS rude,
-        rc.gestion,
-            ei.id, ei.fecha_inscripcion, ei.estadomatricula_tipo_id , ( e.codigo_rude||' '||e.paterno||' '||e.materno||' '||e.nombre) as estudiante, a.area_especial , c.nivel_tipo_id, ce.especial_programa_tipo_id  as programa_id, t.programa , s.servicio, s.id as servicio_id  , n.nivel,  m.modalidad
-,(select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) as nota_cualitativa
-,(select  MAX  (nc.nota_tipo_id) from estudiante_nota nc, estudiante_asignatura ea where ea.estudiante_inscripcion_id=ei.id and ea.id=nc.estudiante_asignatura_id )  as nota
-
+         a.area_especial, count(ei.id) as total
         FROM registro_consolidacion rc
         INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
         INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
-         inner join institucioneducativa_curso c  on c.institucioneducativa_id =inst.id
+        inner join institucioneducativa_curso c  on c.institucioneducativa_id =inst.id
         inner join institucioneducativa_curso_especial ce on  c.id=ce.institucioneducativa_curso_id 
         inner join especial_area_tipo a on  a.id=ce.especial_area_tipo_id
         inner join especial_programa_tipo t on t.id=ce.especial_programa_tipo_id 
@@ -511,26 +499,23 @@ class InfoCentroController extends Controller {
         rc.institucioneducativa_tipo_id = 4 AND inst.estadoinstitucion_tipo_id = 10
         and ei.estadomatricula_tipo_id not in (6,10)
         and t.id in (99,22,43,41,19,46,39,44,61,62,63,28,37,38,50,51,52,53,54,55,56,57,58,59,33,31,25,26,7,8,47,48)
-        and s.id in (38,37,36,35,20,99,1,2,8,9,3,5,40,99) and ei.observacion<>'2semestre'
+        and s.id in (38,37,36,35,20,99,8,9,40,99) and ei.observacion<>'2semestre'
         and m.id<3
-        --and ei.fecha_inscripcion between '2024-01-01' and '2024-07-30' 
+        and ei.fecha_inscripcion between '2024-01-01' and '2024-08-01' 
         and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
           and
          ((select  MAX  (nc.nota_tipo_id) from estudiante_nota nc, estudiante_asignatura ea where ea.estudiante_inscripcion_id=ei.id and ea.id=nc.estudiante_asignatura_id ) is null
               or (select  MAX  (nc.nota_tipo_id) from estudiante_nota nc, estudiante_asignatura ea where ea.estudiante_inscripcion_id=ei.id and ea.id=nc.estudiante_asignatura_id ) =6 )
-                
+        group by    lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial        
         ORDER BY
-        codigo_departamento,
-        codigo_distrito,
-        codigo_sie;
+        lt4.lugar, total desc
+        
     ");
     
     $query->execute();
     $consol = $query->fetchAll();
 
 
-        
-    
         $gestiones = $em->getRepository('SieAppWebBundle:GestionTipo')->findBy(array(), array('id' => 'DESC'));
     
         $gestionesArray = array();
