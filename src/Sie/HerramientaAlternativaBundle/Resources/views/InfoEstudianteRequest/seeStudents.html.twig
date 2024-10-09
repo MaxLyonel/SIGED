@@ -88,7 +88,7 @@
                 </div> #}
             {# endif #}
             {# commented by krlos 15.04.2020 app.session.get('ie_gestion') == app.session.get('currentyear') or #}
-            {% if app.session.get('userId') == 94161725 %}  {# habilitado 0810 por solicitud de raul contreras#}
+            {% if app.session.get('userId') != 94161725 %}
             {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 9 %}
             {% if app.session.get('ie_gestion') == app.session.get('currentyear') %}
                 <div class="col-md-3">
@@ -291,7 +291,7 @@
                                                             {# {% if primariaNuevo %}
                                                             {{dump('ok')}}
                                                             {% else %} #}
-                                                              {% if (app.session.get('userId') == 94161725) %}  {#and  (app.session.get('ie_id') == 52210037 ) %} 
+                                                              {% if (app.session.get('userId') == 94161725) %} 
                                                                  <li>
                                                                     <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                         <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
@@ -363,7 +363,7 @@
                                                             </a>
                                                             </li>  
                                                                                                          
-                                                        {#% endif %#}
+                                                        {% endif %}
                                                     {% endif %}
                                                     <li class="divider"></li>
 
