@@ -103,6 +103,15 @@ class TramiteModCalVigenteController extends Controller {
             $response->setData('El estudiante con el código RUDE '. $codigoRude .' no fue encontrado.');
             return $response;
         }
+        // dump($estudiante->getId());die;
+
+        $cbestudiante = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findBy(['estudiante' => $estudiante->getId()]);
+        // SI EL ESTUDIANTE NO EXISTE, DEVOLVEMOS 204 SIN CONTENIDO
+        if(count($cbestudiante)>0){
+            $response->setStatusCode(202);
+            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene registro censo, temporalmente no puede realizar ninguna modificación.');
+            return $response;
+        }
 
         $inscripciones = $em->createQueryBuilder()
                             ->select('ei.id, ie.id as sie, ie.institucioneducativa, get.gestion, nt.id idNivel, nt.nivel, gt.grado, pt.paralelo, tt.turno, emt.estadomatricula, emt.id estadomatriculaId, dep.departamento, dt.distrito')
