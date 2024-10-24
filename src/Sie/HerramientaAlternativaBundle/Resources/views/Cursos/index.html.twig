@@ -125,7 +125,18 @@
                                                                                 <button class="btn btn-circle btn-primary btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad('{{dataParalelo.infoUe}}');">
                                                                                     <i class="fa fa-home"></i>
                                                                                 </button>
-                                                                            </div>                                                                            
+                                                                            </div>   
+
+                                                                            {#% if app.session.get('roluser') == 8 or (app.session.get('roluser') == 9 and app.session.get('ie_gestion') == app.session.get('currentyear')) %#}                                                                         
+                                                                            {% if app.session.get('roluser') == 9 and app.session.get('ie_gestion') == app.session.get('currentyear') %}                                                                         
+
+                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Confirmar Módulos">
+                                                                                <button class="btn btn-circle btn-success btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table3" onclick="openModalModulos('{{dataParalelo.infoUe}}');">
+                                                                                    <i class="fa fa-navicon"></i>
+                                                                                </button>
+                                                                            </div>   
+
+                                                                            {% endif %}                                                                         
 
                                                                         </li>
                                                                     {% endfor %}
@@ -186,11 +197,57 @@
             </div>            
         </div>
     </div>
+
+    <!-- Modal para modulos -->
+      
+     <div class="modal fade bs-example-modal-table3" id="modalModulos" tabindex="-1" role="dialog" aria-labelledby="modalModulosLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalModulosLabel">Confirmacion de Módulos - 2do. Semestre 2024</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenido del formulario -->
+                   
+                    <div id='showData' style="display: none">
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr >                            
+                            <td colspan="2" id="nivel_lbl" style='text-align:center; vertical-align:middle'></td>
+                        </tr>
+                        <tr >                            
+                            <td colspan="2" id="ciclo_lbl" style='text-align:center; vertical-align:middle'></td>
+                        </tr>
+                        <tr >                            
+                            <td colspan="2" id="grado_lbl" style='text-align:center; vertical-align:middle'></td>
+                        </tr>
+                        <tr >                            
+                            <td id="paralelo_lbl" style='text-align:center; vertical-align:middle'></td>
+                            <td id="turno_lbl" style='text-align:center; vertical-align:middle'></td>
+                        </tr>
+                        
+                    </table>
+                    </div>
+                    
+                    <div id='showTable'></div> 
+                   
+                    <a href="#" class="btn btn-success btn-block" id="form_save2" style="display: none;">Grabar Confirmacion de los modulos</a>
+                </div>  
+
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>                           
+                </div> 
+            </div>    
+        </div>
+    </div>
+
+
 {% endblock %}
 
 {% block javascripts %}
     {{parent()}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>    
     <script>
         /**
          * this is to the tree menu option
@@ -418,6 +475,43 @@
                 success: function (data) {
                     $('#modal').empty();
                     $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var openModalModulos = function (infoUe) {
+            
+            console.log('infoUe', infoUe);
+            document.getElementById("showData").style.display="none";
+
+            var divContainer = document.getElementById("showTable");
+            divContainer.innerHTML = '';
+            divContainer.innerHTML = '<div style="text-align: center;"><strong>CARGANDO INFORMACION...</strong></div>';
+            
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_modulosCurso_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    document.getElementById("nivel_lbl").innerHTML = data.nivel;
+                    document.getElementById("ciclo_lbl").innerHTML = data.ciclo;
+                    document.getElementById("grado_lbl").innerHTML = data.grado;
+                    document.getElementById("paralelo_lbl").innerHTML = 'PARALELO: ' + data.paralelo;
+                    document.getElementById("turno_lbl").innerHTML = 'TURNO: ' + data.turno;
+                    document.getElementById("showData").style.display="block"
+
+                    createTableWithInnerHTML(data.modulos, data.infoUe);
                 },
                 statusCode: {
                     500: function () {
@@ -681,6 +775,130 @@
                 }
             });
         };        
+
+
+    var createTableWithInnerHTML = function (modulosArray, infoUe) {
+ 
+        //let opciones = '<div class="radio"><label><input type="radio" name="operacion" id="regulariza" value="1" > REGULARIZACION </label>&nbsp;&nbsp;&nbsp;<label><input type="radio" name="operacion" id="actualiza" value="2" >ACTUALIZACION</label></div>';
+        let opciones = '<div class="radio"></div>';
+
+        
+        let tableHTML = '<form name="formbeneficio" method="post" role="form" id="formbeneficio"> <input type="hidden" id="input_info" name="input_info" value="' + infoUe  +'">' + opciones ;
+        tableHTML += '<table border="1" class="table table-bordered"><th width="80%">Modulo</th><th width="10%">Confirma</th>';
+
+        for (var i = 0; i < modulosArray.length; i++) {
+            tableHTML += '<tr>';
+
+            let cols = "<td data-title='Modulo'>" + modulosArray[i].modulo + "</td>"
+            //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
+            cols += "<td data-title='Confirma'><input type='checkbox' id='input_" + modulosArray[i].modulo_tipo_id + "' name='input_" + modulosArray[i].modulo_tipo_id + "'></td>"
+
+            tableHTML += cols;
+            tableHTML += '</tr>';
+        }
+
+        //tableHTML += '<tr class="success"><td colspan="2"><strong>TOTAL BENEFICIO ASIGNADO PRIMER SEMESTRE</strong></td><td id="total_beneficio"></td></tr>';
+
+        tableHTML += '</table><form>';
+
+       
+        var divContainer = document.getElementById("showTable");
+        divContainer.innerHTML = '';
+        divContainer.innerHTML = tableHTML;
+
+        document.getElementById("form_save2").style.display="block"
+            
+        
+    }
+
+    $('#form_save2').on("click", function () {
+        
+        var total_beneficio = 0;                      
+        var total_modulos_asignados = 0;
+        console.log('save confirmacion')
+
+        //validar
+
+        var elem = document.getElementById('formbeneficio').elements;
+        var sw = true;
+
+        for (var i = 0; i < elem.length; i++) {
+            if (elem[i].type == 'checkbox')
+                if ((elem[i].checked))
+                    sw = false;
+        }
+        if (sw) {
+            alert('Tiene que seleccionar por lo menos un módulo.');
+            return false;
+        }
+
+
+        swal({
+            title: "Confirmar los Módulos Selecionados ?",
+            text: "La informacion no podrá ser modificada",   
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function (respuesta) {
+            if (respuesta) {
+
+                var formData = new FormData();
+                
+                var elements = document.getElementsByTagName("input")
+                for (var i = 0; i < elements.length; i++) {
+                    
+
+                    if(elements[i].id.substring(0,6) == 'input_'){
+
+                        console.log(elements[i].id)
+                        console.log(elements[i].value)
+
+                        formData.append(elements[i].id, elements[i].value);
+
+                    }
+
+                        
+                }
+           
+
+                $.ajax({
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: Routing.generate('herramienta_modulosCurso_save'),
+                beforeSend: function () {
+                    //$('#modal').empty();
+                },
+                success: function (data) {                
+
+                    $("#modal").modal('hide');
+
+                    console.log('sucess');
+                    swal({                        
+                        text: "TEST - la confirmacion de los módulos ha sido registrada !!",
+                        icon: "success"
+                    });
+                    //window.location.reload();
+                    
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });     
+
+            }
+
+        })
+
+    });
 
 
 
