@@ -64,3 +64,15 @@ herramienta_textoEducativo_generarReporte:
     defaults: { _controller: "SieHerramientaBundle:TextoEducativo:generarReporte"}
     options:
          expose: true
+
+herramienta_modulosCurso_index:
+    path:     /indexModulosCurso
+    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:getModulos2024"}
+    options:
+         expose: true
+
+herramienta_modulosCurso_save:
+    path:     /indexModulosCurso/save
+    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:saveModulos2024"}
+    options:
+         expose: true
