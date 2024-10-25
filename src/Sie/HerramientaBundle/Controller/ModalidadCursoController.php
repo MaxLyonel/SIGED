@@ -380,7 +380,7 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
             //humanistica
 
             $query = "select * from sp_genera_insercion_modulo_alternativa_humanistica('".$objjson."','".$this->session->get('ie_id')."');";
-            dump($query);die;
+            //dump($query);die;
 
             $obs= $db->prepare($query);
             $params = array();
