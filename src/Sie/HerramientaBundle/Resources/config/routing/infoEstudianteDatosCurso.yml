@@ -71,8 +71,3 @@ herramienta_modulosCurso_index:
     options:
          expose: true
 
-herramienta_modulosCurso_save:
-    path:     /indexModulosCurso/save
-    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:saveModulos2024"}
-    options:
-         expose: true
