@@ -348,8 +348,8 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
         //array_push($arr,array("modulos" => $modulos));
 
         $objjson = json_encode($modulos);
-        dump($modulos);
-        dump(json_encode($modulos));
+        //dump($modulos);
+        //dump(json_encode($modulos));
         //die;
 
        /* enviar a la funcion para tecnica
@@ -392,7 +392,6 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
             }else{
                 return $response->setData(array('resultado' => 0 , 'msg' => 'No se pudieron registrar los modulos seleccionados '));
             }
-
 
         }else{
 
