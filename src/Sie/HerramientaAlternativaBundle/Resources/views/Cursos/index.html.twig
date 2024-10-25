@@ -196,7 +196,7 @@
                 </div>   
             </div>            
         </div>
-    </div>
+    </div>  
 
     <!-- Modal para modulos -->
       
@@ -209,6 +209,12 @@
                 </div>
                 <div class="modal-body">
                     <!-- Contenido del formulario -->
+
+                    <div class="alert alert-warning" role="alert">                               
+                        <h5>IMPORTANTE: <strong><u>LEA CON ATENCION</u></strong> </h5> 
+                        LA CONFIRMACION DE MÓDULOS SE PUEDE REALIZAR <strong>SOLO UNA VEZ</strong>, DEBE SELECCIONAR ADECUADAMENTE LOS MODULOS RESPECTIVOS Y GRABAR. LUEGO SOLO PODRA VISUALIZAR LOS REGISTRADOS SIN POSIBILIDAD DE EDITAR O ELIMINAR.
+                    </div>
+
                    
                     <div id='showData' style="display: none">
                     <table class="table table-condensed table-bordered" style="background:#EEEEEE">
@@ -490,7 +496,9 @@
         var openModalModulos = function (infoUe) {
             
             console.log('infoUe', infoUe);
+            
             document.getElementById("showData").style.display="none";
+            document.getElementById("form_save2").style.display="none"
 
             var divContainer = document.getElementById("showTable");
             divContainer.innerHTML = '';
@@ -511,7 +519,7 @@
                     document.getElementById("turno_lbl").innerHTML = 'TURNO: ' + data.turno;
                     document.getElementById("showData").style.display="block"
 
-                    createTableWithInnerHTML(data.modulos, data.infoUe);
+                    createTableWithInnerHTML(data.modulos, data.infoUe, data.modulos2024, data.modulos2024count);
                 },
                 statusCode: {
                     500: function () {
@@ -777,8 +785,10 @@
         };        
 
 
-    var createTableWithInnerHTML = function (modulosArray, infoUe) {
+    var createTableWithInnerHTML = function (modulosArray, infoUe, modulos2024, modulos2024count) {
  
+       
+
         //let opciones = '<div class="radio"><label><input type="radio" name="operacion" id="regulariza" value="1" > REGULARIZACION </label>&nbsp;&nbsp;&nbsp;<label><input type="radio" name="operacion" id="actualiza" value="2" >ACTUALIZACION</label></div>';
         let opciones = '<div class="radio"></div>';
 
@@ -786,16 +796,32 @@
         let tableHTML = '<form name="formbeneficio" method="post" role="form" id="formbeneficio"> <input type="hidden" id="input_info" name="input_info" value="' + infoUe  +'">' + opciones ;
         tableHTML += '<table border="1" class="table table-bordered"><th width="80%">Modulo</th><th width="10%">Confirma</th>';
 
-        for (var i = 0; i < modulosArray.length; i++) {
-            tableHTML += '<tr>';
+        if(modulos2024count == 0){
+            for (var i = 0; i < modulosArray.length; i++) {
+                tableHTML += '<tr>';
 
-            let cols = "<td data-title='Modulo'>" + modulosArray[i].modulo + "</td>"
-            //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
-            cols += "<td data-title='Confirma'><input type='checkbox' id='input_" + modulosArray[i].modulo_tipo_id + "' name='input_" + modulosArray[i].modulo_tipo_id + "'></td>"
+                let cols = "<td data-title='Modulo'>" + modulosArray[i].modulo + "</td>"
+                //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
+                cols += "<td data-title='Confirma'><input type='checkbox' id='input_" + modulosArray[i].modulo_tipo_id + "' name='input_" + modulosArray[i].modulo_tipo_id + "'></td>"
 
-            tableHTML += cols;
-            tableHTML += '</tr>';
+                tableHTML += cols;
+                tableHTML += '</tr>';
+            }
+        }else{
+
+            for (var i = 0; i < modulos2024.length; i++) {
+                tableHTML += '<tr>';
+
+                let cols = "<td data-title='Modulo'>" + modulos2024[i].modulo + "</td>"
+                //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
+                cols += "<td data-title='Confirma'></td>"
+
+                tableHTML += cols;
+                tableHTML += '</tr>';
+            }
+
         }
+        
 
         //tableHTML += '<tr class="success"><td colspan="2"><strong>TOTAL BENEFICIO ASIGNADO PRIMER SEMESTRE</strong></td><td id="total_beneficio"></td></tr>';
 
@@ -806,7 +832,10 @@
         divContainer.innerHTML = '';
         divContainer.innerHTML = tableHTML;
 
-        document.getElementById("form_save2").style.display="block"
+        if(modulos2024count == 0)
+        {
+            document.getElementById("form_save2").style.display="block"
+        }
             
         
     }
@@ -835,7 +864,7 @@
 
         swal({
             title: "Confirmar los Módulos Selecionados ?",
-            text: "La informacion no podrá ser modificada",   
+            text: "Revise una última vez, ya que la informacion no podrá ser modificada",   
             icon: "warning",
             buttons: true,
             dangerMode: true,
@@ -855,8 +884,15 @@
                         console.log(elements[i].id)
                         console.log(elements[i].value)
 
-                        formData.append(elements[i].id, elements[i].value);
+                        var checkBox = document.getElementById(elements[i].id);
 
+                        if (elements[i].id == 'input_info'){                        
+                            formData.append(elements[i].id, elements[i].value);
+                        }
+
+                        if (checkBox.checked == true){                        
+                            formData.append(elements[i].id, elements[i].value);
+                        }
                     }
 
                         
@@ -874,14 +910,24 @@
                 },
                 success: function (data) {                
 
-                    $("#modal").modal('hide');
+                    $("#modalModulos").modal('hide');
 
-                    console.log('sucess');
-                    swal({                        
-                        text: "TEST - la confirmacion de los módulos ha sido registrada !!",
-                        icon: "success"
-                    });
-                    //window.location.reload();
+                    if (data.resultado == 1)
+                    {
+                        swal({                        
+                            text: data.msg,
+                            icon: "success"
+                        });
+                        //window.location.reload();
+                    }else{
+
+                        swal({                        
+                            icon: "error",
+                            title: "Atencion !",
+                            text: data.msg,   
+                        });
+
+                    }
                     
                 },
                 statusCode: {
