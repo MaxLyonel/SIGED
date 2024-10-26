@@ -132,6 +132,11 @@ class ModalidadCursoController extends Controller {
         
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+        /*dump($aInfoUeducativa);
+        dump($aInfoUeducativa['ueducativaInfoId']['paraleloId']);
+        die;*/
+
+        $paralelo_id = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
                 
         $acreditacion = $aInfoUeducativa['ueducativaInfo']['grado'];
         $especialidad = $aInfoUeducativa['ueducativaInfo']['ciclo'];
@@ -142,8 +147,8 @@ class ModalidadCursoController extends Controller {
         $paralelo = $aInfoUeducativa['ueducativaInfo']['paralelo'];
         $turno    = $aInfoUeducativa['ueducativaInfo']['turno'];
 
-
-        /*dump($acreditacion);
+        /*
+        dump($acreditacion);
         dump($especialidad);
         dump($ciclo);
         dump($nivel);
@@ -177,6 +182,7 @@ class ModalidadCursoController extends Controller {
             ]
             ]
         */
+
         
 
         //61880184
@@ -203,7 +209,7 @@ class ModalidadCursoController extends Controller {
                             inner join superior_modulo_periodo m on m.institucioneducativa_periodo_id=b.id
                                 inner join superior_modulo_tipo n on m.superior_modulo_tipo_id=n.id
                                     inner join institucioneducativa_curso_oferta o on o.insitucioneducativa_curso_id=c.id and o.superior_modulo_periodo_id=m.id
-        where  i.gestion_tipo_id in (2023::double precision,2024::double precision) and  i.institucioneducativa_id= :sie and i.sucursal_tipo_id = :sucursal 
+        where  i.gestion_tipo_id in (2023::double precision) and  i.institucioneducativa_id= :sie and i.sucursal_tipo_id = :sucursal 
         and k.nivel_id in (15,18,19,20,21,22,23,24,25)
         and acreditacion = :acreditacion and especialidad = :especialidad
         order by modulo
@@ -239,13 +245,14 @@ from superior_institucioneducativa_acreditacion a
 							inner join institucioneducativa_curso_oferta o on o.insitucioneducativa_curso_id=c.id and o.superior_modulo_periodo_id=m.id
 where  i.gestion_tipo_id in (2024::double precision) and  i.institucioneducativa_id= :sie  and i.sucursal_tipo_id= :sucursal  and i.periodo_tipo_id=3 
 and k.nivel_id in (15,18,19,20,21,22,23,24,25)
-        and acreditacion = :acreditacion and especialidad = :especialidad
+        and acreditacion = :acreditacion and especialidad = :especialidad and c.paralelo_tipo_id = :paralelo
        
         "); 
         $query->bindValue(':sie', $institucion);
         $query->bindValue(':sucursal', $sucursal);    
         $query->bindValue(':acreditacion', $acreditacion);
         $query->bindValue(':especialidad', $especialidad);   
+        $query->bindValue(':paralelo', $paralelo_id);   
 
         $query->execute();
         $modulos2024result = $query->fetchAll(); 
