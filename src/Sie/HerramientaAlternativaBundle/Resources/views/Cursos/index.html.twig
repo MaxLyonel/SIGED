@@ -128,7 +128,7 @@
                                                                             </div>   
 
                                                                             {#% if app.session.get('roluser') == 8 or (app.session.get('roluser') == 9 and app.session.get('ie_gestion') == app.session.get('currentyear')) %#}                                                                         
-                                                                            {% if app.session.get('roluser') == 9 and app.session.get('ie_gestion') == app.session.get('currentyear') %}                                                                         
+                                                                            {% if (app.session.get('roluser') == 9 or app.session.get('roluser') == 10 ) and app.session.get('ie_gestion') == app.session.get('currentyear') %}                                                                         
 
                                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Confirmar Módulos">
                                                                                 <button class="btn btn-circle btn-success btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table3" onclick="openModalModulos('{{dataParalelo.infoUe}}');">
@@ -216,7 +216,32 @@
                     </div>
 
                    
+                    <div id='showForm' style="display: none">
+                        <input type="hidden" id="input_info_new" name="input_info_new" value=""/>
+                        <table border="1" class="table table-bordered">
+                            <th width="100%">
+                                 <input type="text" id="input_nuevo_modulo" class="form-control" name="input_nuevo_modulo" value="">
+                            </th>
+                            <!--th width="10%">
+                                <button type="button" class="btn btn-success " onclick="addtotable();">
+                                    <i class="fa fa-list">
+                                        Adicionar
+                                    </i>
+                                </button>
+                            </th-->
+                        </table>
+                        <hr>
+                        <!--table! border="1" class="table table-bordered" id="tabla_modulos">
+                            <tr>
+                            <td width="85%">Modulo</td>                                                                
+                            </tr>
+                        </table-->
+                         <a href="#" class="btn btn-success btn-block" id="form_save3" style="display: none;">Grabar Nuevo Módulo</a>
+                    </div>
+
+
                     <div id='showData' style="display: none">
+
                     <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                         <tr >                            
                             <td colspan="2" id="nivel_lbl" style='text-align:center; vertical-align:middle'></td>
@@ -499,6 +524,8 @@
             
             document.getElementById("showData").style.display="none";
             document.getElementById("form_save2").style.display="none"
+            document.getElementById("form_save3").style.display="none"
+            document.getElementById("showForm").style.display="none"
 
             var divContainer = document.getElementById("showTable");
             divContainer.innerHTML = '';
@@ -519,7 +546,7 @@
                     document.getElementById("turno_lbl").innerHTML = 'TURNO: ' + data.turno;
                     document.getElementById("showData").style.display="block"
 
-                    createTableWithInnerHTML(data.modulos, data.infoUe, data.modulos2024, data.modulos2024count);
+                    createTableWithInnerHTML(data.modulos, data.infoUe, data.modulos2024, data.modulos2024count, data.rolid);
                 },
                 statusCode: {
                     500: function () {
@@ -785,57 +812,87 @@
         };        
 
 
-    var createTableWithInnerHTML = function (modulosArray, infoUe, modulos2024, modulos2024count) {
+    var createTableWithInnerHTML = function (modulosArray, infoUe, modulos2024, modulos2024count, rolid) {
  
-       
+        document.getElementById("showData").style.display="none"
+        document.getElementById("showForm").style.display="none"
 
-        //let opciones = '<div class="radio"><label><input type="radio" name="operacion" id="regulariza" value="1" > REGULARIZACION </label>&nbsp;&nbsp;&nbsp;<label><input type="radio" name="operacion" id="actualiza" value="2" >ACTUALIZACION</label></div>';
-        let opciones = '<div class="radio"></div>';
+ 
+       if(modulosArray.length > 0)
+       {
+
+            //let opciones = '<div class="radio"><label><input type="radio" name="operacion" id="regulariza" value="1" > REGULARIZACION </label>&nbsp;&nbsp;&nbsp;<label><input type="radio" name="operacion" id="actualiza" value="2" >ACTUALIZACION</label></div>';
+            let opciones = '<div class="radio"></div>';
+
+            
+            let tableHTML = '<form name="formbeneficio" method="post" role="form" id="formbeneficio"> <input type="hidden" id="input_info" name="input_info" value="' + infoUe  +'">' + opciones ;
+            tableHTML += '<table border="1" class="table table-bordered"><th width="80%">Modulo</th><th width="10%">Confirma</th>';
+
+            if(modulos2024count == 0){
+                for (var i = 0; i < modulosArray.length; i++) {
+                    tableHTML += '<tr>';
+
+                    let cols = "<td data-title='Modulo'>" + modulosArray[i].modulo + "</td>"
+                    //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
+                    cols += "<td data-title='Confirma'><input type='checkbox' id='input_" + modulosArray[i].modulo_tipo_id + "' name='input_" + modulosArray[i].modulo_tipo_id + "'></td>"
+
+                    tableHTML += cols;
+                    tableHTML += '</tr>';
+                }
+            }else{
+
+                for (var i = 0; i < modulos2024.length; i++) {
+                    tableHTML += '<tr>';
+
+                    let cols = "<td data-title='Modulo'>" + modulos2024[i].modulo + "</td>"
+                    //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
+                    cols += "<td data-title='Confirma'></td>"
+
+                    tableHTML += cols;
+                    tableHTML += '</tr>';
+                }
+
+            }
+            
+
+            //tableHTML += '<tr class="success"><td colspan="2"><strong>TOTAL BENEFICIO ASIGNADO PRIMER SEMESTRE</strong></td><td id="total_beneficio"></td></tr>';
+
+            tableHTML += '</table><form>';          
+        
+            var divContainer = document.getElementById("showTable");
+            divContainer.innerHTML = '';
+            divContainer.innerHTML = tableHTML;
+
+            if(modulos2024count == 0)
+            {
+                document.getElementById("form_save2").style.display="block"
+            }
+            
+       }else{
+
+
+            $("#input_info_new").val(infoUe);
+            $("#input_nuevo_modulo").val('');
+            
+
+
+            var divContainer = document.getElementById("showTable");
+            divContainer.innerHTML = '';
+            
+            document.getElementById("showForm").style.display="block"
+            document.getElementById("form_save3").style.display="block"
+
+            if(rolid != 10)
+            {
+                document.getElementById("showForm").style.display="none"
+                document.getElementById("form_save3").style.display="none"
+                divContainer.innerHTML = 'OPCIÓN VALIDA SOLO PARA TÉCNICO DISTRITAL';
+            }
+            
+
+       }
 
         
-        let tableHTML = '<form name="formbeneficio" method="post" role="form" id="formbeneficio"> <input type="hidden" id="input_info" name="input_info" value="' + infoUe  +'">' + opciones ;
-        tableHTML += '<table border="1" class="table table-bordered"><th width="80%">Modulo</th><th width="10%">Confirma</th>';
-
-        if(modulos2024count == 0){
-            for (var i = 0; i < modulosArray.length; i++) {
-                tableHTML += '<tr>';
-
-                let cols = "<td data-title='Modulo'>" + modulosArray[i].modulo + "</td>"
-                //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
-                cols += "<td data-title='Confirma'><input type='checkbox' id='input_" + modulosArray[i].modulo_tipo_id + "' name='input_" + modulosArray[i].modulo_tipo_id + "'></td>"
-
-                tableHTML += cols;
-                tableHTML += '</tr>';
-            }
-        }else{
-
-            for (var i = 0; i < modulos2024.length; i++) {
-                tableHTML += '<tr>';
-
-                let cols = "<td data-title='Modulo'>" + modulos2024[i].modulo + "</td>"
-                //cols += "<td data-title='Nota'>" + modulosArray[i].nota_cuantitativa + "</td>"
-                cols += "<td data-title='Confirma'></td>"
-
-                tableHTML += cols;
-                tableHTML += '</tr>';
-            }
-
-        }
-        
-
-        //tableHTML += '<tr class="success"><td colspan="2"><strong>TOTAL BENEFICIO ASIGNADO PRIMER SEMESTRE</strong></td><td id="total_beneficio"></td></tr>';
-
-        tableHTML += '</table><form>';
-
-       
-        var divContainer = document.getElementById("showTable");
-        divContainer.innerHTML = '';
-        divContainer.innerHTML = tableHTML;
-
-        if(modulos2024count == 0)
-        {
-            document.getElementById("form_save2").style.display="block"
-        }
             
         
     }
@@ -945,6 +1002,109 @@
         })
 
     });
+
+    $('#form_save3').on("click", function () {
+        
+        
+        console.log('save confirmacion 3')
+
+        //validar
+
+        var nuevomodulo = document.getElementById('input_nuevo_modulo').value ;
+      
+        if (nuevomodulo == '') {
+            alert('valor incorrecto para la creacion del modulo');
+            return false;
+        }
+
+    
+        swal({
+            title: "Adicionar Módulo ?",
+            text: "Revise una última vez, ya que la informacion no podrá ser modificada",   
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function (respuesta) {
+            if (respuesta) {
+
+                infoUe = document.getElementById('input_info_new').value
+
+                var formData = new FormData();
+                
+                formData.append("input_nuevomodulo", nuevomodulo);
+                formData.append("input_info", infoUe);
+                formData.append("input_new", 1);
+           
+                $.ajax({
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: Routing.generate('herramienta_modulosCurso_save'),
+                beforeSend: function () {
+                    //$('#modal').empty();
+                },
+                success: function (data) {                
+
+                    $("#modalModulos").modal('hide');
+
+                    if (data.resultado == 1)
+                    {
+                        swal({                        
+                            text: data.msg,
+                            icon: "success"
+                        });
+                        //window.location.reload();
+                    }else{
+
+                        swal({                        
+                            icon: "error",
+                            title: "Atencion !",
+                            text: data.msg,   
+                        });
+
+                    }
+                    
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });     
+
+            }
+
+        })
+
+        
+
+    });
+
+    function addtotable() {
+        console.log('add to table')
+
+        var e = document.getElementById("select_modulos");
+        //var value = e.value;
+        //input_nuevo_modulo
+
+
+        var nuevomodulo = document.getElementById('input_nuevo_modulo').value ;
+        var text = document.getElementById('input_nuevo_modulo').value ;
+
+        //y existe el modulo ?
+
+
+        //input = "<input type='number' size='6' class='input_beneficio' min='0' max='30' id='input_" + value + "'";
+        //$('#tabla_modulos').find('tbody').append("<tr><td>" + text + "</td><td>" +input+ "</td></tr>");
+        $('#tabla_modulos').find('tbody').append("<tr><td>" + text + "</td></tr>");
+     
+    }
 
 
 
