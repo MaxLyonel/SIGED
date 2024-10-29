@@ -148,6 +148,8 @@ class ModalidadCursoController extends Controller {
         $paralelo = $aInfoUeducativa['ueducativaInfo']['paralelo'];
         $turno    = $aInfoUeducativa['ueducativaInfo']['turno'];
 
+
+
         /*
         dump($acreditacion);
         dump($especialidad);
@@ -262,9 +264,10 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
         //dump(count($modulos2024)); die;
 
 
+        $rolId = $this->session->get('roluser');
 
         $response = new JsonResponse();
-        return $response->setData(array('modulos2024' => $modulos2024result,'modulos2024count' => $modulos2024,'modulos' => $modulos, 'infoUe' => str_replace("\"", "#", $infoUe),'ciclo' =>$ciclo, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno  ));
+        return $response->setData(array('rolid' => $rolId,'modulos2024' => $modulos2024result,'modulos2024count' => $modulos2024,'modulos' => $modulos, 'infoUe' => str_replace("\"", "#", $infoUe),'ciclo' =>$ciclo, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno  ));
     }
 
     public function saveModulos2024Action(Request $request){
@@ -278,11 +281,21 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
         die;*/
 
         $info= '';
+        $nuevomodulo = false;
+        $nuevomodulotxt = '';
 
         foreach ($valores as $clave => $valor) {    
           
             if($clave == 'input_info'){
                 $info = $valor;
+            }
+
+            if($clave == 'input_new'){
+                $nuevomodulo = true;
+            }
+
+            if($clave == 'input_nuevomodulo'){
+                $nuevomodulotxt = $valor;
             }
         }
 
@@ -309,50 +322,78 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
         $arr=array();
         $modulos=array();
 
-        // los cheks con el superior_modulo_tipo_id
-        foreach ($valores as $clave => $valor) {    
-            
-            if($clave <> 'input_info'){
+        if( $nuevomodulo == false)
+        {
+            // los cheks con el superior_modulo_tipo_id
+            foreach ($valores as $clave => $valor) {    
+                
+                if($clave <> 'input_info'){
+                
 
-                if(substr($clave,0,5) == 'input'){
-                    $aux = $clave;
-                    $desde = strpos($aux, "_");
-                    $id = substr($aux,$desde + 1, strlen($aux));
+                    if(substr($clave,0,5) == 'input'){
+                        $aux = $clave;
+                        $desde = strpos($aux, "_");
+                        $id = substr($aux,$desde + 1, strlen($aux));
 
-                    //recuperamos el modulo segun su id
-                    $query = $em->getConnection()->prepare("                        
-                        select * from superior_modulo_tipo where id =:id
-                    "); 
-                    $query->bindValue(':id', $id);
-                   
-                    $query->execute();
-                    $modulotipo = $query->fetchAll(); 
-                    //dump($modulotipo[0]['modulo']); die;
-                    $nombre_modulo = $modulotipo[0]['modulo'];
-
-                    $item = array(
-                        "gestion_tipo_id"           => 2024,
-                        "institucioneducativa_id"   => $request->getSession()->get('ie_id'),
-                        "sucursal_tipo_id"          => $request->getSession()->get('ie_subcea'), //$request->getSession()->get('ie_suc_id'),
-                        "periodo_tipo_id"           => $request->getSession()->get('ie_per_cod'),
-                        "turno_tipo_id"             => $turnoId,
-                        "paralelo_tipo_id"          => $paraleloId,
-                        "nivel_id"                  => $nivelId,
-                        "ciclo_id"                  => $cicloId,
-                        "grado_id"                  => $gradoId,
-                        "superior_modulo_tipo_id"   => $id,
-                        "modulo_id"                 => $id,
-                        "modulo"                    => $nombre_modulo // 'mecanica'
-
-                    );
+                        //recuperamos el modulo segun su id
+                        $query = $em->getConnection()->prepare("                        
+                            select * from superior_modulo_tipo where id =:id
+                        "); 
+                        $query->bindValue(':id', $id);
                     
-                    array_push($modulos,$item);
+                        $query->execute();
+                        $modulotipo = $query->fetchAll(); 
+                        //dump($modulotipo[0]['modulo']); die;
+                        $nombre_modulo = $modulotipo[0]['modulo'];
+
+
+                        $item = array(
+                            "gestion_tipo_id"           => 2024,
+                            "institucioneducativa_id"   => $request->getSession()->get('ie_id'),
+                            "sucursal_tipo_id"          => $request->getSession()->get('ie_subcea'), //$request->getSession()->get('ie_suc_id'),
+                            "periodo_tipo_id"           => $request->getSession()->get('ie_per_cod'),
+                            "turno_tipo_id"             => $turnoId,
+                            "paralelo_tipo_id"          => $paraleloId,
+                            "nivel_id"                  => $nivelId,
+                            "ciclo_id"                  => $cicloId,
+                            "grado_id"                  => $gradoId,
+                            "superior_modulo_tipo_id"   => $id,
+                            "modulo_id"                 => $id,
+                            "modulo"                    => $nombre_modulo // 'mecanica'
+
+                        );
+                        
+                        array_push($modulos,$item);
+
+                    }
 
                 }
-
+                
             }
+        }else{
+
+            //es nuevo modulo es de uno en uno
+
+            $item = array(
+                "gestion_tipo_id"           => 2024,
+                "institucioneducativa_id"   => $request->getSession()->get('ie_id'),
+                "sucursal_tipo_id"          => $request->getSession()->get('ie_subcea'), //$request->getSession()->get('ie_suc_id'),
+                "periodo_tipo_id"           => $request->getSession()->get('ie_per_cod'),
+                "turno_tipo_id"             => $turnoId,
+                "paralelo_tipo_id"          => $paraleloId,
+                "nivel_id"                  => $nivelId,
+                "ciclo_id"                  => $cicloId,
+                "grado_id"                  => $gradoId,
+                "superior_modulo_tipo_id"   => 0,
+                "modulo_id"                 => 0,
+                "modulo"                    => $nuevomodulotxt // 'mecanica'
+
+            );
             
+            array_push($modulos,$item);
+
         }
+        
 
         //array_push($arr,array("modulos" => $modulos));
 
@@ -384,13 +425,15 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
             -- para humanistica
 
         */
-
-        if( $nivelId == 15){
-            //humanistica
+        /*dump($nuevomodulo);
+        dump($objjson);
+        die;*/
+        if( $nivelId == 15 and $nuevomodulo == false){
+           
+            //humanistica o cualquier caso que sea nuevo
 
             $query = "select * from sp_genera_insercion_modulo_alternativa_humanistica('".$objjson."','".$this->session->get('ie_id')."');";
-            //dump($query);die;
-
+         
             $obs= $db->prepare($query);
             $params = array();
             $obs->execute($params);
@@ -403,11 +446,11 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
             }
 
         }else{
-
+            
             //tecnica
 
             $query = "select * from sp_genera_insercion_modulo_alternativa_tecnica('".$objjson."','".$this->session->get('ie_id')."');";
-            //dump($query);
+            //dump($query); die; 
             $obs= $db->prepare($query);
             $params = array();
             $obs->execute($params);
