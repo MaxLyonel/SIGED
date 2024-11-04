@@ -240,7 +240,7 @@
                 var formData = $('#sie_appwebbundle_maestrocuentabancaria').serialize();
                 $.ajax({
                     type: 'get',
-                    url: Routing.generate('alt_cta_banc_dir_create'),
+                    url: Routing.generate('cta_banc_dir_create'),
                     data: formData,
                     beforeSend: function () {
                         $("#divAlertDir").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
