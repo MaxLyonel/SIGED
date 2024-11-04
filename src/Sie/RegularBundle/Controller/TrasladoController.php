@@ -310,7 +310,8 @@ class TrasladoController extends Controller {
       }
 
       //select * from sp_genera_trapaso_estudiante('2016', '8073070220071504', '80730390', '13', '3', '6', '1', '1', '80730525', '13', '3', '6', '2', '1','0');
-      $query = $em->getConnection()->prepare('SELECT * from sp_genera_trapaso_estudiante(
+      // $query = $em->getConnection()->prepare('SELECT * from sp_genera_trapaso_estudiante(
+      $query = $em->getConnection()->prepare('SELECT * from sp_genera_trapaso_estudiante_forzado(
         :igestion::VARCHAR, :icodigorude::VARCHAR,
         :icodueO::VARCHAR,:inivelO::VARCHAR, :icicloO::VARCHAR, :igradoO::VARCHAR, :iparaleloO::VARCHAR,:iturnoO::VARCHAR,
         :icodueD::VARCHAR,:inivelD::VARCHAR, :icicloD::VARCHAR, :igradoD::VARCHAR, :iparaleloD::VARCHAR,:iturnoD::VARCHAR,
@@ -337,17 +338,18 @@ class TrasladoController extends Controller {
       $query->execute();
       $swTraslado = $query->fetchAll();
 
-      //dump($swTraslado);
+      // dump($swTraslado); die;
 //$em->getConnection()->commit();
-      switch ($swTraslado[0]['sp_genera_trapaso_estudiante']) {
+      // switch ($swTraslado[0]['sp_genera_trapaso_estudiante']) {
+      switch ($swTraslado[0]['sp_genera_trapaso_estudiante_forzado']) {
         case 0:
-            $message = "Traslado no realizado, porque que se detecto inconsistencia de datos. Error:  DIFERENCIAN EN BIMESTRES COMPLETADOS";
+            $message = "Traslado no realizado, porque que se detecto inconsistencia de datos. Error:  DIFERENCIAN EN TRIMESTRES COMPLETADOS";
             $this->addFlash('estadoTraslado', $message);
             return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig'
             );
             break;
         case 5:
-            $message = "Traslado no realizado, porque que se detecto inconsistencia de datos. Error:  ESTA EL ESTUDIANTE EN LA UE DESTINO ESTA CON MATERIAS Y BIMESTRES, PERO EN OTRO GRADO ERROR DE CONSISTENCIA ";
+            $message = "Traslado no realizado, porque que se detecto inconsistencia de datos. Error:  ESTA EL ESTUDIANTE EN LA UE DESTINO ESTA CON MATERIAS Y TRIMESTRES, PERO EN OTRO GRADO ERROR DE CONSISTENCIA ";
             $this->addFlash('estadoTraslado', $message);
             return $this->render($this->session->get('pathSystem') . ':Traslado:confirmarTraslado.html.twig'
             );
