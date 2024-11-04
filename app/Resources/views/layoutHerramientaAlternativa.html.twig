@@ -601,6 +601,9 @@
 
                             </ul>
                         </li>
+
+                        {#
+
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -608,10 +611,11 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                {#<li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer Registros</a></li>#}
+                                {#<li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer Registros</a></li>
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
                         </li>
+                        #}
 
 
                     {% endif %}
@@ -810,22 +814,22 @@
                                 {# <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>  --------------> NO APLICA SEGUN DGEA #}
                             </ul>
                         </li>
-                        {# <li class="submenu">
+                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul> ---- TEMPORAL V1 #}
+                            <ul>
                                 
-                                {# <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li> #}
-                                {# <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li> #}
+                                <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li> 
+                                <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
 
                                 {# <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Consolidación Bachiller de Excelencia</a></li> #}
                                 {# <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li> #}
 
-                            {# </ul> ---- TEMPORAL V1 #}
-                        {# </li> ---- TEMPORAL V1 #}
+                            {</ul> 
+                            </li> 
                     {% endif %}
                     <li class="">
                         <a href="{{path('wf_tramite_index')}}">
