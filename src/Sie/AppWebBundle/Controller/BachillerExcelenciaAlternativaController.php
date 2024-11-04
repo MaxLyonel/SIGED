@@ -29,7 +29,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2023-11-30');
+        $this->fechaCorte = new \DateTime('2024-11-30');
         $this->gestionOperativo = $this->session->get('currentyear');
     }
 
@@ -38,7 +38,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
      */
 
     public function indexAction() {
-        return $this->redirect($this->generateUrl('login'));
+        //return $this->redirect($this->generateUrl('login'));
        
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
@@ -80,7 +80,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
      */
 
     public function indexDirAction() {
-        return $this->redirect($this->generateUrl('login'));
+        //return $this->redirect($this->generateUrl('login'));
         
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
@@ -303,6 +303,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
      *
      */
     public function dirCtaCreateAction(Request $request) {
+
+      
         $id_usuario = $this->session->get('userId');
 
         if (!isset($id_usuario)) {
@@ -316,6 +318,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         $response = new JsonResponse();
         try {
             $form_aux = $request->get('sie_appwebbundle_maestrocuentabancaria');
+            //dump($form_aux); die;
             $entidadfinancieraTipoId = $form_aux['entidadfinancieraTipo'];
             $cuentabancaria = $form_aux['cuentabancaria'];
             $carnet = $form_aux['carnet'];
@@ -343,7 +346,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                     //->andWhere('m.esactivo = :esactivo')
                     ->andWhere('m.esoficial = :esoficial')
                     ->setParameter('institucion', $institucioneducativaId)
-                    ->setParameter('gestion', $gestion)
+                    ->setParameter('gestion', 2024)
                     //->setParameter('esactivo', 't')
                     ->setParameter('esoficial', 't')
                     ->getQuery();
@@ -357,7 +360,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $persona = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
             $inscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroinscripcionId);
             $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucioneducativaId);
-            $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->find($cargoTipoId);
+            $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->find($cargoTipoId);           
             $entidadfinanciera = $em->getRepository('SieAppWebBundle:EntidadfinancieraTipo')->find($entidadfinancieraTipoId);
             $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion);
 
@@ -374,6 +377,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
             $directores = $query->getResult();
 
+          
             foreach ($directores as $value) {
                 $value->setEsoficial('f');
                 $em->persist($value);
@@ -399,10 +403,14 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $em->flush();
             $em->getConnection()->commit();
 
+           
+
             return $response->setData(array('mensaje' => 'Se ha actualizado correctamente la información para: ' . $maestrocuenta->getNombre() . ' ' . $maestrocuenta->getPaterno() . ' ' . $maestrocuenta->getMaterno() . ', con C.I.: ' . $maestrocuenta->getCarnet() . ' y Complemento: ' . $maestrocuenta->getComplemento()));
         } catch (Exception $ex) {
+          
             $em->getConnection()->rollback();
-            return $response->setData(array('mensaje' => 'Error en el registro.'));
+            //return $response->setData(array('mensaje' => 'Error en el registro.'));
+            return $response->setData(array('mensaje' => $ex));
         }
 
         return $response->setData(array('mensaje' => 'Error en el registro.'));

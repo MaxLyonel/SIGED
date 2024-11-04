@@ -31,7 +31,7 @@
                 <p><i class="fa fa-info-circle fa-fw"></i> En el recuadro inferior se tiene la información actual de la Directora o del Director de la Unidad Educativa.</p>
                 <p>En caso de que existiera algún cambio en la información, la misma deberá ser actualizada. Solamente complete la información acerca de la entidad financiera, en caso de tener cuenta en "BANCO UNIÓN", caso contrario deje los valores que aprecen por defecto.</p>
                 <p>Posteriormente, a través de una ventana emergente se pide la confirmación de los datos ingresados. Para confirmar presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".</p>
-                <p class="label label-danger"><strong>Nota.- Tenga en cuenta que la información registrada se constituye en declaración jurada, por tanto debe verificar minuciosamente los datos ingresados, ya que no se podrá realizar cambios posteriores.</strong></p>
+                <h3> <strong>Nota.- Tenga en cuenta que la información registrada se constituye en declaración jurada, por tanto debe verificar minuciosamente los datos ingresados, ya que no se podrá realizar cambios posteriores, información eraserónea es total responsabilidad del Director del CEA</strong></h3>
             </div>
         </div>
     </div>
@@ -240,7 +240,7 @@
                 var formData = $('#sie_appwebbundle_maestrocuentabancaria').serialize();
                 $.ajax({
                     type: 'get',
-                    url: Routing.generate('cta_banc_dir_create'),
+                    url: Routing.generate('alt_cta_banc_dir_create'),
                     data: formData,
                     beforeSend: function () {
                         $("#divAlertDir").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
