@@ -31,8 +31,8 @@ class BachillerExcelenciaController extends Controller {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
         // $this->fechaCorte = new \DateTime('2023-11-30');
-        $this->fechaCorte = new \DateTime('2024-05-02');
-        $this->gestionOperativo =  2023; //2022       
+        $this->fechaCorte = new \DateTime('2024-11-21');
+        $this->gestionOperativo =  2024; //2022       
         // $this->gestionOperativo =  $this->session->get('currentyear'); //2022        
 
     }
@@ -91,6 +91,7 @@ class BachillerExcelenciaController extends Controller {
      */
 
     public function indexDirAction() {
+        // dump('ok');die;
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
@@ -164,7 +165,6 @@ class BachillerExcelenciaController extends Controller {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
             return $this->redirect($this->generateUrl('bach_exc_dir'));
             }
-
             /* Verificar si la UE ya ha registrado al director */
             $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
@@ -524,7 +524,7 @@ class BachillerExcelenciaController extends Controller {
 
             $formulario = $form->getData();
             $institucioneducativa = $formulario['institucioneducativa'];
-            $gestion = 2023;
+            $gestion = 2024;
             $sie = $formulario['institucioneducativa'];
 
             //grabar en institucioneducativa_operativo_log
@@ -582,7 +582,7 @@ class BachillerExcelenciaController extends Controller {
                 A INNER JOIN estudiante_inscripcion b ON A.ID = b.institucioneducativa_curso_id 
             WHERE
                 A.institucioneducativa_id = " .$formulario['institucioneducativa'] ." 
-                AND A.gestion_tipo_id = 2023 
+                AND A.gestion_tipo_id = 2024 
                 AND A.nivel_tipo_id = 13 
                 AND A.grado_tipo_id = 6 
                 AND b.estadomatricula_tipo_id = 4;";
@@ -762,7 +762,7 @@ class BachillerExcelenciaController extends Controller {
             $query = 'select * from public.sp_genera_regular_bachiller_destacado_vista(?,?);';
             $stmt = $db->prepare($query);
             //$params = array('2023',$formulario['institucioneducativa']);
-            $params = array('2023',$institucioneducativa);
+            $params = array('2024',$institucioneducativa);
             //$params = array('2023','80730425');
             $stmt->execute($params);
 
@@ -806,7 +806,7 @@ class BachillerExcelenciaController extends Controller {
             $sie = $formulario['institucioneducativa'];
             $query ="select count(*) as existe from maestro_cuentabancaria
             where 
-            institucioneducativa_id = " . $sie ." and gestion_tipo_id = 2023 and esactivo = false and esoficial = false";
+            institucioneducativa_id = " . $sie ." and gestion_tipo_id = 2024 and esactivo = false and esoficial = false";
             $stmt = $db->prepare($query);       
             $stmt->execute(); 
             $result = $stmt->fetchAll();            
@@ -885,7 +885,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('bach_exc_rst'));
         }
       
-        $gestion = 2023;
+        $gestion = 2024;
 
         $id_sistema = $request->get('id_sistema');
         $nromemo = $request->get('nromemo');
@@ -919,7 +919,7 @@ class BachillerExcelenciaController extends Controller {
             justificacion = '" . $justificacion . "', 
             usuario_id = " . $id_usuario ."
             where 
-            institucioneducativa_id = " . $sie ." and gestion_tipo_id = 2023";
+            institucioneducativa_id = " . $sie ." and gestion_tipo_id = 2024";
 
             $stmt = $db->prepare($query);
             //$params = array($nromemo, $justificacion, $id_usuario , $sie, $gestion);
@@ -1054,7 +1054,7 @@ class BachillerExcelenciaController extends Controller {
         $turno_tipo_id = $po[0]['turno_tipo_id'];
 
 
-        $igestion = 2023; //2022;
+        $igestion = 2024; //2022;
         $iinstitucioneducativa_id = $ie;
         $inivel_tipo_id=13;
         $igrado_tipo_id=6;
@@ -1156,7 +1156,7 @@ class BachillerExcelenciaController extends Controller {
                     inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
                         inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
             where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
-            and a.gestion_tipo_id=2023 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " .$genero_id."
+            and a.gestion_tipo_id=2024 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " .$genero_id."
             group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
             order by round(avg(nota_cuantitativa),0) desc limit 3) a
             union 
@@ -1169,7 +1169,7 @@ class BachillerExcelenciaController extends Controller {
                     inner join estudiante_asignatura d on b.id=d.estudiante_inscripcion_id
                         inner join estudiante_nota e on d.id=e.estudiante_asignatura_id 
             where a.nivel_tipo_id=13 and a.grado_tipo_id=6 and nota_tipo_id=9
-            and a.gestion_tipo_id=2023 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " . $genero_id ."
+            and a.gestion_tipo_id=2024 and a.institucioneducativa_id=".$ue_id."  and genero_tipo_id= " . $genero_id ."
             group by a.institucioneducativa_id,b.estudiante_id,c.genero_tipo_id 
             order by round(avg(nota_cuantitativa),0) desc limit 3) b) a
                 inner join estudiante b on a.estudiante_id=b.id
@@ -1208,7 +1208,7 @@ class BachillerExcelenciaController extends Controller {
     public function createEstudianteDestacado2023Action(Request $request) {
         $id_usuario = $this->session->get('userId');
         $sie = $this->session->get('ie_id');
-        $gestion = 2023;
+        $gestion = 2024;
 
         //TODO: validar si hay el sie en la sesion
 
