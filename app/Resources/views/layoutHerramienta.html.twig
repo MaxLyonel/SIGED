@@ -338,7 +338,7 @@
                                 {# {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8   %} #}
                                 {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_gestion_index')}}">Seguimiento Consolidación</a></li>
-                                    <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
+                                    {# <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li> #}
                                 {% endif %}
 
                                 {% if app.session.get('roluser') in [7,8,10]  %}
@@ -350,37 +350,37 @@
                                 {% if true and app.session.get('roluser') in [0,8]  %}<!--Tecnnico nacional-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades')}}">Nacional Reporte de inicio de actividades</a></li>
                                 {% endif %}
-                                {% if true and app.session.get('roluser') in [7]  %}<!--Tecnnico departamental-->
+                                {# {% if true and app.session.get('roluser') in [7]  %}<!--Tecnnico departamental-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades_distrito')}}">Departamental Reporte de inicio de actividades</a></li>
-                                {% endif %}
-                                {% if true and app.session.get('roluser') in [10,11]  %}<!--Tecnnico distrital-->
+                                {% endif %} #}
+                                {# {% if true and app.session.get('roluser') in [10,11]  %}<!--Tecnnico distrital-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades_distrito_colegio')}}">Distrital Reporte de inicio de actividades</a></li>
-                                {% endif %}
+                                {% endif %} #}
 
                                 {# Reporte de unidades de frontera #}
-                                {% if true and app.session.get('roluser') in [7,10,10]  %}<!--Tecnnico departamental y distrital-->
+                                {# {% if true and app.session.get('roluser') in [7,10,10]  %}<!--Tecnnico departamental y distrital-->
                                     <li><a href="{{ path('herramienta_inforeporte_estudiantes_en_situacion_de_vulnerabilidad')}}">Reporte de estudiantes en situación de Vulnerabilidad</a></li>
-                                {% endif %}
+                                {% endif %} #}
 
 
                                 {# Seguimiento de operativo de salud #}
-                                {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                {# {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
                                     <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li>
-                                {% endif %}
+                                {% endif %} #}
 
                                 {# Seguimiento de operativo registro de textos educativos #}
-                                {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                {# {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
                                     <li><a target="_blank" href="{{ path('herramienta_textoEducativo_seguimiento')}}">Seguimiento al operativo de registro de textos educativos</a></li>
-                                {% endif %}
+                                {% endif %} #}
 
                                 {# Seguimiento de operativo bonojp #}
-                                {% if app.session.get('roluser') in [7,8,10,34]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                {# {% if app.session.get('roluser') in [7,8,10,34]  %}<!--Tecnnico nacional, departamental y distrital-->
                                     <li><a target="_blank" href="{{ path('operativo_bono_jp_seguimiento')}}">Seguimiento al operativo Bono JP</a></li>
-                                {% endif %}
+                                {% endif %} #}
 
-                                {% if app.session.get('roluser') in [34] %}
+                                {# {% if app.session.get('roluser') in [34] %}
                                     <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file Bono JP</a></li>
-                                {% endif %}
+                                {% endif %} #}
                             </ul>
                         </li>
 
@@ -510,9 +510,10 @@
 
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10    %}
                    
-                    
+
                     <!--MENU BACHILLER DE EXCELENCIA PARA SIE NAL Y DDE -->
-                    {# inahbilitado el 06/12/2023
+                    {# inahbilitado el 06/12/2023#}
+                    {% if app.session.get('roluser') in [8] %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -520,16 +521,15 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                        {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
-                        {% if app.session.get('roluser') in [7,8,10] %}
-                           <li><a href="{{ path('_bach_exc_rst')}}">Restablecer registros</a></li>
-                    
-                            <li><a href="{{ path('_bach_exc_rep_dis')}}">Generar Reporte</a></li>
-                            <li><a href="{{ path('_bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
+                        {# {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %} #}
+                           <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
+                            <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
+                            <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
                          </ul>
-                        {% endif %}
-                    </li>  
-                    #}
+                        
+                    </li>
+                    {% endif %}  
+                    
 
                     <!--MENU BACHILLER DE EXCELENCIA -->
                     <li class="submenu">

@@ -183,8 +183,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr><th>Código RUDE</th><td colspan="3">${codigoRude}</td></tr>
-                                                <tr><th>Nombre</th><td colspan="3">${estudiante}</td></tr>
+                                                <tr><th>Código RUDE:</th><td colspan="3">${codigoRude}</td></tr>
+                                                <tr><th>Nombre:</th><td colspan="3">${estudiante}</td></tr>
                                                 <tr>
                                                     <th>Cédula de Identidad</th><td>${carnet}</td>
                                                     <th>Complemento</th><td>${complemento}</td>
@@ -236,7 +236,7 @@
                                     <b>Detalle de calificaciones</b>
                                     <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
                                 </h5>
-                                <div v-if="notas.length > 0 || notasCualitativas.length > 0">
+                                <div v-if="notas.length > 0 ">
                                     <table v-if="notas.length > 0" class="table table-bordered table-striped table-condensed">
                                         <thead>
                                             <tr>
@@ -266,7 +266,7 @@
                                         </tbody>
                                     </table>
                                     <br>
-                                    <table v-if="notasCualitativas.length > 0" class="table table-bordered table-striped table-condensed">
+                                    {# <table v-if="notasCualitativas.length > 0" class="table table-bordered table-striped table-condensed">
                                         <thead>
                                             <tr>
                                                 <th colspan="4">Cualitativas</th>
@@ -284,14 +284,13 @@
                                                 <td>${cualitativa.notaCualitativa}</td>
                                                 <td>
                                                     ${cualitativa.notaNuevaCualitativa}
-                                                    {# <textarea class="form-control input-sm jupper jnumbersletters" cols="17" rows="4" v-model="cualitativa.notaNuevaCualitativa" v-on:keypress="validarNotaCualitativa();" v-on:keyup="validarValorNotaCualitativa(cualitativa)"></textarea> #}
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-default btn-xs text-danger" v-on:click="eliminarNotaCualitativa(cualitativa)"> <i class="fa fa-minus-circle"></i> Quitar </button>
                                                 </td>
                                             </tr>
                                         </tbody>
-                                    </table>
+                                    </table> #}
                                     <hr>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -399,11 +398,11 @@
                             <p class="encabezado yearOld">Datos Estudiante</p>
                             <table class="table table-primary">
                                 <tr>
-                                    <th>Código Rude</th>
+                                    <th>Código Rude:</th>
                                     <td>${codigoRude}</td>
                                 </tr>
                                 <tr>
-                                    <th>Estudiante</th>
+                                    <th>Estudiante:</th>
                                     <td>${estudiante}</td>
                                 </tr>
                             </table>
@@ -475,7 +474,7 @@
                                     <td data-title="Área">
                                         <small>${a.asignatura}</small>
                                     </td>
-                                    <td v-for="n in a.notas" v-bind:id="n.idFila" align="center" v-bind:data-title="n.bimestre" v-on:click="agregarNota(n.idEstudianteNota,a.asignatura,n.bimestre,n.nota,n.id,n.idFila,n.idNotaTipo,n.idEstudianteAsignatura, datos.gestion)" v-bind:class="claseNotaTipo(n.idNotaTipo,datos.gestion)">
+                                    <td v-for="n in a.notas" v-bind:id="n.idFila" align="center" v-bind:data-title="n.bimestre" v-on:click="agregarNota(n.idEstudianteNota,a.asignatura,n.bimestre,n.nota,n.id,n.idFila,n.idNotaTipo,n.idEstudianteAsignatura,n.swcenso, datos.gestion)" v-bind:class="claseNotaTipo(n.idNotaTipo,datos.gestion)">
                                         <small v-if="datos.nivel == 11 || datos.nivel == 1 || datos.nivel == 403">${n.nota}</small>
                                         <div v-else>
                                             <span v-bind:class="{tachado: n.notaNueva != '' && n.nota != n.notaNueva}">${n.nota}</span>
@@ -483,18 +482,17 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="datos.gestion >= 2021 && datos.cualitativas.length > 0 && datos.nivel != 11 && datos.nivel != 13 && datos.tipoSubsistema != 4">
+                                <tr v-if="datos.gestion >= 2021 && datos.nivel != 11 && datos.nivel != 13 && datos.tipoSubsistema != 4">
                                     <td align="center" colspan="4">PROMEDIO ANUAL</td>
-                                    <td v-for="c in datos.cualitativas" align="center">
-                                        {# <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" v-bind:value="c.notaCuantitativa" v-bind:class="['form-control','input-sm', 'p'+c.idNotaTipo]" v-model="promedioGeneral"> #}
+                                    {# <td v-for="c in datos.cualitativas" align="center">
                                         <span v-bind:class="{tachado: promedioGeneral != nuevoPromedioGeneral}">${promedioGeneral}</span>
                                         <span v-if="promedioGeneral != nuevoPromedioGeneral" v-bind:class="{notaNueva: true, notaNuevaAprobado: nuevoPromedioGeneral >= 51, notaNuevaReprobado: nuevoPromedioGeneral < 51}"><b>${nuevoPromedioGeneral}</b></span>
                                         
-                                    </td>
+                                    </td> #}
                                 </tr>
                             </tbody>
                         </table>
-                        <div v-if="datos.gestion < 2019 || (datos.gestion >= 2019 && datos.nivel == 11)">
+                        {# <div v-if="datos.gestion < 2019 || (datos.gestion >= 2019 && datos.nivel == 11)">
                             <h4 class="yearOld titulo">Cualitativas <small style="float:right;color:white;"> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
                             <table v-if="datos.cualitativas != ''" class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
                                 <thead>
@@ -516,7 +514,7 @@
                             <div v-else>
                                 No tiene valoraciones cualitativas...
                             </div>
-                        </div>
+                        </div> #}
                     </div>
                     <div class="modal-footer">
                         <div class="pull-left">
@@ -754,8 +752,8 @@
                             this.datos = response.data.datos;
                             console.log(this.datos);
                             this.estadosMatricula = response.data.estadosMatricula;
-                            this.promedioGeneral = response.data.promedioGeneral;
-                            this.nuevoPromedioGeneral = response.data.promedioGeneral;
+                            // this.promedioGeneral = response.data.promedioGeneral;
+                            // this.nuevoPromedioGeneral = response.data.promedioGeneral;
 
                             var me = this;
                             $.each(this.estadosMatricula, function(index, val) {
@@ -779,151 +777,164 @@
                         this.cargandoCalificaciones = false;
                     });
                 },
-                agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura, gestion){
-                    if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion >= 2021) {
+                agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura,swcenso,gestion){
+                    
+                    if(swcenso == 1){
+                        Swal.fire({
+                            title: 'No puede moficar esta calificación...',
+                            text: "Esta calificación fue consolidad con el benefició CENSO.",
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK',
+                            cancelButtonText: ''
+                        });
+                    } else {
+                        if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion >= 2021) {
 
-                        var index = this.filas.indexOf(idFila);
-                        
-                        var nuevaNota = {
-                            idEstudianteNota: idEstudianteNota,
-                            asignatura: asignatura,
-                            bimestre: bimestre,
-                            nota: nota,
-                            notaNueva: '',
-                            idNota: idNota,
-                            idFila: idFila,
-                            idNotaTipo: idNotaTipo,
-                            idEstudianteAsignatura: idEstudianteAsignatura,
-                            gestion:gestion
-                        }
-
-                        // console.log(this.gestion);
-                        var me = this;
-
-                        $('body').removeClass('modal-open');
-
-                        if(index == -1){
-                            // AGREGAR CALIFICACION
-                            const {value: calificacion} = Swal.fire({
-                                title: 'Agregar calificación',
-                                input: 'text',
-                                inputValue: nuevaNota.nota,
-                                showCancelButton: true,
-                                inputValidator: (value) => {
-                                    if (!value) {
-                                        return 'Ingrese una calificación!'
-                                    }
-                                    if (isNaN(value)) {
-                                        return 'La calificación debe ser un número!'
-                                    }
-                                    if (isNaN(parseInt(value))) {
-                                        return 'La calificación debe ser un número valido!'
-                                    }  
-                                    if (value < 0) {
-                                        return 'La calificación no puede ser negativa!'
-                                    }                                      
-                                    if (value == 0) {
-                                        return 'La calificación no puede ser cero!'
-                                    }
-
-                                    if (nuevaNota.nota == value) {
-                                        return 'La nueva calificación no puede ser igual a la calificación actual'
-                                    }
-
-                                    // NOTAS TRIMESTRALES
-                                    if ((idNotaTipo == 30 || idNotaTipo == 31 || idNotaTipo == 32) && value > 60) {
-                                        return 'La calificación no puede ser mayor a 60!'   
-                                    }
-
-                                    if ((idNotaTipo == 27 || idNotaTipo == 28 || idNotaTipo == 29) && value > 10) {
-                                        return 'La calificación no puede ser mayor a 10!'   
-                                    }
-
-                                    // NOTAS BIMESTRALES
-                                    if ((idNotaTipo == 1 || idNotaTipo == 2 || idNotaTipo == 3 || idNotaTipo == 4) && value > 100) {
-                                        return 'La calificación no puede ser mayor a 100!'
-                                    }
-
-                                    // NOTAS trimestrales - 2021
-                                    if ( gestion >= 2021 && ((idNotaTipo == 6 || idNotaTipo == 7 || idNotaTipo == 8 ) && value > 100) ){
-                                        return 'La calificación no puede ser mayor a 100!'
-                                    }                                    
-
-                                    nuevaNota.notaNueva = value;
-
-                                    this.validarValorNota(nuevaNota);
-                                    
-                                    this.notas.push(nuevaNota);
-                                    this.filas.push(idFila);
-                                    $('#'+idFila).addClass('seleccionado');
-                                    console.log('donde');
-                                },
-                                onClose: () => {
-                                    $('body').addClass('modal-open');
-                                }
-                            })
-                        }else{
-                            console.log('no');
-                            // MODIFICAR CALIFICACION
-                            // Swal.fire(
-                            //   'Aviso!',
-                            //   'La calificación ya fue seleccionada',
-                            //   'warning'
-                            // )
-                            var me = this;
-                            const {value: calificacion} = Swal.fire({
-                                title: 'Modificar calificación',
-                                input: 'text',
-                                inputValue: this.notas[index].notaNueva,
-                                showCancelButton: true,
-                                inputValidator: (value) => {
-                                    if (!value) {
-                                        this.eliminarNota(this.notas[index]);
-                                        return;
-                                    }
-                                    if (isNaN(value)) {
-                                        return 'La calificación debe ser un número!'
-                                    }
-                                    if (value == 0) {
-                                        return 'La calificación no puede ser cero!'
-                                    }
-                                    if (nuevaNota.nota == value) {
-                                        return 'La nueva calificación no puede ser igual a la calificación actual'
-                                    }
-
-                                    // NOTAS TRIMESTRALES
-                                    if ((idNotaTipo == 30 || idNotaTipo == 31 || idNotaTipo == 32) && value > 60) {
-                                        return 'La calificación no puede ser mayor a 60!'   
-                                    }
-
-                                    if ((idNotaTipo == 27 || idNotaTipo == 28 || idNotaTipo == 29) && value > 10) {
-                                        return 'La calificación no puede ser mayor a 10!'   
-                                    }
-
-                                    // NOTAS BIMESTRALES
-                                    if ((idNotaTipo == 1 || idNotaTipo == 2 || idNotaTipo == 3 || idNotaTipo == 4) && value > 100) {
-                                        return 'La calificación no puede ser mayor a 100!'
-                                    }
-
-                                    // nuevaNota.notaNueva = value;
-                                    this.notas[index].notaNueva = value;
-                                    this.validarValorNota(this.notas[index]);
-
-                                },
-                                onClose: () => {
-                                    $('body').addClass('modal-open');
-                                }
-                            })
+                            var index = this.filas.indexOf(idFila);
                             
+                            var nuevaNota = {
+                                idEstudianteNota: idEstudianteNota,
+                                asignatura: asignatura,
+                                bimestre: bimestre,
+                                nota: nota,
+                                notaNueva: '',
+                                idNota: idNota,
+                                idFila: idFila,
+                                idNotaTipo: idNotaTipo,
+                                idEstudianteAsignatura: idEstudianteAsignatura,
+                                gestion:gestion
+                            }
+
+                            // console.log(this.gestion);
+                            var me = this;
+
+                            $('body').removeClass('modal-open');
+
+                            if(index == -1){
+                                // AGREGAR CALIFICACION
+                                const {value: calificacion} = Swal.fire({
+                                    title: 'Agregar calificación',
+                                    input: 'text',
+                                    inputValue: nuevaNota.nota,
+                                    showCancelButton: true,
+                                    inputValidator: (value) => {
+                                        if (!value) {
+                                            return 'Ingrese una calificación!'
+                                        }
+                                        if (isNaN(value)) {
+                                            return 'La calificación debe ser un número!'
+                                        }
+                                        if (isNaN(parseInt(value))) {
+                                            return 'La calificación debe ser un número valido!'
+                                        }  
+                                        if (value < 0) {
+                                            return 'La calificación no puede ser negativa!'
+                                        }                                      
+                                        if (value == 0) {
+                                            return 'La calificación no puede ser cero!'
+                                        }
+
+                                        if (nuevaNota.nota == value) {
+                                            return 'La nueva calificación no puede ser igual a la calificación actual'
+                                        }
+
+                                        // NOTAS TRIMESTRALES
+                                        if ((idNotaTipo == 30 || idNotaTipo == 31 || idNotaTipo == 32) && value > 60) {
+                                            return 'La calificación no puede ser mayor a 60!'   
+                                        }
+
+                                        if ((idNotaTipo == 27 || idNotaTipo == 28 || idNotaTipo == 29) && value > 10) {
+                                            return 'La calificación no puede ser mayor a 10!'   
+                                        }
+
+                                        // NOTAS BIMESTRALES
+                                        if ((idNotaTipo == 1 || idNotaTipo == 2 || idNotaTipo == 3 || idNotaTipo == 4) && value > 100) {
+                                            return 'La calificación no puede ser mayor a 100!'
+                                        }
+
+                                        // NOTAS trimestrales - 2021
+                                        if ( gestion >= 2021 && ((idNotaTipo == 6 || idNotaTipo == 7 || idNotaTipo == 8 ) && value > 100) ){
+                                            return 'La calificación no puede ser mayor a 100!'
+                                        }                                    
+
+                                        nuevaNota.notaNueva = value;
+
+                                        this.validarValorNota(nuevaNota);
+                                        
+                                        this.notas.push(nuevaNota);
+                                        this.filas.push(idFila);
+                                        $('#'+idFila).addClass('seleccionado');
+                                        console.log('donde');
+                                    },
+                                    onClose: () => {
+                                        $('body').addClass('modal-open');
+                                    }
+                                })
+                            }else{
+                                console.log('no');
+                                // MODIFICAR CALIFICACION
+                                // Swal.fire(
+                                //   'Aviso!',
+                                //   'La calificación ya fue seleccionada',
+                                //   'warning'
+                                // )
+                                var me = this;
+                                const {value: calificacion} = Swal.fire({
+                                    title: 'Modificar calificación',
+                                    input: 'text',
+                                    inputValue: this.notas[index].notaNueva,
+                                    showCancelButton: true,
+                                    inputValidator: (value) => {
+                                        if (!value) {
+                                            this.eliminarNota(this.notas[index]);
+                                            return;
+                                        }
+                                        if (isNaN(value)) {
+                                            return 'La calificación debe ser un número!'
+                                        }
+                                        if (value == 0) {
+                                            return 'La calificación no puede ser cero!'
+                                        }
+                                        if (nuevaNota.nota == value) {
+                                            return 'La nueva calificación no puede ser igual a la calificación actual'
+                                        }
+
+                                        // NOTAS TRIMESTRALES
+                                        if ((idNotaTipo == 30 || idNotaTipo == 31 || idNotaTipo == 32) && value > 60) {
+                                            return 'La calificación no puede ser mayor a 60!'   
+                                        }
+
+                                        if ((idNotaTipo == 27 || idNotaTipo == 28 || idNotaTipo == 29) && value > 10) {
+                                            return 'La calificación no puede ser mayor a 10!'   
+                                        }
+
+                                        // NOTAS BIMESTRALES
+                                        if ((idNotaTipo == 1 || idNotaTipo == 2 || idNotaTipo == 3 || idNotaTipo == 4) && value > 100) {
+                                            return 'La calificación no puede ser mayor a 100!'
+                                        }
+
+                                        // nuevaNota.notaNueva = value;
+                                        this.notas[index].notaNueva = value;
+                                        this.validarValorNota(this.notas[index]);
+
+                                    },
+                                    onClose: () => {
+                                        $('body').addClass('modal-open');
+                                    }
+                                })
+                                
+                            }
+
+                            // $(".swal2-input").focus(function(){    
+                            //   this.select();
+                            // });
+                        }else{
+
                         }
-
-                        // $(".swal2-input").focus(function(){    
-                        //   this.select();
-                        // });
-                    }else{
-
                     }
-
                     $('[data-toggle="popover"]').popover();
                     $('[data-toggle="tooltip"]').tooltip();
                 },
