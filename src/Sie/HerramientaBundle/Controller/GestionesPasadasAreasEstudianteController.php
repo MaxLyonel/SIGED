@@ -4,6 +4,7 @@ namespace Sie\HerramientaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,6 +50,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->institucioneducativaId);
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($this->institucioneducativaId,$this->session->get('currentyear'));
         $operativo = $this->get('funciones')->obtenerOperativoDown($this->institucioneducativaId,$this->session->get('currentyear'));
+        
+        // dump($operativo);die;
         // no permite que se registre area tt posterior a la consolidacion 6to u fin operativo año
         // if ($closeopesextosecc ==true or $operativo >3){
         if ($operativo > 3){
@@ -257,12 +260,13 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneById($areaid);
         $em->getConnection()->beginTransaction();
         $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
         
         $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
         $asignaturaId = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
-        
-        
+                        
         if($operativo <= 2 and $asignaturaId ==1039) {
             if ($operativo == 1){
                 try {
@@ -414,9 +418,117 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             } 
         
         }
-        else {
-            $exception = FlattenException::create(new \Exception(), 404);
-            $response = $controller->showAction($request, $exception, null);
+        elseif ($operativo == 3 and $asignaturaId ==1039 and $nivel == 13 and $grado == 6) {
+            // dump($estudianteAsignatura->getId());
+            // die;
+            $swCenso = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy([
+                'estudianteAsignatura' => $estudianteAsignatura->getId(),
+                'notaTipo' => [59, 60] // Buscar en ambos tipos de nota
+            ]);
+            // dump($estudianteid);
+            $query = $em->getConnection()->prepare("
+                        select cb.id cb_id,cbr.*
+                        from censo_beneficiario cb 
+                        inner join censo_beneficiario_regular cbr on cbr.censo_beneficiario_id = cb.id
+                        where cb.estudiante_id = ". $estudianteid .
+                        "and cbr.asignatura_tipo_id = 1039 ");
+            $query->execute();
+            $swCensoBf = $query->fetchAll();
+            // dump($swCenso);
+            // dump($swCensoBf);
+            if (!$swCenso and !$swCensoBf){
+                // dump('ok paso');die;
+                try {
+                    if($estudianteAsignatura) {
+                        
+                        //ELIMINAMOS ESPECIALIDAD
+                        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+                
+                        if($especialidadEstudiante) {
+                            $em->remove($especialidadEstudiante);
+                            $em->flush();
+                        }
+                        
+
+                        $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
+                        if($estudianteNota) {
+                            foreach ($estudianteNota as $key => $nota) {
+                                $notaAntLog = [];
+                                $notaAntLog['id'] = $nota->getId();
+                                $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
+                                $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
+                                $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
+                                $notaAntLog['usuario'] = $nota->getUsuarioId();
+
+                                $this->get('funciones')->setLogTransaccion(
+                                    $nota->getId(),
+                                    'estudiante_nota',
+                                    'D', 
+                                    '',
+                                    '',
+                                    $notaAntLog,
+                                    'Academico',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                                    
+                                $em->remove($nota);
+                                $em->flush();
+                            }
+                        }
+
+                        $eaAntLog = [];
+                        $eaAntLog['id'] = $estudianteAsignatura->getId();
+                        $eaAntLog['gestionTipo'] = $estudianteAsignatura->getGestionTipo()->getId();
+                        $eaAntLog['estudianteInscripcion'] = $estudianteAsignatura->getEstudianteInscripcion()->getId();
+                        $eaAntLog['institucioneducativaCursoOferta'] = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getId();
+
+                        $this->get('funciones')->setLogTransaccion(
+                            $estudianteAsignatura->getId(),
+                            'estudiante_asignatura',
+                            'D',
+                            '',
+                            '',
+                            $eaAntLog,
+                            'Academico',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                        
+                        $em->remove($estudianteAsignatura);
+                        $em->flush();
+                    }
+
+                    $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+
+                    $eiAntLog = [];
+                    $eiAntLog['id'] = $inscripcion->getId();
+                    $eiAntLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+                    $em->persist($inscripcion);
+                    $em->flush();
+                    
+                    $eiNuevoLog = [];
+                    $eiNuevoLog['id'] = $inscripcion->getId();
+                    $eiNuevoLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                    $this->get('funciones')->setLogTransaccion(
+                        $inscripcion->getId(),
+                        'estudiante_inscripcion',
+                        'U',
+                        '',
+                        $eiNuevoLog,
+                        $eiAntLog,
+                        'Academico',
+                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                    
+                    $em->getConnection()->commit();
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                }   
+            } 
+        
+        } else {
+            // $exception = FlattenException::create(new \Exception(), 404);
+            // $response = $controller->showAction($request, $exception, null);
+            return new Response('Página no encontrada', 404);
         }
         
         $areasEstudiante = $this->getAreasEstudiante($inscripcionid);
