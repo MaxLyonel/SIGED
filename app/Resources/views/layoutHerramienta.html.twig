@@ -513,7 +513,7 @@
 
                     <!--MENU BACHILLER DE EXCELENCIA PARA SIE NAL Y DDE -->
                     {# inahbilitado el 06/12/2023#}
-                    {% if app.session.get('roluser') in [8] %}
+                    {% if app.session.get('roluser') in [8,7] %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -522,9 +522,13 @@
                         </a>
                         <ul>
                         {# {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %} #}
-                           <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
-                            <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
+                            {% if app.session.get('roluser') in [8] %}
+                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
+                            {% endif %}        
+                            <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
+                            
+                            
                          </ul>
                         
                     </li>
