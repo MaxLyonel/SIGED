@@ -407,10 +407,28 @@ class CursoAlternativaController extends Controller {
         $db = $em->getConnection();
         //get the send values
         $infoUe = $request->get('infoUe');
-        
+             
         $aInfoUeducativa = unserialize($infoUe);
         
+        //este es el institrucion educativa curso id
         $iecid = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+
+        // borramos la modalidad, hay un problema al botrrar el curso,
+        //consultado raul, iver y erick sobre la modalidad indica que puede borrarse y debe ser  la gestion 2024
+
+        /*$query ="delete from maestro_inscripcion_estadosalud where id=?";
+        $stmt = $db->prepare($query);
+        $params = array($request_id);
+        $stmt->execute($params);
+        $tmp=$stmt->fetchAll();*/
+
+        
+        $query = $em->getConnection()->prepare("
+            delete from institucioneducativa_curso_modalidad_atencion where institucioneducativa_curso_id = ".$iecid." and date_part('year', fecha_registro) =  2024"
+            );
+        $query->execute();
+
+
         
         $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecid);
         $response = new JsonResponse();
@@ -420,7 +438,7 @@ class CursoAlternativaController extends Controller {
 
             $iecpercount = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBySuperiorInstitucioneducativaPeriodo($iec->getSuperiorInstitucioneducativaPeriodo()->getId());    
             $dupcursover = $this->verificarcursoduplicado($aInfoUeducativa, $aInfoUeducativa['ueducativaInfoId']['iecId']);
-            
+           
             if ($dupcursover != '-1'){
                 $iecdup = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($dupcursover);
                 //BUSCANDO E ELIMINANDO CURSO OFERTA
@@ -513,7 +531,8 @@ class CursoAlternativaController extends Controller {
             }
             $em->getConnection()->commit();
             return $response->setData(array('mensaje'=>'¡Proceso realizado exitosamente!'));
-        } catch (Exception $ex) {                       
+        } catch (Exception $ex) {    
+            dump($ex);                   
             $em->getConnection()->rollback();
             return $response->setData(array('mensaje'=>'Proceso detenido.'.$ex));
         }
