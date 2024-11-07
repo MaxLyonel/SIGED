@@ -731,7 +731,7 @@
                         </li>  
                     {% endif %} #}
                                         
-                    {% if app.session.get('roluser') in [7,8,9,10,20] %}
+                    {% if (app.session.get('roluser') in [7,8,9,10,20]) or ( app.session.get('userId') == 13815704) %}
                         <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -742,7 +742,7 @@
                                 <li><a href="{{ path('censoinscription_index')}}">Registro Censo</a></li>
                                                             
                             </ul> #}
-                            {% if app.session.get('roluser') in [8, 9, 7, 10] %}
+                            {% if (app.session.get('roluser') in [8, 9, 7, 10]) or (app.session.get('userId') == 13815704) %}
                                 <ul>
                                     <li><a href="{{ path('censobeneficio_index') }}">Registro Beneficio CPV</a></li>
                                 </ul>

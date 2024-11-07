@@ -49,7 +49,7 @@ class CensoBeneficioController extends Controller
         // Si el rol es 9, toma el 'ie_id' de la sesión
         if ($roluser == 9) {
             $ie_id = $this->session->get('ie_id');
-        } elseif (in_array($roluser, [8, 7, 10])) {
+        } elseif (in_array($roluser, [8, 7, 10]) or ($id_usuario == 13815704)) {
             $sie = $request->get('sie');
             // verificamos si tiene tuicion
             if (!empty($sie)) {
