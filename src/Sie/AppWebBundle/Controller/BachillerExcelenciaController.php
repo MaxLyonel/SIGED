@@ -31,7 +31,7 @@ class BachillerExcelenciaController extends Controller {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
         // $this->fechaCorte = new \DateTime('2023-11-30');
-        $this->fechaCorte = new \DateTime('2024-11-08');
+        $this->fechaCorte = new \DateTime('2024-11-09');
         $this->gestionOperativo =  2024; //2022       
         // $this->gestionOperativo =  $this->session->get('currentyear'); //2022        
 
