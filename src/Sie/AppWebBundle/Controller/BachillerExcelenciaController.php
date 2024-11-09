@@ -48,9 +48,9 @@ class BachillerExcelenciaController extends Controller {
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
 
-        if (!isset($id_usuario)) {
+        // if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
-        }
+        // }
 
         /*if($this->fechaActual > $this->fechaCorte) {
             dump('here'); die;
@@ -96,9 +96,9 @@ class BachillerExcelenciaController extends Controller {
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
 
-        if (!isset($id_usuario)) {
+        // if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
-        }
+        // }
 
         /*if($this->fechaActual > $this->fechaCorte) {
              return $this->redirect($this->generateUrl('principal_web'));
@@ -1349,9 +1349,9 @@ class BachillerExcelenciaController extends Controller {
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
 
-        if (!isset($id_usuario)) {
+        // if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
-        }
+        // }
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
 
