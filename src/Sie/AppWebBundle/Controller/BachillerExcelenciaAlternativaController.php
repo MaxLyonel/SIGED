@@ -82,6 +82,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function indexDirAction() {
         //return $this->redirect($this->generateUrl('login'));
         
+         return $this->redirect($this->generateUrl('principal_web'));
+        
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
@@ -303,6 +305,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
      *
      */
     public function dirCtaCreateAction(Request $request) {
+        
+        // inhabilitar 10/11/2024
+        return $this->redirect($this->generateUrl('principal_web'));
 
       
         $id_usuario = $this->session->get('userId');
