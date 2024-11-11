@@ -96,9 +96,9 @@ class BachillerExcelenciaController extends Controller {
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
 
-        if (!isset($id_usuario)) {
+        // if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
-        }
+        // }
 
         /*if($this->fechaActual > $this->fechaCorte) {
              return $this->redirect($this->generateUrl('principal_web'));
@@ -321,9 +321,9 @@ class BachillerExcelenciaController extends Controller {
     public function dirCtaCreateAction(Request $request) {
         $id_usuario = $this->session->get('userId');
 
-        if (!isset($id_usuario)) {
+        // if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
-        }
+        // }
 
         if($this->fechaActual > $this->fechaCorte) {
              return $this->redirect($this->generateUrl('principal_web'));

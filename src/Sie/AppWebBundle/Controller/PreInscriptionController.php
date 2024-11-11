@@ -852,7 +852,7 @@ class PreInscriptionController extends Controller
                                 ->andWhere('gt.id in (:gestiones)')
                                 ->setParameter('idEstudiante', $estudiante->getId())
                                 ->setParameter('idPersona', $persona->getId())
-                                ->setParameter('gestiones', array(2019,2020))
+                                ->setParameter('gestiones', array(2023,2024))
                                 ->getQuery()
                                 ->getResult();
         
@@ -875,7 +875,7 @@ class PreInscriptionController extends Controller
                             ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
                             ->where('e.id = :idEstudiante')
                             ->andWhere('ei.estadomatriculaTipo = 4')
-                            ->andWhere('gt.id = 2020')
+                            ->andWhere('gt.id = 2024')
                             ->setParameter('idEstudiante', $estudiante->getId())
                             ->getQuery()
                             ->getResult();
