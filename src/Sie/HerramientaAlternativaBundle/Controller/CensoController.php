@@ -59,12 +59,26 @@ class CensoController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
      
         //40730321 61470045
-        $query = $em->getConnection()->prepare("            
+        //esto era 1s
+        /*$query = $em->getConnection()->prepare("            
            select b.*, 
             (select sum(beneficio) from censo_alternativa_beneficiarios_detalle d where d.beneficiario_id = b.id group by d.beneficiario_id) as beneficio
             from censo_alternativa_beneficiarios b where cea = :institucion order by paterno, materno, nombres 
  
+        "); */
+
+        // para 2s solo los que tienen saldo > 0 es decir 30 - totalasignado1s >0
+        // y solo los que tengas estudiante_inscripcion_id del segundo semestre
+        $query = $em->getConnection()->prepare("            
+           select b.*, 
+           saldo_beneficio	as beneficio 
+            from censo_alternativa_beneficiarios b where cea = :institucion and saldo_beneficio > 0 and estudiante_inscripcion_s2 is not null  order by paterno, materno, nombres 
+ 
         "); 
+
+        // para prueba
+        //$institucion = 30680017;
+
         $query->bindValue(':institucion', $institucion);
         $query->execute();
         $beneficiarios = $query->fetchAll(); 
@@ -84,6 +98,8 @@ class CensoController extends Controller {
         //dump($request); die;
         //dump($request->get('rude')); die;
 
+        $saldo = 0;
+
         $rude = $request->get('rude');
         $beneficiario_id = $request->get('row');
         $institucion = $request->getSession()->get('ie_id');
@@ -93,7 +109,7 @@ class CensoController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("                        
-            select imprime_ddjj_s1 as habilitado from censo_alternativa_beneficiarios where rudeal = :rude
+            select imprime_ddjj_s2 as habilitado from censo_alternativa_beneficiarios where rudeal = :rude
         "); 
         $query->bindValue(':rude', $rude);
         $query->execute();
@@ -103,9 +119,25 @@ class CensoController extends Controller {
             $habilitado = false;
         }
 
+        //´para 2 semestre, ver el saldo disponible 
+        //$beneficiario_id = 9986;
+        /*$query = $em->getConnection()->prepare("                        
+            select (30 - coalesce(sum(beneficio),0)) as saldo from censo_alternativa_beneficiarios_detalle where beneficiario_id = :beneficiario_id
+        "); */
+
+        $query = $em->getConnection()->prepare("                        
+            select saldo_beneficio  as saldo from censo_alternativa_beneficiarios where id = :beneficiario_id
+        "); 
+
+
+        $query->bindValue(':beneficiario_id', $beneficiario_id);
+        $query->execute();
+        $saldodisponible = $query->fetchAll(); 
+        $saldo = $saldodisponible[0]['saldo'] ;
+
 
         
-     
+        /*con notas 1s
         $query = $em->getConnection()->prepare("            
             WITH catalogo AS (select a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion,c.id as superior_acreditacion_especialidad_id
 from superior_facultad_area_tipo a
@@ -126,9 +158,37 @@ from superior_institucioneducativa_acreditacion a
 									inner join superior_modulo_periodo m on l.superior_modulo_periodo_id=m.id
 										inner join superior_modulo_tipo n on m.superior_modulo_tipo_id=n.id
 											inner join estudiante_nota o on j.id=o.estudiante_asignatura_id
-where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:sie  and i.sucursal_tipo_id = :sucursal and i.periodo_tipo_id=2  and codigo_rude = :rude
+where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:sie  and i.sucursal_tipo_id = :sucursal and i.periodo_tipo_id=3  and codigo_rude = :rude
 
-        "); 
+        "); */
+
+        $query = $em->getConnection()->prepare("            
+            WITH catalogo AS (select a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion,c.id as superior_acreditacion_especialidad_id
+from superior_facultad_area_tipo a
+	inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+		inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+			inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id)
+select k.*,h.codigo_rude,h.paterno,h.materno,h.nombre,j.estudianteasignatura_estado_id,i.periodo_tipo_id
+,n.id,n.modulo,c.paralelo_tipo_id,c.turno_tipo_id
+from superior_institucioneducativa_acreditacion a
+	inner join superior_institucioneducativa_periodo b on b.superior_institucioneducativa_acreditacion_id=a.id
+		inner join institucioneducativa_curso c on c.superior_institucioneducativa_periodo_id=b.id
+			inner join estudiante_inscripcion d on c.id=d.institucioneducativa_curso_id
+				inner join estudiante h on d.estudiante_id=h.id
+					inner join institucioneducativa_sucursal i on a.institucioneducativa_sucursal_id=i.id
+						inner join estudiante_asignatura j on d.id=j.estudiante_inscripcion_id
+							inner join catalogo k on a.acreditacion_especialidad_id=k.superior_acreditacion_especialidad_id
+								inner join institucioneducativa_curso_oferta l on j.institucioneducativa_curso_oferta_id=l.id
+									inner join superior_modulo_periodo m on l.superior_modulo_periodo_id=m.id
+										inner join superior_modulo_tipo n on m.superior_modulo_tipo_id=n.id
+											
+where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:sie  and i.sucursal_tipo_id = :sucursal and i.periodo_tipo_id=3  and codigo_rude = :rude
+");    
+
+        // para prueba
+        //$institucion = 30680017;
+
+        //$rude = '81720068200836';
         $query->bindValue(':rude', $rude);
         $query->bindValue(':sie', $institucion);
         $query->bindValue(':sucursal', $sucursal);
@@ -138,7 +198,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         //dump($notas); die;
 
         $response = new JsonResponse();
-        return $response->setData(array('notas' => $notas, 'bid' => $beneficiario_id, 'habilitado' => $habilitado));
+        return $response->setData(array('notas' => $notas, 'bid' => $beneficiario_id, 'habilitado' => $habilitado,'saldo' => $saldo));
 
 
     }
@@ -184,7 +244,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
     }
 
 
-    public function saveNotasAction(Request $request){
+    public function saveNotasAction1s(Request $request){
         
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
@@ -319,42 +379,112 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));
     }
 
-    public function saveNotas2sAction(Request $request){
+    public function saveNotasAction(Request $request){
         
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
         $response = new JsonResponse();
 
         $valores = $request->request->all();
-        /*dump($valores); 
-        die;*/
+       
+        //TODO: validar que el el total2s + total 1s no exceda los 15
+
+        $sie = $request->getSession()->get('ie_id');
+        $id_usuario  = $request->getSession()->get('userId');
+
+      
 
         $bid = 0;
         foreach ($valores as $clave => $valor) {  
 
-            if($clave == 'input_bid'){
+            if($clave == 'bid'){
                 $beneficiario_id = $valor;
             }else{
 
-                $aux = $clave;
-                $desde = strpos($aux, "_");
-                $modulo_id = substr($aux,$desde + 1, strlen($aux));
+                if(substr($clave,0,5) == 'input'){
 
-                $modulo_tipo_id = $modulo_id; 
-                $puntos = $valor; 
-
-
-                $query ="insert into censo_alternativa_beneficiarios_detalle (beneficiario_id, estudiante_nota_id, periodo_id, beneficio, fecha_asignacion, usuario_id, operacion ) VALUES (?, ?, 3, ?, now(), 1, ?)";            
+                    $aux = $clave;
+                    $desde = strpos($aux, "_");
+                    $id = substr($aux,$desde + 1, strlen($aux));
     
-                $stmt = $db->prepare($query);
-                $params = array($beneficiario_id, $modulo_tipo_id, $puntos, 1 );
-                $stmt->execute($params);       
+                    $modulo_tipo_id = $id; 
+                    $puntos = $valor; 
+
+                    if($puntos > 0){
+
+                        $query = $em->getConnection()->prepare("select estudiante_inscripcion_s2,estudiante_id from censo_alternativa_beneficiarios where id = :beneficiario_id");                
+                        $query->bindValue(':beneficiario_id', $beneficiario_id);
+                        $query->execute();
+                        $totales = $query->fetchAll();                        
+                        
+                        $ei_id = $totales[0]['estudiante_inscripcion_s2'];
+                        $eid = $totales[0]['estudiante_id'];
+
+                        
+
+                        $query ="insert into censo_alternativa_beneficiarios_detalle (beneficiario_id, modulo_tipo_id, periodo_id, beneficio, fecha_asignacion, usuario_id, operacion ) VALUES (?, ?, 3, ?, now(), 1, ?)";            
+    
+                        $stmt = $db->prepare($query);
+                        $params = array($beneficiario_id, $modulo_tipo_id, $puntos, 1 );
+                        $stmt->execute($params);       
+
+
+                        //actualizamos los saldos totales
+                        $query = $em->getConnection()->prepare("select sum(beneficio) as total_beneficio from censo_alternativa_beneficiarios_detalle where periodo_id = 3 and  beneficiario_id = :beneficiario_id");                
+                        $query->bindValue(':beneficiario_id', $beneficiario_id);
+                        $query->execute();
+                        $totales = $query->fetchAll();     
+                        /*dump($totales);
+                        dump($totales[0]['total_beneficio']);
+                        die;*/
+                        $total=$totales[0]['total_beneficio'];
+
+                        $query ="update censo_alternativa_beneficiarios set total_asignado_2s = ?  where id = ?";                
+                        $stmt = $db->prepare($query);
+                        $params = array($total,$beneficiario_id );
+                        $stmt->execute($params); 
+
+
+                        $query ="update censo_alternativa_beneficiarios set saldo_beneficio = total_beneficio - (total_asignado_1s + total_asignado_2s)  where id = ?";                
+                        $stmt = $db->prepare($query);
+                        $params = array($beneficiario_id );
+                        $stmt->execute($params); 
+
+                        
+
+                        //TABLA GENERICA
+                        $query = $em->getConnection()->prepare("select count(id) as existe from censo_beneficiario where nivel_tipo_id = 15 and grado_tipo_id = 99 and censo_tabla_id = :beneficiario_id and estudiante_inscripcion_id = :ei_id");                
+                        $query->bindValue(':beneficiario_id', $beneficiario_id);
+                        $query->bindValue(':ei_id', $ei_id);
+                        $query->execute();
+                        $totales = $query->fetchAll();                        
+                        $existe=$totales[0]['existe'];
+                        
+                        if($existe == 0){
+                            //se inserta
+                            //INSERT INTO "public"."censo_beneficiario" ("id", "estudiante_id", "estudiante_inscripcion_id", "institucioneducativa_id", "nivel_tipo_id", "grado_tipo_id", "censo_tabla_id", "archivo", "usuario_id", "fecha_registro", "fecha_modificacion", "observacion") VALUES (2, 36449173, 120524895, 81880094, 15, 99, 1, 't', NULL, '2024-09-06 09:38:36', '2024-09-06 09:38:38', NULL);
+
+                            $query ="insert into censo_beneficiario (estudiante_id, estudiante_inscripcion_id, institucioneducativa_id, nivel_tipo_id, grado_tipo_id, censo_tabla_id, archivo, usuario_id, fecha_registro, fecha_modificacion, observacion) VALUES (?, ?, ?, 15, 99, ?, NULL, ?, now(), now(), NULL)";                
+                            $stmt = $db->prepare($query);
+                            $params = array($eid,$ei_id,$sie,$beneficiario_id, $id_usuario);
+                            $stmt->execute($params);     
+                        }
+                            
+
+
+                    }
+
+                }
 
 
             }
 
 
         }
+
+
+        $msg  = 'Datos registrados correctamente';
+        return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));    
 
     }
 
@@ -366,12 +496,16 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         $db = $em->getConnection(); 
 
         $cea = $request->getSession()->get('ie_id');
+
+          // para prueba
+          //$cea = 30680017;
+          
         $cea_nombre = $request->getSession()->get('ie_nombre');
 
 
         // cerrar este cea
 
-        $query ="update censo_alternativa_beneficiarios set imprime_ddjj_s1 = true  where cea = ?";                
+        $query ="update censo_alternativa_beneficiarios set imprime_ddjj_s2 = true  where cea = ?";                
         $stmt = $db->prepare($query);
         $params = array($cea);
         $stmt->execute($params); 
@@ -403,7 +537,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
 
         $cabecera = '<br/><br/><br/><br/><br/><br/><br/><table border="0" style="font-size: 8.5px">';
         $cabecera .='<tr>';          
-        $cabecera .='<td  align="center"><h2>ASIGNACION BENEFICIO CENSO NACIONAL DE POBLACIÓN Y VIVIENDA - 2024</h2></td>';           
+        $cabecera .='<td  align="center"><h2>ASIGNACION BENEFICIO CENSO NACIONAL DE POBLACIÓN Y VIVIENDA SEGUNDO SEMESTRE - 2024</h2></td>';           
         $cabecera .='</tr>';
         $cabecera .='<tr>';
             $cabecera .='<td   align="center"><b>DETALLE DE ASIGNACION DE PUNTOS A PARTICIPANTES SEGUN LISTADO OFICIAL INE</b></td>';          
@@ -414,16 +548,31 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
             select distinct beneficiario_id, paterno, materno, nombres, rudeal, carnet, complemento, departamento, distrito
             from censo_alternativa_beneficiarios_detalle d
             inner join censo_alternativa_beneficiarios b on b.id = d.beneficiario_id
-            where b.cea = :cea and d.periodo_id = 2
+            where b.cea = :cea and d.periodo_id = 3
             order by 2,3,4        
         ");     
         $query->bindValue(':cea', $cea);
         $query->execute();
         $participantes = $query->fetchAll();    
-        //dump($participantes); die;    
+        //dump($participantes); die;   
+        
+        
+        //distrito y depto
+        $query = $em->getConnection()->prepare("
+        select lt.lugar, lt.lugar_tipo_id, lt2.lugar as depto
+        from lugar_tipo lt
+        inner join lugar_tipo lt2 on lt2.id = lt.lugar_tipo_id
+        where lt.id in
+        (
+        select lugar_tipo_id_distrito from jurisdiccion_geografica where id in ( select le_juridicciongeografica_id from institucioneducativa where id = :cea )
+        )         
+        ");     
+        $query->bindValue(':cea', $cea);
+        $query->execute();
+        $distritodepto = $query->fetchAll();  
 
-        $departamento = $participantes[0]['departamento'];
-        $distrito = $participantes[0]['distrito'];
+        $departamento =  $distritodepto[0]['depto']; // $participantes[0]['departamento'];
+        $distrito =  $distritodepto[0]['lugar']; // 'Distrito'; // $participantes[0]['distrito'];
 
 
         $datoscea = '
@@ -439,7 +588,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 <td width="15%" style="background-color:#ddd;"><strong>GESTIÓN</strong></td>
                 <td width="50%">2024</td>
                 <td width="15%" style="background-color:#ddd;"><strong>PERIODO</strong></td>
-                <td width="20%" align="center">PRIMER SEMESTRE</td>
+                <td width="20%" align="center">SEGUNDO SEMESTRE</td>
             </tr>
             <tr>
                 <td width="15%" style="background-color:#ddd;"><strong>DEPARTAMENTO</strong></td>
@@ -544,7 +693,9 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
 
 
         $query = $em->getConnection()->prepare("
-           SELECT
+           
+
+            SELECT
                 censo_alternativa_beneficiarios.id, 
                 censo_alternativa_beneficiarios.carnet, 
                 censo_alternativa_beneficiarios.complemento, 
@@ -556,8 +707,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 censo_alternativa_beneficiarios_detalle.estudiante_nota_id, 
                 censo_alternativa_beneficiarios_detalle.periodo_id, 
                 censo_alternativa_beneficiarios_detalle.beneficio, 
-                superior_modulo_tipo.modulo, 
-                superior_especialidad_tipo.especialidad, 
+                superior_modulo_tipo.modulo,
+                superior_especialidad_tipo.especialidad,
                 superior_acreditacion_tipo.codigo, 
                 superior_acreditacion_tipo.acreditacion
             FROM
@@ -565,32 +716,22 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 INNER JOIN
                 censo_alternativa_beneficiarios_detalle
                 ON 
-                    censo_alternativa_beneficiarios.id = censo_alternativa_beneficiarios_detalle.beneficiario_id
-                INNER JOIN
-                estudiante_nota
-                ON 
-                    censo_alternativa_beneficiarios_detalle.estudiante_nota_id = estudiante_nota.id
-                INNER JOIN
-                estudiante_asignatura
-                ON 
-                    estudiante_nota.estudiante_asignatura_id = estudiante_asignatura.id
-                INNER JOIN
-                institucioneducativa_curso_oferta
-                ON 
-                    estudiante_asignatura.institucioneducativa_curso_oferta_id = institucioneducativa_curso_oferta.id
-                INNER JOIN
-                superior_modulo_periodo
-                ON 
-                    institucioneducativa_curso_oferta.superior_modulo_periodo_id = superior_modulo_periodo.id
+                    censo_alternativa_beneficiarios.id = censo_alternativa_beneficiarios_detalle.beneficiario_id                            
+               
                 INNER JOIN
                 superior_modulo_tipo
                 ON 
-                    superior_modulo_periodo.superior_modulo_tipo_id = superior_modulo_tipo.id
+                    superior_modulo_tipo.id = censo_alternativa_beneficiarios_detalle.modulo_tipo_id
                 left JOIN
                 superior_especialidad_tipo
                 ON 
-                    superior_modulo_tipo.superior_especialidad_tipo_id = superior_especialidad_tipo.id
-                left JOIN
+                    superior_especialidad_tipo.id = superior_modulo_tipo.superior_especialidad_tipo_id
+                 INNER JOIN
+                superior_modulo_periodo
+                ON 
+                    superior_modulo_periodo.superior_modulo_tipo_id = superior_modulo_tipo.id
+										
+								left JOIN
                 superior_institucioneducativa_periodo
                 ON 
                     superior_modulo_periodo.institucioneducativa_periodo_id = superior_institucioneducativa_periodo.id
@@ -606,8 +747,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 superior_acreditacion_tipo
                 ON 
                     superior_acreditacion_especialidad.superior_acreditacion_tipo_id = superior_acreditacion_tipo.id
-            WHERE
-	
+            WHERE	
          censo_alternativa_beneficiarios.id = :beneficiario_id        
         ");                
         $query->bindValue(':beneficiario_id', $beneficiario_id);
@@ -636,7 +776,7 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         }
 
         $filas = $filas . '<tr style="background-color:#ddd;">
-            <td>TOTAL BENEFICIO PRIMER SEMESTRE</td>
+            <td>TOTAL BENEFICIO SEGUNDO SEMESTRE</td>
             <td align="center">' . $total_beneficio . '</td>
         </tr>';
 

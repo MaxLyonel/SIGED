@@ -154,16 +154,16 @@
 
                                 </br>
 
-                                <table  width="100%">
-                                    <th>
-                                        <td style="padding: 8px 10px">
+                                <table  class="table table-condensed table-bordered"  width="100%">
+                                    <tr>
+                                        <!--td style="padding: 8px 10px">
                                             <div class="alert alert-success" role="alert">                                        
                                             <i class="fa fa-warning"></i>                                        
                                             REGULARIZAR
                                             </br>
                                             SI LA NOTA FINAL DEL 1er. SEMESTRE <strong>YA CONTEMPLA</strong> EL BENEFICIO SOLICITADO POR EL ESTUDIANTE
                                             </div>
-                                        </td>
+                                        </td -->
 
                                         <!--td style="padding: 8px 10px">
                                             <div class="alert alert-danger" role="alert">                                        
@@ -173,12 +173,15 @@
                                             SI LA NOTA FINAL DEL 1er. SEMESTRE <strong>NO CONTEMPLA</strong> EL BENEFICIO SOLICITADO POR EL ESTUDIANTE
                                             </div>
                                         </td-->
+
+                                        <td width="85%"> <strong> SALDO BENEFICIO DESPUES DEL PRIMER TRIMESTRE </strong> </td>
+                                        <td width="15%" id="saldotxt"  align="center"> calculando..</td>
                                         
-                                    </th>
+                                    </tr>
                                 </table>
 
                                 <div id='showTable'></div>                             
-                                <a href="#" class="btn btn-success btn-block" id="form_save" style="display: none;">Grabar Asignación de Puntos</a>
+                                <a href="#" class="btn btn-success btn-block" id="form_save" style="display: none;">Grabar Asignación de Puntos Segundo Semestre</a>
 
 							</div>
 
@@ -359,7 +362,7 @@
 				<div class="panel rounded shadow panel-teal">
 					<div class="panel-heading">
 						<div class="pull-left">
-							<h3 class="panel-title">Listado de Beneficiarios Censo 2024 reportados por el INE (Listado Oficial)</h3>
+							<h3 class="panel-title">Listado de Beneficiarios Censo 2024 reportados por el INE (Listado Oficial) y que cuenten con INSCRIPCION EN EL SEGUNDO SEMESTRE</h3>
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -383,11 +386,13 @@
                             </div>
                             </div>
                             
+                            {#
                              <button type="button" class="btn btn-info " data-toggle="modal" data-target=".bs-example-modal-table3">
                                 <i class="fa fa-list">
                                     Adicionar Participante
                                 </i>
                             </button>
+                            #}
 
 							{% if beneficiarios is not empty %}
 								<div
@@ -404,9 +409,9 @@
 												<th>Nombre(s)</th>
 
 												{% if periodo == 2 %}   
-                                                <th>Total Asignado 1.Semestre</th>
+                                                <th>Total xx Asignado 1.Semestre</th>
                                                 {%else%}
-                                                <th>Total Asignado 2.Semestre</th>
+                                                <th>Total  ss Asignado 2.Semestre</th>
                                                 {%endif%}
 
 												<th>Opciones</th>
@@ -431,12 +436,12 @@
                                                     {%endif%}
 
 													<td>
-                                                        {% if periodo == 2 %}   
-                                                            {% if row.imprime_ddjj_s1 == false %}   
-                                                                {% if row.total_asignado_1s == 0 %}   
+                                                       
+                                                            {% if row.imprime_ddjj_s2 == false %}   
+                                                                {% if row.total_asignado_2s == 0 and row.beneficio > 0 %}   
                                                                 <button type="button" class="btn btn-info " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data|json_encode}});">
                                                                     <i class="fa fa-list">
-                                                                        Asignar Beneficio 1S</i>
+                                                                        Asignar Beneficio 2S</i>
                                                                 </button>
                                                                 {%else%}
                                                                     <span class="badge badge-danger">Beneficio Asignado</span>
@@ -445,21 +450,7 @@
                                                                 <span class="badge badge-danger">Operativo Finalizado</span>
                                                             {%endif%}
 
-                                                        {%else%}
-                                                            {% if row.estudiante_inscripcion_s2 != NULL %}
-                                                                {% if row.total_asignado_2s == 0 %}   
-                                                                    <button type="button" class="btn btn-success " data-toggle="modal" data-target=".bs-example-modal-table2" onclick="getNotas2s({{data|json_encode}});">
-                                                                        <i class="fa fa-list">
-                                                                            Asignar Beneficio 2S</i>
-                                                                    </button>
-                                                                {%else%}
-                                                                    <span class="badge badge-danger">Beneficio Asignado</span>
-                                                                {%endif%}
-
-                                                             {%else%}
-                                                                    <span class="badge badge-danger">SIN INSCRIPCION EN EL SEGUNDO SEMESTRE</span>
-                                                            {%endif%}
-                                                        {%endif%}
+                                                       
 													</td>
 
 
@@ -521,7 +512,8 @@
         divContainer.innerHTML = '';
         divContainer.innerHTML = '<div style="text-align: center;"><strong>CARGANDO INFORMACION...</strong></div>';
         
-        
+        $('#saldotxt').html('<strong>... calculando...</strong>');
+
         $.ajax({
             type: 'post',
             data: ({rude: row.rudeal, row: row.id}),
@@ -575,6 +567,7 @@
 
                 document.getElementById("td_acreditacion").innerHTML = data.notas[0].acreditacion;
 
+                $('#saldotxt').html('<strong>' + data.saldo + '</strong>');
 
                 createTableWithInnerHTML(data.notas, data.bid);
                 //document.getElementById("form_save").style.visibility = "visible";
@@ -672,6 +665,37 @@
 
         
         let tableHTML = '<form name="formbeneficio" method="post" role="form" id="formbeneficio"> <input type="hidden" id="bid" name="bid" value="' + bid  +'">' + opciones ;
+        tableHTML += '<table border="1" class="table table-bordered"><th width="85%">Modulo</th><th width="15%">Beneficio</th>';
+
+        for (var i = 0; i < notasArray.length; i++) {
+            tableHTML += '<tr>';
+
+            let cols = "<td data-title='Modulo'>" + notasArray[i].modulo + "</td>"
+            //cols += "<td data-title='Nota'>" + notasArray[i].nota_cuantitativa + "</td>"
+            cols += "<td data-title='Beneficio'><input type='number' size='6' class=' form-control typeahead rounded input_beneficio' min='0' max='30' id='input_" + notasArray[i].id + "' name='input_" + notasArray[i].id + "' value='0'  onclick='this.select();' onclick='calculaTotales0()'  oninput='calculaTotales0()' onblur='datoVacio(this)' </td>"
+
+            tableHTML += cols;
+            tableHTML += '</tr>';
+        }
+
+        tableHTML += '<tr class="success"><td><strong>TOTAL BENEFICIO ASIGNADO SEGUNDO SEMESTRE</strong></td><td id="total_beneficio"></td></tr>';
+
+        tableHTML += '</table><form>';
+
+       
+        var divContainer = document.getElementById("showTable");
+        divContainer.innerHTML = '';
+        divContainer.innerHTML = tableHTML;
+        
+    }
+
+     var createTableWithInnerHTMLOLD = function (notasArray, bid) {
+ 
+        //let opciones = '<div class="radio"><label><input type="radio" name="operacion" id="regulariza" value="1" > REGULARIZACION </label>&nbsp;&nbsp;&nbsp;<label><input type="radio" name="operacion" id="actualiza" value="2" >ACTUALIZACION</label></div>';
+        let opciones = '<div class="radio"></div>';
+
+        
+        let tableHTML = '<form name="formbeneficio" method="post" role="form" id="formbeneficio"> <input type="hidden" id="bid" name="bid" value="' + bid  +'">' + opciones ;
         tableHTML += '<table border="1" class="table table-bordered"><th width="80%">Modulo</th><th width="10%">Nota</th><th width="10%">Beneficio</th>';
 
         for (var i = 0; i < notasArray.length; i++) {
@@ -698,7 +722,9 @@
 
     function calculaTotales0() {
 
-            console.log('here');
+            //alert($("#saldotxt").text());
+
+            //return
 
             var total_beneficio = 0;
                        
@@ -723,6 +749,13 @@
                 alert(' mayor a 30');
             }*/
 
+            
+
+           /* if (total_beneficio > 30) {
+                alert(' mayor a 30');
+            }*/
+
+
             /*if (total_modulos_asignados > 3) {
                 alert('el maximo es de tres modulos !!');
             }*/
@@ -746,7 +779,12 @@
     }
 
     $('#form_save').on("click", function () {
+
         
+
+        const saldo =  $("#saldotxt").text();
+
+              
         var total_beneficio = 0;                      
         var total_modulos_asignados = 0;
 
@@ -784,6 +822,16 @@
                 icon: "error",
                 title: "Atencion !",
                 text: "El beneficio no puede ser mayor a 30 puntos !!",   
+            });
+            return;
+        }
+
+        if (total_beneficio > saldo) {
+            //alert('El beneficio no puede ser maypor a 30 !!');
+            swal({
+                icon: "error",
+                title: "Atencion !",
+                text: "El beneficio no puede ser mayor al saldo del Segundo Semestre !!",   
             });
             return;
         }
@@ -849,7 +897,7 @@
 
                     }
                 }
-            });      
+            }); 
 
             }
 
@@ -874,6 +922,8 @@
     }
 
     $('#form_save2').on("click", function () {
+
+        alert('2');
         
         var total_beneficio = 0;                      
         var total_modulos_asignados = 0;
