@@ -341,7 +341,8 @@
 
               </div>
 
-              <div v-if="(swperson || swnewperson || swstudent) && (userAllowedOnCasespecial && showCaseSpecialOption)" class="row">
+              {#<div v-if="(swperson || swnewperson || swstudent) && (userAllowedOnCasespecial && showCaseSpecialOption)" class="row">#}
+              <div v-if="(swperson || swnewperson || swstudent)" class="row">
                 <div class="col-md-10 col-md-offset-1">
                    <form class="">
                      <div class="form-group">
