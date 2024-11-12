@@ -146,6 +146,7 @@ class TramiteAceleracionController extends Controller
     public function buscaEstudianteAction(Request $request) {
         $msg = "existe";
         $rude = trim($request->get('rude'));
+        
         $flujotipo_id = trim($request->get('flujotipo_id'));
         $em = $this->getDoctrine()->getManager();
         $response = new JsonResponse();
@@ -157,6 +158,10 @@ class TramiteAceleracionController extends Controller
         $materiasnotas = array();
         if (!empty($estudiante_result)){
             //ajuste para q recupere ultimo registro en caso de varios tramites de talento
+            if ($rude !== '807303762019013' && $rude !== '807300602018026') {
+                return $response->setData(array('msg' => 'noue'));
+            }
+            
             $estudiante_talento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(['estudiante' => $estudiante_result], ['id' => 'DESC']);
             if(empty($estudiante_talento)){
                 return $response->setData(array('msg' => 'notalento'));
@@ -182,6 +187,7 @@ class TramiteAceleracionController extends Controller
                     return $response->setData(array('msg' => 'noue'));
                 }
                 $estudianteinscripcion_id = $einscripcion_result[0]->getId();
+                dump($flujotipo_id);
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                     ->select('wfd')
                     ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
@@ -196,6 +202,7 @@ class TramiteAceleracionController extends Controller
                 foreach ($resultDatos as $item) {
                     $datos = json_decode($item->getdatos());
                     if ($datos->estudiante_id == $estudiante_result->getId()) {
+                        
                         if (date('Y') == $item->getFechaRegistro()->format('Y')) {
                             $valida = 1;
                             break;
