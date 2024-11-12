@@ -309,8 +309,8 @@
             {% if (app.session.get('roluser') == 9 or app.session.get('roluser') == 8)   %}  
             {#% if (app.session.get('roluser') == 8)   %#} 
              {#% if (app.session.get('ie_id') == 81720080) %#}
-               {#% if (app.session.get('ie_gestion') == 2024 and app.session.get('ie_per_cod') == 2) %#} 
-               {#
+               {% if (app.session.get('ie_gestion') == 2024 and app.session.get('ie_per_cod') == 3) %} 
+               
                 <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                     <div class="cbp-caption">
                         <div class="cbp-caption-defaultWrap">
@@ -333,9 +333,9 @@
                     <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">OPERATIVO CENSO</div>
                     <div class="cbp-l-grid-masonry-projects-desc"></div>
                 </div><br></div>
-                #}
+              
 
-               {#% endif %#}
+               {% endif %}
             
             {#% endif %#}
             {% endif %}
