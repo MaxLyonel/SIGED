@@ -158,7 +158,8 @@ class TramiteAceleracionController extends Controller
         $materiasnotas = array();
         if (!empty($estudiante_result)){
             //ajuste para q recupere ultimo registro en caso de varios tramites de talento
-            if ($rude !== '807303762019013' && $rude !== '807300602018026') {
+            // if ($rude !== '807303762019013' && $rude !== '807300602018026') {
+            if ($rude !== '807300602018026') {
                 return $response->setData(array('msg' => 'noue'));
             }
             
