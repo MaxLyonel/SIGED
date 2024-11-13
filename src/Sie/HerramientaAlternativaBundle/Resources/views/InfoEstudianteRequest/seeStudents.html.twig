@@ -292,6 +292,7 @@
                                                             {{dump('ok')}}
                                                             {% else %} #}
                                                               {% if (app.session.get('userId') == 94161725) %} 
+                                                              
                                                                  <li>
                                                                     <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                         <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
@@ -313,6 +314,16 @@
                                                         </li>
                                                     {% endif %}
                                                     {#IMPRIMIR FORMULARIO RUDE AL SEGUN EL CASO#}
+
+                                                    {# RUDEAL 2024 SEGUNDO SEMESTRE #}
+                                                    {% if (app.session.get('ie_gestion') == '2024') and (app.session.get('ie_per_cod') == '3') and (app.session.get('roluser') == 9)  %}
+                                                    <li>
+                                                        <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealNew('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                            <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
+                                                        </a>
+                                                    </li>
+                                                    {% endif %}
+
                                                     {% if (((app.session.get('ie_gestion') == '2016') and (app.session.get('ie_per_cod') == '3')) or ((app.session.get('ie_gestion') >= '2017') and (app.session.get('ie_per_cod') in ['2','3']))
                                                             ) %}
                                                             {% if (app.session.get('ie_per_estado') == '0') %}
@@ -329,16 +340,16 @@
                                                                         </a>
                                                                     </li> --- TEMP V1 #}
                                                                 {% if (app.session.get('ie_per_estado') == '2') %}
-                                                                    {# <li>
+                                                                    {#<li>
                                                                         <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudeal('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                             <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
                                                                         </a>
-                                                                    </li> #}
-                                                                    {# <li>
+                                                                    </li>
+                                                                    <li>
                                                                         <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
                                                                             <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
                                                                         </a>
-                                                                    </li> #}
+                                                                    </li>#}
                                                                 {% endif %}
                                                             {% endif %}                                                            
                                                     {% endif %} 
@@ -734,7 +745,7 @@
         success: function (data) {
             $('#mengestioncurso').empty();
             $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-            window.location.href =  Routing.generate('herramienta_alter_cursos_index');
+            //window.location.href =  Routing.generate('herramienta_alter_cursos_index');
         },
         error: function(data){
             $('#mengestioncurso').empty();            

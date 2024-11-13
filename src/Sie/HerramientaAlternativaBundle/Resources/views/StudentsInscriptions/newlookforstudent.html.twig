@@ -341,13 +341,16 @@
 
               </div>
 
-              <div v-if="(swperson || swnewperson || swstudent) && (userAllowedOnCasespecial && showCaseSpecialOption)" class="row">
+              {#<div v-if="(swperson || swnewperson || swstudent) && (userAllowedOnCasespecial && showCaseSpecialOption)" class="row">#}
+              <div v-if="(swperson || swnewperson || swstudent)" class="row">
                 <div class="col-md-10 col-md-offset-1">
                    <form class="">
+                     {#
                      <div class="form-group">
                        <label for="form_caseespecial" class="required">Inscripción Excepcional :</label>
                        <input type="checkbox" v-model="dataStudent.casespecial" id="form_caseespecial" name="form[caseespecial]" class="form-check-input" v-on:click="seen = !seen" value="1">
                      </div>
+                     #}
 
                      <div class="form-group">
                        <label for="form_caseespecial" class="required">Inscripción Por Reconocimiento de Saberes:</label>
