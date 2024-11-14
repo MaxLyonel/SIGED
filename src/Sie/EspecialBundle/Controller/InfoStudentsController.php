@@ -278,12 +278,7 @@ class InfoStudentsController extends Controller {
       if( $gestion>2021 and in_array($objArea->getId(), $areasBono) and $modalidad==1 and $nivel!=410){
         $arrDataLibreta['bono'] = false; //true para activar
       }
-      $sies_autorizados = array( 30680025, 40610073, 40730256, 40730565, 40730602, 50640088,  70680119, 70730067, 80540261, 80610082, 80620079, 80630048, 80730696, 80730729, 80730781,  80730827, 80730836, 80730893, 80850047, 80980448, 80980490);
-      
-      // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
-      if( in_array($sie, $sies_autorizados)){
-        $arrDataLibreta['calificaciones'] = true;
-      }
+     
       $objRegistroConsolidacion = $em->createQueryBuilder()
         ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
         ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
