@@ -190,7 +190,7 @@ class ChangeMatriculaController extends Controller {
         $infoUe = $form['infoUe'];
         $infoStudent = json_decode($form['infoStudent'],true) ;
         $aInfoUeducativa = unserialize($infoUe);
-
+        
         $operativo = $this->get('funciones')->obtenerOperativo($aInfoUeducativa['requestUser']['sie'],$aInfoUeducativa['requestUser']['gestion']);
         
         if ($operativo > 3 ){
@@ -200,7 +200,11 @@ class ChangeMatriculaController extends Controller {
         //get db connexion
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
-
+        $estudianteins = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);
+        if (in_array($estudianteins->getestadomatriculaTipo()->getId(), [5, 55, 11]) ){
+          $response = new JsonResponse();
+          return $response->setData(array('status'=>'error', 'msg'=>'No puede modificar el estado de promovido o reprobado con calificaciones reportadas'));
+        }
         $swChangeStatus = true;
         try {
         
