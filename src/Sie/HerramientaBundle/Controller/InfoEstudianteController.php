@@ -767,10 +767,10 @@ class InfoEstudianteController extends Controller {
         //     //los que aun no hah registrado 2 trmestre
         //     $this->session->set('donwloadLibreta', false);
         // }
-        // if($operativo == 3){
-        //     //los que ya cerraron operativo
-        //     $this->session->set('donwloadLibreta', false);
-        // }
+        if($operativo == 3){
+            //los que ya cerraron operativo
+            $this->session->set('donwloadLibreta', false);
+        }
 
 
         //get turnos

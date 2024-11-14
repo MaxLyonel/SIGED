@@ -39,31 +39,131 @@ class EstudianteNotasController extends Controller {
        
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        /*dump($infoUe);
+        dump($infoStudent);   
+        dump(json_decode($infoStudent));                   */
+        
+        $estudianteInscripcionS2aux = json_decode($infoStudent) ;
+        $estudianteInscripcionS2 = $estudianteInscripcionS2aux->eInsId;
+        //dump($estudianteInscripcionS2);
+        //496266104
+
+        
+
         $data = $this->getNotas($infoUe, $infoStudent);
+               
+        //obtenemos el dato del censo
+        $query = $em->getConnection()->prepare("
+            SELECT
+                censo_alternativa_beneficiarios.id, 
+                censo_alternativa_beneficiarios.cea, 
+                censo_alternativa_beneficiarios.rudeal, 
+                censo_alternativa_beneficiarios.total_asignado_2s, 
+                censo_alternativa_beneficiarios.estudiante_inscripcion_s2, 
+                censo_alternativa_beneficiarios.institucioneducativa_curso_id_s2, 
+                censo_alternativa_beneficiarios.estudiante_id, 
+                censo_alternativa_beneficiarios_detalle.periodo_id, 
+                censo_alternativa_beneficiarios_detalle.beneficio, 
+                censo_alternativa_beneficiarios_detalle.modulo_tipo_id
+            FROM
+                censo_alternativa_beneficiarios
+                INNER JOIN
+                censo_alternativa_beneficiarios_detalle
+                ON 
+                    censo_alternativa_beneficiarios.id = censo_alternativa_beneficiarios_detalle.beneficiario_id
+                    where 
+                    censo_alternativa_beneficiarios.estudiante_inscripcion_s2 = :estudiante_inscripcion
+        ");                
+        $query->bindValue(':estudiante_inscripcion', $estudianteInscripcionS2);
+        $query->execute();
+        $moduloscenso = $query->fetchAll(); 
+        
+        // una copia de las areas para poner el beneficio
+        $notascenso = $data['areas'];
+        $notasfinales = $data['areas'];
+        
+        //a todos adicionamos los campos en cero
+        for ($i=0; $i < count($data['areas']) ; $i++) {                 
+            
+                $data['areas'][$i]['notas'][0]['notacenso'] = 0;
+                $data['areas'][$i]['notas'][0]['notafinal'] = 0;
+            
+        }          
+
+        //comparamos con el censo
+        for ($i=0; $i < count($moduloscenso) ; $i++) { 
+
+            $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
+            $beneficiocenso = $moduloscenso[$i]['beneficio'];
+
+            //con esto buscamos en el array notascenso
+            
+            for ($j=0; $j < count($data['areas']) ; $j++) { 
+                
+                if( $data['areas'][$i]['idAsignatura'] == $modulo_tipo_id ){
+                    $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
+                    $data['areas'][$i]['notas'][0]['notafinal'] = $beneficiocenso;
+                }
+            }          
+            
+        }
+        /*for ($i=0; $i < count($moduloscenso) ; $i++) { 
+
+            $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
+            $beneficiocenso = $moduloscenso[$i]['beneficio'];
+
+            //con esto buscamos en el array notascenso
+            
+            for ($j=0; $j < count($notascenso) ; $j++) { 
+                
+                if( $notascenso[$i]['idAsignatura'] == $modulo_tipo_id ){
+                    $notascenso[$i]['notas'][0]['nota'] = $beneficiocenso;
+                }
+            }          
+            
+        }*/
+
+        //$data['notascenso'] = $notascenso;
+        //$data['notasfinales'] = $notasfinales;
         
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
-        // dump($data);die;
-        // $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
+        //dump($data);die;
+        $closeopequinto = $this->get('funciones')->verificarApEspecializadosCerrado($institucion,$gestion,$periodo);
+        //dump($closeopequinto); die;
         $aInfoUeducativa = unserialize($infoUe);
 
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
         // if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $institucion != 80730796 && $this->session->get('userId')!=94161725){
-        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $periodo == 3 && $this->session->get('userId')!=94161725){
+        /*if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $periodo == 3 && $this->session->get('userId')!=94161725){
             return $this->redirect($this->generateUrl('principal_web'));
-         }
+        }*/
+
+        //no es especializados
+        //dump($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId']); die;
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] <> 52 ){
+            return $this->redirect($this->generateUrl('principal_web'));           
+        }
 
          /********* temporal notas****/
         // if ($gestion == 2024 && $this->session->get('userId')!=94161725){
         //     return $this->redirect($this->generateUrl('principal_web'));
         //  }
         /**************************************************/
+
+        //dump($data);die;
         
         if($data['gestion'] >= 2016){
+           
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestreActual.html.twig',$data);
         }else{
+           
             return $this->render('SieHerramientaAlternativaBundle:EstudianteNotas:notasSemestre.html.twig',$data);
         }
         
@@ -412,7 +512,9 @@ class EstudianteNotasController extends Controller {
 
     public function createUpdateAction(Request $request){
         $infoStudent = $request->get('infoStudent');
-        //dump($infoStudent);
+        //dump($request);
+        /*dump($infoStudent);
+        die;*/
 
         // datos ue
         $infoUe= $request->get('infoUe');
@@ -436,17 +538,50 @@ class EstudianteNotasController extends Controller {
         $idEstudianteNota = $request->get('idEstudianteNota');
         $idNotaTipo = $request->get('idNotaTipo');
         $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
+        
         $notas = $request->get('notas');
+        $notascenso = $request->get('notasCenso');
+        $notasfinales = $request->get('notasFinales');
+
+        /*dump($notas);
+        dump($notascenso);
+        dump($notasfinales);
+        die;*/
+
         $idEstados = $request->get('idEstados');
 
         $estadoGeneral = $request->get('estadoGeneral');
-        /*
-        dump($idEstudianteNota);
+        
+        /*dump($idEstudianteNota);
         dump($idNotaTipo);
         dump($idEstudianteAsignatura);
         dump($notas);
         dump($idEstados);
-        //die;*/
+        die;*/
+
+        //1: revisar si las sumas estan correctas
+        for ($i=0; $i < count($notas) ; $i++) { 
+            if ( $notasfinales[$i] <> $notas[$i] + $notascenso[$i] ){
+                die;
+                return 0;
+            }
+        }
+
+        //2: si alguna suma pasa de 100 se queda con 100
+        for ($i=0; $i < count($notas) ; $i++) { 
+            if ( ($notas[$i] + $notascenso[$i]) > 100 ){
+                $notasfinales[$i] = 100;
+            }
+        }
+
+        //3: reemplazamos la nota final en el array notas y todo queda como debe ser
+        $notasAux = $notas;
+        for ($i=0; $i < count($notas) ; $i++) { 
+            $notas[$i] = $notasfinales[$i];
+        }
+
+        //4: de aqui en adelante deberia ser todo como esta y se supone que funciona
+
 
         if(count($notas)>0){
             // Validamos que las notas sean numeros y esten entre 0 y 100
@@ -503,6 +638,7 @@ class EstudianteNotasController extends Controller {
                 }
 
                 if($idEstudianteNota[$i] == 'nuevo'){
+                   
                     $newNota = new EstudianteNota();
                     $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                     $newNota->setEstudianteAsignatura($em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
@@ -515,7 +651,11 @@ class EstudianteNotasController extends Controller {
                     $newNota->setObs('');
                     $em->persist($newNota);
                     $em->flush();
+
+
+
                 }else{
+                   
                     $updateNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i]);
                     if($updateNota){
                         $updateNota->setNotaCuantitativa($notas[$i]);

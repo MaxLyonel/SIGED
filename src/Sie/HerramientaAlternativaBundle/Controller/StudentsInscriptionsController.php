@@ -594,6 +594,8 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
+
+      //dump('here');die;
       
       // IS SECOND
 
@@ -627,6 +629,9 @@ class StudentsInscriptionsController extends Controller {
       $expedidoId = $request->get('expedidoId');
       $withoutsegip = ($request->get('withoutsegip')=='true')?true:false;
 
+      $reconocimiento = ($request->get('reconocimiento')=='false')?false:true;
+
+
       $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
@@ -648,7 +653,10 @@ class StudentsInscriptionsController extends Controller {
       if(!$withoutsegip){
         // dump("no tiene carnet");
         // get info segip
-        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+        
+        // TEMPORAL: no hay servicio segip
+        //$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+        $answerSegip = true;
       }else{
         // dump("si tiene carnet");
         $answerSegip = true;
@@ -739,6 +747,19 @@ class StudentsInscriptionsController extends Controller {
                 //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
                 $studentInscription->setCodUeProcedenciaId(0);
                 $em->persist($studentInscription);
+
+                /*------------------- -------------------
+                reconocimiento de saberes segundo semestre 2024
+                -------------------------------------------*/
+              
+                if($reconocimiento == true){
+                  $query = $em->getConnection()->prepare('INSERT INTO public.estudiante_inscripcion_alternativa_saberes (estudiante_inscripcion_id) VALUES (:estudiante_inscripcion_id)');
+                                 
+                  $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());                
+                  $query->execute();                  
+                }
+
+
 
                 // set all the courses modules to the student
                 $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
@@ -923,6 +944,12 @@ class StudentsInscriptionsController extends Controller {
 
     public function studentsInscriptionAction(Request $request){
       //ini json var
+
+      /*dump('x'); 
+      cuando ya hay datos
+      dump($request); */
+      
+
       $response = new JsonResponse();
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
@@ -931,6 +958,9 @@ class StudentsInscriptionsController extends Controller {
       $studentId = $request->get('studentId');
       $periodo = $this->session->get('ie_per_cod');
       $gestion = $this->session->get('ie_gestion');
+
+      $reconocimiento = $request->get('reconocimiento');
+
       $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
       $infocomplementaria = $request->get('infocomplementaria');
@@ -1047,9 +1077,10 @@ class StudentsInscriptionsController extends Controller {
 
             // check if the student has an inscription on this course
             $objCurrentInscription = $this->validateInscriptionStudent($studentId, $iecId);
+            //dump($objCurrentInscription); die;
             if(!$objCurrentInscription){
               // do inscription
-              // set the inscription to the new student
+              // set the inscription to the new student             
               $studentInscription = new EstudianteInscripcion();
               $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
               $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
@@ -1064,6 +1095,8 @@ class StudentsInscriptionsController extends Controller {
               $studentInscription->setCodUeProcedenciaId(0);
               $em->persist($studentInscription);
 
+              //dump($studentInscription); die;
+
               //save the inscription data when the inscription is excepcional
               if($casespecial){
                 $estudianteInscripcionAlternativaExcepcionalObjNew = new EstudianteInscripcionAlternativaExcepcional();
@@ -1074,6 +1107,9 @@ class StudentsInscriptionsController extends Controller {
                 $estudianteInscripcionAlternativaExcepcionalObjNew->setDocumento($infocomplementaria);
                 $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
               }
+
+               
+
 
               // set all the courses modules to the student
               $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
@@ -1097,6 +1133,18 @@ class StudentsInscriptionsController extends Controller {
               $code = 200;
               $message = "Estudiante registrado existosamente!!!";
               $swcreatestudent = true;   
+
+              /*------------------- -------------------
+                reconocimiento de saberes segundo semestre 2024
+                -------------------------------------------*/
+              
+                if($reconocimiento == true){
+                  $query = $em->getConnection()->prepare('INSERT INTO public.estudiante_inscripcion_alternativa_saberes (estudiante_inscripcion_id, usuario_id) VALUES (:estudiante_inscripcion_id, :usuario_id)');
+                                 
+                  $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());                
+                  $query->bindValue(':usuario_id', $this->session->get('userId'));                
+                  $query->execute();                  
+                }
 
 
             }else{
@@ -1382,8 +1430,9 @@ class StudentsInscriptionsController extends Controller {
 
     public function studentsInscriptionNEWAction(Request $request){
 
-      // dump($request);
-// die;
+      /*dump($request);
+      CUANDO NO HAY DATOS
+      die;*/
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -1403,6 +1452,8 @@ class StudentsInscriptionsController extends Controller {
       $complemento = mb_strtoupper($request->get('complementoval'), 'utf-8');
       $iecId = $request->get('iecId');
       $expedidoId = $request->get('expedidoId');
+
+      $reconocimiento = ($request->get('reconocimiento')=='false')?false:true;
 
       $casespecial = ($request->get('casespecial')=='false')?false:true;;
       $excepcional = $request->get('excepcional');
@@ -1477,6 +1528,7 @@ class StudentsInscriptionsController extends Controller {
                 $studentInscription->setCodUeProcedenciaId(0);
                 $em->persist($studentInscription);
 
+
                 // set all the courses modules to the student
                 $data = array('iecId'=>$iecId, 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
                 $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
@@ -1497,6 +1549,18 @@ class StudentsInscriptionsController extends Controller {
 
                 // Try and commit the transaction
                 $em->getConnection()->commit();
+
+                /*------------------- -------------------
+                reconocimiento de saberes segundo semestre 2024
+                -------------------------------------------*/
+              
+                if($reconocimiento == true){
+                  $query = $em->getConnection()->prepare('INSERT INTO public.estudiante_inscripcion_alternativa_saberes (estudiante_inscripcion_id, usuario_id) VALUES (:estudiante_inscripcion_id, :usuario_id)');
+                                 
+                  $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());                
+                  $query->bindValue(':usuario_id', $this->session->get('userId'));                
+                  $query->execute();                  
+                }
 
                 $status = 'success';
                 $code = 200;
