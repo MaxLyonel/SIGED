@@ -4986,9 +4986,17 @@ die;/*
         if($operativo==3 && ($igestion == 2021 || $igestion == 2022 || $igestion == 2023 || $igestion == 2024)){
             switch ($inivel_tipo_id) {
                 case '13':
-                    $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                    // $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                    // $query->execute();        
+                    // $resultado = $query->fetchAll();  
+                    $query = $this->em->getConnection()->prepare("select * from sp_genera_estado_final_regular('".$inscripcionId."')");
                     $query->execute();        
                     $resultado = $query->fetchAll();        
+                    // dump($resultado[0]['sp_genera_estado_final_regular']); die;
+                    $estdocalculado = $resultado[0]['sp_genera_estado_final_regular'];
+                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estdocalculado));
+                    $this->em->persist($inscripcion);
+                    $this->em->flush();        
                     break;
                 case '12':
                     $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
@@ -5016,9 +5024,17 @@ die;/*
             }
         }else{
             if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023 and $igestion != 2024){
-                $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                // $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                // $query->execute();        
+                // $resultado = $query->fetchAll();  
+                $query = $this->em->getConnection()->prepare("select * from sp_genera_estado_final_regular('".$inscripcionId."')");
                 $query->execute();        
-                $resultado = $query->fetchAll();              
+                $resultado = $query->fetchAll();        
+                    // dump($resultado[0]['sp_genera_estado_final_regular']); die;
+                $estdocalculado = $resultado[0]['sp_genera_estado_final_regular'];
+                $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estdocalculado));
+                $this->em->persist($inscripcion);
+                $this->em->flush();              
             }
         }
         
@@ -5059,10 +5075,15 @@ die;/*
             switch ($inivel_tipo_id) {
                 case '12':
                 case '13':
-                    $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                    // $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                    $query = $this->em->getConnection()->prepare("select * from sp_genera_estado_final_regular('".$inscripcionId."')");
                     $query->execute();        
                     $resultado = $query->fetchAll();        
-                    
+                    // dump($resultado[0]['sp_genera_estado_final_regular']); die;
+                    $estdocalculado = $resultado[0]['sp_genera_estado_final_regular'];
+                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estdocalculado));
+                    $this->em->persist($inscripcion);
+                    $this->em->flush();  
                     break;
                 case '11':
                     
@@ -5078,9 +5099,14 @@ die;/*
             }
         }else{
             if( $igestion != 2021 and $igestion != 2022 and $igestion != 2023 and $igestion != 2024){
-                $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                // $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                $query = $this->em->getConnection()->prepare("select * from sp_genera_estado_final_regular('".$inscripcionId."')");
                 $query->execute();        
                 $resultado = $query->fetchAll();              
+                $estdocalculado = $resultado[0]['sp_genera_estado_final_regular'];
+                $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estdocalculado));
+                $this->em->persist($inscripcion);
+                $this->em->flush();  
             }
         }
         
