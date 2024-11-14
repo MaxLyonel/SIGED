@@ -4968,7 +4968,7 @@ die;/*
                     $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
-        }else if($igestion == 2021 || $igestion == 2022 || $igestion == 2023) {
+        }else if($igestion == 2021 || $igestion == 2022 || $igestion == 2023 || $igestion == 2024) {
             if($inivel_tipo_id == 11) {
                 $complementario = "";
             }else if($inivel_tipo_id == 12) {
@@ -5040,7 +5040,7 @@ die;/*
         $complementario = "";
         $estado_inicial = $inscripcion->getEstadomatriculaTipo()->getEstadomatricula();
 
-        if($igestion == 2021 || $igestion == 2022 || $igestion == 2023) {
+        if($igestion == 2021 || $igestion == 2022 || $igestion == 2023 || $igestion == 2024) {
             if($inivel_tipo_id == 11) {
                 $complementario = "";
             }else if($inivel_tipo_id == 12) {

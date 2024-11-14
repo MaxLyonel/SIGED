@@ -80,15 +80,15 @@ line-height: 1.83333em;}
                                             <div class="dropdown-header">Reportes</div>
 
                                             {% if app.session.get('acceso_total') and arrLevelandGrado.gestion >= 2019 %}
-                                                <li><a href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Modificadas</a></li>
-                                                <li><a href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Eliminadas</a></li>
+                                                {# <li><a href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Modificadas</a></li>
+                                                <li><a href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Eliminadas</a></li> #}
                                             {% endif %}
                                             <li><a href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}">Listado de estudiantes</a></li>
-                                            <li><a href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}">Reporte NNATS</a></li>
+                                            {# <li><a href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}">Reporte NNATS</a></li> #}
                                             
                                             {% if app.session.get('acceso_total') and app.session.get('ue_plena') %}
-                                                <li><a href="{{ path('download_estudiantes_nivelacion', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTE</a></li>
-                                                <li><a href="{{ path('download_estudiantes_nivelacionttg', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTG</a></li>
+                                                {# <li><a href="{{ path('download_estudiantes_nivelacion', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTE</a></li>
+                                                <li><a href="{{ path('download_estudiantes_nivelacionttg', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTG</a></li> #}
                                             {% endif %}
                                             
                                             {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
@@ -100,13 +100,13 @@ line-height: 1.83333em;}
                                                     {# <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
                                                     <i class="fa fa-group" ></i>
                                                     </button> #}
-                                                    <li><a href="javascript:cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});"> - Cerrar Operativo Sexto de Secundaria</a></li>
+                                                    {# <li><a href="javascript:cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});"> - Cerrar Operativo Sexto de Secundaria</a></li> eliminar operativo 6to 2024#} 
                                                 {% else %}
-                                                    <li><a href="javascript:void();">Operativo Sexto de Secundaria cerrado </a></li>
+                                                    {# <li><a href="javascript:void();">Operativo Sexto de Secundaria cerrado </a></li> eliminar operativo 6to 2024#}
                                                 {% endif %}
                                             {% endif %}
                                             {% if arrLevelandGrado.operativo > 3 and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2023 %}
-                                                <li><a href="javascript:consolidarcutttm({{odataUedu.id}},{{gestion}});">Consolidar CUT-TTM</a></li>
+                                                {# <li><a href="javascript:consolidarcutttm({{odataUedu.id}},{{gestion}});">Consolidar CUT-TTM</a></li> #}
                                             {% endif %}
                                             {# {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
                                                 <li><a href="javascript:cerrarOperativo({{odataUedu.id}},{{gestion}});">Cerrar Operativo Mod. Especialidades</a></li>
@@ -117,11 +117,11 @@ line-height: 1.83333em;}
                                             {% endif %}
                                         </ul>
                                     </div>
-                                    {# Opciones: 6to secundaria #}
+                                    {# Opciones: 6to secundaria 2024 ojo#}
                                    {# {{arrLevelandGrado.closeopesextosecc}} #}
                                     {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
                                     
-                                        {% if arrLevelandGrado.operativo == 3 and arrLevelandGrado.closeopesextosecc == false  %} 
+                                        {# {% if arrLevelandGrado.operativo == 3 and arrLevelandGrado.closeopesextosecc == false  %} 
                                             <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
                                             <i class="fa fa-group" ></i>
                                             </button>
@@ -129,7 +129,7 @@ line-height: 1.83333em;}
                                             <button type="button" disabled class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo'>
                                             <i class="fa fa-group" ></i>
                                             </button>
-                                        {% endif %}
+                                        {% endif %} #}
                                     {% endif %}
                                     {# Opciones:
                                     {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}

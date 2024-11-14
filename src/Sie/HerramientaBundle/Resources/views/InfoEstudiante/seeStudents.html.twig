@@ -47,6 +47,16 @@
                 </ol>
             </div><!-- /.breadcrumb-wrapper -->
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                {# {% for flashMessage in app.session.flashbag.get('goodinscription') %} #}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> No podra modificar el estado de matricula para los estdos de promovido o reprobado, actualice antes de reportar calificaciones.
+                    </div>
+                {# {% endfor %} #}
+            </div>
+        </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
@@ -373,7 +383,7 @@
                                                        
                                                     {# {% if gestion == 2022 and nivel == 13 and grado == 6 and app.session.get('acceso_total')  and mostrarUeSinReporte2022 == false and  cerrarOperativoSexto == false  %}  #}
                                                     {#and mostrarSextoCerrado == false#}
-                                                    {% if gestion == 2022 and nivel == 13 and grado == 6 and app.session.get('acceso_total')  and cerrarOperativoSexto == false  %} {#and mostrarSextoCerrado == false#}
+                                                    {% if gestion == 2024 and nivel == 13 and grado == 6 and app.session.get('acceso_total')  and cerrarOperativoSexto == false  %} {#and mostrarSextoCerrado == false#}
                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones...">
                                                             <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                              <i class="fa fa-list"></i>
@@ -514,7 +524,6 @@
                                     
 
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}
-
                                     {# {{ app.session.get('esGuanawek') }} #}
                                     {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
                                         {% if gestion == 2023 and nivel == 13 and grado >= 6 %}
