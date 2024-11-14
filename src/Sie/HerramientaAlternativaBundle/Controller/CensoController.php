@@ -706,11 +706,12 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 censo_alternativa_beneficiarios.certificado_cpv, 
                 censo_alternativa_beneficiarios_detalle.estudiante_nota_id, 
                 censo_alternativa_beneficiarios_detalle.periodo_id, 
-                censo_alternativa_beneficiarios_detalle.beneficio, 
+                censo_alternativa_beneficiarios_detalle.beneficio,
+				censo_alternativa_beneficiarios_detalle.modulo_tipo_id,
                 superior_modulo_tipo.modulo,
-                superior_especialidad_tipo.especialidad,
-                superior_acreditacion_tipo.codigo, 
-                superior_acreditacion_tipo.acreditacion
+				set.especialidad,
+                'codigo' as codigo, 
+               sat.acreditacion
             FROM
                 censo_alternativa_beneficiarios
                 INNER JOIN
@@ -722,33 +723,17 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 superior_modulo_tipo
                 ON 
                     superior_modulo_tipo.id = censo_alternativa_beneficiarios_detalle.modulo_tipo_id
-                left JOIN
-                superior_especialidad_tipo
-                ON 
-                    superior_especialidad_tipo.id = superior_modulo_tipo.superior_especialidad_tipo_id
-                 INNER JOIN
-                superior_modulo_periodo
-                ON 
-                    superior_modulo_periodo.superior_modulo_tipo_id = superior_modulo_tipo.id
-										
-								left JOIN
-                superior_institucioneducativa_periodo
-                ON 
-                    superior_modulo_periodo.institucioneducativa_periodo_id = superior_institucioneducativa_periodo.id
-                left JOIN
-                superior_institucioneducativa_acreditacion
-                ON 
-                    superior_institucioneducativa_periodo.superior_institucioneducativa_acreditacion_id = superior_institucioneducativa_acreditacion.id
-                left JOIN
-                superior_acreditacion_especialidad
-                ON 
-                    superior_institucioneducativa_acreditacion.acreditacion_especialidad_id = superior_acreditacion_especialidad.id
-                left JOIN
-                superior_acreditacion_tipo
-                ON 
-                    superior_acreditacion_especialidad.superior_acreditacion_tipo_id = superior_acreditacion_tipo.id
+								
+                    inner join institucioneducativa_curso iec on iec.id = censo_alternativa_beneficiarios.institucioneducativa_curso_id_s2
+                    inner join superior_institucioneducativa_periodo siep on siep.id = iec.superior_institucioneducativa_periodo_id
+                    inner join superior_institucioneducativa_acreditacion  siea on siea.id = siep.superior_institucioneducativa_acreditacion_id
+                    inner join superior_acreditacion_especialidad sae on sae.id = siea.acreditacion_especialidad_id
+                    inner join superior_acreditacion_tipo sat on sat.id = sae.superior_acreditacion_tipo_id
+                    inner join superior_especialidad_tipo set on set.id = sae.superior_especialidad_tipo_id 
+           
             WHERE	
-         censo_alternativa_beneficiarios.id = :beneficiario_id        
+         censo_alternativa_beneficiarios.id = :beneficiario_id     
+         
         ");                
         $query->bindValue(':beneficiario_id', $beneficiario_id);
         $query->execute();
