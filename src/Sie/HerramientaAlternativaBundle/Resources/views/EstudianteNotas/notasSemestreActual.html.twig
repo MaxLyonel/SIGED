@@ -8,7 +8,7 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Registro de Notas</h3>
+                    <h3 class="panel-title">Registro de Notas </h3>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -76,7 +76,24 @@
                 									<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
                 									<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                 									<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
-                                                    <input name="notas[]" type="text" size="3" maxlength="3" style="width:50px" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="notaVerificar(this,{{asig.idAsignatura}})" onblur="notaCero(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off">
+                                                    
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <input name="notas[]" type="text" size="3" maxlength="3" style="width:50px" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="notaVerificar(this,{{asig.idAsignatura}})" onblur="notaCero(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off">
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <input name="notasCenso[]" type="text" size="3" maxlength="3" style="width:50px" value="{{n.notacenso}}"  class="form-control input-sm notacenso{{asig.idAsignatura}}" readonly >
+                                                            </td>
+                                                            <td>
+                                                                <input name="notasFinales[]" type="text" size="3" maxlength="3" style="width:50px" value="{{n.notafinal}}"  class="form-control input-sm  notafinal{{asig.idAsignatura}}" readonly >
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                    </table>
+                                                    
+
                                                 {% else %}
                                                     <input type="text" size="3" style="width:50px" value="{{n.nota}}" class="form-control input-sm {{asig.idAsignatura}}" autocomplete="off" disabled="disabled">
                                                 {% endif %}
@@ -157,7 +174,12 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            {#
             {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+                <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+            {% endif %}
+            #}
+            {% if app.session.get('ie_per_estado') == 3 %}
                 <button type="submit" class="btn btn-theme">Guardar Cambios</button>
             {% endif %}
         </div>
@@ -182,13 +204,40 @@
         if(control.value != "" && control.value != 0){
             control.value = Math.round(control.value);
         }
-        cambiarEstado(control.value,clase);
+
+
+        claseaux = ".notafinal" + clase ;
+        clasecenso = ".notacenso" + clase ;
+
+        censo = $(clasecenso).val();
+        console.log(censo);
+        
+        notafinal = parseInt(control.value) + parseInt(censo);
+
+        console.log(claseaux);
+        $(claseaux).val(notafinal);
+
+        //cambiarEstado(control.value,clase);
+        cambiarEstado(notafinal,clase);
         calcularEstadoGeneral();
 	}
 
     var notaCero = function(control,clase){
 		if(control.value == ""){ control.value = 0; }
-        cambiarEstado(control.value,clase);
+
+        claseaux = ".notafinal" + clase ;
+        clasecenso = ".notacenso" + clase ;
+
+        censo = $(clasecenso).val();
+        console.log(censo);
+        
+        notafinal = parseInt(control.value) + parseInt(censo);
+
+        console.log(claseaux);
+        $(claseaux).val(notafinal);
+
+        //cambiarEstado(control.value,clase);
+        cambiarEstado(notafinal,clase);
         calcularEstadoGeneral();
 	}
 
@@ -262,7 +311,8 @@
     // calcularEstadoGeneral();
 
     var registrarNotas = function(){
-        var enviar = true;
+
+         var enviar = true;
 
       	$(".nota").each(function (index) {
             if($(this).val() == 0){
