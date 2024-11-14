@@ -105,8 +105,15 @@ class EstudianteNotasController extends Controller {
             for ($j=0; $j < count($data['areas']) ; $j++) { 
                 
                 if( $data['areas'][$i]['idAsignatura'] == $modulo_tipo_id ){
-                    $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
-                    $data['areas'][$i]['notas'][0]['notafinal'] = $beneficiocenso;
+
+                    if($data['areas'][$i]['notas'][0]['nota'] == 0){
+                        $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
+                        $data['areas'][$i]['notas'][0]['notafinal'] = $beneficiocenso;
+                    }else{
+                        $data['areas'][$i]['notas'][0]['nota'] = $data['areas'][$i]['notas'][0]['nota'] - $data['areas'][$i]['notas'][0]['notacenso'];
+                        $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
+                        $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'] + $beneficiocenso;
+                    }
                 }
             }          
             
