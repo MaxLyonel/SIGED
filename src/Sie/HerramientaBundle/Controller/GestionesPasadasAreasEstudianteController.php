@@ -421,6 +421,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         elseif ($operativo == 3 and $asignaturaId ==1039 and $nivel == 13 and $grado == 6) {
             // dump($estudianteAsignatura->getId());
             // die;
+            return $this->redirect($this->generateUrl('herramienta_inbox_index'));
+            
             $swCenso = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy([
                 'estudianteAsignatura' => $estudianteAsignatura->getId(),
                 'notaTipo' => [59, 60] // Buscar en ambos tipos de nota
