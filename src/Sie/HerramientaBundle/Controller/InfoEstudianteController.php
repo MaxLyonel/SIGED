@@ -2074,7 +2074,6 @@ class InfoEstudianteController extends Controller {
     }
 
     public function closeOperativoSextoSeccAction(Request $request){
-        
         $response = new JsonResponse();
         // get the send values
         $sie     = $request->get('sie');
@@ -2094,7 +2093,6 @@ class InfoEstudianteController extends Controller {
             $arrResponse = array();
             // chek if the validation has error
             if(sizeof($responseOpe)>0){
-            //if(false){ // ya no validamos las observaciones, preguntar
             
                 // error; send the errors to show on the view
                 $swObservations = true;
@@ -2119,7 +2117,7 @@ class InfoEstudianteController extends Controller {
                 $em->flush();
 
                 // Procesa CUT_TTM BTH
-                $query = $em->getConnection()->prepare("select * from sp_bth_institucioneducativa_cutttm ('" . $sie . "','" . $gestion . "','" . $this->session->get('userId') . "');");
+                // $query = $em->getConnection()->prepare("select * from sp_bth_institucioneducativa_cutttm ('" . $sie . "','" . $gestion . "','" . $this->session->get('userId') . "');");
                 $query->execute();
 
                 return $response->setData(array('reloadIt'=>true, 'mssg'=>'Se verifico el operativo Sexto de Secundaria sin problemas'));
