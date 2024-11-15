@@ -537,9 +537,9 @@ class EstudianteNotasController extends Controller {
     public function createUpdateAction(Request $request){
         $infoStudent = $request->get('infoStudent');
         // verificar
-        //dump($request);
-        /*dump($infoStudent);
-        die;*/
+        /*dump($request);
+        dump($infoStudent);*/
+        //die;
 
         // datos ue
         $infoUe= $request->get('infoUe');
@@ -663,7 +663,7 @@ class EstudianteNotasController extends Controller {
                 }
 
                 if($idEstudianteNota[$i] == 'nuevo'){
-                   
+                 
                     $newNota = new EstudianteNota();
                     $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                     $newNota->setEstudianteAsignatura($em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
