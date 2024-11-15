@@ -536,6 +536,7 @@ class EstudianteNotasController extends Controller {
 
     public function createUpdateAction(Request $request){
         $infoStudent = $request->get('infoStudent');
+        // verificar
         //dump($request);
         /*dump($infoStudent);
         die;*/
