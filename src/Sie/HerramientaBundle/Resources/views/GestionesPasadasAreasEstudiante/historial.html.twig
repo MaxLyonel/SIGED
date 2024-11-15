@@ -78,7 +78,8 @@
                                             -
                                         {% endif %}
                                     {% else %}
-                                        {% if historial.nivel_tipo_id_r in [13] and historial.grado_tipo_id_r in [3,4,5,6] and historial.gestion_tipo_id_raep == app.session.get('currentyear') and historial.institucioneducativa_id_raep == institucioneducativa.id %}
+                                        {# {% if historial.nivel_tipo_id_r in [13] and historial.grado_tipo_id_r in [3,4,5,6] and historial.gestion_tipo_id_raep == app.session.get('currentyear') and historial.institucioneducativa_id_raep == institucioneducativa.id %} #}
+                                        {% if historial.nivel_tipo_id_r in [13] and historial.grado_tipo_id_r in [3,4,5] and historial.gestion_tipo_id_raep == app.session.get('currentyear') and historial.institucioneducativa_id_raep == institucioneducativa.id %}
                                             <p style="border:2px solid MediumSeaGreen; background-color:#6ECF86;"">
                                             <a href="#" onclick="aeAreas('{{esGestionVigente}}', '{{historial.estudiante_inscripcion_id_raep}}', '{{historial.estudiante_id_raep}}', '{{historial.gestion_tipo_id_raep}}')" ><i class="fa fa-fw fa-edit"></i> Agregar/Eliminar áreas</a>
                                             </p>
