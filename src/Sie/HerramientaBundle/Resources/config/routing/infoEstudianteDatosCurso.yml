@@ -76,3 +76,15 @@ herramienta_modulosCurso_save:
     defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:saveModulos2024"}
     options:
          expose: true
+
+herramienta_modulosCurso_index_delete:
+    path:     /indexModulosCursoDelete
+    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:getModulos2024Delete"}
+    options:
+         expose: true
+
+herramienta_modulosCurso_delete:
+    path:     /indexModulosCurso/delete
+    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:deleteModulos2024"}
+    options:
+         expose: true
