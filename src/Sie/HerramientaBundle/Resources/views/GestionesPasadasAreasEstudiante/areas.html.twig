@@ -47,7 +47,9 @@
 </div>
 <h5 class="pull-left"><i class="fa fa-fw fa-list" aria-hidden="true" style="padding-top: 10px; padding-bottom: 10px;"></i> Áreas de la/el Estudiante</h5>
 <div class="btn-group pull-right" style="padding-top: 10px; padding-bottom: 10px;">
-    {% if gestion == app.session.get('currentyear') %}
+    {% if gestion == app.session.get('currentyear') and
+        inscripcion.institucioneducativaCurso.nivelTipo.id == 13 and 
+        inscripcion.institucioneducativaCurso.gradoTipo.id != 6 %} 
         <button type="button" class="btn btn-facebook dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             Agregar área <span class="caret"></span>
         </button>
@@ -90,7 +92,9 @@
                                             <div id="calificaciones_{{areaEstudiante.eaId}}" style="display:none; position:absolute; z-index:5; margin-left:-500px; border:2px solid #00B1E1; box-shadow: 7px 7px 4px #0095BD;" class="divCalificaciones">
                                         </div>
                                     {% else %}
-                                        {% if areaEstudiante.atId in [1038, 1039] %}
+                                        {% if areaEstudiante.atId in [1038, 1039] and 
+                                        inscripcion.institucioneducativaCurso.nivelTipo.id == 13 and 
+                                        inscripcion.institucioneducativaCurso.gradoTipo.id != 6 %}
                                             <button onclick="eliminarArea({{esGestionVigente}}, {{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
                                         {% endif %}
                                     {% endif %}
