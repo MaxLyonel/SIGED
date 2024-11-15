@@ -24,6 +24,7 @@ class ModalidadCursoController extends Controller {
 
     public function indexAction(Request $request){
 
+
     	$infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
         if($this->session->get('pathSystem')  == 'SiePermanenteBundle'){
@@ -122,7 +123,7 @@ class ModalidadCursoController extends Controller {
     }
 
     public function getModulos2024Action(Request $request){
-
+      
         $institucion = $request->getSession()->get('ie_id');
         $sucursal = $request->getSession()->get('ie_subcea');
 
@@ -469,5 +470,109 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
         
 
     }
+
+    public function getModulos2024DeleteAction(Request $request){
+
+        $institucion = $request->getSession()->get('ie_id');
+        $sucursal = $request->getSession()->get('ie_subcea');
+
+        /*dump($institucion);
+        dump($sucursal);
+        die; */
+        
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        /*dump($aInfoUeducativa);
+        dump($aInfoUeducativa['ueducativaInfoId']['paraleloId']);
+        die;*/
+
+        $paralelo_id = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
+        $turno_id = $aInfoUeducativa['ueducativaInfoId']['turnoId'];
+                
+        $acreditacion = $aInfoUeducativa['ueducativaInfo']['grado'];
+        $especialidad = $aInfoUeducativa['ueducativaInfo']['ciclo'];
+
+        $ciclo    = $aInfoUeducativa['ueducativaInfo']['ciclo'];
+        $nivel    = $aInfoUeducativa['ueducativaInfo']['nivel'];
+        $grado    = $aInfoUeducativa['ueducativaInfo']['grado'];
+        $paralelo = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+        $turno    = $aInfoUeducativa['ueducativaInfo']['turno'];
+
+
+        //61880184
+
+        $em = $this->getDoctrine()->getManager();
+             
+        //verificar si ya tiene 2024
+        $query = $em->getConnection()->prepare("                        
+       
+        WITH catalogo AS (select a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion,c.id as superior_acreditacion_especialidad_id
+from superior_facultad_area_tipo a
+	inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+		inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+			inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id)
+select distinct o.id as institucioneducativa_curso_oferta_id,k.*,i.periodo_tipo_id
+,n.id as modulo_tipo_id ,n.modulo,c.id
+from superior_institucioneducativa_acreditacion a
+	inner join superior_institucioneducativa_periodo b on b.superior_institucioneducativa_acreditacion_id=a.id
+		inner join institucioneducativa_curso c on c.superior_institucioneducativa_periodo_id=b.id
+			inner join institucioneducativa_sucursal i on a.institucioneducativa_sucursal_id=i.id
+				inner join catalogo k on a.acreditacion_especialidad_id=k.superior_acreditacion_especialidad_id
+					inner join superior_modulo_periodo m on m.institucioneducativa_periodo_id=b.id
+						inner join superior_modulo_tipo n on m.superior_modulo_tipo_id=n.id
+							inner join institucioneducativa_curso_oferta o on o.insitucioneducativa_curso_id=c.id and o.superior_modulo_periodo_id=m.id
+where  i.gestion_tipo_id in (2024::double precision) and  i.institucioneducativa_id= :sie  and i.sucursal_tipo_id= :sucursal  and i.periodo_tipo_id=3 
+and k.nivel_id in (15,18,19,20,21,22,23,24,25)
+        and acreditacion = :acreditacion and especialidad = :especialidad and c.paralelo_tipo_id = :paralelo and c.turno_tipo_id = :turno_id
+       
+        "); 
+        $query->bindValue(':sie', $institucion);
+        $query->bindValue(':sucursal', $sucursal);    
+        $query->bindValue(':acreditacion', $acreditacion);
+        $query->bindValue(':especialidad', $especialidad);   
+        $query->bindValue(':paralelo', $paralelo_id);   
+        $query->bindValue(':turno_id', $turno_id);   
+
+        $query->execute();
+        $modulos2024result = $query->fetchAll(); 
+        $modulos2024 = count($modulos2024result);
+        //dump(count($modulos2024)); die;
+
+
+        $rolId = $this->session->get('roluser');
+
+        $response = new JsonResponse();
+        return $response->setData(array('rolid' => $rolId,'modulos2024' => $modulos2024result,'modulos2024count' => $modulos2024,'infoUe' => str_replace("\"", "#", $infoUe),'ciclo' =>$ciclo, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno  ));
+    }
+
+
+    public function deleteModulos2024Action(Request $request){
+
+        //dump($request);
+        $cursoofertaid = $request->get('cursoofertaid');
+        //dump($cursoofertaid);
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+
+        try {
+            //dump("delete from institucioneducativa_curso_oferta where id=". $cursoofertaid); die;
+            
+            $query = $em->getConnection()->prepare("delete from institucioneducativa_curso_oferta where id=". $cursoofertaid );
+            $query->execute();
+
+            $data = array(
+                'msg' => 'Registro Eliminado',
+                'resultado' => 1
+            ); 
+            return $response->setData($data);
+        } catch (Exception $ex) {
+            $data = array(
+                'msg' => 'No se pudo eliminar el Módulo',
+                'resultado' => 0
+            ); 
+            return $response->setData($data);
+        }
+    }
+
 
 }
