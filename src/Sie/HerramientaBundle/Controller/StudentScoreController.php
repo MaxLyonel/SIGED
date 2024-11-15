@@ -55,6 +55,7 @@ class StudentScoreController extends Controller{
         	'grado'=>$grado,
         );
 
+        
         /*
         $tipoNota = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
         */
@@ -63,6 +64,19 @@ class StudentScoreController extends Controller{
 
         $tipoUE = $this->get('funciones')->getTipoUE($aInfoUe['requestUser']['sie'],$aInfoUe['requestUser']['gestion']);
         $operativo = $this->get('funciones')->obtenerOperativoTrimestre2020($sie,$gestion);
+        
+        if ($nivel==13 and $grado==6 and $operativo==3){
+            $operativosexto = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(
+                'institucioneducativa' => $sie,
+                'gestionTipoId'  => $gestion,
+                'institucioneducativaOperativoLogTipo' => 10
+            ));
+            if (count($operativosexto)>0){
+                return $this->redirect($this->generateUrl('principal_web'));
+            }
+            
+        }
+
         $notas = $this->get('notas')->regularDB($idInscripcion,$operativo);
 
         if($tipoUE){
