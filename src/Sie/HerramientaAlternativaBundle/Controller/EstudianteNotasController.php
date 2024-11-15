@@ -55,6 +55,7 @@ class EstudianteNotasController extends Controller {
         
 
         $data = $this->getNotas($infoUe, $infoStudent);
+        
                
         //obtenemos el dato del censo
         $query = $em->getConnection()->prepare("
@@ -81,7 +82,8 @@ class EstudianteNotasController extends Controller {
         $query->bindValue(':estudiante_inscripcion', $estudianteInscripcionS2);
         $query->execute();
         $moduloscenso = $query->fetchAll(); 
-        
+
+
         // una copia de las areas para poner el beneficio
         $notascenso = $data['areas'];
         $notasfinales = $data['areas'];
@@ -153,8 +155,23 @@ class EstudianteNotasController extends Controller {
         }*/
 
         //no es especializados
-        //dump($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId']); die;
-        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] <> 52 ){
+       //dump($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId']); die;
+       //52 especializados, 32 tecnico medio
+
+       $habilita = false;
+        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 ){
+            $habilita = true;           
+        }
+
+        /*if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 32 ){
+            $habilita = true;           
+        }*/
+
+        /*if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 ){
+            return $this->redirect($this->generateUrl('principal_web'));           
+        }*/
+
+        if ($habilita == false ){
             return $this->redirect($this->generateUrl('principal_web'));           
         }
 
