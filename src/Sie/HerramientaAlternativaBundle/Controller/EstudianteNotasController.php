@@ -55,7 +55,7 @@ class EstudianteNotasController extends Controller {
         
 
         $data = $this->getNotas($infoUe, $infoStudent);
-        
+        //dump($data); die;
                
         //obtenemos el dato del censo
         $query = $em->getConnection()->prepare("
@@ -233,9 +233,9 @@ class EstudianteNotasController extends Controller {
         /*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // if ($closeopequinto and $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52){
         // if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $institucion != 80730796 && $this->session->get('userId')!=94161725){
-        if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $periodo == 3 && $this->session->get('userId')!=94161725){
+        /*if ($aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 52 && $periodo == 3 && $this->session->get('userId')!=94161725){
             return $this->redirect($this->generateUrl('principal_web'));
-        }
+        }*/
         /**************************************************//*********CUANDO CIERRA OPERATIVO 5TO AÑO - IBD****/
         // dump($aInfoUeducativa);die;
         //$sie = $aInfoUeducativa['requestUser']['sie'];
