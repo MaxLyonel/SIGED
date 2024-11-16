@@ -58,7 +58,7 @@ class EstudianteNotasController extends Controller {
         //dump($data); die;
                
         //obtenemos el dato del censo
-        $query = $em->getConnection()->prepare("
+        /*$query = $em->getConnection()->prepare("
             SELECT
                 censo_alternativa_beneficiarios.id, 
                 censo_alternativa_beneficiarios.cea, 
@@ -78,7 +78,31 @@ class EstudianteNotasController extends Controller {
                     censo_alternativa_beneficiarios.id = censo_alternativa_beneficiarios_detalle.beneficiario_id
                     where 
                     censo_alternativa_beneficiarios.estudiante_inscripcion_s2 = :estudiante_inscripcion
+        ");  */              
+
+        $query = $em->getConnection()->prepare("
+            SELECT distinct 
+                censo_alternativa_beneficiarios.id, 
+                censo_alternativa_beneficiarios.cea, 
+                censo_alternativa_beneficiarios.rudeal, 
+                censo_alternativa_beneficiarios.total_asignado_2s, 
+                censo_alternativa_beneficiarios.estudiante_inscripcion_s2, 
+                censo_alternativa_beneficiarios.institucioneducativa_curso_id_s2, 
+                censo_alternativa_beneficiarios.estudiante_id, 
+                censo_alternativa_beneficiarios_detalle.periodo_id, 
+                censo_alternativa_beneficiarios_detalle.beneficio, 
+                censo_alternativa_beneficiarios_detalle.modulo_tipo_id
+            FROM
+                censo_alternativa_beneficiarios
+                INNER JOIN
+                censo_alternativa_beneficiarios_detalle
+                ON 
+                    censo_alternativa_beneficiarios.id = censo_alternativa_beneficiarios_detalle.beneficiario_id
+                    where 
+                    censo_alternativa_beneficiarios.estudiante_inscripcion_s2 = :estudiante_inscripcion and periodo_id = 3 
         ");                
+
+
         $query->bindValue(':estudiante_inscripcion', $estudianteInscripcionS2);
         $query->execute();
         $moduloscenso = $query->fetchAll(); 
@@ -97,6 +121,7 @@ class EstudianteNotasController extends Controller {
         }          
 
         //comparamos con el censo
+      
         for ($i=0; $i < count($moduloscenso) ; $i++) { 
 
             $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
@@ -114,12 +139,25 @@ class EstudianteNotasController extends Controller {
                     }else{
                         $data['areas'][$i]['notas'][0]['nota'] = $data['areas'][$i]['notas'][0]['nota'] - $data['areas'][$i]['notas'][0]['notacenso'];
                         $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
-                        $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'] + $beneficiocenso;
+                        $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'] + $beneficiocenso;                       
+                        
                     }
                 }
             }          
             
         }
+
+        if (count($moduloscenso) == 0){
+            // no tiene censo
+            for ($i=0; $i < count($data['areas']) ; $i++) { 
+                $data['areas'][$i]['notas'][0]['notacenso'] = 0;
+                $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'];
+
+            }
+
+        }
+
+
         /*for ($i=0; $i < count($moduloscenso) ; $i++) { 
 
             $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
@@ -181,7 +219,8 @@ class EstudianteNotasController extends Controller {
         //  }
         /**************************************************/
 
-        //dump($data);die;
+        //dump($data);
+        //die;
         
         if($data['gestion'] >= 2016){
            
@@ -535,14 +574,14 @@ class EstudianteNotasController extends Controller {
     }
 
     public function createUpdateAction(Request $request){
-        
+
         $infoStudent = $request->get('infoStudent');
         
         // verificar
         // no debe devolver null
         /*dump($request);
-        dump($infoStudent);*/
-        //die;
+        dump($infoStudent);
+        die;*/
 
         // datos ue
         $infoUe= $request->get('infoUe');
@@ -665,7 +704,11 @@ class EstudianteNotasController extends Controller {
                     }
                 }
 
+                dump($idEstudianteNota[$i]); 
+
                 if($idEstudianteNota[$i] == 'nuevo'){
+
+                    
                  
                     $newNota = new EstudianteNota();
                     $newNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
