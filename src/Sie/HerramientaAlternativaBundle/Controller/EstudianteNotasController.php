@@ -704,7 +704,7 @@ class EstudianteNotasController extends Controller {
                     }
                 }
 
-                dump($idEstudianteNota[$i]); 
+                //dump($idEstudianteNota[$i]); 
 
                 if($idEstudianteNota[$i] == 'nuevo'){
 
