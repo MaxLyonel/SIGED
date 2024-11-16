@@ -575,4 +575,103 @@ and k.nivel_id in (15,18,19,20,21,22,23,24,25)
     }
 
 
+    public function resetModulos2024Action(Request $request){
+
+        //dump($request); die;
+        $infoUe = $request->get('infoUe');
+        //dump($infoUe); die;
+
+        //$objjson = json_encode($infoUe);
+        //dump($objjson); die;
+
+        $aInfoUeducativa = unserialize($infoUe);
+        /*dump($aInfoUeducativa);
+        dump($aInfoUeducativa['ueducativaInfoId']['iecId']);
+        die;*/
+
+        $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();        
+        $db = $em->getConnection(); 
+
+        // validamos que no haya notas
+        $query = $em->getConnection()->prepare("                        
+       
+             WITH catalogo AS (
+                SELECT 
+                    a.codigo AS nivel_id,
+                    a.facultad_area,
+                    b.codigo AS ciclo_id,
+                    b.especialidad,
+                    d.codigo AS grado_id,
+                    d.acreditacion,
+                    c.id AS superior_acreditacion_especialidad_id
+                FROM 
+                    superior_facultad_area_tipo a
+                    INNER JOIN superior_especialidad_tipo b ON a.id = b.superior_facultad_area_tipo_id
+                    INNER JOIN superior_acreditacion_especialidad c ON b.id = c.superior_especialidad_tipo_id
+                    INNER JOIN superior_acreditacion_tipo d ON c.superior_acreditacion_tipo_id = d.id
+            )
+            SELECT COUNT(*) as notas  
+            FROM superior_institucioneducativa_acreditacion a
+                INNER JOIN superior_institucioneducativa_periodo b ON b.superior_institucioneducativa_acreditacion_id = a.id
+                INNER JOIN institucioneducativa_curso c ON c.superior_institucioneducativa_periodo_id = b.id
+                INNER JOIN estudiante_inscripcion d ON c.id = d.institucioneducativa_curso_id
+                INNER JOIN estudiante h ON d.estudiante_id = h.id
+                INNER JOIN institucioneducativa_sucursal i ON a.institucioneducativa_sucursal_id = i.id
+                INNER JOIN catalogo k ON a.acreditacion_especialidad_id = k.superior_acreditacion_especialidad_id
+                INNER JOIN estudiante_asignatura j ON d.id = j.estudiante_inscripcion_id
+                INNER JOIN estudiante_nota o ON j.id = o.estudiante_asignatura_id
+            WHERE c.id = :iecId;
+		
+       
+        "); 
+        $query->bindValue(':iecId', $iecId);    
+        $query->execute();
+        $valida = $query->fetchAll(); 
+
+        //dump($valida[0]['notas']); die;
+
+        if($valida[0]['notas'] > 0 ){
+            $data = array(
+                'msg' => 'No se pudo resetear el la Asignacion de Módulos, hay datos relacionados',
+                'resultado' => 0
+            ); 
+            return $response->setData($data);
+        }
+
+
+
+        try {
+            //sp_elimina_asignacion_oferta_inscripcion_alternativa(167113900);
+           
+            //dump("select * from sp_elimina_asignacion_oferta_inscripcion_alternativa(". $iecId .");"); die;
+            $query = "select * from sp_elimina_asignacion_oferta_inscripcion_alternativa(". $iecId .");";
+         
+            $obs= $db->prepare($query);
+            $params = array();
+            $obs->execute($params);
+            $observaciones = $obs->fetchAll();
+            //dump($observaciones);die;
+            /*if ($observaciones[0]['sp_genera_insercion_modulo_alternativa_humanistica'] == 1){         
+                return $response->setData(array( 'resultado' => 1 , 'msg' => 'Modulos Registrados con Exito'));
+            }else{
+                return $response->setData(array('resultado' => 0 , 'msg' => 'No se pudieron registrar los modulos seleccionados '));
+            }*/
+
+            $data = array(
+                'msg' => 'Reseteo  Completado',
+                'resultado' => 1
+            ); 
+            return $response->setData($data);
+        } catch (Exception $ex) {
+            $data = array(
+                'msg' => 'No se pudo resetear el la Asignacion de Modulos',
+                'resultado' => 0
+            ); 
+            return $response->setData($data);
+        }
+    }
+
 }

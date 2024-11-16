@@ -150,6 +150,12 @@
                                                                                 </button>
                                                                             </div>   
 
+                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Resetear Módulos">
+                                                                                <button class="btn btn-circle btn-warning btn-stroke "  onclick="resetModulos('{{dataParalelo.infoUe}}');">
+                                                                                    <i class="fa fa-ban"></i>
+                                                                                </button>
+                                                                            </div>   
+
                                                                           
 
                                                                             {% endif %}                                                                         
@@ -614,6 +620,72 @@
                     }
                 }
             });
+        };
+
+         var resetModulos = function (infoUe) {
+            
+            console.log('infoUe', infoUe);
+
+             swal({
+                title: "Desea RESETEAR la asignacion de módulos a los participantes de este curso ?",
+                text: "ESTA OPCION ELIMINA LA ASIGNACION DE MODULOS DE TODOS LOS ESTUDIANTES DEL CURSO QUE NO TENGAN NOTAS",   
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Resetear"],
+            })
+            .then(function (respuesta) {
+                if (respuesta) {
+
+                    var formData = new FormData();               
+
+                    formData.append('infoUe', infoUe);
+                    
+                    $.ajax({
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    url: Routing.generate('herramienta_modulosCurso_reset'),
+                    beforeSend: function () {
+                        //$('#modal').empty();
+                    },
+                    success: function (data) {                
+
+                        $("#modalModulos").modal('hide');
+
+                        if (data.resultado == 1)
+                        {
+                            swal({                        
+                                text: data.msg,
+                                icon: "success"
+                            });
+                            //window.location.reload();
+                        }else{
+
+                            swal({                        
+                                icon: "error",
+                                title: "Atencion !",
+                                text: data.msg,   
+                            });
+
+                        }
+                        
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });   
+
+                }
+
+            })
+           
         };
 
          var openModalModulosDelete = function (infoUe) {
