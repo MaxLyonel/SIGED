@@ -88,3 +88,9 @@ herramienta_modulosCurso_delete:
     defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:deleteModulos2024"}
     options:
          expose: true
+
+herramienta_modulosCurso_reset:
+    path:     /indexModulosCurso/reset
+    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:resetModulos2024"}
+    options:
+         expose: true
