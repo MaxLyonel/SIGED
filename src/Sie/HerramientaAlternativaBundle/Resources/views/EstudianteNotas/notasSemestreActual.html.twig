@@ -216,7 +216,11 @@
         censo = $(clasecenso).val();
         console.log(censo);
         
-        notafinal = parseInt(control.value) + parseInt(censo);
+        if (parseInt(control.value) + parseInt(censo) > 100) {
+             notafinal = 100;
+        }else{
+            notafinal = parseInt(control.value) + parseInt(censo);
+        }
 
         console.log(claseaux);
         $(claseaux).val(notafinal);
