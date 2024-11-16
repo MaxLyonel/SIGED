@@ -121,6 +121,7 @@ class EstudianteNotasController extends Controller {
         }          
 
         //comparamos con el censo
+      
         for ($i=0; $i < count($moduloscenso) ; $i++) { 
 
             $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
@@ -138,12 +139,25 @@ class EstudianteNotasController extends Controller {
                     }else{
                         $data['areas'][$i]['notas'][0]['nota'] = $data['areas'][$i]['notas'][0]['nota'] - $data['areas'][$i]['notas'][0]['notacenso'];
                         $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
-                        $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'] + $beneficiocenso;
+                        $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'] + $beneficiocenso;                       
+                        
                     }
                 }
             }          
             
         }
+
+        if (count($moduloscenso) == 0){
+            // no tiene censo
+            for ($i=0; $i < count($data['areas']) ; $i++) { 
+                $data['areas'][$i]['notas'][0]['notacenso'] = 0;
+                $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'];
+
+            }
+
+        }
+
+
         /*for ($i=0; $i < count($moduloscenso) ; $i++) { 
 
             $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
@@ -205,7 +219,8 @@ class EstudianteNotasController extends Controller {
         //  }
         /**************************************************/
 
-        //dump($data);die;
+        //dump($data);
+        //die;
         
         if($data['gestion'] >= 2016){
            
