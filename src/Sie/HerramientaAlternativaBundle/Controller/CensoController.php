@@ -492,6 +492,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
     public function ddjjPrintAction(Request $request)
     {
 
+       
+
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
@@ -509,6 +511,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         $stmt = $db->prepare($query);
         $params = array($cea);
         $stmt->execute($params); 
+
+       
 
 
         // fin cerrar cea
@@ -531,8 +535,11 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         $pdf->SetFont('helvetica', '', 9, '', true);
         $pdf->startPageGroup();
         $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+       
 
         $pdf->Image('images/logo-min-edu.png', 4, 4, 85, 25, '', '', '', false, 0, '', false, false, 0);
+
+          
 
 
         $cabecera = '<br/><br/><br/><br/><br/><br/><br/><table border="0" style="font-size: 8.5px">';
@@ -543,6 +550,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
             $cabecera .='<td   align="center"><b>DETALLE DE ASIGNACION DE PUNTOS A PARTICIPANTES SEGUN LISTADO OFICIAL INE</b></td>';          
         $cabecera .='</tr>';
         $cabecera .='</table><br/><br/>';
+
+      
 
         $query = $em->getConnection()->prepare("
             select distinct beneficiario_id, paterno, materno, nombres, rudeal, carnet, complemento, departamento, distrito
@@ -673,6 +682,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         ';
 
         $reporte = $cabecera . $datoscea . $tabla_beneficiarios . $tabla_firma;
+
+        //dump($reporte); die;
       
         $pdf->writeHTML($reporte, true, false, true, false, '');
 
@@ -691,11 +702,12 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
             <td width="15%" align="center">Puntos Beneficio</td>
         </tr>';
 
+        //dump($beneficiario_id);die;
 
         $query = $em->getConnection()->prepare("
            
 
-            SELECT
+            SELECT distinct 
                 censo_alternativa_beneficiarios.id, 
                 censo_alternativa_beneficiarios.carnet, 
                 censo_alternativa_beneficiarios.complemento, 
@@ -706,11 +718,12 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 censo_alternativa_beneficiarios.certificado_cpv, 
                 censo_alternativa_beneficiarios_detalle.estudiante_nota_id, 
                 censo_alternativa_beneficiarios_detalle.periodo_id, 
-                censo_alternativa_beneficiarios_detalle.beneficio, 
+                censo_alternativa_beneficiarios_detalle.beneficio,
+				censo_alternativa_beneficiarios_detalle.modulo_tipo_id,
                 superior_modulo_tipo.modulo,
-                superior_especialidad_tipo.especialidad,
-                superior_acreditacion_tipo.codigo, 
-                superior_acreditacion_tipo.acreditacion
+				set.especialidad,
+                'codigo' as codigo, 
+               sat.acreditacion
             FROM
                 censo_alternativa_beneficiarios
                 INNER JOIN
@@ -722,31 +735,14 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
                 superior_modulo_tipo
                 ON 
                     superior_modulo_tipo.id = censo_alternativa_beneficiarios_detalle.modulo_tipo_id
-                left JOIN
-                superior_especialidad_tipo
-                ON 
-                    superior_especialidad_tipo.id = superior_modulo_tipo.superior_especialidad_tipo_id
-                 INNER JOIN
-                superior_modulo_periodo
-                ON 
-                    superior_modulo_periodo.superior_modulo_tipo_id = superior_modulo_tipo.id
-										
-								left JOIN
-                superior_institucioneducativa_periodo
-                ON 
-                    superior_modulo_periodo.institucioneducativa_periodo_id = superior_institucioneducativa_periodo.id
-                left JOIN
-                superior_institucioneducativa_acreditacion
-                ON 
-                    superior_institucioneducativa_periodo.superior_institucioneducativa_acreditacion_id = superior_institucioneducativa_acreditacion.id
-                left JOIN
-                superior_acreditacion_especialidad
-                ON 
-                    superior_institucioneducativa_acreditacion.acreditacion_especialidad_id = superior_acreditacion_especialidad.id
-                left JOIN
-                superior_acreditacion_tipo
-                ON 
-                    superior_acreditacion_especialidad.superior_acreditacion_tipo_id = superior_acreditacion_tipo.id
+								
+                    inner join institucioneducativa_curso iec on iec.id = censo_alternativa_beneficiarios.institucioneducativa_curso_id_s2
+                    inner join superior_institucioneducativa_periodo siep on siep.id = iec.superior_institucioneducativa_periodo_id
+                    inner join superior_institucioneducativa_acreditacion  siea on siea.id = siep.superior_institucioneducativa_acreditacion_id
+                    inner join superior_acreditacion_especialidad sae on sae.id = siea.acreditacion_especialidad_id
+                    inner join superior_acreditacion_tipo sat on sat.id = sae.superior_acreditacion_tipo_id
+                    inner join superior_especialidad_tipo set on set.id = sae.superior_especialidad_tipo_id 
+           
             WHERE	
          censo_alternativa_beneficiarios.id = :beneficiario_id        
         ");                
