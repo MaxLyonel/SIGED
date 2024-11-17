@@ -50,6 +50,9 @@ herramienta_infoconsolidation_gestion_inconsistencias_modal:
     path:     /{gestionid}/consolgestionincosistenciasmodal
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:getInconsistencias }
 
+herramienta_infoconsolidation_gestion_sexto:
+    path:     /consolsexto
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:consolidacionSexto }
 
   
    

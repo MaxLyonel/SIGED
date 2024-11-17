@@ -342,14 +342,18 @@
                                 {% endif %}
 
                                 {% if app.session.get('roluser') in [7,8,10]  %}
+                                    <li><a href="{{ path('herramienta_infoconsolidation_gestion_sexto')}}">Seguimiento Consolicación 6to Sec</a></li>
+                                {% endif %}
+
+                                {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li>
                                         <a href="{{ path('herramienta_infoconsolidation_gestion_inconsistencias_index')}}">Seguimiento Inconsistencias</a>
                                     </li>
                                 {% endif %}
-
+{# 
                                 {% if true and app.session.get('roluser') in [0,8]  %}<!--Tecnnico nacional-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades')}}">Nacional Reporte de inicio de actividades</a></li>
-                                {% endif %}
+                                {% endif %} #}
                                 {# {% if true and app.session.get('roluser') in [7]  %}<!--Tecnnico departamental-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades_distrito')}}">Departamental Reporte de inicio de actividades</a></li>
                                 {% endif %} #}

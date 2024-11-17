@@ -376,6 +376,106 @@ class InfoConsolidationController extends Controller {
     ));
   }
 
+  public function consolidacionSextoAction(Request $request) {
+    $em = $this->getDoctrine()->getManager();
+    $gestionactual = $this->session->get('currentyear');
+    $roluser = $this->session->get('roluser');
+    $roluserlugarid = $this->session->get('roluserlugarid');
+    $bundle = $this->session->get('pathSystem');
+
+
+    $title = 'Reporte de consolidación de operativos 6to Secundaria - GESTIÓN :'.$gestionactual;
+    $label = 'Cantidad de Unidades Educativas que reportaron información';
+    $label_distrito = 'Cantidad de Unidades Educativas que reportaron información en el distrito';
+            
+    $instipoid=1;
+    
+    $consulta = '';
+    $params = []; // Array para almacenar los parámetros dinámicos
+
+    switch ($roluser) {
+        case 8: // Rol general, sin restricciones
+            $consulta = '';  
+            break;
+
+        case 7: // Rol por departamento
+            $lugardde = $em->getRepository('SieAppWebBundle:LugarTipo')->find($roluserlugarid);
+            if ($lugardde) {
+                $consulta = ' WHERE wies.departamento_codigo = :departamentoCodigo ';
+                $params['departamentoCodigo'] = $lugardde->getCodigo();
+            }
+            break;
+
+        case 10: // Rol por distrito
+            $consulta = ' WHERE wies.distrito_id = :distritoId ';
+            $params['distritoId'] = $roluserlugarid;
+            break;
+
+        default:
+            $ues = null;
+            break;
+    }
+
+    $queryEntidad = $em->getConnection()->prepare("
+        SELECT DISTINCT 
+            wies.departamento_codigo,
+            wies.departamento,
+            wies.distrito_id,
+            wies.distrito_codigo,
+            wies.distrito,
+            wies.institucioneducativa_id,
+            wies.institucioneducativa,
+            wies.dependencia_id,
+            wies.dependencia,
+            wies.turno_id,
+            wies.turno,
+            wies.area,
+            wies.niveles_id,
+            wies.niveles_abrv,
+            wies.estadoinstitucion_id,
+            wies.est,
+            CASE 
+                WHEN iol.institucioneducativa_id IS NOT NULL THEN 'SI' 
+                ELSE 'NO' 
+            END AS cal,
+            CASE 
+                WHEN mc.persona_id IS NOT NULL THEN 'SI' 
+                ELSE 'NO' 
+            END AS director_ibd
+        FROM vm_instituciones_educativas_sexto wies 
+        LEFT JOIN institucioneducativa_operativo_log iol 
+            ON iol.institucioneducativa_id = wies.institucioneducativa_id 
+            AND iol.institucioneducativa_operativo_log_tipo_id = 10 
+            AND iol.gestion_tipo_id = :gestionactual
+        LEFT JOIN maestro_cuentabancaria mc 
+            ON wies.institucioneducativa_id = mc.institucioneducativa_id 
+            AND mc.gestion_tipo_id = :gestionactual 
+            AND mc.esoficial = TRUE
+        $consulta
+        ORDER BY 1, 3, 5
+    ");
+
+    // Asignación de parámetros
+    $queryEntidad->bindValue(':gestionactual', $gestionactual, \PDO::PARAM_INT);
+
+    // Asignar los parámetros dinámicos de `$consulta`
+    foreach ($params as $key => $value) {
+        $queryEntidad->bindValue(":$key", $value, \PDO::PARAM_INT);
+    }
+
+    // Ejecutar la consulta
+    $queryEntidad->execute();
+    $objEntidad = $queryEntidad->fetchAll();
+    
+    return $this->render('SieHerramientaBundle:InfoConsolidation:index_sexto.html.twig', array(
+        'consol' => $objEntidad,
+        'gestion' => $gestionactual,
+        'title' => $title,
+        'label' => $label,
+        'label_distrito' => $label_distrito
+    ));
+  }
+
   private function getDataUe($id) {
 
       $em = $this->getDoctrine()->getManager();

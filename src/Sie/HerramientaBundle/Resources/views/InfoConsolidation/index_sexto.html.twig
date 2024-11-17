@@ -1,0 +1,261 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <style>
+    .modal-header-danger {
+        color:#fff;
+        padding:9px 15px;
+        border-bottom:1px solid #eee;
+        background-color: #d9534f;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+        -moz-border-radius-topright: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    </style>
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Consolidación 6to SECUNDARIA (IBD - Calificaciones) <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">
+                    Información Unidad Educativa
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <!-- Start default panel -->
+                <div class="panel panel-primary rounded shadow">
+                    <!-- Start panel heading -->
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{title}}</h3>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <!--/ End panel heading -->
+                    <!-- Start panel content -->
+                    <div class="panel-body">
+                        {# <div class="row">
+                            <div class="form-group">
+                                <label class="col-md-2 col-md-offset-3 control-label text-right" for="gestiones"><strong>Seleccionar gestión:</strong></label>
+                                <div class="col-md-2">
+                                    <select onchange="registroConsol(this.value)" id="gestiones" class="form-control">
+                                        {% for gestion in gestiones %}
+                                            <option value="{{gestion}}">{{gestion}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div> #}
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12" id="tableConsol">
+                                    <div class="table-responsive col-md-9">
+                                        <table class="table table-bordered table-striped" id="listaConsol">
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width:15px">#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Institución Educativa</th>
+                                                    <th>Cuenta Director</th>
+                                                    <th>Cerro Calif.</th>
+                                                    {# <th>Trim. 2</th>
+                                                    <th>Trim. 3</th> #}
+                                                    {#
+                                                    {% if app.session.get('roluser') != 10  %}
+                                                    <th>Habilitar Operativo</th>
+                                                    {% endif %}
+                                                    #}
+                                                </tr>
+                                            </thead>
+
+                                            <tfoot>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Institución Educativa</th>
+                                                    <th>Cuenta Director</th>
+                                                    <th>Calificaciones</th>
+                                                    {# habilitado por Cristina solo ESPECIAL 14-06-23 #}
+                                                    {# {% if instipoid == 4 and (app.session.get('roluser') == 8 or app.session.get('roluser') == 7)  %} #}
+                                                    {# {% if (app.session.get('roluser') == 8 or app.session.get('roluser') == 7)  %}
+                                                    <th>habilitar Operativo</th>
+                                                    {% endif %}
+                                                     #}
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                {% for registro in consol %}
+                                                    <tr>
+                                                        <td class="text-center">{{loop.index}}</td>
+                                                        <td>{{registro.departamento}}</td>
+                                                        <td>{{registro.distrito}}</td>
+                                                        <td>{{registro.institucioneducativa_id}}</td>
+                                                        <td>{{registro.institucioneducativa}}</td>
+                                                        <td><span class="label label-{% if registro.director_ibd == 'NO' %}danger{% else %}success{% endif %}">{{registro.director_ibd}}</span></td>
+                                                        <td><span class="label label-{% if registro.cal == 'NO' %}danger{% else %}success{% endif %}">{{registro.cal}}</span></td>
+                                                        {# <td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
+                                                        <td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td> #}
+                                                        {# commented by krlos 28-11-22
+                                                            {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
+                                                        #}
+                                                        {# habilitado por Cristina solo ESPECIAL 14-06-23 #}
+                                                        {# {% if (app.session.get('roluser') == 8 or app.session.get('roluser') == 7)  %} #}
+                                                        {# {% if instipoid == 4 and (app.session.get('roluser') == 8 or app.session.get('roluser') == 7)  %} #}
+                                                            {# <td>
+                                                                <a href="{{path('herramienta_infoconsolidation_habilitarOpe',{'sie': registro.codigo_sie,'gestion':registro.gestion})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el registro?');"><i class="fa fa-fw fa-edit"></i>Restablecer</a> #}
+                                                                {# <a href="{{path('herramienta_infoconsolidation_enabledOpe',{'sie': registro.codigo_sie,'gestion':registro.gestion})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el operativo? ');"><i class="fa fa-fw fa-edit"></i> Restablecer</a> #}
+                                                            {# </td>
+                                                        {% endif %}                     #}
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {# {% if ues is not empty %}
+                                    <div class="col-md-3">
+                                        {% if app.session.get('roluser') != 10 %}
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading text-center">
+                                                    <h3 class="panel-title">Estadística</h3>
+                                                </div><!-- /.panel-heading -->
+                                                <div class="panel-body">
+                                                    <div class="table-responsive col-md-12">
+                                                        <table class="table table-bordered table-striped" id="listaCentros">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
+                                                                        <th>Departamento</th>
+                                                                    {% elseif app.session.get('roluser') == 7 %}
+                                                                        <th>Distrito</th>
+                                                                    {% endif %}
+                                                                    <th class="text-right">Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
+                                                                        <th>Departamento</th>
+                                                                    {% elseif app.session.get('roluser') == 7 %}
+                                                                        <th>Distrito</th>
+                                                                    {% endif %}
+                                                                    <th class="text-right">Total</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                            <tbody>
+                                                                {% set cant = 0 %}
+                                                                {% for registro in ues %}
+                                                                    {% set cant = cant + registro.total %}
+                                                                    <tr>
+                                                                        <td>{{loop.index}}</td>
+                                                                        {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
+                                                                            <td>{{registro.departamento}}</td>
+                                                                        {% elseif app.session.get('roluser') == 7 %}
+                                                                            <td>{{registro.distrito}}</td>
+                                                                        {% endif %}
+                                                                        <td class="text-right">{{registro.total}}</td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="well well-md col-md-12">
+                                                        <h4>{{label}}: <span class="label label-primary">{{cant}}</span></h4>
+                                                    </div>
+                                                </div><!-- /.panel-body -->
+                                            </div><!-- /.panel -->
+                                        {% else %}
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="mini-stat-type-4 bg-primary shadow">
+                                                    <h3>{{label_distrito}}</h3>
+                                                    {% set cant = 0 %}
+                                                    {% for registro in ues %}
+                                                        {% set cant = cant + registro.total %}
+                                                    {% endfor %}
+                                                    <h1 class="count">{{cant}}</h1>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    No se encontraron registros.
+                                {% endif %} #}
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+                <!--/ End panel content -->
+        </div><!-- /.panel -->
+        <!--/ End default panel -->
+    </div>
+
+    
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+   
+
+    var cargatablas = function (identif){
+        // Setup - add a text input to each footer cell
+        $('#listaConsol tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "#"){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#listaConsol').DataTable( {
+                "order": [[ 0, "asc" ]]
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    };
+
+    $(document).ready(function(){
+        cargatablas();
+        //mostrarModal();
+    });
+
+    
+    </script>
+{% endblock %}
