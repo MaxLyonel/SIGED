@@ -492,6 +492,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
     public function ddjjPrintAction(Request $request)
     {
 
+       
+
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
@@ -509,6 +511,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         $stmt = $db->prepare($query);
         $params = array($cea);
         $stmt->execute($params); 
+
+       
 
 
         // fin cerrar cea
@@ -531,8 +535,11 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         $pdf->SetFont('helvetica', '', 9, '', true);
         $pdf->startPageGroup();
         $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+       
 
         $pdf->Image('images/logo-min-edu.png', 4, 4, 85, 25, '', '', '', false, 0, '', false, false, 0);
+
+          
 
 
         $cabecera = '<br/><br/><br/><br/><br/><br/><br/><table border="0" style="font-size: 8.5px">';
@@ -543,6 +550,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
             $cabecera .='<td   align="center"><b>DETALLE DE ASIGNACION DE PUNTOS A PARTICIPANTES SEGUN LISTADO OFICIAL INE</b></td>';          
         $cabecera .='</tr>';
         $cabecera .='</table><br/><br/>';
+
+      
 
         $query = $em->getConnection()->prepare("
             select distinct beneficiario_id, paterno, materno, nombres, rudeal, carnet, complemento, departamento, distrito
@@ -673,6 +682,8 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
         ';
 
         $reporte = $cabecera . $datoscea . $tabla_beneficiarios . $tabla_firma;
+
+        //dump($reporte); die;
       
         $pdf->writeHTML($reporte, true, false, true, false, '');
 
@@ -691,11 +702,12 @@ where  i.gestion_tipo_id=2024::double precision and  i.institucioneducativa_id=:
             <td width="15%" align="center">Puntos Beneficio</td>
         </tr>';
 
+        //dump($beneficiario_id);die;
 
         $query = $em->getConnection()->prepare("
            
 
-            SELECT
+            SELECT distinct 
                 censo_alternativa_beneficiarios.id, 
                 censo_alternativa_beneficiarios.carnet, 
                 censo_alternativa_beneficiarios.complemento, 
