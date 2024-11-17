@@ -787,6 +787,7 @@
                             this.inscripciones = response.data.inscripciones;
 
                             $('[data-toggle="tooltip"]').tooltip();
+                            this.loadData(this.codigoRude);
                         }
                         if( response.status == 202){
                             this.respuesta = response.data;
@@ -798,17 +799,33 @@
                         console.log(e);
                         this.buscando = false;
                     });
-                    this.loadData();
+                    
                 },
-                loadData: function(){
+                loadData: function(codigoRude){
                     var arrYear = [];
-                    var len = 2020;
-                    for(var i = 2009; i<2022; i++){
+                    // var len = 2020;
+                    // for(var i = 2009; i<2024; i++){
+                    //     arrYear.push({
+                    //         id: i,
+                    //         year: i
+                    //     });
+                    // }
+                    // this.DBYears = arrYear;
+                    var startYear = 2009;
+                    var endYear = 2022; // Por defecto
+
+                    // Cambia el rango de años si el código RUDE coincide
+                    if (codigoRude === '8073039720101453') {
+                        endYear = 2024;
+                    }
+
+                    for (var i = startYear; i < endYear; i++) {
                         arrYear.push({
                             id: i,
                             year: i
                         });
                     }
+
                     this.DBYears = arrYear;
                 },
                 loadLevel: function(){
