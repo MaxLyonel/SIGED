@@ -38,11 +38,25 @@ class EstudianteNotasController extends Controller {
     public function indexAction(Request $request){
        
         $infoUe = $request->get('infoUe');
-        //test
         $infoStudent = $request->get('infoStudent');
 
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+
+        //si cerro ooprativo
+        // se devuelve
+
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select count(*) as cierre from registro_consolidacion_alt_2024 where unidad_educativa = " . $this->session->get('ie_id'));
+        $query->execute();
+        $cierre2024 = $query->fetchAll();
+
+        $especializadoscierre = false;
+        if ($cierre2024[0]['cierre'] > 0){
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+           
 
         /*dump($infoUe);
         dump($infoStudent);   
@@ -82,7 +96,7 @@ class EstudianteNotasController extends Controller {
         ");  */              
 
         $query = $em->getConnection()->prepare("
-            SELECT distinct 
+            SELECT  distinct
                 censo_alternativa_beneficiarios.id, 
                 censo_alternativa_beneficiarios.cea, 
                 censo_alternativa_beneficiarios.rudeal, 
@@ -107,9 +121,11 @@ class EstudianteNotasController extends Controller {
         $query->bindValue(':estudiante_inscripcion', $estudianteInscripcionS2);
         $query->execute();
         $moduloscenso = $query->fetchAll(); 
+        //dump($moduloscenso);
 
 
         // una copia de las areas para poner el beneficio
+        //dump($data['areas']);
         $notascenso = $data['areas'];
         $notasfinales = $data['areas'];
         
@@ -125,6 +141,8 @@ class EstudianteNotasController extends Controller {
       
         for ($i=0; $i < count($moduloscenso) ; $i++) { 
 
+          
+
             $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
             $beneficiocenso = $moduloscenso[$i]['beneficio'];
 
@@ -138,15 +156,16 @@ class EstudianteNotasController extends Controller {
                         $data['areas'][$j]['notas'][0]['notacenso'] = $beneficiocenso;
                         $data['areas'][$j]['notas'][0]['notafinal'] = $beneficiocenso;
                     }else{
-                        $data['areas'][$j]['notas'][0]['nota'] = $data['areas'][$j]['notas'][0]['nota'] - $beneficiocenso; //$data['areas'][$j]['notas'][0]['notacenso'];
+                        $data['areas'][$j]['notas'][0]['nota'] = $data['areas'][$j]['notas'][0]['nota'] - $data['areas'][$j]['notas'][0]['notacenso'];
                         $data['areas'][$j]['notas'][0]['notacenso'] = $beneficiocenso;
-                        $data['areas'][$j]['notas'][0]['notafinal'] = $data['areas'][$j]['notas'][0]['nota'] + $beneficiocenso;            
+                        $data['areas'][$j]['notas'][0]['notafinal'] = $data['areas'][$j]['notas'][0]['nota'] - $beneficiocenso;                       
                         
                     }
                 }
             }          
             
         }
+      
 
         if (count($moduloscenso) == 0){
             // no tiene censo
@@ -220,8 +239,8 @@ class EstudianteNotasController extends Controller {
         //  }
         /**************************************************/
 
-        //dump($data);
-        //die;
+       /* dump($data);
+        die;*/
         
         if($data['gestion'] >= 2016){
            
