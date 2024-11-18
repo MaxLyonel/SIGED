@@ -44,7 +44,13 @@ herramienta_ceducativa_cerrar_operativo:
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:cerraroperativo}
     options:
         expose: true
-        
+
+herramienta_ceducativa_cerrar_operativo_especializados:
+    path:     /cerraroperativoesp/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:cerraroperativoespecializados}
+    options:
+        expose: true
+                
 herramienta_ceducativa_distrito_listaceas:
     path:     /listaceas/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:listadisceas}         
