@@ -38,6 +38,7 @@ class EstudianteNotasController extends Controller {
     public function indexAction(Request $request){
        
         $infoUe = $request->get('infoUe');
+        //test
         $infoStudent = $request->get('infoStudent');
 
         $em = $this->getDoctrine()->getManager();

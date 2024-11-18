@@ -36,6 +36,7 @@ class InstitucioneducativaController extends Controller {
     public function indexAction(Request $request) {
         //get the session's values
         // dump($request->get('gestion'));die;
+        //test
 
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
