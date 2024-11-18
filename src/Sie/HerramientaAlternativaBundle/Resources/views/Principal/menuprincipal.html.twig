@@ -365,10 +365,36 @@
                 <div class="cbp-l-grid-masonry-projects-desc"></div>
             </div><br></div> #}
 
+            {#% if (especializadoscierre == false )%}
+            {#prueba del git
+            
+            <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#7b0cde"></div>
+                        <img src="{{asset('img/cerraralter.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                <br>
+                                    <form onsubmit="return verificarCerrado2024();" action="{{path('herramienta_ceducativa_cerrar_operativo_especializados')}}" method="post" style="display:inline-block" >
+                                        <button class="btn btn-inverse btn-stroke">CERRAR OPERATIVO</button>
+                                    </form>
+                                    <br>
+                                <span style="color:#FFFFFF">Cierra el operativo actual, dando de esta manera por concluido la declaración de la información educativa solicitada. </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CERRAR OPERATIVO ESPECIALIZADOS</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div>
+             {% endif %} #}
 
-
-            {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO#}
-                {% if (app.session.get('ie_per_estado') == '0') %}  {#GENERA ACTA DE CIERRE UNA VES CERRADO EL OPERATIVO#}                                      
+            {#
+            {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO
+                {% if (app.session.get('ie_per_estado') == '0') %}  {#GENERA ACTA DE CIERRE UNA VES CERRADO EL OPERATIVO                                    
                     <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                         <div class="cbp-caption">
                                 <div class="cbp-caption-defaultWrap">
@@ -392,7 +418,7 @@
                             <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR ACTA DE CIERRE DE OPERATIVO</div>
                         <div class="cbp-l-grid-masonry-projects-desc"></div>
                     </div><br></div>
-                {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}{#PARA OPERATIVO DE INCRIPCIONES NOTAS Y REGULARIZACION#}
+                {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}{#PARA OPERATIVO DE INCRIPCIONES NOTAS Y REGULARIZACION
                      <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                         <div class="cbp-caption">
                             <div class="cbp-caption-defaultWrap">
@@ -417,6 +443,7 @@
                     </div><br></div> 
                 {% endif %}
             {% endif %}
+            #}
 
           <div class="col-lg-6 col-md-6 col-sm-6" >
           <div class="cbp-item-wrapper">
@@ -444,5 +471,21 @@
             $('#BotonCerrar').hide();
         }
     }
+
+    
+    function verificarCerrado2024(){
+        var myText = '¡AVISO IMPORTANTE LEA CON ATENCIÓN!\nUna ves cerrado el operativo no sera posible realizar modificaciones.\n REVISE LAS NOTAS ANTES DE PROCEDER \nSi no esta seguro de este mensaje presione CANCELAR.';
+        if(!confirm(myText)){
+            return false;
+        }else{
+
+            var myText = 'ESTA SEGURO DE CERRAR EL OPERATIVO ??.';
+            if(!confirm(myText)){
+                return false;
+            }
+        }
+    }
+
+
     </script>
 {% endblock %}

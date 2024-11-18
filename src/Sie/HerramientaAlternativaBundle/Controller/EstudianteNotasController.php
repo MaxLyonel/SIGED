@@ -47,7 +47,7 @@ class EstudianteNotasController extends Controller {
         // se devuelve
 
 
-        $em = $this->getDoctrine()->getManager();
+        /*$em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select count(*) as cierre from registro_consolidacion_alt_2024 where unidad_educativa = " . $this->session->get('ie_id'));
         $query->execute();
         $cierre2024 = $query->fetchAll();
@@ -55,7 +55,7 @@ class EstudianteNotasController extends Controller {
         $especializadoscierre = false;
         if ($cierre2024[0]['cierre'] > 0){
             return $this->redirect($this->generateUrl('principal_web'));
-        }
+        }*/
            
 
         /*dump($infoUe);
