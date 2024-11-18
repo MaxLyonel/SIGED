@@ -156,7 +156,7 @@ class EstudianteNotasController extends Controller {
                         $data['areas'][$j]['notas'][0]['notacenso'] = $beneficiocenso;
                         $data['areas'][$j]['notas'][0]['notafinal'] = $beneficiocenso;
                     }else{
-                        $data['areas'][$j]['notas'][0]['nota'] = $data['areas'][$j]['notas'][0]['nota'] - $data['areas'][$j]['notas'][0]['notacenso'];
+                        $data['areas'][$j]['notas'][0]['nota'] = $data['areas'][$j]['notas'][0]['nota'] - $beneficiocenso; //correjido para visualizacion
                         $data['areas'][$j]['notas'][0]['notacenso'] = $beneficiocenso;
 
                         if(($data['areas'][$j]['notas'][0]['nota'] + $beneficiocenso) <= 100 )
