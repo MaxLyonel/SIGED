@@ -432,6 +432,8 @@ class InstitucioneducativaController extends Controller {
 
        //dcastillo
 
+       
+
        // ver si cerro operativo       
 
         $sesion = $request->getSession();
@@ -443,7 +445,7 @@ class InstitucioneducativaController extends Controller {
         $rutaObservaciones = "";
 
         //
-        $em = $this->getDoctrine()->getManager();
+        /*$em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select count(*) as cierre from registro_consolidacion_alt_2024 where unidad_educativa = " . $this->session->get('ie_id'));
         $query->execute();
         $cierre2024 = $query->fetchAll();
@@ -451,7 +453,13 @@ class InstitucioneducativaController extends Controller {
         $especializadoscierre = false;
         if ($cierre2024[0]['cierre'] > 0){
             $especializadoscierre = true;
-        }
+        }*/
+      
+        //80660237
+
+        //$especializadoscierre = false;
+        $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$gestion,$this->session->get('ie_per_cod'));
+        //$especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado('20680003',$gestion,$this->session->get('ie_per_cod'));
 
         
         if ($subcea < 0){
@@ -1455,12 +1463,26 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
     public function cerraroperativoespecializadosAction(Request $request) { //dcastillo
 
+        /*
+        sp_validacion_alternativa_curso_web(
+            IN igestion_id character varying,
+            IN icod_ue character varying,
+            IN isub_cea character varying,
+            IN iperiodo_id character varying,
+            IN inivel_id character varying DEFAULT '15',
+            IN iciclo_id character varying DEFAULT '2',
+            IN igrado_id character varying DEFAULT '3',
+            IN iusuario_id character varying DEFAULT '1')
+        */
+
+
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();      
+        
         $db = $em->getConnection();
 
-        $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
-        //$query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','80660237','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
+        $query = "select * from sp_validacion_alternativa_curso_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
+        //$query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','81981438','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
 
         //dump($query); die;
         
@@ -1476,6 +1498,10 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         if ($observaciones){
             return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));  
         }
+
+        return $this->redirect($this->generateUrl('principal_web')); 
+
+        /*
         else{   
            // dump('sin error'); die; 
 
@@ -1531,7 +1557,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
 
            return $this->redirect($this->generateUrl('principal_web')); 
-        }
+        }*/
 
     }
 

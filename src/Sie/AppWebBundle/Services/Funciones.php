@@ -2117,7 +2117,7 @@ class Funciones {
                             ->where('ieol.institucioneducativa = :sie')
                             ->andWhere('ieol.gestionTipoId = :gestion')
                             ->andWhere('ieol.periodoTipo = :periodo')
-                            ->andWhere('ieol.institucioneducativaOperativoLogTipo = 10')
+                            ->andWhere('ieol.institucioneducativaOperativoLogTipo = 16')
                             ->setParameter('sie', $sie)
                             ->setParameter('gestion', $gestion)
                             ->setParameter('periodo', $periodo)

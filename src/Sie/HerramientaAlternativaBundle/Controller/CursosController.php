@@ -47,6 +47,8 @@ class CursosController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        //dump('here'); die;
+
         $em = $this->getDoctrine()->getManager();
         $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
 
@@ -79,10 +81,22 @@ class CursosController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
-        // dump($request);die;
+        //dump($request);die;
+
+
         $em = $this->getDoctrine()->getManager();
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+
+        //dump($aInfoUeducativa); die;
+        
+        $habilitanotas = true;
+        if($aInfoUeducativa['ueducativaInfoId']['nivelId'] == 15 and $aInfoUeducativa['ueducativaInfoId']['gradoId'] == 3){
+            $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
+            $habilitanotas = false;           
+        }
+
+
         // dump($aInfoUeducativa);die;
         $exist = true;
         $objStudents = array();
@@ -144,7 +158,8 @@ class CursosController extends Controller {
                     'totalInscritos'=>count($objStudents),
                     'swSetNameModIntEmer' => $swSetNameModIntEmer,
                     'primariaNuevo' => $primariaNuevo,
-                    'iecId'  => $request->get('iecId')
+                    'iecId'  => $request->get('iecId'),
+                    'habilitanotas' => $habilitanotas
         ));
     }
 

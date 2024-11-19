@@ -365,9 +365,8 @@
                 <div class="cbp-l-grid-masonry-projects-desc"></div>
             </div><br></div> #}
 
-            {#% if (especializadoscierre == false )%}
-            {#prueba del git
-            
+            {% if (especializadoscierre == false ) %}
+                        
             <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                 <div class="cbp-caption">
                     <div class="cbp-caption-defaultWrap">
@@ -390,7 +389,7 @@
                 <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CERRAR OPERATIVO ESPECIALIZADOS</div>
                 <div class="cbp-l-grid-masonry-projects-desc"></div>
             </div>
-             {% endif %} #}
+             {% endif %}
 
             {#
             {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO
@@ -445,12 +444,12 @@
             {% endif %}
             #}
 
+      </div>
           <div class="col-lg-6 col-md-6 col-sm-6" >
           <div class="cbp-item-wrapper">
             <div id="answerClose" style="overflow: scroll; height:500px">  </div>
           </div>
           </div>
-      </div>
       </div>
     </div>
     {% endif %}            
