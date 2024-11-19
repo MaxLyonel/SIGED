@@ -1475,7 +1475,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             IN iusuario_id character varying DEFAULT '1')
         */
 
-
+       
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();      
         
@@ -1497,7 +1497,54 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         //esto devuelve las obsrvaciones
         //$observaciones = [];
         if ($observaciones){
-            return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));  
+            //return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));  
+
+            $cea= $this->session->get('ie_id');
+
+            $pdf = $this->container->get("white_october.tcpdf")->create(
+                'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
+            );
+            // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $pdf->SetAuthor('Adal');
+            $pdf->SetTitle('Acta Supletorio');
+            $pdf->SetSubject('Report PDF');
+            $pdf->SetPrintHeader(false);
+            $pdf->SetPrintFooter(true, -10);
+            // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
+            $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIO');
+            $pdf->setFontSubsetting(true);
+            $pdf->SetMargins(10, 10, 10, true);
+            $pdf->SetAutoPageBreak(true, 8);
+    
+            $pdf->SetFont('helvetica', '', 9, '', true);
+            $pdf->startPageGroup();
+            $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+
+            $cabecera = '<br/><br/><br/><table border="0" style="font-size: 8.5px">';
+            $cabecera .='<tr>';          
+            $cabecera .='<td  align="center"><h2>CIERRE OPERATIVO ESPECIALIZADOS</h2></td>';           
+            $cabecera .='</tr>';
+            $cabecera .='<tr>';
+                $cabecera .='<td   align="center"><b>DETALLE DE OBSERVACIONES</b></td>';          
+            $cabecera .='</tr>';
+            $cabecera .='<tr>';
+                $cabecera .='<td   align="center"><b>CEA: '. $this->session->get('ie_id') .'</b></td>';          
+            $cabecera .='</tr>';
+            $cabecera .='</table><br/><br/>';
+    
+    
+            $reporte = '';
+
+            for ($i=0; $i < count($observaciones) ; $i++) { 
+               $reporte = $reporte . $observaciones[$i]['observacion'] . '<hr>';
+            }
+    
+            //dump($reporte); die;
+          
+            $pdf->writeHTML($cabecera . $reporte, true, false, true, false, '');
+    
+            $pdf->Output("Detalle_Observaciones_". $cea. "_" .date('YmdHis').".pdf", 'D');
+            
         }
 
         return $this->redirect($this->generateUrl('principal_web')); 
@@ -1560,6 +1607,37 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
            return $this->redirect($this->generateUrl('principal_web')); 
         }*/
 
+    }
+
+    public function printreport($observaciones){
+
+        $pdf = $this->container->get("white_october.tcpdf")->create(
+            'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
+        );
+        // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->SetAuthor('Adal');
+        $pdf->SetTitle('Acta Supletorio');
+        $pdf->SetSubject('Report PDF');
+        $pdf->SetPrintHeader(false);
+        $pdf->SetPrintFooter(true, -10);
+        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
+        $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIO');
+        $pdf->setFontSubsetting(true);
+        $pdf->SetMargins(10, 10, 10, true);
+        $pdf->SetAutoPageBreak(true, 8);
+
+        $pdf->SetFont('helvetica', '', 9, '', true);
+        $pdf->startPageGroup();
+        $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+
+
+        $reporte = 'test';
+
+        //dump($reporte); die;
+      
+        $pdf->writeHTML($reporte, true, false, true, false, '');
+
+        $pdf->Output("Detalle_Censo_". $cea. "_" .date('YmdHis').".pdf", 'D');
     }
 
     public function cerraroperativoAction(Request $request) { //dcastillo
