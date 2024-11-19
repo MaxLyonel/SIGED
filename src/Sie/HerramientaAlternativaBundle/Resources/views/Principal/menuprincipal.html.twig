@@ -365,6 +365,33 @@
             </div><br></div> #}
 
             
+            {#% if (especializadoscierre == false ) %#}
+
+            {% if (app.session.get('ie_id') == 50950042 or app.session.get('ie_id') == 61470045 or app.session.get('ie_id') == 80630044  ) %}
+                        
+            <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#7b0cde"></div>
+                        <img src="{{asset('img/cerraralter.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                <br>
+                                    <form onsubmit="return verificarCerrado2024();" action="{{path('herramienta_ceducativa_cerrar_operativo_especializados')}}" method="post" style="display:inline-block" >
+                                        <button class="btn btn-inverse btn-stroke">CERRAR OPERATIVO</button>
+                                    </form>
+                                    <br>
+                                <span style="color:#FFFFFF">Cierra el operativo actual, dando de esta manera por concluido la declaración de la información educativa solicitada. </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CERRAR OPERATIVO ESPECIALIZADOS</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div>
+             {% endif %}
 
             {#
             {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO
