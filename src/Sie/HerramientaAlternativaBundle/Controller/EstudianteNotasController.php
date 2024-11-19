@@ -87,6 +87,7 @@ class EstudianteNotasController extends Controller {
         //if ($this->session->get('ie_id') == 50950042  or $this->session->get('ie_id') == 61470045 or $this->session->get('ie_id') == 80630044 or $this->session->get('ie_id') == 81230269 ){
         if ($this->session->get('ie_id') == 50950042  or $this->session->get('ie_id') == 61470045 or $this->session->get('ie_id') == 80630044 or $this->session->get('ie_id') == 81230269 ){
             $guardanotas = true;
+            //para todos
         }
 
 
