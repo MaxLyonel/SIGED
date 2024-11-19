@@ -1481,7 +1481,8 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         
         $db = $em->getConnection();
 
-        $query = "select * from sp_validacion_alternativa_curso_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
+        $query = "select * from sp_validacion_alternativa_curso_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."','15', '2', '3','".$this->session->get('userId')."');";
+        //dump("select * from sp_validacion_alternativa_curso_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."','15', '2', '3','".$this->session->get('userId')."');"); die;
         //$query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','81981438','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
 
         //dump($query); die;
