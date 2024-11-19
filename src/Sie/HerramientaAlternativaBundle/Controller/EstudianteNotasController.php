@@ -59,7 +59,7 @@ class EstudianteNotasController extends Controller {
         $guardanotas = true;
         
         //si es especializados preguntamos
-        if($estudianteInscripcionS2aux->nivelId == 15 and $estudianteInscripcionS2aux->gradoId == 3)
+        if(($estudianteInscripcionS2aux->nivelId == 15 and $estudianteInscripcionS2aux->gradoId == 3))
         {
             /*$especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
             if($especializadoscierre == true){
@@ -70,8 +70,17 @@ class EstudianteNotasController extends Controller {
             $guardanotas = false;
 
         }else{
-            //todos los demas no hbailitados
-            $guardanotas = false;
+
+            // solo tecnico medio
+            if( ($estudianteInscripcionS2aux->nivelId == 22 or $estudianteInscripcionS2aux->nivelId == 19 ) and $estudianteInscripcionS2aux->gradoId == 3){
+                $guardanotas = true;
+            }else{
+                
+                //todos los demas no hbailitados
+                $guardanotas = false;
+            }
+            
+
         }
 
         //dump($guardanotas); die; 
