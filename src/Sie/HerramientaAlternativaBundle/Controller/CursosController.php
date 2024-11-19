@@ -93,7 +93,9 @@ class CursosController extends Controller {
         $habilitanotas = true;
         if($aInfoUeducativa['ueducativaInfoId']['nivelId'] == 15 and $aInfoUeducativa['ueducativaInfoId']['gradoId'] == 3){
             $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
-            $habilitanotas = false;           
+            if($especializadoscierre == true){
+                $habilitanotas = false;           
+            }
         }
 
 
