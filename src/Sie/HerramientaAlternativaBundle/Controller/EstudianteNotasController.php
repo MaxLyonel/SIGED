@@ -46,26 +46,32 @@ class EstudianteNotasController extends Controller {
         //si cerro ooprativo
         // se devuelve
 
-
-        /*$em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("select count(*) as cierre from registro_consolidacion_alt_2024 where unidad_educativa = " . $this->session->get('ie_id'));
-        $query->execute();
-        $cierre2024 = $query->fetchAll();
-
-        $especializadoscierre = false;
-        if ($cierre2024[0]['cierre'] > 0){
-            return $this->redirect($this->generateUrl('principal_web'));
-        }*/
-           
-
         /*dump($infoUe);
         dump($infoStudent);   
-        dump(json_decode($infoStudent));                   */
+        dump(json_decode($infoStudent));    die; */
+                   
         
         $estudianteInscripcionS2aux = json_decode($infoStudent) ;
         $estudianteInscripcionS2 = $estudianteInscripcionS2aux->eInsId;
         //dump($estudianteInscripcionS2);
         //496266104
+
+        $guardanotas = true;
+        
+        //si es especializados preguntamos
+        if($estudianteInscripcionS2aux->nivelId == 15 and $estudianteInscripcionS2aux->gradoId == 3)
+        {
+            $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
+            if($especializadoscierre == true){
+                $guardanotas = false;
+            }
+
+        }else{
+            //todos los demas no hbailitados
+            $guardanotas = false;
+        }
+
+        //dump($guardanotas); die; 
 
         
 
@@ -235,9 +241,9 @@ class EstudianteNotasController extends Controller {
             return $this->redirect($this->generateUrl('principal_web'));           
         }*/
 
-        if ($habilita == false ){
+        /*if ($habilita == false ){
             return $this->redirect($this->generateUrl('principal_web'));           
-        }
+        }*/
 
          /********* temporal notas****/
         // if ($gestion == 2024 && $this->session->get('userId')!=94161725){
@@ -245,8 +251,11 @@ class EstudianteNotasController extends Controller {
         //  }
         /**************************************************/
 
-       /* dump($data);
+        $data['guardanotas'] = $guardanotas;
+        
+        /*dump($data);
         die;*/
+
         
         if($data['gestion'] >= 2016){
            

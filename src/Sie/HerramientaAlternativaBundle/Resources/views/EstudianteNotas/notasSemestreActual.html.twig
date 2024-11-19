@@ -81,7 +81,7 @@
                                                     <table>
                                                         <tr>
                                                             <td>
-                                                                <input name="notas[]" type="text" size="3" maxlength="3" style="width:50px" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="notaVerificar(this,{{asig.idAsignatura}})" onblur="notaCero(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off">
+                                                                <input name="notas[]" type="text" size="3" maxlength="3" style="width:50px" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="notaVerificar(this,{{asig.idAsignatura}})" onblur="notaCero(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off" {{ guardanotas ==  false? 'disabled' : '' }}>
                                                                 
                                                             </td>
                                                             <td>
@@ -184,7 +184,9 @@
             {% endif %}
             #}
             {#% if app.session.get('ie_per_estado') == 3 %#}
-                <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+                {% if( guardanotas == true) %}
+                <button id=btnguardanotas" type="submit" class="btn btn-theme">Guardar Cambios</button>
+                {% endif %}
             {#% endif %#}
         </div>
     </div><!-- /.modal-content -->
