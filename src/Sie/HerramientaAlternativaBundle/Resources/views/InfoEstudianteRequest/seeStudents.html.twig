@@ -96,7 +96,7 @@
                     </button>
                 </div>
                 {#% if ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0')) %#} 
-                 {% if app.session.get('ie_id') == 52210037  %}
+                 {% if app.session.get('ie_id') == 94161725  %}
                     <div class="col-md-3">
                         <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                             <i class="fa fa-user"></i> Inscripción con CI
@@ -133,17 +133,21 @@
         {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('ie_id') == 80730610 ) %}  {# POR HR 25684, TEMPORAL DESDE HOY MARTES HASTA EL VIERNES 14/06/2024 POR SOLICITUD DE RAUL #} 
         {% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %}
                 <div class="col-md-3">
+                    
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                         <i class="fa fa-user"></i> Inscripción con CI
                     </button>
                 </div>
+               
         {% endif %}
         {% if (app.session.get('roluser') == 7 and (app.session.get('ie_gestion') == app.session.get('currentyear'))) or ((app.session.get('userId') != 94161725) and  app.session.get('roluser') == 7)%}
             {% if ( ((app.session.get('ie_per_estado') == '0') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') )) %}
                 <div class="col-md-3">
+                    {#
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                         <i class="fa fa-user"></i> Inscripción con CI
                     </button>
+                    #}
                 </div>
 
             {% endif %}
@@ -229,7 +233,7 @@
 
                                 {# set the array student info and convert on json string #}
                                 {# set objInfoStudent = objInfoStudent|merge(data) #}
-                                {# set jsnInfoStudent = objInfoStudent #}
+                                {# set jsnInfoStudent = objInfoStudent #}                                
                                 {% set jsnInfoStudent = items|json_encode() %}
 
                                 <tr {% if data.segipId == 0 %}class="text-danger"{% endif %} id="trEstudianteSegip_{{data.codigoRude}}">
@@ -291,7 +295,7 @@
                                                             {{dump('ok')}}
                                                             {% else %} #}
                                                               {#% if (app.session.get('userId') == 94161725) or ( app.session.get('roluser') == 9 )%#} 
-                                                              {% if ( habilitanotas == true  )%} 
+                                                              {#% if ( habilitanotas == true  )%#} 
                                                              
                                                                  <li>
                                                                     <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
@@ -299,7 +303,7 @@
                                                                     </a>
                                                                 </li>
     
-                                                            {% endif %}
+                                                            {#% endif %#}
                                                             {# {% endif %} #}
                                                         {#% endif %#}   
                                                    
