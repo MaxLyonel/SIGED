@@ -99,6 +99,7 @@ class ReportesController extends Controller {
     }
     
     public function observacionesoperativoAction() {
+        //2024
         $arch = 'LISTA_OBSERVACIONES'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
