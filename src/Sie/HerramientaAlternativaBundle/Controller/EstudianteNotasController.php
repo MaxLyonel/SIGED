@@ -61,12 +61,12 @@ class EstudianteNotasController extends Controller {
         //si es especializados preguntamos
         if(($estudianteInscripcionS2aux->nivelId == 15 and $estudianteInscripcionS2aux->gradoId == 3))
         {
-            $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
+            /*$especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
             if($especializadoscierre == true){
                 $guardanotas = false;
-            }
+            } */          
             
-            //por cierre de todo
+            //para todos
             $guardanotas = false;
 
         }else{
@@ -85,10 +85,10 @@ class EstudianteNotasController extends Controller {
         
         //ultimos casos alternativa
         //if ($this->session->get('ie_id') == 50950042  or $this->session->get('ie_id') == 61470045 or $this->session->get('ie_id') == 80630044 or $this->session->get('ie_id') == 81230269 ){
-        if ($this->session->get('ie_id') == 50950042  or $this->session->get('ie_id') == 61470045 or $this->session->get('ie_id') == 80630044 or $this->session->get('ie_id') == 81230269 ){
+        i/*f ($this->session->get('ie_id') == 50950042  or $this->session->get('ie_id') == 61470045 or $this->session->get('ie_id') == 80630044 or $this->session->get('ie_id') == 81230269 ){
             $guardanotas = true;
             //para todos
-        }
+        }*/
 
         //$guardanotas = true;
 
