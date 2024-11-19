@@ -366,7 +366,8 @@
             </div><br></div> #}
 
             {% if (especializadoscierre == false ) %}
-                        
+                      
+            {#
             <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                 <div class="cbp-caption">
                     <div class="cbp-caption-defaultWrap">
@@ -377,9 +378,10 @@
                         <div class="cbp-l-caption-alignCenter">
                             <div class="cbp-l-caption-body">
                                 <br>
-                                    <form onsubmit="return verificarCerrado2024();" action="{{path('herramienta_ceducativa_cerrar_operativo_especializados')}}" method="post" style="display:inline-block" >
+                                    <form id="formcierre" onsubmit="return verificarCerrado2024();" action="{{path('herramienta_ceducativa_cerrar_operativo_especializados')}}" method="post" style="display:inline-block" >
                                         <button class="btn btn-inverse btn-stroke">CERRAR OPERATIVO</button>
                                     </form>
+                                  
                                     <br>
                                 <span style="color:#FFFFFF">Cierra el operativo actual, dando de esta manera por concluido la declaración de la información educativa solicitada. </span>
                             </div>
@@ -390,6 +392,7 @@
                 <div class="cbp-l-grid-masonry-projects-desc"></div>
             </div>
              {% endif %}
+             #}
 
             {#
             {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO
@@ -447,7 +450,7 @@
       </div>
           <div class="col-lg-6 col-md-6 col-sm-6" >
           <div class="cbp-item-wrapper">
-            <div id="answerClose" style="overflow: scroll; height:500px">  </div>
+            <div id="answerClose" style="overflow: scroll; height:500px"> </div>
           </div>
           </div>
       </div>
@@ -459,7 +462,7 @@
     {{parent()}}
     <script>
 
-    console.log('GESTION: ', gestion);
+    
 
 
     function verificarCerrado(){
@@ -485,6 +488,50 @@
         }
     }
 
+    /* function verificarCerrado2024b(){
+
+        //e.preventDefault();
+
+        var myText = '¡AVISO IMPORTANTE LEA CON ATENCIÓN!\nUna ves cerrado el operativo no sera posible realizar modificaciones.\n REVISE LAS NOTAS ANTES DE PROCEDER \nSi no esta seguro de este mensaje presione CANCELAR.';
+        if(!confirm(myText)){
+            return false;
+        }else{
+
+            var myText = 'ESTA SEGURO DE CERRAR EL OPERATIVO ??.';
+            if(!confirm(myText)){
+                return false;
+            }
+
+                var data = new FormData();
+                data.append('datos',99 );
+
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('herramienta_ceducativa_cerrar_operativo_especializados'),                   
+                    data: data,
+                    beforeSend: function () {
+                        //$("#answerClose").empty();
+                        //$("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        console.log(data);
+                       
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+
+
+
+        }
+    }*/
+   
 
     </script>
 {% endblock %}
