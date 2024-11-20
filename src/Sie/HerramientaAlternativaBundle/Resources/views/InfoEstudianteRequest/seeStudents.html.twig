@@ -296,13 +296,13 @@
                                                             {% else %} #}
                                                               {#% if (app.session.get('userId') == 94161725) or ( app.session.get('roluser') == 9 )%#} 
                                                               {#% if ( habilitanotas == true  )%#} 
-                                                                {% if ((app.session.get('ie_gestion') == app.session.get('currentyear')) and (app.session.get('ie_per_cod') == 3)) %} 
+                                                                {#% if ((app.session.get('ie_gestion') == app.session.get('currentyear')) and (app.session.get('ie_per_cod') == 3)) %#} 
                                                                  <li>
                                                                     <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                         <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
                                                                     </a>
                                                                 </li>
-                                                                {% endif %}
+                                                                {#% endif %#}
     
                                                             {#% endif %#}
                                                             {# {% endif %} #}
@@ -311,7 +311,8 @@
                                                     {% endif %}
 
                                                     {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
-                                                    {% if (app.session.get('ie_per_estado') == '0') and (app.session.get('ie_gestion') <= app.session.get('currentyear') ) %}
+                                                    {#% if (app.session.get('ie_per_estado') == '0') and (app.session.get('ie_gestion') <= app.session.get('currentyear') ) %#}
+                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') ) %}
                                                         <li>
                                                           <a href="{{path('herramienta_alter_libretas', {'eInsId': data.eInsId, 'nivel': data.nivelId})}}">
                                                               <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Libreta</span>

@@ -92,7 +92,8 @@ class EstudianteNotasController extends Controller {
         }
 
         //solo raul contreras
-        if( $this->session->get('ie_id') == 94161725 ){
+        
+        if( $this->session->get('userName') == 9602888 ){
             $guardanotas = true;
         }
         
