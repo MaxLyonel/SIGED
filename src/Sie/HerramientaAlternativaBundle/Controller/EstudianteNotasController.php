@@ -72,7 +72,7 @@ class EstudianteNotasController extends Controller {
         }else{
 
             // solo tecnico medio
-            if( ($estudianteInscripcionS2aux->nivelId == 22 or $estudianteInscripcionS2aux->nivelId == 19 or $estudianteInscripcionS2aux->nivelId == 18 ) and $estudianteInscripcionS2aux->gradoId == 3){
+            if( ( $estudianteInscripcionS2aux->nivelId == 18 or $estudianteInscripcionS2aux->nivelId == 19 or $estudianteInscripcionS2aux->nivelId == 20 or $estudianteInscripcionS2aux->nivelId == 21 or $estudianteInscripcionS2aux->nivelId == 22 or $estudianteInscripcionS2aux->nivelId == 23 or $estudianteInscripcionS2aux->nivelId == 24 or $estudianteInscripcionS2aux->nivelId == 25 ) and $estudianteInscripcionS2aux->gradoId == 3){
                 $guardanotas = true;
             }else{
                 
