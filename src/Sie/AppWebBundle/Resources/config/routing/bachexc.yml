@@ -34,7 +34,7 @@ bach_exc_ie_rst_search:
     methods:  POST      
 
 test_bachiller:
-    path:     /be-create2023
+    path:     /be-create_ibd
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:createEstudianteDestacado2023" }    
     options:
          expose: true
