@@ -814,8 +814,8 @@
                                 {# <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>  --------------> NO APLICA SEGUN DGEA #}
                             </ul>
                         </li>
-
-                        {# se inahbilita 0911
+                        
+                       
                          <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -824,15 +824,17 @@
                             </a>
                             <ul>
                                 
+                                {#
                                 <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li> 
                                 <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
+                                #}
 
-                                {# <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Consolidación Bachiller de Excelencia</a></li> 
-                                {# <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li> 
+                                 <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Consolidación Bachiller de Excelencia</a></li> 
+                                 <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li> 
 
                             </ul> 
                             </li> 
-                        #}
+                       
 
 
                     {% endif %}

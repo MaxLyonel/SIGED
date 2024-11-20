@@ -82,8 +82,6 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function indexDirAction() {
         //return $this->redirect($this->generateUrl('login'));
         
-         return $this->redirect($this->generateUrl('principal_web'));
-        
         $id_usuario = $this->session->get('userId');
         $ie_id = $this->session->get('ie_id');
         $em = $this->getDoctrine()->getManager();
@@ -120,6 +118,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
     public function resultSearchIeDirAction(Request $request) {
         //verificacion registro alternativa
+
+        //dump('here'); die;
         
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
@@ -305,10 +305,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
      *
      */
     public function dirCtaCreateAction(Request $request) {
-        
+
         // inhabilitar 10/11/2024
         return $this->redirect($this->generateUrl('principal_web'));
-
       
         $id_usuario = $this->session->get('userId');
 
@@ -460,7 +459,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
      */
 
     public function resultSearchIeAction(Request $request) {
-        // dump('ok');die;
+
+        //dump('here'); die;
+        
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
@@ -502,6 +503,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
             }
             // $gestion = 2022;
             $bachilleres=$this->listaregistoest($institucion, $gestion);
+            //dump($bachilleres); die;
+
             if (count($bachilleres) > 0){ 
                 return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultBachilleres.html.twig', array(
                     'bachilleres' => $bachilleres,
@@ -528,6 +531,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $em->flush();
             $em->getConnection()->commit();
 
+          
 
             /*
             * Verificar si la UE cuenta con aprendizajes especializados
@@ -554,12 +558,16 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 return $this->redirect($this->generateUrl('bach_exc_alt'));
             }
 
-            $closeopequinto = $this->get('funciones')->verificarSextoSecundariaCerrado($institucion,$gestion);
+            /*
+           $closeopequinto = $this->get('funciones')->verificarSextoSecundariaCerrado($institucion,$gestion);
             // dump($closeopequinto);die;
             if ($closeopequinto==false){
                 $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa ' . $formulario['institucioneducativa'] . ' no cerro el operativo de aprendizajes especializados.');
                 return $this->redirect($this->generateUrl('bach_exc_alt'));
             }
+                */
+
+
             /* Verificar si la UE ya ha registrado al bachiller destacado */
             // $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
@@ -602,7 +610,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $query = $em->getConnection()->prepare("SELECT * from sp_genera_alternativa_bachiller_destacado_vista('".$gestion."', '".$institucion."')");
             $query->execute();
             $estudiantes = $query->fetchAll();
-            // dump($estudiantes);die;
+            //dump($estudiantes);die;
             $est_oficial = [];
             $est_duplicadosM = [];
             $est_duplicadosF = [];
@@ -1078,6 +1086,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function listaregistoest($institucion, $gestion){
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
+
+        //$gestion = 2023;
 
         $query = $repository->createQueryBuilder('ed')
                 ->select('ed.codigoRude, ed.carnetIdentidad, ed.paterno, ed.materno, ed.nombre, g.genero, ed.promedioFinal, ed.promedioSem1, ed.promedioSem2')
