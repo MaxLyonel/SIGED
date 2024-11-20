@@ -82,6 +82,14 @@ class EstudianteNotasController extends Controller {
             
 
         }
+
+        //si es 2024 y segundo semestre
+        if( $this->session->get('ie_per_cod') == 2 ){
+            $guardanotas = false;
+        }
+        if( $this->session->get('ie_gestion') <> 2024 ){
+            $guardanotas = false;
+        }
         
         //ultimos casos alternativa
         //if ($this->session->get('ie_id') == 50950042  or $this->session->get('ie_id') == 61470045 or $this->session->get('ie_id') == 80630044 or $this->session->get('ie_id') == 81230269 ){
@@ -163,10 +171,8 @@ class EstudianteNotasController extends Controller {
         }          
 
         //comparamos con el censo
-      
+        /*
         for ($i=0; $i < count($moduloscenso) ; $i++) { 
-
-          
 
             $modulo_tipo_id = $moduloscenso[$i]['modulo_tipo_id'];
             $beneficiocenso = $moduloscenso[$i]['beneficio'];
@@ -195,10 +201,55 @@ class EstudianteNotasController extends Controller {
                 }
             }          
             
+        }*/
+
+        //iteramos las areas
+        for ($i=0; $i < count($data['areas']) ; $i++) { 
+
+
+            //el censo
+            $swcenso = 0;
+            for ($j=0; $j < count($moduloscenso) ; $j++) { 
+
+                $modulo_tipo_id = $moduloscenso[$j]['modulo_tipo_id'];
+                $beneficiocenso = $moduloscenso[$j]['beneficio'];
+
+                if( $data['areas'][$i]['idAsignatura'] == $modulo_tipo_id ){
+
+                    $swcenso = 1;
+
+                    if($data['areas'][$i]['notas'][0]['nota'] == 0){
+                        //no tiene nota
+                        $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
+                        $data['areas'][$i]['notas'][0]['notafinal'] = $beneficiocenso;
+                    }else{
+                        //tiene nota
+                        $data['areas'][$i]['notas'][0]['nota'] = $data['areas'][$i]['notas'][0]['nota'] - $beneficiocenso; //correjido para visualizacion
+                        $data['areas'][$i]['notas'][0]['notacenso'] = $beneficiocenso;
+
+                        if(($data['areas'][$i]['notas'][0]['nota'] + $beneficiocenso) <= 100 )
+                        {
+                            $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota'] + $beneficiocenso;                       
+                        }else{
+                            $data['areas'][$i]['notas'][0]['notafinal'] = 100;                       
+                        }
+
+                    }
+                
+                }
+
+            }
+
+            //no encontro censo
+            if( $swcenso == 0 ){
+                $data['areas'][$i]['notas'][0]['notacenso'] = 0;
+                $data['areas'][$i]['notas'][0]['notafinal'] = $data['areas'][$i]['notas'][0]['nota']; 
+            }
+
         }
       
 
-        if (count($moduloscenso) == 0){
+       /* if (count($moduloscenso) == 0){
             // no tiene censo
             for ($i=0; $i < count($data['areas']) ; $i++) { 
                 $data['areas'][$i]['notas'][0]['notacenso'] = 0;
@@ -206,7 +257,7 @@ class EstudianteNotasController extends Controller {
 
             }
 
-        }
+        }*/
 
 
         /*for ($i=0; $i < count($moduloscenso) ; $i++) { 
@@ -633,7 +684,7 @@ class EstudianteNotasController extends Controller {
         
         // verificar
         // no debe devolver null
-        /*dump($request);
+       /* dump($request);
         dump($infoStudent);
         die;*/
 
@@ -702,7 +753,7 @@ class EstudianteNotasController extends Controller {
         }
 
         //4: de aqui en adelante deberia ser todo como esta y se supone que funciona
-
+        //dump($notas); die;
 
         if(count($notas)>0){
             // Validamos que las notas sean numeros y esten entre 0 y 100
