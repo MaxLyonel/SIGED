@@ -98,7 +98,7 @@ class CensoBeneficioController extends Controller
                     inner join turno_tipo tt on ic.turno_tipo_id = tt.id
                     where ic.nivel_tipo_id = 13
                     and ic.grado_tipo_id in (4,5,6)
-                    and ei.estadomatricula_tipo_id = 4
+                    and ei.estadomatricula_tipo_id IN (5,55,11,10,4,6,9)
                     and ic.gestion_tipo_id = 2024
                     and ic.institucioneducativa_id = $ie_id
                     union all 
@@ -121,7 +121,7 @@ class CensoBeneficioController extends Controller
                     left join censo_beneficiario cb on ei.id = cb.estudiante_inscripcion_id 
                     where ic.nivel_tipo_id = 13
                     and ic.grado_tipo_id in (4,5,6)
-                    and ei.estadomatricula_tipo_id = 4
+                    and ei.estadomatricula_tipo_id IN (5,55,11,10,4,6,9)
                     and ic.gestion_tipo_id = 2024
                     and ic.institucioneducativa_id = $ie_id) a
                     where a.cb_id is null) a 
