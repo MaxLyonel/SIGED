@@ -441,7 +441,11 @@ class InfoConsolidationController extends Controller {
             CASE 
                 WHEN mc.persona_id IS NOT NULL THEN 'SI' 
                 ELSE 'NO' 
-            END AS director_ibd
+            END AS director_ibd,
+             CASE 
+                WHEN eibd.institucioneducativa_id IS NOT NULL THEN 'SI' 
+                ELSE 'NO' 
+            END AS estudiante_ibd
         FROM vm_instituciones_educativas_sexto wies 
         LEFT JOIN institucioneducativa_operativo_log iol 
             ON iol.institucioneducativa_id = wies.institucioneducativa_id 
@@ -451,6 +455,12 @@ class InfoConsolidationController extends Controller {
             ON wies.institucioneducativa_id = mc.institucioneducativa_id 
             AND mc.gestion_tipo_id = :gestionactual 
             AND mc.esoficial = TRUE
+        left join (
+          select distinct  institucioneducativa_id 
+          from estudiante_destacado_automatico_auditoria edaa 
+          where gestion_tipo_id = :gestionactual
+          and edaa.tipo_operacion = 'INSERCION'
+          ) eibd on eibd.institucioneducativa_id = wies.institucioneducativa_id
         $consulta
         ORDER BY 1, 3, 5
     ");
