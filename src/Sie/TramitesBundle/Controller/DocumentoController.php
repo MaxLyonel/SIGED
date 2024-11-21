@@ -772,6 +772,13 @@ public function getDocumentoTokenImpreso($token) {
         $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
         $entityDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->findOneBy(array('id' => $documentoTipo));
         $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
+        $ges = $entityDocumentoSerie->getGestion()->getId();
+        if($ges == 2024 and $documentoTipo == 1){
+            $fecha = new \DateTime('2024-12-09');
+        }
+        if ($ges == 2024 and $documentoTipo == 8 and $tipoSerie=='TTMI') {
+            $fecha = new \DateTime('2024-12-09');
+        }
         $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
         $entityDocumento = new Documento();
@@ -916,6 +923,13 @@ public function getDocumentoTokenImpreso($token) {
         $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
         $entityDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->findOneBy(array('id' => $documentoTipo));
         $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
+        $ges = $entityDocumentoSerie->getGestion()->getId();
+        if($ges == 2024 and $documentoTipo == 1){
+            $fecha = new \DateTime('2024-12-09');
+        }
+        if ($ges == 2024 and $documentoTipo == 8 and $tipoSerie=='TTMI') {
+            $fecha = new \DateTime('2024-12-09');
+        }
         $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
         $entityDocumento = new Documento();
