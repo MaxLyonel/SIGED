@@ -61,13 +61,13 @@ class EstudianteNotasController extends Controller {
         //si es especializados preguntamos
         if(($estudianteInscripcionS2aux->nivelId == 15 and $estudianteInscripcionS2aux->gradoId == 3))
         {
-            $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
+            /*$especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$this->session->get('ie_gestion'),$this->session->get('ie_per_cod'));
             if($especializadoscierre == true){
                 $guardanotas = false;
-            } 
+            } */
             
             //para todos
-            //$guardanotas = false;
+            $guardanotas = false;
 
         }else{
 
@@ -77,7 +77,7 @@ class EstudianteNotasController extends Controller {
             }else{
                 
                 //todos los demas no hbailitados
-                $guardanotas = false;
+                $guardanotas = true;
             }
             
 
@@ -156,11 +156,12 @@ class EstudianteNotasController extends Controller {
                     censo_alternativa_beneficiarios.estudiante_inscripcion_s2 = :estudiante_inscripcion and periodo_id = 3 
         ");                
 
+        
 
         $query->bindValue(':estudiante_inscripcion', $estudianteInscripcionS2);
         $query->execute();
         $moduloscenso = $query->fetchAll(); 
-        //dump($moduloscenso);
+        //dump($moduloscenso);die;
 
 
         // una copia de las areas para poner el beneficio
