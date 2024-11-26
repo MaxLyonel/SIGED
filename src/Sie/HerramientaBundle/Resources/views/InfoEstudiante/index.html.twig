@@ -140,7 +140,8 @@ line-height: 1.83333em;}
                                             title="Cerrar Operativo 6to de Secundaria" 
                                             id="btnCerraOperativo" 
                                             onclick="cerrarOperativoSextodeSecc({{odataUedu.id}}, {{gestion}});">
-                                            <i class="fa fa-key"></i> Cerrar Op. 6to Sec
+                                            <i class="fa fa-key"></i> 
+                                            {# Cerrar Op. 6to Sec #}
                                         </button>
                                     {% else %}
                                     <button 
@@ -151,9 +152,38 @@ line-height: 1.83333em;}
                                         title="Cerro Operativo 6to de Secundaria" 
                                         id="btnCerraOperativo" 
                                         onclick="">
-                                        <i class="fa fa-lock"></i> Cerro Op. 6to Sec
+                                        <i class="fa fa-lock"></i> 
+                                        {# Cerro Op. 6to Sec #}
                                     </button>
                                     {% endif %}
+                                    {% if arrLevelandGrado.closeopesextosecc and ueplenafull %}
+                                        {% if ueplenafull %}
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-warning btn-sm" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Generar CUT-TTM" 
+                                                id="btnCerraOperativo" 
+                                                onclick="consolidarcutttm({{odataUedu.id}},{{gestion}});">
+                                                <i class="fa fa-cogs"></i> 
+                                                CUT-TTM
+                                            </button>
+                                        {% else %}
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-warning btn-sm" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Ya Generó el CUT-TTM" 
+                                            id="btnCerraOperativo" 
+                                            onclick="">
+                                            <i class="fa fa-file"></i> 
+                                            CUT-TTM
+                                        </button>
+                                        {% endif %}
+                                    {% endif %}
+
                                 {% endif %}
 
                                     {# Opciones:
@@ -947,18 +977,20 @@ line-height: 1.83333em;}
       function consolidarcutttm(sie, gestion){
 
       Swal.fire({
-               title: 'Consolidación CUT-TTM',
-               text: "Esta seguro de consolidar CUT-TTM",
-               type: 'question',
-               html:
-                   '<bLuego de la consolidación deberá descargar los certificados correspondientes</b>, ' +
-                   '<b>¿Está seguro de realizar consolidación?</b> ',
-               showCancelButton: true,
-               confirmButtonColor: '#3085d6',
-               cancelButtonColor: '#d33',
-               confirmButtonText: 'Si, proceder',
-               cancelButtonText: 'Cancelar'
-           }).then((result) => {
+                title: '¿Está seguro de consolidar la información?',
+                type: 'question',
+                html: `
+                    <p><b>Esta acción generará el CUT-TTM.</b></p>
+                    <p>Una vez realizada la consolidación, deberá descargar los certificados correspondientes.</p>
+                    <p><b>¿Desea proceder con la consolidación?</b></p>
+                `,
+                icon: 'question', // Cambiado a icon en lugar de type (actual estándar de SweetAlert2)
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, proceder',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
                if (result.value) {
                  var formData = {sie:sie, gestion:gestion};
                  var imagen = '{{ asset("img/loading96.gif") }}';
