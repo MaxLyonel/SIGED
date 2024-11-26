@@ -58,11 +58,11 @@ class InfoEstudianteController extends Controller {
     public function indexAction(Request $request) {
         //get the session's values
         $this->session = $request->getSession();
-//        $id_usuario = $this->session->get('userId');
+        $id_usuario = $this->session->get('userId');
 //        //validation if the user is logged
-//        if (!isset($id_usuario)) {
-//            return $this->redirect($this->generateUrl('login'));
-//        }
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 //        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array());
         //get the value to send
         $formResponse = $request->get('form');
@@ -175,7 +175,7 @@ class InfoEstudianteController extends Controller {
         //evaluar si la ue es plena 
 
              $query = $em->getConnection()->prepare("SELECT * 
-            from institucioneducativa_humanistico_tecnico 
+            from institucioneducativa_humanistico_tecnico
             WHERE institucioneducativa_id = $sie and gestion_tipo_id = $gestion
             and institucioneducativa_humanistico_tecnico_tipo_id = 1 and grado_tipo_id in (5,6)");
             $query->execute();
@@ -184,13 +184,16 @@ class InfoEstudianteController extends Controller {
 
 
         $ue_plena =($entity_validacion)?true:false;
-        //dump($ue_plena);die;
-
+        $ue_plena_full = false;
         if($ue_plena){
             if($entity){
             $estado = false;
             }else{
                 $estado =  true;
+            }
+            
+            if ($entity_validacion[0]['grado_tipo_id'] == 6) {
+                $ue_plena_full = true;
             }
         }else{
             $estado = false;
@@ -260,6 +263,7 @@ class InfoEstudianteController extends Controller {
                     'odataUedu' => $odataUedu,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'estado'=>$estado,
+                    'ueplenafull'=>$ue_plena_full,
                     'arrLevelandGrado'=>$arrLevelandGrado,
                     'gradoId'=>$gradoId,
                     'idiomasArray' => $idiomasArray
@@ -2215,7 +2219,6 @@ class InfoEstudianteController extends Controller {
     }
 
     public function consolidarCutttmBthAction(Request $request){
-        
         $response = new JsonResponse();
         // get the send values
         $sie     = $request->get('sie');
@@ -2228,7 +2231,7 @@ class InfoEstudianteController extends Controller {
         $query = $em->getConnection()->prepare("SELECT * 
             from institucioneducativa_humanistico_tecnico 
             WHERE institucioneducativa_id = $sie and gestion_tipo_id = $gestion
-            and institucioneducativa_humanistico_tecnico_tipo_id = 1 and grado_tipo_id in (5,6)");
+            and institucioneducativa_humanistico_tecnico_tipo_id = 1 and grado_tipo_id in (6)");
             $query->execute();
             $entity_validacion = $query->fetchAll();
             // dump($entity_validacion);die;
@@ -2237,8 +2240,11 @@ class InfoEstudianteController extends Controller {
         // dump($ue_plena);die;
             
         $operativo = $this->get('funciones')->obtenerOperativo($this->session->get('ie_id'), $this->session->get('currentyear'));
-        
-        if ($operativo > 3 AND $ue_plena){
+
+        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+                
+
+        if ($operativo >= 3 AND $ue_plena and $closeopesextosecc){
             $query = $em->getConnection()->prepare("select * from sp_bth_institucioneducativa_cutttm ('" . $sie . "','" . $gestion . "','" . $this->session->get('userId') . "');");
             $query->execute();
             return new JsonResponse(array('status' => 200, 'mensaje' => 'Se reconsolido el CUT-TTM, verifique y descargue el certificado'));
@@ -2246,5 +2252,7 @@ class InfoEstudianteController extends Controller {
         else {
             return new JsonResponse(array('status' => 400, 'mensaje' => 'No se genera la consolidación CUT-TTM, aun no concluyo con sus operativo de gestión'));
         }
+
+        
     }
 }
