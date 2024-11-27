@@ -535,6 +535,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
             case 'ue-alta-demanda.minedu.gob.bo':
+            case '172.20.196.13:8071':
                 $this->session->set('pathSystem', "AppWebBundle");
                 return $this->render('SieAppWebBundle:PreInscription:index.html.twig');
                 break;  
@@ -892,9 +893,9 @@ class DefaultController extends Controller {
                     $passwordant = $user->getPassword2();
                     $date = $dateObject->format('Y-m-d');
                     
-                    // if ($date < '2024-11-27' or $passwordact == $passwordant) {
-                    //     return $this->redirect($this->generateUrl('usuariopasswd'));
-                    // }
+                    if ($date < '2024-11-27' or $passwordact == $passwordant) {
+                        return $this->redirect($this->generateUrl('usuariopasswd'));
+                    }
                     /***************************** */
 
                     $sistema = $this->session->get('pathSystem');
