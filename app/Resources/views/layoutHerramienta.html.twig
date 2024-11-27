@@ -850,7 +850,7 @@
                         </li>
                     {% endif %}
                     {# Preinscripciones #}
-                    {# {% if app.session.get('roluser') in [9,10,8,7] %}
+                    {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -862,12 +862,12 @@
                             </ul>
                             <ul>
                                 <li><a href="{{ path('preinscripcion_sorteo_index')}}">Fecha de sorteo</a></li>
-                            </ul> #}
+                            </ul> 
                             {# <ul>
                                 <li><a href="{{path('uealtademanda')}}">Modificar cupo</a></li>
                             </ul> #}
-                        {# </li>
-                    {% endif %} #}
+                        </li>
+                    {% endif %}
 
                     {# Cambio de tutor BJP 2021  #}
                     
@@ -877,16 +877,18 @@
 
                     {#% if app.session.get('roluser') in [9,10,8,7] %#}
                     {# a peticion de BRUNO por email, solo habilitar la opcion que esta en el menu recibidos #}
-                    {% if app.session.get('roluser') in [7,8,9] %} {# se quita el 9 director a peticion de bruno via mail 19/01/2024#}
+                    {# se quita el 9 director a peticion de bruno via mail 19/01/2024#}
+                    {# {% if app.session.get('roluser') in [7,8,9] %} 
+                    
                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="icon"><i class="fa fa-users"></i></span> #}
                                 {#<span class="text">Bono JP - {{ 'now'|date('Y') }}</span>#}
-                                <span class="text">Bono JP - 2023</span>
+                                {# <span class="text">Bono JP - 2023</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>
+                            <ul> #}
                                 {#
                                  {% if app.session.get('roluser') in [9] %}
                                 <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de Titular</a></li> 
@@ -895,9 +897,9 @@
                                 
                                 
                                 {# % if app.session.get('roluser') in [9,10,8] %#}
-                                {% if app.session.get('roluser') in [9] %}
+                                {# {% if app.session.get('roluser') in [9] %}
                                   <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte Pagados BJP</a></li>
-                                {% endif %}
+                                {% endif %} #}
                                 
                                 {#
                                 {% if app.session.get('roluser') in [8,37] %}
@@ -922,9 +924,9 @@
                                 #}
                                 
 
-                            </ul>
+                            {# </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
                    
                      {#
 
