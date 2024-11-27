@@ -3,6 +3,18 @@
 {% block cuerpo %}
     <div class="row">
         <div class="col-lg-12">
+            <div class="alert alert-warning alert-dismissible fade in" role="alert" style="margin-top: 20px;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4><i class="fa fa-lock"></i> ¡Atención! Cambie su contraseña</h4>
+                <p>
+                    <strong>En atención a las recomendaciones de políticas de seguridad AGETIC/NE/2496/2024, se solicita actualizar su contraseña.</strong><br>
+                    Asegúrese de que la nueva contraseña sea segura, con un mínimo de 8 caracteres. Se recomienda no utilizar el código SIE.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-12">
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
@@ -36,19 +48,70 @@
                                 </div>
                             </div>#}
 
-                            <div class="form-group">
+                            {# <div class="form-group">
                                 <label for="form_gestion" class="col-sm-2 control-label">Contraseña Nueva</label>
                                 <div class="col-sm-10">
                                     {{ form_widget(form.newpasswd,{ 'attr':{'class': 'form-control','placeholder':'Inserte Contraseña Nueva','pattern':'[a-zA-Z0-9]{5,17}'}  }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
-                            </div>
-
+                            </div> #}
+                            {# <div class="form-group">
+                                <label for="form_gestion" class="col-sm-2 control-label">Contraseña Nueva</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.newpasswd, { 
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Inserte Contraseña Nueva',
+                                            'pattern': '(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}',
+                                            'title': 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial (@$!%*?&).'
+                                        }  
+                                    }) }}
+                                    <div class="help-block with-errors">Debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (@$!%*?&).</div>
+                                </div>
+                            </div> #}
                             <div class="form-group">
+                                <label for="form_gestion" class="col-sm-2 control-label">Contraseña Nueva</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.newpasswd, { 
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Inserte Contraseña Nueva',
+                                            'pattern': '(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}',
+                                            'title': 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial (@$!%*?&).'
+                                        }
+                                    }) }}
+                                    <div id="passwordFeedback" class="help-block">
+                                        <ul>
+                                            <li id="length" class="text-danger">Debe tener al menos 8 caracteres.</li>
+                                            <li id="uppercase" class="text-danger">Debe contener al menos una letra mayúscula.</li>
+                                            <li id="lowercase" class="text-danger">Debe contener al menos una letra minúscula.</li>
+                                            <li id="number" class="text-danger">Debe contener al menos un número.</li>
+                                            <li id="special" class="text-danger">Debe contener al menos un carácter especial (@$!%*?&).</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            {# <div class="form-group">
                                 <label for="form_gestion" class="col-sm-2 control-label">Repetir Contraseña </label>
                                 <div class="col-sm-10">
                                     {{ form_widget(form.repeatpasswd,{ 'attr':{'class': 'form-control','placeholder':'Repita contraseña Nueva','pattern':'[a-zA-Z0-9]{5,17}'}  }) }}
                                     <div class="help-block with-errors"></div>
+                                </div>
+                            </div> #}
+                            <div class="form-group">
+                                <label for="form_gestion" class="col-sm-2 control-label">Repetir Contraseña</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.repeatpasswd, { 
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Inserte Contraseña Nueva',
+                                            'pattern': '(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}',
+                                            'title': 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial (@$!%*?&).'
+                                        }  
+                                    }) }}
+                                    <div class="help-block with-errors">Debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (@$!%*?&).</div>
                                 </div>
                             </div>
 
@@ -64,4 +127,35 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+        document.getElementById('newpasswd').addEventListener('input', function () {
+            const password = this.value;
+
+            // Validaciones
+            const feedback = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[@$!%*?&]/.test(password)
+            };
+
+            // Actualizar las clases de los mensajes
+            document.getElementById('length').className = feedback.length ? 'text-success' : 'text-danger';
+            document.getElementById('uppercase').className = feedback.uppercase ? 'text-success' : 'text-danger';
+            document.getElementById('lowercase').className = feedback.lowercase ? 'text-success' : 'text-danger';
+            document.getElementById('number').className = feedback.number ? 'text-success' : 'text-danger';
+            document.getElementById('special').className = feedback.special ? 'text-success' : 'text-danger';
+
+            // Personalizar el mensaje de validación en tiempo real
+            this.setCustomValidity(
+                feedback.length && feedback.uppercase && feedback.lowercase && feedback.number && feedback.special 
+                    ? '' 
+                    : 'La contraseña no cumple con los requisitos.'
+            );
+        });
+    </script>
 {% endblock %}
