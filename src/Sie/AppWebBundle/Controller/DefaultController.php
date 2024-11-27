@@ -656,6 +656,7 @@ class DefaultController extends Controller {
     * FUNCION PARA VALIDAR LOS ROLES Y OTRAS VALIDACIONES
     */
     public function create_sessions_loginAction(Request $request){
+        
         $sesion = $request->getSession();
         try {
             $em = $this->getDoctrine()->getManager();
@@ -829,7 +830,12 @@ class DefaultController extends Controller {
                                             }, 'property' => 'rol'))
                                         ->add('goin', 'submit', array('label' => 'Continuar'))
                                         ->getForm();
-                                return $this->render($this->session->get('pathSystem') . 'SieAppWebBundle:Default:roles.html.twig', array('user' => $user, 'roles' => $aRoles, 'persona' => $aPersona, 'form' => $formUserRol->createView()));
+                                return $this->render($this->session->get('pathSystem') . 'SieAppWebBundle:Default:roles.html.twig', array(
+                                    'user' => $user, 
+                                    'roles' => $aRoles, 
+                                    'persona' => $aPersona, 
+                                    'form' => $formUserRol->createView())
+                                );
                             }
                         }
                         //*****FIN DE CONFIGURACIONES PARA OTROS SUBSISTEMAS
@@ -861,7 +867,7 @@ class DefaultController extends Controller {
                     $datetime2 = new \DateTime("today");
                     $interval = $datetime1->diff($datetime2);
                     $dias = $interval->format('%a');
-                    if (intval($dias) > 90) {
+                    if (intval($dias) > 120) {
                         $this->session->getFlashBag()->add('errorcontraexp', 'La omisión reiterada a esta observación derivara en la ');
                         $exp = 'true';
                     }
@@ -879,6 +885,17 @@ class DefaultController extends Controller {
                         $mendir = 'true';
                     }*/
                     //dump($mensaje->getMensaje());die;
+                    /**********ACTUALIZACIÓN OBLIGATORIA****************** */
+                    
+                    $dateObject = $user->getFechaRegistro();
+                    $passwordact = $user->getPassword();
+                    $passwordant = $user->getPassword2();
+                    $date = $dateObject->format('Y-m-d');
+                    
+                    if ($date < '2024-11-27' or $passwordact == $passwordant) {
+                        return $this->redirect($this->generateUrl('usuariopasswd'));
+                    }
+                    /***************************** */
 
                     $sistema = $this->session->get('pathSystem');
 

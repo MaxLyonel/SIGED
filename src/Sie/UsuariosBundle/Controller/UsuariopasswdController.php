@@ -57,7 +57,8 @@ class UsuariopasswdController extends Controller {
                     ->add('usernameh', 'hidden', array('mapped' => false, 'data' => $user->getUsername()))
                     ->add('password', 'hidden', array('required' => true, 'data' => $user->getPassword()))
                     //->add('oldpasswd', 'text', array("mapped" => false, 'required' => 'required', 'data' => '', 'disabled' => false))
-                    ->add('newpasswd', 'password', array("mapped" => false, 'required' => 'required', 'data' => '', 'disabled' => false))
+                    // ->add('newpasswd', 'password', array("mapped" => false, 'required' => 'required', 'data' => '', 'disabled' => false))
+                    ->add('newpasswd', 'password', array('mapped' => false, 'required' => true))
                     ->add('repeatpasswd', 'password', array("mapped" => false, 'required' => 'required', 'data' => '', 'disabled' => false))
                     ->add('save', 'submit', array('label' => 'Guardar y volver a ingresar.'))
                     ->getForm();
@@ -75,7 +76,7 @@ class UsuariopasswdController extends Controller {
         $sesion = $request->getSession();
         $form = $request->get('form');
         $dataserver = $request->server;
-
+        $newPassword = $form['newpasswd'];
 //        if ($form['password'] == md5($form['oldpasswd'])) {
             if ($form['newpasswd'] == $form['repeatpasswd']) {
                 $em = $this->getDoctrine()->getManager();
@@ -88,11 +89,14 @@ class UsuariopasswdController extends Controller {
                     /*die('fg');
                     $sesion->getFlashBag()->add('error', '¡La nueva contraseña no puede ser igual a la contraseña expirada!');
                     return $this->redirectToRoute('usuariopasswd');*/
+                }elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $newPassword)) {
+                    $sesion->getFlashBag()->add('error', 'La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, una letra minúscula, un número y un carácter especial (@, $, !, %, *, ?, &).');
+                    return $this->redirect($this->generateUrl('sie_usuarios_reset_login', array('usuarioid' => $form['id'])));
                 }else {
                     try {//UPDATE REGISTRO
                         $entity->setPassword(md5($form['newpasswd']));
                         $entity->setFechaRegistro(new \DateTime('now'));
-                        $entity->setPassword2(md5($form['newpasswd']));
+                        // $entity->setPassword2(md5($form['newpasswd']));
                         $entity->setEstadoPassword('3');
                         $em->persist($entity);
                         $em->flush();

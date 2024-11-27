@@ -127,6 +127,7 @@
                             <div class="clearfix"></div>
                         </li>
                             {# SUPER USUARIO #}
+                        {% if app.request.get('_route') != 'usuariopasswd' %} 
                             {% if app.session.get('roluser') == 31 %} 
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuconfiguraciones">
@@ -175,7 +176,6 @@
                                     </ul>
                                 </li> 
                             {% endif %}
-
                             {# NACIONALES CENSO - RESPONSABLE DE EDUCACION SUPERIOR#}
                             {% if (app.session.get('roluser') == 30) or (app.session.get('roluser') == 41) %} 
                                 <li class="panel">
@@ -302,17 +302,17 @@
                             
                             {# DIRECTOR #}
                             {% if app.session.get('roluser') == 9 %}
-                                <li class="panel">
+                                {# <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
                                         <i class="fa fa-search"></i> Crear Rude <i class="fa fa-caret-down"></i>
-                                    </a>
+                                    </a> #}
 
                                     {# if app.session.get('directorAlternativa') #}
-                                    <ul class="collapse nav" id="menuBusquedas">                
+                                    {# <ul class="collapse nav" id="menuBusquedas">                 #}
                                         {# <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>  #}
-                                    </ul>
+                                    {# </ul> #}
                                     {# endif #}
-                                </li>
+                                {# </li>
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas">
                                         <i class="fa fa-list-ul"></i> Unidad Educativa <i class="fa fa-caret-down"></i>
@@ -330,7 +330,7 @@
                                              <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_personas_ie') }}"> Administrativos y Docentes</a></li>
                                              <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_apoderados_ie') }}"> Apoderados</a></li>
                                         </ul>
-                                    </li>
+                                    </li> #}
                                     {#<li class="panel">
                                         <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas3">
                                             <i class="fa fa-list-ul"></i> Listas <i class="fa fa-caret-down"></i>
@@ -339,9 +339,10 @@
                                              <li><a class="glyphicon glyphicon-file" href="{{ path('sie_usuario_ie_cursos', {'usuarioid': app.session.get('userId') }) }}"> Cursos </a></li>
                                         </ul>
                                     </li>#}
-                                {% endif %}   
-                            {% endif %}    
-                    </ul>
+                                {# {% endif %}    #}
+                            {% endif %}
+                    {% endif %}    
+                    </ul> 
                 </div>
             </nav>
 
