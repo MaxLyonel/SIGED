@@ -601,6 +601,7 @@ class MallaTecnicaController extends Controller {
         ));
     }
     public function createModuloNuevoAction(Request $request){
+      
         $form = $request->get('form');
         $horas= [80,100,120];
         $horasid = ($form['horas']);
@@ -608,17 +609,43 @@ class MallaTecnicaController extends Controller {
         $modulo = strtoupper($form['modulo']);
         $idsip = $form['idsip'];
         $idesp = $form['idesp'];
+        
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
 
         try{
-            $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_tipo');")->execute();
-            $smtipo = new SuperiorModuloTipo();
+
+            $query = $em->getConnection()->prepare("select max(id) as ultimo from superior_modulo_tipo");            
+            $query->execute();
+            $entity = $query->fetchAll();
+            $nextid = $entity[0]['ultimo'] + 1;
+           
+            /*$smtipo = new SuperiorModuloTipo();
+            $smtipo -> setId($nextid +1);
             $smtipo -> setModulo($modulo);
             $smtipo -> setEsvigente(true);
             $smtipo -> setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
             $em->persist($smtipo);
-            $em->flush($smtipo);
+            $em->flush($smtipo);*/
+           
+
+            $query ="INSERT INTO superior_modulo_tipo (id,modulo, superior_area_saberes_tipo_id, esvigente) VALUES (?,?,?,?);";                
+            $stmt = $db->prepare($query);
+            $params = array($nextid, $modulo,1,true);
+            $stmt->execute($params);    
+            //$em->getConnection()->lastInsertId() ;
+            //dump($stmt);
+            //dump($mt);
+            //die;
+
+            $query = $em->getConnection()->prepare("select max(id) as ultimo from superior_modulo_periodo");            
+            $query->execute();
+            $entity = $query->fetchAll();
+            $nextid2 = $entity[0]['ultimo'] + 1;
+
+            /*$smtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find(1);
 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
             $smperiodo = new SuperiorModuloPeriodo();
@@ -626,7 +653,12 @@ class MallaTecnicaController extends Controller {
             $smperiodo ->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($form['idsip']));
             $smperiodo ->setHorasModulo($horasmodulo);
             $em->persist($smperiodo);
-            $em->flush($smperiodo);
+            $em->flush($smperiodo);*/
+
+            $query ="INSERT INTO superior_modulo_periodo (id,superior_modulo_tipo_id, institucioneducativa_periodo_id, horas_modulo) VALUES (?,?,?,?);";                
+            $stmt = $db->prepare($query);
+            $params = array($nextid2, $nextid,$idsip,$horasmodulo);
+            $stmt->execute($params); 
 
           //  dump($smperiodo);die;
             $em->getConnection()->commit();
