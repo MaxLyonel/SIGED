@@ -74,12 +74,27 @@ class EstudianteNotasController extends Controller {
             // solo tecnico medio
             if( ( $estudianteInscripcionS2aux->nivelId == 18 or $estudianteInscripcionS2aux->nivelId == 19 or $estudianteInscripcionS2aux->nivelId == 20 or $estudianteInscripcionS2aux->nivelId == 21 or $estudianteInscripcionS2aux->nivelId == 22 or $estudianteInscripcionS2aux->nivelId == 23 or $estudianteInscripcionS2aux->nivelId == 24 or $estudianteInscripcionS2aux->nivelId == 25 ) and $estudianteInscripcionS2aux->gradoId == 3){
                 $guardanotas = false;
+
+                if ( $this->session->get('ie_id') == 81730192 or $this->session->get('ie_id') == 81730201 or $this->session->get('ie_id') == 81720080 or $this->session->get('ie_id') == 81700046 or $this->session->get('ie_id') == 81680080 or $this->session->get('ie_id') == 61710073 or  $this->session->get('ie_id') == 71690059   ) {
+                    $guardanotas = true;
+                }
+
             }
             /*else{
                 
                 //todos los demas no hbailitados
                 $guardanotas = true;
             }*/
+
+            /*Guadalquivir 81730192
+            Tarija Adultos 81730201
+            Emborozu 81720080
+            San José de Charaja 81700046
+            Potrerillos Adultos 81680080
+            Tarairi 61710073
+            El Puente de Iscayachi 71690059*/
+
+           
             
 
         }
