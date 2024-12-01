@@ -131,7 +131,7 @@
     </style>
 
     <div class="header-content">
-        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámite Modificación de Calificaciones Gestión Vigente <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -233,7 +233,7 @@
                                 </div>
                                 <hr>
                                 <h5>
-                                    <b>Detalle de calificaciones</b>
+                                    <b>Detalle de calificaciones a Modificar</b>
                                     <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
                                 </h5>
                                 <div v-if="notas.length > 0 ">
@@ -266,6 +266,15 @@
                                         </tbody>
                                     </table>
                                     <br>
+                                    <table class="table table-condensed table-bordered">
+                                        <thead>
+                                            <tr><th colspan="5">Estado de Matricula</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><th>Actual</th><td colspan="3"><span v-bind:class="{tachado: actualEstadomatricula != nuevoEstadomatricula }">${this.actualEstadomatricula}</span></td></tr>
+                                            <tr v-if="actualEstadomatricula != nuevoEstadomatricula"><th>Nueva</th><td><strong><span v-if="actualEstadomatricula != nuevoEstadomatricula" >${this.nuevoEstadomatricula}</span></strong></td></tr>
+                                        </tbody>
+                                    </table>
                                     {# <table v-if="notasCualitativas.length > 0" class="table table-bordered table-striped table-condensed">
                                         <thead>
                                             <tr>
@@ -292,15 +301,12 @@
                                         </tbody>
                                     </table> #}
                                     <hr>
+                                       
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <h5><b>Justificativo</b></h5>
                                             <textarea v-model="justificacion" id="" rows="2" class="form-control jupper" ref="justificacion"></textarea>
                                         </div>
-                                        {# <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                            <h5>Adjuntar Informe técnico</h5>
-                                            <input type="file" name="image" @change="getImage" accept="file/*" class="form-control">
-                                        </div> #}
                                     </div>
 
                                     <div class="row">
@@ -610,7 +616,6 @@
                     return false;
                 },
                 claseNotaTipo: function(tiponota, gestion){
-                    console.log(gestion);
                     if(gestion <= 2020){
                         if(this.inArray(tiponota, [5,6,7,8,9,11]  ) ){
                             if(gestion == 2020)
@@ -695,7 +700,6 @@
                         }
 
                         this.buscando = false;
-                        console.log(this.inscripciones);
                     })
                     .catch(e => {
                         console.log(e);
@@ -741,7 +745,6 @@
                     }))
                     .then(response => {
                         if (response.data.tramitePendiente.length > 0) {
-                            // console.log(response.data.tramitePendiente[0]);
                             var msg = 'La inscripción tiene un trámite pendiente. <br> <b>Trámite Nro. '+ response.data.tramitePendiente[0].tramite_id +'</b>';
                             Swal.fire({
                               title: 'Tramites pendientes!',
@@ -750,7 +753,6 @@
                             });
                         }else{
                             this.datos = response.data.datos;
-                            console.log(this.datos);
                             this.estadosMatricula = response.data.estadosMatricula;
                             // this.promedioGeneral = response.data.promedioGeneral;
                             // this.nuevoPromedioGeneral = response.data.promedioGeneral;
@@ -791,7 +793,8 @@
                             cancelButtonText: ''
                         });
                     } else {
-                        if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion >= 2021) {
+                        // if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion >= 2021) {
+                        if (idNotaTipo != 9) {
 
                             var index = this.filas.indexOf(idFila);
                             
@@ -808,7 +811,6 @@
                                 gestion:gestion
                             }
 
-                            // console.log(this.gestion);
                             var me = this;
 
                             $('body').removeClass('modal-open');
@@ -867,14 +869,12 @@
                                         this.notas.push(nuevaNota);
                                         this.filas.push(idFila);
                                         $('#'+idFila).addClass('seleccionado');
-                                        console.log('donde');
                                     },
                                     onClose: () => {
                                         $('body').addClass('modal-open');
                                     }
                                 })
                             }else{
-                                console.log('no');
                                 // MODIFICAR CALIFICACION
                                 // Swal.fire(
                                 //   'Aviso!',
@@ -976,21 +976,8 @@
                 validarValorNota: function(nota){
                     // VALIDACIONES TRIMESTRALES
                     if(nota.idNotaTipo == 6 || nota.idNotaTipo == 7 || nota.idNotaTipo == 8){
-                        if(nota.gestion == 2020){
-                            console.log('notaaaaaa11'+nota.notaNueva);
-                            if(nota.notaNueva < 0){ nota.notaNueva = 0; }
-                            if(nota.notaNueva > 100){ nota.notaNueva = 100; }                            
-                            console.log('notaaaaaa22'+nota.notaNueva);
-                        }else{
-                            if(nota.gestion >= 2021){
                                 if(nota.notaNueva < 0){ nota.notaNueva = 0; }
                                 if(nota.notaNueva > 100){ nota.notaNueva = 100; }
-                            }else{
-                                if(nota.notaNueva < 0){ nota.notaNueva = 0; }
-                                if(nota.notaNueva > 70){ nota.notaNueva = 70; }
-                            }
-                        }
-                        
                     }
                     if(nota.idNotaTipo == 30 || nota.idNotaTipo == 31 || nota.idNotaTipo == 32 || nota.idNotaTipo == 10){
                         if(nota.notaNueva < 0){ nota.notaNueva = 0; }
@@ -1002,22 +989,19 @@
                     }
 
                     // VALIDACION PARA NOTAS BIMESTRALES
-                    if(nota.idNotaTipo == 1 || nota.idNotaTipo == 2 || nota.idNotaTipo == 3 || nota.idNotaTipo == 4 || nota.idNotaTipo == 5){
-                        if(nota.notaNueva < 0){ nota.notaNueva = 0; }
-                        if(nota.notaNueva > 100){ nota.notaNueva = 100; }    
-                    }                    
+                    // if(nota.idNotaTipo == 1 || nota.idNotaTipo == 2 || nota.idNotaTipo == 3 || nota.idNotaTipo == 4 || nota.idNotaTipo == 5){
+                    //     if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                    //     if(nota.notaNueva > 100){ nota.notaNueva = 100; }    
+                    // }                    
 
                     if(nota.notaNueva != "" && nota.notaNueva != 0){
                         nota.notaNueva = Math.round(nota.notaNueva);
                     }
-                    console.log('nota '+nota.notaNueva);
                     // cargamos la nota al valor de nueva nota
                     var me = this;
 
                     $.each(this.datos.cuantitativas, function(index, val) {
                         if (val['asignatura'] == nota.asignatura) {
-                            console.log(val['asignatura']);
-                            console.log(nota.asignatura);
                             $.each(val['notas'], function(index2, val2) {
                                 if (val2['idFila'] == nota.idFila) {
                                     me.datos.cuantitativas[index].notas[index2].notaNueva = nota.notaNueva;
@@ -1025,7 +1009,6 @@
                             });
                         }
                     });    
-                    //console.log(this.datos.cuantitativas)       ;
                     this.calcularPromedios();
                 },
                 calcularPromedios: function(){
@@ -1073,8 +1056,6 @@
 
                         // CALCULAMOS EL ESTADO DE MATRÍCULA
                         var cantidadMaterias = this.datos.cuantitativas.length;
-                        console.log(cantidadMaterias);
-                        console.log(cantidadPromedios);
 
                         if(cantidadMaterias == cantidadPromedios){
                             var me = this;
@@ -1430,7 +1411,6 @@
                     this.filasCualitativas.splice(index1,1);
 
                     $('#'+row.idFila).removeClass('seleccionado');
-                    console.log(this.filas);
                 },
                 validarNotaCualitativa: function(){
                     var key = window.event;
@@ -1479,7 +1459,6 @@
                         }
                     }
                     this.informe = event.target.files[0];
-                    console.log(this.informe);
                     this.checkInforme = true;
                 },
                 enviarSolicitud: function(){
@@ -1557,6 +1536,14 @@
                         );
                         return;
                     }
+                    if (this.actualEstadomatricula != this.nuevoEstadomatricula && this.nuevoEstadomatricula !='PROMOVIDO' && this.datos.operativo >= 3 && this.datos.nivel == 13 && this.datos.grado ==6){ //|| !this.checkFormulario) {
+                        Swal.fire(
+                          'Atención!',
+                          'Error en el  estado final de matricula.',
+                          'warning'
+                        );
+                        return;
+                    }                    
 
                     $.each(this.notasCualitativas, function(index, val) {
                         val.notaNuevaCualitativa = val.notaNuevaCualitativa.toUpperCase();
