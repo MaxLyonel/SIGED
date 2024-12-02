@@ -825,15 +825,7 @@ class InfoEstudianteController extends Controller {
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
         
         $imprimirLibreta = false;
-        if($operativo > 3){
-            $estadosPermitidosImprimir = array(5,11,55,28);
-        } else {
-            $estadosPermitidosImprimir = array(4);
-        }
         
-        if($gestion == 2020){
-            $estadosPermitidosImprimir = array(5,55);
-        }
         // dump($operativo);exit();
 
         if($tipoUE){
@@ -929,6 +921,7 @@ class InfoEstudianteController extends Controller {
     // $uESinReporte = $em->getRepository('SieAppWebBundle:UesSinReporte2022')->findOneById($sie);
     // if($uESinReporte)
     //     $mostrarUeSinReporte2022 = true;
+  
 
     $this->session->set('optionFormRude', false);
     $this->session->set('optionReporteRude', false);
@@ -1010,6 +1003,25 @@ class InfoEstudianteController extends Controller {
         if ($closeopesextosecc == true and $nivel == 13 and $grado == 6){
             $this->session->set('donwloadLibreta', true);
         } 
+        /**********************temporal*************** */
+        $this->session->set('donwloadLibreta', true);
+
+        if($operativo >= 3){
+            if ($closeopesextosecc and $nivel == 13 and $grado == 6){
+                $estadosPermitidosImprimir = array(5,11,55,28);
+            } elseif ($operativo == 3){
+                $estadosPermitidosImprimir = array(4);
+            } else {
+                $estadosPermitidosImprimir = array(5,11,55,28);
+            }
+            
+        } else {
+            $estadosPermitidosImprimir = array(4);
+        }
+        
+        if($gestion == 2020){
+            $estadosPermitidosImprimir = array(5,55);
+        }
 
         // TEMPORAL PARA EL OPERATIVO CENSO
         
