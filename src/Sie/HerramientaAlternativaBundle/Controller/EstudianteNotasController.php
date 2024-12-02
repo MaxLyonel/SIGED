@@ -77,14 +77,16 @@ class EstudianteNotasController extends Controller {
             if( ( $estudianteInscripcionS2aux->nivelId == 18 or $estudianteInscripcionS2aux->nivelId == 19 or $estudianteInscripcionS2aux->nivelId == 20 or $estudianteInscripcionS2aux->nivelId == 21 or $estudianteInscripcionS2aux->nivelId == 22 or $estudianteInscripcionS2aux->nivelId == 23 or $estudianteInscripcionS2aux->nivelId == 24 or $estudianteInscripcionS2aux->nivelId == 25 ) and $estudianteInscripcionS2aux->gradoId == 3){
                 $guardanotas = false;
 
-                $ceas = array(
+                /*$ceas = array(
                     81730192, 81730201, 81720080, 81700046, 81680080, 61710073, 71690059, 81730192, 81730201, 81720080, 81700046, 81680080,
                     61710073, 71690059, 71700041, 71710048, 81730195, 61710054, 81730232, 71720028, 71720044, 40870095, 50900039, 80900073,
                     80980567, 80890118, 70900072, 80980481, 80980523, 80830080, 80830076, 80830085, 50870054, 80850048, 80850048, 80830075,
                     80980501, 80980626, 80900075, 80930078, 80960094, 80980580, 40900023, 80980443, 80860157, 80900103, 80900103, 80900103, 
                     80930051, 80980321, 80900092, 80960115, 80960115, 80900094, 80980485, 80980492, 80870082, 60890173, 70890030, 80900093,
                     80980585, 80830081, 80970093, 60890230, 80980449, 80850045, 80830080, 80980538, 60970031, 80900103 
-                );
+                );*/
+                $ceas = array(123456, 654321);
+
 
                 $centro =  $this->session->get('ie_id');
                 //dump($centro); die; 
