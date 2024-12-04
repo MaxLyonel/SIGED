@@ -96,16 +96,16 @@ class EstudianteNotasController extends Controller {
                     80980567,80900073,50900039,40870095,81480128 
                 );*/
 
-                $ceas = array(
+                /*$ceas = array(
                    70890030,60850031,81680087,81730193,81710078,81700041 
-                );
+                );*/
 
 
                 $centro =  $this->session->get('ie_id');
                 //dump($centro); die; 
-                if ( in_array( $centro, $ceas) ) {
+                /*if ( in_array( $centro, $ceas) ) {
                     $guardanotas = true;
-                }
+                }*/
 
             }
             /*else{
