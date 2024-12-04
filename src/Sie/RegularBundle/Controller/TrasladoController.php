@@ -310,8 +310,8 @@ class TrasladoController extends Controller {
       }
 
       //select * from sp_genera_trapaso_estudiante('2016', '8073070220071504', '80730390', '13', '3', '6', '1', '1', '80730525', '13', '3', '6', '2', '1','0');
-      // $query = $em->getConnection()->prepare('SELECT * from sp_genera_trapaso_estudiante_forzado(
-      $query = $em->getConnection()->prepare('SELECT * from sp_genera_trapaso_estudiante(      
+      // $query = $em->getConnection()->prepare('SELECT * from sp_genera_trapaso_estudiante(      
+      $query = $em->getConnection()->prepare('SELECT * from sp_genera_trapaso_estudiante_forzado(
         :igestion::VARCHAR, :icodigorude::VARCHAR,
         :icodueO::VARCHAR,:inivelO::VARCHAR, :icicloO::VARCHAR, :igradoO::VARCHAR, :iparaleloO::VARCHAR,:iturnoO::VARCHAR,
         :icodueD::VARCHAR,:inivelD::VARCHAR, :icicloD::VARCHAR, :igradoD::VARCHAR, :iparaleloD::VARCHAR,:iturnoD::VARCHAR,
@@ -340,8 +340,8 @@ class TrasladoController extends Controller {
 
       // dump($swTraslado); die;
 //$em->getConnection()->commit();
-      switch ($swTraslado[0]['sp_genera_trapaso_estudiante']) {
-      // switch ($swTraslado[0]['sp_genera_trapaso_estudiante_forzado']) {
+      // switch ($swTraslado[0]['sp_genera_trapaso_estudiante']) {
+      switch ($swTraslado[0]['sp_genera_trapaso_estudiante_forzado']) {
         case 0:
             $message = "Traslado no realizado, porque que se detecto inconsistencia de datos. Error:  DIFERENCIAN EN TRIMESTRES COMPLETADOS";
             $this->addFlash('estadoTraslado', $message);
