@@ -752,12 +752,13 @@ class StudentsInscriptionsController extends Controller {
                 reconocimiento de saberes segundo semestre 2024
                 -------------------------------------------*/
               
+                /*
                 if($reconocimiento == true){
                   $query = $em->getConnection()->prepare('INSERT INTO public.estudiante_inscripcion_alternativa_saberes (estudiante_inscripcion_id) VALUES (:estudiante_inscripcion_id)');
                                  
                   $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());                
                   $query->execute();                  
-                }
+                }*/
 
 
 
@@ -1554,13 +1555,13 @@ class StudentsInscriptionsController extends Controller {
                 reconocimiento de saberes segundo semestre 2024
                 -------------------------------------------*/
               
-                if($reconocimiento == true){
+               /* if($reconocimiento == true){
                   $query = $em->getConnection()->prepare('INSERT INTO public.estudiante_inscripcion_alternativa_saberes (estudiante_inscripcion_id, usuario_id) VALUES (:estudiante_inscripcion_id, :usuario_id)');
                                  
                   $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());                
                   $query->bindValue(':usuario_id', $this->session->get('userId'));                
                   $query->execute();                  
-                }
+                }*/
 
                 $status = 'success';
                 $code = 200;

@@ -785,6 +785,7 @@ class EstudianteNotasController extends Controller {
         //dump('count($notasfinales)'); dump(count($notafinales));
         //die;
 
+        // gestiones anteriores no entran
         if($gestion == 2024){
 
             //1: revisar si las sumas estan correctas
