@@ -735,7 +735,7 @@ class EstudianteNotasController extends Controller {
         
         // verificar
         // no debe devolver null
-       /* dump($request);
+        /*dump($request);
         dump($infoStudent);
         die;*/
 
@@ -779,28 +779,35 @@ class EstudianteNotasController extends Controller {
         dump($idNotaTipo);
         dump($idEstudianteAsignatura);
         dump($notas);
-        dump($idEstados);
-        die;*/
+        dump($idEstados);*
+        dump('count($notas)'); dump(count($notas));*/
+        //dump('count($notascenso)'); dump(count($notascenso));
+        //dump('count($notasfinales)'); dump(count($notafinales));
+        //die;
 
-        //1: revisar si las sumas estan correctas
-        for ($i=0; $i < count($notas) ; $i++) { 
-            if ( $notasfinales[$i] <> $notas[$i] + $notascenso[$i] ){
-                die;
-                return 0;
+        if($gestion == 2024){
+
+            //1: revisar si las sumas estan correctas
+            for ($i=0; $i < count($notas) ; $i++) { 
+                if ( $notasfinales[$i] <> $notas[$i] + $notascenso[$i] ){
+                    die;
+                    return 0;
+                }
             }
-        }
 
-        //2: si alguna suma pasa de 100 se queda con 100
-        for ($i=0; $i < count($notas) ; $i++) { 
-            if ( ($notas[$i] + $notascenso[$i]) > 100 ){
-                $notasfinales[$i] = 100;
+            //2: si alguna suma pasa de 100 se queda con 100
+            for ($i=0; $i < count($notas) ; $i++) { 
+                if ( ($notas[$i] + $notascenso[$i]) > 100 ){
+                    $notasfinales[$i] = 100;
+                }
             }
-        }
 
-        //3: reemplazamos la nota final en el array notas y todo queda como debe ser
-        $notasAux = $notas;
-        for ($i=0; $i < count($notas) ; $i++) { 
-            $notas[$i] = $notasfinales[$i];
+            //3: reemplazamos la nota final en el array notas y todo queda como debe ser
+            $notasAux = $notas;
+            for ($i=0; $i < count($notas) ; $i++) { 
+                $notas[$i] = $notasfinales[$i];
+            }
+
         }
 
         //4: de aqui en adelante deberia ser todo como esta y se supone que funciona
