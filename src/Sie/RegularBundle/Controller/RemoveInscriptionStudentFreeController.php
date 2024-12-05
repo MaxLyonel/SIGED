@@ -136,7 +136,24 @@ class RemoveInscriptionStudentFreeController extends Controller {
             //dump($objInscriptionCurrent);die;
             //get the inscription info about student getnumberInscription
             //$objNumberInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getnumberInscription($objStudent->getId(), $this->session->get('currentyear'));
+            
+            
+
             $objInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsEfectivos($objStudent->getId(), $form['gestion']);
+
+            $closeopesextosecc = false;
+            if ($objInscription[0]['nivelId']==13 and $objInscription[0]['gradoId']==6) {
+              $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($objInscription[0]['sie'], $objInscription[0]['gestion']);
+            }
+
+            $operativo = $this->get('funciones')->obtenerOperativo($objInscription[0]['sie'], $objInscription[0]['gestion']);
+            
+            if ($closeopesextosecc or $operativo > 3){
+              $message = 'La Unidad Educativa donde se encuentra inscrito el estudiante, con código RUDE: '. $form['codigoRude'] .', ha cerrado su operativo de fin de gestión, por lo que no es posible modificar el estado de matrícula';
+              $this->addFlash('notiremovest', $message);
+              return $this->redirectToRoute('remove_inscription_student_free_index');  
+            }
+            
             if (sizeof($objInscription) > 0) {
                 //$objInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsEfectivos($objStudent->getId(), $this->session->get('currentyear'));
                 //if the student has current inscription with matricula 4, so build the student form
@@ -194,7 +211,6 @@ class RemoveInscriptionStudentFreeController extends Controller {
         }
 
       }
-
       return new JsonResponse([
           'status' => 200, // or any other appropriate success code
           'view' => $this->renderView($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:maincambioestado.html.twig', array(
@@ -214,12 +230,27 @@ class RemoveInscriptionStudentFreeController extends Controller {
     * create the for with the new estados
     **/
     private function mainChangeStadoForm($dataInfo, $rolUser){
+      $datai = json_decode($dataInfo,true);
+      $em = $this->getDoctrine()->getManager();
+      // $em->getConnection()->beginTransaction();
       // $arrEstados = array('4'=>'Efectivo', '10'=>'Abandono');
+      // $arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($datai['estInsId']);
+      $estudianteNotas = $em->createQueryBuilder()
+                                ->select('en.id as idNota')
+                                ->from('SieAppWebBundle:EstudianteNota','en')
+                                ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                                ->orderBy('en.id','ASC')
+                                ->where('ea.estudianteInscripcion = :estInsId')
+                                ->setParameter('estInsId',$datai['estInsId'])
+                                ->getQuery()
+                                ->getResult();
       $rolesAllowed = array(7,10);
       if(in_array($rolUser,$rolesAllowed)){
-        // $arrEstados = array('4'=>'EFECTIVO', '9'=>'RETIRADO TRASLADO','5'=>'PROMOVIDO');
-       // $arrEstados = array('4'=>'EFECTIVO', '5'=>'PROMOVIDO');
-       $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO');
+          if (count($estudianteNotas) > 0){
+            $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO');
+          } else {
+            $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO');
+          }
       }else{
         // $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
         if($rolUser == 8)
@@ -273,7 +304,6 @@ class RemoveInscriptionStudentFreeController extends Controller {
       $arrDataInfo = json_decode($dataInfo,true);
       // dump($arrDataInfo);      die;
       
-
       //get the operativo information
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent($arrDataInfo)-1;
       $this->operativo = $this->get('funciones')->obtenerOperativo($arrDataInfo['sie'],$arrDataInfo['gestion']);
@@ -282,6 +312,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
       //dump($arrDataInfo);die;
       //answer the verification
       $swverification = true;
+      $message = '';
       if($arrDataInfo['estadoMatriculaId']==$estadoNew){
         $swverification = false;
         $message = 'No realizado, esta intentando cambiar al mismo estado... ';
@@ -297,13 +328,12 @@ class RemoveInscriptionStudentFreeController extends Controller {
       $query->execute();
       $aTuicion = $query->fetchAll();
             //check if the user has the tuicion
-      if (!$aTuicion[0]['get_ue_tuicion']) {
+      if (!$aTuicion[0]['get_ue_tuicion'] &&  $message === '') {
         $swverification = false;
         $message = "Usuario no tiene tuición para realizar la operación";
         $this->addFlash('changestate', $message);
       }
     }
-      // dump($estadoNew);die;
       //ge notas to do the changeMatricula to Retiro Abandono
       $swChangeStatus = false;
       
@@ -312,13 +342,13 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $notas = $this->get('notas')->regular($arrDataInfo['estInsId'],$this->operativo);
         $swChangeStatus = $this->validateNotas($notas, $estadoNew);
 
-        if($swChangeStatus && $estadoNew==6){
+        if($swChangeStatus && $estadoNew==6 && $message === ''){
           $swverification = false;
           $message = 'No realizado, Estudidante cuenta con calificaciones. ';
           $this->addFlash('changestate', $message);
         }
 
-        if($swChangeStatus && $estadoNew==10){
+        if($swChangeStatus && $estadoNew==10 &&  $message === ''){
           $swverification = false;
           $message = 'No realizado, Estudidante no cuenta con calificaciones. ';
           $this->addFlash('changestate', $message);
@@ -328,34 +358,33 @@ class RemoveInscriptionStudentFreeController extends Controller {
       //get the students inscriptions
       $objInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsEfectivosChange($objStudent->getId(), $arrDataInfo['gestion']);
 
-      if($estadoNew == 4){
+     
+      $db = $em->getConnection(); 
 
-        //check if the student has more than one inscription
-        if (sizeof($objInscription) > 1) {
-          $objInscriptionCurrent = $em->getRepository('SieAppWebBundle:Estudiante')->findCurrentStudentInscription($objStudent->getId(), $arrDataInfo['gestion']);
-          //check if the student has inscription like EFECTIVO
-          if($objInscriptionCurrent){
-            $swverification = false;
-            $message = 'No se puede realizar el cambio, por que el Estudiante ya cuenta con otra inscripción en estado EFECTIVO';
-            $this->addFlash('changestate', $message);
-          }
-        }
+      $query =" select distinct e.codigo_rude, ic.institucioneducativa_id, ei.estadomatricula_tipo_id
+                from estudiante e 
+                inner join estudiante_inscripcion ei on e.id = ei.estudiante_id 
+                inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id = ic.id 
+                where ic.gestion_tipo_id = " . $arrDataInfo['gestion'] ."
+                and ic.nivel_tipo_id in (11,12,13)
+                and ei.estadomatricula_tipo_id in (4,10,5,55,11)
+                and ei.id <>  " . $arrDataInfo['estInsId'] ." 
+                and e.id =  " . $arrDataInfo['estId'] ." ; ";
 
-      }
-      $operativo = 3;
-    //dump($operativo);die;
-      //dump($objInscriptionCurrent);die;
-    // Verifcamos si la unidad educativa del estudiante ya consolido 3er bimestre
-    if($operativo < 3){
+            $stmt = $db->prepare($query);       
+            $stmt->execute(); 
+            $result = $stmt->fetchAll();    
+        // dump ( $result);
+        // die;
+    if(count($result) > 0 &&  $message === ''){
         $swverification = false;
-        $message = 'No realizado, para poder realizar el cambio de estado la unidad educativa en la cual esta inscrito el(la) estudiante debe consolidar el tercer bimestre';
+        $message = 'No es posible realizar el cambio de estado, ya que el estudiante presenta otro estado de matrícula válido. Por favor, revise su historial!!!';
         $this->addFlash('changestate', $message);
     }
-    // Para ues que ya consolidaron el cuarto bimetre
-    // Se ajustara el modulo para que calcule los promedios, aun no promedia
-    if($operativo > 3){
+
+    if($operativo >= 3 &&  $message === ''){
         $swverification = false;
-        $message = 'No se puede realizar el cambio de estado!!!';
+        $message = 'No se puede realizar el cambio de estado, la Unidad Educativa consolidao su información!!!';
         $this->addFlash('changestate', $message);
     }
 // dump($arrDataInfo);die;
@@ -365,194 +394,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
               'dataInfo'  => $dataInfo ,
               'estadoNew' => $estadoNew
               ));
-      // Verificamos si el nuevo estado es efectivo
-      // entonces verificamos si el estudiante cuenta con calificaciones segun el operativo
-      // if($estadoNew == 4 and $swverification == true){
-      //     $operativo = $operativo ;//- 1;
-      //     if($operativo > 0){
-      //
-      //         $asigEst = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$arrDataInfo['estInsId']));
-      //         $asigCurso = $em->createQueryBuilder()
-      //                               ->select('ieco')
-      //                               ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-      //                               ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
-      //                               ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','with','ieco.insitucioneducativaCurso = iec.id')
-      //                               ->where('ei.id = :estIns')
-      //                               ->setParameter('estIns',$arrDataInfo['estInsId'])
-      //                               ->getQuery()
-      //                               ->getResult();
-      //         //dump($asigEst);
-      //         //dump($asigCurso);die;
-      //         // Verificamos si el estudiante tiene la misma cantidad de materias q el curso
-      //         if(count($asigEst) != count($asigCurso)){
-      //             $swverification = false;
-      //             $message = 'Se detectó inconsistencia de datos, el estudiante no cuenta con todas las materias del curso... ';
-      //             $this->addFlash('changestate', $message);
-      //         }else{
-      //             // Verificamos si las materias del estudiante son las mismas del curso en el que esta inscrito
-      //             $iguales = true;
-      //             $arrayIds = array();
-      //             foreach ($asigCurso as $ac) {
-      //                 $arrayIds[] = $ac->getId();
-      //             }
-      //             foreach ($asigEst as $ae) {
-      //                 if(!in_array($ae->getInstitucioneducativaCursoOferta()->getId(),$arrayIds)){
-      //                     $iguales = false;
-      //                 }
-      //             }
-      //             if($iguales == false){
-      //                 $swverification = false;
-      //                 $message = 'Se detectó inconsistencia de datos, las materias del estudiante no coinciden con las del curso... ';
-      //                 $this->addFlash('changestate', $message);
-      //             }else{
-      //                 // Verificamos si tiene notas
-      //                 $notasArray = array();
-      //                 $registrarNotas = false;
-      //                 $cont = 0;
-      //                 foreach ($asigEst as $ae) {
-      //                     $notasArray[$cont] = array('idAsignatura'=>$ae->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId(),'asignatura'=>$ae->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getAsignatura());
-      //                     $notas = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$ae->getId()));
-      //                     for($i=1;$i<=$operativo;$i++){
-      //                         $existe = false;
-      //                         foreach ($notas as $n) {
-      //                             if($i == $n->getNotaTipo()->getId()){
-      //                                 $existe = true;
-      //                                 if($arrDataInfo['nivelId'] == 11){
-      //                                     $valorNota = $n->getNotaCualitativa();
-      //                                     if($valorNota == ""){
-      //                                         $registrarNotas = true;
-      //                                     }
-      //                                 }else{
-      //                                     $valorNota = $n->getNotaCuantitativa();
-      //                                     if($valorNota == 0){
-      //                                         $registrarNotas = true;
-      //                                     }
-      //                                 }
-      //                                 $notasArray[$cont]['notas'][] =   array(
-      //                                                         'id'=>$cont."-".$i,
-      //                                                         'idEstudianteNota'=>$n->getId(),
-      //                                                         'bimestre'=>$i,
-      //                                                         'nota'=>$valorNota,
-      //                                                         'notaTipo'=>$n->getNotaTipo()->getId(),
-      //                                                         'idEstudianteAsignatura'=>$n->getEstudianteAsignatura()->getId(),
-      //                                                         'idFila'=>$ae->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId().''.$i
-      //                                                     );
-      //                                 break;
-      //                             }
-      //
-      //                         }
-      //                         if($existe == false){
-      //                             $registrarNotas = true;
-      //                             if($arrDataInfo['nivelId'] == 11){
-      //                                 $valorNota = "";
-      //                             }else{
-      //                                 $valorNota = "";
-      //                             }
-      //                             $notasArray[$cont]['notas'][] =   array(
-      //                                                     'id'=>$cont."-".$i,
-      //                                                     'idEstudianteNota'=>'nuevo',
-      //                                                     'bimestre'=>$i,
-      //                                                     'nota'=>$valorNota,
-      //                                                     'notaTipo'=>$i,
-      //                                                     'idEstudianteAsignatura'=>$ae->getId(),
-      //                                                     'idFila'=>$ae->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId().''.$i
-      //                                                 );
-      //                         }
-      //                     }
-      //                     $cont++;
-      //                 }
-      //
-      //
-      //                 // Notas cualitativas
-      //                 $registrarCualitativas = false;
-      //                 if($arrDataInfo['nivelId'] != 11){
-      //                     // Para niveles primaria y secundaria
-      //                     $cualitativas = array();
-      //                     for($i=1;$i<=$operativo;$i++){
-      //                         $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('notaTipo'=>$i,'estudianteInscripcion'=>$arrDataInfo['estInsId']));
-      //                         if($notaCualitativa){
-      //                             $cualitativas[] = array('id'=>'cuant-'.$i,'idEstudianteNota'=>$notaCualitativa->getId(),'idEstudianteInscripcion'=>$arrDataInfo['estInsId'],'bimestre'=>$notaCualitativa->getNotaTipo()->getNotaTipo(),'notaCualitativa'=>$notaCualitativa->getNotaCualitativa(),'idFila'=>$arrDataInfo['estInsId'].''.$i,'notaTipo'=>$i);
-      //                             if($notaCualitativa->getNotaCualitativa() == ""){
-      //                                 $registrarCualitativas = true;
-      //                             }
-      //                         }else{
-      //                             $registrarCualitativas = true;
-      //                             $notaTipos = $em->createQueryBuilder()
-      //                                             ->select('nt.notaTipo')
-      //                                             ->from('SieAppWebBundle:NotaTipo','nt')
-      //                                             ->where('nt.id = :id')
-      //                                             ->setParameter('id',$i)
-      //                                             ->getQuery()
-      //                                             ->getSingleResult();
-      //
-      //                             $notaTipos = $notaTipos['notaTipo'];
-      //                             $cualitativas[] = array('id'=>'cuant-'.$i,'idEstudianteNota'=>'nuevo','idEstudianteInscripcion'=>$arrDataInfo['estInsId'],'bimestre'=>$notaTipos,'notaCualitativa'=>'','idFila'=>$arrDataInfo['estInsId'].''.$i,'notaTipo'=>$i);
-      //                         }
-      //                     }
-      //                 }else{
-      //
-      //                     $cualitativas = array();
-      //
-      //                     if($operativo >= 4){
-      //                         $notaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('notaTipo'=>18,'estudianteInscripcion'=>$arrDataInfo['estInsId']));
-      //                         if($notaCualitativa){
-      //                             if($notaCualitativa->getNotaCualitativa() == ""){
-      //                                 //$em->remove($notaCualitativa);
-      //                                 //$em->flush();
-      //                                 $registrarCualitativas = true;
-      //                                 $notaTipos = $em->createQueryBuilder()
-      //                                             ->select('nt.notaTipo')
-      //                                             ->from('SieAppWebBundle:NotaTipo','nt')
-      //                                             ->where('nt.id = :id')
-      //                                             ->setParameter('id',18)
-      //                                             ->getQuery()
-      //                                             ->getSingleResult();
-      //
-      //                                 $notaTipos = $notaTipos['notaTipo'];
-      //                                 $cualitativas[] = array('id'=>'cuant-18','idEstudianteNota'=>'nuevo','idEstudianteInscripcion'=>$arrDataInfo['estInsId'],'bimestre'=>$notaTipos,'notaCualitativa'=>'','idFila'=>$arrDataInfo['estInsId'].'18','notaTipo'=>18);
-      //                             }else{
-      //                                 $cualitativas[] = array('id'=>'cuant-18','idEstudianteNota'=>$notaCualitativa->getId(),'idEstudianteInscripcion'=>$arrDataInfo['estInsId'],'bimestre'=>$notaCualitativa->getNotaTipo()->getNotaTipo(),'notaCualitativa'=>$notaCualitativa->getNotaCualitativa(),'idFila'=>$arrDataInfo['estInsId'].'18','notaTipo'=>18);
-      //                             }
-      //                         }else{
-      //                             $registrarCualitativas = true;
-      //                             $notaTipos = $em->createQueryBuilder()
-      //                                             ->select('nt.notaTipo')
-      //                                             ->from('SieAppWebBundle:NotaTipo','nt')
-      //                                             ->where('nt.id = :id')
-      //                                             ->setParameter('id',18)
-      //                                             ->getQuery()
-      //                                             ->getSingleResult();
-      //
-      //                             $notaTipos = $notaTipos['notaTipo'];
-      //                             $cualitativas[] = array('id'=>'cuant-18','idEstudianteNota'=>'nuevo','idEstudianteInscripcion'=>$arrDataInfo['estInsId'],'bimestre'=>$notaTipos,'notaCualitativa'=>'','idFila'=>$arrDataInfo['estInsId'].'18','notaTipo'=>18);
-      //                         }
-      //                     }
-      //
-      //                 }
-      //                 //dump($cualitativas);die;
-      //                 // Verificamos si hay q registrar notas
-      //                 if($registrarNotas == false and $registrarCualitativas == false ){
-      //                     $swverification = true;
-      //                     //$message = 'No tiene notas por registrar';
-      //                     //$this->addFlash('changestate', $message);
-      //                 }else{
-      //                     $swverification = true;
-      //                     return $this->render($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:verificarcambio.html.twig', array(
-      //                               'swverification' => $swverification, 'asignaturas'=>$notasArray, 'cualitativas'=>$cualitativas, 'operativo'=>$operativo,
-      //                               'dataInfo'  => $dataInfo ,
-      //                               'estadoNew' => $estadoNew,
-      //                               'nivel'=>$arrDataInfo['nivelId']
-      //                               ));
-      //                 }
-      //             }
-      //         }
-      //
-      //         //dump($notasArray);die;
-      //     }
-      // }
-
-
-
+      
     }
 
     /*
