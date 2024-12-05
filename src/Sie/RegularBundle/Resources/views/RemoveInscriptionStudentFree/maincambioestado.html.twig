@@ -3,7 +3,7 @@
   <div class="row">
 
                       <!-- Bordered Responsive Table -->
-                      <div class="col-lg-7">
+                      <div class="col-lg-12">
                           <div class="portlet portlet-blue">
                               <div class="portlet-heading">
                                   <div class="portlet-title">
@@ -19,21 +19,21 @@
                                           </thead>
                                           <tbody>
                                               <tr>
-                                                  <td>rude</td>
+                                                  <th>Código RUDE</th>
                                                   <td>{{datastudent.codigoRude}}</td>
                                               </tr>
                                               <tr>
-                                                  <td>Estudiante</td>
+                                                  <th>Nombre y Apellidos</th>
                                                   <td>{{datastudent.paterno|e}} {{datastudent.materno|e}} {{ datastudent.nombre|e }} </td>
                                               </tr>
                                               <tr>
-                                                  <td>fecha Nacimiento</td>
+                                                  <th>Fecha Nacimiento</th>
                                                   <td>{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>
                                               </tr>
-                                              <!--tr>
-                                                  <td>CI</td>
-                                                  <td>{{datastudent.carnetIdentidad}}</td>
-                                              </tr-->
+                                              <tr>
+                                                  <th>Estado actual de Matrícula</th>
+                                                  <td>{{dataInscription.estadomatriculaTipo}}</td>
+                                              </tr>
 
                                           </tbody>
                                       </table>
@@ -45,11 +45,11 @@
                       <!-- /.col-lg-6 -->
 
                       <!-- Hoverable Responsive Table -->
-                      <div class="col-lg-5">
+                      <div class="col-lg-12">
                           <div class="portlet portlet-orange">
                               <div class="portlet-heading">
                                   <div class="portlet-title">
-                                      <h4>Verificar Cambio</h4>
+                                      <h4>Realizar el cambio a:</h4>
                                   </div>
                                   <div class="clearfix"></div>
                               </div>
@@ -63,10 +63,7 @@
                                           </thead>
                                           <tbody>
                                               <tr>
-                                                  <td>{{dataInscription.estadomatriculaTipo}}</td>
-                                              </tr>
-                                              <tr>
-                                                  <td>  {{form_widget(form.estadonew)}}</td>
+                                                  <td>{{form_widget(form.estadonew)}}</td>
                                               </tr>
                                               <tr>
                                                   <td>{{form_widget(form.verificar)}}</td>
