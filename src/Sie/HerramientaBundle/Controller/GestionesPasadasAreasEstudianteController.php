@@ -266,7 +266,6 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
         $asignaturaId = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
-                        
         if($operativo <= 2 and $asignaturaId ==1039) {
             if ($operativo == 1){
                 try {
@@ -525,6 +524,174 @@ class GestionesPasadasAreasEstudianteController extends Controller {
                 } catch (Exception $ex) {
                     $em->getConnection()->rollback();
                 }   
+            } 
+        
+        } elseif ($operativo == 3 and $asignaturaId ==1039 and $nivel == 13 and $grado == 5) {
+            // dump($estudianteAsignatura->getId());
+            // die;
+            // return $this->redirect($this->generateUrl('herramienta_inbox_index'));
+            
+            $swCenso = $em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy([
+                'estudianteAsignatura' => $estudianteAsignatura->getId(),
+                'notaTipo' => [59, 60] // Buscar en ambos tipos de nota
+            ]);
+            // dump($estudianteid);
+            $query = $em->getConnection()->prepare("
+                        select cb.id cb_id,cbr.*
+                        from censo_beneficiario cb 
+                        inner join censo_beneficiario_regular cbr on cbr.censo_beneficiario_id = cb.id
+                        where cb.estudiante_id = ". $estudianteid .
+                        "and cbr.asignatura_tipo_id = 1039 ");
+            $query->execute();
+            $swCensoBf = $query->fetchAll();
+            // dump($swCenso);
+            // dump($swCensoBf);
+            if (!$swCenso and !$swCensoBf){
+                // dump($estudianteid);die;
+
+                $query = $em->getConnection()->prepare("
+                        select  e.codigo_rude 
+                        ,ei.id ei_id, ei.estadomatricula_tipo_id 
+                        ,ic.gestion_tipo_id ,ic.institucioneducativa_id, ic.nivel_tipo_id, ic.grado_tipo_id, ico.asignatura_tipo_id, 
+                        eiht.especialidad_tecnico_humanistico_tipo_id as  id_esp_est, coalesce (b.id, 0) as id_esp_ue, coalesce (b.especialidad_tecnico_humanistico_tipo_id,0) esp_ue_id
+                        from estudiante e 
+                        inner join estudiante_inscripcion ei on e.id = ei.estudiante_id 
+                        inner join institucioneducativa_curso ic on ei.institucioneducativa_curso_id = ic.id 
+                        inner join institucioneducativa_curso_oferta ico on ic.id = ico.insitucioneducativa_curso_id 
+                        inner join estudiante_asignatura ea on ea.estudiante_inscripcion_id = ei.id and ea.institucioneducativa_curso_oferta_id = ico.id
+                        left join estudiante_inscripcion_humnistico_tecnico eiht on ei.id = eiht.estudiante_inscripcion_id 
+                        left join (
+                        select distinct *
+                        from (
+                        select id, institucioneducativa_id, especialidad_tecnico_humanistico_tipo_id
+                        from institucioneducativa_especialidad_tecnico_humanistico ieth 
+                        where ieth.institucioneducativa_id =  ".$sie."
+                        and ieth.gestion_tipo_id =  ". $gestion."
+                        union all
+                        select ieth.id, ieth.institucioneducativa_id, ethhr.especialidad_tecnico_humanistico_homologacion_id  as especialidad_tecnico_humanistico_tipo_id
+                        from especialidad_tecnico_humanistico_homologacion_regla ethhr 
+                        inner join institucioneducativa_especialidad_tecnico_humanistico ieth on ethhr.especialidad_tecnico_humanistico_tipo_id = ieth.especialidad_tecnico_humanistico_tipo_id 
+                        where ieth.institucioneducativa_id = ".$sie."
+                        and ieth.gestion_tipo_id = ". $gestion."
+                        ) a
+                        ) b on b.especialidad_tecnico_humanistico_tipo_id = eiht.especialidad_tecnico_humanistico_tipo_id
+                        where e.id = ". $estudianteid ."
+                        and ic.nivel_tipo_id in (13)
+                        and ic.grado_tipo_id in (4)
+                        and ico.asignatura_tipo_id in (1039)
+                        and ei.estadomatricula_tipo_id in (5);");
+                $query->execute();
+                $cuartobth = $query->fetchAll();
+                $msg = '';
+                if (count($cuartobth)>1){
+                    $msg = 'presenta inconsistencia en 4to secundaria';
+                }
+
+                if (
+                    !empty($cuartobth) &&
+                    isset($cuartobth[0]['id_esp_ue']) &&
+                    $cuartobth[0]['id_esp_ue'] !== 0
+                ) {
+                    $msg = 'Existen carreras compatibles con 4to secundaria';
+                }
+                // if (count($cuartobth)==1 and $cuartobth[0]['id_esp_ue'] != null){
+                //     $msg = 'Existen carreras compatibles con 4to secundaria';
+                // }
+                // dump(count($cuartobth));
+                // dump($cuartobth[0]);
+                // dump($msg);die;
+                if ($msg === ''){
+                    try {
+                        if($estudianteAsignatura) {
+                            
+                            //ELIMINAMOS ESPECIALIDAD
+                            $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+                    
+                            if($especialidadEstudiante) {
+                                $em->remove($especialidadEstudiante);
+                                $em->flush();
+                            }
+                            
+
+                            $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
+                            if($estudianteNota) {
+                                foreach ($estudianteNota as $key => $nota) {
+                                    $notaAntLog = [];
+                                    $notaAntLog['id'] = $nota->getId();
+                                    $notaAntLog['notaTipo'] = $nota->getNotaTipo()->getId();
+                                    $notaAntLog['estudianteAsignatura'] = $nota->getEstudianteAsignatura()->getId();
+                                    $notaAntLog['notaCuantitativa'] = $nota->getNotaCuantitativa();
+                                    $notaAntLog['usuario'] = $nota->getUsuarioId();
+
+                                    $this->get('funciones')->setLogTransaccion(
+                                        $nota->getId(),
+                                        'estudiante_nota',
+                                        'D', 
+                                        '',
+                                        '',
+                                        $notaAntLog,
+                                        'Academico',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                                        
+                                    $em->remove($nota);
+                                    $em->flush();
+                                }
+                            }
+
+                            $eaAntLog = [];
+                            $eaAntLog['id'] = $estudianteAsignatura->getId();
+                            $eaAntLog['gestionTipo'] = $estudianteAsignatura->getGestionTipo()->getId();
+                            $eaAntLog['estudianteInscripcion'] = $estudianteAsignatura->getEstudianteInscripcion()->getId();
+                            $eaAntLog['institucioneducativaCursoOferta'] = $estudianteAsignatura->getInstitucioneducativaCursoOferta()->getId();
+
+                            $this->get('funciones')->setLogTransaccion(
+                                $estudianteAsignatura->getId(),
+                                'estudiante_asignatura',
+                                'D',
+                                '',
+                                '',
+                                $eaAntLog,
+                                'Academico',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                            
+                            $em->remove($estudianteAsignatura);
+                            $em->flush();
+                        }
+
+                        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+
+                        $eiAntLog = [];
+                        $eiAntLog['id'] = $inscripcion->getId();
+                        $eiAntLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                        $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+                        $em->persist($inscripcion);
+                        $em->flush();
+                        
+                        $eiNuevoLog = [];
+                        $eiNuevoLog['id'] = $inscripcion->getId();
+                        $eiNuevoLog['estadomatriculaTipo'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                        $this->get('funciones')->setLogTransaccion(
+                            $inscripcion->getId(),
+                            'estudiante_inscripcion',
+                            'U',
+                            '',
+                            $eiNuevoLog,
+                            $eiAntLog,
+                            'Academico',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+                        
+                        $em->getConnection()->commit();
+                    } catch (Exception $ex) {
+                        $em->getConnection()->rollback();
+                    } 
+                }  else {
+                    // $exception = FlattenException::create(new \Exception(), 404);
+                    // $response = $controller->showAction($request, $exception, null);
+                    return new Response($msg, 404);
+                }
+                
             } 
         
         } else {
