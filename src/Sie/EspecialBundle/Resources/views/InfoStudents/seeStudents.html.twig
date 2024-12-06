@@ -113,7 +113,7 @@
                                 <td>
                                 
                                     {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones  #}
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo >= 0  %}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo >= 0 and data.estadomatriculaId != 78 and data.estadomatriculaId != 11 and data.estadomatriculaId != 10 and data.estadomatriculaId != 6  %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}},'{{infoUe}}');" >
                                            <i class="fa fa-list"></i>
@@ -122,7 +122,7 @@
                                     {% else %}.
                                     {% endif %}
                                             
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo >= 0 and arrDataLibreta.libreta == true %}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo >= 0 and arrDataLibreta.libreta == true and data.estadomatriculaId != 10 and data.estadomatriculaId != 6 %}
                                     {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION #}
                                          
                                         {% if arrDataLibreta.areaEspecialId == 2 and programa in [7,8,25,26] %}
