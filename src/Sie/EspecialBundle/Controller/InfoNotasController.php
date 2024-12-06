@@ -122,10 +122,10 @@ class InfoNotasController extends Controller {
                             //identificamos la nota a evaluar
                             $idNota = 55;
                             if(in_array($programa, array(19,41,39))){
-                                $idNota = 53; // Primer Semestre
+                                $idNota = 54; // 2 Semestre
                             }
                             if(in_array($programa, array(43))){
-                                $idNota = 6; // Primer Trimesyte
+                                $idNota = 8; // 3 Trimesyte
                             }
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
                             $template = 'especialModular';
@@ -170,7 +170,7 @@ class InfoNotasController extends Controller {
                         if($gestion > 2023 and ($nivel == 411 and in_array($programa, array(47,48))) or ($nivel == 410 and in_array($progserv, array(35,36,37,38))) ){ // programas visual y notas semestrales   
                             //semestralTrimestralSeguimiento
                             //CONTENIDO-RESULTADO-RECOMENDACION
-                            $idNota = 53; // Primer Semestre
+                            $idNota = 54; // 2 Semestre
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
                             $template = 'especialSeguimientoSemestral';
                             $actualizarMatricula = false;
@@ -215,13 +215,13 @@ class InfoNotasController extends Controller {
                             case 411:  //Servicios
                                 if($gestion >2019){ 
                                     if($programa==37){ //ITINERARIOS - Area-Objeivos,Evaluados-Trimestral
-                                        $idNota = 6 ; //SGUNNDO TRIMESTRE
+                                        $idNota = 8 ; //3 TRIMESTRE
                                         $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
                                         $template = 'especialModular';
                                         $actualizarMatricula = false;
                                     }
                                     if($programa==38){   //Transición a la vida adulta 
-                                        $idNota = 53; // Primer Semestre Contenidos-Objetivos-Resultados --TODO
+                                        $idNota = 54; // 2 Semestre Contenidos-Objetivos-Resultados --TODO
                                         $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
                                         $template = 'especialSeguimientoSemestral';
                                         $actualizarMatricula = false;
@@ -232,7 +232,7 @@ class InfoNotasController extends Controller {
                                 break;
                             case 409:  //Atencion temprana
                                 if($gestion >2023){  //idem juntar
-                                    $idNota = 53 ; //PRIMER SEMESTRE
+                                    $idNota = 54 ; //2 SEMESTRE
                                     $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
                                     $template = 'especialModular';
                                     $actualizarMatricula = true;
@@ -253,7 +253,7 @@ class InfoNotasController extends Controller {
                         }
                     }
                     if($gestion >2023){
-                        $idNota = 53 ; //PRIMER SEMESTRE
+                        $idNota = 54 ; //2 SEMESTRE
                         $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
                         $template = 'especialModular';
                         $actualizarMatricula = false;
@@ -288,7 +288,7 @@ class InfoNotasController extends Controller {
                             }
                         }
                         if($gestion >2023 and $nivel ==411  ){   
-                            $idNota = 53; // Primer Semestre
+                            $idNota = 54; // 2 Semestre
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);
                             $template = 'especialModular';
                             $actualizarMatricula = false;
@@ -302,7 +302,7 @@ class InfoNotasController extends Controller {
             }
             //SERVICIOS - APOYO TECNICO PEDAGOGICO PARA TODAS LAS DISCAPACIDADES
             if($nivel==410 and $gestion>2023 and $servicio==20){
-                $idNota = 53;//prog/ser con contenidos-resultados-recomendaciones
+                $idNota = 54;//prog/ser con contenidos-resultados-recomendaciones
                 $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo, $idNota);            
                 $template = 'especialSeguimientoSemestral'; 
                 $seguimiento = true;

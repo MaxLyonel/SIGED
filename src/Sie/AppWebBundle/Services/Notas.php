@@ -7310,15 +7310,17 @@ die;/*
 
             if (in_array($subarea, array(1,3,4,12,10))  and $gestion > 2023 and (in_array($programa, array(19,41,39,22,37,43,28,50,51,52,53,54,55,56,57,58,59,60)) or $servicio==40)){ 
                 //Nueva evaluacion de programas o servicios por modulos
+                
                 $ultimo  = 6;
                 $idtn = [6, 7, 8];
-                if($idNota==53){
-                    $idtn = [53, 54];
-                    $ultimo  = 53;
+                if($idNota==54){
+                    //$idtn = [53, 54];
+                    $idtn = [54];
+                    $ultimo  = 54;
                 }
                 if($idNota==55){
                     $idtn = [55, 56, 57,58];
-                    $ultimo  = 55;
+                    $ultimo  = 58;
                 }
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(28,37));
                 if(in_array($programa, array(19,41,39,37,43,28,50,51,52,53,54,55,56,57,58,59,60))){
