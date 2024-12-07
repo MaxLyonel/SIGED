@@ -117,7 +117,8 @@ class StudentScoreController extends Controller{
           }
 
         }
-        if (!($nivel==13 and $grado==6 and $operativo==3)){$vista = 0;} //habilitar solo cuando sea operativo 6to secundaria
+        if ($nivel==13 and $grado==6 and $operativo==3){$vista = 0;}
+        else {$vista = 1;} //habilitar solo cuando sea operativo 6to secundaria
         
         return $this->render('SieHerramientaBundle:StudentScore:newtrimestre.html.twig',array(
             'notas'=>$notas,

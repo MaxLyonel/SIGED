@@ -1004,7 +1004,7 @@ class InfoEstudianteController extends Controller {
             $this->session->set('donwloadLibreta', true);
         } 
         /**********************temporal*************** */
-        $this->session->set('donwloadLibreta', true);
+        // $this->session->set('donwloadLibreta', true);
 
         if($operativo >= 3){
             if ($closeopesextosecc and $nivel == 13 and $grado == 6){
