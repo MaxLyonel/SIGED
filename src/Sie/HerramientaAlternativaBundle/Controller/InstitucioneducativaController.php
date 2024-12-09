@@ -1796,7 +1796,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             
                         $cabecera = '<br/><br/><br/><table border="0" style="font-size: 8.5px">';
                         $cabecera .='<tr>';          
-                        $cabecera .='<td  align="center"><h2>CIERRE OPERATIVO ESSEGUNDO SEMESTRE 2024</h2></td>';           
+                        $cabecera .='<td  align="center"><h2>CIERRE OPERATIVO SEGUNDO SEMESTRE 2024</h2></td>';           
                         $cabecera .='</tr>';
                         $cabecera .='<tr>';
                             $cabecera .='<td   align="center"><b>DETALLE DE OBSERVACIONES</b></td>';          

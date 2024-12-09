@@ -188,7 +188,7 @@ class InfoNotasController extends Controller {
                             case 412:
                                 if($grado <= 6){
                                     $notas = $this->get('notas')->especial_cualitativoEsp($idInscripcion,$operativo);
-                                    //dump($notas);die;
+                                   // dump($notas);die;
                                     if($gestion < 2020){
                                         if($notas['tipoNota'] == 'Trimestre'){
                                             $template = 'especialCualitativoTrimestral';
@@ -310,7 +310,7 @@ class InfoNotasController extends Controller {
                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(47,78)));
             }
             $descNota = $em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
-         //dump($notas);
+        // dump($notas);
          //  dump($notas["cualitativas"]);die;
          // dump($template); 
          // die;
@@ -569,11 +569,12 @@ class InfoNotasController extends Controller {
         
         $arrInfoUe = unserialize($request->get('infoUe'));
         $arrInfoStudent = json_decode($request->get('infoStudent'),true);
-        //dump($arrInfoUe);die;
+        //dump($arrInfoStudent);die;
         //dump($request);die;
         $sie = $arrInfoUe['requestUser']['sie'];
         $gestion = $arrInfoUe['requestUser']['gestion'];
         $estInsId = $arrInfoStudent['estInsId'];
+        $estId = $arrInfoStudent['id'];
         $areaEspecialId = $arrInfoUe['ueducativaInfoId']['areaEspecialId'];
         $programa = $arrInfoUe['ueducativaInfoId']['programaId'];
         $servicio = $arrInfoUe['ueducativaInfoId']['servicioId'];
@@ -674,7 +675,7 @@ class InfoNotasController extends Controller {
                 $nombre = 'libreta_especial_talento_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 //$data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
                 //$link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
-                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&areaid=' . $areaEspecialId .'&lk='. $link . '&&__format=pdf&';
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&estudianteid=' . $estId . '&inscripid=' . $estInsId . '&codue=' . $sie .'&areaid=' . $areaEspecialId .'&lk='. $link . '&&__format=pdf';
                 break;
             case 4: //fisico-motora TEMPRANA      
                 if($gestion >2023 and in_array($programa, array(28))) {   //formato semestral con asignaturas
