@@ -1642,6 +1642,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
     public function cerraroperativoAction(Request $request) { //dcastillo
         
+
+        //dump('here'); die;
+
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -1650,6 +1653,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
       
         //dump($request);die; no manda nada por request todo esta en la sesion
         //dump($sesion->get('ie_per_estado'));die;
+
+        /*
+        ie_per_cod	3
+        ie_per_estado	2
+        */
 
         
         try {
@@ -1741,23 +1749,77 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     }
                 }
                 if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS
-                    //dump('2'); die;
-                    //dump("select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');");
-                     //die;
+                    
+                    /*dump('2');
+                    dump("select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');");
+                    die;*/
+
+                    
                     $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
 
                     $obs= $db->prepare($query);
                     $params = array();
                     $obs->execute($params);
                     $observaciones = $obs->fetchAll();
-                    if ($ies->getInstitucioneducativa()->getId() == 80730796 and $iest[0]->getTramiteEstado()->getId() == '13'){
+                    
+                    /*if ($ies->getInstitucioneducativa()->getId() == 80730796 and $iest[0]->getTramiteEstado()->getId() == '13'){
                         $observaciones = "";
-                    }
+                    }*/
 
-                    $observaciones = "";
+                    //$observaciones = "";
+
+                    
 
                     if ($observaciones){
-                        return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));                    }
+                        //return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));        
+                        
+                        $cea= $this->session->get('ie_id');
+
+                        $pdf = $this->container->get("white_october.tcpdf")->create(
+                            'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
+                        );
+                        // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                        $pdf->SetAuthor('Adal');
+                        $pdf->SetTitle('Acta Supletorio');
+                        $pdf->SetSubject('Report PDF');
+                        $pdf->SetPrintHeader(false);
+                        $pdf->SetPrintFooter(true, -10);
+                        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
+                        $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIO');
+                        $pdf->setFontSubsetting(true);
+                        $pdf->SetMargins(10, 10, 10, true);
+                        $pdf->SetAutoPageBreak(true, 8);
+                
+                        $pdf->SetFont('helvetica', '', 9, '', true);
+                        $pdf->startPageGroup();
+                        $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+            
+                        $cabecera = '<br/><br/><br/><table border="0" style="font-size: 8.5px">';
+                        $cabecera .='<tr>';          
+                        $cabecera .='<td  align="center"><h2>CIERRE OPERATIVO ESSEGUNDO SEMESTRE 2024</h2></td>';           
+                        $cabecera .='</tr>';
+                        $cabecera .='<tr>';
+                            $cabecera .='<td   align="center"><b>DETALLE DE OBSERVACIONES</b></td>';          
+                        $cabecera .='</tr>';
+                        $cabecera .='<tr>';
+                            $cabecera .='<td   align="center"><b>CEA: '. $this->session->get('ie_id') .'</b></td>';          
+                        $cabecera .='</tr>';
+                        $cabecera .='</table><br/><br/>';
+                
+                
+                        $reporte = '';
+            
+                        for ($i=0; $i < count($observaciones) ; $i++) { 
+                           $reporte = $reporte . $observaciones[$i]['observacion'] . '<hr>';
+                        }
+                
+                        //dump($reporte); die;
+                      
+                        $pdf->writeHTML($cabecera . $reporte, true, false, true, false, '');
+                
+                        $pdf->Output("Detalle_Observaciones_". $cea. "_" .date('YmdHis').".pdf", 'D');
+
+                    }
                     else{
 
                        // dump($iest[0]->getTramiteEstado()->getId()); die;
