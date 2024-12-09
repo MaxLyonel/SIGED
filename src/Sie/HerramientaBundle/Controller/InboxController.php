@@ -835,6 +835,15 @@ class InboxController extends Controller {
           $nextButton = 'Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
         }
         
+        $query = $em->getConnection()->prepare('SELECT ien.*
+                FROM institucioneducativa_nivel_autorizado ien
+                WHERE ien.nivel_tipo_id = 13
+                and ien.institucioneducativa_id= ' . $data['id'] );
+        $query->execute();
+        $ieNivelAutorizado = $query->fetchAll();
+        $existesec = false;
+        if (count($ieNivelAutorizado) > 0) {$existesec = true;}
+        
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
           'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
@@ -852,6 +861,7 @@ class InboxController extends Controller {
           'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
           'operativoBonoJPform' => $this->InfoStudentForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP...',$data)->createView(),
           'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($form['sie'],$form['gestion'],14),
+          'existesec' => $existesec
         ));
       // }
     }
@@ -1396,6 +1406,9 @@ class InboxController extends Controller {
                 if($form['gestion']==2023) { 
                   $queryCheckCal = 'select * from sp_validacion_regular_web2023_fg(:gestion,:sie,:ope)';
                 }
+                if($form['gestion']==2024) { 
+                  $queryCheckCal = 'select * from sp_validacion_regular_web2024_fg(:gestion,:sie,:ope)';
+                }
                 $query = $em->getConnection()->prepare($queryCheckCal);
                 $query->bindValue(':gestion', $form['gestion']);
                 $query->bindValue(':sie', $form['sie']);
@@ -1829,11 +1842,11 @@ class InboxController extends Controller {
           break;
         case 3: 
           $opeTrim = $operativo + 5;
-          $dbFunction = 'sp_validacion_regular_web2023_fg';                 
+          $dbFunction = 'sp_validacion_regular_web2024_fg';                 
           break;
         case 4: 
           $opeTrim = ($operativo-1) + 5;
-          $dbFunction = 'sp_validacion_regular_web2023_fg';                 
+          $dbFunction = 'sp_validacion_regular_web2024_fg';                 
           break;
         
         default:

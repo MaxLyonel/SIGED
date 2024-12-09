@@ -203,18 +203,33 @@ class NoteConsultationUesController extends Controller {
                           $inconsistencia = $query->fetchAll(); 
                         } elseif($gestion == 2023){
                           
-                          // if(in_array($this->session->get('roluser'), array(9)) ){
-                          //        $operativo = $operativo - 1;
-                          // }
-                          // $valor_op=array('0'=>6,'1'=>6,'2'=>7,'3'=>8);
+                          if(in_array($this->session->get('roluser'), array(9)) ){
+                                 $operativo = $operativo - 1;
+                          }
+                          $valor_op=array('0'=>6,'1'=>6,'2'=>7,'3'=>8);
                           
-                          // $queryCheckCal = 'select * from sp_validacion_regular_web2023_fg(:gestion,:sie,:ope)';
-                          // $query = $em->getConnection()->prepare($queryCheckCal);
-                          // $query->bindValue(':gestion', $gestion);
-                          // $query->bindValue(':sie', $sie);
-                          // $query->bindValue(':ope', $valor_op[$operativo]);
-                          // $query->execute();
-                          // $inconsistencia = $query->fetchAll();
+                          $queryCheckCal = 'select * from sp_validacion_regular_web2023_fg(:gestion,:sie,:ope)';
+                          $query = $em->getConnection()->prepare($queryCheckCal);
+                          $query->bindValue(':gestion', $gestion);
+                          $query->bindValue(':sie', $sie);
+                          $query->bindValue(':ope', $valor_op[$operativo]);
+                          $query->execute();
+                          $inconsistencia = $query->fetchAll();
+                          $inconsistencia = null; 
+                        } elseif($gestion == 2024){
+                          
+                          if(in_array($this->session->get('roluser'), array(9)) ){
+                                 $operativo = $operativo - 1;
+                          }
+                          $valor_op=array('0'=>6,'1'=>6,'2'=>7,'3'=>8);
+                          
+                          $queryCheckCal = 'select * from sp_validacion_regular_web2024_fg(:gestion,:sie,:ope)';
+                          $query = $em->getConnection()->prepare($queryCheckCal);
+                          $query->bindValue(':gestion', $gestion);
+                          $query->bindValue(':sie', $sie);
+                          $query->bindValue(':ope', $valor_op[$operativo]);
+                          $query->execute();
+                          $inconsistencia = $query->fetchAll();
                           $inconsistencia = null; 
                         } else {                            
                             $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
