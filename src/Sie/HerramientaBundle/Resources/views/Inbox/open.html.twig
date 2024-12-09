@@ -32,6 +32,8 @@
         {# /***datos para el operativo**/ #}
         {% if operativo == 3 and bimestre == 2 %} 
         <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre+1}} Abierto </h3>
+        {% elseif operativo == 4 and bimestre == 3 %}
+        <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado </h3>
         {% else %}
         <h3 style="color:#ff0000;" align="center"> Trimestre {{operativo}} </h3>
         {% endif %}
@@ -111,7 +113,7 @@
                 {% endif %} #}
                 <!--Se deshabilito mientras dura operativo 6to sec-->
                 <!--Se deshabilito hasta nueva instruccion mientras dura el operativo-->
-                {% if  data.gestion == app.session.get('currentyear') and  data.gestion == 2024 and operativo in [0, 1, 2] %} 
+                {% if  data.gestion == app.session.get('currentyear') and  data.gestion == 2024 and operativo in [0, 1, 2, 3]  and existesec == false %} 
                 <div id="closeoperativo">
                     <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                         <div class="thumbnail">
@@ -324,43 +326,98 @@
             if (typeof bimestre === "undefined") {
                 bimestre=0;
             }
-            console.log(bimestre);
-            if(confirm('¿Está segura/o de {{ data.messageope }} ?')){
-                formData = $('#formCloseOperativoInscription').serialize();
-                $.ajax({
-                    type: 'post',
-                    url: Routing.generate('herramienta_inbox_close_operativo_inscription'),
-                    data: formData,
-                    beforeSend: function () {
-                        $("#answerClose").empty();
-                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        $("#answerClose").empty();
-                        $("#answerClose").append(data.view);
-                        if(data.countinco > 0 && bimestre >= 3){
-                            conteoinc = data.countinco;
-                            $("#closeoperativo").hide();
-                            $("#closeoperativoextra").show();
-                        }
-                        if(data.countinco == 0){
-                            $("#closeoperativo").hide();
-                        }
+            
+            // if(confirm('¿Está segura/o de {{ data.messageope }} ?')){
+            //     formData = $('#formCloseOperativoInscription').serialize();
+            //     $.ajax({
+            //         type: 'post',
+            //         url: Routing.generate('herramienta_inbox_close_operativo_inscription'),
+            //         data: formData,
+            //         beforeSend: function () {
+            //             $("#answerClose").empty();
+            //             $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+            //         },
+            //         success: function (data) {
+            //             console.log(data);
+            //             $("#answerClose").empty();
+            //             $("#answerClose").append(data.view);
+            //             if(data.countinco > 0 && bimestre >= 3){
+            //                 conteoinc = data.countinco;
+            //                 $("#closeoperativo").hide();
+            //                 $("#closeoperativoextra").show();
+            //             }
+            //             if(data.countinco == 0){
+            //                 $("#closeoperativo").hide();
+            //             }
  
-                    },
-                    statusCode: {
-                        500: function () {
+            //         },
+            //         statusCode: {
+            //             500: function () {
 
+            //             },
+            //             404: function () {
+
+            //             }
+            //         }
+            //     });
+            // } else{ 
+            //     return false;
+            // }
+
+            Swal.fire({
+                title: '¿Está seguro de cerrar el operativo?',
+                type: 'question',
+                html: `
+                    <div style="text-align: left;">
+                        <p>Antes de continuar, por favor tome en cuenta lo siguiente:</p>
+                        <ul>
+                            <li><strong>¿Ha revisado que todas las calificaciónes sean las correctas?</strong></li>
+                            <li><strong>¿Ha descargado y revisado el boletín centralizador preliminar?</strong></li>
+                            <li><strong>¿Ha verificado que no tiene trámites pendientes por regularizar?</strong></li>
+                            <li>Una vez que cierre el operativo, no podrán realizar modificaciones ni finalizar trámites pendientes que se encuentren en distrito y departamento.</li>
+                        </ul>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, proceder',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    let formData = $('#formCloseOperativoInscription').serialize();
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('herramienta_inbox_close_operativo_inscription'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#answerClose").empty();
+                            $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
                         },
-                        404: function () {
-
+                        success: function (data) {
+                            console.log(data);
+                            $("#answerClose").empty();
+                            $("#answerClose").append(data.view);
+                            if (data.countinco > 0 && bimestre >= 3) {
+                                conteoinc = data.countinco;
+                                $("#closeoperativo").hide();
+                                $("#closeoperativoextra").show();
+                            }
+                            if (data.countinco == 0) {
+                                $("#closeoperativo").hide();
+                            }
+                        },
+                        statusCode: {
+                            500: function () {
+                                console.error('Error 500: Problema en el servidor.');
+                            },
+                            404: function () {
+                                console.error('Error 404: No se encontró la URL solicitada.');
+                            }
                         }
-                    }
-                });
-            } else{ 
-                return false;
-            }
+                    });
+                }
+            }); 
         };
 
         var forzarcierreoperativo = function(){
