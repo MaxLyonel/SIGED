@@ -34,7 +34,7 @@ class AreasController extends Controller {
 
     public function indexAction(Request $request) {
 
-        die; 
+        //die; 
         // ----- TEMP V1.
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -51,7 +51,7 @@ class AreasController extends Controller {
         // dump($idCurso);die;
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
         $mallaActual = $curso->getModalidadTipoId();
-        // dump($curso); die;
+        //dump($curso); die;
         // check if the course is PRIMARIA
         if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe) ){
             $primaria = true;
@@ -88,6 +88,8 @@ class AreasController extends Controller {
 
     public function getAreasCajon( $dataUE ){
 
+
+
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
@@ -123,6 +125,8 @@ class AreasController extends Controller {
         $resultOficial = $queryCheckOficial->fetch();
 
         // if( count($resultSecond) == 0 && $resultOficial['es_oficial'] ){
+
+        /*
         if( $resultOficial['es_oficial'] ){
                 // EXTRAER MODULOS DE LA TABLA ctr_altenativa_planes
             $queryThird = $db->prepare("select * from ctr_altenativa_planes cap 
@@ -172,8 +176,8 @@ class AreasController extends Controller {
                     $smperiodo ->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtipo));
                     $smperiodo ->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($resultSearchSIP['sipid']));
                     $smperiodo ->setHorasModulo('100');
-                    $em->persist($smperiodo);
-                    $em->flush($smperiodo);
+                    //$em->persist($smperiodo);
+                    //$em->flush($smperiodo);
 
                     $smperiodo = $smperiodo->getId();
                 }else{
@@ -208,13 +212,14 @@ class AreasController extends Controller {
                     $smmp->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smperiodo));
                     $smmp->setFechaRegistro(new \DateTime('now'));
                     $smmp->setFechaModificacion(new \DateTime('now'));
-                    $em->persist($smmp);
-                    $em->flush($smmp);
+                    //$em->persist($smmp);
+                    //$em->flush($smmp);
                 }
 
             } 
 
         }
+            */
 
         if( $resultOficial['es_oficial'] ){
             // dump($dataUE['ueducativaInfo']['superiorAcreditacionTipoId']);
@@ -1077,6 +1082,8 @@ class AreasController extends Controller {
 
     public function getAreas($infoUe) {
         
+        //dump('here'); die;
+
         $aInfoUeducativa = unserialize($infoUe);
 
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
@@ -1092,10 +1099,12 @@ class AreasController extends Controller {
         $sucursal = $this->session->get('ie_suc_id');
         $periodo = $this->session->get('ie_per_cod');
 
+        //dump($nivel); die; 22 gastronomia
+
         $em = $this->getDoctrine()->getManager();
 
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($iecId);
-        // dump($curso);die;
+        //dump($curso);die;
 
         if($curso->getModalidadTipoId() == 1) {
             $nuevamalla = true;
@@ -1151,6 +1160,7 @@ class AreasController extends Controller {
                 ->getResult();
             }
             if($modulos) {
+                /*
                 $em->getConnection()->beginTransaction();
                 try {    
                     foreach ($modulos as $modulo) {
@@ -1166,7 +1176,8 @@ class AreasController extends Controller {
                     $em->getConnection()->commit();
                 } catch (Exception $ex) {
                     $em->getConnection()->rollback();
-                }
+                }*/
+
             }
         }
 
@@ -1234,15 +1245,15 @@ class AreasController extends Controller {
                         $newSuperiorModuloTipo->setSigla('MIE');
                         $newSuperiorModuloTipo->setOficial(1);
                         $newSuperiorModuloTipo->setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
-                        $em->persist($newSuperiorModuloTipo);
-                        $em->flush();
+                        //$em->persist($newSuperiorModuloTipo);
+                        //$em->flush();
 
                         $smp = new SuperiorModuloPeriodo();
                         $smp->setSuperiorModuloTipo($newSuperiorModuloTipo);
                         $smp->setInstitucioneducativaPeriodo($iePeriodo[0]);
                         $smp->setHorasModulo(0);
-                        $em->persist($smp);
-                        $em->flush();
+                        //$em->persist($smp);
+                        //$em->flush();
 
                         $cursoModulo = $smp;
 
@@ -1256,8 +1267,8 @@ class AreasController extends Controller {
                     $ieco->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
                     $ieco->setSuperiorModuloPeriodo($cursoModulo);
                     $ieco->setHorasmes(0);
-                    $em->persist($ieco);
-                    $em->flush();
+                    //$em->persist($ieco);
+                    //$em->flush();
 
                 }
             }
@@ -1355,6 +1366,11 @@ class AreasController extends Controller {
                 ->getResult();
             }
         } else {
+
+            /*dump('aqui'); 
+            dump($actuales); 
+            die;*/
+
             if($actuales){
                 $tieneCursoOferta = true;
                 $curso = $em->createQueryBuilder()                
@@ -1467,6 +1483,9 @@ class AreasController extends Controller {
         $resultSMMP = [];
         
         if( $this->session->get('ie_gestion') >= 2023 && ( $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 1 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 20 || $aInfoUeducativa['ueducativaInfo']['superiorAcreditacionTipoId'] == 32 )  ){
+
+            //dump('aquiiii'); die;
+
             $curso = $this->getAreasCajon( $aInfoUeducativa );
             $contAsg = count($curso) - count($cursoOferta);
             $sest_esoficial = ( count($curso) == 0 ) ? true : $curso[0]['es_oficial'];
@@ -1587,6 +1606,8 @@ class AreasController extends Controller {
         $idmi = $request->get('idmi');
         $idnt = $request->get('idnt');
         // $horas = $request->get('horas');
+
+        //dump('here'); die;
         
         $em = $this->getDoctrine()->getManager();
         // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta_maestro');")->execute();

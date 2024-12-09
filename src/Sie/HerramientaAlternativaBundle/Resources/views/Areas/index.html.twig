@@ -79,9 +79,11 @@
 
                         <input value="{{asignaturas}}" id="form-module-alt" hidden="true">
                         <div style="float:right">
+                            {#
                             <button onclick="addAreaAll( '{{infoUe}}', '{{tieneCursoOferta}}', '{{count}}', '{{superiorAcreditacionTipoId}}', '{{sest_esoficial}}' )" class="btn btn-primary">
                                 Agregar{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %}
                             </button>
+                            #}
                             {# <p class="text-pendient">{% if ( app.session.get('ie_gestion') >= 2023 ) %} Modulos {% else %} Áreas {% endif %} pendientes: <strong>{{count}}</strong></p> #}
                         </div>
                         {# {% if ((cursoOferta|length < 5 and superiorAcreditacionTipoId != 32 ) or (cursoOferta|length < 10 and superiorAcreditacionTipoId == 32) ) %}
@@ -144,7 +146,9 @@
                                 {# {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2' or sest_esoficial)%}
                                     <th class="text-center">Eliminar</th>
                                 {% endif %} #}
+                                {#
                                 <th class="text-center">Eliminar</th>
+                                #}
                             </tr>
                         </thead>
                         <tbody>
@@ -197,15 +201,15 @@
                                     {# {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')%} #}
                                         <td class="text-center">
                                             {% if (app.session.get('ie_gestion') >= 2023) and (app.session.get('userId') == 94161725) %}
-                                                <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                                {#<button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>#}
                                             {% endif %}
                                             {% if ((primaria == true and co.codigo == '408') or primaria == false) and (app.session.get('userId') != 94161725) %}
                                                 {% if ( superiorAcreditacionTipoId != 1 and superiorAcreditacionTipoId != 20 ) %}
-                                                    <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                                    {#<button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>#}
                                                 {% endif %}
                                             {# {% elseif ( superiorAcreditacionTipoId == 32 ) %} #}
                                             {% else %}
-                                                <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                                {#<button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button> #}
                                             {% endif %}
                                         </td>
                                     {# {% endif %} #}

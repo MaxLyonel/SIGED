@@ -305,12 +305,13 @@
                   <div class="cbp-l-grid-masonry-projects-desc"></div>
               </div><br></div>
 
-
+           
             {% if (app.session.get('roluser') == 9 or app.session.get('roluser') == 8)   %}  
             {#% if (app.session.get('roluser') == 8)   %#} 
              {#% if (app.session.get('ie_id') == 81720080) %#}
                {% if (app.session.get('ie_gestion') == 2024 and app.session.get('ie_per_cod') == 3) %} 
                
+                {#
                 <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                     <div class="cbp-caption">
                         <div class="cbp-caption-defaultWrap">
@@ -332,12 +333,15 @@
                     </div>
                     <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">OPERATIVO CENSO</div>
                     <div class="cbp-l-grid-masonry-projects-desc"></div>
-                </div><br></div>             
+                </div><br></div>  
+
+                #}           
 
                {% endif %}
             
             {#% endif %#}
             {% endif %}
+            
 
 
 
@@ -400,9 +404,9 @@
             {% endif %}
           
 
-            {#
-            {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO
-                {% if (app.session.get('ie_per_estado') == '0') %}  {#GENERA ACTA DE CIERRE UNA VES CERRADO EL OPERATIVO                                    
+           
+            {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO #}
+                {% if (app.session.get('ie_per_estado') == '0') %}  {#GENERA ACTA DE CIERRE UNA VES CERRADO EL OPERATIVO   #}                              
                     <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                         <div class="cbp-caption">
                                 <div class="cbp-caption-defaultWrap">
@@ -426,7 +430,7 @@
                             <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR ACTA DE CIERRE DE OPERATIVO</div>
                         <div class="cbp-l-grid-masonry-projects-desc"></div>
                     </div><br></div>
-                {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}{#PARA OPERATIVO DE INCRIPCIONES NOTAS Y REGULARIZACION
+                {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}{#PARA OPERATIVO DE INCRIPCIONES NOTAS Y REGULARIZACION#}
                      <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                         <div class="cbp-caption">
                             <div class="cbp-caption-defaultWrap">
@@ -451,7 +455,7 @@
                     </div><br></div> 
                 {% endif %}
             {% endif %}
-            #}
+          
 
       </div>
           <div class="col-lg-6 col-md-6 col-sm-6" >
