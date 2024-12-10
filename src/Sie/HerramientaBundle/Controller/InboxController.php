@@ -842,7 +842,7 @@ class InboxController extends Controller {
         $query->execute();
         $ieNivelAutorizado = $query->fetchAll();
         $existesec = false;
-        if (count($ieNivelAutorizado) > 0) {$existesec = true;}
+        //if (count($ieNivelAutorizado) > 0) {$existesec = true;}
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),

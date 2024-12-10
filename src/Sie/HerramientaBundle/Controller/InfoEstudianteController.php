@@ -1026,11 +1026,16 @@ class InfoEstudianteController extends Controller {
         // TEMPORAL PARA EL OPERATIVO CENSO
         
         // $ieCenso = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findBy(array('institucioneducativa'=>$sie));;
-        
-        // if (count($ieCenso) > 0 and $nivel == 13 and $grado >= 4) {
-        //     $this->session->set('donwloadLibreta', false);
-        // }
-        
+        // dump($operativo);
+        if ($operativo > 3  && $nivel == 13 && in_array($grado, [4, 5]) and $gestion == 2024) {
+            $imprimirLibreta = false; 
+            // dump($grado);
+        } else {
+            $imprimirLibreta = true; 
+            // dump($grado);
+        }
+        // dump($this->session->get('donwloadLibreta'));
+        // die;
         // to enable 1er Trim 
         // $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
         // if(sizeof($objUe1erTrin)>0){
