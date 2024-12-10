@@ -500,8 +500,9 @@
                                                     {% else %} #}
                                                     
                                                         {% if app.session.get('donwloadLibreta') == true %}
+                                                             
                                                             {# ojo aqui en la impresion#}
-                                                            {% if data.estadomatriculaId in estadosPermitidosImprimir %}
+                                                            {% if data.estadomatriculaId in estadosPermitidosImprimir  and operativo <= 3  %}
                                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                     <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
                                                                     <i class="fa fa-print" style="color:#FFFFFF"></i>
@@ -665,7 +666,6 @@
                                     {# IMPRESION DE LIBRETA #}
                                     {# {{dump(estadosPermitidosImprimir)}} #}
                                     {% if  imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir and app.session.get('roluser') in [7,8,9,10] %}
-                                    
                                         {% if (gestion < app.session.get('currentyear') and data.estadomatriculaId != 4) %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                 <a class="btn btn-circle btn-warning" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
