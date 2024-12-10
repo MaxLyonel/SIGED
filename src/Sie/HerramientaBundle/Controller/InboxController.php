@@ -1487,6 +1487,8 @@ class InboxController extends Controller {
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
+
+            
             return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
                           'observation' => false,
                           'institucion' =>  $form['sie'],
@@ -1913,6 +1915,7 @@ class InboxController extends Controller {
               'operativo' => $operativo,
             );   
             $this->saveLog($data);
+            
           }else{
             if($operativo <= 3 ){
               $fieldOpe = 'setBim' .$operativo;
@@ -1926,7 +1929,11 @@ class InboxController extends Controller {
               );   
               $this->saveLog($data);
 
-              
+            // Procesa procesa CENSO
+            if ($operativo ===3) {
+            $query = $em->getConnection()->prepare("select * from sp_censo_ue_consolida_tt('" . $form['sie'] . "','" . $this->session->get('userId') . "');");
+            $query->execute();  
+            }
             }
           }
 
@@ -1939,7 +1946,6 @@ class InboxController extends Controller {
               $this->session->set('donwloadLibreta', true);
             else
               $this->session->set('donwloadLibreta', false);              
-
           return new JsonResponse([
                 'countinco' =>0,
                 'view' => $this->renderView($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
