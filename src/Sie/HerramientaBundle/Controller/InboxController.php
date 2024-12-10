@@ -835,12 +835,12 @@ class InboxController extends Controller {
           $nextButton = 'Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
         }
         
-        $query = $em->getConnection()->prepare('SELECT ien.*
-                FROM institucioneducativa_nivel_autorizado ien
-                WHERE ien.nivel_tipo_id = 13
-                and ien.institucioneducativa_id= ' . $data['id'] );
-        $query->execute();
-        $ieNivelAutorizado = $query->fetchAll();
+        // $query = $em->getConnection()->prepare('SELECT ien.*
+        //         FROM institucioneducativa_nivel_autorizado ien
+        //         WHERE ien.nivel_tipo_id = 13
+        //         and ien.institucioneducativa_id= ' . $data['id'] );
+        // $query->execute();
+        // $ieNivelAutorizado = $query->fetchAll();
         $existesec = false;
         //if (count($ieNivelAutorizado) > 0) {$existesec = true;}
         
@@ -1930,7 +1930,16 @@ class InboxController extends Controller {
               $this->saveLog($data);
 
             // Procesa procesa CENSO
-            if ($operativo ===3) {
+            $query = $em->getConnection()->prepare('SELECT ic.*
+                  FROM institucioneducativa_curso ic
+                  WHERE ic.nivel_tipo_id = 13
+                  and ic.grado_tipo_id in (4,5)
+                  and ic.gestion_tipo_id = 2024
+                  and ic.institucioneducativa_id= ' . $form['sie'] );
+            $query->execute();
+            $existeCurso = $query->fetchAll();
+
+            if ($operativo === 3 && count($existeCurso) > 0) {
             $query = $em->getConnection()->prepare("select * from sp_censo_ue_consolida_tt('" . $form['sie'] . "','" . $this->session->get('userId') . "');");
             $query->execute();  
             }
