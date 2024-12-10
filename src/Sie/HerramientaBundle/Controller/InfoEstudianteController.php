@@ -1027,15 +1027,15 @@ class InfoEstudianteController extends Controller {
         
         // $ieCenso = $em->getRepository('SieAppWebBundle:CensoBeneficiario')->findBy(array('institucioneducativa'=>$sie));;
         // dump($operativo);
-        if ($operativo > 3 ) {
-            if ($nivel == 13 && in_array($grado, [4, 5]) and $gestion == 2024) {
-                $imprimirLibreta = false; 
-                // dump($grado);    
-            } else {
-                $imprimirLibreta = true; 
-                // dump($grado);
-            }
-        }
+        // if ($operativo > 3 ) {
+        //     if ($nivel == 13 && in_array($grado, [4, 5]) and $gestion == 2024) {
+        //         $imprimirLibreta = false; 
+        //         // dump($grado);    
+        //     } else {
+        //         $imprimirLibreta = true; 
+        //         // dump($grado);
+        //     }
+        // }
         // to enable 1er Trim 
         // $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
         // if(sizeof($objUe1erTrin)>0){
