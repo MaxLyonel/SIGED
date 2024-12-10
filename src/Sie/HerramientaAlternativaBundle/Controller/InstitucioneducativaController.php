@@ -1738,7 +1738,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     $obs->execute($params);
                     $observaciones = $obs->fetchAll();
                     
-                    $observaciones = "";
+                    //$observaciones = "";
 
                     if ($observaciones){
                         //return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));        
