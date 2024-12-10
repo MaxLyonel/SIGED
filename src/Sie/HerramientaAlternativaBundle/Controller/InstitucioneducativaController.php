@@ -444,6 +444,8 @@ class InstitucioneducativaController extends Controller {
         $estadoOperativo = false;
         $rutaObservaciones = "";
 
+        $em = $this->getDoctrine()->getManager();
+
         //
         /*$em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select count(*) as cierre from registro_consolidacion_alt_2024 where unidad_educativa = " . $this->session->get('ie_id'));
@@ -460,6 +462,57 @@ class InstitucioneducativaController extends Controller {
         //$especializadoscierre = false;
         $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$gestion,$this->session->get('ie_per_cod'));
         //$especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado('20680003',$gestion,$this->session->get('ie_per_cod'));
+
+        // ha cerrado segundo semestre 2024 ??
+
+        $query = $em->getConnection()->prepare("
+             SELECT
+                institucioneducativa.id, 
+                institucioneducativa_sucursal.id, 
+                institucioneducativa_sucursal.periodo_tipo_id,
+                institucioneducativa_sucursal.gestion_tipo_id, 
+                institucioneducativa_sucursal_tramite.id, 
+                institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id, 
+                institucioneducativa_sucursal_tramite.periodo_estado_id, 
+                institucioneducativa_sucursal_tramite.tramite_estado_id, 
+                institucioneducativa_sucursal_tramite.tramite_tipo_id
+            FROM
+                institucioneducativa
+                INNER JOIN
+                institucioneducativa_sucursal
+                ON 
+                    institucioneducativa.id = institucioneducativa_sucursal.institucioneducativa_id
+                INNER JOIN
+                institucioneducativa_sucursal_tramite
+                ON 
+                    institucioneducativa_sucursal.id = institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id
+                    where 
+                    institucioneducativa.id = :sie  and gestion_tipo_id = 2024 and  periodo_tipo_id = 3 and tramite_estado_id = 14 
+        ");                
+
+        
+
+        $query->bindValue(':sie', $this->session->get('ie_id'));
+        $query->execute();
+        $cierre2024 = $query->fetchAll(); 
+
+        $segundosemestre2024cierre = false;
+        if($cierre2024){
+            $segundosemestre2024cierre = true;
+        }
+
+        if($gestion < 2024 ) {
+            $segundosemestre2024cierre = true;
+        }
+
+        if($gestion == 2024 and $semestre == 2){
+            $segundosemestre2024cierre = true;
+        }
+       
+
+
+
+        //dump($segundosemestre2024cierre); die;
 
         
         if ($subcea < 0){
@@ -682,6 +735,9 @@ class InstitucioneducativaController extends Controller {
             case 99: //SOLO LECTURA
                 $sesion->set('ie_per_estado', '2'); //dcastillo
                 $sesion->set('ie_operativo', '!En modo vista!');
+
+                $estadoOperativo = false;
+
                 break;
             case 100: //MAESTRO DE UNIDAD EDUCATIVA ALTER
                 /**
@@ -756,7 +812,7 @@ class InstitucioneducativaController extends Controller {
             $sesion->set('ie_operativo', '!En operativo de regularización!');
         }*/
 
-        return $this->render($this->session->get('pathSystem') . ':Principal:menuprincipal.html.twig',array('estadoOperativo'=>$estadoOperativo,'rutaObservaciones'=>$rutaObservaciones,'gestion'=>$request->get('gestion'), 'especializadoscierre' => $especializadoscierre ));
+        return $this->render($this->session->get('pathSystem') . ':Principal:menuprincipal.html.twig',array('estadoOperativo'=>$estadoOperativo,'rutaObservaciones'=>$rutaObservaciones,'gestion'=>$request->get('gestion'), 'especializadoscierre' => $especializadoscierre, 'segundosemestre2024cierre' => $segundosemestre2024cierre ));
     }
 
     public function verificarOperativo($request) {
@@ -1640,6 +1696,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $pdf->Output("Detalle_Censo_". $cea. "_" .date('YmdHis').".pdf", 'D');
     }
 
+    // para cerrar 2024
     public function cerraroperativoAction(Request $request) { //dcastillo
         
 
@@ -1664,6 +1721,231 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();
             $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id'));            
             $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
+            //dump($ies);dump($iest); die;
+            if ($iest){
+                
+                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS
+                    
+                    /*dump('2');
+                    dump("select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');");
+                    die;*/
+
+                    
+                    $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
+
+                    $obs= $db->prepare($query);
+                    $params = array();
+                    $obs->execute($params);
+                    $observaciones = $obs->fetchAll();
+                    
+                    $observaciones = "";
+
+                    if ($observaciones){
+                        //return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));        
+                        
+                        $cea= $this->session->get('ie_id');
+
+                        $pdf = $this->container->get("white_october.tcpdf")->create(
+                            'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
+                        );
+                        // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                        $pdf->SetAuthor('Adal');
+                        $pdf->SetTitle('Acta Supletorio');
+                        $pdf->SetSubject('Report PDF');
+                        $pdf->SetPrintHeader(false);
+                        $pdf->SetPrintFooter(true, -10);
+                        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
+                        $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIO');
+                        $pdf->setFontSubsetting(true);
+                        $pdf->SetMargins(10, 10, 10, true);
+                        $pdf->SetAutoPageBreak(true, 8);
+                
+                        $pdf->SetFont('helvetica', '', 9, '', true);
+                        $pdf->startPageGroup();
+                        $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+            
+                        $cabecera = '<br/><br/><br/><table border="0" style="font-size: 8.5px">';
+                        $cabecera .='<tr>';          
+                        $cabecera .='<td  align="center"><h2>CIERRE OPERATIVO SEGUNDO SEMESTRE 2024</h2></td>';           
+                        $cabecera .='</tr>';
+                        $cabecera .='<tr>';
+                            $cabecera .='<td   align="center"><b>DETALLE DE OBSERVACIONES</b></td>';          
+                        $cabecera .='</tr>';
+                        $cabecera .='<tr>';
+                            $cabecera .='<td   align="center"><b>CEA: '. $this->session->get('ie_id') .'</b></td>';          
+                        $cabecera .='</tr>';
+                        $cabecera .='</table><br/><br/>';
+                
+                
+                        $reporte = '';
+            
+                        for ($i=0; $i < count($observaciones) ; $i++) { 
+                           $reporte = $reporte . $observaciones[$i]['observacion'] . '<hr>';
+                        }
+                
+                        //dump($reporte); die;
+                      
+                        $pdf->writeHTML($cabecera . $reporte, true, false, true, false, '');
+                
+                        $pdf->Output("Detalle_Observaciones_". $cea. "_" .date('YmdHis').".pdf", 'D');
+
+                    }
+                    else{
+
+                       // dump($iest[0]->getTramiteEstado()->getId()); die;
+
+                       $iestvar = $iest[0];
+                       $iestvar->setPeriodoEstado($em->getRepository('SieAppWebBundle:PeriodoEstadoTipo')->find('2'));
+                       $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('14'));//¡Fin de Semestre - Cerrado!
+                       $iestvar->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find('4'));
+
+                       $iestvar->setFechaModificacion(new \DateTime('now'));
+                       $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
+                       $em->persist($iestvar);
+                       $em->flush();
+                       
+                       $em->getConnection()->commit();
+
+                       return $this->redirect($this->generateUrl('herramienta_alter_reporte_operativo_exitoso_cerrado'));
+                       
+
+                    }
+                }
+                
+            }else{
+                //EN CASO QUE LA SUCURSAL PERIODO NO TENGA ASIGNADO UN PERIODO TRAMITE    
+                
+                $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
+
+                $obs= $db->prepare($query);
+                $params = array();
+                $obs->execute($params);
+                $observaciones = $obs->fetchAll();
+                
+                //$observaciones = "";
+
+                if ($observaciones){
+                    //return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));        
+                    
+                    $cea= $this->session->get('ie_id');
+
+                    $pdf = $this->container->get("white_october.tcpdf")->create(
+                        'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
+                    );
+                    // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $pdf->SetAuthor('Adal');
+                    $pdf->SetTitle('Acta Supletorio');
+                    $pdf->SetSubject('Report PDF');
+                    $pdf->SetPrintHeader(false);
+                    $pdf->SetPrintFooter(true, -10);
+                    // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
+                    $pdf->SetKeywords('TCPDF, PDF, ACTA SUPLETORIO');
+                    $pdf->setFontSubsetting(true);
+                    $pdf->SetMargins(10, 10, 10, true);
+                    $pdf->SetAutoPageBreak(true, 8);
+            
+                    $pdf->SetFont('helvetica', '', 9, '', true);
+                    $pdf->startPageGroup();
+                    $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+        
+                    $cabecera = '<br/><br/><br/><table border="0" style="font-size: 8.5px">';
+                    $cabecera .='<tr>';          
+                    $cabecera .='<td  align="center"><h2>CIERRE OPERATIVO SEGUNDO SEMESTRE 2024</h2></td>';           
+                    $cabecera .='</tr>';
+                    $cabecera .='<tr>';
+                        $cabecera .='<td   align="center"><b>DETALLE DE OBSERVACIONES</b></td>';          
+                    $cabecera .='</tr>';
+                    $cabecera .='<tr>';
+                        $cabecera .='<td   align="center"><b>CEA: '. $this->session->get('ie_id') .'</b></td>';          
+                    $cabecera .='</tr>';
+                    $cabecera .='</table><br/><br/>';
+            
+            
+                    $reporte = '';
+        
+                    for ($i=0; $i < count($observaciones) ; $i++) { 
+                       $reporte = $reporte . $observaciones[$i]['observacion'] . '<hr>';
+                    }
+            
+                    //dump($reporte); die;
+                  
+                    $pdf->writeHTML($cabecera . $reporte, true, false, true, false, '');
+            
+                    $pdf->Output("Detalle_Observaciones_". $cea. "_" .date('YmdHis').".pdf", 'D');
+
+                }
+                else{
+
+                   // dump($iest[0]->getTramiteEstado()->getId()); die;
+
+                   $iest = new InstitucioneducativaSucursalTramite();
+                   $iest->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id')));            
+                   $iest->setPeriodoEstado($em->getRepository('SieAppWebBundle:PeriodoEstadoTipo')->find('2'));
+                   $iest->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('14'));//¡Fin de Semestre - Cerrado!
+                   $iest->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find('4'));
+
+                   //EXTRAER COD DISTRITO
+                   $query = "SELECT get_ie_distrito_id(".$this->session->get('ie_id').");";
+                   $stmt = $db->prepare($query);
+                   $params = array();
+                   $stmt->execute($params);
+                   $podis = $stmt->fetchAll();
+                   foreach ($podis as $p){
+                       $lugarestipoid = $p["get_ie_distrito_id"];           
+                   }
+                   $lugarids = explode(",", $lugarestipoid);
+                   $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));                
+                   $dis_cod = $em->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id);
+                   $iest->setDistritoCod($dis_cod->getCodigo());
+                   $iest->setFechainicio(new \DateTime('now'));
+                   $iest->setUsuarioIdInicio($this->session->get('userId'));
+                   $em->persist($iest);
+                   $em->flush();      
+                   
+                   $em->getConnection()->commit();
+
+                   return $this->redirect($this->generateUrl('herramienta_alter_reporte_operativo_exitoso_cerrado'));
+                   
+
+                }
+                
+            }            
+           
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+    }
+
+
+    /*
+        dejamos este por que  no se entiende
+    */
+
+    public function cerraroperativoOldAction(Request $request) { //dcastillo
+        
+
+        //dump('here'); die;
+
+        $sesion = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $db = $em->getConnection();
+        $gestion = 2019;
+      
+        //dump($request);die; no manda nada por request todo esta en la sesion
+        //dump($sesion->get('ie_per_estado'));die;
+
+        /*
+        ie_per_cod	3
+        ie_per_estado	2
+        */
+
+        
+        try {
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();
+            $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id'));            
+            $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
+            dump($ies);dump($iest); die;
             if ($iest){
                 if ($sesion->get('ie_per_estado') == '1'){//INICIO INSCRIPCIONES
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
@@ -1824,6 +2106,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
                        // dump($iest[0]->getTramiteEstado()->getId()); die;
 
+                       
                         if ($iest[0]->getTramiteEstado()->getId() == '6'){//¡En regularización notas!
                             $iestvar = $iest[0];
                             $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('8'));//Ver regularización notas terminada                          
@@ -1857,6 +2140,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                 $reg = $this->registroConsolidacion($ies,$operativo,'registro');
                             }
                         } 
+
                     }
                 }
                 if ($sesion->get('ie_per_estado') == '3'){//OPERATIVO DE MODO REGULARIZACION     
