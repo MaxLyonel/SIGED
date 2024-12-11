@@ -77,6 +77,12 @@ class EstudianteNotasController extends Controller {
             if( ( $estudianteInscripcionS2aux->nivelId == 18 or $estudianteInscripcionS2aux->nivelId == 19 or $estudianteInscripcionS2aux->nivelId == 20 or $estudianteInscripcionS2aux->nivelId == 21 or $estudianteInscripcionS2aux->nivelId == 22 or $estudianteInscripcionS2aux->nivelId == 23 or $estudianteInscripcionS2aux->nivelId == 24 or $estudianteInscripcionS2aux->nivelId == 25 ) and $estudianteInscripcionS2aux->gradoId == 3){
                 $guardanotas = false;
 
+                /* tecnico medio I
+                nivelId" => 22
+                "cicloId" => 2
+                "gradoId" => 3
+                */
+
                 /*$ceas = array(
                     81730192, 81730201, 81720080, 81700046, 81680080, 61710073, 71690059, 81730192, 81730201, 81720080, 81700046, 81680080,
                     61710073, 71690059, 71700041, 71710048, 81730195, 61710054, 81730232, 71720028, 71720044, 40870095, 50900039, 80900073,
@@ -100,10 +106,18 @@ class EstudianteNotasController extends Controller {
                    70890030,60850031,81680087,81730193,81710078,81700041 
                 );*/
 
+                /*
                 $ceas = array(
                     81960115,81980751,61940050,81981032,41980033,81690082,81700048, 61710060, 81710121, 81730200,
                     71720028,81680080,50900039,80900103,80830076,80980481,80830075, 80980523, 40900023, 80830081,
                     80860094,60850031,80910034,80970088,80900082,80980567,60890230, 70920020, 80980481, 80980538
+                );*/
+
+                //correo del 1112
+                $ceas = array(
+                    80480187,80480287,70440043,90490001,80460025,50460028,80450047,70440031,70480036,80480299,70470050,
+                    70470051,70450022,40450031,50450001,80430080,80440068,80440090,80480246,60450020,80840048,80870082,
+                    80980485,80980492,81130012,61150001,81080024,61940056,71940020,61900025,81940039,81980751,81960115,61940056
                 );
 
 
