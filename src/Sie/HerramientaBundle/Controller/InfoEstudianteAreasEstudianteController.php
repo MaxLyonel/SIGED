@@ -364,6 +364,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns));
                 $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
                 $especialidadEstudiante->setHoras(0);
+                $especialidadEstudiante->setObservacion('NUEVO._.');
                 $em->persist($especialidadEstudiante);
                 $em->flush();
             }
@@ -522,6 +523,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
         $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
         $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
         $especialidadEstudiante->setHoras(0);
+        $especialidadEstudiante->setObservacion('NUEVO._..');
         $em->persist($especialidadEstudiante);
         $em->flush();
 
