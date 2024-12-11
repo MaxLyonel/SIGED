@@ -487,12 +487,13 @@ class InstitucioneducativaController extends Controller {
                 ON 
                     institucioneducativa_sucursal.id = institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id
                     where 
-                    institucioneducativa.id = :sie  and gestion_tipo_id = 2024 and  periodo_tipo_id = 3 and tramite_estado_id = 14 
+                    institucioneducativa.id = :sie  and gestion_tipo_id = 2024 and  periodo_tipo_id = 3 and tramite_estado_id = 14 and institucioneducativa_sucursal.sucursal_tipo_id = :subcea
         ");                
 
         
 
         $query->bindValue(':sie', $this->session->get('ie_id'));
+        $query->bindValue(':subcea', $subcea);
         $query->execute();
         $cierre2024 = $query->fetchAll(); 
 
