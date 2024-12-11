@@ -209,8 +209,10 @@ class ReportesController extends Controller {
             print_r(' Subcentro:'.$this->session->get('ie_subcea'));
             print_r(' Periodo:'.$this->session->get('ie_per_cod'));
             die;*/
-            //81710077 Gesion:2024 Estado:2 Nivel:15 Ciclo:2 Grado:1 Paralelo:1 Paralelotxt:A Turno:4 Subcentro:7 Periodo:3
 
+            //81710077 Gesion:2024 Estado:2 Nivel:15 Ciclo:2 Grado:1 Paralelo:1 Paralelotxt:A Turno:4 Subcentro:7 Periodo:3
+            // tecnica
+            //60480060 Gesion:2024 Estado:2 Nivel:22 Ciclo:20 Grado:1 Paralelo:1 Paralelotxt:A Turno:4 Subcentro:0 Periodo:3
         
         if ($nivel == '15'){//CENTRALIZADOR HUMANISTICA
             // FUNCION PARA VERIFICAR SI EL CURSO DE PRIMARIA TRABAJA CON LA NUEVA CURRICULA
@@ -312,7 +314,42 @@ class ReportesController extends Controller {
         }
         else{//CENTRALIZADOR TECNICA
             if($this->session->get('ie_gestion') >= 2016 ){
-                if ($this->session->get('ie_per_estado') == '0'){
+
+                $query = $em->getConnection()->prepare("
+                            SELECT
+                            institucioneducativa.id, 
+                            institucioneducativa_sucursal.id, 
+                            institucioneducativa_sucursal.periodo_tipo_id,
+                            institucioneducativa_sucursal.gestion_tipo_id, 
+                            institucioneducativa_sucursal_tramite.id, 
+                            institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id, 
+                            institucioneducativa_sucursal_tramite.periodo_estado_id, 
+                            institucioneducativa_sucursal_tramite.tramite_estado_id, 
+                            institucioneducativa_sucursal_tramite.tramite_tipo_id
+                        FROM
+                            institucioneducativa
+                            INNER JOIN
+                            institucioneducativa_sucursal
+                            ON 
+                                institucioneducativa.id = institucioneducativa_sucursal.institucioneducativa_id
+                            INNER JOIN
+                            institucioneducativa_sucursal_tramite
+                            ON 
+                                institucioneducativa_sucursal.id = institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id
+                                where 
+                                institucioneducativa.id = :sie  and gestion_tipo_id = 2024 and  periodo_tipo_id = 3 and tramite_estado_id = 14 
+                    ");                
+            
+                    $query->bindValue(':sie', $this->session->get('ie_id'));
+                    $query->execute();
+                    $cierre2024 = $query->fetchAll(); 
+            
+                    $segundosemestre2024cierre = false;
+                    if($cierre2024){
+                        $segundosemestre2024cierre = true;
+                    }
+
+                if ($this->session->get('ie_per_estado') == '0'  or $segundosemestre2024cierre == true ){
                     //VALIDOS
                     $ciclotxt = $aInfoUeducativa['ueducativaInfo']['ciclo'];
                     $ciclotxt = substr($ciclotxt, 0, 6);
