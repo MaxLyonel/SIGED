@@ -836,6 +836,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
                         $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
                         $especialidadEstudiante->setEstudianteInscripcion($inscripcion);
                         $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
+                        $especialidadEstudiante->setObservacion('NUEVO..');
                         $especialidadEstudiante->setHoras(0);
                         $em->persist($especialidadEstudiante);
                         $em->flush();
@@ -898,6 +899,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid));
                 $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
                 $especialidadEstudiante->setHoras(0);
+                $especialidadEstudiante->setObservacion('NUEVO...');
                 $em->persist($especialidadEstudiante);
                 $em->flush();
             }

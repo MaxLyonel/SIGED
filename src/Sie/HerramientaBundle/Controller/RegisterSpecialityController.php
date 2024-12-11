@@ -127,6 +127,7 @@ class RegisterSpecialityController extends Controller {
                       $objInscriptionTecnicoHumanistico->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
                       $objInscriptionTecnicoHumanistico->setInstitucioneducativaHumanisticoId($arrSpecialities[0]);
                       $objInscriptionTecnicoHumanistico->sethoras(($horas) ? $horas : 0);
+                      $objInscriptionTecnicoHumanistico->setObservacion('NUEVO.__.');
                   }
                   $em->persist($objInscriptionTecnicoHumanistico);
                   $em->flush();

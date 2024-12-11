@@ -146,6 +146,8 @@ class TecnicoHumanisticoController extends Controller {
             $objInscriptionTecnicoHumanistico->setEstudianteInscripcionId($idIns);
             $objInscriptionTecnicoHumanistico->setEspecialidadTipo($idEspecialidad);
             $objInscriptionTecnicoHumanistico->sethoras(($horas) ? $horas : 0);
+            $objInscriptionTecnicoHumanistico->setObservacion('NUEVO');
+            $objInscriptionTecnicoHumanistico->setFechaRegistro(new \DateTime('now'));
         }
         $em->persist($objInscriptionTecnicoHumanistico);
         $em->flush();

@@ -1882,6 +1882,7 @@ class InfoEstudianteController extends Controller {
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
                 $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($specialityId));
                 $especialidadEstudiante->setHoras(0);
+                $especialidadEstudiante->setObservacion('NUEVO..._.');
                 $em->persist($especialidadEstudiante);
 
                   //set the backup info
