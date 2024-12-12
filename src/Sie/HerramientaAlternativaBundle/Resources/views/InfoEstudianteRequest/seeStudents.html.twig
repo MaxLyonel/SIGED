@@ -373,7 +373,7 @@
                                                     {#ACTIVO TOMA DE AREAS SOLO EN NOTAS Y REGULARIZAION#}
                                                     {#% if (app.session.get('roluser') == 7 and (app.session.get('ie_gestion') == app.session.get('currentyear'))) or ((app.session.get('userId') != 94161725) and  app.session.get('roluser') == 7)%#}
                                                     {#% if ( app.session.get('ie_gestion') == app.session.get('currentyear') and app.session.get('ie_per_estado') == '3'and app.session.get('roluser') == 9 ) %#}      
-                                                    {% if (app.session.get('roluser') == 9)  and app.session.get('ie_gestion') == 2025 and app.session.get('ie_per_cod') == 3 %}  
+                                                    {% if (app.session.get('roluser') == 7) and app.session.get('ie_gestion') == 2024 and app.session.get('ie_per_cod') == 3 %}  
                                                     {# commented by krlos 07.07.2020 #}      
                                                          {#% if app.session.get('userId') == 94161725 %}    {# PARA TODOS A SOLIICTUD DE RAUL CONTRERAS #}                                            
                                                             <li>
