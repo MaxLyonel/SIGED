@@ -1676,9 +1676,8 @@ class TramiteDetalleController extends Controller {
                     break;
                 case 3:
                     //corte temporal por saturacion
-                    if($ges < 2024){
                      $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_medio_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
-                    }
+                    
                     break;
             }           
             $response->setStatusCode(200);
@@ -3977,9 +3976,8 @@ class TramiteDetalleController extends Controller {
 
             // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
             //corte temporal por saturacion
-            if($ges<2024){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&',false, $context));
-            }
+            
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
