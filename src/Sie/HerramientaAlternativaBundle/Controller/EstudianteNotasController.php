@@ -58,7 +58,7 @@ class EstudianteNotasController extends Controller {
         //dump($estudianteInscripcionS2);
         //496266104
 
-        $guardanotas = true;
+        $guardanotas = false;
         
         //si es especializados preguntamos
         if(($estudianteInscripcionS2aux->nivelId == 15 and $estudianteInscripcionS2aux->gradoId == 3))
@@ -121,20 +121,20 @@ class EstudianteNotasController extends Controller {
                 );*/
 
                 //correo del 1212
-                $ceas = array(
+                /*$ceas = array(
                     71460038,81460121,81370079,61470046,81460112,61470052,81410137,61470045,81400074,81340068,71380044,81480133,	
                     51450049,81420070,81480130,81480203,81480132,81480110,81450114,80410043,80400017,60420072,80900082,80840048,
                     80870082,80980485,80980492,81980796,81981503,80480303,80400017,80480272,80480303,80480286,80480188,80480255,
                     80480299,60450020,70470050,70420123,80420064, 80850048, 80730649, 80730635, 80730649, 80730635, 40730328,
                     40730315, 80730598, 80730657
-                );
+                );*/
 
 
-                $centro =  $this->session->get('ie_id');
+                //$centro =  $this->session->get('ie_id');
                 //dump($centro); die; 
-                if ( in_array( $centro, $ceas) ) {
+                /*if ( in_array( $centro, $ceas) ) {
                     $guardanotas = true;
-                }
+                }*/
 
             }
             /*else{

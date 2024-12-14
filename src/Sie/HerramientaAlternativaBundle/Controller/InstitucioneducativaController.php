@@ -1701,6 +1701,8 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     public function cerraroperativoAction(Request $request) { //dcastillo
         
 
+        die;
+        
         //dump('here'); die;
 
         $sesion = $request->getSession();
