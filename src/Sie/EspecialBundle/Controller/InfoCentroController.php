@@ -494,30 +494,179 @@ class InfoCentroController extends Controller {
         LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
         LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
         LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
-        INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
         WHERE ".$where." AND rc.gestion = 2024 AND c.gestion_tipo_id = 2024  AND c.nivel_tipo_id<>405 AND
         rc.institucioneducativa_tipo_id = 4 AND inst.estadoinstitucion_tipo_id = 10
         and ei.estadomatricula_tipo_id not in (6,10)
         and t.id in (99,22,43,41,19,46,39,44,61,62,63,28,37,38,50,51,52,53,54,55,56,57,58,59,33,31,25,26,7,8,47,48)
-        and s.id in (38,37,36,35,20,99,8,9,40,99) and ei.observacion<>'2semestre'
         and m.id<3
-        and ei.fecha_inscripcion between '2024-01-01' and '2024-08-01' 
-        and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
-          and
-         ((select  MAX  (nc.nota_tipo_id) from estudiante_nota nc, estudiante_asignatura ea where ea.estudiante_inscripcion_id=ei.id and ea.id=nc.estudiante_asignatura_id ) is null
-              or (select  MAX  (nc.nota_tipo_id) from estudiante_nota nc, estudiante_asignatura ea where ea.estudiante_inscripcion_id=ei.id and ea.id=nc.estudiante_asignatura_id ) =6 )
-        group by    lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial        
+        and ei.fecha_inscripcion between '2024-01-01' and '2024-12-31' 
+       and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
+              and
+             ((select  MAX  (nc.nota_tipo_id) from estudiante_nota nc, estudiante_asignatura ea where ea.estudiante_inscripcion_id=ei.id and ea.id=nc.estudiante_asignatura_id ) <8
+                  )
+             group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
         ORDER BY
         lt4.lugar, total desc
-        
     ");
     
     $query->execute();
     $consol = $query->fetchAll();
 
-
-        $gestiones = $em->getRepository('SieAppWebBundle:GestionTipo')->findBy(array(), array('id' => 'DESC'));
     
+    $query1 = $em->getConnection()->prepare("
+    SELECT
+    lt4.lugar AS departamento,
+    inst.id as codigo_sie,
+    inst.institucioneducativa,
+     a.area_especial, count(ei.id) as total
+    FROM registro_consolidacion rc
+    INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+    INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+    inner join institucioneducativa_curso c  on c.institucioneducativa_id =inst.id
+    inner join institucioneducativa_curso_especial ce on  c.id=ce.institucioneducativa_curso_id 
+    inner join especial_area_tipo a on  a.id=ce.especial_area_tipo_id
+    inner join especial_programa_tipo t on t.id=ce.especial_programa_tipo_id 
+    inner join especial_servicio_tipo s on s.id=ce.especial_servicio_tipo_id 
+    inner join nivel_tipo n on c.nivel_tipo_id=n.id
+    inner join especial_modalidad_tipo m on  ce.especial_modalidad_tipo_id = m.id
+    inner join estudiante_inscripcion ei on c.id=ei.institucioneducativa_curso_id
+    inner join estudiante e on e.id=ei.estudiante_id
+    inner join estudiante_inscripcion_especial eie on ei.id = eie.estudiante_inscripcion_id
+    LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+    LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+    LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+    LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+    LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+    WHERE ".$where." AND rc.gestion = 2024 AND c.gestion_tipo_id = 2024  AND c.nivel_tipo_id<>405 AND
+    rc.institucioneducativa_tipo_id = 4 AND inst.estadoinstitucion_tipo_id = 10
+    and ei.estadomatricula_tipo_id not in (6,10)
+ 	and s.id in (38,37,36,35,20,8,9)
+    and m.id<3
+    and ei.fecha_inscripcion between '2024-01-01' and '2024-07-30' 
+    and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) <54
+    group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
+    ORDER BY
+    lt4.lugar, total desc
+");
+$query1->execute();
+$consol_servicios = $query1->fetchAll();
+
+$query11 = $em->getConnection()->prepare("
+SELECT
+lt4.lugar AS departamento,
+inst.id as codigo_sie,
+inst.institucioneducativa,
+ a.area_especial, count(ei.id) as total
+FROM registro_consolidacion rc
+INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+inner join institucioneducativa_curso c  on c.institucioneducativa_id =inst.id
+inner join institucioneducativa_curso_especial ce on  c.id=ce.institucioneducativa_curso_id 
+inner join especial_area_tipo a on  a.id=ce.especial_area_tipo_id
+inner join especial_programa_tipo t on t.id=ce.especial_programa_tipo_id 
+inner join especial_servicio_tipo s on s.id=ce.especial_servicio_tipo_id 
+inner join nivel_tipo n on c.nivel_tipo_id=n.id
+inner join especial_modalidad_tipo m on  ce.especial_modalidad_tipo_id = m.id
+inner join estudiante_inscripcion ei on c.id=ei.institucioneducativa_curso_id
+inner join estudiante e on e.id=ei.estudiante_id
+inner join estudiante_inscripcion_especial eie on ei.id = eie.estudiante_inscripcion_id
+LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+WHERE ".$where." AND rc.gestion = 2024 AND c.gestion_tipo_id = 2024  AND c.nivel_tipo_id<>405 AND
+rc.institucioneducativa_tipo_id = 4 AND inst.estadoinstitucion_tipo_id = 10
+and ei.estadomatricula_tipo_id not in (6,10)
+ and s.id in (38,37,36,35,20,8,9)
+and m.id<3
+and ei.fecha_inscripcion between '2024-08-01' and '2024-12-30' 
+and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
+group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
+ORDER BY
+lt4.lugar, total desc
+");
+$query11->execute();
+$consol_servicios2 = $query11->fetchAll();
+
+
+$query2 = $em->getConnection()->prepare("
+SELECT
+lt4.lugar AS departamento,
+inst.id as codigo_sie,
+inst.institucioneducativa,
+ a.area_especial, count(ei.id) as total
+FROM registro_consolidacion rc
+INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+inner join institucioneducativa_curso c  on c.institucioneducativa_id =inst.id
+inner join institucioneducativa_curso_especial ce on  c.id=ce.institucioneducativa_curso_id 
+inner join especial_area_tipo a on  a.id=ce.especial_area_tipo_id
+inner join especial_programa_tipo t on t.id=ce.especial_programa_tipo_id 
+inner join especial_servicio_tipo s on s.id=ce.especial_servicio_tipo_id 
+inner join nivel_tipo n on c.nivel_tipo_id=n.id
+inner join especial_modalidad_tipo m on  ce.especial_modalidad_tipo_id = m.id
+inner join estudiante_inscripcion ei on c.id=ei.institucioneducativa_curso_id
+inner join estudiante e on e.id=ei.estudiante_id
+inner join estudiante_inscripcion_especial eie on ei.id = eie.estudiante_inscripcion_id
+LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+WHERE ".$where." AND rc.gestion = 2024 AND c.gestion_tipo_id = 2024  AND c.nivel_tipo_id<>405 AND
+rc.institucioneducativa_tipo_id = 4 AND inst.estadoinstitucion_tipo_id = 10
+and ei.estadomatricula_tipo_id not in (6,10)
+ and t.id in (22,41,19,46,39,44,61,62,63,28,38,50,51,52,53,54,55,56,57,58,59,33,31,47,48)
+and m.id<3
+and ei.fecha_inscripcion between '2024-01-01' and '2024-07-30' 
+and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) <54
+     group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
+ORDER BY
+lt4.lugar, total desc
+");
+$query2->execute();
+$consol_programas = $query2->fetchAll();
+
+$query22 = $em->getConnection()->prepare("
+SELECT
+lt4.lugar AS departamento,
+inst.id as codigo_sie,
+inst.institucioneducativa,
+ a.area_especial, count(ei.id) as total
+FROM registro_consolidacion rc
+INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+inner join institucioneducativa_curso c  on c.institucioneducativa_id =inst.id
+inner join institucioneducativa_curso_especial ce on  c.id=ce.institucioneducativa_curso_id 
+inner join especial_area_tipo a on  a.id=ce.especial_area_tipo_id
+inner join especial_programa_tipo t on t.id=ce.especial_programa_tipo_id 
+inner join especial_servicio_tipo s on s.id=ce.especial_servicio_tipo_id 
+inner join nivel_tipo n on c.nivel_tipo_id=n.id
+inner join especial_modalidad_tipo m on  ce.especial_modalidad_tipo_id = m.id
+inner join estudiante_inscripcion ei on c.id=ei.institucioneducativa_curso_id
+inner join estudiante e on e.id=ei.estudiante_id
+inner join estudiante_inscripcion_especial eie on ei.id = eie.estudiante_inscripcion_id
+LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+WHERE ".$where." AND rc.gestion = 2024 AND c.gestion_tipo_id = 2024  AND c.nivel_tipo_id<>405 AND
+rc.institucioneducativa_tipo_id = 4 AND inst.estadoinstitucion_tipo_id = 10
+and ei.estadomatricula_tipo_id not in (6,10)
+ and t.id in (22,41,19,46,39,44,61,62,63,28,38,50,51,52,53,54,55,56,57,58,59,33,31,47,48)
+and m.id<3
+and ei.fecha_inscripcion between '2024-08-01' and '2024-12-30' 
+and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
+     group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
+ORDER BY
+lt4.lugar, total desc
+");
+$query22->execute();
+$consol_programas2 = $query22->fetchAll();
+
+        $gestiones = $em->getRepository('SieAppWebBundle:GestionTipo')->findBy(array(), array('id' => 'DESC'));    
         $gestionesArray = array();
         
         foreach ($gestiones as $value) {
@@ -528,6 +677,10 @@ class InfoCentroController extends Controller {
         
         return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:index_gestion_lista.html.twig', array(
             'consol' => $consol,
+            'consol_servicios' => $consol_servicios,
+            'consol_programas' => $consol_programas,
+            'consol_servicios2' => $consol_servicios2,
+            'consol_programas2' => $consol_programas2,
             'gestiones' => $gestionesArray,
             'gestionactual' => $gestionactual,
             'title' => $title,
