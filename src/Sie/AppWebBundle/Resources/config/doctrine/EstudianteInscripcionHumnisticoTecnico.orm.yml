@@ -2,12 +2,12 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
     type: entity
     table: estudiante_inscripcion_humnistico_tecnico
     indexes:
-        IDX_9977FBB1877D22F:
-            columns:
-                - institucioneducativa_humanistico_id
         IDX_9977FBBD72DBC59:
             columns:
                 - especialidad_tecnico_humanistico_tipo_id
+        IDX_9977FBB1877D22F:
+            columns:
+                - institucioneducativa_humanistico_id
     uniqueConstraints:
         uq_estudiante_inscripcion_hum_tec:
             columns:
@@ -48,13 +48,13 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
             comment: ''
             column: fecha_modificacion
     manyToOne:
-        institucioneducativaHumanistico:
-            targetEntity: InstitucioneducativaEspecialidadTecnicoHumanistico
+        especialidadTecnicoHumanisticoTipo:
+            targetEntity: EspecialidadTecnicoHumanisticoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                institucioneducativa_humanistico_id:
+                especialidad_tecnico_humanistico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         estudianteInscripcion:
@@ -66,13 +66,13 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
                 estudiante_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
-        especialidadTecnicoHumanisticoTipo:
-            targetEntity: EspecialidadTecnicoHumanisticoTipo
+        institucioneducativaHumanistico:
+            targetEntity: InstitucioneducativaEspecialidadTecnicoHumanistico
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                especialidad_tecnico_humanistico_tipo_id:
+                institucioneducativa_humanistico_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
