@@ -1,6 +1,7 @@
-{% if consol is not empty %}
+
     <div class="table-responsive col-md-12">
-    <h1>NOTAS FALTANTES DEL 3ER TRIMESTRE</h1>
+    {% if consol is not empty %}
+    <h3>NOTAS FALTANTES DEL 3ER TRIMESTRE</h3>
         <table class="table table-bordered table-striped" id="listaConsol">
 		
             <thead>
@@ -29,9 +30,12 @@
             </tbody>
 		
         </table>
+        
+{% endif %}
+{% if consol_programas is not empty %}
           <hr></hr>
-          <h1>NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE PROGRAMAS </h1>
-        <table class="table table-bordered table-striped" id="listaConsolServicios">
+          <h3>NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE PROGRAMAS </h3>
+        <table class="table table-bordered table-striped" id="listaConsolProgramas">
 		
             <thead>
                 <tr>
@@ -59,10 +63,12 @@
             </tbody>
 		
         </table>
+        
+{% endif %}
+{% if consol_programas2 is not empty %}
         <hr></hr>
-        <hr></hr>
-          <h1>INSCRITOS EN EL 2DO SEMESTRE CON NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE PROGRAMAS </h1>
-        <table class="table table-bordered table-striped" id="listaConsolServicios">
+          <h3>INSCRITOS EN EL 2DO SEMESTRE CON NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE PROGRAMAS </h3>
+        <table class="table table-bordered table-striped" id="listaConsolProgramas2do">
 		
             <thead>
                 <tr>
@@ -77,52 +83,25 @@
 
             
             <tbody>
-                {% for registrop in consol_programas2 %}
+                {% for registropr in consol_programas2 %}
                 	<tr>
                 		<td class="text-center">{{loop.index}}</td>
-                		<td>{{registrop.departamento}}</td>
-                		<td>{{registrop.codigo_sie}}</td>
-                		<td>{{registrop.institucioneducativa}}</td>
-						<td>{{registrop.area_especial}}</td>
-						<td>{{registrop.total}}</td>
-                	</tr>
-                {% endfor %}
-            </tbody>
-		
-        </table>
-        <HR></HR>
-        <h1>NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE SERVICIOS </h1>
-        <table class="table table-bordered table-striped" id="listaConsolServicios">
-		
-            <thead>
-                <tr>
-                	<th style="min-width:15px">#</th>
-                    <th>Departamento</th>
-                    <th>SIE</th>
-                    <th>Centro de Educación</th>
-                    <th>Area/Discapacidad</th>
-                    <th>Estudiantes sin calificaciones</th>
-                </tr>
-            </thead>
-
-           
-            <tbody>
-                {% for registros in consol_servicios %}
-                	<tr>
-                		<td class="text-center">{{loop.index}}</td>
-                		<td>{{registros.departamento}}</td>
-                		<td>{{registros.codigo_sie}}</td>
-                		<td>{{registros.institucioneducativa}}</td>
-						<td>{{registros.area_especial}}</td>
-						<td>{{registros.total}}</td>
+                		<td>{{registropr.departamento}}</td>
+                		<td>{{registropr.codigo_sie}}</td>
+                		<td>{{registropr.institucioneducativa}}</td>
+						<td>{{registropr.area_especial}}</td>
+						<td>{{registropr.total}}</td>
                 	</tr>
                 {% endfor %}
             </tbody>
 		
         </table>
         
-        <hr></hr>
-        <h1>INSCRITOS EN EL 2DO SEMESTRE CON NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE SERVICIOS </h1>
+{% endif %}
+
+{% if consol_servicios is not empty %}
+        <HR></HR>
+        <h3>NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE SERVICIOS </h3>
         <table class="table table-bordered table-striped" id="listaConsolServicios">
 		
             <thead>
@@ -138,22 +117,55 @@
 
            
             <tbody>
-                {% for registros in consol_servicios2 %}
+                {% for registrose in consol_servicios %}
                 	<tr>
                 		<td class="text-center">{{loop.index}}</td>
-                		<td>{{registros.departamento}}</td>
-                		<td>{{registros.codigo_sie}}</td>
-                		<td>{{registros.institucioneducativa}}</td>
-						<td>{{registros.area_especial}}</td>
-						<td>{{registros.total}}</td>
+                		<td>{{registrose.departamento}}</td>
+                		<td>{{registrose.codigo_sie}}</td>
+                		<td>{{registrose.institucioneducativa}}</td>
+						<td>{{registrose.area_especial}}</td>
+						<td>{{registrose.total}}</td>
                 	</tr>
                 {% endfor %}
             </tbody>
 		
         </table>
-    </div>
-{% else %}
-    No se encontraron registros.
+        
 {% endif %}
+{% if consol_servicios2 is not empty %}
+        <hr></hr>
+        <h3>INSCRITOS EN EL 2DO SEMESTRE CON NOTAS FALTANTES DEL SEGUNDO SEMESTRE  DE SERVICIOS </h3>
+        <table class="table table-bordered table-striped" id="listaConsolServicios2do">
+		
+            <thead>
+                <tr>
+                	<th style="min-width:15px">#</th>
+                    <th>Departamento</th>
+                    <th>SIE</th>
+                    <th>Centro de Educación</th>
+                    <th>Area/Discapacidad</th>
+                    <th>Estudiantes sin calificaciones</th>
+                </tr>
+            </thead>
+
+           
+            <tbody>
+                {% for registroser in consol_servicios2 %}
+                	<tr>
+                		<td class="text-center">{{loop.index}}</td>
+                		<td>{{registroser.departamento}}</td>
+                		<td>{{registroser.codigo_sie}}</td>
+                		<td>{{registroser.institucioneducativa}}</td>
+						<td>{{registroser.area_especial}}</td>
+						<td>{{registroser.total}}</td>
+                	</tr>
+                {% endfor %}
+            </tbody>
+		
+        </table>
+        
+{% endif %}
+    </div>
+
 
 
