@@ -360,11 +360,12 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_humnistico_tecnico');");
                 $query->execute();
                 $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
-                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $especialidadEstudiante->setInstitucioneducativaHumanistico($institucionEspecialidad);
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns));
                 $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
                 $especialidadEstudiante->setHoras(0);
                 $especialidadEstudiante->setObservacion('NUEVO._.');
+                $especialidadEstudiante->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
                 $em->persist($especialidadEstudiante);
                 $em->flush();
             }
@@ -507,6 +508,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
     }
 
     public function especialidadRegistrarAction(Request $request){
+        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $infoUe = $form['infoUe'];
@@ -514,16 +516,16 @@ class InfoEstudianteAreasEstudianteController extends Controller {
         $idInscripcion = $form['idInscripcion'];
         $idieeht = $form['idieeht'];
         $arrInfoUe = unserialize($infoUe);
-
-
+        
         $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($idieeht);
-
+        // dump($institucionEspecialidad->getId());die;
         $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
-        $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+        $especialidadEstudiante->setInstitucioneducativaHumanistico($institucionEspecialidad);
         $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
         $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
         $especialidadEstudiante->setHoras(0);
-        $especialidadEstudiante->setObservacion('NUEVO._..');
+        $especialidadEstudiante->setObservacion('NUEVO.');
+        $especialidadEstudiante->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
         $em->persist($especialidadEstudiante);
         $em->flush();
 

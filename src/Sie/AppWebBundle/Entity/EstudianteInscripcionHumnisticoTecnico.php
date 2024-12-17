@@ -98,29 +98,6 @@ class EstudianteInscripcionHumnisticoTecnico {
 
 
     /**
-     * Set institucioneducativaHumanisticoId
-     *
-     * @param integer $institucioneducativaHumanisticoId
-     * @return EstudianteInscripcionHumnisticoTecnico
-     */
-    public function setInstitucioneducativaHumanisticoId($institucioneducativaHumanisticoId)
-    {
-        $this->institucioneducativaHumanisticoId = $institucioneducativaHumanisticoId;
-
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativaHumanisticoId
-     *
-     * @return integer
-     */
-    public function getInstitucioneducativaHumanisticoId()
-    {
-        return $this->institucioneducativaHumanisticoId;
-    }
-
-    /**
      * Set especialidadTecnicoHumanisticoTipo
      *
      * @param \Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo $especialidadTecnicoHumanisticoTipo

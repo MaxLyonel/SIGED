@@ -833,11 +833,12 @@ class GestionesPasadasAreasEstudianteController extends Controller {
                     if(count($especialidadAnterior) > 0) {
                         $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($especialidadAnterior[0]['institucioneducativaHumanisticoId']);                    
                         $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
-                        $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                        $especialidadEstudiante->setInstitucioneducativaHumanistico($institucionEspecialidad);
                         $especialidadEstudiante->setEstudianteInscripcion($inscripcion);
                         $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
                         $especialidadEstudiante->setObservacion('NUEVO..');
                         $especialidadEstudiante->setHoras(0);
+                        $especialidadEstudiante->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
                         $em->persist($especialidadEstudiante);
                         $em->flush();
                     }
@@ -895,11 +896,12 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             if($especialidades != 0) {
                 $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($especialidades);
                 $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
-                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $especialidadEstudiante->setInstitucioneducativaHumanistico($institucionEspecialidad);
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid));
                 $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
                 $especialidadEstudiante->setHoras(0);
                 $especialidadEstudiante->setObservacion('NUEVO...');
+                $especialidadEstudiante->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
                 $em->persist($especialidadEstudiante);
                 $em->flush();
             }

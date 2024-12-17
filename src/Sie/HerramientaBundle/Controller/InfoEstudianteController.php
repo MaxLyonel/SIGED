@@ -1877,12 +1877,13 @@ class InfoEstudianteController extends Controller {
 
                 // set tthe add or update
                 $arrCondition = array('institucioneducativa'=>$this->session->get('ie_id'), 'gestionTipo'=>$this->session->get('currentyear'), 'especialidadTecnicoHumanisticoTipo'=>$specialityId);
-                    $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findOneBy($arrCondition);
-                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findOneBy($arrCondition);
+                $especialidadEstudiante->setInstitucioneducativaHumanistico($institucionEspecialidad);
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId));
                 $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($specialityId));
                 $especialidadEstudiante->setHoras(0);
                 $especialidadEstudiante->setObservacion('NUEVO..._.');
+                $especialidadEstudiante->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
                 $em->persist($especialidadEstudiante);
 
                   //set the backup info
