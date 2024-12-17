@@ -408,7 +408,7 @@ class BthRegularizacionTtgTteController extends Controller {
                 
                 $estInscHumTec	= new EstudianteInscripcionHumnisticoTecnico();
                 
-                $estInscHumTec->setInstitucioneducativaHumanisticoId($institucionHumanisticoEsp);
+                $estInscHumTec->setInstitucioneducativaHumanistico($institucionHumanisticoEsp);
                 $estInscHumTec->setEstudianteInscripcion($estudianteInscripcion);
                 $estInscHumTec->setEspecialidadTecnicoHumanisticoTipo($especialidadTipo);
                 $estInscHumTec->setHoras(0);

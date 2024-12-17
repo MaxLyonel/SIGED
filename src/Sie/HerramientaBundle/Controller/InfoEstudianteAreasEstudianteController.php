@@ -360,11 +360,12 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_humnistico_tecnico');");
                 $query->execute();
                 $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
-                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $especialidadEstudiante->setInstitucioneducativaHumanistico($institucionEspecialidad);
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns));
                 $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
                 $especialidadEstudiante->setHoras(0);
                 $especialidadEstudiante->setObservacion('NUEVO._.');
+                $especialidadEstudiante->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
                 $em->persist($especialidadEstudiante);
                 $em->flush();
             }
