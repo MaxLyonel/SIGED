@@ -164,6 +164,48 @@ class EstudianteNotasController extends Controller {
             $guardanotas = false;
         }
 
+        // habilitamos notas pata los que no cerarraon
+
+        $query = $em->getConnection()->prepare("
+             SELECT
+                institucioneducativa.id, 
+                institucioneducativa_sucursal.id, 
+                institucioneducativa_sucursal.periodo_tipo_id,
+                institucioneducativa_sucursal.gestion_tipo_id, 
+                institucioneducativa_sucursal_tramite.id, 
+                institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id, 
+                institucioneducativa_sucursal_tramite.periodo_estado_id, 
+                institucioneducativa_sucursal_tramite.tramite_estado_id, 
+                institucioneducativa_sucursal_tramite.tramite_tipo_id
+            FROM
+                institucioneducativa
+                INNER JOIN
+                institucioneducativa_sucursal
+                ON 
+                    institucioneducativa.id = institucioneducativa_sucursal.institucioneducativa_id
+                INNER JOIN
+                institucioneducativa_sucursal_tramite
+                ON 
+                    institucioneducativa_sucursal.id = institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id
+                    where 
+                    institucioneducativa.id = :sie  and gestion_tipo_id = 2024 and  periodo_tipo_id = 3 and tramite_estado_id = 14 and institucioneducativa_sucursal.sucursal_tipo_id = :subcea
+        ");                
+
+        
+
+        $query->bindValue(':sie', $this->session->get('ie_id'));
+        $query->bindValue(':subcea', $this->session->get('ie_subcea'));
+        $query->execute();
+        $cierre2024 = $query->fetchAll(); 
+
+        $guardanotas = true;
+        if($cierre2024){
+            //ya cerro
+            $guardanotas = false;
+        }
+
+        /*----*/
+      
         //solo raul contreras
         
         if( $this->session->get('userName') == 9602888 ){
