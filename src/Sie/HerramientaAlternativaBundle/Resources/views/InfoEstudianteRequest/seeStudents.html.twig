@@ -322,7 +322,7 @@
                                                     {% endif %}
                                                     {#IMPRIMIR FORMULARIO RUDE AL SEGUN EL CASO#}
 
-                                                    {# RUDEAL 2024 SEGUNDO SEMESTRE 
+                                                    {# RUDEAL 2024 SEGUNDO SEMESTRE DCASTILLO #} 
                                                     {% if (app.session.get('ie_gestion') == '2024') and (app.session.get('ie_per_cod') == '3') and (app.session.get('roluser') == 9)  %}
                                                     <li>
                                                         <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealNew('{{infoUe}}', '{{jsnInfoStudent}}');" >
@@ -330,7 +330,7 @@
                                                         </a>
                                                     </li>
                                                     {% endif %}
-                                                    #}
+                                                    {##}
 
                                                     {% if (((app.session.get('ie_gestion') == '2016') and (app.session.get('ie_per_cod') == '3')) or ((app.session.get('ie_gestion') >= '2017') and (app.session.get('ie_per_cod') in ['2','3']))
                                                             ) %}
