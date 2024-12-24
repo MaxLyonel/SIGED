@@ -45,6 +45,11 @@ class TramiteBthModificacionCarreraTTEController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
+
+        if ($ie_id != 71410019) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $em = $this->getDoctrine()->getManager();
 
         $request_id = $request->get('id');
