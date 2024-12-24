@@ -1701,7 +1701,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     public function cerraroperativoAction(Request $request) { //dcastillo
 
 
-        return $this->redirectToRoute('principal_web');
+        //return $this->redirectToRoute('principal_web');
         
 
         //die;
@@ -1729,8 +1729,8 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
             //dump($ies);dump($iest); die;
 
-            die;
-            
+            //die;
+
             if ($iest){
                 
                 
@@ -1803,7 +1803,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     else{
 
                        // dump($iest[0]->getTramiteEstado()->getId()); die;
-                       die;
+                       //die;
 
                        $iestvar = $iest[0];
                        $iestvar->setPeriodoEstado($em->getRepository('SieAppWebBundle:PeriodoEstadoTipo')->find('2'));
@@ -1888,7 +1888,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 else{
 
                    // dump($iest[0]->getTramiteEstado()->getId()); die;
-                   die;
+                   //die;
 
                    $iest = new InstitucioneducativaSucursalTramite();
                    $iest->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id')));            

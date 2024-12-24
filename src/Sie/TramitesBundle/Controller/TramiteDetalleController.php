@@ -1659,6 +1659,8 @@ class TramiteDetalleController extends Controller {
                 case 1:
                     if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
+                    } elseif($institucionEducativaEntity['departamento_codigo'] == "2" or $institucionEducativaEntity['departamento_codigo'] == 2) {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_lp_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     } elseif($institucionEducativaEntity['departamento_codigo'] == "44" or $institucionEducativaEntity['departamento_codigo'] == 44) {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_or_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     } else {
@@ -1668,6 +1670,8 @@ class TramiteDetalleController extends Controller {
                 case 2:
                     if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
+                    } elseif($institucionEducativaEntity['departamento_codigo'] == "2" or $institucionEducativaEntity['departamento_codigo'] == 2) {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_lp_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     } elseif($institucionEducativaEntity['departamento_codigo'] == "4" or $institucionEducativaEntity['departamento_codigo'] == 4) {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_or_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     }else {
@@ -3923,7 +3927,7 @@ class TramiteDetalleController extends Controller {
     // PARAMETROS: sie, gestion
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function dipHumImpresionCartonPdfAction(Request $request) {
+    public function dipHumImpresionCartonPdfAction(Request $request) { //dump('form');die;
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
@@ -5539,7 +5543,7 @@ class TramiteDetalleController extends Controller {
     // PARAMETROS: sie, gestion
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function bachTecHumImpresionCartonPdfAction(Request $request) {
+    public function bachTecHumImpresionCartonPdfAction(Request $request) {// dump('bth');die;
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
@@ -5575,7 +5579,7 @@ class TramiteDetalleController extends Controller {
             $entidadDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $departamentoCodigo));
 
             $dep = $entidadDepartamento->getSigla();
-            $arch = 'CARTON_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
+            $arch = 'CARTON_bth_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));

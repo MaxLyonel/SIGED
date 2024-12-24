@@ -543,6 +543,7 @@ class InfoCentroController extends Controller {
  	and s.id in (38,37,36,35,20,8,9)
     and m.id<3
     and ei.fecha_inscripcion between '2024-01-01' and '2024-07-30' 
+    and ei.estadomatricula_tipo_id<>78
     and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) <54
     group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
     ORDER BY
@@ -580,6 +581,7 @@ rc.institucioneducativa_tipo_id = 4 AND inst.estadoinstitucion_tipo_id = 10
 and ei.estadomatricula_tipo_id not in (6,10)
  and s.id in (38,37,36,35,20,8,9)
 and m.id<3
+and ei.estadomatricula_tipo_id<>78
 and ei.fecha_inscripcion between '2024-08-01' and '2024-12-30' 
 and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
 group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
@@ -620,6 +622,7 @@ and ei.estadomatricula_tipo_id not in (6,10)
  and t.id in (22,41,19,46,39,44,61,62,63,28,38,50,51,52,53,54,55,56,57,58,59,33,31,47,48)
 and m.id<3
 and ei.fecha_inscripcion between '2024-01-01' and '2024-07-30' 
+	and ei.estadomatricula_tipo_id<>78
 and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) <54
      group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
 ORDER BY
@@ -627,7 +630,7 @@ lt4.lugar, total desc
 ");
 $query2->execute();
 $consol_programas = $query2->fetchAll();
-
+//dump($consol_programas);die;
 $query22 = $em->getConnection()->prepare("
 SELECT
 lt4.lugar AS departamento,
@@ -658,6 +661,7 @@ and ei.estadomatricula_tipo_id not in (6,10)
  and t.id in (22,41,19,46,39,44,61,62,63,28,38,50,51,52,53,54,55,56,57,58,59,33,31,47,48)
 and m.id<3
 and ei.fecha_inscripcion between '2024-08-01' and '2024-12-30' 
+and ei.estadomatricula_tipo_id<>78
 and (select max (nc.nota_tipo_id) from estudiante_nota_cualitativa nc where nc.estudiante_inscripcion_id=ei.id) is null
      group by        lt4.lugar,  inst.id, inst.institucioneducativa,a.area_especial
 ORDER BY
