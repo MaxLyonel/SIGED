@@ -675,7 +675,7 @@ class InfoNotasController extends Controller {
                 $nombre = 'libreta_especial_talento_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 //$data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
                 //$link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
-                $report = $this->container->getParameter('urlreportweb') . $archivo . '&estudianteid=' . $estId . '&inscripid=' . $estInsId . '&codue=' . $sie .'&areaid=' . $areaEspecialId .'&lk='. $link . '&&__format=pdf';
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&estudianteid=' . $estId . '&inscripid=' . $estInsId . '&gestion=' . $gestion .'&codue=' . $sie .'&areaid=' . $areaEspecialId .'&lk='. $link . '&&__format=pdf';
                 break;
             case 4: //fisico-motora TEMPRANA      
                 if($gestion >2023 and in_array($programa, array(28))) {   //formato semestral con asignaturas
