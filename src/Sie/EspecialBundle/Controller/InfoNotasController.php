@@ -583,7 +583,7 @@ class InfoNotasController extends Controller {
         switch ($areaEspecialId){
             case 1: //AUDITIVA
                 $nivelId = $arrInfoUe['ueducativaInfoId']['nivelId'];
-               // dump($nivelId);
+             
                 if ($nivelId == 403) {
                     $archivo = "libreta_auditiva_inicial_v1_amg.rptdesign";
                     $nombre = 'libreta_especial_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
@@ -596,7 +596,11 @@ class InfoNotasController extends Controller {
                     $archivo = "esp_informe_semestral_asignaturas.rptdesign";
                     $nombre = 'esp_informe_semestral_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 }
-                if($gestion >2023 and in_array($programa, array(22,40))) {   //formato modular con asignaturas
+                if($gestion >2023 and in_array($programa, array(22))) {   //formato modular con asignaturas
+                    $archivo = "esp_informe_modular_asignaturas.rptdesign";
+                    $nombre = 'esp_informe_modular_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                }
+                if($gestion >2023 and in_array($servicio, array(40))) {   //formato modular con asignaturas
                     $archivo = "esp_informe_modular_asignaturas.rptdesign";
                     $nombre = 'esp_informe_modular_auditiva_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 }
