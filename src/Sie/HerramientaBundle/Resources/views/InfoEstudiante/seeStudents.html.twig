@@ -498,16 +498,26 @@
                                                         #}
                                                         {# {% endif %}
                                                     {% else %} #}
+                                                    {% if app.session.get('donwloadLibreta') == true %}
                                                     
-                                                        {% if app.session.get('donwloadLibreta') == true %}
-                                                             
                                                             {# ojo aqui en la impresion#}
+                                                            {% if gestion >= 2025 %} 
+                                                            
                                                             {% if data.estadomatriculaId in estadosPermitidosImprimir  and operativo <= 3  %}
                                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                     <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
                                                                     <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                                     </a>
                                                                 </div>
+                                                            {% endif %}
+                                                            {% else %}
+                                                            {% if data.estadomatriculaId in estadosPermitidosImprimir  and operativo == 4  %}
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
+                                                                    <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo, 'idioma':idiomaId} )}}">
+                                                                    <i class="fa fa-print" style="color:#FFFFFF"></i>
+                                                                    </a>
+                                                                </div>
+                                                            {% endif %}
                                                             {% endif %}
                                                         {% else %}
                                                             {# {% if gestion >= 2024 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 %}  #}
