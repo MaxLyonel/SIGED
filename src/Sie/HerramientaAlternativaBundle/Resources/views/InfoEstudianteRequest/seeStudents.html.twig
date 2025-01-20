@@ -131,7 +131,7 @@
         {# temporal para CEA 2  #}
         {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %#}
         {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('ie_id') == 80730610 ) %}  {# POR HR 25684, TEMPORAL DESDE HOY MARTES HASTA EL VIERNES 14/06/2024 POR SOLICITUD DE RAUL #} 
-        {% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %}
+        {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %#}
                 <div class="col-md-3">
                     
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
@@ -139,15 +139,15 @@
                     </button>
                 </div>
                
-        {% endif %}
+        {#% endif %#}
         {% if (app.session.get('roluser') == 7 and (app.session.get('ie_gestion') == app.session.get('currentyear'))) or ((app.session.get('userId') != 94161725) and  app.session.get('roluser') == 7)%}
             {% if ( ((app.session.get('ie_per_estado') == '0') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') )) %}
                 <div class="col-md-3">
-                    {#
+                    
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                         <i class="fa fa-user"></i> Inscripción con CI
                     </button>
-                    #}
+                    
                 </div>
 
             {% endif %}
