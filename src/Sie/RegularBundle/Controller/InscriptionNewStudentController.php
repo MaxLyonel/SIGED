@@ -41,12 +41,12 @@ class InscriptionNewStudentController extends Controller {
      */
     public function indexAction() {
       //deshabilitado
-      if (in_array($this->session->get('roluser'), array(9))){
-           return $this->redirect($this->generateUrl('login'));
-      }
+      // if (in_array($this->session->get('roluser'), array(9))){
+      //      return $this->redirect($this->generateUrl('login'));
+      // }
       //return $this->redirect($this->generateUrl('login'));
 
-     if (in_array($this->session->get('roluser'), array(8,10,7))){
+     if (in_array($this->session->get('roluser'), array(9))){
      }else{
       return $this->redirect($this->generateUrl('login'));  
      }
