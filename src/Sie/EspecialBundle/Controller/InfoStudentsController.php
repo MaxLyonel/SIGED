@@ -408,11 +408,11 @@ class InfoStudentsController extends Controller {
     $dataUe = unserialize($form['data']);
     
    
-      //solo para casos de inscripciones por excepcion se valida que sea la departamental o distrital
-      if($this->session->get('roluser')==9){ 
-        $this->session->getFlashBag()->add('notalento', 'La Inscripción Excepcional solo esta habilitado al técnico de la Departamental o Distrital');
-        return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
-      }
+    //solo para casos de inscripciones por excepcion se valida que sea la departamental o distrital
+    //  if($this->session->get('roluser')==9){ 
+    //    $this->session->getFlashBag()->add('notalento', 'La Inscripción Excepcional solo esta habilitado al técnico de la Departamental o Distrital');
+    //    return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array('exist'=>false ));
+    //  }
     
     
     //get the student info by rudeal
@@ -622,7 +622,7 @@ class InfoStudentsController extends Controller {
       $estado = 4;
       $obs = '2semestre';
     }else{*/
-      $estado = 68;
+      $estado = 4;
       $obs = '1';
     //}
  
