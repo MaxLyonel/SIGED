@@ -233,7 +233,7 @@ class CreacionCursosEspecialController extends Controller {
             $query = $em->createQuery(
                     'SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
                                     WHERE a.id IN (:id) ORDER BY a.areaEspecial'
-                     )->setParameter('id',array(1,2,3,4,6,7,10,12));
+                     )->setParameter('id',array(1,2,3,4,6,7,10,12,20));
                     // )->setParameter('id',array(1,2,3,4,5,6,7,8,9,100));
                     $areas_result = $query->getResult();
                     $areas = array();
@@ -338,9 +338,9 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('idInstitucion','hidden',array('data'=>$request->get('idInstitucion')))
                     ->add('idGestion','hidden',array('data'=>$request->get('idGestion')))
                     ->add('turno','choice',array('label'=>'Turno','choices'=>$turnos,'attr'=>array('class'=>'form-control')))
-                    ->add('area', 'choice',array('label'=>'Subárea','choices'=>$areas , 'empty_value' => 'Seleccionar', 'required' => true, 'attr' => array('class' => 'form-control')))
+                    ->add('area', 'choice',array('label'=>'Oferta subarea/servicio','choices'=>$areas , 'empty_value' => 'Seleccionar', 'required' => true, 'attr' => array('class' => 'form-control')))
                     ->add('modalidad','choice',array('label'=>'Modalidad','empty_value' => 'Seleccionar','required' => true, 'attr' => array('class' => 'form-control'),'attr'=>array('class'=>'form-control')))
-                    ->add('nivel','choice',array('label'=>'Oferta','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
+                    ->add('nivel','choice',array('label'=>'Oferta:','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('grado','choice',array('label'=>'Grado','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('programa','choice',array('label'=>'Programa','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('servicio','choice',array('label'=>'Servicio','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
@@ -350,8 +350,10 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('nivelTecnicoId','hidden',array('data'=> $nivelTecnico))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
                     ->add('fisicoMotor','choice',array('label'=>'Fisico-Motora','choices'=>array('Físico-Motora/Auditiva'=>'Físico-Motora/Auditiva','Físico-Motora/Visual'=>'Físico-Motora/Visual','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
-                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple', 'Visual/Auditiva'=>'Visual/Auditiva','Visual/Intelectual'=>'Visual/Intelectual','Intelectual/Auditiva'=>'Intelectual/Auditiva' ),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
+                    //->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple', 'Visual/Auditiva'=>'Visual/Auditiva','Visual/Intelectual'=>'Visual/Intelectual','Intelectual/Auditiva'=>'Intelectual/Auditiva' ),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
+                    //->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Multiple'=>'Multiple'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
                     ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación Sociocomunitaria en Casa','required' => false))
+                    
                     ->add('guardar','submit',array('label'=>'Crear Oferta','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
             $em->getConnection()->commit();
@@ -616,10 +618,7 @@ class CreacionCursosEspecialController extends Controller {
 
         if ($area == "1" ) { //AUDITIVA
             if($modalidad == 1){
-                $nivelesArray = array(403,404,405,410,411);
-                if ($this->session->get('idGestion') > 2023) {
-                    $nivelesArray =  array(403,404,405,411);
-                }
+                $nivelesArray = array(403,404,411);
             }else{
                 $nivelesArray = array(410);
             }
@@ -660,7 +659,7 @@ class CreacionCursosEspecialController extends Controller {
             }else{
                 
                 if($modalidad == 1){
-                    $nivelesArray = array(410,411);
+                    $nivelesArray = array(411);
                 }else{
                     $nivelesArray = array(410);
                 }
@@ -709,6 +708,11 @@ class CreacionCursosEspecialController extends Controller {
                 $nivelesArray = array(411);
             }
         }
+        elseif ($area == "20") {    //SERVICIOS multidisciplinarios
+            if($modalidad == 3){
+                $nivelesArray = array(410);
+            }
+        }
         $query = $em->createQuery(
                 'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                             WHERE n.id IN (:id)'
@@ -717,6 +721,8 @@ class CreacionCursosEspecialController extends Controller {
         $niveles = $query->getResult();
         
         $nivelesArray = array();
+       // dump("aqiuiii------");
+       // dump($nivelesArray);die;
         for($i=0;$i<count($niveles);$i++){
             $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
         }
@@ -821,14 +827,13 @@ class CreacionCursosEspecialController extends Controller {
         $this->session = new Session();
         $em = $this->getDoctrine()->getManager();
         $ids = array(1,2);
-        if($area==2 && $this->session->get('idGestion')>=2023) //visual
-            $ids = array(1,2,3);
         
-        if( $this->session->get('idGestion')>2023) // para todas las areas 
-            $ids = array(1,2,3);
 
-        if($area==10) //mental-psiquica
-            $ids = array(1);
+        if($area==20) //servicios complementarios
+            $ids = array(3);
+
+        if($area==1 or $area==2) //servicios complementarios
+            $ids = array(1,2,3);
 
         $modalidadesArray = array();
             $query = $em->createQuery(
@@ -889,7 +894,7 @@ class CreacionCursosEspecialController extends Controller {
                     $servicios = array(1,2,3,4,5,25,26,27,28,29);
                     
                     if($area == 1 and $this->session->get('idGestion') > 2022){
-                        $servicios = array(1,2,3,4,5,25,26,27,28,29,40);
+                        $servicios = array(40);
                     }
 
                 }else{
@@ -897,7 +902,7 @@ class CreacionCursosEspecialController extends Controller {
                 }
 
                 if($modalidad == 3  AND $area == "1"){
-                    $servicios = array(1,2,3,4,25,27,40);
+                    $servicios = array(40);
                 }
                 if($modalidad == 3 AND ($area == "3" OR $area == "12" ) ){
                     $servicios = array(5,1,2,3,4,25,27,26,28);
@@ -920,12 +925,15 @@ class CreacionCursosEspecialController extends Controller {
                 }
             }//array(1,2,3,4,5,21)
             if($modalidad == 3){
-                $servicios = array(1,2,3,4,5,28,35,36,37,38,41);
+                $servicios = array(35,36,37,38,41);
             }
             
         }
         elseif (($area == "9")  and $nivel == "410" and  $grado == "99" ) {
             $servicios = array(20);
+        }
+        elseif (($area == "20")  and $nivel == "410" and  $grado == "99" ) {
+            $servicios = array(1,2,3,4,5,25);
         }
         else {
             $servicios = array(99);
@@ -1016,7 +1024,7 @@ class CreacionCursosEspecialController extends Controller {
             }else{
                 $programas = array(5,6,17);
             }
-            if ($this->session->get('idGestion') <=2024) {
+            if ($this->session->get('idGestion') >=2024) {
                 $programas = array(61,62,63);
             }
         }elseif ($area == "4" and $nivel == "411" and  $grado == "99" ) {
@@ -1025,8 +1033,11 @@ class CreacionCursosEspecialController extends Controller {
             }else{
                 $programas = array(18);
             }
-            if ($this->session->get('idGestion') >= 2023) {
+            if ($this->session->get('idGestion') >= 2023 and $this->session->get('idGestion') <2025) {
                 $programas = array(28);
+            }
+            if ($this->session->get('idGestion') > 2024) {
+                $programas = array(65,66);
             }
         }elseif ($area == "7" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
