@@ -961,8 +961,9 @@ class StudentsInscriptionsController extends Controller {
       $periodo = $this->session->get('ie_per_cod');
       $gestion = $this->session->get('ie_gestion');
 
+      $reconocimiento = false;
       //$reconocimiento = $request->get('reconocimiento');
-      $reconocimiento = ($request->get('reconocimiento')=='false')?false:true;
+      //$reconocimiento = ($request->get('reconocimiento')=='false')?false:true;
 
       $casespecial = ($request->get('casespecial')=='false')?false:true;
       $excepcional = $request->get('excepcional');
