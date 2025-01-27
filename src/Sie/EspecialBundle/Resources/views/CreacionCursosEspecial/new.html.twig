@@ -50,12 +50,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-12" id="divMultiple" style="display:none">
-                                        {% for a in form.multiple %}
-                                            <div class="col-md-4 rdio rdio-primary circle">
-                                                {{ form_widget(a,{ 'attr':{'class':'multiple'}  }) }}
-                                                {{ form_label(a) }}
-                                            </div>
-                                        {% endfor %}
+                                        
                                         <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="form-group col-md-12" id="divFisicoMotor" style="display:none">
@@ -67,6 +62,7 @@
                                         {% endfor %}
                                         <div class="help-block with-errors"></div>
                                     </div>
+                                   
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
@@ -81,7 +77,7 @@
                                     </div>
                                 </div>
                                 <div class="row"> 
-                                    <div class="form-group col-lg-6 col-md-12">
+                                    <div class="form-group col-lg-6 col-md-12" id="divnivel">
                                         {{form_label(form.nivel)}}
                                         {{form_widget(form.nivel,{ 'attr':{'onchange':'listarGrados()'}  }) }}
                                         <div class="help-block with-errors"></div>
@@ -172,6 +168,7 @@
                     $("#divtecnica").show();
                     $("#divniveltec").show();
                 }
+                
                 $("#divservicio").show();
                 $("#divprograma").show();
                 if(area== 3 || area == 4 || area== 5){
@@ -179,11 +176,23 @@
                 }else{
                     $("#divEc").hide();
                 }
+                
                 if(area == 2){
-                    $('#idparalelo').text("Grupo");
+                    $('#idparalelo').text("Grupo...");
                 }else{
-                    $('#idparalelo').text("Paralelo");
+                    $('#idparalelo').text("Paralelo...");
                 }
+                
+                //$("#divnivel").show();  
+                 if(area == 20){ 
+                   //$("#divnivel").hide();  
+                   $("#divprograma").hide();
+                   $("#divtecnica").hide();
+                   $("#divniveltec").hide();
+                   $("#divgrado").hide();
+                  
+                }
+                
                 $.ajax({
                     type: 'get',
                     url: Routing.generate('listar_niveles_especial', {'area':area,'modalidad':modalidad}),
@@ -289,6 +298,12 @@
             var nivel = $('#form_nivel').val();
             var grado = $('#form_grado').val();
             var modalidad = $('#form_modalidad').val();
+            if(area == 20){ 
+                   nivel = 410;
+                   grado = 99;
+               $(".nivel").attr('required', false);
+                    $(".grado").attr('required', false);
+            }
             $.ajax({
                 type: 'get',
                 url: Routing.generate('listar_servicios_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
@@ -312,6 +327,7 @@
                     dropdown("#form_servicio");
                 }
             });
+                 
         }
 
           function listarMomentos() {
@@ -334,6 +350,7 @@
         }
 
         function listarProgramas() {
+            
             if ($('#form_educacionCasa').is(":checked") && $('#form_servicio').val() == 20) {
                 alert('No se puede seleccionar Apoyo Técnico Pedagógico por que está marcado Programa de Atención en Casa.');
                 $('#form_servicio').val('');
@@ -342,7 +359,11 @@
                 var nivel = $('#form_nivel').val();
                 var grado = $('#form_grado').val();
                 var modalidad = $('#form_modalidad').val();
-                
+
+                if(area == 20){ 
+                   nivel = 410;
+                   grado = 99;
+                }
 
                 $.ajax({
                     type: 'get',
@@ -384,7 +405,7 @@
             });
         }
 
-        function validacion(){
+        function validacion(){ 
             var area  = $('#form_area').val();
             if((area == 3 || area == 4 || area == 5) && $("#form_educacionCasa").is(':checked')){
                 msg = "¿Está seguro/a de crear una nueva  educativa?\n Tome nota que la  educativa será creado para:\n -EDUCACIÓN SOCIOCOMUNITARIA EN CASA";
@@ -437,13 +458,17 @@
             }
             $("#divservicio").show();
             $("#divprograma").show();
+            $("#divnivel").show();
+            
             if(area== 3 || area == 4 || area== 5){
                 $("#divEc").show();
             }else{
                 $("#divEc").hide();
             }
+
+            
             if(area == 4){
-                $("#divFisicoMotor").show();
+                $("#divFisicoMotor").hide();
                 $(".fisicoMotor").attr('required', false);
                 //$(".fisicoMotor").removeAttr('required');
                 $("#form_educacionCasa").prop('checked', false);
@@ -461,7 +486,7 @@
                 $("#divMultiple").hide();
                 $(".multiple").removeAttr('required');
             }
-            if(area== 4 || area== 6 || area== 7){
+            if( area== 4 || area== 6 || area== 7){
                 $("#divgrado").hide();
                 $("#divtecnica").hide();
                 $("#divniveltec").hide();
@@ -469,6 +494,13 @@
                 $("#divgrado").show();
                 $("#divtecnica").show();
                 $("#divniveltec").show();
+            }
+            if(area == 20){
+                $("#divservicio").hide();
+                $("#divprograma").hide();
+                $("#divtecnica").hide();
+                $("#divniveltec").hide();
+                $("#divgrado").hide();
             }
 
              listarModalidades();
