@@ -1617,9 +1617,9 @@ class StudentsInscriptionsController extends Controller {
       $arrstudentInscription = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getStudentCourseAlterPerStudentId($studentId, $this->session->get('ie_gestion'), $this->session->get('ie_per_cod'));
       // if the level is primaria or seccundaria to the validation
 
-      dump( $objUeducativa); 
+      /*dump( $objUeducativa); 
       dump( $arrstudentInscription);
-      die;
+      die;*/
 
      if($objUeducativa['nivelId']==15){
        reset($arrstudentInscription);
