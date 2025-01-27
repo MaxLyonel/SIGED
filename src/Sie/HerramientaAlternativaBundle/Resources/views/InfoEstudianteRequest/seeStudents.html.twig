@@ -133,7 +133,7 @@
         {# temporal para CEA 2  #}
         {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %#}
         {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('ie_id') == 80730610 ) %}  {# POR HR 25684, TEMPORAL DESDE HOY MARTES HASTA EL VIERNES 14/06/2024 POR SOLICITUD DE RAUL #} 
-        {#% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %#}
+        {% if app.session.get('ie_gestion') >= 2009 and (app.session.get('userId') == 94161725) %}
                 <div class="col-md-3">
                     
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
@@ -141,9 +141,9 @@
                     </button>
                 </div>
                
-        {#% endif %#}
-        {% if (app.session.get('roluser') == 7 and (app.session.get('ie_gestion') == app.session.get('currentyear'))) or ((app.session.get('userId') != 94161725) and  app.session.get('roluser') == 7)%}
-            {% if ( ((app.session.get('ie_per_estado') == '0') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') )) %}
+        {% endif %}
+        {% if (app.session.get('roluser') == 7 and (app.session.get('ie_gestion') == app.session.get('currentyear'))) or ((app.session.get('userId') != 94161725) and  app.session.get('roluser') == 9)%}
+            {#% if ( ((app.session.get('ie_per_estado') == '0') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') )) %#}
                 <div class="col-md-3">
                     
                     <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
@@ -152,7 +152,7 @@
                     
                 </div>
 
-            {% endif %}
+            {#% endif %#}
         {% endif %}
         {# FIN temporal para CEPEAD #}
          {# {% if (app.session.get('roluser') == 8) and app.session.get('ie_gestion') < app.session.get('currentyear') %}
@@ -285,7 +285,8 @@
                                                     {% endif %} #}
 
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
-                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%}
+                                                    {% if (app.session.get('ie_gestion') < app.session.get('currentyear') and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%}
+                                                    {#% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%#}
                                                     {# commented by krlos 07.07.2020  #}
                                                                 {# <li>
                                                                     <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
@@ -299,12 +300,13 @@
                                                               {#% if (app.session.get('userId') == 94161725) or ( app.session.get('roluser') == 9 )%#} 
                                                               {#% if ( habilitanotas == true  )%#} 
                                                                 {#% if ((app.session.get('ie_gestion') == app.session.get('currentyear')) and (app.session.get('ie_per_cod') == 3)) %#} 
-                                                               
+                                                                <!-- 
                                                                  <li>
                                                                     <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                         <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
                                                                     </a>
                                                                 </li>
+                                                                -->
                                                                 {#% endif %#}
     
                                                             {#% endif %#}
@@ -315,7 +317,7 @@
 
                                                     {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
                                                     {#% if (app.session.get('ie_per_estado') == '0') and (app.session.get('ie_gestion') <= app.session.get('currentyear') ) %#}
-                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') ) %}
+                                                    {% if (app.session.get('ie_gestion') < app.session.get('currentyear') ) %}
                                                         <li>
                                                           <a href="{{path('herramienta_alter_libretas', {'eInsId': data.eInsId, 'nivel': data.nivelId})}}">
                                                               <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Libreta</span>
