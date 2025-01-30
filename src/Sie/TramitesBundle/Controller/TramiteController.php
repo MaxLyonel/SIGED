@@ -415,7 +415,7 @@ class TramiteController extends Controller {
                     //}
 
                     $datosBusqueda = base64_encode(serialize($form));
-
+//dump($this->session->get('pathSystem'));die;
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:registroIndex.html.twig', array(
                         'formBusqueda' => $this->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_certificado_tecnico_registro_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Registro',
@@ -2416,7 +2416,7 @@ class TramiteController extends Controller {
                         inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
                         left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
                         left join superior_especialidad_tipo as sesth on sesth.id = sest.homologado_id
-                        where (sest.id = ".$especialidadId." or sest.homologado_id = ".$especialidadId.") and sat.codigo = ".$nivelId."
+                        where (sest.id = ".$especialidadId." or sest.homologado_id = ".$especialidadId.") and sat.codigo = ".$nivelId." and en.nota_cuantitativa>0
                         and case when ies.gestion_tipo_id = date_part('year',current_date) and pet.id = ".$periodoId." then true else en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END end
                     -- group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
                    --  , smp.horas_modulo, smt.modulo having count(*) < 2
@@ -2456,7 +2456,7 @@ class TramiteController extends Controller {
                         inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
                         inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
                         left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and en.nota_cuantitativa>0
                         and case when ies.gestion_tipo_id = date_part('year',current_date) and pet.id = ".$periodoId." then true else en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END end
                     group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
                     , smp.horas_modulo, smt.modulo having count(*) < 2
