@@ -177,6 +177,7 @@ class CursoAlternativaController extends Controller {
     }
     
     public function newAction(Request $request) {
+
         
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
