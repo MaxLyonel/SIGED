@@ -48,12 +48,19 @@ class PrincipalController extends Controller {
 
         $rol_usuario = $this->sesion->get('roluser');
 
+        
+
         $userData = $this->userData($id_usuario);
 
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('SieAppWebBundle:Notificacion');
         $hoy = new \DateTime('now');
+
+        $gestion = $this->sesion->get('currentyear');
+
+        // dump($this->sesion->all());
+        // die;
 
         $query = $repository->createQueryBuilder('n')
                 ->select('u')
@@ -229,7 +236,19 @@ class PrincipalController extends Controller {
 
         //Obtenemos los datos de la tabla riesgo_unidadeducativa_riesgo
         // $unidadEducativaTipo =  $em->getRepository('SieAppWebBundle:RiesgoUnidadeducativaTipo')->findAll();
-
+        $uewyk = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findBy(array(
+            'institucioneducativaId' => $this->sesion->get('ie_id'),
+            'gestionTipoId'  => ($gestion-1),
+            'institucioneducativaHumanisticoTecnicoTipo' => 4
+        ));
+        
+        //habilitacion de gestión para WHENAYECK
+        $fechawyk = new \DateTime(sprintf('%d-07-01', $gestion));
+        
+        if (count($uewyk) > 0 && $hoy < $fechawyk) {
+            $gestion = $gestion - 1;
+        }
+        
         //Aqui obtenemos un historial de los ultimos 3 meses del incio de actividades
         $historialInicioActividadesData=array();
         if ($rol_usuario==9){
@@ -269,7 +288,7 @@ class PrincipalController extends Controller {
                 ->where('inst.id = :idInstitucion')
                 ->andWhere('inss.gestionTipo in (:gestion)')
                 ->setParameter('idInstitucion', $this->sesion->get('ie_id'))
-                ->setParameter('gestion', $this->sesion->get('currentyear'))
+                ->setParameter('gestion', $gestion)
                 ->getQuery();
 
             $ubicacionUe = $query->getResult();
@@ -278,7 +297,7 @@ class PrincipalController extends Controller {
                 
             $descargaspn = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(
                     'institucioneducativa' => $this->sesion->get('ie_id'),
-                    'gestionTipoId'  => $this->sesion->get('currentyear'),
+                    'gestionTipoId'  => $gestion,
                     'institucioneducativaOperativoLogTipo' => 15
             ));
             $descarga = count($descargaspn);
@@ -350,7 +369,7 @@ class PrincipalController extends Controller {
           'descargasSPN'=>$descarga,
           'fechaDescargaSPN' => $fechaDescargaSPN,
           //'objObservactionSie' => $objObservactionSie
-          'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$this->sesion->get('currentyear'))),array())->createView(),
+          'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$gestion)),array())->createView(),
         //   'observacion' => $observacion,
         //   'dataEncuesta' => $dataEncuesta,
         //   'existe' => $existe,

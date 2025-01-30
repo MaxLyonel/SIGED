@@ -521,10 +521,10 @@
                                                             {% endif %}
                                                         {% else %}
                                                             {# {% if gestion >= 2024 and nivel == 13 and grado >= 4 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 %}  #}
-                                                            {% if gestion >= 2024 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 and operativo <= 3 %} 
+                                                            {% if gestion == 2024 and app.session.get('acceso_total') and app.session.get('esGuanawek')==0 and operativo <= 3 %} 
                                                             
                                                                 {# {% if gestion <= 2023 and nivel == 13 and grado == 4 %}  #}
-                                                                {% if gestion >= 2024 and nivel == 13 and grado >= 4 %} 
+                                                                {% if gestion == 2024 and nivel == 13 and grado >= 4 %} 
                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                             <i class="fa fa-list"></i>
@@ -540,7 +540,7 @@
                                                                 {% endif %}
                                                             {% else %}                                          
                                                                     {# ojo aqui #}
-                                                                {% if gestion >= 2024 and app.session.get('esGuanawek')==0 and operativo <= 3 %}    
+                                                                {% if gestion == 2024 and app.session.get('esGuanawek')==0 and operativo <= 3 %}    
                                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
@@ -573,7 +573,7 @@
                                     {# if gestion >= 2023 and nivel >= 12 and data.estadomatriculaId in [4,10,9,6] and swRegisterPersonBjp and app.session.get('estado') != 14  #}                                       
                                     {# inhabilitado el 05/10 a las 1200 #}
                                     
-                                    {% if gestion >= 2024 and nivel >= 12 and data.estadomatriculaId in [999] and swRegisterPersonBjp and app.session.get('estado') != 14  %}                                       
+                                    {% if gestion == 2024 and nivel >= 12 and data.estadomatriculaId in [999] and swRegisterPersonBjp and app.session.get('estado') != 14  %}                                       
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Asignar Titular">
                                                 <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
                                                     <i class="fa fa-user"></i>

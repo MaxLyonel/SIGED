@@ -205,15 +205,29 @@ class InboxController extends Controller {
         }
         //get the sie and the name of sie
         //$arrSieInfo = $this->getUserSie($this->session->get('personaId'), $this->session->get('currentyear'));
-        $arrSieInfo = $this->getUserInfo($this->session->get('personaId'), $this->session->get('currentyear'));
-        $arrSieInfoUe = $this->getUserSie($this->session->get('personaId'), $this->session->get('currentyear'));
+        $gestion = $this->session->get('currentyear');
+        //habilitacion de gestión para WHENAYECK
+        $uewyk = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findBy(array(
+          'institucioneducativaId' => $this->session->get('ie_id'),
+          'gestionTipoId'  => ($gestion-1),
+          'institucioneducativaHumanisticoTecnicoTipo' => 4
+        ));
+        $hoy = new \DateTime('now');
+        $fechawyk = new \DateTime(sprintf('%d-07-01', $gestion));
+        
+        if (count($uewyk) > 0 && $hoy < $fechawyk) {
+          $gestion = $gestion - 1;
+        }
+         
+        $arrSieInfo = $this->getUserInfo($this->session->get('personaId'), $gestion);
+        $arrSieInfoUe = $this->getUserSie($this->session->get('personaId'), $gestion);
         //get the ue plena info
         //$objValidateUePlena=array();
         //if(!$arrSieInfo)
 
-        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$gestion-1));
         //get the current year
-        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$gestion:($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$gestion-1;
 
 
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
@@ -287,37 +301,25 @@ class InboxController extends Controller {
          //dump($objEspecial);die;
         // dump($this->unidadEducativa);die;
 
-        // if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
-        // || ((int)$this->unidadEducativa <= 82230136 && (int)$this->unidadEducativa >=82230001 )
-        // || ((int)$this->unidadEducativa <= 80730824
-        //  && (int)$this->unidadEducativa >=80730002 )
-
-        // ) or $this->unidadEducativa == 71700024 ){
-            
-        // }
-
-
         $ie_id=$this->session->get('ie_id');
-        $_gestion=$this->session->get('currentyear');
+        $_gestion=$gestion;
         $this->session->set('esGuanawek',0);
         //change the year to current year after that ....
-        $esGuanawek=$this->esGuanawek($ie_id,$gestion=2020);
+        $esGuanawek=$this->esGuanawek($ie_id,$gestion);
         if($esGuanawek)
         {
-          /*$operativoPerUe=1;
-          $_gestion=2020;*/
           $this->session->set('esGuanawek',1);
         }
         //else{
           // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
-          $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
-          $_gestion=$this->session->get('currentyear');
+          $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$gestion-1));
+          $_gestion=$gestion;
           //$this->session->set('esGuanawek',0);
         //}
 
         $this->operativoUe = $operativoPerUe;
         //get the current year
-        $arrSieInfo[0]['gestion']= bin2hex((($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1) ;
+        $arrSieInfo[0]['gestion']= bin2hex((($operativoPerUe == 0))?$gestion:($operativoPerUe-1 == 3)?$gestion:$gestion-1) ;
         $arrSieInfo[0]['id'] = bin2hex($this->session->get('ie_id')) ;
         //get the fuill ue info
         $arrFullUeInfo=array();
@@ -350,7 +352,9 @@ class InboxController extends Controller {
             
         $entities = $query->getResult();
 
-        // dump($arrSieInfo[0]);die;
+        // dump($esGuanawek);
+        // dump($_gestion);
+        // die;
 
         $this->session->set('ue_sol_regularizar',false);
         //dump($this->session->get('pathSystem'));die;
@@ -366,7 +370,7 @@ class InboxController extends Controller {
 
             'esGuanawek' => $esGuanawek,
             'objEspecial' => $objEspecial,
-            'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($ie_id,$this->session->get('currentyear'),14),
+            'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($ie_id,$gestion,14),
         ));
     }
 
@@ -616,14 +620,28 @@ class InboxController extends Controller {
 
       $em = $this->getDoctrine()->getManager();
 
-      $arrSieInfo = $this->getUserInfo($this->session->get('personaId'), $this->session->get('currentyear'));
-      $arrSieInfoUe = $this->getUserSie($this->session->get('personaId'), $this->session->get('currentyear'));        
+      $gestion = $this->session->get('currentyear');
+      //habilitacion de gestión para WHENAYECK
+      $uewyk = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findBy(array(
+        'institucioneducativaId' => $this->session->get('ie_id'),
+        'gestionTipoId'  => ($gestion-1),
+        'institucioneducativaHumanisticoTecnicoTipo' => 4
+      ));
+      $hoy = new \DateTime('now');
+      $fechawyk = new \DateTime(sprintf('%d-07-01', $gestion));
+      
+      if (count($uewyk) > 0 && $hoy < $fechawyk) {
+        $gestion = $gestion - 1;
+      }
 
-      $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
-      $_gestion=$this->session->get('currentyear');
+      $arrSieInfo = $this->getUserInfo($this->session->get('personaId'), $gestion);
+      $arrSieInfoUe = $this->getUserSie($this->session->get('personaId'), $gestion);        
+
+      $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$gestion-1));
+      $_gestion=$gestion;
       $this->operativoUe = $operativoPerUe;
       //get the current year
-      $arrSieInfo[0]['gestion']= (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+      $arrSieInfo[0]['gestion']= (($operativoPerUe == 0))?$gestion:($operativoPerUe-1 == 3)?$gestion:$gestion-1;
       $arrSieInfo[0]['id'] = $this->session->get('ie_id');
       //get the fuill ue info
       $arrFullUeInfo=array();
@@ -648,7 +666,6 @@ class InboxController extends Controller {
         //get the values
         $form = $request->get('form');
         $dataPre = json_decode($form['data'], true);
-        
         if(isset($dataPre['tipo']) && $dataPre['tipo'] == 'history'){
           $data['gestion'] = $dataPre['gestion'];
           $arrRol = array(10,8,7);
@@ -658,6 +675,7 @@ class InboxController extends Controller {
           $data = $this->getBaseInfoUE(array());      
           // end to get the data to open the UE info
         }
+
         /*
         * verificamos si tiene tuicion
         */
@@ -678,7 +696,6 @@ class InboxController extends Controller {
           'gestionTipoId' => $data['gestion']
 
         ));
-
         $repository = $em->getRepository('SieAppWebBundle:Tramite');
         $query = $repository->createQueryBuilder('t')
             ->select('td')
