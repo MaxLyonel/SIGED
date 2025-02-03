@@ -407,7 +407,8 @@ class InfoStudentsController extends Controller {
     $form =  $request->get('form');
     $dataUe = unserialize($form['data']);
     
-   
+   // dump(unserialize($form['data']));
+   //  die;
     //solo para casos de inscripciones por excepcion se valida que sea la departamental o distrital
     //  if($this->session->get('roluser')==9){ 
     //    $this->session->getFlashBag()->add('notalento', 'La Inscripción Excepcional solo esta habilitado al técnico de la Departamental o Distrital');
@@ -472,6 +473,30 @@ class InfoStudentsController extends Controller {
             ));
         }
       }
+      if($dataUe['ueducativaInfoId']['areaEspecialId']==6) {
+        $inscriptionvDif = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $inscriptionvDif->createQueryBuilder('ei')
+        ->select('ei.id as id, iec.id as iecStudentId')
+        ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+        ->where('ei.estudiante = :id')
+        ->andwhere('iec.gestionTipo = :gestion')
+        ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+        ->andwhere('iec.nivelTipo IN (:nivel)')
+        ->setParameter('id', $objStudent->getId())
+        ->setParameter('gestion', $dataUe['requestUser']['gestion'])
+        ->setParameter('mat', array(4,79,68,7,80))
+        ->setParameter('nivel',  array(11, 404))
+        ->getQuery();
+        $listaDif = $query->getResult();
+       
+        if (count($listaDif)==0) {
+          $this->session->getFlashBag()->add('noinscription', 'Estudiante debe pertenecer a nivel de PRIMARIA del SEP');
+            return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
+                'exist'=>false
+            ));
+
+        }
+      }
       /*
       else { //191123 esto comentar cuando sea etapa de inscripcuibm, solo se habilito para TALENTO por HR 54332/2023 
        $this->session->getFlashBag()->add('notalento', 'EL proceso de inscripción solo esta habilitado para Talento Extraordinario');
@@ -483,10 +508,68 @@ class InfoStudentsController extends Controller {
  
       $listaprogramas = array(7,8,9,10,11,14,15,16);
       if($dataUe['requestUser']['gestion'] >= 2022){
-        $listaprogramas = array(7,8,25,29,26,12);
+        $listaprogramas = array(7,8,25,26);
       }
-     
-      if($dataUe['ueducativaInfoId']['areaEspecialId'] == 2 and $dataUe['ueducativaInfoId']['programaId'] == 12) {
+     //VALIDACION VISUAL SI CONCLUYO EL PROGRAMA EN GESTION ANTERIOR NO PUEDE VOLVER A INSCRIBERSE EN EL MISMO
+      if($dataUe['ueducativaInfoId']['areaEspecialId'] == 2 and in_array($dataUe['ueducativaInfoId']['programaId'],$listaprogramas )) {
+        $inscriptionvisual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $inscriptionvisual->createQueryBuilder('ei')
+          ->select('ei.id as id, iec.id as iecStudentId')
+          ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+          ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iece.institucioneducativaCurso=iec.id')
+          ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+          ->where('ei.estudiante = :id')
+          ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+          ->andwhere('iece.especialProgramaTipo IN (:prog) ')
+          ->setParameter('id', $objStudent->getId())
+          ->setParameter('mat', array(78))
+          ->setParameter('prog', $listaprogramas)
+          ->getQuery();
+
+        $inscripcionEtapas = $query->getResult();
+
+        if (count($inscripcionEtapas)>0) {
+          $this->session->getFlashBag()->add('noinscription', 'Estudiante ya CONCLUYO el programa en gestiones pasadas, no puede volver a inscribirse en el mismo programa');
+            return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
+                'exist'=>false
+            ));
+
+        }
+      }
+       // VALIDACION VISUAL PUEDE INSCRIBIRSE EN TALLERES SI ESTA EN UN PROGRAMA PREVIO
+       $programasTalleres = array(47,48);
+       $serviciosTalleres = array(41,35,36,37,38);
+       if($dataUe['ueducativaInfoId']['areaEspecialId'] == 2 and (in_array($dataUe['ueducativaInfoId']['programaId'],$programasTalleres) or in_array($dataUe['ueducativaInfoId']['servicioId'],$serviciosTalleres))) {
+        $inscriptionvisual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $inscriptionvisual->createQueryBuilder('ei')
+        ->select('ei.id as id, iec.id as iecStudentId')
+        ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+        ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iece.institucioneducativaCurso=iec.id')
+        ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+        ->where('ei.estudiante = :id')
+        ->andwhere('iec.gestionTipo = :gestion')
+        ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+        ->andwhere('iece.especialProgramaTipo IN (:prog) or iec.nivelTipo IN (:nivel)')
+        ->setParameter('id', $objStudent->getId())
+        ->setParameter('gestion', $dataUe['requestUser']['gestion'])
+        ->setParameter('mat', array(4,79,68,7,80))
+        ->setParameter('prog', $listaprogramas)
+        ->setParameter('nivel',  array(11,12,13,411))
+        ->getQuery();
+
+        $inscripcionTaller = $query->getResult();
+//dump($inscripcionTaller);die;
+        if (count($inscripcionTaller)<1) {
+          $this->session->getFlashBag()->add('noinscription', 'El estudiante debe estar inscrito previamente en algun PROGRAMA de Educación Visual o modalidad INDIRECTA');
+            return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
+                'exist'=>false
+            ));
+
+        }
+      }
+
+      if($dataUe['ueducativaInfoId']['areaEspecialId'] == 2   and $dataUe['ueducativaInfoId']['programaId'] == 12) { //visual y programas por etapas
+        $gestion_anterior = 
         $inscriptionvisual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
         $query = $inscriptionvisual->createQueryBuilder('ei')
           ->select('ei.id as id, iec.id as iecStudentId')
@@ -514,21 +597,26 @@ class InfoStudentsController extends Controller {
 
         }
       }
+
       $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
       $query = $inscription2->createQueryBuilder('ei')
         ->select('ei.id as id, iec.id as iecStudentId')
         ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+        ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iece.institucioneducativaCurso=iec.id')
         ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
         ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
         ->where('ei.estudiante = :id')
         ->andwhere('iec.gestionTipo = :gestion')
-        // ->andwhere('it.id = :ietipo')
+        ->andwhere('iece.especialProgramaTipo = :prog')
+        ->andwhere('iece.especialServicioTipo = :serv')
+        ->andwhere('iec.nivelTipo = :nivel')
         ->andwhere('ei.estadomatriculaTipo IN (:mat)')
         ->setParameter('id', $objStudent->getId())
         ->setParameter('gestion', $dataUe['requestUser']['gestion'])
         ->setParameter('mat', array(4,5,68,79,78,28))
-        //->setParameter('mat2', '5')
-        // ->setParameter('ietipo', 1)
+        ->setParameter('prog', $dataUe['ueducativaInfoId']['programaId'])
+        ->setParameter('serv', $dataUe['ueducativaInfoId']['servicioId'])
+        ->setParameter('nivel', $dataUe['ueducativaInfoId']['nivelId'])
         ->getQuery();
 
 
@@ -540,6 +628,9 @@ class InfoStudentsController extends Controller {
         ));
         //check if the student has an inscription on this year sesion->get('ie_gestion');
         //$selectedInscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionStudentByYear($objStudent->getId(), $dataUe['requestUser']['gestion'],$dataUe['ueducativaInfoId']['iecId']);
+        //dump($selectedInscriptionStudent);
+       // dump($dataUe);
+       // die;
         if($selectedInscriptionStudent[0]['iecStudentId']!=$dataUe['ueducativaInfoId']['iecId']){
           //check if the level and grado is correct to the student//the next step is do it
             $objStudentInscriptions = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionAlternativaStudent($objStudent->getId());
