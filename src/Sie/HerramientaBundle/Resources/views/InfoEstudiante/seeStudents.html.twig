@@ -586,9 +586,9 @@
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}
                                     {# {{ app.session.get('esGuanawek') }} #}
                                     {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
-                                        {% if gestion == 2023 and nivel == 13 and grado >= 6 %}
+                                        {% if gestion == 2024 and nivel == 13 and grado >= 6 %}
                                             {% if nivelGradoSexto.closeopesextosecc == false %}
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 5-..">
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones .-..">
                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table"  onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                         <i class="fa fa-list"></i>
                                                     </button>
@@ -603,8 +603,8 @@
                                                 {% endif %} 
                                             {% endif %}
                                         {% else %}
-                                            {% if gestion == 2023 and data.estadomatriculaId in [4,5,11] and operativo < 4 %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 6.-.">
+                                            {% if gestion == 2024 and data.estadomatriculaId in [4,5,11] and operativo < 4 %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones ..-.">
                                                 <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table"  onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                     <i class="fa fa-list"></i>
                                                 </button>
