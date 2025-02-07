@@ -56,7 +56,7 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
         //     $gestion_fin_t = $p["gestion_fin"];
         // } 
         $gestion_ini_t = 2009;
-        $gestion_fin_t = 2024;
+        $gestion_fin_t = 2025;
     $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lugar);
     $lugar_nombre=$result->getLugar();
     $plan=3;
@@ -94,7 +94,7 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
             // $gestion_fin = $p["gestion_fin"];
         // } 
             $gestion_ini = 2009;
-            $gestion_fin = 2024;
+            $gestion_fin = 2025;
     }
     /////////////// REVISAR DE DONDE ESTA VINVIENDO Y QUE QUIERE VER
     $select1=$where=$select2_groupby=$groupby2="";
@@ -317,7 +317,7 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
         //     $gestion_fin_t = $p["gestion_fin"];
         // } 
     $gestion_ini_t = 2009;
-    $gestion_fin_t = 2024;
+    $gestion_fin_t = 2025;
 
     $plan=3;
     $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lugar);
