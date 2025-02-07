@@ -654,7 +654,7 @@ class InstitucioneducativaRepository extends EntityRepository {
                           etet.especialidad as especialidad
                           ')
                 ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
-                ->leftJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iec.id = iece.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iec.id = iece.institucioneducativaCurso')
                 ->leftJoin('SieAppWebBundle:EspecialAreaTipo', 'eat', 'WITH', 'iece.especialAreaTipo = eat.id')
                 ->leftJoin('SieAppWebBundle:EspecialProgramaTipo', 'ept', 'WITH', 'iece.especialProgramaTipo = ept.id')
                 ->leftJoin('SieAppWebBundle:EspecialServicioTipo', 'est', 'WITH', 'iece.especialServicioTipo = est.id')

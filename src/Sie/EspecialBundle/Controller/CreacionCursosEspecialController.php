@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
 use Sie\AppWebBundle\Entity\InstitucioneducativaAreaEspecialAutorizado;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 use Sie\AppWebBundle\Entity\EspecialModalidadTipo;
+use Sie\AppWebBundle\Entity\ControlOperativoEspecial;
 use Sie\AppWebBundle\Entity\EspecialMomentoTipo;
 
 
@@ -472,12 +473,29 @@ class CreacionCursosEspecialController extends Controller {
                 if (isset($form['multiple']) && $form['area'] == 5 && !isset($form['educacionCasa'])){
                         $lugar=$form['multiple'];
                 }
+                //verificamos si el operativo esta activo
+                $control = $em->getRepository('SieAppWebBundle:ControlOperativoEspecial')->findOneBy(array(
+                    'gestionTipoId' => $form['idGestion'], 
+                    'especialAreaTipoId' => $form['area'], 
+                    'nivelTipoId' => $form['nivel'],
+                    'especialProgramaTipoId' => $form['programa'],
+                    'especialServicioTipoId' => $form['servicio'],
+                    //'especialEspecialidadTecnicaId' => $form['servicio']
+                    ));
+                    
+                    if($control and $control->getEstadoInscripcion()==true){
+                        $tipo = $control->getPeriodoTipoId();
+                    }else{
+                        $this->get('session')->getFlashBag()->add('newCursoError', 'El operativo de inscripcion no esta vigente.');
+                        return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
+                    }
+                //$entidad = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $serie, 'departamentoTipo' => $departamento, 'formacionEducacionTipo' => $formacion));
                 // Si no existe el curso
                 // curso generico SIE
                 $nuevo_curso_sie = new InstitucioneducativaCurso();
                 $nuevo_curso_sie->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($form['idGestion']));
                 $nuevo_curso_sie->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['idInstitucion']));
-                $nuevo_curso_sie->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+                $nuevo_curso_sie->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($tipo));
                 $nuevo_curso_sie->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find($form['nivel']));
                 $nuevo_curso_sie->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($form['grado']));
                 $nuevo_curso_sie->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find($form['paralelo']));
@@ -799,10 +817,7 @@ class CreacionCursosEspecialController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $niveltecnico = '';
         if ($nivel == "404" or $nivel == "405" ) { //TECNICA
-            $niveltecnico = array(1,2,3,4,5,6);
-            if($area==1){
-                $niveltecnico = array(1,2,3,4);
-            }
+            $niveltecnico = array(1,2,3,4);
         }
         $nivelestecnicosArray = array();
         if($niveltecnico){
@@ -966,7 +981,7 @@ class CreacionCursosEspecialController extends Controller {
                 $programas = array(19, 20, 21, 22);
             }
             if ($this->session->get('idGestion') >= 2023) {
-                $programas = array(39,19,22,41,42,43,44,45,46);
+                $programas = array(39,19,22,41,42,43,44,46);
             }
             
         }
@@ -985,7 +1000,7 @@ class CreacionCursosEspecialController extends Controller {
                         $programas = array(7,8,12,25,26,29);   //--- se agrego nuevos programas cambio denom en BD 24=25
                     }
                     if ($this->session->get('idGestion') >=2023) {
-                        $programas = array(7,8,25,26,27,47,48);   //
+                        $programas = array(7,8,25,26,47,48);   //
                     }
                 }else{ //INDIRECTA
                     $programas = array(10);
@@ -999,7 +1014,7 @@ class CreacionCursosEspecialController extends Controller {
                 $programas = array(28,30);
             }
             if ($this->session->get('idGestion') >=2023 && $nivel=="411") {
-                $programas = array(37,38);   //--- 
+                $programas = array(37,38,67,68);   //--- 
             }
             if ($this->session->get('idGestion') >=2023 && $nivel=="409") {
                 $programas = array(28);   //--- 

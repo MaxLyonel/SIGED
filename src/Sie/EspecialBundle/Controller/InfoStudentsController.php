@@ -11,9 +11,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEspecial;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
 use Sie\AppWebBundle\Entity\EstadomatriculaTipo;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\EstudianteDiscapacidadCertificado;
+use Sie\AppWebBundle\Entity\ControlOperativoEspecial;
 use Sie\AppWebBundle\Entity\Estudiante;
 
 
@@ -62,6 +64,8 @@ class InfoStudentsController extends Controller {
       $aInfoUnidadEductiva = array();
       if ($objUeducativa) {
           foreach ($objUeducativa as $uEducativa) {
+            $modalidadId = $uEducativa['modalidadId'];
+            $modalidad = $uEducativa['modalidad'];
 
               //get the literal data of unidad educativa
               $sinfoUeducativa = serialize(array(
@@ -89,34 +93,46 @@ class InfoStudentsController extends Controller {
                 //$especialidad = ' ('.$cont.')';
                 //$cont = $cont +1;
               }
+          
 
               if($uEducativa['iecLugar']){ //dump("2");
                 if ($uEducativa['nivelId'] == 411){
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].' - '.$modalidad.') '.$uEducativa['nivel']][$uEducativa['programa'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }elseif($uEducativa['nivelId'] == 410){ 
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                  $nivel = $uEducativa['nivel'];
+                  if($uEducativa['modalidadId']==2 and $uEducativa['especialServicioTipo']==20)
+                    $nivel = '';
+                  if($uEducativa['modalidadId']==3)
+                    $modalidad = '';
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].' - '.$modalidad.') '.$nivel][$uEducativa['servicio'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }else{
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].' - '.$modalidad.') '.$uEducativa['nivel']][$uEducativa['grado'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }
                 
               }else{
                 if ($uEducativa['nivelId'] == 411){ 
                   
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa'].$momento][$uEducativa['paralelo']]  = array('infoUe' => $sinfoUeducativa);
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].' - '.$modalidad.') '.$uEducativa['nivel']][$uEducativa['programa'].$momento][$uEducativa['paralelo']]  = array('infoUe' => $sinfoUeducativa);
                   
                 }elseif($uEducativa['nivelId'] == 410){ 
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                  $nivel = $uEducativa['nivel'];
+                  if($uEducativa['modalidadId']==2 and $uEducativa['especialServicioTipo']==20)
+                    $nivel = ''; 
+                  if($uEducativa['modalidadId']==3)
+                    $modalidad = '';
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].' - '.$modalidad.') '.$nivel][$uEducativa['servicio']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }elseif($uEducativa['nivelId'] == 405){ //tecnica
                   //LUEGO QUITAR .especial
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].'-'.$uEducativa['grado'].') '.$uEducativa['nivel']][$uEducativa['especialidad']][$uEducativa['paralelo'].$especialidad]= array('infoUe' => $sinfoUeducativa);
                 }
                 else{
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].' - '.$modalidad.') '.$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }
               }              
 
           }
-         // dump($aInfoUnidadEductiva);die;
+        
+        // dump($aInfoUnidadEductiva);die;
 
       } else {
           $message = 'No existe información de la Unidad Educativa para la gestión seleccionada ó Código SIE no existe ';
@@ -171,8 +187,28 @@ class InfoStudentsController extends Controller {
      // dump($momentoId);die;
       //get db connexion
       $em = $this->getDoctrine()->getManager();
-      $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
 
+       //verificamos si el operativo esta activo
+       $control = $em->getRepository('SieAppWebBundle:ControlOperativoEspecial')->findOneBy(array(
+        'gestionTipoId' => $gestion, 
+        'especialAreaTipoId' => $aInfoUeducativa['ueducativaInfoId']['areaEspecialId'], 
+        'nivelTipoId' => $nivel,
+        'especialProgramaTipoId' => $programa,
+        'especialServicioTipoId' => $servicio,
+        //'especialEspecialidadTecnicaId' => $form['servicio']
+        ));
+        
+        /*if($control and $control->getEstadoInscripcion()==true){
+            $tipo = $control->getPeriodoTipoId();
+        }else{
+            $this->get('session')->getFlashBag()->add('newCursoError', 'El operativo de inscripcion no esta vigente.');
+            return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
+        }*/
+
+
+      $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
+      
+      
       //get next level data
       $objNextCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
           'institucioneducativa' => $sie,
@@ -208,10 +244,12 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(400,401,402,408,403,404,412);
 
-      $arrDataLibreta['calificaciones'] = false;
-      $arrDataLibreta['libreta'] = false;
+      $arrDataLibreta['calificaciones'] = $control->getEstadoLlenadoNotas();
+      $arrDataLibreta['libreta'] = $control->getEstadoLibreta();
 
-      if($gestion < 2024 and $nivel <> 405){
+/*
+
+      if( $control and $control->getEstadoLlenadoNotas()){
         $arrDataLibreta['libreta'] = true;
       }
 
@@ -278,6 +316,9 @@ class InfoStudentsController extends Controller {
       if( $gestion>2021 and in_array($objArea->getId(), $areasBono) and $modalidad==1 and $nivel!=410){
         $arrDataLibreta['bono'] = false; //true para activar
       }
+
+       */
+
      
       $objRegistroConsolidacion = $em->createQueryBuilder()
         ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
@@ -485,7 +526,7 @@ class InfoStudentsController extends Controller {
         ->setParameter('id', $objStudent->getId())
         ->setParameter('gestion', $dataUe['requestUser']['gestion'])
         ->setParameter('mat', array(4,79,68,7,80))
-        ->setParameter('nivel',  array(11, 404))
+        ->setParameter('nivel',  array(11,12,404))
         ->getQuery();
         $listaDif = $query->getResult();
        
@@ -653,7 +694,9 @@ class InfoStudentsController extends Controller {
 
       }else{
         //check if the level and grado is correct to the student//the next step is do it
-          $objStudentInscriptions = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionAlternativaStudent($objStudent->getId());
+          //$objStudentInscriptions = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionAlternativaStudent($objStudent->getId());
+          $objStudentInscriptions = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionEspecialStudent($objStudent->getId());
+          //dump($objStudentInscriptions);die;
           return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
             'objStudent'=>$objStudent,
             'objStudentInscriptions'=>$objStudentInscriptions,
@@ -716,7 +759,25 @@ class InfoStudentsController extends Controller {
       $estado = 4;
       $obs = '1';
     //}
- 
+    $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$aInfoUeducativa['ueducativaInfoId']['iecId']));
+    //dump($cursoEspecial);die;
+    //dump($cursoEspecial->getEspecialProgramaTipo()->getId());die;
+    $control = $em->getRepository('SieAppWebBundle:ControlOperativoEspecial')->findOneBy(array(
+      'gestionTipoId' => $gestion, 
+      'especialAreaTipoId' => $areaId, 
+      'nivelTipoId' => $nivel,
+      'especialProgramaTipoId' => $cursoEspecial->getEspecialProgramaTipo()->getId(),
+      'especialServicioTipoId' => $cursoEspecial->getEspecialServicioTipo()->getId(),
+      //'especialEspecialidadTecnicaId' => $form['servicio']
+      ));
+      
+      if($control and $control->getEstadoInscripcion()==true){
+          $estado = $control->getEstadoMatriculaId();
+      }else{
+          $this->get('session')->getFlashBag()->add('newCursoError', 'El operativo de inscripcion no esta vigente.');
+          return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
+      }
+
     //create the conexion DB
     try {
       //restart the id on estudiante_inscripcion table

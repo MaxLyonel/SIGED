@@ -54,10 +54,12 @@
                     <thead>
                         <tr role="row">
                           <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Gestion</th>
-                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending">SIE</th>
-                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending">Unidad Educativa</th>
-                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending">Nivel</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending">SIE-Unidad Educativa</th>
+                          
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending">Modalidad/Nivel</th>
+
                           <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending">Grado</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending">Area/Programa/Servicio</th>
                           <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending">Paralelo</th>
                           <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending">Turno</th>
                           <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending">Estado Matricula</th>
@@ -68,10 +70,24 @@
                     {% for data in objStudentInscriptions %}
                       <tr role="row" class="odd">
                           <td >{{data.gestion}}</td>
-                          <td>{{data.sie}}</td>
-                          <td>{{data.institucioneducativa}}</td>
-                          <td>{{data.nivel}}</td>
+                          <td><b>{{data.sie}}</b><br> {{data.institucioneducativa}}</td>
+                          
+                          <td>
+                          {{data.modalidad}}                          <br>
+                          {{data.nivel}}</td>
                           <td>{{data.grado}}</td>
+                          <td>
+                           {% if data.areaId != 99 %}
+                               <b> {{data.areaEspecial }}</b><br>
+                          {% endif %}
+
+                          {% if data.programaId != 99 %}
+                                {{data.programa}}
+                          {% endif %}
+                          {% if data.servicioId != 99 %}
+                                {{data.servicio}}
+                          {% endif %}
+                          </td>
                           <td>{{data.paralelo}}</td>
                           <td>{{data.turno}}</td>
                           <td>{{data.estadoMatricula}}</td>

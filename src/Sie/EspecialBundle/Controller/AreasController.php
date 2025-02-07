@@ -767,6 +767,8 @@ class AreasController extends Controller {
                                     }
 
                                  break;
+                                case 65: //---atención temprana
+                                case 66: //---atención temprana
                                 case 28: //---atención temprana
                                         $asignaturas = $em->createQuery(
                                             'SELECT at
@@ -781,7 +783,7 @@ class AreasController extends Controller {
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(482,32862,32863,32864,32865,32866))
+                                    )->setParameter('ids',array(32862,32863,32864,32865,32866))
                                     ->getResult();
                                     }
                                  break;

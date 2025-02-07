@@ -1,0 +1,104 @@
+Sie\AppWebBundle\Entity\ControlOperativoEspecial:
+    type: entity
+    table: control_operativo_especial
+    id:
+        id:
+            type: integer
+            id: true
+            nullable: false
+            unsigned: false
+            comment: ''
+            generator:
+                strategy: AUTO
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        especialAreaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: especial_area_tipo_id
+        nivelTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        especialProgramaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: especial_programa_tipo_id
+        especialServicioTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: especial_servicio_tipo_id
+        especialEspecialidadTecnicaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: especial_especialidad_tecnica_id
+        periodoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: periodo_tipo_id
+        estadoMatriculaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estado_matricula_id
+        estadoInscripcion:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_inscripcion
+        tipoEvaluacion:
+            type: string
+            nullable: true
+            comment: ''
+            column: tipo_evaluacion
+        notaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nota_tipo_id
+        estadoLlenadoNotas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_llenado_notas
+        operativo:
+            type: string
+            nullable: true
+            comment: ''
+            column: operativo
+        estadoOperativo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_operativo
+        estadoLlenadoRude:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_llenado_rude
+        estadoLibreta:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_libreta
+    lifecycleCallbacks: {  }
+
