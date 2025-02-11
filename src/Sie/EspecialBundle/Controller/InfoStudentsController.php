@@ -920,7 +920,8 @@ class InfoStudentsController extends Controller {
         'areaEspecialId' => $objArea->getId(),
         'arrDataLibreta'=> $arrDataLibreta,
         'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
-        'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']        
+        'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId'],      
+        'programa' =>  $cursoEspecial->getEspecialProgramaTipo()->getId()  
         // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
 
