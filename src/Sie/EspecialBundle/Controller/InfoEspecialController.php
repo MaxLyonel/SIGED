@@ -157,7 +157,7 @@ class InfoEspecialController extends Controller{
                 'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Cursos',$data)->createView(),
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
                 'data'=>$dataInfo,
-                'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción Extemporaneos',$data, $periodo)->createView(),
+                'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo Inscripción',$data, $periodo)->createView(),
                 'closeOperativoRudeesform' => $this->CloseOperativoRudeesForm('info_especial_close_operativo_rudees', 'Cerrar Operativo Rudees',$data, $periodo)->createView(),
                 'closeOperativoNotasform' => $this->CloseOperativoNotasForm('info_especial_close_operativo_notas', 'Cerrar Operativo Notas',$data, $periodo)->createView(),
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
@@ -391,7 +391,7 @@ class InfoEspecialController extends Controller{
             $rconsol->setTabla('**');
             $rconsol->setIdentificador('**');
             $rconsol->setCodigo('**');
-            $rconsol->setDescripcionError('Consolidado exitosamente extemporaneo!!');
+            $rconsol->setDescripcionError('Consolidado exitosamente!!');
             $rconsol->setFecha(new \DateTime("now"));
             $rconsol->setusuario('0');
             $rconsol->setConsulta('**');

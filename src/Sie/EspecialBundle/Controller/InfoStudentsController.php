@@ -246,6 +246,7 @@ class InfoStudentsController extends Controller {
 
       $arrDataLibreta['calificaciones'] = $control->getEstadoLlenadoNotas();
       $arrDataLibreta['libreta'] = $control->getEstadoLibreta();
+      $arrDataLibreta['rudees'] = $control->getEstadoLlenadoRude();
 
 /*
 
@@ -532,6 +533,29 @@ class InfoStudentsController extends Controller {
        
         if (count($listaDif)==0) {
           $this->session->getFlashBag()->add('noinscription', 'Estudiante debe pertenecer a nivel de PRIMARIA del SEP');
+            return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
+                'exist'=>false
+            ));
+
+        }
+        $inscriptionvDifA = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $inscriptionvDifA->createQueryBuilder('ei')
+        ->select('ei.id as id, iec.id as iecStudentId')
+        ->innerjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+        ->innerjoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iece.institucioneducativaCurso=iec.id')
+        ->where('ei.estudiante = :id')
+        ->andwhere('iec.gestionTipo = :gestion')
+        ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+        ->andwhere('iece.especialAreaTipo IN (:area)')
+        ->setParameter('id', $objStudent->getId())
+        ->setParameter('gestion', $dataUe['requestUser']['gestion'])
+        ->setParameter('mat', array(4,79,68,7,80))
+        ->setParameter('area',  array(6))
+        ->getQuery();
+        $listaDifA = $query->getResult();
+        
+        if (count($listaDifA)>0) {
+          $this->session->getFlashBag()->add('noinscription', 'Estudiante solo puede estar inscrito en un Programa de Dificultad en el Aprendizaje');
             return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
                 'exist'=>false
             ));
@@ -848,6 +872,8 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
+   
+    /*   
       $nivelesLibreta = array(400,401,402,403,404, 408);
       $programasLibreta = array(7,8,9,12,14,15,25);
       if($gestion >2019 and $nivel <> 405){
@@ -863,6 +889,10 @@ class InfoStudentsController extends Controller {
       }else{
         $arrDataLibreta['libreta'] = false;
       }
+    */
+      $arrDataLibreta['calificaciones'] = $control->getEstadoLlenadoNotas();
+      $arrDataLibreta['libreta'] = $control->getEstadoLibreta();
+      $arrDataLibreta['rudees'] = $control->getEstadoLlenadoRude();
       //reload the students list
       $exist = true;
       $objStudents = array();

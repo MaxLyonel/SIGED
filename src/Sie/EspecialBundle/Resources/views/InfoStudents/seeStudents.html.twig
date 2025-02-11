@@ -38,7 +38,7 @@
             {% set cupos = funciones.getCantidadEstudiantes(infoUe,objStudents) %}
             {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
               <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}','{{cupos.cupo}}','{{cupos.msg}}');" >
-                <i class="fa fa-user"></i> Inscripción Extemporaneos
+                <i class="fa fa-user"></i> Inscripción
               </button>
             {% endif %}
             
