@@ -633,6 +633,15 @@ class CreacionCursosEspecialController extends Controller {
         $em = $this->getDoctrine()->getManager();
         //datos de carrera
         //$objInfoAutorizadaUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->getInfoAutorizadaUe($form['sie'], $form['gestion']);die('krlossdfdfdfs');
+        $nivelValores = array(203, 204, 205,232);
+        $objInfoAutorizadaUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')
+    ->createQueryBuilder('i')
+    ->where('i.institucioneducativa = :institucioneducativa')
+    ->andWhere('i.nivelTipo IN (:niveles)')
+    ->setParameter('institucioneducativa', $this->session->get('idInstitucion'))
+    ->setParameter('niveles', $nivelValores)
+    ->getQuery()
+    ->getResult();
 
         if ($area == "1" ) { //AUDITIVA
             if($modalidad == 1){
@@ -664,7 +673,11 @@ class CreacionCursosEspecialController extends Controller {
                     $nivelesArray = array(409,401,412,411);
                 }
                 if ($this->session->get('idGestion') > 2023 AND $area == "3") { //nuevo plan
-                    $nivelesArray = array(409,401,405,412,411);
+
+                    $nivelesArray = array(409,401,412,411);
+                    if(count($objInfoAutorizadaUe)>0)
+                        $nivelesArray = array(409,401,405,412,411);
+                    
                 }
                 
             }else{
@@ -973,6 +986,26 @@ class CreacionCursosEspecialController extends Controller {
        // dump($nivel);die;
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
+        
+      //  $objInfoAutorizadaUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa'=>$this->session->get('idInstitucion')));
+        /*$objInfoSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findBy(array(
+            'institucioneducativa'=>$data['idInstitucion'],
+            'gestionTipo'=>$data['gestion'],
+          ));*/
+
+          $nivelValores = array(203, 204, 205,232);
+
+$objInfoAutorizadaUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')
+    ->createQueryBuilder('i')
+    ->where('i.institucioneducativa = :institucioneducativa')
+    ->andWhere('i.nivelTipo IN (:niveles)')
+    ->setParameter('institucioneducativa', $this->session->get('idInstitucion'))
+    ->setParameter('niveles', $nivelValores)
+    ->getQuery()
+    ->getResult();
+
+      
+        //dump(count($objInfoAutorizadaUe)>);die;
         if ( $area == "1" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
                 $programas = array(13);
@@ -981,7 +1014,9 @@ class CreacionCursosEspecialController extends Controller {
                 $programas = array(19, 20, 21, 22);
             }
             if ($this->session->get('idGestion') >= 2023) {
-                $programas = array(39,19,22,41,42,43,44,46);
+                $programas = array(39,19,22,41,43,44,46);
+                if(count($objInfoAutorizadaUe)>0)
+                    $programas = array(39,19,22,41,42,43,44,46);
             }
             
         }
@@ -1000,7 +1035,9 @@ class CreacionCursosEspecialController extends Controller {
                         $programas = array(7,8,12,25,26,29);   //--- se agrego nuevos programas cambio denom en BD 24=25
                     }
                     if ($this->session->get('idGestion') >=2023) {
-                        $programas = array(7,8,25,26,47,48);   //
+                        $programas = array(7,8,25,26,47,48);  
+                        if(count($objInfoAutorizadaUe)>0)
+                            $programas = array(7,8,25,26,27,47,48);  
                     }
                 }else{ //INDIRECTA
                     $programas = array(10);
