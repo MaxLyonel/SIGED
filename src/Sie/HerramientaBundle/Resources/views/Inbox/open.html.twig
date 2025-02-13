@@ -95,7 +95,80 @@
                     </div>
                 </div>
             </div>
-            {% if app.session.get('lastOperativo') != 5%}
+
+            {% if app.session.get('lastOperativo') != 1 and  app.session.get('esGuanawek') == 0 %}
+                {# {% if app.session.get('ie_id') == '81981478' %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="thumbnail">
+                            <img src="{{asset('img/administrativo300.jpg')}}" alt="Cambio de Paralelo">
+                            <div class="caption text-center">
+                                <h4>Cambio de Paralelo</h4>
+                                <div class="thumbnail-action">
+                                    {{form_start(mallaCurricularform)}}
+                                        {{form_widget(mallaCurricularform.next)}}
+                                    {{form_end(mallaCurricularform)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %} #}
+                <!--Se deshabilito mientras dura operativo 6to sec-->
+                <!--Se deshabilito hasta nueva instruccion mientras dura el operativo-->
+                {% if  data.gestion == app.session.get('currentyear') and  data.gestion >= 2024 and operativo in [0, 1, 2, 3]  and existesec == false %} 
+                <div id="closeoperativo">
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="thumbnail">
+                            <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
+                            <div class="caption text-center">
+                                {% if operativo == 0 %}
+                                    <h4>Cerrar Inscripciones</h4>
+                                {% else %}
+                                    <h4>Cerrar Operativo</h4>
+                                {% endif %}
+                                <div class="thumbnail-action">
+                                    {{form_start(closeOperativoInscriptionform, { 'attr':{'id':'formCloseOperativoInscription' }} )}}
+                                        {{form_widget(closeOperativoInscriptionform.next)}}
+                                    {{form_end(closeOperativoInscriptionform)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# SE HABILITARA PARA EL ULTIMO TRIMESTRE #}
+                {# <div id="closeoperativoextra" style="display: none;">
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="thumbnail">
+                            <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
+                            <div class="caption text-center">
+                                <h4>Presenta Inconsistencias</h4>
+                                <div class="thumbnail-action">
+                                    <button id="cerrarBtn" class="btn btn-primary btn-md btn-block" onclick="forzarcierreoperativo();">Cerrar con Inconsistencias</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> #}
+                {% endif %}
+                {# {% if bimestre < '3' and data.gestion!=app.session.get('currentyear') %} #}
+                {% if bimestre < '3' and data.gestion!=app.session.get('currentyear') and app.session.get('esGuanawek') == 1 %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="thumbnail">
+                            <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
+                            <div class="caption text-center">
+                                <h4>Cerrar Operativo</h4>
+                                <div class="thumbnail-action">
+                                    {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                        {{form_widget(closeOperativoform.next)}}
+                                    {{form_end(closeOperativoform)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+            {% endif %}
+
+            {% if app.session.get('lastOperativo') != 2 and  app.session.get('esGuanawek') == 1 %}
                 {# {% if app.session.get('ie_id') == '81981478' %}
                     <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                         <div class="thumbnail">
