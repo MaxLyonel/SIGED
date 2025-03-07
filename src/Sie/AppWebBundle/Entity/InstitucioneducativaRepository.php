@@ -107,8 +107,7 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->setParameter('grado', $grado)
                 ->setParameter('paralelo', $paralelo)
                 ->setParameter('turno', $turno)
-                ->orderBy('e.paterno, e.materno, e.nombre')
-        ;
+                ->orderBy('e.paterno, e.materno, e.nombre') ;
         return $qb->getQuery()->getResult();
     }
 
@@ -635,9 +634,10 @@ class InstitucioneducativaRepository extends EntityRepository {
                 //->distinct()
                 ->groupBy('tt.id, nt.id, gt.id, pt.id, iec.cicloTipo, iec.id')
                 ->orderBy('tt.id, nt.id, gt.id, pt.id, iec.cicloTipo, iec.id')
-
-
         ;
+        // dump($sie);
+        // dump($gestion);
+        // dump($qb->getQuery()->getSQL()); die;
         return $qb->getQuery()->getResult();
     }
     public function getInfoUeducativaEspecialBySieGestion($sie, $gestion) {

@@ -188,108 +188,93 @@ class InfoConsolidationController extends Controller {
    * list of request
    *
    */
-  public function indexAction(Request $request) {     
-   
-    $aAccess = array(5, 2, 9);
+  public function indexAction(Request $request) { //? (--> 6)
+
+    $aAccess = array(5, 2, 9); //? en el sidebar indica que solo los roles 7,8,9,10 pueden ingresar
+    //? confuso
     if (in_array($this->session->get('roluser'), $aAccess)) {
-        $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
-        //verificar si es IE
+        $institutionData1 = $this->getDataUe($this->session->get('ie_id')); //? obtiene el instituto educativo
         if ($institutionData1) {
+          //create the db connexion
+          $em=$this->getDoctrine()->getManager();
+          //get the session's values
+          $this->session = $request->getSession();
+          $id_usuario = $this->session->get('userId');
 
-                //create the db connexion
-                $em=$this->getDoctrine()->getManager();
-                //get the session's values
-                $this->session = $request->getSession();
-                $id_usuario = $this->session->get('userId');
+          $this->unidadEducativa = $this->session->get('ie_id');
 
-                //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
-                $this->unidadEducativa = $this->session->get('ie_id');
-
-                //validation if the user is logged
-                if (!isset($id_usuario)) {
-                    return $this->redirect($this->generateUrl('login'));
-                }
-                //get the sie and the name of sie
-                //$arrSieInfo = $this->getUserSie($this->session->get('personaId'), $this->session->get('currentyear'));
-                $arrSieInfo = array();
-                // $arrSieInfo = $this->getUserInfo($this->session->get('personaId'), $this->session->get('currentyear'));
-                // $arrSieInfoUe = $this->getUserSie($this->session->get('personaId'), $this->session->get('currentyear'));
-                //get the ue plena info
-                //$objValidateUePlena=array();
-                //if(!$arrSieInfo)
-                $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId' => $this->unidadEducativa));
-                //set the modular variable if exist
-                $this->session->set('ue_modular', (array_search("$this->unidadEducativa",$this->arrUeModular,true))?true:false);
-                $this->session->set('ue_regularizar', (array_search("$this->unidadEducativa",$this->arrUeRegularizar,true)!=false)?true:false);
-                $this->session->set('ue_noturna', (array_search("$this->unidadEducativa",$this->arrUeNocturnas,true)!=false)?true:false);
-
-                if($objValidateUePlena){
-                  //switch to the kind of UE
-                  switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
-                    case 1:
-                      # plena
-                      $this->session->set('ue_plena', true);
-                      break;
-                    case 2:
-                        # tec teg
-                      $this->session->set('ue_tecteg', true);
-                        break;
-                    default:
-                      # code...
-                      break;
-                  }
-
-                }else{
-                  $this->session->set('ue_tecteg', (array_search("$this->unidadEducativa",$this->arrUeTecTeg,true)!=false)?true:false);
-                  $this->session->set('ue_plena', ($objValidateUePlena)?true:false);
-                }
+          //validation if the user is logged
+          if (!isset($id_usuario)) {
+              return $this->redirect($this->generateUrl('login'));
+          }
+          //get the sie and the name of sie
+          $arrSieInfo = array();
+          $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId' => $this->unidadEducativa));
+          //? Esta haciendo busquedas con listas predefinidas como variables
+          $this->session->set('ue_modular', (array_search("$this->unidadEducativa",$this->arrUeModular,true))?true:false);
+          $this->session->set('ue_regularizar', (array_search("$this->unidadEducativa",$this->arrUeRegularizar,true)!=false)?true:false);
+          $this->session->set('ue_noturna', (array_search("$this->unidadEducativa",$this->arrUeNocturnas,true)!=false)?true:false);
 
 
-                $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
-                $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
-                $this->operativoUe = $operativoPerUe;
-                //get the current year
-                $arrSieInfo[0]['gestion']= ($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
-                $arrSieInfo[0]['id'] = $this->session->get('ie_id');
-                //get the fuill ue info
-                $arrFullUeInfo=array();
-                $arrFullUeInfo =$arrSieInfo[0];
-                //$arrFullUeInfo['ueplenainfo'] =$objValidateUePlena;
+          if($objValidateUePlena){
+            //cambiar al tipo de ue
+            switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
+              case 1:
+                # plena
+                $this->session->set('ue_plena', true);
+                break;
+              case 2:
+                  # tec teg
+                $this->session->set('ue_tecteg', true);
+                  break;
+              default:
+                # code...
+                break;
+            }
+          }else{
+            $this->session->set('ue_tecteg', (array_search("$this->unidadEducativa",$this->arrUeTecTeg,true)!=false)?true:false);
+            $this->session->set('ue_plena', ($objValidateUePlena)?true:false);
+          }
+          $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
+          $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+          $this->operativoUe = $operativoPerUe;
+          //get the current year
+          $arrSieInfo[0]['gestion']= ($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+          $arrSieInfo[0]['id'] = $this->session->get('ie_id');
+          //get the fuill ue info
+          $arrFullUeInfo=array();
+          $arrFullUeInfo =$arrSieInfo[0];
 
-                //$objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId' => $data['sie']));
+          $repository = $em->getRepository('SieAppWebBundle:Tramite');
 
-                $repository = $em->getRepository('SieAppWebBundle:Tramite');
+          $registroConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion');
+          $query = $registroConsolidation->createQueryBuilder('rc')
+                  ->where('rc.unidadEducativa = :id')
+                  ->setParameter('id', $this->session->get('ie_id'))
+                  ->orderBy('rc.gestion', 'ASC')
+                  ->getQuery();
 
+          $objConsolidationInfo = $query->getResult(); //? Obtiene todos los registros consolidados de la unidad
 
+          $objInstitucionEducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id'));
 
+          $dataInfo = array('id' => $this->session->get('ie_id'), 'gestion' => $this->session->get('currentyear'), 'ieducativa' => $objInstitucionEducativa);
 
-                // $objConsolidationInfo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findBy(array(
-                //    'unidadEducativa' => $this->session->get('ie_id')
-                //  ));
-
-                 $registroConsolidation = $em->getRepository('SieAppWebBundle:RegistroConsolidacion');
-                 $query = $registroConsolidation->createQueryBuilder('rc')
-                         ->where('rc.unidadEducativa = :id')
-                         ->setParameter('id', $this->session->get('ie_id'))
-                         ->orderBy('rc.gestion', 'ASC')
-                         ->getQuery();
-
-                 $objConsolidationInfo = $query->getResult();
-
-
-                 $objInstitucionEducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id'));
-
-                 $dataInfo = array('id' => $this->session->get('ie_id'), 'gestion' => $this->session->get('currentyear'), 'ieducativa' => $objInstitucionEducativa);
-                 //dump($objInstitucionEducativa);die;
-
-                return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:index.html.twig', array(
-                    'objValidateUePlena'=>($objValidateUePlena)?1:0,
-                    'arrSieInfo'=>$arrSieInfo[0],
-                    'gestion'=>$this->session->get('currentyear'),
-                    'infoConsolidations'    => $objConsolidationInfo,
-                    'institucionEducativa' => $objInstitucionEducativa,
-                    'data'=>$dataInfo
-                ));
+          // dump($this->session->get('pathSystem'));
+          // dump($objValidateUePlena);
+          // dump($arrSieInfo[0]);
+          // dump($objConsolidationInfo);
+          // dump($objInstitucionEducativa);
+          // dump($dataInfo);
+          // die;
+          return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:index.html.twig', array(
+              'objValidateUePlena'=>($objValidateUePlena)?1:0,
+              'arrSieInfo'=>$arrSieInfo[0],
+              'gestion'=>$this->session->get('currentyear'),
+              'infoConsolidations'    => $objConsolidationInfo,
+              'institucionEducativa' => $objInstitucionEducativa,
+              'data'=>$dataInfo
+          ));
 
         } else {
             return $this->render('SieHerramientaBundle:InfoConsolidation:find.html.twig');

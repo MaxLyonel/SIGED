@@ -70,69 +70,9 @@ line-height: 1.83333em;}
                                             <option value="{{row.id}}">{{row.idioma}}</option>
                                         {% endfor %}                            
                                     </select>
-                                    {# <div class="btn-group">                                    
-                                        <button type="button" class="btn btn-sm btn-instagram dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                            Opciones &nbsp; <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right">
-                                            
-                                            <div class="dropdown-header">Reportes</div>
-
-                                            {% if app.session.get('acceso_total') and arrLevelandGrado.gestion >= 2019 %} #}
-                                                {# <li><a href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Modificadas</a></li>
-                                                <li><a href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}">Lista de Especialidades Eliminadas</a></li> #}
-                                            {# {% endif %}
-                                            <li><a href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}">Listado de estudiantes</a></li> #}
-                                            {# <li><a href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}">Reporte NNATS</a></li> #}
-                                            
-                                            {# {% if app.session.get('acceso_total') and app.session.get('ue_plena') %} #}
-                                                {# <li><a href="{{ path('download_estudiantes_nivelacion', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTE</a></li>
-                                                <li><a href="{{ path('download_estudiantes_nivelacionttg', {'gestion': gestion, 'sie': odataUedu.id} )}}">Listado de estudiantes con nivelación TTG</a></li> #}
-                                            {# {% endif %} #}
-                                            
-                                            {# {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
-                                                <li class="divider"></li>
-                                                <div class="dropdown-header"><strong>Operativos</strong></div> #}
-                                                
-                                                {# if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  #}
-                                                {# {% if arrLevelandGrado.operativo in [3] and arrLevelandGrado.closeopesextosecc == false  %} #}
-                                                    {# <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
-                                                    <i class="fa fa-group" ></i>
-                                                    </button>  #}
-                                                    {# <li><a href="javascript:cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});"> - Cerrar Operativo Sexto de Secundaria</a></li>
-                                                {% else %} #}
-                                                    {# <li><a href="javascript:void();">Operativo Sexto de Secundaria cerrado </a></li> eliminar operativo 6to 2024#}
-                                                {# {% endif %}
-                                            {% endif %}
-                                            {% if arrLevelandGrado.operativo > 3 and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2023 %} #}
-                                                {# <li><a href="javascript:consolidarcutttm({{odataUedu.id}},{{gestion}});">Consolidar CUT-TTM</a></li> #}
-                                            {# {% endif %} #}
-                                            {# {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
-                                                <li><a href="javascript:cerrarOperativo({{odataUedu.id}},{{gestion}});">Cerrar Operativo Mod. Especialidades</a></li>
-                                            {% endif %} #}
-                                            
-                                            {# {% if arrLevelandGrado.gestion == 2019 and app.session.get('ue_plena') and app.session.get('ue_modular')%}
-                                                <li><a href="javascript:cerrarRude()">Cerrar Operativo RUDE</a></li>
-                                            {% endif %}
-                                        </ul>
-                                    </div> #}
-                                    {# Opciones: 6to secundaria 2024 ojo#}
-                                    {# {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
-                                    
-                                        {% if arrLevelandGrado.operativo == 3 and arrLevelandGrado.closeopesextosecc == false  %} 
-                                            <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
-                                            <i class="fa fa-group" ></i>
-                                            </button>
-                                        {% else %}
-                                            <button type="button" disabled class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Ya Cerro Operativo Sexto de Secundaria" id='btnCerraoperativo'>
-                                            <i class="fa fa-group" ></i>
-                                            </button>
-                                        {% endif %}
-                                    {% endif %} #}
                                     {% if arrLevelandGrado.operativo in allowOperativo and arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
-    
                                     {% if arrLevelandGrado.operativo == 3 and not arrLevelandGrado.closeopesextosecc %}
-                                        <button 
+                                        <button
                                             type="button" 
                                             class="btn btn-success btn-sm" 
                                             data-toggle="tooltip" 
@@ -185,19 +125,6 @@ line-height: 1.83333em;}
                                     {% endif %}
 
                                 {% endif %}
-
-                                    {# Opciones:
-                                    {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Mod. Especialidades" id='btnCerraoperativo' onclick="cerrarOperativo({{odataUedu.id}},{{gestion}});">
-                                    <i class="fa fa-group" ></i>
-                                    </button>
-                                    {% endif %}
-                                    {% if app.session.get('acceso_total') and arrLevelandGrado.gestion >= 2019 %}
-                                        <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidades', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Modificadas"><i class="fa fa-cloud-download"></i></a>
-                                        <a class="btn btn-facebook btn-sm" href="{{ path('donwload_studentBthEspecialidadesEliminadas', {'gestion': gestion, 'ue': odataUedu.id,'gradoId':gradoId} )}}" data-toggle="tooltip" data-placemente="top" data-original-title=" Lista de Especialidades Eliminadas"><i class="fa fa-cloud-download"></i></a>
-                                    {% endif %}
-                                    <a class="btn btn-twitter btn-sm" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Listado de estudiantes"><i class="fa fa-download"></i></a>
-                                    <a class="btn btn-info btn-sm" href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Reporte NNATS"><i class="fa fa-download"></i></a> #}
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -224,10 +151,11 @@ line-height: 1.83333em;}
                                                             <ul>
                                                                 {% for paraleloKey, dataParalelo in dataGrado %}
                                                                     <li style="display:none">
+                                                                        {{dataParalelo.infoUe}}
                                                                       <a href="#" onclick="seeStudents('{{dataParalelo.infoUe}}');">
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Lista de Inscritos">
                                                                             <span ><i class="icon-leaf"></i>
-                                                                                {{paraleloKey}}
+                                                                                 e {{paraleloKey}}
                                                                             </span>
                                                                         </div>
                                                                       </a>
@@ -237,64 +165,23 @@ line-height: 1.83333em;}
                                                                             <i class="fa fa-check-square-o"></i>
                                                                          </button>
                                                                       </div>
-                                                                      {% endif %} 
-                                                                      {#
-                                                                      {% if ( dataGrado[paraleloKey].nivelId in [11] and dataGrado[paraleloKey].gradoId in [2]) or   ( dataGrado[paraleloKey].nivelId in [12] and dataGrado[paraleloKey].gradoId in [1,2,3,4,5,6]) or ( dataGrado[paraleloKey].nivelId in [13] and dataGrado[paraleloKey].gradoId in [1,2,3,4,5,6])%}
-                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
-                                                                            <button type="button" class="btn btn-circle btn-warning btn-stroke" onclick="getStudents('{{dataParalelo.infoUe}}');" >
-                                                                                <i class="fa fa-group"></i>
-                                                                            </button>
-                                                                        </div> 
                                                                       {% endif %}
-                                                                      #}
-                                                                              
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas/Maestros">
                                                                             <button class="btn btn-circle btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-group"></i>
                                                                             </button>
                                                                         </div>
-                                                                        
-                                                                        <!--button type="button" class="btn btn-warning btn-xs dropdown-toggle" data-toggle="dropdown" tabindex="-1">
-                                                                            <i class="fa fa-caret-square-o-down"></i>
-                                                                        </button>
-                                                                        <table class="dropdown-menu pull-left" role="menu">
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <button type="button" class="btn btn-link" onclick="getStudents('{{dataParalelo.infoUe}}');">
-                                                                                        <i class ="fa fa-pencil"></i> Inscripción
-                                                                                    </button>
-                                                                                </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <button type="button" class="btn btn-link" onclick="seeStudents('{{dataParalelo.infoUe}}');">
-                                                                                            <i class="fa fa-group"></i> Inscripción
-                                                                                        </button>
-                                                                                    </td>
-                                                                                </tr>
-
-                                                                            </table-->
-
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Datos del curso">
                                                                             <button class="btn btn-circle btn-info btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosCurso('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>
                                                                         </div>
-                                                                        {# {% if "now"|date('j')|number_format in range(1,14) %} #}
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modalidad">
                                                                             <button class="btn btn-circle btn-primary btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-home"></i>
                                                                             </button>
                                                                         </div>
 
-                                                                        {# Este icono es para registrar los textos educativos #}
-                                                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Textos Educativos">
-                                                                            <button class="btn btn-circle btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="registrarTextoEducativo('{{dataParalelo.infoUe}}');">
-                                                                                <i class="fa fa-book"></i>
-                                                                            </button>
-                                                                        </div> #}
-
-                                                                        {# {% endif %} #}
                                                                         {% if arrLevelandGrado.operativo in allowOperativo and arrLevelandGrado.gestion >= 2019 %}
                                                                             {% if estado == true and app.session.get('currentyear') == 2019 %}
                                                                                 {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
@@ -312,17 +199,11 @@ line-height: 1.83333em;}
                                                                                                 </button>
                                                                                             </div>
                                                                                         {% endif %}
-                                                                                    {% endif %}    
+                                                                                    {% endif %}
                                                                                 {% endif %}
                                                                             {% else %}
                                                                             {% endif %}
                                                                         {% endif %}
-
-                                                                        {# icon de asignar paralelo #}
-                                                                       
-                                                                       
-                                                                        
-
                                                                     </li>
                                                                 {% endfor %}
                                                             </ul>
@@ -411,7 +292,6 @@ line-height: 1.83333em;}
         };
 
         var getStudents = function (infoUe) {
-
             $.ajax({
                 type: 'get',
                 /*data: ({iecId: iecId, nivel: nivel, sie: sie, gestion: gestion, grado: grado, paralelo: paralelo, turno: turno, ciclo: ciclo}),*/
@@ -465,7 +345,7 @@ line-height: 1.83333em;}
         };
 
         var seeStudents = function (infoUe) {
-           
+           console.log("ingresa aca");
             $.ajax({
                 type: 'get',
                 data: ({infoUe: infoUe}),
@@ -491,6 +371,7 @@ line-height: 1.83333em;}
         };
         var seeStudents = function (infoUe) {
             //impresion libreta
+            console.log("no, ingresa aca");
             var e = document.getElementById("idiomasList");
             var idiomaId = e.value;
 

@@ -657,7 +657,7 @@ class InboxController extends Controller {
      * @param Request $request
      * @return obj with the selected request
      */
-    public function openAction(Request $request) {
+    public function openAction(Request $request) { //? (--> 8)
       //create conexion
       $em = $this->getDoctrine()->getManager();
         //get session data
@@ -694,8 +694,8 @@ class InboxController extends Controller {
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
           'institucioneducativaId' => $data['id'],
           'gestionTipoId' => $data['gestion']
-
         ));
+
         $repository = $em->getRepository('SieAppWebBundle:Tramite');
         $query = $repository->createQueryBuilder('t')
             ->select('td')
@@ -723,6 +723,8 @@ class InboxController extends Controller {
 
        if($objValidateUePlena){
          //switch to the kind of UE
+        // dump($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId());
+        // die;
          switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
            case 1:
            case 7:
@@ -831,7 +833,6 @@ class InboxController extends Controller {
              $trimestre=0; 
             /*codigo sie no existe*/ 
           }
-          # code...
         }else{ 
            $trimestre=0; 
           /*codigo sie no existe*/ 
@@ -860,6 +861,9 @@ class InboxController extends Controller {
         // $ieNivelAutorizado = $query->fetchAll();
         $existesec = false;
         //if (count($ieNivelAutorizado) > 0) {$existesec = true;}
+
+        // dump($data);
+        // die;
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
@@ -888,45 +892,35 @@ class InboxController extends Controller {
      * @return type obj form
      */
     private function InfoStudentForm($goToPath, $nextButton, $data) {
-      
-      // dump($this->session->get('ue_plena'));
-      // die;
-        //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
-        $this->unidadEducativa = $data['id'];
-        $form =  $this->createFormBuilder()
-                        ->setAction($this->generateUrl($goToPath))
-                        ->add('gestion', 'hidden', array('data' => bin2hex($data['gestion'])))
-                        ->add('sie', 'hidden', array('data' => bin2hex($this->unidadEducativa)));
-        if(
-            ($this->session->get('ue_plena')  && $this->session->get('ue_humanistica')) ||
-            ($this->session->get('ue_tecteg') && $this->session->get('ue_humanistica')) ||
-            ($this->session->get('ue_modular') && $this->session->get('ue_humanistica')) ||
-            ($this->session->get('ue_humanistica_web') && $this->session->get('ue_humanistica')) ||
-            ($this->session->get('ue_sol_regularizar') && $this->session->get('ue_humanistica')) ||
-            ($this->session->get('ue_plena')  ) ||
-            ($this->session->get('ue_modular')  ) ||
-            ($this->session->get('ue_caldiff')  ) ||
-            ($this->session->get('ue_humanistica_web')  ) ||
-            ($this->session->get('ue_sol_regularizar')  ) ||
-            ($this->session->get('ue_tecteg') )
+      $this->unidadEducativa = $data['id'];
+      $form =  $this->createFormBuilder()
+                ->setAction($this->generateUrl($goToPath))
+                ->add('gestion', 'hidden', array('data' => bin2hex($data['gestion'])))
+                ->add('sie', 'hidden', array('data' => bin2hex($this->unidadEducativa)));
+      if(
+        ($this->session->get('ue_plena')  && $this->session->get('ue_humanistica')) ||
+        ($this->session->get('ue_tecteg') && $this->session->get('ue_humanistica')) ||
+        ($this->session->get('ue_modular') && $this->session->get('ue_humanistica')) ||
+        ($this->session->get('ue_humanistica_web') && $this->session->get('ue_humanistica')) ||
+        ($this->session->get('ue_sol_regularizar') && $this->session->get('ue_humanistica')) ||
+        ($this->session->get('ue_plena')  ) ||
+        ($this->session->get('ue_modular')  ) ||
+        ($this->session->get('ue_caldiff')  ) ||
+        ($this->session->get('ue_humanistica_web')  ) ||
+        ($this->session->get('ue_sol_regularizar')  ) ||
+        ($this->session->get('ue_tecteg') )
       ){
-        $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
-        ;
+        $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')));
+      }else{
+        if($nextButton == 'Estudiantes'){
+          $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')));
         }else{
-          if($nextButton == 'Estudiantes'){
-            $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
-            ;
-          }else{
-            //$form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
-            $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
-            ;
-          }
-
-
+          $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')));
         }
-        $form = $form->add('accessuser', 'hidden', array('data' => false));
-        $form = $form->getForm();
-        return $form;
+      }
+      $form = $form->add('accessuser', 'hidden', array('data' => false));
+      $form = $form->getForm();
+      return $form;
     }
     /**
      * create form Student Info to send values

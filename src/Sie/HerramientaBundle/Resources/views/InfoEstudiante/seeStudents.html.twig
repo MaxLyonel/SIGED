@@ -196,44 +196,24 @@
                         {#init the array info student #}
                         {% set objInfoStudent = [] %}
                         {% for data in objStudents %}
-                          {# set items = {
-                                          'estadomatriculaId': data.estadomatriculaId,
-                                          'id': data.id,
-                                          'carnetIdentidad': data.carnetIdentidad,
-                                          'codigoRude': data.codigoRude,
-                                          'paterno': '',
-                                          'materno': '',
-                                          'nombre': '',
-                                          'fechaNacimiento': data.fechaNacimiento,
-                                          'eInsId': data.eInsId,
-                                          'nivelId': data.nivelId,
-                                          'cicloId': data.cicloId,
-                                          'gradoId': data.gradoId,
-                                          'nivel': data.nivel,
-                                          'grado': data.grado,
-                                          'paralelo': data.paralelo
-                                          } #}
-                          {% set items = {
-                                          'estadomatriculaId': data.estadomatriculaId,
-                                          'id': data.id,
-                                          'carnetIdentidad': data.carnetIdentidad,
-                                          'codigoRude': data.codigoRude,
-                                          'paterno': '',
-                                          'materno': '',
-                                          'nombre': '',
-                                          'fechaNacimiento': data.fechaNacimiento,
-                                          'eInsId': data.eInsId,
-                                          'nivel': data.nivel,
-                                          'grado': data.grado,
-                                          'paralelo': data.paralelo
-                                          } %}
+                        {% set items = {
+                            'estadomatriculaId': data.estadomatriculaId,
+                            'id': data.id,
+                            'carnetIdentidad': data.carnetIdentidad,
+                            'codigoRude': data.codigoRude,
+                            'paterno': '',
+                            'materno': '',
+                            'nombre': '',
+                            'fechaNacimiento': data.fechaNacimiento,
+                            'eInsId': data.eInsId,
+                            'nivel': data.nivel,
+                            'grado': data.grado,
+                            'paralelo': data.paralelo
+                        } %}
                             {% set horasPlena = data.horasPlena %}
                             {% set conespecialidad = data.conespecialidad %}
                             {% set esvalidoPlena = data.esvalidoPlena %}
                             {% set jsnInfoStudent = items|json_encode() %}
-                            {# set the array student info and convert on json string #}
-                            {# set objInfoStudent = objInfoStudent|merge(data) #}
-                            {# set jsnInfoStudent = objInfoStudent|json_encode() #}
                             <tr {% if data.segipId == 0 %}class="text-danger"{% endif %} id="trEstudianteSegip_{{data.codigoRude}}">
                                 <td>{{loop.index}}</td>
                                 <td>{{data.codigoRude}}</td>
@@ -244,28 +224,14 @@
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
                                     {% if (gestion == app.session.get('currentyear')) %} {#es temporal#}
-                                        {# {% if data.cambioEstadoMatricula == true and 1 == 0 %}
-                                            <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                                {{data.estadomatricula}}
-                                            </button>
-                                        {% else %} #}
-                                            {% if (data.estadomatriculaId in [4,6,11,5] and operativo <= 3) %}
-                                                <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                                    <div id="{{data.eInsId}}">{{data.estadomatricula}}</div>
-                                                </button>
-                                            {% else %}
-                                               <a href="javascript:void(0)" title="" onclick="visualizar_contenido('{{infoUe}}','{{jsnInfoStudent}}')"><strong style="color:#ff0000;border:2px;"> {{data.estadomatricula}} &nbsp;</strong> &nbsp;&nbsp;<button><span class="fa fa-eye"></span></button> </a>
-                                            {% endif %}
-                                            
-                                        {# {% endif %} #}
-                                    {% else %}
-                                        {# {% if data.estadomatriculaId in [4,6,101,5] and sie == '81981543' and gestion == 2022 %}
+                                        {% if (data.estadomatriculaId in [4,6,11,5] and operativo <= 3) %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 <div id="{{data.eInsId}}">{{data.estadomatricula}}</div>
                                             </button>
                                         {% else %}
-                                        <a href="javascript:void(0)" title="" onclick="visualizar_contenido('{{infoUe}}','{{jsnInfoStudent}}')"><strong style="color:#ff0000;border:2px;"> {{data.estadomatricula}} &nbsp;</strong> &nbsp;&nbsp;<button><span class="fa fa-eye"></span></button> </a>
-                                        {% endif %} #}
+                                            <a href="javascript:void(0)" title="" onclick="visualizar_contenido('{{infoUe}}','{{jsnInfoStudent}}')"><strong style="color:#ff0000;border:2px;"> {{data.estadomatricula}} &nbsp;</strong> &nbsp;&nbsp;<button><span class="fa fa-eye"></span></button> </a>
+                                        {% endif %}
+                                    {% else %}
                                         {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
                                             {% if operativo == 5  or data.estadomatriculaId == 5 or data.estadomatriculaId ==  26 or data.estadomatriculaId ==  37 or data.estadomatriculaId == 55 or data.estadomatriculaId == 56 or data.estadomatriculaId == 57 or data.estadomatriculaId == 58 %}
                                                 {{data.estadomatricula}}
@@ -300,90 +266,24 @@
                                     </div>
                                 </div>
                                 <td class="text-center">
-                                    {# APODERADOS #}
-                                    {# {% if gestion == 2020 and data.estadomatriculaId in [4] and false %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado">
-                                            <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderado('{{infoUe}}','{{jsnInfoStudent}}',0);" >
-                                                <i class="fa fa-users"></i>
-                                            </button>
-                                        </div>
-                                    {% endif %} #}
 
-                                    {# APODERADO BONO FAMILIA #}
-                                    {# {% if (gestion == 2020 or wenakeyBono) and data.estadomatriculaId in [4] and false %} #}
-                                    {# PARA UES PRIVADAS #}
-                                    {# {% if (gestion == 2020 or wenakeyBono) and data.estadomatriculaId in [4] and true %}
-                                        {% if data.emitId == 19 %}
-                                            <span class="badge badge-warning">Estudiante extranjero <br /> no habilitado</span>
-                                        {% else %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
-                                                <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.eInsId}});" >
-                                                    <i class="fa fa-user"></i>
-                                                </button>
-                                            </div>
-                                        {% endif %}
-                                    {% endif %} #}
-
-                                    {# AREAS ESTUDIANTE #}
-                                    {# commented by krlos 25.03.21
-                                    {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
-                                            <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="areasEstudiante('{{infoUe}}','{{jsnInfoStudent}}');" >
-                                                <i class="fa fa-bars"></i>
-                                            </button>
-                                        </div>
-                                    {% endif %}
-                                    #}
                                     {# HABILITA FORMULARIO RUDE #}
-
                                     {# {% if  gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %} #}
-                                    {% if  gestion == app.session.get('currentyear') and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %}
+                                    {# {% if  (gestion)== (app.session.get('currentyear')-1) and data.estadomatriculaId in [4,5,55,28,11] and app.session.get('optionFormRude') %} #}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
                                         </div>
-                                    {% endif %}
-                                    {#
-                                    {% if swRegisterCalifications %}
-                                        {% if gestion >= 2021 and data.estadomatriculaId in [4] %}
-                                            {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %}
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                        <i class="fa fa-list"></i>
-                                                    </button>
-                                                </div>
-                                            {% else %}
-                                                {% if gestion >= 2021 %}                                        
-                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                            <i class="fa fa-list"></i>
-                                                        </button>
-                                                    </div>
-                                            {% endif %}
-                                    {% endif %}
-                                    #}
+                                    {# {% endif %} #}
 
-                                    {#Sea añadio el boton de reporte formulario RUDE#}
-                                    {# if true #}
                                     {% if app.session.get('roluser') in [9] and gestion == app.session.get('currentyear') and app.session.get('optionReporteRude') %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Rude ">
-                                           <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('download_formulario_rude', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                             <i class="fa fa-archive" style="color:#FFFFFF"></i>
-                                           </a>
+                                            <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('download_formulario_rude', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                                <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                            </a>
                                         </div>
                                     {% endif %}
-
-                                    {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                            <i class="fa fa-list"></i>
-                                        </button>
-                                    </div>
-                                    <a href="mailto:joe@example.com?subject=feedback" "email me">prueba</a> #}
-
-                                    {# <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                      <i class="fa fa-archive" style="color:#FFFFFF"></i>
-                                    </a> #}
 
                                     {#by krlos notas 28.05.2021 commented 30.07.21#}
                                     {% if app.session.get('esGuanawek')==0 %}
@@ -565,14 +465,6 @@
                                         {% endif %}
                                     {% endif %}
                                     
-                                    {# habilita titular de cobro bjp #}
-                                
-                                    {#% if gestion >= 2022 and nivel >= 12 and data.estadomatriculaId in [4,101,9,41] and swRegisterPersonBjp and app.session.get('estado') != 14  %#}                                       
-                                    {# a peticion de bruno SOLO EFECTIVOS #}
-                                    {# a peticion de bruno SOLO EFECTIVOS + Retirado por abandono, no incorporado, Retirado traslado. #}
-                                    {# if gestion >= 2023 and nivel >= 12 and data.estadomatriculaId in [4,10,9,6] and swRegisterPersonBjp and app.session.get('estado') != 14  #}                                       
-                                    {# inhabilitado el 05/10 a las 1200 #}
-                                    
                                     {% if gestion == 2024 and nivel >= 12 and data.estadomatriculaId in [999] and swRegisterPersonBjp and app.session.get('estado') != 14  %}                                       
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Asignar Titular">
                                                 <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
@@ -624,55 +516,9 @@
                                     
                                     {# REPORTE NAATS SOLO PARA GESTION 2018 Y NIVELES DE PRIMARIA Y SECUNDARIA #}
                                     {% if gestion > 2019 and nivel != 11 and data.estadomatriculaId in [4,5,11,55] %}
-                                    {#
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Trabajo del estudiante">
-                                            <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="trabajo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                        </div>
-                                    #}
                                     {% endif %}
-                                    
-                                    {# REPORTE CUT #}
-                                    {# {% if (sextoCerrado == true or operativo >= 4) and data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and data.estadomatriculaId in [4,5,55] %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="CUT">
-                                            <a class="btn btn-circle btn-success btn-stroke" href="{{path('download_cut', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                              <i class="fa fa-file-pdf-o" style="color:#11AA00"></i>
-                                            </a>
-                                        </div>
-                                    {% endif %} #}
 
 
-
-                                    {# REGISTRO DE NOTAS #}
-                                    {# {% if app.session.get('roluser') == 8 or app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 ) %} #}
-                                        {# {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [5,11,55] and operativo <= 4) or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %} #}
-                                            {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
-                                            {# PARA TODAS LAS DEMAS GESTIONES #}
-                                            {#add to ue 80730370 #}
-                                            {# {% if app.session.get('ie_id') == '80730370' %}
-                                                {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
-
-                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 7.-">
-                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" disabled="true" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                            <i class="fa fa-list"></i>
-                                                        </button>
-                                                    </div>
-                                                {% else %}                                                
-                                                    {% if gestion > 2019 %}
-                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones 8-.   ">
-                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" disabled="true" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                            <i class="fa fa-list"></i>
-                                                        </button>
-                                                    </div>
-                                                    {% endif %}
-                                                {% endif %}
-                                            {% endif %}
-
-                                        {% endif %}
-                                    {% endif %} #}
-                                             
-                                    
                                     {# IMPRESION DE LIBRETA #}
                                     {# {{dump(estadosPermitidosImprimir)}} #}
                                     {% if  imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir and app.session.get('roluser') in [7,8,9,10] %}
@@ -695,26 +541,6 @@
                                            
                                         {% endif %}
                                     {% endif %}
-
-                                      
-                                    {# ELIMINAR INSCRIPCION #}
-                                    {# commented to BJP by krlos
-                                    {% if  app.session.get('removeInscriptionAllowed')  or app.session.get('ie_id') == '81981478' %}
-                                    
-                                    {% endif %} 
-                                    #}
-                                    {#
-                                    {% if  gestion == app.session.get('currentyear') and data.estadomatriculaId == 4 and app.session.get('optionRemove') == false %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción" id="delInscriptionId_{{data.codigoRude}}">
-                                            <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionAca('{{infoUe}}','{{jsnInfoStudent}}','{{data.codigoRude}}');" >
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    {% endif %}
-                                    #}
-                                                                        
-
-
 
 
                                     {% if false %}

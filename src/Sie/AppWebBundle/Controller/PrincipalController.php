@@ -33,22 +33,15 @@ class PrincipalController extends Controller {
      * @param Request $request
      * @return array data user
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request) { //? (--> 3)
 
-        
         $user = $this->container->get('security.context')->getToken()->getUser();
-        //$this->sesion->set('userId',$user->getId());
-        //$this->sesion->set('roluser',8);
-
-
         $id_usuario = $this->sesion->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
         $rol_usuario = $this->sesion->get('roluser');
-
-        
 
         $userData = $this->userData($id_usuario);
 
@@ -59,9 +52,7 @@ class PrincipalController extends Controller {
 
         $gestion = $this->sesion->get('currentyear');
 
-        // dump($this->sesion->all());
-        // die;
-
+        //? Consulta Notificaciones nuevas recibidas
         $query = $repository->createQueryBuilder('n')
                 ->select('u')
                 ->innerJoin('SieAppWebBundle:NotificacionUsuario', 'u', 'WITH', 'u.notif = n.id')
@@ -75,15 +66,14 @@ class PrincipalController extends Controller {
                 ->setParameter('rol', $rol_usuario)
                 ->setParameter('estado', 't')
                 ->getQuery();
-        
-        $entities = $query->getResult();
 
-        //Consulta Mensajes nuevos recibidos
+        $entities = $query->getResult();
 
         $emM = $this->getDoctrine()->getManager();
 
         $repositoryM = $emM->getRepository('SieAppWebBundle:Mensaje');
 
+        // ? Consulta Mensajes nuevos recibidos
         $queryM = $repositoryM->createQueryBuilder('m')
                 ->select('m.id, m.asunto, m.fecha, m.adjunto1, m.adjunto2, mu.leido, p.paterno, p.materno, p.nombre')
                 ->innerJoin('SieAppWebBundle:MensajeUsuario', 'mu', 'WITH', 'mu.mensaje = m.id')
@@ -109,9 +99,9 @@ class PrincipalController extends Controller {
                 ->getQuery();
 
         $total = $queryT->getSingleScalarResult();
-
         $mensajesNuevos = $queryM->getResult();
 
+        // ? Guarda en la sessión los mensajes nuevos y el total
         $this->sesion->set('mensajesNuevos', $mensajesNuevos);
         $this->sesion->set('mensajesNuevosT', $total);
 
@@ -120,36 +110,9 @@ class PrincipalController extends Controller {
 
         $emF = $this->getDoctrine()->getManager();
 
-
-        //////TEMPORAL ALTERNATIVA HERRAMIENTA
-        //////TEMPORAL ALTERNATIVA HERRAMIENTA
-        //////TEMPORAL ALTERNATIVA HERRAMIENTA
-        //////EXTRACCION DE NOTIFICACIONES PARA EL USUARIO
-        /*$em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-        $query = "  select institucioneducativa_id, institucioneducativa, gestion_tipo_id, sucursal_tipo_id, periodo_tipo_id, g.tramite_estado
-                    from institucioneducativa_sucursal a
-                    inner join institucioneducativa c on a.institucioneducativa_id = c.id
-                    inner join institucioneducativa_sucursal_tramite b on b.institucioneducativa_sucursal_id = a.id
-                    inner join tramite_estado g on g.id = b.tramite_estado_id
-                    where g.id in ('5','16','17')
-                    order by gestion_tipo_id";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $not = $stmt->fetchAll();
-        if (!$not) {
-            $not = array();
-        }
-
-        $departamental = $this->ceasstdcierreDptoAction();
-        $nacional = $this->ceasstdcierreNalAction();
-
-        dump($departamental);dump($nacional);die;*/
-        
+        //? Obtiene algún tipo de instalador
         $em->getConnection()->beginTransaction();
         $em->getConnection()->commit();
-            
             $query = $em->getConnection()->prepare('select * from control_instalador ci  where ci.activo = true order by 1 desc ');
             $query->execute();
             $instalador= $query->fetchAll();
@@ -157,80 +120,36 @@ class PrincipalController extends Controller {
         $departamental = array();
         $nacional = array();
         $not = array();
-        //////TEMPORAL ALTERNATIVA HERRAMIENTA
-        //////TEMPORAL ALTERNATIVA HERRAMIENTA
-        //////TEMPORAL ALTERNATIVA HERRAMIENTA
-
-        //get observation data
-        /*$sieaux = $sesion->get('ie_id');
-        if (isset($sieaux)) {
-            $sieaux = -1;
-        }*/
-        //Lista de observados consolidacion inscripcion
-        // if ($rol_usuario == 9){
-        //     $query = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->createQueryBuilder('eio')
-        //         ->where('eio.gestionTipo = :gestion')
-        //         ->andWhere('eio.institucioneducativa = :ie')
-        //         ->setParameter('gestion', $this->sesion->get('currentyear'))
-        //         ->setParameter('ie', $this->sesion->get('ie_id'))
-        //         ->getQuery();
-            
-        //     $observacion = $query->getResult();
-        // }else{
-        //     $observacion = array();
-        // }
-        
-
-        //$objObservactionSie = $em->getRepository('SieAppWebBundle:ValidacionProceso')->getObservationPerSie(array('sie'=> $sieaux, 'gestion'=>2016));
 
         if($this->sesion->get('pathSystem') == 'SieGisBundle'){
             return $this->redirectToRoute('sie_gis_homepage');
         }
 
-        //         $query = $em->getConnection()->prepare('select lt4.lugar as departamento,initcap(lt5.lugar) as distrito,initcap(lt3.lugar) as provincia,lt2.lugar as municipio,ie.id as sie,ie.institucioneducativa as ue
-        //         from institucioneducativa_encuesta iee
-        //         inner join institucioneducativa ie on ie.id = iee.institucioneducativa_id
-        //         inner join jurisdiccion_geografica jg on jg.id = ie.le_juridicciongeografica_id
-        //         left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
-        //         left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
-        //         left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
-        //         left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
-        //         left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-        //         left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito');
-        //     $query->execute();
-        //     $dataEncuesta= $query->fetchAll();
-        // if (count($dataEncuesta) > 0){
-        //     $existe = true;
-        // }
-        // else {
-        //     $existe = false;
-        // }
-         $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
-            $query = $em->createQuery(
-                'SELECT lt
-                FROM SieAppWebBundle:LugarTipo lt
-                WHERE lt.lugarNivel = :nivel
-                AND lt.lugarTipo = :lt1
-                ORDER BY lt.id')
-                ->setParameter('nivel', 8)
-                ->setParameter('lt1', $paisNac);
-            $dptoNacE = $query->getResult();
+        $paisNac = $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1)); //? obtiene a Bolivia
+        $query = $em->createQuery(
+            'SELECT lt
+            FROM SieAppWebBundle:LugarTipo lt
+            WHERE lt.lugarNivel = :nivel
+            AND lt.lugarTipo = :lt1
+            ORDER BY lt.id')
+            ->setParameter('nivel', 8)
+            ->setParameter('lt1', $paisNac);
 
-            $dptoNacArray = array();
-            foreach ($dptoNacE as $value) {
-                if( $value->getId()== 11 || $value->getId()==79355  )
-                {
+        $dptoNacE = $query->getResult(); //? Obtiene departamentos
 
-                }else {
-                    $dptoNacArray[$value->getId()] = $value->getLugar();
-                }
+        $dptoNacArray = array();
+        foreach ($dptoNacE as $value) {
+            //? Filtra los departamentos por 11 = NINGUNO o  79355 = NULL
+            if( $value->getId()== 11 || $value->getId()==79355 )             {
+
+            }else {
+                //? llena el array $dptoNacArray[id de lugar_tipo] = La Paz
+                $dptoNacArray[$value->getId()] = $value->getLugar();
             }
-        //    dump($dptoNacArray);die;
-        //
+        }
         $registroInicioDeClases = array();
         if($this->sesion->get('roluser') == 9){
             $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
-            //$registroInicioDeClases = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
             $registroInicioDeClases=$this->getInicioClasesInstitucioneducativaSucursal();
         }
 
@@ -253,7 +172,6 @@ class PrincipalController extends Controller {
         $historialInicioActividadesData=array();
         if ($rol_usuario==9){
             $historialInicioActividadesData=$this->getHistorialInicioDeActividades();
-        // dump($historialInicioActividadesData);die;
             $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
 
             $query = $repository->createQueryBuilder('jg')
@@ -294,7 +212,7 @@ class PrincipalController extends Controller {
             $ubicacionUe = $query->getResult();
 
             $ubicacion = (isset($ubicacionUe) && !empty($ubicacionUe) && isset($ubicacionUe[0])) ? $ubicacionUe[0] : '';
-                
+
             $descargaspn = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(
                     'institucioneducativa' => $this->sesion->get('ie_id'),
                     'gestionTipoId'  => $gestion,
@@ -307,9 +225,6 @@ class PrincipalController extends Controller {
             if (count($nivelAutorizado) > 0){
                 $verSPN = true;
             }
-            // dump( $ubicacion);
-            // dump(count($nivelAutorizado)); die;
-
             // Obtener la fecha actual
             $fechaActual = new \DateTime();
             $codigoDepartamento = $ubicacion['codigo_departamento'];
@@ -350,9 +265,9 @@ class PrincipalController extends Controller {
             $descarga = 0;
             $fechaDescargaSPN = '';
         }
-       
-        // $verSPN = false;
-        // dump($fechaDescargaSPN);die;
+
+        // dump('formOperativoRude: ', $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$gestion)),array()));
+        // die;
 
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,

@@ -1045,7 +1045,7 @@ class EstudianteRepository extends EntityRepository {
     /**
     *
     **/
-    public function getOperativoToStudent($data){
+    public function getOperativoToStudent($data){ //? (--> 6*)
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb

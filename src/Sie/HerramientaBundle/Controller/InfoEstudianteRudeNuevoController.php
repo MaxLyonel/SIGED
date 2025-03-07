@@ -60,8 +60,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $infoUe = $request->get('infoUe');
-        $infoStudent = $request->get('infoStudent');
+        $infoUe = $request->get('infoUe'); //? información de la unidad educativa
+        $infoStudent = $request->get('infoStudent'); //? información del estudiante
         $editar = $request->get('editar');
 
         $aInfoUeducativa = unserialize($infoUe);
@@ -73,7 +73,6 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
         $idInscripcion = $aInfoStudent['eInsId'];
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
-
         $estudiante = $inscripcion->getEstudiante();
 
         $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array(
@@ -187,9 +186,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
      * DATOS DE LA O EL ESTUDIANTE
      */
     private function createFormEstudiante($rude, $e, $rude_ext){
-        // dump($rude_ext->getCiExtranjero());die;
+
         $em = $this->getDoctrine()->getManager();
         $pais = $e->getPaisTipo()->getId();
+        // dump($e->getPaisTipo()); die;
         if($pais == 1){
             $departamento = '79354';
             $provincia = 11;
@@ -197,7 +197,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $departamento = $e->getLugarNacTipo()->getId();
             }
             if($e->getLugarProvNacTipo() != null){
-                $provincia = $e->getLugarProvNacTipo()->getId();                
+                $provincia = $e->getLugarProvNacTipo()->getId();
             }
         }else{
             $departamento = '79354';
@@ -210,7 +210,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $condition = array('lugarNivel' => 1, 'paisTipoId' => $pais);
             $dep = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy($condition);
             foreach ($dep as $d) {
-                $departamentos[$d->getId()] = $d->getLugar();
+                $departamentos[$d->getId()] = $d->getLugar(); //? obtiene departamentos
             }
 
             $prov = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $departamento));
@@ -242,109 +242,108 @@ class InfoEstudianteRudeNuevoController extends Controller {
         // dump($rude_ext);
         // die;
         $form = $this->createFormBuilder()
-                    // ->setAction($this->generateUrl('info_estudiante_rude_save_form2'))
-                    ->add('rudeId', 'hidden', array('data' => $rude->getId(),'mapped'=>false))
-                    ->add('estudianteId', 'hidden', array('data' => $e->getId()))
-                    ->add('pais', 'entity', array(
-                            'class' => 'SieAppWebBundle:PaisTipo',
-                            'query_builder' => function (EntityRepository $e) {
-                                return $e->createQueryBuilder('p')
-                                        ->where('p.id != 0')
-                                        ->orderBy('p.pais', 'ASC')
-                                ;
-                            },
-                            'empty_value' => 'Seleccionar...',
-                            'required'=>true,
-                            'property' => 'pais',
-                            'data'=>$e->getPaisTipo()
-                        ))
-                    ->add('departamento', 'choice', array('required'=>false,'empty_value'=>'Seleccionar', 'choices'=>$departamentos, 'data'=>$departamento))
-                    ->add('provincia', 'choice', array('required'=>false,'empty_value'=>'Seleccionar', 'choices'=>$provincias, 'data'=>$provincia))
-                    ->add('localidadNac', 'text', array('required'=>false,'required'=>true, 'data'=>$e->getLocalidadNac()))
+            ->add('rudeId', 'hidden', array('data' => $rude->getId(),'mapped'=>false))
+            ->add('estudianteId', 'hidden', array('data' => $e->getId()))
+            ->add('pais', 'entity', array(
+                    'class' => 'SieAppWebBundle:PaisTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('p')
+                                ->where('p.id != 0')
+                                ->orderBy('p.pais', 'ASC')
+                        ;
+                    },
+                    'empty_value' => 'Seleccionar...',
+                    'required'=>true,
+                    'property' => 'pais',
+                    'data'=>$e->getPaisTipo()
+                ))
+            ->add('departamento', 'choice', array('required'=>false,'empty_value'=>'Seleccionar', 'choices'=>$departamentos, 'data'=>$departamento))
+            ->add('provincia', 'choice', array('required'=>false,'empty_value'=>'Seleccionar', 'choices'=>$provincias, 'data'=>$provincia))
+            ->add('localidadNac', 'text', array('required'=>false,'required'=>true, 'data'=>$e->getLocalidadNac()))
 
-                    ->add('codigoRude', 'text', array('required' => false, 'data'=>$e->getCodigoRude()))
-                    ->add('carnet', 'text', array('required' => false, 'data'=>$e->getCarnetIdentidad()))
-                    ->add('complemento', 'text', array('required' => false, 'data'=>$e->getComplemento()))
-                    ->add('fechaNacimiento', 'text', array('required' => false, 'data'=>$e->getFechaNacimiento()->format('d-m-Y')))
-                    ->add('sexo', 'entity', array(
-                            'class' => 'SieAppWebBundle:GeneroTipo',
-                            'query_builder' => function (EntityRepository $e) {
-                                return $e->createQueryBuilder('gt')
-                                        ->where('gt.id != 3');
-                            },
-                            'empty_value' => 'Seleccionar...',
-                            'required' => true,
-                            'data'=>$e->getGeneroTipo()
-                        ))
-                    ->add('oficialia', 'text', array('required' => false, 'data'=>$e->getOficialia()))
-                    ->add('libro', 'text', array('required' => false, 'data'=>$e->getLibro()))
-                    ->add('partida', 'text', array('required' => false, 'data'=>$e->getPartida()))
-                    ->add('folio', 'text', array('required' => false, 'data'=>$e->getFolio()))
+            ->add('codigoRude', 'text', array('required' => false, 'data'=>$e->getCodigoRude()))
+            ->add('carnet', 'text', array('required' => false, 'data'=>$e->getCarnetIdentidad()))
+            ->add('complemento', 'text', array('required' => false, 'data'=>$e->getComplemento()))
+            ->add('fechaNacimiento', 'text', array('required' => false, 'data'=>$e->getFechaNacimiento()->format('d-m-Y')))
+            ->add('sexo', 'entity', array(
+                    'class' => 'SieAppWebBundle:GeneroTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('gt')
+                                ->where('gt.id != 3');
+                    },
+                    'empty_value' => 'Seleccionar...',
+                    'required' => true,
+                    'data'=>$e->getGeneroTipo()
+                ))
+            ->add('oficialia', 'text', array('required' => false, 'data'=>$e->getOficialia()))
+            ->add('libro', 'text', array('required' => false, 'data'=>$e->getLibro()))
+            ->add('partida', 'text', array('required' => false, 'data'=>$e->getPartida()))
+            ->add('folio', 'text', array('required' => false, 'data'=>$e->getFolio()))
 
-                    ->add('extCi', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked' => $rude_ext ? $rude_ext->getCiExtranjero() : false)))
-                    ->add('extCiDip', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getCiDiplomatico() : false)))
-                    ->add('extCn', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getCnExtranjero() : false)))
-                    ->add('extDni', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getDni() : false)))
-                    ->add('extPas', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getPasaporte() : false)))
-                    ->add('extDecJur', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getDeclaracion() : false)))
-                    ->add('extCodDoc', 'text', array('required' => false, 'data'=>$rude_ext ? $rude_ext->getCodigoDocumento() : ''))
-                    ->add('extArchDecJur', FileType::class, [
-                        'label' => false,
-                        'required' => false,
-                        'constraints' => [
-                            new File([
-                                'maxSize' => '2M',
-                                'mimeTypes' => [
-                                    'application/pdf',
-                                    'image/jpeg',
-                                    'image/jpg',
-                                    'image/png',
-                                ],
-                                'mimeTypesMessage' => 'Por favor, sube un archivo PDF, JPEG o PNG.',
-                            ]),
+            ->add('extCi', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked' => $rude_ext ? $rude_ext->getCiExtranjero() : false)))
+            ->add('extCiDip', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getCiDiplomatico() : false)))
+            ->add('extCn', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getCnExtranjero() : false)))
+            ->add('extDni', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getDni() : false)))
+            ->add('extPas', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getPasaporte() : false)))
+            ->add('extDecJur', 'checkbox',  array('mapped'=>false, 'required'=>false, 'label' => false,'attr'=> array('checked'=>$rude_ext ? $rude_ext->getDeclaracion() : false)))
+            ->add('extCodDoc', 'text', array('required' => false, 'data'=>$rude_ext ? $rude_ext->getCodigoDocumento() : ''))
+            ->add('extArchDecJur', FileType::class, [
+                'label' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/png',
                         ],
-                        'attr' => [
-                            'accept' => '.pdf,.jpeg,.jpg,.png',
-                            'id' => 'extArchDecJur',
-                        ],
-                    ])
-                    
-                    ->add('tieneDiscapacidad', 'choice', array(
-                            'choices'=>array(true=>'Si', false=>'No'),
-                            'data'=> ($discapacidadEstudiante)? true: false,
-                            'required'=>true,
-                            'multiple'=>false,
-                            'empty_value'=>false,
-                            'expanded'=>true
-                        ))
-                    ->add('carnetIbc', 'text', array('required' => false, 'data'=>$e->getCarnetIbc()))
-                    ->add('discapacidadId', 'hidden', array('required' => false, 'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getId():'nuevo'))
-                    ->add('discapacidad', 'entity', array(
-                            'class' => 'SieAppWebBundle:DiscapacidadTipo',
-                            'query_builder' => function (EntityRepository $e) use ($rude) {
-                                return $e->createQueryBuilder('dt')
-                                        ->where('dt.id in (:ids)')
-                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
-                            },
-                            'empty_value' => 'Seleccionar...',
-                            'required' => true,
-                            'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getDiscapacidadTipo():'',
-                            'mapped'=>false
-                        ))
-                    ->add('gradoDiscapacidad', 'entity', array(
-                            'class' => 'SieAppWebBundle:GradoDiscapacidadTipo',
-                            'query_builder' => function (EntityRepository $e) use ($gradosArray) {
-                                return $e->createQueryBuilder('gdt')
-                                        ->where('gdt.id in (:ids)')
-                                        ->setParameter('ids', $gradosArray);
-                            },
-                            'empty_value' => 'Seleccionar...',
-                            'required' => true,
-                            'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getGradoDiscapacidadTipo():''
-                        ))
-                    ->add('departamentoNacimiento', 'hidden', array('data'=>$departamentoNacimiento->getLugar()))
-                    ->add('provinciaNacimiento', 'hidden', array('data'=>$provinciaNacimiento->getLugar()))
-                    ->getForm();
+                        'mimeTypesMessage' => 'Por favor, sube un archivo PDF, JPEG o PNG.',
+                    ]),
+                ],
+                'attr' => [
+                    'accept' => '.pdf,.jpeg,.jpg,.png',
+                    'id' => 'extArchDecJur',
+                ],
+            ])
+            
+            ->add('tieneDiscapacidad', 'choice', array(
+                    'choices'=>array(true=>'Si', false=>'No'),
+                    'data'=> ($discapacidadEstudiante)? true: false,
+                    'required'=>true,
+                    'multiple'=>false,
+                    'empty_value'=>false,
+                    'expanded'=>true
+                ))
+            ->add('carnetIbc', 'text', array('required' => false, 'data'=>$e->getCarnetIbc()))
+            ->add('discapacidadId', 'hidden', array('required' => false, 'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getId():'nuevo'))
+            ->add('discapacidad', 'entity', array(
+                    'class' => 'SieAppWebBundle:DiscapacidadTipo',
+                    'query_builder' => function (EntityRepository $e) use ($rude) {
+                        return $e->createQueryBuilder('dt')
+                                ->where('dt.id in (:ids)')
+                                ->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
+                    },
+                    'empty_value' => 'Seleccionar...',
+                    'required' => true,
+                    'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getDiscapacidadTipo():'',
+                    'mapped'=>false
+                ))
+            ->add('gradoDiscapacidad', 'entity', array(
+                    'class' => 'SieAppWebBundle:GradoDiscapacidadTipo',
+                    'query_builder' => function (EntityRepository $e) use ($gradosArray) {
+                        return $e->createQueryBuilder('gdt')
+                                ->where('gdt.id in (:ids)')
+                                ->setParameter('ids', $gradosArray);
+                    },
+                    'empty_value' => 'Seleccionar...',
+                    'required' => true,
+                    'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getGradoDiscapacidadTipo():''
+                ))
+            ->add('departamentoNacimiento', 'hidden', array('data'=>$departamentoNacimiento->getLugar()))
+            ->add('provinciaNacimiento', 'hidden', array('data'=>$provinciaNacimiento->getLugar()))
+            ->getForm();
 
         return $form;
     }
@@ -395,27 +394,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);
         //Para guardar datos del la discapacidad en la tabla Rude
-        $rude->setTieneDiscapacidad($form['tieneDiscapacidad']);
-        $carnetIbc=empty($form['carnetIbc'])?0:1;
-        $rude->setTieneCarnetDiscapacidad($carnetIbc);
-        // dump($estudiante);die;
-        /**
-         * REGISTRO DE CARNET DE IDENTIDAD
-         */
-        // $carnet = $form['carnet'];
-        // if(isset($carnet) and $carnet != ''){
-        //     $complemento = $form['complemento'];
-        //     $estudiante->setCarnetIdentidad($carnet);
-        //     $estudiante->setComplemento( mb_strtoupper($complemento, 'utf-8'));
-        // }
+        $rude->setTieneDiscapacidad($form['tieneDiscapacidad']); //? actualiza el campo tiene discapacidad (RUDE)
 
-        // $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => $form['pais'])));
-        // $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['departamento'] ? $form['departamento'] : null)));
-        // $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['provincia'] ? $form['provincia'] : null)));
-        // $estudiante->setLocalidadNac(mb_strtoupper($form['localidad'],'utf-8'));
-            
+        $carnetIbc=empty($form['carnetIbc'])?0:1;
+        $rude->setTieneCarnetDiscapacidad($carnetIbc); //? actualizar el capo tiene carnet discapacidad (RUDE)
+
             if(isset($form['oficialia'])){
-                $estudiante->setOficialia($form['oficialia']);
+                $estudiante->setOficialia($form['oficialia']); //? (ESTUDIANTE)
             }
             if(isset($form['libro'])){
                 $estudiante->setLibro($form['libro']);
@@ -429,17 +414,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $cedulaTipo = ($estudiante->getPaisTipo()->getId()==1)?1:2;
             $estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
 
-        // $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneBy(array('id' => $form['sexo'])));
-           $em->persist($estudiante);
-           $em->flush();
-        
+        $em->persist($estudiante);
+        $em->flush();
         //EXTRANJEROS
         $rudeext = $em->getRepository('SieAppWebBundle:RudeExtranjero')->findBy(array('rude' => $form['rudeId']));
-        
         // dump($rudeext);
-        
         if ( count($rudeext) == 0 and (isset($form['extCi']) or isset($form['extCiDip']) or  isset($form['extCn']) or  isset($form['extDni']) or  isset($form['extPas']) or  isset($form['extDecJur']) or  isset($form['extCodDoc']))){
-            
             $rudeext = new RudeExtranjero();
             $rudeext->setRude($em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']));
             $rudeext->setCiExtranjero(isset($form['extCi']) ? 1:0);
@@ -456,9 +436,6 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $rudeext->setArchivo('');
             }
             $rudeext->setCodigoDocumento($form['extCodDoc']);
-            // $rudeext->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
-            // $rudeext->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
-            // $rudeext->setFechaRegistro(new \DateTime('now'));
             $em->persist($rudeext);
             $em->flush();
         } else {
@@ -535,45 +512,6 @@ class InfoEstudianteRudeNuevoController extends Controller {
         return $response->setData(['msg'=>true]);
     }
 
-     /**
-     * GUARDA ARCHIVO A SUBIR
-     */
-    // private function guardarArch($sie, $codigoRude, $gestion, $prefijo, $file)
-    // {
-    //     if (isset($file)) {
-    //         $type = $file['type'];
-    //         $size = $file['size'];
-    //         $tmp_name = $file['tmp_name'];
-    //         $name = $file['name'];
-    //         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    //         $new_name = $prefijo.date('YmdHis') . '.' . $extension;
-    
-    //         // GUARDAR EL ARCHIVO
-    //         $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/rude/decjurada/'.$gestion.'/'. $sie . '/' . $codigoRude;
-    //         if (!file_exists($directorio)) {
-    //             mkdir($directorio, 0777, true);
-    //         }
-    
-    //         $archivador = $directorio . '/' . $new_name;
-    
-    //         if (!move_uploaded_file($tmp_name, $archivador)) {
-    //             return null;
-    //         }
-    
-    //         // CREAR DATOS DEL ARCHIVO
-    //         $informe = array(
-    //             'name' => $name,
-    //             'type' => $type,
-    //             'tmp_name' => 'nueva_ruta',
-    //             'size' => $size,
-    //             'new_name' => $new_name
-    //         );
-    
-    //         return $new_name;
-    //     } else {
-    //         return null;
-    //     }
-    // }
 
     private function guardarArch($sie, $codigoRude, $gestion, $prefijo, $file )
     {
@@ -618,11 +556,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         if($rude->getMunicipioLugarTipo() != null){
-
                 $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+                dump($lt5_id);
                 $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+                dump($lt4_id);
                 $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
-
+                dump($lt3_id);
+                die;
                 $m_id = $rude->getMunicipioLugarTipo()->getId();
                 $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
                 $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();

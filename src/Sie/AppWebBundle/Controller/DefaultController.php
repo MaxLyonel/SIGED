@@ -87,6 +87,7 @@ class DefaultController extends Controller {
             case 'academico.sie.gob.bo':
             case 'academico.local':
             case '172.20.196.5:8013':
+            case '172.20.196.69:8013':
             case '172.20.0.53:8013':
                 $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
@@ -460,18 +461,6 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramientaAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
-//            default :
-//                $sysname = 'PNP';
-//                $sysporlet = 'black';
-//                $sysbutton = true;
-//                $this->session->set('pathSystem', "SiePnpBundle");
-//                break;
-//            default :
-//                $sysname = 'USUARIOS';
-//                $sysporlet = 'white';
-//                $sysbutton = true;
-//                $this->session->set('pathSystem', "SieUsuariosBundle");
-//                break;
             case '172.20.196.13:8021':
             case '172.20.0.53:8021':
             case 'infraestructura.local':
@@ -544,7 +533,7 @@ class DefaultController extends Controller {
                 return $this->render('SieAppWebBundle:ControlDatosCelular:index.html.twig');
                 break;    
             case '172.20.196.5:9007': /// login plataforma
-	    case 'aula.minedu.gob.bo':
+	        case 'aula.minedu.gob.bo':
                 $this->session->set('pathSystem', "AppWebBundle");
                 return $this->render('SieAppWebBundle:ControlDatosPlataforma:index.html.twig');
                 break;   
@@ -662,37 +651,31 @@ class DefaultController extends Controller {
         try {
             $em = $this->getDoctrine()->getManager();
             $this->session = $request->getSession();
-            //***************************
-            //******REALIZA LA BUSQUEDA DE USUARIO Y CONTRASEÑA
-            //***************************
-            //$user = $em->getRepository('SieAppWebBundle:Usuario')->findBy(array('username' => $form['_username'], 'password' => md5($form['_password']), 'esactivo' => 'true'));
 
+            //? ***********  REALIZA LA BUSQUEDA DE USUARIO Y CONTRASEÑA ****************
             $user = $this->container->get('security.context')->getToken()->getUser();
-            //dump($user);die();
-            if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
-
-                // VERIFICAMOS SI EL USUARIO ES DE ALTERNATIVA Y ES UN CENTRO
-                /*$arrauuseralt = array(4747180,466334,3063920);
-                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and !(in_array($user->getUsername(),$arrauuseralt) )){
-                    $this->session->getFlashBag()->add('errorusuario', 'El sistema esta temporalmente fuera de servicio, por mantenimiento. Disculpe las molestias.');
-                    return $this->redirectToRoute('login');
-                }*/
-
-                //*******SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA
+            // dump('usuario: ', $user);
+            if ( $user and is_object($user) ) { //? USUARIO Y CONTRASEÑA CORRECTAS
                 $this->session->set('userId', $user->getId());
-                
+
+                //? ************ SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA *******
                 if (md5($user->getUsername()) == $user->getPassword()) {
                     return $this->redirect($this->generateUrl('sie_usuarios_reset_login', array('usuarioid' => $user->getId())));
                 }
+                //? *********************************************************************
 
-                //*******************
-                //BUSCANDO ROLES ACTIVOS Y UNIDADES O CENTROS DONDE ESTES COMO VIGENTES
-                //dump($this->get('login'));die;
+                //? BUSCANDO ROLES ACTIVOS Y UNIDADES O CENTROS DONDE ESTES COMO VIGENTES
                 $rolselected = $this->get('login')->verificarRolesActivos($user->getPersona()->getId(),'-1');
+                // dump('rol selected');
+                // dump($rolselected);
 
-                $aPersona = $em->getRepository('SieAppWebBundle:Persona')->find($user->getPersona()->getId());
-                $carnet = $aPersona->getCarnet().$aPersona->getComplemento();
-                $this->session->set('lastname', $aPersona->getPaterno());
+                $aPersona = $em->getRepository('SieAppWebBundle:Persona')->find($user->getPersona()->getId()); //? Solo obtiene el modelo sin datos
+                // dump('persona');
+                // dump($aPersona);
+                $carnet = $aPersona->getCarnet().$aPersona->getComplemento(); //? aqui obtiene el carnet
+                // dump('carnet');
+                // dump($carnet);
+                $this->session->set('lastname', $aPersona->getPaterno()); //? aqui obtiene su ap paterno
                 $this->session->set('lastname2', $aPersona->getMaterno());
                 $this->session->set('name', $aPersona->getNombre());
                 $this->session->set('userName', $user->getUsername());
@@ -700,8 +683,13 @@ class DefaultController extends Controller {
                 $this->session->set('userfoto', $aPersona->getFoto());
                 $this->session->set('userId2', $user->getId());
                 $this->session->set('currentyear', date('Y'));
-                
+
+                // dump('session antes');
+                // dump($this->session);
+
+                //? NO INGRESA ACA PARA REGULAR
                 if($this->session->get('pathSystem')=='SieUniversityBundle'){
+                    dump('entones no debería ingresar aca');
                     $useruni_id = $this->session->get('userId');
                     $useruni_name = $this->session->get('userName');
                     
@@ -714,8 +702,10 @@ class DefaultController extends Controller {
                     }
                     
                 }
-               
+
+                //? NO INGRESA ACA PARA REGULAR
                 if($this->session->get('pathSystem')=='SieTecnicaEstBundle'){
+                    dump('tampoco aca');
                     $estadoUsuarioRol = $this->getAccessUsuarioRol(array("usuarioId"=>$this->session->get('userId'),"rolId"=>20));
                     if ($estadoUsuarioRol){
                         return $this->redirect($this->generateUrl('sie_tecnicaest_dashboard'));
@@ -724,13 +714,10 @@ class DefaultController extends Controller {
                     }
                     
                 }
-                //*************************
-                //*************************
-                //*****CONFIGURACIONES PARA OTROS SUBSISTEMAS
-                //*****CONFIGURACIONES PARA OTROS SUBSISTEMAS
+                //? *****CONFIGURACIONES PARA OTROS SUBSISTEMAS
                 if  ( ($this->session->get('pathSystem') === 'SieDiplomaBundle')
-                   || ($this->session->get('pathSystem') === 'SieTramitesBundle')
-                   || ($this->session->get('sysname') === 'REPORTES') ){
+                    || ($this->session->get('pathSystem') === 'SieTramitesBundle')
+                    || ($this->session->get('sysname') === 'REPORTES') ){
                         //review if the system is Diplomas
                         $aRoles = $this->getUserRoles($user->getId());
                         $this->myarrayRoles = $aRoles;
@@ -844,10 +831,9 @@ class DefaultController extends Controller {
                         //***********************
                         //***********************
                 }else{
-                    //*******************
-                    //MENSAJE DE QUE CORRECCION EN CASO DE QUE USUARIO NO COINCIDA CON CARNET
+                    //? MENSAJE DE QUE CORRECCION EN CASO DE QUE USUARIO NO COINCIDA CON CARNET
                     $carnetban = 'null';
-                    $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($carnet);
+                    $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($carnet); //? solo obtiene el modelo
                     if ($this->session->get('userName') <> $carnet) {
                         if (sizeof($personausuarios) == 0) {
                             $this->session->getFlashBag()->add('errorusername', 'La omisión reiterada a esta observación derivara en la ');
@@ -857,10 +843,7 @@ class DefaultController extends Controller {
                         }
                         $carnetban = 'true';
                     }
-                    //dump($carnet);dump($this->session->get('userName'));die;
-
-                    //*******************
-                    //MENSAJE DE RESETEO DE CONTRASEÑA CANTIDAD DE DIAS DESDE EL ULTIMO CAMBIO DE CONTRASEÑA
+                    //? MENSAJE DE RESETEO DE CONTRASEÑA CANTIDAD DE DIAS DESDE EL ULTIMO CAMBIO DE CONTRASEÑA
                     $exp = 'null';
                     $dateObject = $user->getFechaRegistro();
                     $date = $dateObject->format('Y-m-d');
@@ -872,22 +855,9 @@ class DefaultController extends Controller {
                         $this->session->getFlashBag()->add('errorcontraexp', 'La omisión reiterada a esta observación derivara en la ');
                         $exp = 'true';
                     }
-                    //dump($exp);die;
-
-                    //*******************
-                    //MENSAJE DIRIGIDO AL USUARIO
                     $mendir = 'null';
-                    /*$mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $this->session->get('userId'), 'notif' => '5713980' ) );
 
-                    if (sizeof($mensajedirecto) > 0) {
-                        //CORRECCCION DE MENSAJE
-                        $mensaje = $em->getRepository('SieAppWebBundle:Notificacion')->find($mensajedirecto->getNotif() );
-                        $this->session->getFlashBag()->add('mensajedircod4', $mensaje->getMensaje());
-                        $mendir = 'true';
-                    }*/
-                    //dump($mensaje->getMensaje());die;
-                    /**********ACTUALIZACIÓN OBLIGATORIA****************** */
-                    
+                    //? ACTUALIZACIÓN OBLIGATORIA DE CONTRASEÑA
                     $dateObject = $user->getFechaRegistro();
                     $passwordact = $user->getPassword();
                     $passwordant = $user->getPassword2();
@@ -896,9 +866,11 @@ class DefaultController extends Controller {
                     if ($date < '2024-11-27' or $passwordact == $passwordant) {
                         return $this->redirect($this->generateUrl('usuariopasswd'));
                     }
-                    /***************************** */
+                    //? FIN DE ACTUALIZACIÓN OBLIGATORIA DE CONTRASEÑA */
 
                     $sistema = $this->session->get('pathSystem');
+                    // dump('sistema');
+                    // dump($sistema);
 
                     switch ($sistema) {
                         case 'SieRegularBundle':
@@ -955,16 +927,16 @@ class DefaultController extends Controller {
                             break;
                         case 'SiePermanenteBundle':
                             $this->session->set('sysname', 'SISTEMA ACADÉMICO EDUCACIÓN PERMANENTE');
-                            $this->session->set('sysporlet', '#0101DF');                            
-                            break;    
-                        default:
+                            $this->session->set('sysporlet', '#0101DF');
+                            break;
+                        default: //? Ingresa aca (aunque parece insulso, porque sysname y sysporlet ya tienen esos datos)
                             $this->session->set('sysname', 'SISTEMA SIGED');
-                            $this->session->set('sysporlet', '#0101DF');                            
+                            $this->session->set('sysporlet', '#0101DF');
                             break;
                     }
 
+                    //? ======== si ya expiro o su carnet esta baneado o medir no funciona ========
                     if (($exp == 'true') || ($carnetban == 'true') || ($mendir == 'true')){
-                        //dump($rolselected);die;
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'titulosubsistema' => $this->session->get('sysname'),
@@ -975,12 +947,11 @@ class DefaultController extends Controller {
                             'persona' => $this->session->get('name').' '.$this->session->get('lastname')
                         ));
                     }
-                    //dump($rolselected);die;
                     //*******************
-                    //CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
-                    //SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
-                    $sesion->set('directorAlternativa', false);
-                    //dump($rolselected);die;
+                    //? CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
+                    //? SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
+                    $sesion->set('directorAlternativa', false); //? insulso la variable ya es false
+                    // dump('count rolselected: ', count($rolselected));
                     if (count($rolselected) == 1) {
                         if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
                             $this->session->set('roluser', $rolselected[0]['id']);
@@ -990,17 +961,20 @@ class DefaultController extends Controller {
                             $this->session->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
+                            // dump($rolselected);
+                            // dump($this->session);
+                            // dump("ingresa aca");
                              //to show the option create rude on alternativa by krlos
                                 if($rolselected[0]['id'] == 9){
                                     $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
-                                    'id'=> $rolselected[0]['sie'],
-                                    'institucioneducativaTipo'=>2
-                                        ));
+                                        'id'=> $rolselected[0]['sie'],
+                                        'institucioneducativaTipo'=>2
+                                    ));
+                                    // dump($objInstitucioneducativaAlt); //? ES NULL
+                                    // die;
                                     if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
-
                                         $sesion->set('directorAlternativa', true);
                                     }
-
                                 }
                         }else{
                             $this->session->set('roluser', $rolselected[0]['id']);
@@ -1011,15 +985,16 @@ class DefaultController extends Controller {
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
                         }
-                        
+                        // dump($this->session);
+                        // die;
                         return $this->redirect($this->generateUrl('sie_login_homepage'));
                     }
-                    //FIN DE CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
-                    //*******************
+                    //? FIN DE CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
 
-                    //*************************
-                    //CUANDO EL USUARIO TIENEN VARIOS ROLES ACTIVOS
+                    //? CUANDO EL USUARIO TIENEN VARIOS ROLES ACTIVOS
                     if (count($rolselected) > 1) {
+                        // dump("no ingresa aca");
+                        // die;
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'titulosubsistema' => $this->session->get('sysname'),
@@ -1030,13 +1005,12 @@ class DefaultController extends Controller {
                             'persona' => $this->session->get('name').' '.$this->session->get('lastname')
                         ));
                     }
-                    //FIN DE CUANDO EL USUARIO TIENEN VARIOS ROLES ACTIVOS
-                    //*************************
+                    //? FIN DE CUANDO EL USUARIO TIENEN VARIOS ROLES ACTIVOS
 
-                    //*************************
-                    //CUANDO EL USUARIO NO TIENEN ROLES ACTIVOS
-                    //dump(count($rolselected));die();
+                    //? CUANDO EL USUARIO NO TIENEN ROLES ACTIVOS
                     if (count($rolselected) === 0) {
+                        // dump("no no no, ingresa aca");
+                        // die;
                         $this->session->getFlashBag()->add('error', '¡Usted no cuenta registro vigente en la presente gestión! Consulte con su técnico SIE en el módulo Gestión Administrativos.');
 
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
@@ -1049,14 +1023,12 @@ class DefaultController extends Controller {
                             'persona' => $this->session->get('name').' '.$this->session->get('lastname')
                         ));
                     }
-                    //FIN DE CUANDO EL USUARIO NO TIENEN ROLES ACTIVOS
-                    //*************************
+                    //? FIN DE CUANDO EL USUARIO NO TIENEN ROLES ACTIVOS
                 }
-            } else {///****** EN CASO DE QUE NO EXISTA EL USUARIO
+            } else {//? EN CASO DE QUE NO EXISTA EL USUARIO
                 return $this->redirect($this->generateURL('logout'));
             }
         } catch (Exception $e) {
-
         }
     }
 

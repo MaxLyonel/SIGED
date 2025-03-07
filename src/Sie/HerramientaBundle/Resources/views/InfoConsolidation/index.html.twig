@@ -75,53 +75,49 @@
                             {% for infoConsolidation in infoConsolidations %}
 
                             <tr class="border-primary">
-                                            <td class="text-center border-right"><strong>{{ loop.index }}</strong></td>
-                                            <td>{{ infoConsolidation.unidadEducativa }}</td>
-                                            <td>{{ infoConsolidation.gestion }}</td>
-                                            <td>{% if infoConsolidation.bim1 > 1 %}
-                                                  WEB
-                                                {% else %}
-                                                  ESCRITORIO
-                                                {% endif %}
-                                            </td>
-                                            <td>{% if infoConsolidation.bim2 > 1 %}
-                                                  WEB
-                                                {% else %}
-                                                  ESCRITORIO
-                                                {% endif %}
-                                            </td>
-                                            <td>{% if infoConsolidation.bim3 > 1 %}
-                                                  WEB
-                                                {% else %}
-                                                  ESCRITORIO
-                                                {% endif %}
-                                            </td>
-                                            <td>{% if infoConsolidation.bim4 > 1 %}
-                                                  WEB
-                                                {% else %}
-                                                  ESCRITORIO
-                                                {% endif %}
-                                            </td>
+                                <td class="text-center border-right"><strong>{{ loop.index }}</strong></td>
+                                <td>{{ infoConsolidation.unidadEducativa }}</td>
+                                <td>{{ infoConsolidation.gestion }}</td>
+                                <td>{% if infoConsolidation.bim1 > 1 %}
+                                        WEB
+                                    {% else %}
+                                        ESCRITORIO
+                                    {% endif %}
+                                </td>
+                                <td>{% if infoConsolidation.bim2 > 1 %}
+                                        WEB
+                                    {% else %}
+                                        ESCRITORIO
+                                    {% endif %}
+                                </td>
+                                <td>{% if infoConsolidation.bim3 > 1 %}
+                                        WEB
+                                    {% else %}
+                                        ESCRITORIO
+                                    {% endif %}
+                                </td>
+                                <td>{% if infoConsolidation.bim4 > 1 %}
+                                        WEB
+                                    {% else %}
+                                        ESCRITORIO
+                                    {% endif %}
+                                </td>
 
-                                            <td class="text-center">
-                                            {% if app.session.get('currentyear') !=  infoConsolidation.gestion %} 
-                                                {% set items = {
-                                                                'gestion': infoConsolidation.gestion,
-                                                                'id'     : infoConsolidation.unidadEducativa,
-                                                                'tipo'   : 'history'
-                                                } %}
-                                                {% set jsnFullUeInfo = items|json_encode() %}
-                                                {# if( infoConsolidation.gestion == app.session.get('currentyear')-1 )  and (app.session.get('ue_modular') or app.session.get('ue_plena') or app.session.get('ue_tecteg')) #}
-                                                    <form action="{{path('herramienta_inbox_open')}}" method="post" style="display: inline-block">
-                                                        <!-- this is the new start-->
-                                                        <input type="hidden" id="form_data" name="form[data]" required="required" value="{{jsnFullUeInfo}}">
-                                                        <!-- this is the new end-->
-                                                        <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Ver Información {{infoConsolidation.gestion}}"><i class="fa fa-pencil"> Ver Información</i></button>
-                                                    </form>
-                                                {# endif #}
-                                            {% endif %}
-                                            </td>
-                                        </tr>
+                                <td class="text-center">
+                                {% if app.session.get('currentyear') !=  infoConsolidation.gestion %} 
+                                    {% set items = {
+                                        'gestion': infoConsolidation.gestion,
+                                        'id'     : infoConsolidation.unidadEducativa,
+                                        'tipo'   : 'history'
+                                    } %}
+                                    {% set jsnFullUeInfo = items|json_encode() %}
+                                    <form action="{{path('herramienta_inbox_open')}}" method="post" style="display: inline-block">
+                                        <input type="hidden" id="form_data" name="form[data]" required="required" value="{{jsnFullUeInfo}}">
+                                        <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Ver Información {{infoConsolidation.gestion}}"><i class="fa fa-pencil"> Ver Información</i></button>
+                                    </form>
+                                {% endif %}
+                                </td>
+                            </tr>
 
                             {% endfor %}
                             </tbody>
