@@ -40,20 +40,16 @@ class CursosController extends Controller {
      *
      */
     public function indexAction(Request $request) {
+        dump("[15] Decimo quinto ingreso");
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
-        //validationremoveInscriptionAction if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        //dump('here'); die;
-
         $em = $this->getDoctrine()->getManager();
         $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
 
-        /*dump($this->session->get('ie_subcea'));
-        dump($objUeducativa);die;*/
         $exist = true;
         $aInfoUnidadEductiva = array();
         if ($objUeducativa) {
@@ -65,15 +61,12 @@ class CursosController extends Controller {
                 ));
 
                 $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId'], 'iecId' => $uEducativa['iecId']);
-                
             }
         } else {
             $message = 'No existe información del Centro de Educación Alternativa para la gestión seleccionada.';
             $this->addFlash('warninresult', $message);
             $exist = false;
         }
-        /*dump($exist);
-        dump($aInfoUnidadEductiva);die;*/
         $exist = true;
         return $this->render($this->session->get('pathSystem') . ':Cursos:index.html.twig', array(
             'aInfoUnidadEductiva' => $aInfoUnidadEductiva,

@@ -15,6 +15,7 @@ class LoginController extends Controller {
      * @return type
      */
     public function indexAction(Request $request) { //? (--> 2)
+        dump('[6] Sexto ingreso');
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $sesion->get('userId');
@@ -45,17 +46,6 @@ class LoginController extends Controller {
 
         return $this->redirect($this->generateUrl('principal_web'));
     }
-
-    /*public function dirselunieduAction(Request $request, $ue) {
-        $sesion = $request->getSession();
-        $em = $this->getDoctrine()->getManager();
-        $sesion->set('ie_id', $ue);
-        $sesion->set('ie_per_estado', '-1');
-        $sesion->set('ie_nombre', $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ue)->getInstitucioneducativa());
-        $cuenta = $em->getRepository('SieAppWebBundle:RolTipo')->find($sesion->get('roluser'));
-        $sesion->set('cuentauser', $cuenta->getRol());
-        return $this->redirect($this->generateUrl('principal_web'));
-    }*/
 
     public function sieAction() {
         return $this->redirectToRoute('login');

@@ -352,12 +352,8 @@ class InboxController extends Controller {
             
         $entities = $query->getResult();
 
-        // dump($esGuanawek);
-        // dump($_gestion);
-        // die;
-
         $this->session->set('ue_sol_regularizar',false);
-        //dump($this->session->get('pathSystem'));die;
+        // dump($this->session); die;
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
             'objValidateUePlena'=>($objValidateUePlena)?1:0,
             'arrSieInfo'=>$arrSieInfo[0],
@@ -422,38 +418,15 @@ class InboxController extends Controller {
     private function formUePlena($data,$objTypeOfUE){
 
       $objTypeOfUEId = (sizeof($objTypeOfUE))>0?$objTypeOfUE[0]->getInstitucioneducativaHumanisticoTecnicoTipo()->getId():100;
-      /**ge the format to the UE**/
       switch (true) {
-        // case $this->session->get('ue_modular'):
-        //   # code...
-        //   $label = 'Unidad Educativa Modular';
-        //   $btnClass = 'btn btn-teal text-center btn-block';
-        //   break;
         case $this->session->get('ue_regularizar'):
-          # code...
           $label = 'U.E. Regularizar';
           $btnClass = 'btn btn-lilac text-center btn-block';
           break;
-        // case $this->session->get('ue_noturna'):
-        //   # code...
-        //   $label = 'Unidad Educativa Nocturna';
-        //   $btnClass = 'btn btn-warning text-center btn-block';
-        //   break;
-        // case $this->session->get('ue_tecteg'):
-        //   # code...
-        //   $label = 'Unidad Educativa Tec. Tegnológica';
-        //   $btnClass = 'btn btn-success text-center btn-block';
-        //   break;
         case $this->session->get('ue_general'):
-            # code...
             $label = 'Registro del area TTG';
             $btnClass = 'btn btn-lilac text-center btn-block';
             break;
-        // default:
-        //   # code...
-        //   $label = 'Unidad Educativa Plena';
-        //   $btnClass = 'btn btn-primary text-center btn-block';
-        //   break;
       }
       $btnForm  = ($this->operativoUe <= 5 )?'submit':'button';
       switch ($objTypeOfUEId) {
@@ -489,7 +462,6 @@ class InboxController extends Controller {
           $btnClass ='btn btn-teal text-center btn-block';
           break;
         default:
-          # code...
           if( $this->session->get('ue_humanistica')){
             $label = 'U.E. Regular';
             $btnClass ='btn btn-lilac text-center btn-block';
@@ -504,7 +476,7 @@ class InboxController extends Controller {
 
       $btnClass = ($this->operativoUe <= 5)?$btnClass:'btn btn-default text-center disabled';
 
-      //dump($btnClass);die;
+      // dump($data); die;
       return $this->createFormBuilder()
             ->setAction($this->generateUrl('herramienta_inbox_open'))
             ->add('data', 'hidden', array('data'=>$data))
@@ -652,34 +624,29 @@ class InboxController extends Controller {
 
 
     }
-    /**
-     * open the request
-     * @param Request $request
-     * @return obj with the selected request
-     */
     public function openAction(Request $request) { //? (--> 8)
-      //create conexion
       $em = $this->getDoctrine()->getManager();
-        //get session data
-        $this->session = $request->getSession();
-        $id_usuario = $this->session->get('userId');
-        //get the values
-        $form = $request->get('form');
-        $dataPre = json_decode($form['data'], true);
-        if(isset($dataPre['tipo']) && $dataPre['tipo'] == 'history'){
-          $data['gestion'] = $dataPre['gestion'];
-          $arrRol = array(10,8,7);
-          $data['id'] =  ( in_array($this->session->get('roluser'),$arrRol) )? $dataPre['id']: $this->session->get('ie_id');
-        }else{
-          // start to get the data to open the UE info
-          $data = $this->getBaseInfoUE(array());      
-          // end to get the data to open the UE info
-        }
+      $this->session = $request->getSession();
+      $id_usuario = $this->session->get('userId');
+      $form = $request->get('form');
+      $dataPre = json_decode($form['data'], true);
+      if(isset($dataPre['tipo']) && $dataPre['tipo'] == 'history'){
+        $data['gestion'] = $dataPre['gestion'];
+        $arrRol = array(10,8,7);
+        $data['id'] =  ( in_array($this->session->get('roluser'),$arrRol) )? $dataPre['id']: $this->session->get('ie_id');
+      }else{
+        //! ingresa aca
+        $data = $this->getBaseInfoUE(array());
+      }
 
         /*
         * verificamos si tiene tuicion
         */
         $tuicion = false;
+        // dump($this->session->get('userId'));
+        // dump($data['id']);
+        // dump($this->session->get('roluser'));
+        // die;
         $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
         $query->bindValue(':user_id', $this->session->get('userId'));
         $query->bindValue(':sie', $data['id']);
@@ -722,9 +689,6 @@ class InboxController extends Controller {
         }
 
        if($objValidateUePlena){
-         //switch to the kind of UE
-        // dump($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId());
-        // die;
          switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
            case 1:
            case 7:
@@ -844,7 +808,7 @@ class InboxController extends Controller {
         }else{
             $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.','4'=>'4to. Trim.');
         }
-        
+
         if ($trimestre == 0){
           $dataInfo['messageope']='Cerrar '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
           $nextButton = 'Cerrar '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
@@ -852,19 +816,7 @@ class InboxController extends Controller {
           $dataInfo['messageope']='Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
           $nextButton = 'Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])];
         }
-        
-        // $query = $em->getConnection()->prepare('SELECT ien.*
-        //         FROM institucioneducativa_nivel_autorizado ien
-        //         WHERE ien.nivel_tipo_id = 13
-        //         and ien.institucioneducativa_id= ' . $data['id'] );
-        // $query->execute();
-        // $ieNivelAutorizado = $query->fetchAll();
         $existesec = false;
-        //if (count($ieNivelAutorizado) > 0) {$existesec = true;}
-
-        // dump($data);
-        // die;
-        
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
           'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
@@ -874,7 +826,7 @@ class InboxController extends Controller {
           'closeOperativoInscriptionform' => $this->CloseOperativoInscriptionForm('herramienta_inbox_close_operativo_inscription',$nextButton,$data)->createView(),
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
-          'tuicion'=>$tuicion,
+          'tuicion'=>!$tuicion,
           'bimestre'=>$trimestre,
           'objObsQA' => $objObsQA,
           'operativo' => $operativo,          

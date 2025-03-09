@@ -34,7 +34,7 @@ class PrincipalController extends Controller {
      * @return array data user
      */
     public function indexAction(Request $request) { //? (--> 3)
-
+        dump('[7] Septimo ingreso');
         $user = $this->container->get('security.context')->getToken()->getUser();
         $id_usuario = $this->sesion->get('userId');
         if (!isset($id_usuario)) {
@@ -148,27 +148,26 @@ class PrincipalController extends Controller {
             }
         }
         $registroInicioDeClases = array();
-        if($this->sesion->get('roluser') == 9){
+        if($this->sesion->get('roluser') == 9){ //! si es alternativa
+            //! no se usa el objIesucursal en esta funcion
             $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
             $registroInicioDeClases=$this->getInicioClasesInstitucioneducativaSucursal();
         }
 
-        //Obtenemos los datos de la tabla riesgo_unidadeducativa_riesgo
-        // $unidadEducativaTipo =  $em->getRepository('SieAppWebBundle:RiesgoUnidadeducativaTipo')->findAll();
         $uewyk = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findBy(array(
             'institucioneducativaId' => $this->sesion->get('ie_id'),
             'gestionTipoId'  => ($gestion-1),
             'institucioneducativaHumanisticoTecnicoTipo' => 4
         ));
-        
+
         //habilitacion de gestión para WHENAYECK
         $fechawyk = new \DateTime(sprintf('%d-07-01', $gestion));
-        
+
         if (count($uewyk) > 0 && $hoy < $fechawyk) {
             $gestion = $gestion - 1;
         }
-        
-        //Aqui obtenemos un historial de los ultimos 3 meses del incio de actividades
+
+        //! Aqui obtenemos un historial de los ultimos 3 meses del incio de actividades
         $historialInicioActividadesData=array();
         if ($rol_usuario==9){
             $historialInicioActividadesData=$this->getHistorialInicioDeActividades();
@@ -240,13 +239,12 @@ class PrincipalController extends Controller {
                 "3" => "25/07/2024", //Cochabamba
                 "6" => "25/07/2024", //Tarija
                 "1" => "26/07/2024", //Chuquisaca
-                "5" => "26/07/2024", //Potosi                      
+                "5" => "26/07/2024", //Potosiß
                 "9" => "26/07/2024"  //Pando
             ];
 
             // Variable para controlar si la acción está habilitada
             $habilitado = false;
-            // dump( $fechasHabilitadas[$codigoDepartamento]);die;
 
             if (array_key_exists($codigoDepartamento, $fechasHabilitadas)) {
                 if ($fechaFormato == $fechasHabilitadas[$codigoDepartamento]) {
@@ -266,34 +264,23 @@ class PrincipalController extends Controller {
             $fechaDescargaSPN = '';
         }
 
-        // dump('formOperativoRude: ', $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$gestion)),array()));
-        // die;
-
+        dump('[8] Octavo ingreso (redirige a la vista)');
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
-          'userData' => $userData,
-          'entities' => $entities,
-          'notification' => $not,
-          'entitiestot' => $nacional,
-          'entitiesdpto' => $departamental,
-          'form' => $this->searchForm()->createView(),
-          'form2' => $this->searchForm2()->createView(),
-          'rie' => $this->obtieneDatosPrincipal(), //Datos para la pantalla principal de RIE
-          'instalador'=>$instalador,
-          'habilitadoSPN'=>$habilitado,
-          'verSPN'=>$verSPN,
-          'descargasSPN'=>$descarga,
-          'fechaDescargaSPN' => $fechaDescargaSPN,
-          //'objObservactionSie' => $objObservactionSie
-          'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$gestion)),array())->createView(),
-        //   'observacion' => $observacion,
-        //   'dataEncuesta' => $dataEncuesta,
-        //   'existe' => $existe,
-        //   'depto' => $dptoNacArray,
-          'registroInicioDeClases'=>count($registroInicioDeClases),
-
-        //   'unidadEducativaTipoData'=>$unidadEducativaTipo,
-
-        //   'historialInicioActividadesData'=>$historialInicioActividadesData,
+            'userData' => $userData,
+            'entities' => $entities,
+            'notification' => $not,
+            'entitiestot' => $nacional,
+            'entitiesdpto' => $departamental,
+            'form' => $this->searchForm()->createView(),
+            'form2' => $this->searchForm2()->createView(),
+            'rie' => $this->obtieneDatosPrincipal(), //Datos para la pantalla principal de RIE
+            'instalador'=>$instalador,
+            'habilitadoSPN'=>$habilitado,
+            'verSPN'=>$verSPN,
+            'descargasSPN'=>$descarga,
+            'fechaDescargaSPN' => $fechaDescargaSPN,
+            'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$gestion)),array())->createView(),
+            'registroInicioDeClases'=>count($registroInicioDeClases),
         ));
     }
 

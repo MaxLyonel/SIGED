@@ -1,11 +1,11 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
 {% block contentoption %}
-     <div class="header-content">
+    <div class="header-content">
         <h2><i class="fa fa-th-large"></i>{% if  app.session.get('roluser')== 9 or app.session.get('roluser')== 10 %}Gestionar C.E.A. {% else %} Seleccionar CEA:{% endif %} <span>panel de busqueda de acuerdo a las siguientes opciones</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
-               <li>
+                <li>
                     <i class="glyphicon glyphicon-leaf"></i>
                     <a href="{{path('principal_web')}}">Bienvenida/o</a>
                     <i class="fa fa-angle-right"></i>
@@ -18,9 +18,9 @@
                 </li>
                 {% endif %}
             </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div>  
-   <div class="row">
+        </div>
+    </div>
+    <div class="row">
         {% for flashMessage in app.session.flashbag.get('notfound') %}
                     <div class="alert alert-warning alert-dismissible" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -99,26 +99,15 @@
                             </div>
                         </div>
                         {{form_end(form)}}
-                    </div><!-- /.panel-body -->
-                </div><!-- /.panel -->
-                    {#<form action="{{path('herramienta_ceducativa_buscar_cea')}}" method="post" style="display:inline-block">
-                        <div class="form-body">
-                            <div class="form-group">
-                                <label class="sr-only" for="Inputcodsie">Codigo SIE</label>
-                                <input type="text" class="form-control" name="form[Inputcodsie]" id="form_Inputcodsie" placeholder="Cod. SIE">
-                            </div><!-- /.form-group -->                            
-                            <button type="submit" class="btn btn-success">Buscar</button>
-                        </div><!-- /.form-body -->
-                    </form>#}
+                    </div>
+                </div>
                 <div id="lista">
-                </div>    
-                </div><!-- /.panel-body -->
-            </div><!-- /.panel -->
-            <!--/ End inline form -->
+                </div>
+                </div>
+            </div>
         </div>
     </div>
-    
-{% endblock %}   
+{% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script>
@@ -130,7 +119,7 @@
         
         function buscarhistorial()
         {
-            //alert('entra');
+            console.log('[11] Decimo uno ingreso');
             var formData = $('#form_cea').serialize();
             $.ajax({
                 type: 'get',

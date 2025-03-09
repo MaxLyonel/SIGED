@@ -108,7 +108,9 @@ class DefaultController extends Controller {
             case '172.20.196.191:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
+            case '172.20.196.69:8016':
             case 'alternativa.local':
+                dump("(1) Primer ingreso");
                 $sysname = 'Sistema Académico Educación Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -157,13 +159,6 @@ class DefaultController extends Controller {
                 $layout = 'layoutPermanente.html.twig';
                 $this->session->set('pathSystem', "SiePermanenteBundle");
                 break;
-            // case 'diplomas2015.sie.gob.bo':
-            //     $sysname = 'DIPLOMAS';
-            //     $sysporlet = 'dpl';
-            //     $sysbutton = false;
-            //     $layout = 'layoutDiplomas.html.twig';
-            //     $this->session->set('pathSystem', "SieDiplomaBundle");
-            //     break;
             case '172.20.16.239a':
             case 'diplomas2015.local':
                 $sysname = 'DIPLOMAS';
@@ -172,13 +167,6 @@ class DefaultController extends Controller {
                 $layout = 'layoutDiplomas.html.twig';
                 $this->session->set('pathSystem', "SieDiplomaBundle");
                 break;
-            // case 'diplomas.sie.gob.bo':
-            //     $sysname = 'DIPLOMAS';
-            //     $sysporlet = 'dpl';
-            //     $sysbutton = false;
-            //     $layout = 'layoutDiplomas.html.twig';
-            //     $this->session->set('pathSystem', "SieDiplomaBundle");
-            //     break;
             case 'reportes.sie.gob.bo':
             case 'reportes':
                 $sysname = 'REPORTES';
@@ -212,54 +200,12 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
             case '172.20.196.18':                
-                // $sysname = 'TRAMITE';
-                // $sysporlet = 'green';
-                // $sysbutton = false;
-                // $layout = 'layoutTramites.html.twig';
-                // $this->session->set('pathSystem', "SieTramitesBundle");
-                // break;
-                // $sysname = 'Sistema Siged';
-                // $sysporlet = 'blue';
-                // $sysbutton = true;
-                // $layout = 'layoutRegular.html.twig';
-                // $this->session->set('pathSystem', "SieRegularBundle");
-                // $this->session->set('sistemaid', 1);
-                // $this->session->set('color', 'blue');
-                // break;
-                // $sysname = 'UNIVERSIDADES';
-                // $sysporlet = 'blue';
-                // $sysbutton = false;
-                // $layout = 'layoutUniversity.html.twig';
-                // $this->session->set('pathSystem', "SieUniversityBundle");
-                // break;
-                // $sysname = 'Sistema Académico Educación Regular';
-                // $sysporlet = 'blue';
-                // $sysbutton = true;
-                // $layout = 'layoutHerramienta.html.twig';
-                // $this->session->set('pathSystem', "SieHerramientaBundle");
-                // $this->session->set('color', 'primary');
-                // $this->session->set('sistemaid', 6);
-                // break;
                 $sysname = 'DGESTTLA ESTADISTICO';
                 $sysporlet = 'blue';
                 $sysbutton = false;
                 $layout = 'layoutTecnicaEst.html.twig';
                 $this->session->set('pathSystem', "SieTecnicaEstBundle");
                 break;
-                // $sysname = 'Sistema Académico Educación Alternativa';
-                // $sysporlet = 'blue';
-                // $sysbutton = true;
-                // $layout = 'layoutHerramientaAlternativa.html.twig';
-                // $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                // $this->session->set('color', 'success');
-                // $this->session->set('sistemaid', 2);
-                // break;
-                // $sysname = 'Sistema Académico Educación Permanente';
-                // $sysporlet = 'green';
-                // $sysbutton = false;
-                // $layout = 'layoutPermanente.html.twig';
-                // $this->session->set('pathSystem', "SiePermanenteBundle");
-                // break;
             case 'tramite.sie.gob.bo':
             case 'diplomas.sie.gob.bo':
             case 'diplomas2015.sie.gob.bo':           
@@ -334,7 +280,6 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
             case '172.20.196.13:8030':
-            // case '172.20.196.7':
             case 'inscripcionocepb.minedu.gob.bo':
             case 'olimpiada.sie.gob.bo':
                 $sysname = 'olimpiadas';
@@ -352,30 +297,6 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             default :
-                // $sysname = 'ESPECIAL';
-                // $sysporlet = '#F44336';//red
-                // $sysbutton = true;
-                // $layout = 'layoutEspecialSie.html.twig';
-                // $this->session->set('pathSystem', "SieEspecialBundle");
-
-                // $sysname = 'Sistema Académico Educación Alternativa';
-                // $sysporlet = 'blue';
-                // $sysbutton = true;
-                // $layout = 'layoutHerramientaAlternativa.html.twig';
-                // $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                // $this->session->set('color', 'success');
-                // $this->session->set('sistemaid', 2);
-
-
-                // $sysname = 'Sistema Siged';
-                // $sysporlet = 'blue';
-                // $sysbutton = true;
-                // $layout = 'layoutRegular.html.twig';
-                // $this->session->set('pathSystem', "SieRegularBundle");
-                // $this->session->set('sistemaid', 1);
-                // $this->session->set('color', 'blue');
-                
-                
                 $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -472,7 +393,6 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.13:8023':
             case '172.20.0.53:8021':
-            // case '172.20.196.7':
             case 'infraestructura.local':
                 $sysname = 'INFRAESTRUCTURA';
                 $sysporlet = 'black';
@@ -504,7 +424,6 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieDiplomaBundle");
                 break;
             case 'www.gis.local':
-            // case '172.20.196.7':
             case 'sigee.sie.gob.bo':
                 $this->session->set('pathSystem', "SieGisBundle");
                 return $this->render('SieGisBundle:Default:index.html.twig');
@@ -628,9 +547,6 @@ class DefaultController extends Controller {
         $arrDataLogin = array('form' => $this->createLoginForm()->createView());
         if ($sysname == 'RuePublico') {
             return $this->redirect($this->generateURL('consulta_rue'));
-            /*$arrDataLogin['formInstitucioneducativa'] = $this->createSearchFormInstitucioneducativa()->createView();
-            $arrDataLogin['formInstitucioneducativaId'] = $this->createSearchFormInstitucioneducativaId()->createView();
-            $arrDataLogin['formInstitucioneducativaTipo'] = $this->createSearchFormInstitucioneducativaTipo()->createView();*/
         }
 
         /*
@@ -646,35 +562,24 @@ class DefaultController extends Controller {
     * FUNCION PARA VALIDAR LOS ROLES Y OTRAS VALIDACIONES
     */
     public function create_sessions_loginAction(Request $request){
-        
+        dump('[2] Segundo ingreso');
         $sesion = $request->getSession();
         try {
             $em = $this->getDoctrine()->getManager();
             $this->session = $request->getSession();
-
             //? ***********  REALIZA LA BUSQUEDA DE USUARIO Y CONTRASEÑA ****************
             $user = $this->container->get('security.context')->getToken()->getUser();
-            // dump('usuario: ', $user);
             if ( $user and is_object($user) ) { //? USUARIO Y CONTRASEÑA CORRECTAS
                 $this->session->set('userId', $user->getId());
-
                 //? ************ SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA *******
                 if (md5($user->getUsername()) == $user->getPassword()) {
                     return $this->redirect($this->generateUrl('sie_usuarios_reset_login', array('usuarioid' => $user->getId())));
                 }
                 //? *********************************************************************
-
                 //? BUSCANDO ROLES ACTIVOS Y UNIDADES O CENTROS DONDE ESTES COMO VIGENTES
                 $rolselected = $this->get('login')->verificarRolesActivos($user->getPersona()->getId(),'-1');
-                // dump('rol selected');
-                // dump($rolselected);
-
                 $aPersona = $em->getRepository('SieAppWebBundle:Persona')->find($user->getPersona()->getId()); //? Solo obtiene el modelo sin datos
-                // dump('persona');
-                // dump($aPersona);
                 $carnet = $aPersona->getCarnet().$aPersona->getComplemento(); //? aqui obtiene el carnet
-                // dump('carnet');
-                // dump($carnet);
                 $this->session->set('lastname', $aPersona->getPaterno()); //? aqui obtiene su ap paterno
                 $this->session->set('lastname2', $aPersona->getMaterno());
                 $this->session->set('name', $aPersona->getNombre());
@@ -684,15 +589,11 @@ class DefaultController extends Controller {
                 $this->session->set('userId2', $user->getId());
                 $this->session->set('currentyear', date('Y'));
 
-                // dump('session antes');
-                // dump($this->session);
-
                 //? NO INGRESA ACA PARA REGULAR
                 if($this->session->get('pathSystem')=='SieUniversityBundle'){
                     dump('entones no debería ingresar aca');
                     $useruni_id = $this->session->get('userId');
                     $useruni_name = $this->session->get('userName');
-                    
                     $estadoUsuarioRol = $this->getAccessUsuarioRol(array("usuarioId"=>$this->session->get('userId'),"rolId"=>20));                    
                     if ($estadoUsuarioRol){
                         $this->session->set('roluser', 20); // 20 es de consultas
@@ -869,8 +770,6 @@ class DefaultController extends Controller {
                     //? FIN DE ACTUALIZACIÓN OBLIGATORIA DE CONTRASEÑA */
 
                     $sistema = $this->session->get('pathSystem');
-                    // dump('sistema');
-                    // dump($sistema);
 
                     switch ($sistema) {
                         case 'SieRegularBundle':
@@ -951,9 +850,10 @@ class DefaultController extends Controller {
                     //? CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
                     //? SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
                     $sesion->set('directorAlternativa', false); //? insulso la variable ya es false
-                    // dump('count rolselected: ', count($rolselected));
+                    dump('rol del usuario');
+                    dump($rolselected);
                     if (count($rolselected) == 1) {
-                        if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
+                        if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){ //? es director o maestro?
                             $this->session->set('roluser', $rolselected[0]['id']);
                             $this->session->set('roluserlugarid', $rolselected[0]['rollugarid']);
                             $this->session->set('ie_id', $rolselected[0]['sie']);
@@ -961,21 +861,15 @@ class DefaultController extends Controller {
                             $this->session->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
-                            // dump($rolselected);
-                            // dump($this->session);
-                            // dump("ingresa aca");
-                             //to show the option create rude on alternativa by krlos
-                                if($rolselected[0]['id'] == 9){
-                                    $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
-                                        'id'=> $rolselected[0]['sie'],
-                                        'institucioneducativaTipo'=>2
-                                    ));
-                                    // dump($objInstitucioneducativaAlt); //? ES NULL
-                                    // die;
-                                    if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
-                                        $sesion->set('directorAlternativa', true);
-                                    }
+                            if($rolselected[0]['id'] == 9){
+                                $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+                                    'id'=> $rolselected[0]['sie'],
+                                    'institucioneducativaTipo'=>2 //? lo marca como alternativa
+                                ));
+                                if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
+                                    $sesion->set('directorAlternativa', true);
                                 }
+                            }
                         }else{
                             $this->session->set('roluser', $rolselected[0]['id']);
                             $this->session->set('roluserlugarid', $rolselected[0]['rollugarid']);
@@ -985,16 +879,13 @@ class DefaultController extends Controller {
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
                         }
-                        // dump($this->session);
-                        // die;
                         return $this->redirect($this->generateUrl('sie_login_homepage'));
                     }
                     //? FIN DE CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
 
                     //? CUANDO EL USUARIO TIENEN VARIOS ROLES ACTIVOS
                     if (count($rolselected) > 1) {
-                        // dump("no ingresa aca");
-                        // die;
+                        dump('[3] tercer ingreso (redirección vista)');
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'titulosubsistema' => $this->session->get('sysname'),
@@ -1033,16 +924,13 @@ class DefaultController extends Controller {
     }
 
     public function sigedrolselectAction(Request $request, $key) {
+        dump('[4] De la vista al Controlador');
         $em =  $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
-        //$id_usuario = $this->sesion->get('userId');
-        //dump($sesion);die;
         if (!$sesion->get('personaId')) {
             return $this->redirect($this->generateUrl('login'));
         }
         $rolselected = $this->get('login')->verificarRolesActivos($sesion->get('personaId'),$key);
-        //dump($rolselected);
-        //die;
         //to show the option create rude on alternativa
         $sesion->set('directorAlternativa', false);
         if (sizeof($rolselected) == 1) {
@@ -1054,20 +942,17 @@ class DefaultController extends Controller {
                 $sesion->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                 $sesion->set('cuentauser', $rolselected[0]['rol']);
                 $sesion->set('tiposubsistema', $rolselected[0]['idietipo']);
-                // dump($rolselected);die;
                 //to show the option create rude on alternativa by krlos
                 if($rolselected[0]['id'] == 9){
                     $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
-                    'id'=> $rolselected[0]['sie'],
-                    'institucioneducativaTipo'=>2
-                        ));
+                        'id'=> $rolselected[0]['sie'],
+                        'institucioneducativaTipo'=>2
+                    ));
                     if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
                         $sesion->set('directorAlternativa', true);
                     }
-
                 }
-
-            }else{
+            } else {
                 $sesion->set('roluser', $rolselected[0]['id']);
                 $sesion->set('roluserlugarid', $rolselected[0]['rollugarid']);
                 $sesion->set('ie_id', '-1');

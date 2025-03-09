@@ -1,170 +1,158 @@
 {% extends 'layoutHerramienta.html.twig' %}
-
 {% block contentoption %}
 
+<div class="header-content">
+    <h2><i class="fa fa-table"></i> Información General <span></span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Recibidos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Recibidos</li>
+        </ol>
+    </div>
+</div>
 
+<div class="body-content animated fadeIn">
+    <div class="row">
 
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <div class="panel rounded shadow">
+                <div class="panel-body">
+                    <div class="inner-all">
+                        <ul class="list-unstyled">
+                            <li class="text-center">
+                                <img data-no-retina class="img-circle img-bordered-primary" src="{{asset('webherramienta/img/avatar/100/1.png')}}" alt="Tol Lee">
+                            </li>
+                            <li class="text-center">
+                                <h4 class="text-capitalize">{{arrSieInfo.paterno}} {{arrSieInfo.nombre}}</h4>
+                                <p class="text-muted text-capitalize">{{arrSieInfo.id}}</p>
+                            </li>
+                            <li>
+                                {% if app.session.get('ie_id') > 0 and 1 == 2 %}
+                                <!-- this is for the RUDE OPERATIVO start -->
+                                {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
+                                {{form_widget(formOperativoRude.downOperativoRude)}}
+                                {{form_end(formOperativoRude)}}
+                                <div id="downoperativoId"></div>
+                                {% endif %}
 
-    <!-- Start page header -->
-    <div class="header-content">
-        <h2><i class="fa fa-table"></i> Información General <span></span></h2>
-        <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí:</span>
-            <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="#">Recibidos</a>
-                    <i class="fa fa-angle-right"></i>
-                </li>
-                <li class="active">Recibidos</li>
-            </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div><!-- /.header-content -->
-    <!--/ End page header -->
-
-
-
-    <div class="body-content animated fadeIn">
-
-      <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-4">
-
-                        <div class="panel rounded shadow">
-                            <div class="panel-body">
-                                <div class="inner-all">
-                                    <ul class="list-unstyled">
-                                        <li class="text-center">
-                                            <img data-no-retina class="img-circle img-bordered-primary" src="{{asset('webherramienta/img/avatar/100/1.png')}}" alt="Tol Lee">
-                                        </li>
-                                        <li class="text-center">
-                                            <h4 class="text-capitalize">{{arrSieInfo.paterno}} {{arrSieInfo.nombre}}</h4>
-                                            <p class="text-muted text-capitalize">{{arrSieInfo.id}}</p>
-                                        </li>
-                                        <li>
-                                            {% if app.session.get('ie_id') > 0 and 1 == 2 %}    
-                                            <!-- this is for the RUDE OPERATIVO start -->
-                                            {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
-                                            {{form_widget(formOperativoRude.downOperativoRude)}}
-                                            {{form_end(formOperativoRude)}}
-                                            <div id="downoperativoId">
-                                               
-                                            </div>
-                                            {% endif %}
-                                            <!-- this is for the RUDE OPERATIVO end -->
-                                            
-                                            <!--a href="page-profile.html" class="btn btn-success text-center btn-block">PRO Account</a-->
-                                            {% if objEspecial=='' and (objValidateUePlena or app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('ue_humanistica')) %}
-                                              {{form(form)}} 
-                                            {% endif %}
-                                            {% if objValidateUePlena %}
-                                                <br /> 
-                                                <a href="{{ path('gp_areas_estudiante_index', {'op': 1})}}" class="btn btn-block btn-facebook">Adición/Eliminación de áreas para Estudiantes</a>
-                                            {% endif %}
-                                        </li>
-                                        <li><br/></li>
-                                        <li>
-                                            <div class="btn-group-vertical btn-block">
-                                                <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Gestión de Usuarios</a>
-                                                <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                {% if objEspecial=='' and (objValidateUePlena or app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('ue_humanistica')) %}
+                                ingresa aca
+                                    {{form(form)}}
+                                {% endif %}
+                                {% if objValidateUePlena %}
+                                    <br />
+                                    <a href="{{ path('gp_areas_estudiante_index', {'op': 1})}}" class="btn btn-block btn-facebook">Adición/Eliminación de áreas para Estudiantes</a>
+                                {% endif %}
+                            </li>
+                            <li><br/></li>
+                            <li>
+                                <div class="btn-group-vertical btn-block">
+                                    <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Gestión de Usuarios</a>
+                                    <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
                                 </div>
-                            </div>
-                        </div><!-- /.panel -->
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-lg-9 col-md-9 col-sm-8">
-                      <!-- Lista de tramites aprobados por la DDE -->
-                      {% if entities %}
-                        <div class="panel">
-                                                <div class="panel-heading">
-                                                    <div class="pull-left">
-                                                        <h3 class="panel-title">Solicitudes aprobadas</h3>
-                                                    </div>
-                                                    <a href="{{path('sie_herramienta_tramite_index')}}" class="btn btn-facebook btn-md pull-right"><i class="fa fa-fw fa-plus-circle"></i>Nuevo</a>
-                                                    <div class="clearfix"></div>
-                                                </div><!-- /.panel-heading -->
-                                                <div class="panel-body no-padding">
-                                                    <div class="table-responsive" style="margin-top: -1px;">
-                                                        <table class="table table-primary">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="text-center border-right" style="width: 1%;">No.</th>
-                                                                <th>Trámite</th>
-                                                                <th>Código SIE</th>
-                                                                <th>Unidad Educativa</th>
-                                                                <th>Descripción</th>
-                                                                <th>Fecha Envío</th>
-                                                                <th>Observación</th>
-                                                                <th class="text-center">Estado Trámite</th>
-                                                                <th class="text-center" style="width: 12%;">Acciones</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            {% set cont = 1 %}
-                                                            {% for entity in entities %}
-                                                            <tr class="border-primary">
-                                                                <td class="text-center border-right"><strong>{{ loop.index }}</strong></td>
-                                                                <td>{{ entity.tramite.id }}</td>
-                                                                <td>{{ entity.tramite.institucioneducativa.id }}</td>
-                                                                <td>{{ entity.tramite.institucioneducativa }}</td>
-                                                                <td>{{ entity.tramite.tramiteTipo.tramiteTipo }} - {{ entity.tramite.gestionId }}</td>
-                                                                <td>{{ entity.fechaEnvio|date('d-m-Y') }}</td>
-                                                                <td>{{ entity.obs }}</td>
-                                                                <td class="text-center">
-                                                                    {{ entity.flujoProceso.proceso.procesoTipo }}
-                                                                </td>
-                                                                <td class="text-center">
-                                                                {% set items = {
-                                                                                'gestion': entity.tramite.gestionId,
-                                                                                'id'     : entity.tramite.institucioneducativa.id,
-                                                                                'tipo'   : entity.tramite.tramiteTipo.id
-                                                                } %}
-                                                                {% set jsnFullUeInfo = items|json_encode() %}
+                </div>
+            </div><!-- /.panel -->
+        </div>
 
-                                                                    <form action="{{path('herramienta_inbox_open')}}" method="post" style="display: inline-block">
-                                                                        <input type="hidden" id="form_tramiteId" name="form[tramiteId]" value="{{entity.tramite.id}}">
-                                                                        <input type="hidden" id="form_tipo" name="form[tipo]" value="{{ entity.tramite.tramiteTipo.id }}">
-                                                                        <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{entity.tramite.institucioneducativa.id}}">
-                                                                        <input type="hidden" id="form_gestion" name="form[gestion]" value="{{entity.tramite.gestionId}}">
-                                                                        <!-- this is the new start-->
-                                                                        <input type="hidden" id="form_data" name="form[data]" required="required" value="{{jsnFullUeInfo}}">
-                                                                        <!-- this is the new end-->
-                                                                        <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Regularizar Gestión {{entity.tramite.gestionId}}"><i class="fa fa-pencil"></i></button>
-                                                                    </form>
+        <div class="col-lg-9 col-md-9 col-sm-8">
+            <!-- Lista de tramites aprobados por la DDE -->
+            {% if entities %}
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Solicitudes aprobadas</h3>
+                        </div>
+                        <a href="{{path('sie_herramienta_tramite_index')}}" class="btn btn-facebook btn-md pull-right"><i class="fa fa-fw fa-plus-circle"></i>Nuevo</a>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body no-padding">
+                        <div class="table-responsive" style="margin-top: -1px;">
+                            <table class="table table-primary">
+                                <thead>
+                                <tr>
+                                    <th class="text-center border-right" style="width: 1%;">No.</th>
+                                    <th>Trámite</th>
+                                    <th>Código SIE</th>
+                                    <th>Unidad Educativa</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha Envío</th>
+                                    <th>Observación</th>
+                                    <th class="text-center">Estado Trámite</th>
+                                    <th class="text-center" style="width: 12%;">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% set cont = 1 %}
+                                {% for entity in entities %}
+                                <tr class="border-primary">
+                                    <td class="text-center border-right"><strong>{{ loop.index }}</strong></td>
+                                    <td>{{ entity.tramite.id }}</td>
+                                    <td>{{ entity.tramite.institucioneducativa.id }}</td>
+                                    <td>{{ entity.tramite.institucioneducativa }}</td>
+                                    <td>{{ entity.tramite.tramiteTipo.tramiteTipo }} - {{ entity.tramite.gestionId }}</td>
+                                    <td>{{ entity.fechaEnvio|date('d-m-Y') }}</td>
+                                    <td>{{ entity.obs }}</td>
+                                    <td class="text-center">
+                                        {{ entity.flujoProceso.proceso.procesoTipo }}
+                                    </td>
+                                    <td class="text-center">
+                                    {% set items = {
+                                                    'gestion': entity.tramite.gestionId,
+                                                    'id'     : entity.tramite.institucioneducativa.id,
+                                                    'tipo'   : entity.tramite.tramiteTipo.id
+                                    } %}
+                                    {% set jsnFullUeInfo = items|json_encode() %}
 
-                                                                    {% if false %}
-                                                                      {% if entity.tramite.gestionId >= 2014 %}
-                                                                      <form method="post" style="display: inline-block" id="formVal{{ cont }}" onsubmit="validateForm({{ cont }}); return false;">
-                                                                          <input type="hidden" id="form_tramiteId" name="form[tramiteId]" value="{{entity.tramite.id}}">
-                                                                          <input type="hidden" id="form_tipo" name="form[tipo]" value="{{ entity.tramite.tramiteTipo.id }}">
-                                                                          <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{entity.tramite.institucioneducativa.id}}">
-                                                                          <input type="hidden" id="form_gestion" name="form[gestion]" value="{{entity.tramite.gestionId}}">
-                                                                          <button type="submit" class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" data-original-title="Validar y Consolidar Información {{entity.tramite.gestionId}}"><i class="fa fa-eye"></i></button>
-                                                                      </form>
-                                                                      {% set cont = cont + 1 %}
-                                                                      {% endif %}
-                                                                    {% endif %}
-                                                                </td>
-                                                            </tr>
-                                                            {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div><!-- /.panel-body -->
-                                            </div><!-- /.panel -->
-                                            <!--/ End team table -->
-                        {% else %}
-                          <div class="callout callout-info">
-                            <p><strong>¡Información!</strong> No tiene solicitudes aprobadas por la DDE.</p>
-                            <p>Ir a <a href="{{path('sie_herramienta_tramite_index')}}"><strong>Seguimiento de solicitudes</strong></a></p>
-                          </div>
-                          {% endif %}
-                          <div id="logs"></div>
-                                <!--end lista tramites aprobados por la DDE -->
-                              </div>
-                            </div>
-                          </div>
+                                        <form action="{{path('herramienta_inbox_open')}}" method="post" style="display: inline-block">
+                                            <input type="hidden" id="form_tramiteId" name="form[tramiteId]" value="{{entity.tramite.id}}">
+                                            <input type="hidden" id="form_tipo" name="form[tipo]" value="{{ entity.tramite.tramiteTipo.id }}">
+                                            <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{entity.tramite.institucioneducativa.id}}">
+                                            <input type="hidden" id="form_gestion" name="form[gestion]" value="{{entity.tramite.gestionId}}">
+                                            <!-- this is the new start-->
+                                            <input type="hidden" id="form_data" name="form[data]" required="required" value="{{jsnFullUeInfo}}">
+                                            <!-- this is the new end-->
+                                            <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Regularizar Gestión {{entity.tramite.gestionId}}"><i class="fa fa-pencil"></i></button>
+                                        </form>
+
+                                        {% if false %}
+                                            {% if entity.tramite.gestionId >= 2014 %}
+                                            <form method="post" style="display: inline-block" id="formVal{{ cont }}" onsubmit="validateForm({{ cont }}); return false;">
+                                                <input type="hidden" id="form_tramiteId" name="form[tramiteId]" value="{{entity.tramite.id}}">
+                                                <input type="hidden" id="form_tipo" name="form[tipo]" value="{{ entity.tramite.tramiteTipo.id }}">
+                                                <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{entity.tramite.institucioneducativa.id}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{entity.tramite.gestionId}}">
+                                                <button type="submit" class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" data-original-title="Validar y Consolidar Información {{entity.tramite.gestionId}}"><i class="fa fa-eye"></i></button>
+                                            </form>
+                                            {% set cont = cont + 1 %}
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="callout callout-info">
+                        <p><strong>¡Información!</strong> No tiene solicitudes aprobadas por la DDE.</p>
+                        <p>Ir a <a href="{{path('sie_herramienta_tramite_index')}}"><strong>Seguimiento de solicitudes</strong></a></p>
+                    </div>
+            {% endif %}
+                <div id="logs"></div>
+        </div>
+
+    </div>
+</div>
 {% endblock %}
 {% block javascripts%}
     {{parent()}}

@@ -1,11 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
-
-    <!-- START @HEAD -->
     <head>
-        <!-- START @META SECTION -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <meta name="description" content="Acceso al sistema Alternativa - Educación Alternativa - Ministerio de Educación">
@@ -15,9 +9,7 @@
         <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
         <link href="{{asset('webherramienta/assets/admin/css/pages/sign-type-2.css')}}" rel="stylesheet">
         <link rel="stylesheet" href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}">
-
         <style type="text/css">
-            
             body, html {
                 width: 100%;
                 height: 100%;
@@ -28,23 +20,19 @@
             }
 
             body{
-                /* background: url("{{asset('images/fondo1.png')}}") no-repeat center center fixed; */
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;
                 background-size: cover;
             }
-
             #sign-wrapper{
                 height: 100%;
             }
-
             .sign-header{
                 color: #ECEFF1;
                 margin-top: 2px;
                 font-size: 1.3em;
             }
-
             .sign-header, .sign-text span{
                 background-color: #1b3f61;
                 color: #ECEFF1;
@@ -54,38 +42,28 @@
                 border-bottom: 1px solid #D6E9ED;
                 text-shadow: 2px 2px #90A4AE;
             }
-
             .sign-header{
                 border-color: #B2CCC6;
             }
-
             .form-signin{
                 background-color: #D6E9ED;
                 opacity: 1 !important;
-                /* border: 1px solid #CCE9E4; */
             }
-
             .sign-body, .sign-footer{
-                /* background: #D6E9ED; */
                 background: #ECEFF1;
                 font-size: 1.2em;
             }
-
             .btn-aceptar{
                 background-color: #1b3f61;
-                /* background-color: #D6E9ED; */
                 color: #FFFFFF;
                 font-size: 1.1em;
             }
-
             .icono{
                 color: #404647 !important;
             }
-
             .input-group{
                 border: 1px solid #98A4A9;
             }
-
             .img-logo{
                 width: 98%;
             }
@@ -95,18 +73,15 @@
             input[type="text"]{
                 color: #404647 !important;
             }
-
             input[type=checkbox]
             {
-              /* Doble-tamaño Checkboxes */
-              -ms-transform: scale(1.5); /* IE */
-              -moz-transform: scale(1.5); /* FF */
-              -webkit-transform: scale(1.5); /* Safari y Chrome */
-              -o-transform: scale(1.5); /* Opera */
-              padding: 5px;
-              margin-right: 20px;
+                -ms-transform: scale(1.5); /* IE */
+                -moz-transform: scale(1.5); /* FF */
+                -webkit-transform: scale(1.5); /* Safari y Chrome */
+                -o-transform: scale(1.5); /* Opera */
+                padding: 5px;
+                margin-right: 20px;
             }
-
             .enlaces{
                 position: absolute;
                 top: 10px;
@@ -119,7 +94,6 @@
                 text-decoration: none;
                 font-size: 1.2em;
             }
-
             .enlaces > a:hover{
                 color: #FFFFFF;
             }
@@ -127,25 +101,19 @@
                 padding-top: 20px;
             }
         </style>
-        
     </head>
-    
+
     <body class="page-sound page-backstretch" >
-        
         <div class="enlaces">
-            
         </div>
 
-        <!-- START @SIGN WRAPPER -->
         <div id="sign-wrapper">
-
             {% for flashMessage in app.session.flashbag.get('errorusuario') %}
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
-            
             <div class="img">
                 <img class="img-logo" src="{{asset('images/logo-min-edu.png')}}" alt="">
             </div>
@@ -158,10 +126,9 @@
                     <center>
                         <small>{{app.session.get('sysname')|upper}}</small>
                     </center>
-
-                </div><!-- /.form-group -->
-            </div><!-- /.sign-header -->
-
+                </div>
+            </div>
+            {{ path('login_check')}}
             <form class="form-signin" id="form_login" action="{{path('login_check')}}" accept-charset="utf-8" method="post" style="border: 1px solid #1b3f61" >
                 {% if 'SISTEMA ACADÉMICO EDUCACIÓN REGULARssssss'==app.session.get('sysname')|upper %}
                     <div class="alert alert-warning alert-dismissible" role="alert">
@@ -171,37 +138,28 @@
                         <h4 class="text-center">Disculpe las molestias.</h4>
                     </div>
                 {% else %}
-
-
                     <div class="sign-body">
                         {% if error %}
                             <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
                         {% endif %}
-                       
-                          
-                       
                         <div class="form-group">
                             <div class="input-group input-group-lg rounded no-overflow">
                                 <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
                                 <span class="input-group-addon"><i class="fa fa-user icono"></i></span>
                             </div>
-                        </div><!-- /.form-group -->
+                        </div>
                         <div class="form-group">
                             <div class="input-group input-group-lg rounded no-overflow">
                                 <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
                                 <span class="input-group-addon"><i class="fa fa-lock icono"></i></span>
                             </div>
-                        </div><!-- /.form-group -->
-                        
+                        </div>
+                    </div>
 
-                       
-                    </div><!-- /.sign-body -->
-                 
                     <div class="sign-footer">
-
                         <div >
                             <div class="checkbox" style="margin-left: 15px">
-                                <label> 
+                                <label>
                                     <input type="checkbox" required="required"> <span style="margin-left: 10px;">Validar los datos</span>
                                 </label>
                             </div>
@@ -209,26 +167,8 @@
                         <div class="form-group">
                             <br>
                             <button class="btn btn-lg btn-block no-margin rounded btn-aceptar" type="submit" onclick="functionToExecute()"><i class="fa fa-unlock"></i>Aceptar</button>
-                            {#
-                            {% if app.session.get('sistemaid') == 1 %}
-                                <div class="consulta text-center">
-                                    <a href="{{path('consultalibreta')}}" style="color:#455A64; font-size:1em;"><span class="glyphicon glyphicon-list-alt"></span> Consultar Libreta</a>
-                                </div>
-                            {% endif %}
-                            #}
                             <br>
-
-                            {# {% if app.session.get('pathSystem') == 'SieHerramientaBundle' %}
-                                <div class="pull-left" style="margin-bottom: 10px">
-                                    <a href="{{path('solicitud_rue_apertura',{'id':54,'desglose':0})}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Apertura RUE22</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="{{path('tramite_rue_reapertura')}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Reapertura RUE</a>
-                                </div></br>
-                                <div style="clear: both"></div>
-                            {% endif %} #}
                             {% if app.session.get('pathSystem') == 'SieHerramientaAlternativaBundle' %}
-                                {# fRnk: 214-222 #}
                                 <div class="pull-left" style="margin-bottom: 10px">
                                     <a href="{{path('solicitud_cea_apertura',{'id':73,'desglose':0})}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Apertura CEA</a>
                                 <br>
@@ -242,28 +182,21 @@
                             {% if app.session.get('pathSystem') == 'SieOlimpiadasBundle' %}
                                 <div class="pull-center">
                                     <a href="http://olimpiada.minedu.gob.bo/public/files/ocepb/manual_ocepb.pdf" target="_blank" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Manual OCEPB</a>
-                                </div></br>                            
+                                </div></br>
                             {% endif %}
-
-                            {# <a href="{{path('consulta_bono_familia_index')}}" style="color:#455A64; font-size:1em; margin-top:20px;">Consulta si eres beficiario del bono familia</a> #}
-                        </div><!-- /.form-group -->
-                    </div><!-- /.sign-footer -->
-
-                 {% endif %} 
+                        </div>
+                    </div>
+                {% endif %}
             </form>
-
         </div>
 
         <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
         <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
         <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
- 
         <script>
-
             $("#form_captcha").keyup(function () {
                 $("#form_captcha").val($("#form_captcha").val().toUpperCase());
             });
-
             function showCaptcha() {
                 element = document.getElementById("divCaptcha");
                 check = document.getElementById("form_check");
@@ -278,28 +211,12 @@
                     $('#form_captcha').attr('required', 'true');
                 }
             }
-
-    //         var formulario = document.getElementById("form_login");
-
-    // formulario.addEventListener("submit", function(event) {
-    //     event.preventDefault();
-
-    //     var username = document.getElementById("username").value;
-    //     var password = document.getElementById("password").value;
-        
-    //     localStorage.setItem('user', JSON.stringify({username: username, password: password }));
-
-    // });
-
         function functionToExecute(){
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
-        
             localStorage.setItem('user', JSON.stringify({username: username, password: password }));
             console.log('ok');
         }
         </script>
-
     </body>
-
 </html>

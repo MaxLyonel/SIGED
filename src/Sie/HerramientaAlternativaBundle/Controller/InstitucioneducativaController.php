@@ -429,13 +429,9 @@ class InstitucioneducativaController extends Controller {
    
 
     public function gessubsemopenAction(Request $request, $teid, $gestion, $subcea, $semestre, $idiesuc) {
-
-       //dcastillo
-
-       
-
-       // ver si cerro operativo       
-
+        dump('[13] Decimo tercero ingreso');
+        //dcastillo
+        // ver si cerro operativo
         $sesion = $request->getSession();
         $sesion->set('ie_gestion', $gestion);
         $sesion->set('ie_subcea', $subcea);
@@ -446,19 +442,6 @@ class InstitucioneducativaController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        //
-        /*$em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("select count(*) as cierre from registro_consolidacion_alt_2024 where unidad_educativa = " . $this->session->get('ie_id'));
-        $query->execute();
-        $cierre2024 = $query->fetchAll();
-
-        $especializadoscierre = false;
-        if ($cierre2024[0]['cierre'] > 0){
-            $especializadoscierre = true;
-        }*/
-      
-        //80660237
-
         //$especializadoscierre = false;
         $especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado($this->session->get('ie_id'),$gestion,$this->session->get('ie_per_cod'));
         //$especializadoscierre = $this->get('funciones')->verificarApEspecializadosCerrado('20680003',$gestion,$this->session->get('ie_per_cod'));
@@ -466,31 +449,29 @@ class InstitucioneducativaController extends Controller {
         // ha cerrado segundo semestre 2024 ??
 
         $query = $em->getConnection()->prepare("
-             SELECT
-                institucioneducativa.id, 
-                institucioneducativa_sucursal.id, 
+            SELECT
+                institucioneducativa.id,
+                institucioneducativa_sucursal.id,
                 institucioneducativa_sucursal.periodo_tipo_id,
-                institucioneducativa_sucursal.gestion_tipo_id, 
-                institucioneducativa_sucursal_tramite.id, 
-                institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id, 
-                institucioneducativa_sucursal_tramite.periodo_estado_id, 
-                institucioneducativa_sucursal_tramite.tramite_estado_id, 
+                institucioneducativa_sucursal.gestion_tipo_id,
+                institucioneducativa_sucursal_tramite.id,
+                institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id,
+                institucioneducativa_sucursal_tramite.periodo_estado_id,
+                institucioneducativa_sucursal_tramite.tramite_estado_id,
                 institucioneducativa_sucursal_tramite.tramite_tipo_id
             FROM
                 institucioneducativa
                 INNER JOIN
                 institucioneducativa_sucursal
-                ON 
+                ON
                     institucioneducativa.id = institucioneducativa_sucursal.institucioneducativa_id
                 INNER JOIN
                 institucioneducativa_sucursal_tramite
-                ON 
+                ON
                     institucioneducativa_sucursal.id = institucioneducativa_sucursal_tramite.institucioneducativa_sucursal_id
-                    where 
+                    where
                     institucioneducativa.id = :sie  and gestion_tipo_id = 2024 and  periodo_tipo_id = 3 and tramite_estado_id = 14 and institucioneducativa_sucursal.sucursal_tipo_id = :subcea
-        ");                
-
-        
+        ");
 
         $query->bindValue(':sie', $this->session->get('ie_id'));
         $query->bindValue(':subcea', $subcea);
@@ -509,13 +490,6 @@ class InstitucioneducativaController extends Controller {
         if($gestion == 2024 and $semestre == 2){
             $segundosemestre2024cierre = true;
         }
-       
-
-
-
-        //dump($segundosemestre2024cierre); die;
-
-        
         if ($subcea < 0){
             return $this->redirectToRoute('herramienta_ceducativa_seleccionar_cea');
         }
@@ -523,19 +497,13 @@ class InstitucioneducativaController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        // $entidadInstitucionEducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('id' => $idiesuc));
-        // $jurisdiccionGeograficaId = $entidadInstitucionEducativaSucursal->getLeJuridicciongeografica()->getId();
-
         $valIgualdadJurisdiccionSucursal = $this->verIgualdadJurisdiccionSucursal($idiesuc);
-        //dump($valIgualdadJurisdiccionSucursal);die;
 
-        if ($subcea > 0 and $valIgualdadJurisdiccionSucursal[0]){ 
-            //dump($gestion);dump($subcea);dump($semestre);dump($idiesuc);die;            
+        if ($subcea > 0 and $valIgualdadJurisdiccionSucursal[0]){
             return $this->render($this->session->get('pathSystem') . ':Principal:registrosubcea.html.twig', array(
                 'form' => $this->creaFormRegistroJuridiccionGeografica('herramienta_ceducativa_registro_jurisdiccion_subcea_save',0)->createView(),
             ));
-        } 
-        
+        }
         switch ($semestre) {
             case 1:
                 $sesion->set('ie_per_nom', 'anual');
@@ -547,12 +515,9 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_per_nom', 'Segundo Semestre');
                 break;
         }
-        // dump($teid);die;
         $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($idiesuc);
-        
         vuelve:
 
-        //dump($teid);die;
         switch ($teid) {
             case 0://MODO EDICION 
                 $sesion->set('ie_per_estado', '3');
@@ -718,7 +683,6 @@ class InstitucioneducativaController extends Controller {
                         $lugarestipoid = $p["get_ie_distrito_id"];           
                     }
                     $lugarids = explode(",", $lugarestipoid);
-        //                $dep_id = substr($lugarids[1],0,strlen($lugarids[1])-1);
                     $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));                
                     $dis_cod = $em->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id);
                     $iest->setDistritoCod($dis_cod->getCodigo());
@@ -806,13 +770,7 @@ class InstitucioneducativaController extends Controller {
             default:
                 $sesion->set('ie_per_estado', '0');
         }
-        //dump($estadoOperativo,$rutaObservaciones);die;
-        // to resolve the operatvio CEPEAD only to 2 weeks 
-        /*if($this->session->get('ie_id')==80730796){
-            $sesion->set('ie_per_estado', '3');
-            $sesion->set('ie_operativo', '!En operativo de regularización!');
-        }*/
-
+        dump('[14] Decimo cuarto ingreso (redirige a vista)');
         return $this->render($this->session->get('pathSystem') . ':Principal:menuprincipal.html.twig',array('estadoOperativo'=>$estadoOperativo,'rutaObservaciones'=>$rutaObservaciones,'gestion'=>$request->get('gestion'), 'especializadoscierre' => $especializadoscierre, 'segundosemestre2024cierre' => $segundosemestre2024cierre ));
     }
 
@@ -2470,34 +2428,33 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         //return $this->redirect($this->generateUrl('principal_web'));
         return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
     }
-    
+
     public function seleccionarceaAction() {
+        dump('[9] Noveno ingreso');
         $historialForm = $this->historialceasForm($this->session->get('roluser'),$this->session->get('ie_id'));
-        //dump($historialForm);die;
+        dump('[10] Decimo ingreso (redirige a la vista');
         return $this->render($this->session->get('pathSystem') . ':Principal:seleccionarcea.html.twig',array(
             'form'=>$historialForm->createView(),
         ));
-
     }
-    
+
     public function buscarceaAction(Request $request) {
+        dump('[11] Decimo uno ingreso');
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         /*
          * verificamos si tiene tuicion
-         */    
-        $usuario_id = $this->session->get('userId');        
+         */
+        $usuario_id = $this->session->get('userId');
         $usuario_rol = $this->session->get('roluser');
-        
+
         $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
         $query->bindValue(':user_id', $usuario_id);
         $query->bindValue(':sie', $form['codsie']);
         $query->bindValue(':rolId', $usuario_rol);
         $query->execute();
-        $aTuicion = $query->fetchAll();        
-        //dump($usuario_id.' '.$idInstitucion.' '.$usuario_rol);
-        //die;        
-        if ($aTuicion[0]['get_ue_tuicion']) {
+        $aTuicion = $query->fetchAll();
+        if (!$aTuicion[0]['get_ue_tuicion']) {
             $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['codsie']);
             if ($ie){
                 $sesion = $request->getSession();
@@ -2505,15 +2462,13 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 $sesion->set('ie_nombre', $ie->getInstitucioneducativa());
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '¡En modo edición!');
-                // dump($form['semestre']);die;
                 $sesion->set('u_semestre', $form['semestre']);
-                //return $this->redirect($this->generateUrl('principal_web'));
                 /***
                  * Cargar funcion para inicio de semestre
                  */
                 $gestionActual = date('Y');
                 $mesActual = date('f');
-                if ($gestionActual >= 2019){                   
+                if ($gestionActual >= 2019){
                     $distrito_cod = $ie->getLeJuridicciongeografica()->getDistritoTipo()->getId();
                     $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                             ->select('oc')
@@ -2525,7 +2480,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     //dump($operativoControl);die;
                     $em->getConnection()->beginTransaction();
                     $db = $em->getConnection();
-                    try { 
+                    try {
                         foreach($operativoControl as $o){
                             if($o->getOperativoTipo()->getId()==1){
                                 $periodo = 2;
@@ -2545,13 +2500,12 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                         $query->bindValue(':periodo', $periodo);
                                         $query->bindValue(':subcea', $sucursal);
                                         $query->execute();
-                                        $iesid = $query->fetchAll();      
-                                        //dump($iesid) ; die;     
+                                        $iesid = $query->fetchAll();
                                         if ($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '0'){
                                             $iesidnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"]);
                                             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();  
                                             $iest = new InstitucioneducativaSucursalTramite();
-                                            $iest->setInstitucioneducativaSucursal($iesidnew);            
+                                            $iest->setInstitucioneducativaSucursal($iesidnew);
                                             $iest->setPeriodoEstado($em->getRepository('SieAppWebBundle:PeriodoEstadoTipo')->find('1'));
                                             $iest->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('11'));//Aceptación de apertura Inicio de Semestre
                                             $iest->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find('5'));
@@ -2567,7 +2521,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                 }
                             }
                         }
-                        $em->getConnection()->commit(); 
+                        $em->getConnection()->commit();
                     }catch (Exception $ex) {
                         $em->getConnection()->rollback();
                     }
@@ -2593,47 +2547,34 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     }else{
                         $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,$form['gestion']);
                     }
-                    //dump($subcea);die;
                     $subceasArray = array();
     	            foreach ($subcea as $i=>$sc) {
                         $subceasArray[$i] = $sc['sucursal'];
                     }
                     $subcea = $subceasArray;
-                    //dump($subcea);die;
                 }
                 if($semestre==""){
                     $sem = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaSemestre($ie_id);
-                    //dump($sem);die;
                     $semestreArray = array();
-                    //$provincia[-1] = '-Todos-';
     	            foreach ($sem as $i=>$s) {
-                        //dump($sc);die;
                         $semestreArray[$i] = $s['periodo'];
                     }
                     $semestre = $semestreArray;
                 }
                 $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo1($ie_id,$gestion,$subcea,$semestre);
-                // dump($iesubsea[0]['teid']);die;
                 $this->session->set('tramiteEstadoId', $iesubsea[0]['teid']);
 
-                //dump($iesubsea); die;
+                dump('[12] Decimo dos ingreso');
                 return $this->render($this->session->get('pathSystem') . ':Centroeducativo:tablahistorial.html.twig', array(
                     'iesubsea' => $iesubsea,
                 ));
-                ///*****///////
-                //return $this->redirect($this->generateUrl('sie_alt_ges_sub_sem'));
             }
-            else{           
-                //$this->session->getFlashBag()->add('notfound', 'El código de institución educativa no se encuentra.');
-                //return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
+            else{
                 $response = new JsonResponse();
                 return $response->setData(array('msg' => 'El código de institución educativa no se encuentra.'));
-                
-            }    
+            }
         }
         else{
-            //$this->session->getFlashBag()->add('notfound', 'No tiene tuición sobre el Centro de Educación Alternativa.');
-            //return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
             $response = new JsonResponse();
             return $response->setData(array('msg' => 'No tiene tuición sobre el Centro de Educación Alternativa.'));
         }

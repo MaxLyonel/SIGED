@@ -57,6 +57,7 @@ class InfoEstudianteController extends Controller {
      */
     public function indexAction(Request $request) { //? (--> 9)
         $this->session = $request->getSession();
+        dump($this->session);
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));

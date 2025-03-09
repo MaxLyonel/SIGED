@@ -17,147 +17,10 @@
                         <i class="fa fa-angle-right"></i>
                     </li>
             </ol>
-        </div><!-- /.breadcrumb-wrapper -->
+        </div>
     </div>
 
     {% if (app.session.get('ie_per_estado') != '-1') %}
-        {#<div class="body-content animated fadeIn">
-            <div class="row">
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                   
-                    <div class="panel panel-success rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-university fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramienta_ceducativa_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Centro de Educación Alternativa</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                   
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                   
-                    <div class="panel panel-danger rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-user-secret fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramientalt_info_personal_adm_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Personal Administrativo</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                    
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                    
-                    <div class="panel panel-teal rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-users fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramientalt_info_maestro_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Personal Docente</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                    
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                    
-                    <div class="panel panel-primary rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-child fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramienta_alter_cursos_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Información Estudiante</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                    
-                </div>
-            </div><!-- /.row -->
-            <div class="row">                
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                    <div class="panel panel-warning rounded shadow">
-                        <div class="panel-heading text-center">
-                            <p class="inner-all no-margin">
-                                <i class="fa fa-language fa-5x"></i>
-                            </p>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body text-center">
-                            <a href="{{path('herramienta_alter_malla_tecnica_index')}}"><i class="fa fa-gear"></i> <span class="text-blue">Malla Curricular</span></a>
-                        </div><!-- /.panel-body -->
-                    </div><!-- /.panel -->
-                </div>
-                
-                {% if (app.session.get('roluser') == 9) %}
-                    {% if (app.session.get('ie_per_estado') != '0') %}
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <div class="panel panel-lilac rounded shadow">
-                                <div class="panel-heading text-center">
-                                    <p class="inner-all no-margin">
-                                        <i class="fa fa-times-circle-o fa-5x"></i>
-                                    </p>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body text-center">
-                                    {% if (app.session.get('ie_gestion') < '2010') %}
-                                        <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                            <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                        </form>
-                                    {% else %}
-                                        {% if (app.session.get('ie_per_estado') == '0') %}                                        
-                                            <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                                <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                            </form>
-                                        {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}
-                                            <form action="{{path('herramienta_ceducativa_cerrar_operativo')}}" onsubmit="return verificarCerrado();">
-                                                <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Cerrar Operativo</span></button>
-                                            </form>
-                                        {% endif %}
-                                    {% endif %}                                                                        
-                            </div>
-                        </div>
-                    {% else %}            
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <div class="panel panel-body rounded shadow">
-                                <div class="panel-heading text-center">
-                                    <p class="inner-all no-margin">
-                                        <i class="fa fa-check-circle-o fa-5x"></i>
-                                    </p>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body text-center">                                                           
-                                    <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                        <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                    </form>
-                                </div><!-- /.panel-body -->
-                            </div>
-                        </div>
-                    {% endif %}
-                {% else %}  
-                    <div class="col-md-3 col-sm-3 col-xs-6">
-                        <div class="panel panel-body rounded shadow">
-                            <div class="panel-heading text-center">
-                                <p class="inner-all no-margin">
-                                    <i class="fa fa-check-circle-o fa-5x"></i>
-                                </p>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body text-center">                                                           
-                                <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}">
-                                    <button type="submit" class="btn-link"><i class="fa fa-gear"></i> <span class="text-blue">Generar archivo de inconsistencias de información del periodo.</span></button>
-                                </form>
-                            </div><!-- /.panel-body -->
-                        </div>
-                    </div>
-                {% endif %}    
-                </div>
-            </div>#}
-
-
-
         <div class="body-content animated fadeIn">
         {% if estadoOperativo is defined and estadoOperativo == true %}
             <div class="alert alert-danger ">
@@ -187,8 +50,6 @@
         {% endif %}
         <hr>
         <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
-
-
             <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                 <div class="cbp-caption">
                     <div class="cbp-caption-defaultWrap">
@@ -198,7 +59,6 @@
                     <div class="cbp-caption-activeWrap">
                         <div class="cbp-l-caption-alignCenter">
                             <div class="cbp-l-caption-body">
-                                {# action="{{path('sie_alt_ges_sub_sem_open', {'teid':'0', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" #}
                                 <form action="{{path('herramienta_ceducativa_index')}}" method="post" style="display:inline-block"> 
                                     <button class="btn btn-inverse btn-stroke">INGRESAR</button>
                                 </form>
@@ -211,7 +71,6 @@
                 <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow"><span class="text-blue">CENTRO DE EDUCACIÓN ALTERNATIVA</span></div>
                 <div class="cbp-l-grid-masonry-projects-desc"></div>
             </div><br></div>
- 
 
             <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                 <div class="cbp-caption">
@@ -235,7 +94,6 @@
                 <div class="cbp-l-grid-masonry-projects-desc"></div>
             </div><br></div>
 
-            
             <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                 <div class="cbp-caption">
                     <div class="cbp-caption-defaultWrap">
@@ -281,31 +139,29 @@
                 <div class="cbp-l-grid-masonry-projects-desc"></div>
             </div><br></div>
 
-            
-              <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                  <div class="cbp-caption">
-                      <div class="cbp-caption-defaultWrap">
-                          <div class="headerOptions" style="height:20px; background:#e4981d"></div>
-                          <img src="{{asset('img/malla.jpg')}}" alt="...">
-                      </div>
-                      <div class="cbp-caption-activeWrap">
-                          <div class="cbp-l-caption-alignCenter">
-                              <div class="cbp-l-caption-body">
-                                 <br>
-                                    <form action="{{path('herramienta_alter_malla_tecnica_index')}}" method="post" style="display:inline-block"> 
-                                        <button class="btn btn-inverse btn-stroke">INGRESAR</button>
-                                    </form>
-                                    <br>
-                                  <span style="color:#FFFFFF">Carreras, acreditación, modulos, cargar horaria, etc.</span>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">MALLA CURRICULAR</div>
-                  <div class="cbp-l-grid-masonry-projects-desc"></div>
-              </div><br></div>
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#e4981d"></div>
+                        <img src="{{asset('img/malla.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                <br>
+                                <form action="{{path('herramienta_alter_malla_tecnica_index')}}" method="post" style="display:inline-block"> 
+                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                </form>
+                                <br>
+                                <span style="color:#FFFFFF">Carreras, acreditación, modulos, cargar horaria, etc.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">MALLA CURRICULAR</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
 
-           
             {% if (app.session.get('roluser') == 9 or app.session.get('roluser') == 8)   %}  
             {#% if (app.session.get('roluser') == 8)   %#} 
              {#% if (app.session.get('ie_id') == 81720080) %#}

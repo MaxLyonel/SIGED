@@ -1,7 +1,6 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
 
 {% block contentoption %}
-<!-- Start page header -->
 <div class="header-content">
     <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido/a <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
@@ -13,160 +12,108 @@
                 <i class="fa fa-angle-right"></i>
             </li>
         </ol>
-    </div><!-- /.breadcrumb-wrapper -->
-</div><!-- /.header-content -->
-<!--/ End page header -->
-
-<!-- Start body content -->
-<div class="body-content animated fadeIn">
-<div class="row">
-    <div class="col-lg-3 col-md-3 col-sm-4">
-        <div class="panel rounded shadow">
-            <div class="panel-body">
-                <div class="inner-all">
-                    <ul class="list-unstyled">
-                        <li class="text-center">
-                            
-                            {% if app.session.get('userfoto') is not null %}
-                                <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
-                            {% else %}
-                                <img src="{{asset('img/photo.png')}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
-                                
-                            {% endif %}
-
-                        </li>
-                        <li class="text-center">
-                            <h4 class="text-capitalize">{{app.session.get('name')}} {{app.session.get('lastname')}}</h4>
-                            <p class="text-muted text-capitalize">{{app.session.get('cuentauser')}}</p>
-                        </li>                                        
-                        <li><br/></li>
-                        <li>
-                            <div class="btn-group-vertical btn-block">
-                                <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar Cuenta - Gestión de Usuarios</a>                                
-                                <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div><!-- /.panel -->                            
     </div>
+</div>
 
-    <div class="col-lg-9 col-md-9 col-sm-8">
-        <!-- Start input fields - basic form -->
-        <div class="panel rounded shadow">
-            <div class="panel panel-teal shadow">
-                <div class="panel-heading">
-                    <div class="pull-left">
-                        <h3 class="panel-title">Notificaciones</h3>
-                    </div>
-                    <div class="pull-right">
-                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                    </div>
-                    <div class="clearfix"></div>
-                </div><!-- /.panel-heading -->
-                <div class="panel-body no-padding">
-                    
-                    
-                    <ul class="list-group">
-                    {#
-                                <ul class="list-group">
-                                    {% for entity in entities|slice(0, 5) %}
-                                        {% if entity.rolTipo.id == app.session.get('roluser') %}
-                                            <li class="list-group-item">
-                                                <span class="badge {% if(entity.notif.noticiaTipo) == 0  %}badge-success{% elseif(entity.notif.noticiaTipo) == 1 %}badge-warning{% else %}badge-danger{% endif %}">{% if(entity.notif.noticiaTipo) == 0  %}Normal{% elseif(entity.notif.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span>
-                                                <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> {% if entity.notif.fechaCrea %}{{ entity.notif.fechaCrea|date('d-m-Y') }}{% endif %} | {{ entity.notif.titulo }}</strong></h5>
-                                                <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> {{ entity.notif.mensaje|raw }}</p>
-                                                <p class="list-group-item-text text-green">
-                                                    {% if entity.notif.adjunto %}
-                                                        Descargar adjunto: <a href="{{ asset('uploads/adjuntos/' ~ entity.notif.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" alt="{{ entity.notif.adjunto }}" width="20" height="20"></a>
-                                                    {% endif %}
-                                                </p>
-                                            </li>
-                                        {% endif %}
-                                    {% else %}
-                                        { comentar esto
-                                        <div class="alert alert-info" role="alert">
-                                            <i class="fa fa-fw fa-info-circle"></i> Sin notificaciones
-                                        </div>
-                                        }
-                                    {% endfor %}
-                                </ul>
-                        #}
-                    
-                        <li class="list-group-item">
-                            <span class="badge badge-danger">Urgente</span>
-                            <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> La Paz, 16 de marzo de 2022</strong></h5>
-                            <br>
-                            <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> Informamos a nuestros usuarios que debido a ataques del virus informático Redline Stealer, que recopila información de inicios de sesión, contraseñas, datos de autocompletar, cookies y detalles de tarjetas de crédito de todos los navegadores web basados en Gecko y Chromium, solicitamos tomar las siguientes acciones:
-
-
-                            </p>
-                            <br>
-                            <strong>
-                            <ul>
-                                <li>Cambie las contraseñas actuales.</li>
-                                <li>Evitar guardar las contraseñas en el navegador.</li>
-                                <li>Escanee su computadora con un antivirus.</li>
-                            </ul>
-                            </strong>
-                        </li>   
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>    
-
-
-    <div class="col-lg-9 col-md-9 col-sm-8">
-        <div class="profile-cover">
-            <div class="cover rounded shadow no-overflow">
-                <div class="inner-cover">
-                    <!-- Start offcanvas btn group menu: This menu will take position at the top of profile cover (mobile only). -->
-                    <div class="btn-group cover-menu-mobile hidden-lg hidden-md">
-                        <button type="button" class="btn btn-theme btn-sm dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                        <ul class="dropdown-menu pull-right no-border" role="menu">                                                
-                            {% if app.session.get('ie_id') != -1 %}
-                                {#<li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>#}
-                                <li class="active"><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
-                                <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
-                                <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>
-                                {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
-                            {% endif %}
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <div class="panel rounded shadow">
+                <div class="panel-body">
+                    <div class="inner-all">
+                        <ul class="list-unstyled">
+                            <li class="text-center">
+                                {% if app.session.get('userfoto') is not null %}
+                                    <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
+                                {% else %}
+                                    <img src="{{asset('img/photo.png')}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
+                                {% endif %}
+                            </li>
+                            <li class="text-center">
+                                <h4 class="text-capitalize">{{app.session.get('name')}} {{app.session.get('lastname')}}</h4>
+                                <p class="text-muted text-capitalize">{{app.session.get('cuentauser')}}</p>
+                            </li>
+                            <li><br/></li>
+                            <li>
+                                <div class="btn-group-vertical btn-block">
+                                    <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar Cuenta - Gestión de Usuarios</a>                                
+                                    <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
+                                </div>
+                            </li>
                         </ul>
                     </div>
-                    
                 </div>
-                {% if app.session.get('ie_id') != -1 %}
-                <div class="col-xs-12 col-sm-9 col-md-9">
-                    {#<a href="{{path('herramienta_ceducativa_seleccionar_cea')}}" class="btn btn-success" ><i class="fa fa-history"></i> <span>Gestionar C.E.A.</span></a>#}
-                    <a href="{{path('herramienta_alter_galeria_fotos_centro')}}" class="btn btn-lilac" ><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span></a>
-                    <a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}" class="btn btn-warning" ><i class="fa fa-pencil"></i> <span>Editar Fotos</span></a>
+            </div>
+        </div>
+
+        <div class="col-lg-9 col-md-9 col-sm-8">
+            <div class="panel rounded shadow">
+                <div class="panel panel-teal shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Notificaciones</h3>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body no-padding">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="badge badge-danger">Urgente</span>
+                                <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> La Paz, 16 de marzo de 2022</strong></h5>
+                                <br>
+                                <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> Informamos a nuestros usuarios que debido a ataques del virus informático Redline Stealer, que recopila información de inicios de sesión, contraseñas, datos de autocompletar, cookies y detalles de tarjetas de crédito de todos los navegadores web basados en Gecko y Chromium, solicitamos tomar las siguientes acciones:
+                                </p>
+                                <br>
+                                <strong>
+                                <ul>
+                                    <li>Cambie las contraseñas actuales.</li>
+                                    <li>Evitar guardar las contraseñas en el navegador.</li>
+                                    <li>Escanee su computadora con un antivirus.</li>
+                                </ul>
+                                </strong>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                {# <img data-no-retina height="50" width="150" src="/uploads/institutoseducativos/{{app.session.get('ie_id')}}_Fondo" class="img-responsive full-width" alt="                "> #}
-                {% endif %}
-                {#<ul class="list no-padding hidden-sm hidden-xs cover-menu">                                        
+            </div>
+        </div>
+
+        <div class="col-lg-9 col-md-9 col-sm-8">
+            <div class="profile-cover">
+                <div class="cover rounded shadow no-overflow">
+                    <div class="inner-cover">
+                        <div class="btn-group cover-menu-mobile hidden-lg hidden-md">
+                            <button type="button" class="btn btn-theme btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right no-border" role="menu">
+                                {% if app.session.get('ie_id') != -1 %}
+                                    <li class="active"><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
+                                    <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
+                                    <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                     {% if app.session.get('ie_id') != -1 %}
-                        <li class="active"><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
-                        <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
-                        <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>                                                           
+                    <div class="col-xs-12 col-sm-9 col-md-9">
+                        <a href="{{path('herramienta_alter_galeria_fotos_centro')}}" class="btn btn-lilac" ><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span></a>
+                        <a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}" class="btn btn-warning" ><i class="fa fa-pencil"></i> <span>Editar Fotos</span></a>
+                    </div>
                     {% endif %}
-                </ul>#}
-            </div><!-- /.cover -->
-        </div><!-- /.profile-cover -->
-        <div class="divider">
+                </div>
+            </div>
+            <div class="divider">
+            </div>
         </div>
     </div>
-</div><!-- /.row -->                    
-</div><!-- /.body-content -->
+</div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-        <script>
-        
+    <script>
     </script>
 {% endblock %}
-    
